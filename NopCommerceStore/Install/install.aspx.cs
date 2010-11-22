@@ -43,8 +43,8 @@ namespace NopSolutions.NopCommerce.Web.Install
     public partial class InstallPage : Page
     {
         #region Fields
-        private List<string> upgradeableVersions = new List<string>() { "1.40", "1.50", "1.60", "1.70", "1.80" };
-        private string newVersion = "1.80";
+        private List<string> upgradeableVersions = new List<string>() { "1.40", "1.50", "1.60", "1.70", "1.80", "1.90" };
+        private string newVersion = "1.90";
         #endregion
 
         #region Utilities

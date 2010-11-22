@@ -6028,6 +6028,7 @@
     <None Include="editors\fckeditor\editor\dialog\fck_spellerpages\spellerpages\server-scripts\spellchecker.pl" />
     <None Include="editors\fckeditor\fckutils.cfm" />
     <None Include="Install\Scripts\1.80\nopCommerce_upgrade.sql" />
+    <None Include="Install\Scripts\1.90\nopCommerce_upgrade.sql" />
     <Content Include="WishlistEmailAFriend.aspx" />
     <Content Include="editors\fckeditor\editor\css\behaviors\disablehandles.htc" />
     <Content Include="editors\fckeditor\editor\css\behaviors\showtableborders.htc" />

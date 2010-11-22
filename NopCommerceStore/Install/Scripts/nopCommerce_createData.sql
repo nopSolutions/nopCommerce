@@ -4,13 +4,13 @@ INSERT [dbo].[Nop_SMSProvider] ([SMSProviderId], [Name], [ClassName], [SystemKey
 SET IDENTITY_INSERT [dbo].[Nop_SMSProvider] OFF
 GO
 
-
 SET IDENTITY_INSERT [dbo].[Nop_EmailAccount] ON
 INSERT [dbo].[Nop_EmailAccount] ([EmailAccountId], [Email], [DisplayName], [Host], [Port], [Username], [Password], [EnableSSL], [UseDefaultCredentials]) VALUES (1, N'test@mail.com', N'General contact', N'smtp.mail.com', 25, N'123', N'123', 0, 0)
 INSERT [dbo].[Nop_EmailAccount] ([EmailAccountId], [Email], [DisplayName], [Host], [Port], [Username], [Password], [EnableSSL], [UseDefaultCredentials]) VALUES (2, N'test@mail.com', N'Sales representative', N'smtp.mail.com', 25, N'123', N'123', 0, 0)
 INSERT [dbo].[Nop_EmailAccount] ([EmailAccountId], [Email], [DisplayName], [Host], [Port], [Username], [Password], [EnableSSL], [UseDefaultCredentials]) VALUES (3, N'test@mail.com', N'Customer support', N'smtp.mail.com', 25, N'123', N'123', 0, 0)
 SET IDENTITY_INSERT [dbo].[Nop_EmailAccount] OFF
 GO
+
 
 SET IDENTITY_INSERT [dbo].[Nop_ShippingMethod] ON
 INSERT [dbo].[Nop_ShippingMethod] ([ShippingMethodID], [Name], [Description], [DisplayOrder]) VALUES (1, N'By Ground', N'Compared to other shipping methods, like by flight or over seas, ground shipping is carried out closer to the earth', 1)
@@ -19,23 +19,13 @@ INSERT [dbo].[Nop_ShippingMethod] ([ShippingMethodID], [Name], [Description], [D
 SET IDENTITY_INSERT [dbo].[Nop_ShippingMethod] OFF
 GO
 
+
 SET IDENTITY_INSERT [dbo].[Nop_TaxProvider] ON
 INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (3, N'No tax', N'', N'', N'NopSolutions.NopCommerce.Tax.FreeTaxProvider, Nop.Tax.FreeTaxProvider', 1)
 INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (6, N'Tax By Country & State', N'', N'Tax\General\ConfigureTax.ascx', N'NopSolutions.NopCommerce.Tax.GeneralTaxProvider, Nop.Tax.GeneralTaxProvider', 2)
 INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (7, N'StrikeIron Basic (US and CA Only)', N'', N'Tax\StrikeIron\ConfigureTax.ascx', N'NopSolutions.NopCommerce.Tax.StrikeIronTaxProvider, Nop.Tax.StrikeIron', 2)
 INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (8, N'Fixed Rate Tax', N'', N'Tax\FixedRate\ConfigureTax.ascx', N'NopSolutions.NopCommerce.Tax.FixedRateTaxProvider, Nop.Tax.FixedRateTaxProvider', 10)
 SET IDENTITY_INSERT [dbo].[Nop_TaxProvider] OFF
-GO
-
-
-INSERT [dbo].[Nop_LogType] ([LogTypeID], [Name]) VALUES (0, N'Unknown')
-INSERT [dbo].[Nop_LogType] ([LogTypeID], [Name]) VALUES (1, N'Customer Error')
-INSERT [dbo].[Nop_LogType] ([LogTypeID], [Name]) VALUES (2, N'Mail Error')
-INSERT [dbo].[Nop_LogType] ([LogTypeID], [Name]) VALUES (3, N'Order Error')
-INSERT [dbo].[Nop_LogType] ([LogTypeID], [Name]) VALUES (4, N'Administration Area')
-INSERT [dbo].[Nop_LogType] ([LogTypeID], [Name]) VALUES (5, N'Common Error')
-INSERT [dbo].[Nop_LogType] ([LogTypeID], [Name]) VALUES (6, N'Shipping Errror')
-INSERT [dbo].[Nop_LogType] ([LogTypeID], [Name]) VALUES (7, N'Tax Error')
 GO
 
 
@@ -58,19 +48,17 @@ SET IDENTITY_INSERT [dbo].[Nop_CreditCardType] OFF
 GO
 
 
-INSERT [dbo].[Nop_ShoppingCartType] ([ShoppingCartTypeID], [Name]) VALUES (1, N'Shopping Cart')
-INSERT [dbo].[Nop_ShoppingCartType] ([ShoppingCartTypeID], [Name]) VALUES (2, N'Wishlist')
-GO
-
-
 SET IDENTITY_INSERT [dbo].[Nop_MessageTemplate] ON
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (25, N'Blog.BlogComment')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (13, N'Customer.EmailValidationMessage')
+INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (32, N'Customer.NewPM')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (14, N'Customer.PasswordRecovery')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (11, N'Customer.WelcomeMessage')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (23, N'Forums.NewForumPost')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (22, N'Forums.NewForumTopic')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (29, N'GiftCard.Notification')
+INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (33, N'NewCustomer.Notification')
+INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (34, N'NewReturnRequest.StoreOwnerNotification')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (24, N'News.NewsComment')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (27, N'NewsLetterSubscription.ActivationMessage')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (28, N'NewsLetterSubscription.DeactivationMessage')
@@ -83,7 +71,9 @@ INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (9, N'Or
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (8, N'OrderShipped.CustomerNotification')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (26, N'Product.ProductReview')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (21, N'QuantityBelow.StoreOwnerNotification')
+INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (35, N'ReturnRequestStatusChanged.CustomerNotification')
 INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (17, N'Service.EmailAFriend')
+INSERT [dbo].[Nop_MessageTemplate] ([MessageTemplateID], [Name]) VALUES (36, N'Wishlist.EmailAFriend')
 SET IDENTITY_INSERT [dbo].[Nop_MessageTemplate] OFF
 GO
 
@@ -160,7 +150,7 @@ INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES 
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (102, N'PaymentMethod.Worldpay.UseSandbox', N'False', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (105, N'Localization.DefaultLanguageID', N'7', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (108, N'Localization.DefaultAdminLanguageID', N'7', N'')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (111, N'Common.CurrentVersion', N'1.80', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (111, N'Common.CurrentVersion', N'1.90', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (112, N'PaymentMethod.PayFlowPro.TransactionMode', N'AuthorizeAndCapture', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (113, N'PaymentMethod.PayFlowPro.UseSandbox', N'True', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (114, N'PaymentMethod.PayFlowPro.User', N'1', N'')
@@ -265,16 +255,10 @@ INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES 
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (207, N'Cache.ManufacturerManager.MappingsCacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (208, N'Cache.MeasureManager.CacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (209, N'Cache.OrderManager.CacheEnabled', N'true', N'')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (210, N'Cache.CreditCardTypeManager.CacheEnabled', N'true', N'')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (211, N'Cache.PaymentMethodManager.CacheEnabled', N'true', N'')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (212, N'Cache.PaymentStatusManager.CacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (213, N'Cache.ProductAttributeManager.CacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (214, N'Cache.SpecificationAttributeManager.CacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (215, N'Cache.ProductManager.CacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (216, N'Cache.DiscountManager.CacheEnabled', N'true', N'')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (217, N'Cache.ShippingMethodManager.CacheEnabled', N'true', N'')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (218, N'Cache.ShippingRateComputationMethodManager.CacheEnabled', N'true', N'')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (219, N'Cache.ShippingStatusManager.CacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (220, N'Cache.TaxCategoryManager.CacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (221, N'Cache.TaxProviderManager.CacheEnabled', N'true', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (222, N'Cache.TaxRateManager.CacheEnabled', N'true', N'')
@@ -288,7 +272,6 @@ INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES 
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (231, N'SEO.Sitemaps.OtherPages', N'', N'Comma separated page list')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (232, N'Customer.NewCustomerRegistrationDisabled', N'false', N'Determines whether new customer registration is not allowed')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (233, N'Forums.SignatureEnabled', N'True', N'Determines whether user signatures are enabled')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (234, N'Cache.IpBlacklistManager.CacheEnabled', N'true', N'Blacklist cache enabled')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (235, N'Tax.PaymentMethodAdditionalFeeIsTaxable', N'false', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (236, N'Tax.PaymentMethodAdditionalFeeIncludesTax', N'false', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (237, N'Tax.PaymentMethodAdditionalFeeTaxClassID', N'0', N'')
@@ -462,49 +445,63 @@ INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES 
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (406, N'Display.Checkout.GiftCardBox', N'True', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (407, N'Display.Products.DisplayCartAfterAddingProduct', N'True', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (408, N'SEONames.ConvertNonWesternChars', N'True', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (409, N'SearchPage.ProductsPerPage', N'10', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (410, N'PaymentMethod.PaypalStandard.ValidateOrderTotal', N'true', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (411, N'Common.StoreClosed.AllowAdminAccess', N'True', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (412, N'Display.Products.ShowCategoryProductNumber.IncludeSubCategories', N'True', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (413, N'PDFInvoice.RenderOrderNotes', N'False', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (414, N'PromotionProvider.BecomeCom.ProductThumbnailImageSize', N'125', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (415, N'PromotionProvider.Froogle.ProductThumbnailImageSize', N'125', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (416, N'PromotionProvider.PriceGrabber.ProductThumbnailImageSize', N'125', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (417, N'Common.EmailWishlist', N'True', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (418, N'SEO.ProductTags.UrlRewriteFormat', N'{0}producttag/{1}-{2}.aspx', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (419, N'Cache.PaymentManager.CacheEnabled', N'true', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (420, N'Cache.BlacklistManager.CacheEnabled', N'true', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (421, N'Cache.ShippingManager.CacheEnabled', N'true', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (422, N'Cache.CustomerActivityManager.CacheEnabled', N'true', N'')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (423, N'OnlineUserManager.MaximumOnlineCustomers', N'1', N'')
 SET IDENTITY_INSERT [dbo].[Nop_Setting] OFF
 GO
 
 
-
 SET IDENTITY_INSERT [dbo].[Nop_PaymentMethod] ON
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (1, N'Manual Processing', N'Credit Card', N'', N'Payment\Manual\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Manual\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Manual.ManualPaymentProcessor, Nop.Payment.Manual', N'', 0, 1, 1)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (2, N'PayPal Standard', N'PayPal Standard', N'', N'Payment\PayPalStandard\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayPalStandard\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayPal.PayPalStandardPaymentProcessor, Nop.Payment.PayPal', N'', 0, 0, 32)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (7, N'PayPal Direct', N'Credit Card', N'', N'Payment\PayPalDirect\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayPalDirect\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayPal.PayPalDirectPaymentProcessor, Nop.Payment.PayPal', N'', 0, 0, 3)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (8, N'2Checkout', N'2Checkout', N'', N'Payment\TwoCheckout\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\TwoCheckout\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.TwoCheckout.TwoCheckoutPaymentProcessor, Nop.Payment.TwoCheckout', N'', 0, 0, 30)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (9, N'Authorize.NET', N'Credit Card', N'', N'Payment\AuthorizeNET\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\AuthorizeNET\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET.AuthorizeNetPaymentProcessor, Nop.Payment.AuthorizeNet', N'', 0, 0, 2)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (10, N'PayPal Express', N'PayPal Express', N'', N'Payment\PayPalExpress\ConfigurePaymentMethod.ascx', N'', N'NopSolutions.NopCommerce.Payment.Methods.PayPal.PayPalExpressPaymentProcessor, Nop.Payment.PayPal', N'PayPalExpress', 0, 0, 33)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (11, N'eWay (Australia)', N'Credit Card', N'', N'Payment\eWay\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\eWay\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.eWay.eWayPaymentProcessor, Nop.Payment.eWay', N'', 0, 0, 5)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (12, N'Moneybookers', N'Moneybookers', N'', N'Payment\Moneybookers\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Moneybookers\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Moneybookers.MoneybookersPaymentProcessor, Nop.Payment.Moneybookers', N'', 0, 0, 31)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (13, N'Worldpay', N'Worldpay', N'', N'Payment\Worldpay\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Worldpay\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Worldpay.WorldpayPaymentProcessor, Nop.Payment.Worldpay', N'', 0, 0, 35)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (14, N'Google Checkout', N'Google Checkout', N'', N'Payment\GoogleCheckout\ConfigurePaymentMethod.ascx', N'', N'NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout.GoogleCheckoutPaymentProcessor, Nop.Payment.GoogleCheckout', N'GoogleCheckout', 0, 0, 34)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (15, N'Cash On Delivery', N'Cash On Delivery', N'', N'Payment\CashOnDelivery\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\CashOnDelivery\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CashOnDelivery.CashOnDeliveryPaymentProcessor, Nop.Payment.CashOnDelivery', N'', 0, 1, 70)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (16, N'PayFlow Pro', N'Credit Card', N'', N'Payment\PayFlowPro\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayFlowPro\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayFlowPro.PayFlowProPaymentProcessor,Nop.Payment.PayFlowPro', N'', 0, 0, 4)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (17, N'Check / Money Order', N'Check / Money Order', N'', N'Payment\Check\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Check\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Check.CheckPaymentProcessor, Nop.Payment.Check', N'', 0, 1, 80)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (18, N'Purchase Order', N'Purchase Order', N'', N'Payment\PurchaseOrder\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PurchaseOrder\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PurchaseOrder.PurchaseOrderPaymentProcessor, Nop.Payment.PurchaseOrder', N'PURCHASEORDER', 0, 1, 60)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (19, N'PSI Gate', N'Credit Card', N'', N'Payment\PSIGate\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PSIGate\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PSIGate.PSIGatePaymentProcessor, Nop.Payment.PSIGate', N'', 0, 0, 6)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (20, N'CDG Commerce', N'Credit Card', N'', N'Payment\CDGCommerce\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\CDGCommerce\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CDGcommerce.CDGcommercePaymentProcessor, Nop.Payment.CDGCommerce', N'', 0, 0, 7)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (21, N'eWay (UK)', N'Credit Card', N'', N'Payment\eWayUK\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\eWayUK\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.eWayUK.eWayPaymentProcessor, Nop.Payment.eWayUK', N'EWAYUK', 0, 0, 100)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (22, N'PayJunction (QuickLink)', N'Credit Card', N'', N'Payment\PayJunction\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayJunction\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayJunction.PayJunctionPaymentProcessor, Nop.Payment.PayJunction', N'PAYJUNCTION_QUICKLINK', 0, 0, 120)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (23, N'DIBS FlexWin', N'DIBS FlexWin', N'', N'Payment\Dibs\FlexWinConfig.ascx', N'~\Templates\Payment\Dibs\FlexWinPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Dibs.FlexWinPaymentProcessor, Nop.Payment.Dibs', N'DIBS.FLEXWIN', 0, 0, 130)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (24, N'Svea Hosted Payment', N'Svea Hosted Payment', N'', N'Payment\Svea\HostedPaymentConfig.ascx', N'~\Templates\Payment\Svea\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Svea.HostedPaymentProcessor, Nop.Payment.Svea', N'SVEA.HOSTEDPAYMENT', 0, 0, 140)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (25, N'Pay In Store', N'Pay In Store', N'', N'Payment\PayInStore\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayInStore\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayInStore.PayInStorePaymentProcessor, Nop.Payment.PayInStore', N'PAYINSTORE', 0, 1, 120)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (26, N'Amazon Simple Pay', N'Amazon Simple Pay', N'', N'Payment\Amazon\SimplePayConfig.ascx', N'~\Templates\Payment\Amazon\SimplePayPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Amazon.SimplePayPaymentProcessor, Nop.Payment.Amazon', N'AMAZON.SIMPLEPAY', 0, 0, 150)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (27, N'PayPoint (hosted)', N'PayPoint', N'', N'Payment\PayPoint\HostedPaymentConfig.ascx', N'~\Templates\Payment\PayPoint\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayPoint.HostedPaymentProcessor, Nop.Payment.PayPoint', N'PAYPOINT.HOSTED', 0, 0, 160)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (28, N'USA ePay (hosted)', N'USA ePay (hosted)', N'', N'Payment\USAePay\EPaymentFormConfig.ascx', N'~\Templates\Payment\USAePay\EPaymentFormPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.USAePay.EPaymentFormPaymentProcessor, Nop.Payment.USAePay', N'USAEPAY.EPAYMENTFORM', 0, 0, 170)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (29, N'Beanstream (hosted)', N'Beanstream', N'', N'Payment\Beanstream\HostedPaymentConfig.ascx', N'~\Templates\Payment\Beanstream\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Beanstream.HostedPaymentProcessor, Nop.Payment.Beanstream', N'BEANSTREAM.HOSTED', 0, 0, 180)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (30, N'Moneris (hosted)', N'Moneris', N'', N'Payment\Moneris\HostedPaymentConfig.ascx', N'~\Templates\Payment\Moneris\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Moneris.HostedPaymentProcessor, Nop.Payment.Moneris', N'MONERIS.HOSTED', 0, 0, 190)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (31, N'SecurePay (Secure XML)', N'Credit Card', N'', N'Payment\SecurePay\XmlPaymentConfig.ascx', N'~\Templates\Payment\SecurePay\XmlPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.SecurePay.XmlPaymentProcessor, Nop.Payment.SecurePay', N'SECUREPAY.XML', 0, 0, 200)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (32, N'ChronoPay (hosted)', N'ChronoPay', N'', N'Payment\ChronoPay\HostedPaymentConfig.ascx', N'~\Templates\Payment\ChronoPay\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.ChronoPay.HostedPaymentProcessor, Nop.Payment.ChronoPay', N'CHRONOPAY.HOSTED', 0, 0, 210)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (33, N'Assist (hosted)', N'Assist', N'', N'Payment\Assist\HostedPaymentConfig.ascx', N'~\Templates\Payment\Assist\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Assist.HostedPaymentProcessor, Nop.Payment.Assist', N'ASSIST.HOSTED', 0, 0, 220)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (34, N'CyberSource (hosted)', N'CyberSource', N'', N'Payment\CyberSource\HostedPaymentConfig.ascx', N'~\Templates\Payment\CyberSource\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CyberSource.HostedPaymentProcessor, Nop.Payment.CyberSource', N'CYBERSOURCE.HOSTED', 0, 0, 230)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (35, N'iDeal (Basic)', N'iDeal', N'', N'Payment\iDeal\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\iDeal\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.iDeal.iDealBasicPaymentProcessor, Nop.Payment.iDeal', N'iDeal.Basic', 0, 0, 240)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (37, N'Sermepa', N'Sermepa', N'', N'Payment\Sermepa\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Sermepa\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Sermepa.SermepaPaymentProcessor, Nop.Payment.Sermepa', N'SERMEPA', 0, 0, 250)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (38, N'SagePay', N'SagePay', N'', N'Payment\SagePay\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\SagePay\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.SagePay.SagePayPaymentProcessor, Nop.Payment.SagePay', N'SAGEPAY', 0, 0, 260)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (39, N'QuickPay Dankort', N'QuickPay Visa-Dankort', N'', N'Payment\QuickPay\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\QuickPay\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.QuickPay.QuickPayPaymentProcessor, Nop.Payment.QuickPay', N'QUICKPAY', 0, 0, 270)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (40, N'Alipay (beta)', N'Alipay', N'', N'Payment\Alipay\HostedPaymentConfig.ascx', N'~\Templates\Payment\Alipay\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Alipay.AlipayPaymentProcessor, Nop.Payment.Alipay', N'ALIPAY', 0, 0, 280)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (41, N'USA ePay (integrated)', N'Credit Card', N'', N'Payment\USAePayIntegrated\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\USAePayIntegrated\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.USAePay.USAePayPaymentProcessor, Nop.Payment.USAePay', N'USAEPAY.INTERGRATED', 0, 0, 172)
-INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [HidePaymentInfoForZeroOrders], [IsActive], [DisplayOrder]) VALUES (42, N'CCAvenue', N'CCAvenue', N'', N'Payment\CCAvenue\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\CCAvenue\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CCAvenue.CCAvenuePaymentProcessor, Nop.Payment.CCAvenue', N'CCAVENUE', 0, 0, 290)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (1, N'Manual Processing', N'Credit Card', N'', N'Payment\Manual\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Manual\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Manual.ManualPaymentProcessor, Nop.Payment.Manual', N'', 1, 1)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (2, N'PayPal Standard', N'PayPal Standard', N'', N'Payment\PayPalStandard\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayPalStandard\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayPal.PayPalStandardPaymentProcessor, Nop.Payment.PayPal', N'', 0, 32)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (7, N'PayPal Direct', N'Credit Card', N'', N'Payment\PayPalDirect\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayPalDirect\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayPal.PayPalDirectPaymentProcessor, Nop.Payment.PayPal', N'', 0, 3)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (8, N'2Checkout', N'2Checkout', N'', N'Payment\TwoCheckout\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\TwoCheckout\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.TwoCheckout.TwoCheckoutPaymentProcessor, Nop.Payment.TwoCheckout', N'', 0, 30)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (9, N'Authorize.NET', N'Credit Card', N'', N'Payment\AuthorizeNET\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\AuthorizeNET\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET.AuthorizeNetPaymentProcessor, Nop.Payment.AuthorizeNet', N'', 0, 2)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (10, N'PayPal Express', N'PayPal Express', N'', N'Payment\PayPalExpress\ConfigurePaymentMethod.ascx', N'', N'NopSolutions.NopCommerce.Payment.Methods.PayPal.PayPalExpressPaymentProcessor, Nop.Payment.PayPal', N'PayPalExpress', 0, 33)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (11, N'eWay (Australia)', N'Credit Card', N'', N'Payment\eWay\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\eWay\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.eWay.eWayPaymentProcessor, Nop.Payment.eWay', N'', 0, 5)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (12, N'Moneybookers', N'Moneybookers', N'', N'Payment\Moneybookers\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Moneybookers\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Moneybookers.MoneybookersPaymentProcessor, Nop.Payment.Moneybookers', N'', 0, 31)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (13, N'Worldpay', N'Worldpay', N'', N'Payment\Worldpay\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Worldpay\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Worldpay.WorldpayPaymentProcessor, Nop.Payment.Worldpay', N'', 0, 35)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (14, N'Google Checkout', N'Google Checkout', N'', N'Payment\GoogleCheckout\ConfigurePaymentMethod.ascx', N'', N'NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout.GoogleCheckoutPaymentProcessor, Nop.Payment.GoogleCheckout', N'GoogleCheckout', 0, 34)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (15, N'Cash On Delivery', N'Cash On Delivery', N'', N'Payment\CashOnDelivery\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\CashOnDelivery\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CashOnDelivery.CashOnDeliveryPaymentProcessor, Nop.Payment.CashOnDelivery', N'', 1, 70)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (16, N'PayFlow Pro', N'Credit Card', N'', N'Payment\PayFlowPro\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayFlowPro\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayFlowPro.PayFlowProPaymentProcessor,Nop.Payment.PayFlowPro', N'', 0, 4)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (17, N'Check / Money Order', N'Check / Money Order', N'', N'Payment\Check\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Check\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Check.CheckPaymentProcessor, Nop.Payment.Check', N'', 1, 80)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (18, N'Purchase Order', N'Purchase Order', N'', N'Payment\PurchaseOrder\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PurchaseOrder\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PurchaseOrder.PurchaseOrderPaymentProcessor, Nop.Payment.PurchaseOrder', N'PURCHASEORDER', 1, 60)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (19, N'PSI Gate', N'Credit Card', N'', N'Payment\PSIGate\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PSIGate\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PSIGate.PSIGatePaymentProcessor, Nop.Payment.PSIGate', N'', 0, 6)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (20, N'CDG Commerce', N'Credit Card', N'', N'Payment\CDGCommerce\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\CDGCommerce\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CDGcommerce.CDGcommercePaymentProcessor, Nop.Payment.CDGCommerce', N'', 0, 7)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (21, N'eWay (UK)', N'Credit Card', N'', N'Payment\eWayUK\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\eWayUK\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.eWayUK.eWayPaymentProcessor, Nop.Payment.eWayUK', N'EWAYUK', 0, 100)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (22, N'PayJunction (QuickLink)', N'Credit Card', N'', N'Payment\PayJunction\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayJunction\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayJunction.PayJunctionPaymentProcessor, Nop.Payment.PayJunction', N'PAYJUNCTION_QUICKLINK', 0, 120)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (23, N'DIBS FlexWin', N'DIBS FlexWin', N'', N'Payment\Dibs\FlexWinConfig.ascx', N'~\Templates\Payment\Dibs\FlexWinPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Dibs.FlexWinPaymentProcessor, Nop.Payment.Dibs', N'DIBS.FLEXWIN', 0, 130)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (24, N'Svea Hosted Payment', N'Svea Hosted Payment', N'', N'Payment\Svea\HostedPaymentConfig.ascx', N'~\Templates\Payment\Svea\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Svea.HostedPaymentProcessor, Nop.Payment.Svea', N'SVEA.HOSTEDPAYMENT', 0, 140)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (25, N'Pay In Store', N'Pay In Store', N'', N'Payment\PayInStore\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\PayInStore\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayInStore.PayInStorePaymentProcessor, Nop.Payment.PayInStore', N'PAYINSTORE', 1, 120)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (26, N'Amazon Simple Pay', N'Amazon Simple Pay', N'', N'Payment\Amazon\SimplePayConfig.ascx', N'~\Templates\Payment\Amazon\SimplePayPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Amazon.SimplePayPaymentProcessor, Nop.Payment.Amazon', N'AMAZON.SIMPLEPAY', 0, 150)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (27, N'PayPoint (hosted)', N'PayPoint', N'', N'Payment\PayPoint\HostedPaymentConfig.ascx', N'~\Templates\Payment\PayPoint\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.PayPoint.HostedPaymentProcessor, Nop.Payment.PayPoint', N'PAYPOINT.HOSTED', 0, 160)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (28, N'USA ePay (hosted)', N'USA ePay (hosted)', N'', N'Payment\USAePay\EPaymentFormConfig.ascx', N'~\Templates\Payment\USAePay\EPaymentFormPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.USAePay.EPaymentFormPaymentProcessor, Nop.Payment.USAePay', N'USAEPAY.EPAYMENTFORM', 0, 170)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (29, N'Beanstream (hosted)', N'Beanstream', N'', N'Payment\Beanstream\HostedPaymentConfig.ascx', N'~\Templates\Payment\Beanstream\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Beanstream.HostedPaymentProcessor, Nop.Payment.Beanstream', N'BEANSTREAM.HOSTED', 0, 180)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (30, N'Moneris (hosted)', N'Moneris', N'', N'Payment\Moneris\HostedPaymentConfig.ascx', N'~\Templates\Payment\Moneris\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Moneris.HostedPaymentProcessor, Nop.Payment.Moneris', N'MONERIS.HOSTED', 0, 190)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (31, N'SecurePay (Secure XML)', N'Credit Card', N'', N'Payment\SecurePay\XmlPaymentConfig.ascx', N'~\Templates\Payment\SecurePay\XmlPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.SecurePay.XmlPaymentProcessor, Nop.Payment.SecurePay', N'SECUREPAY.XML', 0, 200)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (32, N'ChronoPay (hosted)', N'ChronoPay', N'', N'Payment\ChronoPay\HostedPaymentConfig.ascx', N'~\Templates\Payment\ChronoPay\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.ChronoPay.HostedPaymentProcessor, Nop.Payment.ChronoPay', N'CHRONOPAY.HOSTED', 0, 210)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (33, N'Assist (hosted)', N'Assist', N'', N'Payment\Assist\HostedPaymentConfig.ascx', N'~\Templates\Payment\Assist\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Assist.HostedPaymentProcessor, Nop.Payment.Assist', N'ASSIST.HOSTED', 0, 220)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (34, N'CyberSource (hosted)', N'CyberSource', N'', N'Payment\CyberSource\HostedPaymentConfig.ascx', N'~\Templates\Payment\CyberSource\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CyberSource.HostedPaymentProcessor, Nop.Payment.CyberSource', N'CYBERSOURCE.HOSTED', 0, 230)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (35, N'iDeal (Basic)', N'iDeal', N'', N'Payment\iDeal\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\iDeal\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.iDeal.iDealBasicPaymentProcessor, Nop.Payment.iDeal', N'iDeal.Basic', 0, 240)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (37, N'Sermepa', N'Sermepa', N'', N'Payment\Sermepa\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\Sermepa\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Sermepa.SermepaPaymentProcessor, Nop.Payment.Sermepa', N'SERMEPA', 0, 250)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (38, N'SagePay', N'SagePay', N'', N'Payment\SagePay\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\SagePay\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.SagePay.SagePayPaymentProcessor, Nop.Payment.SagePay', N'SAGEPAY', 0, 260)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (39, N'QuickPay Dankort', N'QuickPay Visa-Dankort', N'', N'Payment\QuickPay\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\QuickPay\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.QuickPay.QuickPayPaymentProcessor, Nop.Payment.QuickPay', N'QUICKPAY', 0, 270)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (40, N'Alipay (beta)', N'Alipay', N'', N'Payment\Alipay\HostedPaymentConfig.ascx', N'~\Templates\Payment\Alipay\HostedPayment.ascx', N'NopSolutions.NopCommerce.Payment.Methods.Alipay.AlipayPaymentProcessor, Nop.Payment.Alipay', N'ALIPAY', 0, 280)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (41, N'USA ePay (integrated)', N'Credit Card', N'', N'Payment\USAePayIntegrated\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\USAePayIntegrated\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.USAePay.USAePayPaymentProcessor, Nop.Payment.USAePay', N'USAEPAY.INTERGRATED', 0, 172)
+INSERT [dbo].[Nop_PaymentMethod] ([PaymentMethodID], [Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) VALUES (42, N'CCAvenue', N'CCAvenue', N'', N'Payment\CCAvenue\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\CCAvenue\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CCAvenue.CCAvenuePaymentProcessor, Nop.Payment.CCAvenue', N'CCAVENUE', 0, 290)
 SET IDENTITY_INSERT [dbo].[Nop_PaymentMethod] OFF
 GO
 
@@ -516,33 +513,9 @@ SET IDENTITY_INSERT [dbo].[Nop_ProductTemplate] OFF
 GO
 
 
-INSERT [dbo].[Nop_PaymentStatus] ([PaymentStatusID], [Name]) VALUES (10, N'Pending')
-INSERT [dbo].[Nop_PaymentStatus] ([PaymentStatusID], [Name]) VALUES (20, N'Authorized')
-INSERT [dbo].[Nop_PaymentStatus] ([PaymentStatusID], [Name]) VALUES (30, N'Paid')
-INSERT [dbo].[Nop_PaymentStatus] ([PaymentStatusID], [Name]) VALUES (35, N'PartiallyRefunded')
-INSERT [dbo].[Nop_PaymentStatus] ([PaymentStatusID], [Name]) VALUES (40, N'Refunded')
-INSERT [dbo].[Nop_PaymentStatus] ([PaymentStatusID], [Name]) VALUES (50, N'Voided')
-GO
-
-
-
-INSERT [dbo].[Nop_OrderStatus] ([OrderStatusID], [Name]) VALUES (10, N'Pending')
-INSERT [dbo].[Nop_OrderStatus] ([OrderStatusID], [Name]) VALUES (20, N'Processing')
-INSERT [dbo].[Nop_OrderStatus] ([OrderStatusID], [Name]) VALUES (30, N'Complete')
-INSERT [dbo].[Nop_OrderStatus] ([OrderStatusID], [Name]) VALUES (40, N'Cancelled')
-GO
-
-
 SET IDENTITY_INSERT [dbo].[Nop_ManufacturerTemplate] ON
 INSERT [dbo].[Nop_ManufacturerTemplate] ([ManufacturerTemplateId], [Name], [TemplatePath], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (1, N'Products In Grid', N'~\Templates\Manufacturers\ProductsInGrid.ascx', 1, CAST(0x00009AEF00125991 AS DateTime), CAST(0x00009B1F00C1A7F2 AS DateTime))
 SET IDENTITY_INSERT [dbo].[Nop_ManufacturerTemplate] OFF
-GO
-
-
-INSERT [dbo].[Nop_DiscountType] ([DiscountTypeID], [Name]) VALUES (1, N'Assigned to order total')
-INSERT [dbo].[Nop_DiscountType] ([DiscountTypeID], [Name]) VALUES (2, N'Assigned to product variants (SKUs)')
-INSERT [dbo].[Nop_DiscountType] ([DiscountTypeID], [Name]) VALUES (5, N'Assigned to categories')
-INSERT [dbo].[Nop_DiscountType] ([DiscountTypeID], [Name]) VALUES (10, N'Assigned to shipping')
 GO
 
 
@@ -796,31 +769,6 @@ GO
 
 
 
-INSERT [dbo].[Nop_DiscountLimitation] ([DiscountLimitationID], [Name]) VALUES (0, N'Unlimited')
-INSERT [dbo].[Nop_DiscountLimitation] ([DiscountLimitationID], [Name]) VALUES (10, N'One Time Only')
-INSERT [dbo].[Nop_DiscountLimitation] ([DiscountLimitationID], [Name]) VALUES (15, N'N Times Only')
-INSERT [dbo].[Nop_DiscountLimitation] ([DiscountLimitationID], [Name]) VALUES (20, N'One Time Per Customer')
-INSERT [dbo].[Nop_DiscountLimitation] ([DiscountLimitationID], [Name]) VALUES (25, N'N Times Per Customer')
-GO
-
-
-INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name]) VALUES (1, N'None')
-INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name]) VALUES (2, N'Must be assigned to customer role')
-INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name]) VALUES (10, N'Had purchased all of these product variants')
-INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name]) VALUES (20, N'Had purchased one of these product variants')
-INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name]) VALUES (30, N'Had spent x.xx amount')
-INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name]) VALUES (60, N'Billing country is')
-INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name]) VALUES (70, N'Shipping country is')
-GO
-
-
-INSERT [dbo].[Nop_ShippingStatus] ([ShippingStatusID], [Name]) VALUES (10, N'Shipping not required')
-INSERT [dbo].[Nop_ShippingStatus] ([ShippingStatusID], [Name]) VALUES (20, N'Not yet shipped')
-INSERT [dbo].[Nop_ShippingStatus] ([ShippingStatusID], [Name]) VALUES (30, N'Shipped')
-INSERT [dbo].[Nop_ShippingStatus] ([ShippingStatusID], [Name]) VALUES (40, N'Delivered')
-GO
-
-
 SET IDENTITY_INSERT [dbo].[Nop_MeasureDimension] ON
 INSERT [dbo].[Nop_MeasureDimension] ([MeasureDimensionID], [Name], [SystemKeyword], [Ratio], [DisplayOrder]) VALUES (1, N'inch(es)', N'inches', CAST(1.0000 AS Decimal(18, 4)), 1)
 INSERT [dbo].[Nop_MeasureDimension] ([MeasureDimensionID], [Name], [SystemKeyword], [Ratio], [DisplayOrder]) VALUES (2, N'feet', N'feet', CAST(0.0833 AS Decimal(18, 4)), 2)
@@ -860,19 +808,13 @@ SET IDENTITY_INSERT [dbo].[Nop_ShippingRateComputationMethod] OFF
 GO
 
 
-INSERT [dbo].[Nop_LowStockActivity] ([LowStockActivityID], [Name]) VALUES (0, N'Nothing')
-INSERT [dbo].[Nop_LowStockActivity] ([LowStockActivityID], [Name]) VALUES (1, N'Disable buy button')
-INSERT [dbo].[Nop_LowStockActivity] ([LowStockActivityID], [Name]) VALUES (2, N'Unpublish')
-GO
-
-
 SET IDENTITY_INSERT [dbo].[Nop_Currency] ON
 INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (1, N'US Dollar', N'USD', N'en-US', CAST(1.2690 AS Decimal(18, 4)), N'', 1, 1, CAST(0x00009AB000C959F7 AS DateTime), CAST(0x00009B96014297C2 AS DateTime))
 INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (2, N'Australian Dollar', N'AUD', N'en-AU', CAST(1.6270 AS Decimal(18, 4)), N'', 0, 2, CAST(0x00009AB000C959FC AS DateTime), CAST(0x00009B3D0117F458 AS DateTime))
 INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (4, N'British Pound', N'GBP', N'en-GB', CAST(0.7810 AS Decimal(18, 4)), N'', 1, 3, CAST(0x00009AB000C959FC AS DateTime), CAST(0x00009B9601429AA0 AS DateTime))
 INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (5, N'Canadian Dollar', N'CAD', N'en-CA', CAST(1.6000 AS Decimal(18, 4)), N'', 0, 4, CAST(0x00009AB000C959FC AS DateTime), CAST(0x00009B3D0117E88D AS DateTime))
 INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (6, N'Chinese Yuan Renminbi', N'CNY', N'zh-CN', CAST(10.7980 AS Decimal(18, 4)), N'', 0, 5, CAST(0x00009AB000C959FC AS DateTime), CAST(0x00009B3D0117E266 AS DateTime))
-INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (7, N'Euro', N'EUR', N'', CAST(1.0000 AS Decimal(18, 4)), N'€#,###.00', 1, 2, CAST(0x00009AB000C959FC AS DateTime), CAST(0x00009BB8011603A7 AS DateTime))
+INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (7, N'Euro', N'EUR', N'', CAST(1.0000 AS Decimal(18, 4)), N'€0.00', 1, 2, CAST(0x00009AB000C959FC AS DateTime), CAST(0x00009BB8011603A7 AS DateTime))
 INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (8, N'Hong Kong Dollar', N'HKD', N'zh-HK', CAST(12.1700 AS Decimal(18, 4)), N'', 0, 7, CAST(0x00009AB000C95A00 AS DateTime), CAST(0x00009B3D0117DE5F AS DateTime))
 INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (9, N'Japanese Yen', N'JPY', N'ja-JP', CAST(162.0000 AS Decimal(18, 4)), N'', 0, 8, CAST(0x00009AB000C95A00 AS DateTime), CAST(0x00009B3D0117DB0E AS DateTime))
 INSERT [dbo].[Nop_Currency] ([CurrencyID], [Name], [CurrencyCode], [DisplayLocale], [Rate], [CustomFormatting], [Published], [DisplayOrder], [CreatedOn], [UpdatedOn]) VALUES (12, N'Russian Rouble', N'RUB', N'ru-RU', CAST(34.7240 AS Decimal(18, 4)), N'', 0, 9, CAST(0x00009AB000C95A00 AS DateTime), CAST(0x00009BD300EC5AEF AS DateTime))
@@ -1103,8 +1045,6 @@ SET IDENTITY_INSERT [dbo].[Nop_StateProvince] OFF
 GO
 
 
-
-
 SET IDENTITY_INSERT [dbo].[Nop_MessageTemplateLocalized] ON
 INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (114, 13, 7, N'', N'%Store.Name%. Email validation', N'<a href="%Store.URL%">%Store.Name%</a>  <br />  <br />  To activate your account <a href="%Customer.AccountActivationURL%">click here</a>.     <br />  <br />  %Store.Name%', 1, 0)
 INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (115, 14, 7, N'', N'%Store.Name%. Password recovery', N'<a href="%Store.URL%">%Store.Name%</a>  <br />  <br />  To change your password <a href="%Customer.PasswordRecoveryURL%">click here</a>.     <br />  <br />  %Store.Name%', 1, 0)
@@ -1318,8 +1258,58 @@ INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [Mess
 INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (222, 30, 7, N'', N'Your order from %Store.Name% has been delivered.', N'<p><a href="%Store.URL%"> %Store.Name%</a> <br /> <br /> Hello %Order.CustomerFullName%, <br /> Good news! You order has been delivered. <br /> Order Number: %Order.OrderNumber%<br /> Order Details: <a href="%Order.OrderURLForCustomer%" target="_blank">%Order.OrderURLForCustomer%</a><br /> Date Ordered: %Order.CreatedOn%<br /> <br /> <br /> <br /> Billing Address<br /> %Order.BillingFirstName% %Order.BillingLastName%<br /> %Order.BillingAddress1%<br /> %Order.BillingCity% %Order.BillingZipPostalCode%<br /> %Order.BillingStateProvince% %Order.BillingCountry%<br /> <br /> <br /> <br /> Shipping Address<br /> %Order.ShippingFirstName% %Order.ShippingLastName%<br /> %Order.ShippingAddress1%<br /> %Order.ShippingCity% %Order.ShippingZipPostalCode%<br /> %Order.ShippingStateProvince% %Order.ShippingCountry%<br /> <br /> Shipping Method: %Order.ShippingMethod% <br /> <br /> %Order.Product(s)% </p>', 1, 0)
 INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (223, 31, 7, N'', N'New VAT number is submitted.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
 <br />
-%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number (%Customer.VatNumber%).
+%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number. Details are below:
+<br />
+VAT number: %Customer.VatNumber%
+<br />
+VAT number status: %Customer.VatNumberStatus%
+<br />
+Received name: %VatValidationResult.Name%
+<br />
+Received address: %VatValidationResult.Address%
 </p>', 1, 0)
+INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (224, 32, 7, N'', N'%Store.Name%. You have received a new private message', N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+		<br />
+		You have received a new private message.
+		</p>', 1, 0)
+INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (225, 33, 7, N'', N'New customer registration', N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+		<br />A new customer registered with your store. Below are the customer''s details:
+		<br />Full name: %Customer.FullName%
+		<br />Email: %Customer.Email%
+		</p>', 1, 0)
+INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (226, 34, 7, N'', N'%Store.Name%. New return request.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+		<br />
+		%Customer.FullName% (%Customer.Email%) has just submitted a new return request. Details are below:
+		<br />
+		Request ID: %ReturnRequest.ID%
+		<br />
+		Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%
+		<br />
+		Reason for return: %ReturnRequest.Reason%
+		<br />
+		Requested action: %ReturnRequest.RequestedAction%
+		<br />
+		Customer comments:
+		<br />
+		%ReturnRequest.CustomerComment%
+		</p>', 1, 0)
+INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (227, 35, 7, N'', N'%Store.Name%. Return request status was changed.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+		<br />
+		Hello %Customer.FullName%,
+		<br />
+		Your return request #%ReturnRequest.ID% status has been changed.
+		</p>', 1, 0)
+INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId]) VALUES (228, 36, 7, N'', N'%Store.Name%. Wishlist', N'<p><a href="%Store.URL%"> %Store.Name%</a> <br />
+<br />
+%Customer.Email% was shopping on %Store.Name% and wanted to share a wishlist with you. <br />
+<br />
+<br />
+For more info click <a target="_blank" href="%Wishlist.URLForCustomer%">here</a> <br />
+<br />
+<br />
+%EmailAFriend.PersonalMessage%<br />
+<br />
+%Store.Name%</p>', 1, 0)
 SET IDENTITY_INSERT [dbo].[Nop_MessageTemplateLocalized] OFF
 GO
 
@@ -1599,7 +1589,7 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4065, 7, N'ShoppingCart.CalculatedDuringCheckout', N'Calculated during checkout')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4066, 7, N'ShoppingCart.CartIsEmpty', N'Your Shopping Cart is empty!')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4067, 7, N'ShoppingCart.Checkout', N'Checkout')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4068, 7, N'ShoppingCart.ContinueShopping', N'Continue')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4068, 7, N'ShoppingCart.ContinueShopping', N'Continue shopping')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4069, 7, N'ShoppingCart.CouponCode', N'Coupon code:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4070, 7, N'ShoppingCart.ItemTotal', N'Total')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4071, 7, N'ShoppingCart.ItemYouSave', N'You save:')
@@ -1612,7 +1602,7 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4078, 7, N'ShoppingCart.ShippingNotRequired', N'Not required')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4079, 7, N'ShoppingCart.Sub-Total', N'Sub-Total')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4081, 7, N'ShoppingCart.Tax', N'Tax')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4082, 7, N'ShoppingCart.UpdateCart', N'Update cart')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4082, 7, N'ShoppingCart.UpdateCart', N'Update shopping cart')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4083, 7, N'TwoCheckoutPaymentModule.Message', N'You will be redirected to 2Checkout site to complete the order.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4084, 7, N'Wishlist.AddToWishlist', N'Add to wishlist')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4085, 7, N'Wishlist.ItemTotal', N'Total')
@@ -1626,9 +1616,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4093, 7, N'Wishlist.YourWishlist', N'Your wishlist')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4094, 7, N'Wishlist.YourWishlistURL', N'Your wishlist URL for sharing: ')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4095, 7, N'WorldpayPaymentModule.Message', N'You will be redirected to Worldpay site to complete the order.')
-SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6876, 7, N'Pager.First', N'First')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6877, 7, N'Pager.Last', N'Last')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6878, 7, N'Pager.Next', N'Next')
@@ -1748,6 +1735,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6997, 7, N'News.OnlyRegisteredUsersCanLeaveComments', N'Only registered users can leave comments.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6998, 7, N'Products.PleaseEnterReviewTitle', N'Please enter review title.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6999, 7, N'Products.PleaseEnterReviewText', N'Please enter review text.')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7000, 7, N'News.PleaseEnterCommentText', N'Please enter comment text.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7001, 7, N'Blog.PleaseEnterCommentText', N'Please enter comment text.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7002, 7, N'Account.PasswordRecovery.EmailNotFound', N'Email Not Found.')
@@ -2041,9 +2031,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7297, 7, N'Admin.LocationHome.Currencies.Title', N'Manage Currencies')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7298, 7, N'Admin.LocationHome.Currencies.TitleDescription', N'Manage currencies.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7299, 7, N'Admin.LocationHome.Currencies.Description', N'Manage the currrencies that are available to purchasing customers of your store. Set the exchange the rates for each currency for automatic order calculation during checkout for your customers'' selected currency.')
-SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7300, 7, N'Admin.LocationHome.Warehouses.Title', N'Manage Warehouses')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7301, 7, N'Admin.LocationHome.Warehouses.TitleDescription', N'Manage warehouses.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7302, 7, N'Admin.LocationHome.Warehouses.Description', N'Manage your warehouses. Products can be assigned to a specific warehouse for better stock management.')
@@ -2595,7 +2582,7 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7848, 7, N'Admin.ProductVariantAttributeValues.Name.ErrorMessage', N'Name is required')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7849, 7, N'Admin.ProductVariantAttributeValues.PriceAdjustment', N'Price Adjustment')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7850, 7, N'Admin.ProductVariantAttributeValues.PriceAdjustment.RequiredErrorMessage', N'Price adjustment is required')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7851, 7, N'Admin.ProductVariantAttributeValues.PriceAdjustment.RangeErrorMessage', N'The price must be from 0 to 100000000')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7851, 7, N'Admin.ProductVariantAttributeValues.PriceAdjustment.RangeErrorMessage', N'The price must be from -100000000 to 100000000')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7852, 7, N'Admin.ProductVariantAttributeValues.WeightAdjustment', N'Weight Adjustment')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7853, 7, N'Admin.ProductVariantAttributeValues.WeightAdjustment.RequiredErrorMessage', N'Weight adjustment is required')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7854, 7, N'Admin.ProductVariantAttributeValues.WeightAdjustment.RangeErrorMessage', N'The weight adjustment must be from 0 to 999999')
@@ -2611,7 +2598,7 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7864, 7, N'Admin.ProductVariantAttributeValues.New.PriceAdjustment', N'Price adjustment:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7865, 7, N'Admin.ProductVariantAttributeValues.New.PriceAdjustment.Tooltip', N'The price adjustment applied when choosing this attribute value e.g. ''10'' to add 10 euros.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7866, 7, N'Admin.ProductVariantAttributeValues.New.PriceAdjustment.RequiredErrorMessage', N'Price adjustment is required')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7867, 7, N'Admin.ProductVariantAttributeValues.New.PriceAdjustment.RangeErrorMessage', N'The price must be from 0 to 100000000')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7867, 7, N'Admin.ProductVariantAttributeValues.New.PriceAdjustment.RangeErrorMessage', N'The price must be from -100000000 to 100000000')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7868, 7, N'Admin.ProductVariantAttributeValues.New.WeightAdjustment', N'Weight adjustment:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7869, 7, N'Admin.ProductVariantAttributeValues.New.WeightAdjustment.Tooltip', N'The weight adjustment applied when choosing this attribute value')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7870, 7, N'Admin.ProductVariantAttributeValues.New.WeightAdjustment.RequiredErrorMessage', N'Weight adjustment is required')
@@ -2962,8 +2949,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8235, 7, N'Admin.Customers.EditColumn.Tooltip', N'Edit customer details')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8236, 7, N'Admin.CustomerAdd.Title', N'Add a new customer')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8237, 7, N'Admin.CustomerAdd.BackToCustomers', N'back to customer list')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8238, 7, N'Admin.CustomerAdd.AddButton', N'Add new')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8239, 7, N'Admin.CustomerAdd.AddButton.Tooltip', N'Add customer')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8240, 7, N'Admin.CustomerDetails.Title', N'Edit customer details')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8241, 7, N'Admin.CustomerDetails.BackToCustomers', N'back to customer list')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8242, 7, N'Admin.CustomerDetails.SaveButton', N'Save')
@@ -2981,7 +2966,7 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8254, 7, N'Admin.CustomerInfo.Email', N'Email address:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8255, 7, N'Admin.CustomerInfo.Email.Tooltip', N'The customer''s email address.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8256, 7, N'Admin.CustomerInfo.Username', N'Username:')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8257, 7, N'Admin.CustomerInfo.Username.Tooltip', N'The customer''s email address.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8257, 7, N'Admin.CustomerInfo.Username.Tooltip', N'The username of the customer.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8258, 7, N'Admin.CustomerInfo.Password', N'Password:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8259, 7, N'Admin.CustomerInfo.Password.Tooltip', N'The password.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8260, 7, N'Admin.CustomerInfo.Gender', N'Gender:')
@@ -3064,7 +3049,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8337, 7, N'Admin.CustomerRoleAdd.Title', N'Add a new customer role')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8338, 7, N'Admin.CustomerRoleAdd.BackToCustomerRoles', N'back to customer roles list')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8339, 7, N'Admin.CustomerRoleAdd.AddButton.Text', N'Save')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8340, 7, N'Admin.CustomerRoleAdd.AddButton.Tooltip', N'Save customer role')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8341, 7, N'Admin.CustomerRoleDetails.Title', N'Edit customer role')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8342, 7, N'Admin.CustomerRoleDetails.BackToCustomerRoles', N'back to customer roles list')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8343, 7, N'Admin.CustomerRoleDetails.SaveButton', N'Save')
@@ -3092,7 +3076,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8365, 7, N'Admin.AffiliateAdd.Title', N'Add a new affiliate')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8366, 7, N'Admin.AffiliateAdd.BackToAffiliates', N'back to affiliate list')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8367, 7, N'Admin.AffiliateAdd.AddButton.Text', N'Add')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8368, 7, N'Admin.AffiliateAdd.AddButton.Tooltip', N'Add affiliate')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8369, 7, N'Admin.AffiliateDetails.Title', N'Edit affiliate details')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8370, 7, N'Admin.AffiliateDetails.BackToAffiliates', N'back to affiliate list')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8371, 7, N'Admin.AffiliateDetails.SaveButton.Text', N'Save')
@@ -3717,7 +3700,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9022, 7, N'Admin.LocaleStringResources.AddNewButton.Text', N'Add new')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9023, 7, N'Admin.LocaleStringResources.AddNewButton.Tooltip', N'Add a new resource string')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9024, 7, N'Admin.LocaleStringResources.Language', N'Select language:')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9025, 7, N'Admin.LocaleStringResources.SelectLanguage', N'Select language')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9026, 7, N'Admin.LocaleStringResources.LanguageColumn', N'Language')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9027, 7, N'Admin.LocaleStringResources.ResourceNameColumn', N'Resource name')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9028, 7, N'Admin.LocaleStringResources.ResourceValueColumn', N'Resource value')
@@ -5844,7 +5826,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11221, 7, N'Admin.CustomerReports.RegisteredCustomers.Title', N'Registered customers')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11222, 7, N'Admin.GlobalSettings.Media.ShowAdminProductImages', N'Show product images in admin area:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11223, 7, N'Admin.GlobalSettings.Media.ShowAdminProductImages.Tooltip', N'Check if you want to see the product images in admin area.')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11224, 7, N'Admin.Products.Image', N'Image')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11225, 7, N'Admin.AddCategoryProduct.Image', N'Image')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11226, 7, N'Admin.AddManufacturerProduct.Image', N'Image')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11227, 7, N'Admin.AddRelatedProduct.Image', N'Image')
@@ -6030,7 +6011,7 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11413, 7, N'Admin.ProductTags.Count', N'Tagged products')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11414, 7, N'Products.ProductTags', N'Product tags')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11415, 7, N'ProductTags.Title', N'Products tagged with ''{0}''')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11416, 7, N'PageTitle.ProductTags', N'Tagged products')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11416, 7, N'PageTitle.ProductTags', N'Products tagged with ''{0}''')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11417, 7, N'ProductTagsCloud.Title', N'Popular tags')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11418, 7, N'PrivateMessages.YouHaveUnreadPM', N'You have {0} unread message(s) in your Inbox')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11419, 7, N'PaymentMethod.Alipay.HostedPayment.Message', N'You will be redirected to Alipay site.')
@@ -6068,8 +6049,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11453, 7, N'Admin.SpecificationAttributeOptions.New.DisplayOrder.RequiredErrorMessage', N'Display order is required')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11454, 7, N'Admin.SpecificationAttributeOptions.New.DisplayOrder.RangeErrorMessage', N'The display order must be from -99999 to 99999')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11455, 7, N'Admin.SpecificationAttributeOptions.New.AddNewButton.Text', N'Add')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11456, 7, N'Admin.PaymentMethodInfo.HidePaymentInfoForZeroOrders', N'Skip/hide payment info for "zero" total orders:')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11457, 7, N'Admin.PaymentMethodInfo.HidePaymentInfoForZeroOrders.Tooltip', N'A Skip/hide payment information page if order total is zero.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11458, 7, N'Admin.Sitemap.ThirdPartyIntegrationTitle', N'Third-party Integration')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11459, 7, N'Admin.Sitemap.ThirdPartyIntegrationDescription', N'Manage third-party integration')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11460, 7, N'Admin.ThirdPartyIntegration.Title', N'Third-party integration')
@@ -6270,7 +6249,7 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11655, 7, N'Admin.ConfigurationHome.SMSProviders.Title', N'SMS Providers')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11656, 7, N'Admin.ConfigurationHome.SMSProviders.Description', N'Manage SMS notification settings and providers.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11657, 7, N'Admin.CustomerInfo.VatNumber', N'VAT number:')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11658, 7, N'Admin.CustomerInfo.VatNumber.Tooltip', N'Enter company VAT number')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11658, 7, N'Admin.CustomerInfo.VatNumber.Tooltip', N'Enter company VAT number (NOTE: Enter VAT number without country code)')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11659, 7, N'Admin.CustomerInfo.VATNumberStatus', N'(status: {0})')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11660, 7, N'Admin.CustomerInfo.BtnMarkVatNumberAsValid.Text', N'Mark VAT number as valid')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11661, 7, N'Admin.CustomerInfo.BtnMarkVatNumberAsInvalid.Text', N'Mark VAT number as invalid')
@@ -6489,11 +6468,6 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11876, 7, N'Admin.Products.GoSKUButton.Text', N'Go')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11877, 7, N'Products.Manufacturer', N'Manufacturer: ')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11878, 7, N'Products.Manufacturers', N'Manufacturers: ')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11879, 7, N'Admin.GlobalSettings.Other.MinOrderAmount', N'Min order amount:')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11880, 7, N'Admin.GlobalSettings.Other.MinOrderAmount.Tooltip', N'Enter minimum order amount here')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11881, 7, N'Admin.GlobalSettings.Other.MinOrderAmount.RequiredErrorMessage', N'Minimum order amount is required')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11882, 7, N'Admin.GlobalSettings.Other.MinOrderAmount.RangeErrorMessage', N'The minimum order amount must be from 0 to 100000000')
-INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11883, 7, N'Checkout.MinOrderAmount', N'Minimum order amount is {0}')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11886, 7, N'Products.SKU', N'SKU: ')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11887, 7, N'ShoppingCart.SKU', N'SKU')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11888, 7, N'Wishlist.SKU', N'SKU')
@@ -6716,9 +6690,297 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12108, 7, N'CCAvenuePaymentModule.Message', N'You will be redirected to CCAvenue site to complete the order.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12109, 7, N'PDFInvoice.ShippingMethod', N'Shipping method: {0}')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12110, 7, N'MessageToken.OrderProducts.SKU', N'SKU: {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12111, 7, N'Admin.OnlineCustomers.Registered', N'Members:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12112, 7, N'Admin.OnlineCustomers.Registered.Tooltip', N'See how many registered customers you got on your site in this moment.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12113, 7, N'Admin.OnlineCustomers.Total', N'Total:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12114, 7, N'Admin.OnlineCustomers.Total.Tooltip', N'See how many customers (total) you got on your site in this moment.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12115, 7, N'Admin.OnlineCustomers.Total.Value', N'{0} (maximum: {1})')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12116, 7, N'Admin.GlobalSettings.Products.SearchPageProductsPerPage', N'Search page. Products per page:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12117, 7, N'Admin.GlobalSettings.Products.SearchPageProductsPerPage.Tooltip', N'Set the page size for products on ''Search'' page.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12118, 7, N'Admin.GlobalSettings.Products.SearchPageProductsPerPage.RequiredErrorMessage', N'Number of ''Search page. Products per page'' is required.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12119, 7, N'Admin.GlobalSettings.Products.SearchPageProductsPerPage.RangeErrorMessage', N'The number of ''Search page. Products per page'' must be from 1 to 999999.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12120, 7, N'Admin.GlobalSettings.Other.DisplayPageExecutionTime', N'Display page execution time:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12121, 7, N'Admin.GlobalSettings.Other.DisplayPageExecutionTime.Tooltip', N'Display page execution time at the bottom of all pages in public store (this option should be disabled in production environment).')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12122, 7, N'Admin.GlobalSettings.Products.ShowManufacturerPartNumber', N'Show manufacturer part number:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12123, 7, N'Admin.GlobalSettings.Products.ShowManufacturerPartNumber.Tooltip', N'Check to show manufacturer part numbers in public store.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12124, 7, N'Products.ManufacturerPartNumber', N'Part number:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12125, 7, N'Admin.GlobalSettings.Other.AllowCustomersToChangeUsernames', N'Allow customers to change their usernames:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12126, 7, N'Admin.GlobalSettings.Other.AllowCustomersToChangeUsernames.Tooltip', N'A value indicating whether customers are allowed to change their usernames.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12127, 7, N'VAT.EnteredWithoutCountryCode', N'NOTE: Enter VAT number without country code')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12128, 7, N'Admin.Products.ProductVariants', N'Product variants')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12129, 7, N'Admin.Products.ProductVariants.Name', N'Name')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12130, 7, N'Admin.Products.ProductVariants.Unnamed', N'Unnamed')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12131, 7, N'Admin.Products.ProductVariants.Price', N'Price')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12132, 7, N'Admin.Products.ProductVariants.Published', N'Published')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12133, 7, N'Admin.Products.ProductVariants.SKU', N'SKU')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12134, 7, N'Admin.GlobalSettings.Profiles.NotifyAboutPrivateMessages', N'Notify about new private messages:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12135, 7, N'Admin.GlobalSettings.Profiles.NotifyAboutPrivateMessages.Tooltip', N'Notify customers when new a private messages is sent.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12136, 7, N'Admin.GlobalSettings.Other.NotifyAboutNewCustomerRegistration', N'Notify about new customer registration:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12137, 7, N'Admin.GlobalSettings.Other.NotifyAboutNewCustomerRegistration.Tooltip', N'Notify the store owner when a new customer is registered.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12138, 7, N'Admin.SystemHome.Warnings.TitleDescription', N'System warnings')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12139, 7, N'Admin.SystemHome.Warnings.Title', N'Warnings')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12140, 7, N'Admin.SystemHome.Warnings.Description', N'A self-diagnostics page that runs through the store settings and confirms all of them are correct,')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12141, 7, N'Admin.Sitemap.WarningsTitle', N'Warnings')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12142, 7, N'Admin.Sitemap.WarningsDescription', N'Warnings')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12143, 7, N'Admin.GlobalSettings.SEODisplay.ProductCanonicalURL', N'enable canonical URL')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12144, 7, N'Admin.GlobalSettings.SEODisplay.CategoryCanonicalURL', N'enable canonical URL')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12145, 7, N'Admin.GlobalSettings.SEODisplay.ManufacturerCanonicalURL', N'enable canonical URL')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12146, 7, N'Admin.GlobalSettings.Products.MaxShoppingCartItems', N'Maximum shopping cart items:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12147, 7, N'Admin.GlobalSettings.Products.MaxShoppingCartItems.Tooltip', N'Maximum number of distinct products allowed in a shopping cart.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12148, 7, N'Admin.GlobalSettings.Products.MaxShoppingCartItems.RequiredErrorMessage', N'The value must be from 1 to 999999')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12149, 7, N'Admin.GlobalSettings.Products.MaxShoppingCartItems.RangeErrorMessage', N'Enter a maximum number of distinct products allowed in a shopping cart')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12150, 7, N'Admin.GlobalSettings.Products.MaxWishlistItems', N'Maximum wishlist items:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12151, 7, N'Admin.GlobalSettings.Products.MaxWishlistItems.Tooltip', N'Maximum number of distinct products allowed in a wishlist.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12152, 7, N'Admin.GlobalSettings.Products.MaxWishlistItems.RequiredErrorMessage', N'The value must be from 1 to 999999')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12153, 7, N'Admin.GlobalSettings.Products.MaxWishlistItems.RangeErrorMessage', N'Enter a maximum number of distinct products allowed in a wishlist')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12154, 7, N'Admin.GlobalSettings.Products.ShowCategoryProductNumber', N'Show the number of distinct products besides each category:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12155, 7, N'Admin.GlobalSettings.Products.ShowCategoryProductNumber.Tooltip', N'Check to show the number of products besides each category (category navigation block)')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12156, 7, N'Admin.GlobalSettings.Other.AllowAnonymousUsersToVotePolls', N'Allow anonymous users to vote on polls:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12157, 7, N'Admin.GlobalSettings.Other.AllowAnonymousUsersToVotePolls.Tooltip', N'Check to allow anonymous users to vote on polls.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12158, 7, N'Admin.GlobalSettings.Media.StoreImagesInDB', N'Pictures are stored into... :')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12159, 7, N'Admin.GlobalSettings.Media.StoreImagesInDB.Tooltip', N'A value indicationing whether pictures are stored into database or filesystem.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12160, 7, N'Admin.GlobalSettings.Media.StoreImagesInDB.DB', N'database')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12161, 7, N'Admin.GlobalSettings.Media.StoreImagesInDB.FS', N'file system')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12162, 7, N'Admin.GlobalSettings.Media.StoreImagesInDB.Change', N'Change')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12163, 7, N'Admin.OrderDetails.SubtotalDiscountInclTax', N'Order subtotal discount (incl tax):')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12164, 7, N'Admin.OrderDetails.SubtotalDiscountInclTax.Tooltip', N'The subtotal discount of this order (including tax).')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12165, 7, N'Admin.OrderDetails.SubtotalDiscountExclTax', N'Order subtotal discount (excl tax):')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12166, 7, N'Admin.OrderDetails.SubtotalDiscountExclTax.Tooltip', N'The subtotal discount of this order (excluding tax).')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12167, 7, N'Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InPrimaryCurrency', N'Subtotal discount in primary currency - {0}:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12168, 7, N'Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InCustomerCurrency', N'Subtotal discount in customer currency - {0}:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12169, 7, N'Admin.GlobalSettings.General.StoreClosedForAdmins', N'Allow an admin to view the closed store:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12170, 7, N'Admin.GlobalSettings.General.StoreClosedForAdmins.Tooltip', N'Check to allow a user with admin access to view the store while it is set to closed.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12171, 7, N'Admin.Maintenance.DownloadColumn', N'Download')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12172, 7, N'Admin.Maintenance.DownloadButton.Text', N'Download')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12173, 7, N'Admin.GlobalSettings.SEODisplay.AllowCustomerSelectTheme', N'Allow customers to select a theme:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12174, 7, N'Admin.GlobalSettings.SEODisplay.AllowCustomerSelectTheme.Tooltip', N'Check to allow customers to select a store theme.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12175, 7, N'Common.SelectStoreTheme', N'Select store theme:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12176, 7, N'Admin.ReturnRequestDetails.NotifyCustomerButton.Text', N'Notify customer about status change')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12177, 7, N'Admin.ReturnRequestDetails.NotifyCustomerButton.Tooltip', N'Click to notify the customer about status change of this return request (save return request first)')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12178, 7, N'Admin.GlobalSettings.Other.MinOrderTotalAmount', N'Min order total amount:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12179, 7, N'Admin.GlobalSettings.Other.MinOrderTotalAmount.Tooltip', N'Enter minimum order total amount')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12180, 7, N'Admin.GlobalSettings.Other.MinOrderTotalAmount.RequiredErrorMessage', N'Minimum order total amount is required')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12181, 7, N'Admin.GlobalSettings.Other.MinOrderTotalAmount.RangeErrorMessage', N'The minimum total order amount must be from 0 to 100000000')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12182, 7, N'Checkout.MinOrderTotalAmount', N'Minimum order total amount is {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12183, 7, N'Admin.GlobalSettings.Other.MinOrderSubtotalAmount', N'Min order sub-total amount:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12184, 7, N'Admin.GlobalSettings.Other.MinOrderSubtotalAmount.Tooltip', N'Enter minimum order sub-total amount')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12185, 7, N'Admin.GlobalSettings.Other.MinOrderSubtotalAmount.RequiredErrorMessage', N'Minimum order sub-total amount is required')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12186, 7, N'Admin.GlobalSettings.Other.MinOrderSubtotalAmount.RangeErrorMessage', N'The minimum sub-total order amount must be from 0 to 100000000')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12187, 7, N'Checkout.MinOrderSubtotalAmount', N'Minimum order sub-total amount is {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12188, 7, N'Forum.AdvancedSearch', N'Advanced search')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12189, 7, N'Admin.CustomerInfo.PasswordChanged', N'Password successfully changed')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12190, 7, N'Admin.LocaleStringResources.Language.Tooltip', N'Filter results by language')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12191, 7, N'Admin.LocaleStringResources.SearchButton.Text', N'Search')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12192, 7, N'Admin.LocaleStringResources.ResourceName', N'Resource name:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12193, 7, N'Admin.LocaleStringResources.ResourceName.Tooltip', N'Filter results by resource name or part of resource name. Leave empty to load all resources.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12194, 7, N'Admin.LocaleStringResources.ResourceValue', N'Resource value:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12195, 7, N'Admin.LocaleStringResources.ResourceValue.Tooltip', N'Filter results by resource value or part of resource value. Leave empty to load all resources.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12196, 7, N'Admin.Maintenance.DeleteOldExportedFilesButton.Text', N'Delete old exported files')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12197, 7, N'Admin.Maintenance.DeleteOldExportedFilesButton.Tooltip', N'Delete old exported files in \files\ExportImport folder (PDF, Excel etc)')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12198, 7, N'Admin.Maintenance.DeleteOldExportedFiles.Success', N'{0} files were successfully deleted')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12199, 7, N'Admin.Maintenance.DeleteOldExportedFiles.NoFilesToDelete', N'No files found to delete')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12200, 7, N'PollBlock.Title', N'Community Poll')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12201, 7, N'PDFInvoice.OrderNotes', N'Order notes:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12202, 7, N'PDFInvoice.OrderNotes.CreatedOn', N'Created on')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12203, 7, N'PDFInvoice.OrderNotes.Note', N'Note')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12204, 7, N'Admin.CategoryAdd.ACL', N'Access control')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12205, 7, N'Admin.CategoryDetails.ACL', N'Access control')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12206, 7, N'Admin.CategoryACL.Note', N'NOTE: ACL rules applied to public store.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12207, 7, N'Admin.CategoryACL.MarkRequired', N'Mark all customer roles you want to restrict access to this category')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12208, 7, N'Admin.PromotionProviders.Froogle.ProductThumbSize', N'Product thumbnail image size:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12209, 7, N'Admin.PromotionProviders.Froogle.ProductThumbSize.Tooltip', N'The default size (pixels) for product thumbnail images.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12210, 7, N'Admin.PromotionProviders.Froogle.ProductThumbSize.RequiredErrorMessage', N'Enter a product thumbnail image size')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12211, 7, N'Admin.PromotionProviders.Froogle.ProductThumbSize.RangeErrorMessage', N'The product thumbnail image size must be from 0 to 999999')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12212, 7, N'Admin.PromotionProviders.PriceGrabber.ProductThumbSize', N'Product thumbnail image size:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12213, 7, N'Admin.PromotionProviders.PriceGrabber.ProductThumbSize.Tooltip', N'The default size (pixels) for product thumbnail images.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12214, 7, N'Admin.PromotionProviders.PriceGrabber.ProductThumbSize.RequiredErrorMessage', N'Enter a product thumbnail image size')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12215, 7, N'Admin.PromotionProviders.PriceGrabber.ProductThumbSize.RangeErrorMessage', N'The product thumbnail image size must be from 0 to 999999')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12216, 7, N'Admin.PromotionProviders.Become.ProductThumbSize', N'Product thumbnail image size:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12217, 7, N'Admin.PromotionProviders.Become.ProductThumbSize.Tooltip', N'The default size (pixels) for product thumbnail images.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12218, 7, N'Admin.PromotionProviders.Become.ProductThumbSize.RequiredErrorMessage', N'Enter a product thumbnail image size')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12219, 7, N'Admin.PromotionProviders.Become.ProductThumbSize.RangeErrorMessage', N'The product thumbnail image size must be from 0 to 999999')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12220, 7, N'Admin.GlobalSettings.Products.EmailWishList', N'Allow customers to email their wishlists:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12221, 7, N'Admin.GlobalSettings.Products.EmailWishList.Tooltip', N'Check to allow customers to email their wishlists to friends. NOTE: This option is available only for registered customers')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12222, 7, N'Wishlist.EmailButton', N'Email a friend')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12223, 7, N'PageTitle.WishlistEmailAFriend', N'Email wishlist to a friend')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12224, 7, N'EmailWishlist.EmailAFriend', N'Email wishlist to a friend')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12225, 7, N'EmailWishlist.FriendEmail', N'Friend''s Email:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12226, 7, N'EmailWishlist.YourEmailAddress', N'Your Email address:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12227, 7, N'EmailWishlist.PersonalMessage', N'Personal Message:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12228, 7, N'EmailWishlist.EmailAFriendButton', N'Send email')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12229, 7, N'EmailWishlist.Description', N'{0} products in the wishlist')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12230, 7, N'EmailWishlist.OnlyRegisteredUsersCanEmailAFriend', N'Only registered customers can use email a friend feature')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12231, 7, N'EmailWishlist.YourMessageHasBeenSent', N'Your message has been sent.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12232, 7, N'Admin.NewsletterSubscribers.ImportEmails.All', N'Export all')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12233, 7, N'Admin.NewsletterSubscribers.ImportEmails.Confirmed', N'Export only active (confirmed)')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12234, 7, N'Admin.GlobalSettings.SEODisplay.ProductTagUrl', N'Product tag url rewrite format:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12235, 7, N'Admin.GlobalSettings.SEODisplay.ProductTagUrl.Tooltip', N'The format for product tag urls. Must have 3 arguments i.e. ''{0}producttag/{1}-{2}.aspx''')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12236, 7, N'Admin.GlobalSettings.SEODisplay.ProductTagUrl.ErrorMessage', N'You must enter a valid rewrite format string.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12237, 7, N'Admin.ForumsSettings.RelativeDateTimeFormattingEnabled', N'Relative date and time formatting:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12238, 7, N'Admin.ForumsSettings.RelativeDateTimeFormattingEnabled.Tooltip', N'Click to enable relative date and time formatting (e.g. 2 hours ago, a month ago)')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12239, 7, N'Account.DuplicateEmail', N'The e-mail address that you entered is already in use. Please enter a different e-mail address.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12240, 7, N'Account.DuplicateUserName', N'Please enter a different user name.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12241, 7, N'Admin.SystemInformation.Title', N'System Information')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12242, 7, N'Admin.SystemInformation.nopVersion', N'nopCommerce version:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12243, 7, N'Admin.SystemInformation.OperatingSystem', N'Operating system:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12244, 7, N'Admin.SystemInformation.ASPNETInfo', N'ASP.NET info:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12245, 7, N'Admin.SystemInformation.IsFullTrust', N'Is full trust level:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12246, 7, N'Admin.SystemInformation.ServerTimeZone', N'Server time zone:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12247, 7, N'Admin.SystemInformation.ServerLocalTime', N'Server local time:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12248, 7, N'Admin.SystemInformation.UTCTime', N'Greenwich mean time (GMT/UTC):')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12249, 7, N'Admin.SystemHome.SystemInformation.TitleDescription', N'System information')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12250, 7, N'Admin.SystemHome.SystemInformation.Title', N'System information')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12251, 7, N'Admin.SystemHome.SystemInformation.Description', N'View system and server information here')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12252, 7, N'Admin.Sitemap.SystemInformationTitle', N'System Information')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12253, 7, N'Admin.Sitemap.SystemInformationDescription', N'View System Information')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12254, 7, N'Admin.GlobalSettings.Profiles.FormFields.TimeZoneEnabled', N'''Time Zone'' enabled:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12255, 7, N'Admin.GlobalSettings.Profiles.FormFields.TimeZoneEnabled.Tooltip', N'Set if ''Time Zone'' is enabled (registration page). NOTE: Ensure that ''Allow customers to select time zone'' option is also enabled')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12256, 7, N'Admin.PromotionProviders.Froogle.Currency', N'Currency:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12257, 7, N'Admin.PromotionProviders.Froogle.Currency.Tooltip', N'Select the default currency that will be used to generate the feed')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12258, 7, N'Admin.PromotionProviders.PriceGrabber.Currency', N'Currency:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12259, 7, N'Admin.PromotionProviders.PriceGrabber.Currency.Tooltip', N'Select the default currency that will be used to generate the feed')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12260, 7, N'Admin.PromotionProviders.Become.Currency', N'Currency:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12261, 7, N'Admin.PromotionProviders.Become.Currency.Tooltip', N'Select the default currency that will be used to generate the feed')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12262, 7, N'PdfPackagingSlip.Company', N'Company: {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12263, 7, N'PdfPackagingSlip.Name', N'Name: {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12264, 7, N'PdfPackagingSlip.Phone', N'Phone: {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12265, 7, N'PdfPackagingSlip.Address', N'Address: {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12266, 7, N'PdfPackagingSlip.Address2', N'Address 2: {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12267, 7, N'PdfPackagingSlip.ShippingMethod', N'Shipping method: {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12268, 7, N'Admin.GlobalSettings.GoogleAnalytics.Placement', N'Placement:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12269, 7, N'Admin.GlobalSettings.GoogleAnalytics.Placement.Tooltip', N'Select the placement of Google Analytics script')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12270, 7, N'Admin.GlobalSettings.GoogleAnalytics.Placement.Head', N'Before the closing </head> tag')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12271, 7, N'Admin.GlobalSettings.GoogleAnalytics.Placement.Body', N'Before the </body> tag')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12272, 7, N'Admin.Logs.SearchButton.Text', N'Search')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12273, 7, N'Admin.Logs.SearchButton.Tooltip', N'Search for log based on the criteria below')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12274, 7, N'Admin.Log.CreatedOnFrom', N'Created from:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12275, 7, N'Admin.Log.CreatedOnFrom.Tooltip', N'The creation from date for the search.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12276, 7, N'Admin.Log.CreatedOnTo', N'Created to:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12277, 7, N'Admin.Log.CreatedOnTo.Tooltip', N'The creation to date for the search.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12278, 7, N'Admin.Log.Message', N'Message:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12279, 7, N'Admin.Log.Message.Tooltip', N'Search by message or part of entered message. Leave empty to load all records')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12280, 7, N'Admin.Log.LogType', N'Log type:')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12281, 7, N'Admin.Log.LogType.Tooltip', N'Select a log type.')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12282, 7, N'Admin.Log.AllLogTypes', N'All')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12283, 7, N'Admin.CategoryAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12284, 7, N'Admin.CategoryDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12285, 7, N'Admin.ProductAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12286, 7, N'Admin.ProductDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12287, 7, N'Admin.ProductVariantAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12288, 7, N'Admin.ProductVariantDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12289, 7, N'Admin.ProductAttributeAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12290, 7, N'Admin.ProductAttributeDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12291, 7, N'Admin.SpecificationAttributeAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12292, 7, N'Admin.SpecificationAttributeDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12293, 7, N'Admin.CheckoutAttributeAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12294, 7, N'Admin.CheckoutAttributeDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12295, 7, N'Admin.ManufacturerAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12296, 7, N'Admin.ManufacturerDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12297, 7, N'Admin.RecurringPaymentDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12298, 7, N'Admin.GiftCardDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12299, 7, N'Admin.ReturnRequestDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12300, 7, N'Admin.CustomerAdd.SaveButton', N'Save')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12301, 7, N'Admin.CustomerAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12302, 7, N'Admin.CustomerDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12303, 7, N'Admin.AddressAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12304, 7, N'Admin.AddressDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12306, 7, N'Admin.CustomerRoleAdd.SaveButton.Text', N'Save')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12307, 7, N'Admin.CustomerRoleAdd.SaveButton.Tooltip', N'Save customer role')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12308, 7, N'Admin.CustomerRoleAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12309, 7, N'Admin.CustomerRoleDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12311, 7, N'Admin.AffiliateAdd.SaveButton.Text', N'Save')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12312, 7, N'Admin.AffiliateAdd.SaveButton.Tooltip', N'Save affiliate')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12313, 7, N'Admin.AffiliateAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12314, 7, N'Admin.AffiliateDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12315, 7, N'Admin.CampaignAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12316, 7, N'Admin.CampaignDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12317, 7, N'Admin.DiscountAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12318, 7, N'Admin.DiscountDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12319, 7, N'Admin.PricelistAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12320, 7, N'Admin.PricelistDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12321, 7, N'Admin.PollAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12322, 7, N'Admin.PollDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12323, 7, N'Admin.NewsAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12324, 7, N'Admin.NewsDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12325, 7, N'Admin.BlogPostAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12326, 7, N'Admin.BlogPostDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12327, 7, N'Admin.TopicAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12328, 7, N'Admin.TopicDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12329, 7, N'Admin.ForumGroupAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12330, 7, N'Admin.ForumGroupDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12331, 7, N'Admin.ForumAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12332, 7, N'Admin.ForumDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12333, 7, N'Admin.ProductTemplateAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12334, 7, N'Admin.ProductTemplateDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12335, 7, N'Admin.CategoryTemplateAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12336, 7, N'Admin.CategoryTemplateDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12337, 7, N'Admin.ManufacturerTemplateAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12338, 7, N'Admin.ManufacturerTemplateDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12339, 7, N'Admin.MessageTemplateDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12340, 7, N'Admin.LocaleStringResourceAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12341, 7, N'Admin.LocaleStringResourceDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12342, 7, N'Admin.EmailAccountAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12343, 7, N'Admin.EmailAccountDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12344, 7, N'Admin.BlacklistIPAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12345, 7, N'Admin.BlacklistIPDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12346, 7, N'Admin.BlacklistNetworkAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12347, 7, N'Admin.BlacklistNetworkDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12348, 7, N'Admin.CreditCardTypeAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12349, 7, N'Admin.CreditCardTypeDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12350, 7, N'Admin.PaymentMethodAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12351, 7, N'Admin.PaymentMethodDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12352, 7, N'Admin.TaxProviderAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12353, 7, N'Admin.TaxProviderDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12354, 7, N'Admin.TaxCategoryAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12355, 7, N'Admin.TaxCategoryDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12356, 7, N'Admin.ShippingMethodAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12357, 7, N'Admin.ShippingMethodDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12358, 7, N'Admin.ShippingRateComputationMethodAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12359, 7, N'Admin.ShippingRateComputationMethodDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12360, 7, N'Admin.CountryAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12361, 7, N'Admin.CountryDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12362, 7, N'Admin.StateProvinceAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12363, 7, N'Admin.StateProvinceDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12364, 7, N'Admin.LanguageAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12365, 7, N'Admin.LanguageDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12366, 7, N'Admin.CurrencyAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12367, 7, N'Admin.CurrencyDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12368, 7, N'Admin.WarehouseAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12369, 7, N'Admin.WarehouseDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12370, 7, N'Admin.MeasureDimensionAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12371, 7, N'Admin.MeasureDimensionDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12372, 7, N'Admin.MeasureWeightAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12373, 7, N'Admin.MeasureWeightDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12374, 7, N'Admin.SettingAdd.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12375, 7, N'Admin.SettingDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12376, 7, N'Admin.MessageQueueDetails.SaveAndStayButton.Text', N'Save and Continue Edit')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12377, 7, N'DiscountLimitation.0', N'Unlimited')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12378, 7, N'DiscountLimitation.10', N'One Time Only')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12379, 7, N'DiscountLimitation.15', N'N Times Only')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12380, 7, N'DiscountLimitation.20', N'One Time Per Customer')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12381, 7, N'DiscountLimitation.25', N'N Times Per Customer')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12382, 7, N'DiscountRequirement.1', N'None')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12383, 7, N'DiscountRequirement.2', N'Must be assigned to customer role')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12384, 7, N'DiscountRequirement.5', N'Customer must be registered')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12385, 7, N'DiscountRequirement.7', N'Has all of these product variants in the cart')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12386, 7, N'DiscountRequirement.8', N'Has one of these product variants in the cart')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12387, 7, N'DiscountRequirement.10', N'Had purchased all of these product variants')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12388, 7, N'DiscountRequirement.20', N'Had purchased one of these product variants')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12389, 7, N'DiscountRequirement.30', N'Had spent x.xx amount')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12390, 7, N'DiscountRequirement.60', N'Billing country is')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12391, 7, N'DiscountRequirement.70', N'Shipping country is')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12392, 7, N'DiscountType.1', N'Assigned to order total')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12393, 7, N'DiscountType.2', N'Assigned to product variants (SKUs)')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12394, 7, N'DiscountType.5', N'Assigned to categories')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12395, 7, N'DiscountType.10', N'Assigned to shipping')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12396, 7, N'DiscountType.20', N'Assigned to order subtotal')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12397, 7, N'LowStockActivity.0', N'Nothing')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12398, 7, N'LowStockActivity.1', N'Disable buy button')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12399, 7, N'LowStockActivity.2', N'Unpublish')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12400, 7, N'Admin.nopCommerceNews.HideAdv', N'Hide advertisements')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12401, 7, N'Admin.nopCommerceNews.DisplayAdv', N'Display advertisements')
 SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
 GO
-
 
 
 SET IDENTITY_INSERT [dbo].[Nop_Topic] ON
@@ -6773,6 +7035,7 @@ GO
 
 INSERT [dbo].[Nop_Customer_CustomerRole_Mapping] ([CustomerID], [CustomerRoleID]) VALUES (37, 1)
 GO
+
 
 SET IDENTITY_INSERT [dbo].[Nop_NewsLetterSubscription] ON
 INSERT [dbo].[Nop_NewsLetterSubscription] ([NewsLetterSubscriptionID], [NewsLetterSubscriptionGuid], [Email], [Active], [CreatedOn]) VALUES (1, N'b1b7afa3-39aa-40fc-a60f-62cb47cd185a', N'admin@yourstore.com', 1, CAST(0x00009B3600C2192F AS DateTime))
@@ -6836,7 +7099,6 @@ SET IDENTITY_INSERT [dbo].[Nop_ActivityLogType] OFF
 GO
 
 
-
 SET IDENTITY_INSERT [dbo].[Nop_CustomerAction] ON
 INSERT [dbo].[Nop_CustomerAction] ([CustomerActionID], [Name], [SystemKeyword], [Comment], [DisplayOrder]) VALUES (1, N'Manage Catalog', N'ManageCatalog', N'', 10)
 INSERT [dbo].[Nop_CustomerAction] ([CustomerActionID], [Name], [SystemKeyword], [Comment], [DisplayOrder]) VALUES (2, N'Manage Orders', N'ManageOrders', N'', 30)
@@ -6872,6 +7134,7 @@ INSERT [dbo].[Nop_CustomerAction] ([CustomerActionID], [Name], [SystemKeyword], 
 INSERT [dbo].[Nop_CustomerAction] ([CustomerActionID], [Name], [SystemKeyword], [Comment], [DisplayOrder]) VALUES (33, N'Manage Promotion Providers', N'ManagePromotionProviders', N'', 200)
 INSERT [dbo].[Nop_CustomerAction] ([CustomerActionID], [Name], [SystemKeyword], [Comment], [DisplayOrder]) VALUES (34, N'Manage SMS Providers', N'ManageSMSProviders', N'', 305)
 INSERT [dbo].[Nop_CustomerAction] ([CustomerActionID], [Name], [SystemKeyword], [Comment], [DisplayOrder]) VALUES (35, N'Manage Return Requests', N'ManageReturnRequests', N'', 45)
+INSERT [dbo].[Nop_CustomerAction] ([CustomerActionID], [Name], [SystemKeyword], [Comment], [DisplayOrder]) VALUES (36, N'Manage Email Settings', N'ManageEmailSettings', N'', 20)
 SET IDENTITY_INSERT [dbo].[Nop_CustomerAction] OFF
 GO
 
@@ -6999,7 +7262,6 @@ INSERT [dbo].[Nop_ACL] ([ACLID], [CustomerActionID], [CustomerRoleID], [Allow]) 
 INSERT [dbo].[Nop_ACL] ([ACLID], [CustomerActionID], [CustomerRoleID], [Allow]) VALUES (124, 31, 2, 0)
 SET IDENTITY_INSERT [dbo].[Nop_ACL] OFF
 GO
-
 
 
 SET IDENTITY_INSERT [dbo].[Nop_Poll] ON
