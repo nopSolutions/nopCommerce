@@ -828,7 +828,7 @@ textarea
 .shippingmethodnextstepbutton, .paymentmethodnextstepbutton, .paymentinfonextstepbutton,
 .confirmordernextstepbutton, .submitforumtopicbutton, .submitpmbutton, .replypmbutton,
 .deleteselectedpmbutton, .reorderbutton, .minicartcheckoutbutton, .newsletterbox-subscribebutton, 
-.useragreementbutton, .deleteselectedfsbutton, .submitreturnrequestbutton
+.useragreementbutton, .deleteselectedfsbutton, .submitreturnrequestbutton, .uploadavatarbutton
 {
 
 }
@@ -839,7 +839,7 @@ textarea
 .returnitemsbutton, .orderdetailsprintbutton, .estimateshippingbutton,
 .updatewishlistbutton, .applycouponcodebutton, .updatecartbutton, .continueshoppingbutton, 
 .orderprocessedcontinuebutton, .submitpollvotebutton, .cancelforumtopicbutton, .forumsearchbutton, 
-.forumsearchboxbutton, .cancelpmbutton, .deletepmbutton, .backpmbutton
+.forumsearchboxbutton, .cancelpmbutton, .deletepmbutton, .backpmbutton, .removeavatarbutton
 {
 
 }
@@ -2688,6 +2688,11 @@ ul.languagelist li .selected
 .customer-avatar
 {
 	padding: 10px;	
+}
+
+.customer-avatar .button
+{
+    margin: 5px 0;
 }
 
 .account-activation-page

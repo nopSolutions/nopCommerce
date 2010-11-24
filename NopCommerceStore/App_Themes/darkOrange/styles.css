@@ -860,7 +860,7 @@ textarea
 .shippingmethodnextstepbutton, .paymentmethodnextstepbutton, .paymentinfonextstepbutton, 
 .confirmordernextstepbutton, .submitforumtopicbutton, .submitpmbutton, .replypmbutton, 
 .deleteselectedpmbutton, .reorderbutton, .minicartcheckoutbutton, .newsletterbox-subscribebutton, 
-.useragreementbutton, .deleteselectedfsbutton, .submitreturnrequestbutton
+.useragreementbutton, .deleteselectedfsbutton, .submitreturnrequestbutton, .uploadavatarbutton
 {
 	background: url(images/orange_button_bg.gif) no-repeat 25% 50% #FF8800;
 	border: 1px solid #FF8800;
@@ -877,7 +877,7 @@ textarea
 .returnitemsbutton, .orderdetailsprintbutton, .estimateshippingbutton, 
 .updatewishlistbutton, .applycouponcodebutton, .updatecartbutton, .continueshoppingbutton, 
 .orderprocessedcontinuebutton, .submitpollvotebutton, .cancelforumtopicbutton, .forumsearchbutton, 
-.forumsearchboxbutton, .cancelpmbutton, .deletepmbutton, .backpmbutton
+.forumsearchboxbutton, .cancelpmbutton, .deletepmbutton, .backpmbutton, .removeavatarbutton
 {
 	background: url(images/grey_button_bg.gif) no-repeat 25% 50% #333;
 	border: 1px solid #333;
@@ -2790,6 +2790,11 @@ ul.languagelist li .selected
 .customer-avatar
 {
 	padding: 10px;	
+}
+
+.customer-avatar .button
+{
+    margin: 5px 0;
 }
 
 .account-activation-page
