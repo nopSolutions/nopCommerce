@@ -92,7 +92,7 @@ set @resources='
     <Value>Notify about new private messages:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Profiles.NotifyAboutPrivateMessages.Tooltip">
-    <Value>Notify customers when new a private messages is sent.</Value>
+    <Value>Notify customers when a new private message is sent.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Other.NotifyAboutNewCustomerRegistration">
     <Value>Notify about new customer registration:</Value>
@@ -164,7 +164,7 @@ set @resources='
     <Value>Pictures are stored into... :</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Media.StoreImagesInDB.Tooltip">
-    <Value>A value indicationing whether pictures are stored into database or filesystem.</Value>
+    <Value>A value indicating whether pictures are stored in database or file system.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Media.StoreImagesInDB.DB">
     <Value>database</Value>
@@ -948,6 +948,9 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.nopCommerceNews.DisplayAdv">
     <Value>Display advertisements</Value>
+  </LocaleResource>
+  <LocaleResource Name="Profile.PostedOn">
+    <Value>Posted</Value>
   </LocaleResource>
 </Language>
 '
