@@ -40,7 +40,7 @@ using NopSolutions.NopCommerce.Controls;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CustomerRegisterControl: BaseNopFrontendUserControl
+    public partial class CustomerRegisterControl : BaseNopFrontendUserControl
     {
         private void ApplyLocalization()
         {
@@ -178,7 +178,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var phNewsletter = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phNewsletter");
             var phPreferences = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phPreferences");
             var trTimeZone = (HtmlTableRow)CreateUserWizardStep1.ContentTemplateContainer.FindControl("trTimeZone");
-            
+
             phGender.Visible = this.CustomerService.FormFieldGenderEnabled;
             phDateOfBirth.Visible = this.CustomerService.FormFieldDateOfBirthEnabled;
 
@@ -223,7 +223,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             trTimeZone.Visible = DateTimeHelper.AllowCustomersToSetTimeZone && this.CustomerService.FormFieldTimeZoneEnabled;
             phPreferences.Visible = trTimeZone.Visible;
-            
+
             base.OnInit(e);
         }
 
@@ -248,7 +248,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var cbNewsletter = (CheckBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("cbNewsletter");
             var dtDateOfBirth = (NopDatePicker)CreateUserWizardStep1.ContentTemplateContainer.FindControl("dtDateOfBirth");
             var ddlTimeZone = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlTimeZone");
-            
+
             Customer customer = null;
             if (this.CustomerService.UsernamesEnabled)
             {
@@ -538,8 +538,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        protected void StepNextButton_PreRender(object sender, EventArgs e)
+        {
+            //default button
+            this.Page.Form.DefaultButton = (sender as Button).UniqueID;
+        }
+
         protected override void OnPreRender(EventArgs e)
         {
+            //return URL
             string returnUrl = CommonHelper.QueryString("ReturnUrl");
             if (!String.IsNullOrEmpty(returnUrl))
             {

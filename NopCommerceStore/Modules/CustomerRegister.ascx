@@ -387,7 +387,7 @@
                     <CustomNavigationTemplate>
                         <div class="button">
                             <asp:Button ID="StepNextButton" runat="server" CommandName="MoveNext" Text="<% $NopResources:Account.RegisterNextStepButton %>"
-                                ValidationGroup="CreateUserForm" CssClass="registernextstepbutton" />
+                                ValidationGroup="CreateUserForm" CssClass="registernextstepbutton" OnPreRender="StepNextButton_PreRender" />
                         </div>
                     </CustomNavigationTemplate>
                 </asp:CreateUserWizardStep>
