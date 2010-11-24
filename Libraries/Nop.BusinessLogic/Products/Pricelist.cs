@@ -63,10 +63,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 case PriceListExportModeEnum.All:
                     {
                         blnOverrideAdjustment = true;
-                        foreach (Product product in IoC.Resolve<IProductService>().GetAllProducts(false))
-                        {
-                            productVariants.AddRange(IoC.Resolve<IProductService>().GetProductVariantsByProductId(product.ProductId, false));
-                        }
+                        int totalRecords = 0;
+                        productVariants = IoC.Resolve<IProductService>().GetAllProductVariants(0, 0, string.Empty, int.MaxValue, 0, out totalRecords);
                     }
                     break;
                 case PriceListExportModeEnum.AssignedProducts:
