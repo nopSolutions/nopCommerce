@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Tax
         /// <summary>
         /// Gets a tax rate
         /// </summary>
-        /// <param name="taxCategoryID">The tax category identifier</param>
+        /// <param name="taxCategoryId">The tax category identifier</param>
         /// <returns>Tax rate</returns>
         protected decimal GetTaxRate(int taxCategoryId)
         {

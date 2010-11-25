@@ -424,7 +424,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         public void UpdateBlogComment(BlogComment blogComment)
         {
             if (blogComment == null)
-                throw new ArgumentNullException("activityLogType");
+                throw new ArgumentNullException("blogComment");
 
             blogComment.IPAddress = CommonHelper.EnsureNotNull(blogComment.IPAddress);
             blogComment.IPAddress = CommonHelper.EnsureMaximumLength(blogComment.IPAddress, 100);

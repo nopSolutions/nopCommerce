@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Common.Xml
         /// <summary>
         /// XML Encode as is
         /// </summary>
-        /// <param name="s">String</param>
+        /// <param name="str">String</param>
         /// <returns>Encoded string</returns>
         public static string XmlEncodeAsIs(string str)
         {
@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Common.Xml
         /// <summary>
         /// Encodes an attribute
         /// </summary>
-        /// <param name="s">Attribute</param>
+        /// <param name="str">Attribute</param>
         /// <returns>Encoded attribute</returns>
         public static string XmlEncodeAttribute(string str)
         {

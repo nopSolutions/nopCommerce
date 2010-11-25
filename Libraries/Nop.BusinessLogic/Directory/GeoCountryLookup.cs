@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                     fileInput.Read(buf, 0, 6);
                 }
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 Debug.WriteLine("IO Exception");
                 return 0; // N/A

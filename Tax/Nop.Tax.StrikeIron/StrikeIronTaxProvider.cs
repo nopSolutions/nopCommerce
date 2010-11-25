@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Tax.TaxDataBasic;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
+using System.Diagnostics;
 
 namespace NopSolutions.NopCommerce.Tax
 {
@@ -165,6 +166,7 @@ namespace NopSolutions.NopCommerce.Tax
                     sb.AppendLine("State total sales tax: " + wsOutput.ServiceResult.TotalSalesTax.ToString());
                     sb.AppendLine("State total use tax: " + wsOutput.ServiceResult.TotalUseTax.ToString());
                     string debug = sb.ToString();
+                    Debug.WriteLine(debug);
                     result = Convert.ToDecimal(wsOutput.ServiceResult.TotalUseTax);
                 }
                 else
@@ -242,6 +244,7 @@ namespace NopSolutions.NopCommerce.Tax
                     sb.AppendLine("tax_shipping_handling: " + wsOutput.ServiceResult.TaxShippingHandling);
                     sb.AppendLine("total: " + wsOutput.ServiceResult.Total.ToString());
                     string debug = sb.ToString();
+                    Debug.WriteLine(debug);
                     result = Convert.ToDecimal(wsOutput.ServiceResult.Total);
                 }
                 else

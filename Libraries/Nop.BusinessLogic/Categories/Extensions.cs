@@ -47,6 +47,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Sort categories for tree representation
         /// </summary>
         /// <param name="source">Source</param>
+        /// <param name="parentId">Parent category identifier</param>
         /// <returns>Sorted categories</returns>
         public static List<Category> SortCategoriesForTree(this List<Category> source, int parentId)
         {
@@ -69,7 +70,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// <returns>Result</returns>
         public static IQueryable<Category> WhereAclPerObjectNotDenied(this IQueryable<Category> query, NopObjectContext context)
         {
-            List<int> customerRoleIds = new List<int>();
             if (NopContext.Current.User != null)
             {
                 //customer roles

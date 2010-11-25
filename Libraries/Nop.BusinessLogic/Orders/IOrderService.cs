@@ -820,6 +820,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Partially refunds an order (offline)
         /// </summary>
         /// <param name="orderId">Order identifier</param>
+        /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>Updated order</returns>
         Order PartiallyRefundOffline(int orderId, decimal amountToRefund);
 

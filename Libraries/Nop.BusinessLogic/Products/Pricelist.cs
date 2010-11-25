@@ -126,14 +126,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             // search for youngest file
             string[] files = System.IO.Directory.GetFiles(cachePath, this.ShortName + "*.txt");
 
-            string youngestFileName = "";
             DateTime youngestFileDate = new DateTime(2000, 01, 01);
 
             foreach (string file in files)
             {
                 if (new System.IO.FileInfo(file).CreationTime > youngestFileDate)
                 {
-                    youngestFileName = file;
                     youngestFileDate = new System.IO.FileInfo(file).CreationTime;
                 }
             }

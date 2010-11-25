@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <summary>
         /// Gets an ACL per object entry by identifier
         /// </summary>
-        /// <param name="aclId">ACL per object entry identifier</param>
+        /// <param name="aclPerObjectId">ACL per object entry identifier</param>
         /// <returns>ACL per object entry</returns>
         ACLPerObject GetAclPerObjectById(int aclPerObjectId);
 

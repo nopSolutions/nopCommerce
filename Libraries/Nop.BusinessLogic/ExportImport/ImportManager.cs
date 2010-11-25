@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 DataTable dt = excelHelper.ReadTable("Customers");
                 foreach (DataRow dr in dt.Rows)
                 {
-                    int customerId = Convert.ToInt32(dr["CustomerId"]);
+                    //int customerId = Convert.ToInt32(dr["CustomerId"]);
                     Guid customerGuid = new Guid(dr["CustomerGuid"].ToString());
                     string email = dr["Email"].ToString();
                     string username = dr["Username"].ToString();

@@ -141,7 +141,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         {
                             if (this.RewardPointsForPurchases_Awarded == order.OrderStatus)
                             {
-                                var rph = InsertRewardPointsHistory(order.CustomerId,
+                                InsertRewardPointsHistory(order.CustomerId,
                                     0, points, decimal.Zero,
                                     decimal.Zero, string.Empty,
                                     string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.EarnedForOrder"), order.OrderId),
@@ -151,7 +151,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                             if (this.RewardPointsForPurchases_Canceled == order.OrderStatus)
                             {
-                                var rph = InsertRewardPointsHistory(order.CustomerId,
+                               InsertRewardPointsHistory(order.CustomerId,
                                     0, -points, decimal.Zero,
                                     decimal.Zero, string.Empty,
                                     string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.ReducedForOrder"), order.OrderId),
@@ -3967,6 +3967,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Partially refunds an order (offline)
         /// </summary>
         /// <param name="orderId">Order identifier</param>
+        /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>Updated order</returns>
         public Order PartiallyRefundOffline(int orderId, decimal amountToRefund)
         {

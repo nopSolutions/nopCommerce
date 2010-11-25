@@ -1540,7 +1540,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <summary>
         /// Gets blog URL
         /// </summary>
-        /// <param name="tag">Blog tag</param>
         /// <returns>Blog URL</returns>
         public static string GetBlogUrl()
         {
@@ -1563,7 +1562,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <summary>
         /// Gets blog URL
         /// </summary>
-        /// <param name="tag">Blog tag</param>
+        /// <param name="month">Month</param>
         /// <returns>Blog URL</returns>
         public static string GetBlogUrlByMonth(DateTime month)
         {
@@ -1851,7 +1850,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         {
             if(topic == null)
             {
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException("topic");
             }
             string seName = GetSEName(topic.Subject);
             string url2 = SEOHelper.EnableUrlRewriting ? IoC.Resolve<ISettingManager>().GetSettingValue("SEO.ForumTopic.UrlRewriteFormat") : "{0}Boards/Topic.aspx?TopicId={1}";

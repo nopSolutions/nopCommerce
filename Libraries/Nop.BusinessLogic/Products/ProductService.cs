@@ -401,7 +401,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public List<Product> GetAllProductsDisplayedOnHomePage()
         {
             bool showHidden = NopContext.Current.IsAdmin;
-            int languageId = NopContext.Current.WorkingLanguage.LanguageId;
                         
             var query = from p in _context.Products
                         orderby p.Name
@@ -2218,7 +2217,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Updates the product review
         /// </summary>
-        /// <param name="ProductReview">Product review</param>
+        /// <param name="productReview">Product review</param>
         public void UpdateProductReview(ProductReview productReview)
         {
             if (productReview == null)

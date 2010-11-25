@@ -533,7 +533,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 decimal taxRate = decimal.Zero;
                 string error2 = string.Empty;
-                string error3 = string.Empty;
                 decimal sciSubTotal = PriceHelper.GetSubTotal(shoppingCartItem, customer, true);
 
                 decimal sciExclTax = IoC.Resolve<ITaxService>().GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, false, customer, out taxRate, ref error2);

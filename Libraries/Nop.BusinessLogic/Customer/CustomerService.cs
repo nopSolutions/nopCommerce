@@ -1246,7 +1246,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 IoC.Resolve<IOrderService>().RewardPointsEnabled &&
                 IoC.Resolve<IOrderService>().RewardPointsForRegistration > 0)
             {
-                var rph = IoC.Resolve<IOrderService>().InsertRewardPointsHistory(customer.CustomerId, 0,
+                IoC.Resolve<IOrderService>().InsertRewardPointsHistory(customer.CustomerId, 0,
                     IoC.Resolve<IOrderService>().RewardPointsForRegistration, decimal.Zero, decimal.Zero,
                     string.Empty, IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.EarnedForRegistration"),
                     DateTime.UtcNow);

@@ -778,7 +778,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                     IoC.Resolve<ISettingManager>().SetParam("Media.Images.StoreInDB", value.ToString());
 
                     //update all picture objects
-                    int totalRecords = 0;
                     var pictures = this.GetPictures(int.MaxValue, 0);
                     for (int i = 0; i < pictures.Count; i++)
                     {

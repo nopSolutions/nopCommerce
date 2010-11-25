@@ -1197,7 +1197,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     return new List<RewardPointsHistory>();
                 if (_rewardPointsHistoryCache == null)
                 {
-                    int totalRecords = 0;
                     _rewardPointsHistoryCache = IoC.Resolve<IOrderService>().GetAllRewardPointsHistoryEntries(this.CustomerId,
                         null, 0, int.MaxValue);
                 }

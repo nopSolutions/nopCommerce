@@ -249,8 +249,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
 
             var category = GetCategoryById(categoryId);
 
-            bool showHidden = NopContext.Current.IsAdmin;
-
             while (category != null && //category is not null
                 !category.Deleted && //category is not deleted
                 category.Published) //category is published

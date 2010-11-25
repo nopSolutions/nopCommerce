@@ -94,7 +94,8 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
         /// <summary>
         /// Handles the result.
         /// </summary>
-        /// <param name="canadaPostResult">The result from Canada Post.</param>
+        /// <param name="canadaPostResponse">The response from Canada Post.</param>
+        /// /// <param name="language">The language.</param>
         /// <returns></returns>
         private RequestResult HandleResult(string canadaPostResponse, CanadaPostLanguageEnum language)
         {

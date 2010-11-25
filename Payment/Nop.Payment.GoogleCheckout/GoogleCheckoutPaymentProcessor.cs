@@ -267,8 +267,10 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                 }
 
                 Order order = IoC.Resolve<IOrderService>().GetOrderById(orderID);
-                logMessage("new-order-notification received and saved: Order Number " + orderID);
-
+                if (order != null)
+                {
+                    logMessage("new-order-notification received and saved: Order Number " + orderID);
+                }
             }
             catch (Exception exc)
             {

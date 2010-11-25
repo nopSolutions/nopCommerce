@@ -518,7 +518,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         {
             try
             {
-                var ip = System.Net.IPAddress.Parse(ipAddress);
+                System.Net.IPAddress.Parse(ipAddress);
             }
             catch
             {

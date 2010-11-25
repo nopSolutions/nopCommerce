@@ -313,7 +313,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             for(int i = 0; i < productCollection.Count; i++)
             {
                 var orderProductVariant = productCollection[i];
-                int rowNum = i + 1;
                 Row prodRow = tbl.AddRow();
 
                 string name = String.Format("Not available. Id={0}", orderProductVariant.ProductVariantId);

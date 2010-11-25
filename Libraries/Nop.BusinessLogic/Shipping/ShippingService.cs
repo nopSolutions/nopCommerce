@@ -107,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             Discount orderSubTotalAppliedDiscount = null;
             decimal subTotalWithoutDiscountBase = decimal.Zero; 
             decimal subTotalWithDiscountBase = decimal.Zero;
-            string SubTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
+            string subTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
                 customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             subTotalBase = subTotalWithDiscountBase;

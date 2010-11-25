@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.TwoCheckout
         /// <returns>The error status, or String.Empty if no errors</returns>
         public string PostProcessPayment(Order order)
         {
-            string returnURL = CommonHelper.GetStoreLocation(false) + "TwoCheckoutReturn.aspx";
+            //string returnURL = CommonHelper.GetStoreLocation(false) + "TwoCheckoutReturn.aspx";
 
             StringBuilder builder = new StringBuilder();
             builder.AppendFormat("{0}?id_type=1", serverURL);
@@ -93,8 +93,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.TwoCheckout
                 int pNum = i + 1;
                 OrderProductVariant opv = orderProductVariants[i];
                 ProductVariant pv = orderProductVariants[i].ProductVariant;
-                Product product = pv.Product;
-
+                
                 string c_prod = string.Format("c_prod_{0}", pNum);
                 string c_prod_value = string.Format("{0},{1}", pv.SKU, opv.Quantity);
                 builder.AppendFormat("&{0}={1}", c_prod, c_prod_value);

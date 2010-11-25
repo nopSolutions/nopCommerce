@@ -170,7 +170,7 @@ namespace NopSolutions.NopCommerce.Common.Utils
         /// Finds a control recursive
         /// </summary>
         /// <typeparam name="T">Control class</typeparam>
-        /// <param name="Controls">Input control collection</param>
+        /// <param name="controls">Input control collection</param>
         /// <returns>Found control</returns>
         public static T FindControlRecursive<T>(ControlCollection controls) where T : class
         {
@@ -439,14 +439,14 @@ namespace NopSolutions.NopCommerce.Common.Utils
             if (useSsl)
             {
                 //shared SSL certificate URL
-                string sharedSSLUrl = string.Empty;
+                string sharedSslUrl = string.Empty;
                 if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSLUrl"]))
-                    sharedSSLUrl = ConfigurationManager.AppSettings["SharedSSLUrl"].Trim();
+                    sharedSslUrl = ConfigurationManager.AppSettings["SharedSSLUrl"].Trim();
 
-                if (!String.IsNullOrEmpty(sharedSSLUrl))
+                if (!String.IsNullOrEmpty(sharedSslUrl))
                 {
                     //shared SSL
-                    result = sharedSSLUrl;
+                    result = sharedSslUrl;
                 }
                 else
                 {
@@ -457,15 +457,15 @@ namespace NopSolutions.NopCommerce.Common.Utils
             else
             {
                 if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseSSL"])
-                    && Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"]));
+                    && Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"]))
                 {
                     //SSL is enabled
                     
                     //get shared SSL certificate URL
-                    string sharedSSLUrl = string.Empty;
+                    string sharedSslUrl = string.Empty;
                     if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSLUrl"]))
-                        sharedSSLUrl = ConfigurationManager.AppSettings["SharedSSLUrl"].Trim();
-                    if (!String.IsNullOrEmpty(sharedSSLUrl))
+                        sharedSslUrl = ConfigurationManager.AppSettings["SharedSSLUrl"].Trim();
+                    if (!String.IsNullOrEmpty(sharedSslUrl))
                     {
                         //shared SSL
 
@@ -473,12 +473,12 @@ namespace NopSolutions.NopCommerce.Common.Utils
                          * but we cannot reference Nop.BusinessLogic.dll assembly.
                          * So we are using one more app config settings - <add key="NonSharedSSLUrl" value="http://www.yourStore.com" />
                          */
-                        string nonSharedSSLUrl = string.Empty;
+                        string nonSharedSslUrl = string.Empty;
                         if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["NonSharedSSLUrl"]))
-                            nonSharedSSLUrl = ConfigurationManager.AppSettings["NonSharedSSLUrl"].Trim();
-                        if (string.IsNullOrEmpty(nonSharedSSLUrl))
+                            nonSharedSslUrl = ConfigurationManager.AppSettings["NonSharedSSLUrl"].Trim();
+                        if (string.IsNullOrEmpty(nonSharedSslUrl))
                             throw new Exception("NonSharedSSLUrl app config setting is not empty");
-                        result = nonSharedSSLUrl;
+                        result = nonSharedSslUrl;
                     }
                 }
             }
@@ -1008,6 +1008,7 @@ namespace NopSolutions.NopCommerce.Common.Utils
         /// Ensure that a string doesn't exceed maximum allowed length
         /// </summary>
         /// <param name="str">Input string</param>
+        /// <param name="maxLength">Maximum length</param>
         /// <returns>Input string if its lengh is OK; otherwise, truncated input string</returns>
         public static string EnsureMaximumLength(string str, int maxLength)
         {

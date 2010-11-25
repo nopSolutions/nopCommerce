@@ -654,7 +654,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Updates the product review
         /// </summary>
-        /// <param name="ProductReview">Product review</param>
+        /// <param name="productReview">Product review</param>
         void UpdateProductReview(ProductReview productReview);
 
         /// <summary>

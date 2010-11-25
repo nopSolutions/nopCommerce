@@ -319,7 +319,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
             SortedDictionary<decimal, decimal> orderSubTotalTaxRates = null;
-            string SubTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
+            string subTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
                 customer, false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase, out orderSubTotalTaxRates);
             foreach (KeyValuePair<decimal,decimal> kvp in orderSubTotalTaxRates)

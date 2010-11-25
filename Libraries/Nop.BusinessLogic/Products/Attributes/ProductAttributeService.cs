@@ -804,7 +804,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Updates a product variant attribute combination
         /// </summary>
-        /// <param name="productVariantAttributeCombination">Product variant attribute combination</param>
+        /// <param name="combination">Product variant attribute combination</param>
         public void UpdateProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
             if (combination == null)

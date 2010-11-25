@@ -157,7 +157,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         public void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
-                throw new ArgumentNullException("activityLogType");
+                throw new ArgumentNullException("specificationAttribute");
 
             specificationAttribute.Name = CommonHelper.EnsureNotNull(specificationAttribute.Name);
             specificationAttribute.Name = CommonHelper.EnsureMaximumLength(specificationAttribute.Name, 100);
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         public void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
-                throw new ArgumentNullException("activityLogType");
+                throw new ArgumentNullException("specificationAttribute");
 
             specificationAttribute.Name = CommonHelper.EnsureNotNull(specificationAttribute.Name);
             specificationAttribute.Name = CommonHelper.EnsureMaximumLength(specificationAttribute.Name, 100);

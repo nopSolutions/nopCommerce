@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         ///  Formats the email a friend text
         /// </summary>
-        /// <param name="productReview">Product review</param>
+        /// <param name="text">Text to format</param>
         /// <returns>Formatted text</returns>
         public static string FormatEmailAFriendText(this string text)
         {

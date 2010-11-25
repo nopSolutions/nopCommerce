@@ -184,7 +184,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Updates the checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        /// <param name="displayOrder">Display order</param>
         public void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)

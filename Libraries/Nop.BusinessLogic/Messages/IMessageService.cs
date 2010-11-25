@@ -159,6 +159,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="createdOn">The date and time of item creation</param>
         /// <param name="sendTries">The send tries</param>
         /// <param name="sentOn">The sent date and time. Null if email is not sent yet</param>
+        /// <param name="emailAccountId">Email account identifer</param>
         /// <returns>Queued email</returns>
         QueuedEmail InsertQueuedEmail(int priority, MailAddress from,
             MailAddress to, string cc, string bcc,
@@ -180,6 +181,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="createdOn">The date and time of item creation</param>
         /// <param name="sendTries">The send tries</param>
         /// <param name="sentOn">The sent date and time. Null if email is not sent yet</param>
+        /// <param name="emailAccountId">Email account identifer</param>
         /// <returns>Queued email</returns>
         QueuedEmail InsertQueuedEmail(int priority, string from,
             string fromName, string to, string toName, string cc, string bcc,
