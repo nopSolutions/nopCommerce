@@ -913,7 +913,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     order.CardType = SecurityHelper.Encrypt(cardType);
                     order.CardName = SecurityHelper.Encrypt(cardName);
                     order.CardNumber = SecurityHelper.Encrypt(cardNumber);
-                    order.CardNumber = SecurityHelper.Encrypt(this.PaymentService.GetMaskedCreditCardNumber(cardNumber));
+                    order.MaskedCreditCardNumber = SecurityHelper.Encrypt(this.PaymentService.GetMaskedCreditCardNumber(cardNumber));
                     order.CardCvv2 = SecurityHelper.Encrypt(cardCVV2);
                     order.CardExpirationMonth = SecurityHelper.Encrypt(cardExpirationMonth);
                     order.CardExpirationYear = SecurityHelper.Encrypt(cardExpirationYear);
