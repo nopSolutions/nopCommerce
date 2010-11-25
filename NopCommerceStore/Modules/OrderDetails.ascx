@@ -95,10 +95,11 @@
                                 <br />
                                 <br />
                             </asp:PlaceHolder>
-                            <b>
-                                <%=GetLocaleResourceString("Order.PaymentMethod")%></b>
-                            <br />
-                            <asp:Literal runat="server" ID="lPaymentMethod"></asp:Literal>
+                            <asp:PlaceHolder runat="server" ID="phPaymentMethod">
+                            <b><%=GetLocaleResourceString("Order.PaymentMethod")%></b>
+                                <br />
+                                <asp:Literal runat="server" ID="lPaymentMethod"></asp:Literal>
+                            </asp:PlaceHolder>
                         </td>
                         <td width="50%" align="left" runat="server" id="pnlShipping" style="vertical-align:top;">
                             <b>

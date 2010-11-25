@@ -148,9 +148,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //payment method
             var paymentMethod = this.PaymentService.GetPaymentMethodById(order.PaymentMethodId);
             if (paymentMethod != null)
+            {
                 this.lPaymentMethod.Text = paymentMethod.VisibleName;
+            }
             else
-                this.lPaymentMethod.Text = order.PaymentMethodName;
+            {
+                if (!String.IsNullOrEmpty(order.PaymentMethodName))
+                    this.lPaymentMethod.Text = order.PaymentMethodName;
+                else
+                    this.phPaymentMethod.Visible = false;
+            }
 
             //totals
             switch (order.CustomerTaxDisplayType)
