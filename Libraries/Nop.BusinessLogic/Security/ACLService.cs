@@ -49,12 +49,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <summary>
         /// Object context
         /// </summary>
-        protected readonly NopObjectContext _context;
+        private readonly NopObjectContext _context;
 
         /// <summary>
         /// Cache service
         /// </summary>
-        protected readonly ICacheManager _cacheManager;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 

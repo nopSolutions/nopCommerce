@@ -36,12 +36,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         /// <summary>
         /// Object context
         /// </summary>
-        protected readonly NopObjectContext _context;
+        private readonly NopObjectContext _context;
 
         /// <summary>
         /// Cache manager
         /// </summary>
-        protected readonly ICacheManager _cacheManager;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 

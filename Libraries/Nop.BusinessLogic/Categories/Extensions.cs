@@ -15,10 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
-
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Categories
 {
@@ -82,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                                           where acl.ObjectId == c.CategoryId &&
                                           acl.ObjectTypeId == (int)ObjectTypeEnum.Category &&
                                           acl.Deny == true &&
-                                          //crQuery.Count > 0 &&
+                                              //crQuery.Count > 0 &&
                                           crQuery.Contains(acl.CustomerRoleId)
                                           select acl.CustomerRoleId).Count() == 0);
             }
@@ -114,7 +112,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                             where acl.ObjectId == category.CategoryId &&
                             acl.ObjectTypeId == (int)ObjectTypeEnum.Category &&
                             acl.Deny == true &&
-                            //crQuery.Count > 0 &&
+                                //crQuery.Count > 0 &&
                             crQuery.Contains(acl.CustomerRoleId)
                             select acl.CustomerRoleId;
 
