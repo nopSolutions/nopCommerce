@@ -5,7 +5,7 @@
 
 <asp:GridView ID="gvShippingMethods" runat="server" AutoGenerateColumns="False" Width="300px" OnRowDataBound="gvShippingMethods_RowDataBound" >
     <Columns>
-        <asp:TemplateField HeaderText="Tax category" ItemStyle-Width="50%">
+        <asp:TemplateField HeaderText="Shipping Method" ItemStyle-Width="50%">
             <ItemTemplate>
                 <%#Server.HtmlEncode(Eval("Name").ToString())%>
                 <asp:HiddenField runat="server" ID="hfShippingMethodId" Value='<%#Eval("ShippingMethodId")%>'>

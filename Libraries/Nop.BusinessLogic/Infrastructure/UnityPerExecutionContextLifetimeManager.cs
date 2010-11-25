@@ -22,6 +22,7 @@ using System.Web;
 using System.Web.Compilation;
 using System.Xml;
 using Microsoft.Practices.Unity;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {
@@ -128,7 +129,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             else
             {
                 //Not in WCF or ASP.NET Environment, UnitTesting, WinForms, WPF etc.
-                result = CallContext.GetData(_key.ToString());
+                if (AppDomain.CurrentDomain.IsFullyTrusted)
+                {
+                    //ensure that we're in full trust
+                    result = CallContext.GetData(_key.ToString());
+                }
             }
 
 
@@ -190,7 +195,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             else
             {
                 //Not in WCF or ASP.NET Environment, UnitTesting, WinForms, WPF etc.
-                CallContext.SetData(_key.ToString(), newValue);
+                if (AppDomain.CurrentDomain.IsFullyTrusted)
+                {
+                    //ensure that we're in full trust
+                    CallContext.SetData(_key.ToString(), newValue);
+                }
             }
         }
 
