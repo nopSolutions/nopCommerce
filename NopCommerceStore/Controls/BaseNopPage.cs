@@ -67,10 +67,10 @@ namespace NopSolutions.NopCommerce.Web
 {
     public partial class BaseNopPage : Page
     {
-        protected string GetLocaleResourceString(string ResourceName)
+        protected string GetLocaleResourceString(string resourceName)
         {
-            Language language = NopContext.Current.WorkingLanguage;
-            return this.LocalizationManager.GetLocaleResourceString(ResourceName, language.LanguageId);
+            var language = NopContext.Current.WorkingLanguage;
+            return this.LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId);
         }
         
         /// <summary>

@@ -150,7 +150,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
-        private Topic topic = null;
         public Topic Topic
         {
             get

@@ -143,8 +143,8 @@ namespace NopSolutions.NopCommerce.Web
         protected override void OnPreRender(EventArgs e)
         {
             //java-script
-            string adminJS = CommonHelper.GetStoreLocation() + "Scripts/admin.js";
-            Page.ClientScript.RegisterClientScriptInclude(adminJS, adminJS);
+            string adminJs = CommonHelper.GetStoreLocation() + "Scripts/admin.js";
+            Page.ClientScript.RegisterClientScriptInclude(adminJs, adminJs);
 
             base.OnPreRender(e);
         }
@@ -196,13 +196,7 @@ namespace NopSolutions.NopCommerce.Web
             if (nopAdministrationMasterPage != null)
                 nopAdministrationMasterPage.ShowError(message, completeMessage);
         }
-
-        protected string GetLocaleResourceString(string resourceName)
-        {
-            Language language = NopContext.Current.WorkingLanguage;
-            return this.LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId);
-        }
-                
+        
         #endregion
 
         #region Properties

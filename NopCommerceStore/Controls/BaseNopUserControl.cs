@@ -75,23 +75,7 @@ namespace NopSolutions.NopCommerce.Web
             string jqueryTabs = CommonHelper.GetStoreLocation() + "Scripts/jquery.idTabs.min.js";
             Page.ClientScript.RegisterClientScriptInclude(jqueryTabs, jqueryTabs);
         }
-
-        protected void DisplayAlertMessage(string message)
-        {
-            if (String.IsNullOrEmpty(message))
-                return;
-
-            this.BindJQuery();
-            StringBuilder alertJsStart = new StringBuilder();
-            alertJsStart.AppendLine("<script type=\"text/javascript\">");
-            alertJsStart.AppendLine("$(document).ready(function() {");
-            alertJsStart.AppendLine(string.Format("alert('{0}');", message.Trim()));
-            alertJsStart.AppendLine("});");
-            alertJsStart.AppendLine("</script>");
-            string js = alertJsStart.ToString();
-            Page.ClientScript.RegisterClientScriptBlock(GetType(), "alertScriptKey", js);
-        }
-
+        
         protected string GetLocaleResourceString(string resourceName)
         {
             Language language = NopContext.Current.WorkingLanguage;

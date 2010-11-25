@@ -119,22 +119,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 foreach (DataListItem item in this.dlPaymentMethod.Items)
                 {
-                    RadioButton rdPaymentMethod = (RadioButton)item.FindControl("rdPaymentMethod");
+                    RadioButton rdPaymentMethod = (RadioButton) item.FindControl("rdPaymentMethod");
 
-                    if (value == null)
+                    rdPaymentMethod.Checked = false;
+                    int paymentMethodId = 0;
+                    if (int.TryParse(this.dlPaymentMethod.DataKeys[item.ItemIndex].ToString(), out paymentMethodId))
                     {
-                        rdPaymentMethod.Checked = false;
-                    }
-                    else
-                    {
-                        int paymentMethodId = 0;
-                        if (int.TryParse(this.dlPaymentMethod.DataKeys[item.ItemIndex].ToString(), out paymentMethodId))
+                        if (paymentMethodId == value)
                         {
-                            if (paymentMethodId == value)
-                            {
-                                rdPaymentMethod.Checked = true;
-                                break;
-                            }
+                            rdPaymentMethod.Checked = true;
+                            break;
                         }
                     }
                 }
