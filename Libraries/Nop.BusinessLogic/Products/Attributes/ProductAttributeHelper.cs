@@ -41,9 +41,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <returns>Selected product variant attribute identifiers</returns>
         public static List<int> ParseProductVariantAttributeIds(string attributes)
         {
-            var Ids = new List<int>();
+            var ids = new List<int>();
             if (String.IsNullOrEmpty(attributes))
-                return Ids;
+                return ids;
 
             try
             {
@@ -59,7 +59,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         int id = 0;
                         if (int.TryParse(str1, out id))
                         {
-                            Ids.Add(id);
+                            ids.Add(id);
                         }
                     }
                 }
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             {
                 Debug.Write(exc.ToString());
             }
-            return Ids;
+            return ids;
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         public static List<ProductVariantAttribute> ParseProductVariantAttributes(string attributes)
         {
             var pvaCollection = new List<ProductVariantAttribute>();
-            var Ids = ParseProductVariantAttributeIds(attributes);
-            foreach (int id in Ids)
+            var ids = ParseProductVariantAttributeIds(attributes);
+            foreach (int id in ids)
             {
                 var pva = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeById(id);
                 if (pva != null)
@@ -181,8 +181,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 XmlDocument xmlDoc = new XmlDocument();
                 if (String.IsNullOrEmpty(attributes))
                 {
-                    XmlElement _element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(_element1);
+                    XmlElement element1 = xmlDoc.CreateElement("Attributes");
+                    xmlDoc.AppendChild(element1);
                 }
                 else
                 {
@@ -321,8 +321,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 XmlDocument xmlDoc = new XmlDocument();
                 if (String.IsNullOrEmpty(attributes))
                 {
-                    XmlElement _element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(_element1);
+                    XmlElement element1 = xmlDoc.CreateElement("Attributes");
+                    xmlDoc.AppendChild(element1);
                 }
                 else
                 {

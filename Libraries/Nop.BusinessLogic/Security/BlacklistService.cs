@@ -76,13 +76,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <returns>Returns a backwards uint representation of the string.</returns>
         private uint IpAddressToLongBackwards(string ipAddress)
         {
-            var oIP = System.Net.IPAddress.Parse(ipAddress);
-            byte[] byteIP = oIP.GetAddressBytes();
+            byte[] byteIp = System.Net.IPAddress.Parse(ipAddress).GetAddressBytes();
 
-            uint ip = (uint)byteIP[0] << 24;
-            ip += (uint)byteIP[1] << 16;
-            ip += (uint)byteIP[2] << 8;
-            ip += (uint)byteIP[3];
+            uint ip = (uint)byteIp[0] << 24;
+            ip += (uint)byteIp[1] << 16;
+            ip += (uint)byteIp[2] << 8;
+            ip += (uint)byteIp[3];
 
             return ip;
         }
@@ -191,13 +190,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <returns>Returns a uint representation of the IP address.</returns>
         private uint IpAddressToLong(string ipAddress)
         {
-            var oIP = System.Net.IPAddress.Parse(ipAddress);
-            byte[] byteIP = oIP.GetAddressBytes();
+            byte[] byteIp = System.Net.IPAddress.Parse(ipAddress).GetAddressBytes();
 
-            uint ip = (uint)byteIP[3] << 24;
-            ip += (uint)byteIP[2] << 16;
-            ip += (uint)byteIP[1] << 8;
-            ip += (uint)byteIP[0];
+            uint ip = (uint)byteIp[3] << 24;
+            ip += (uint)byteIp[2] << 16;
+            ip += (uint)byteIp[1] << 8;
+            ip += (uint)byteIp[0];
 
             return ip;
         }

@@ -538,8 +538,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             p12.Format.Alignment = ParagraphAlignment.Right;
 
             //order notes
-            bool printOrderNotesToPDF = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PDFInvoice.RenderOrderNotes");
-            if (printOrderNotesToPDF)
+            bool printOrderNotesToPdf = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PDFInvoice.RenderOrderNotes");
+            if (printOrderNotesToPdf)
             {
                 var orderNotes = IoC.Resolve<IOrderService>().GetOrderNoteByOrderId(order.OrderId, false);
                 if (orderNotes.Count > 0)
@@ -571,7 +571,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                         Row noteRow = tbl1.AddRow();
 
                         noteRow.Cells[0].AddParagraph(DateTimeHelper.ConvertToUserTime(orderNote.CreatedOn, DateTimeKind.Utc).ToString());
-                        noteRow.Cells[1].AddParagraph(HtmlHelper.ConvertHtmlToPlainText(orderNote.FormatOrderNoteText(), true).ToString());
+                        noteRow.Cells[1].AddParagraph(HtmlHelper.ConvertHtmlToPlainText(orderNote.FormatOrderNoteText(), true));
                     }
                 }
             }

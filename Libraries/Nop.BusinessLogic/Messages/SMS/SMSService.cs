@@ -207,8 +207,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 
             foreach (SMSProvider smsProvider in GetAllSMSProviders(false))
             {
-                var iSMSProvider = smsProvider.Instance;
-                if (iSMSProvider.SendSMS(text))
+                var iSmsProvider = smsProvider.Instance;
+                if (iSmsProvider.SendSMS(text))
                 {
                     i++;
                 }

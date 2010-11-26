@@ -40,9 +40,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <returns>Selected checkout attribute identifiers</returns>
         public static List<int> ParseCheckoutAttributeIds(string attributes)
         {
-            var Ids = new List<int>();
+            var ids = new List<int>();
             if (String.IsNullOrEmpty(attributes))
-                return Ids;
+                return ids;
 
             try
             {
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         int id = 0;
                         if (int.TryParse(str1, out id))
                         {
-                            Ids.Add(id);
+                            ids.Add(id);
                         }
                     }
                 }
@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             {
                 Debug.Write(exc.ToString());
             }
-            return Ids;
+            return ids;
         }
 
         /// <summary>
@@ -78,8 +78,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         public static List<CheckoutAttribute> ParseCheckoutAttributes(string attributes)
         {
             var caCollection = new List<CheckoutAttribute>();
-            var Ids = ParseCheckoutAttributeIds(attributes);
-            foreach (int id in Ids)
+            var ids = ParseCheckoutAttributeIds(attributes);
+            foreach (int id in ids)
             {
                 var ca = IoC.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeById(id);
                 if (ca != null)

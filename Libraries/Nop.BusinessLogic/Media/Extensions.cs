@@ -55,12 +55,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Gets the loaded picture binary depending on picture storage settings
         /// </summary>
         /// <param name="picture">Picture</param>
-        /// <param name="fromDB">Load from database; otherwise, from file system</param>
+        /// <param name="fromDb">Load from database; otherwise, from file system</param>
         /// <returns>Picture binary</returns>
-        public static byte[] LoadPictureBinary(this Picture picture, bool fromDB)
+        public static byte[] LoadPictureBinary(this Picture picture, bool fromDb)
         {
             byte[] result = null;
-            if (fromDB)
+            if (fromDb)
             {
                 result = picture.PictureBinary;
             }

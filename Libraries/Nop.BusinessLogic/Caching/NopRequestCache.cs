@@ -48,11 +48,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <returns>The value associated with the specified key.</returns>
         public object Get(string key)
         {
-            var _items = GetItems();
-            if (_items == null)
+            var items = GetItems();
+            if (items == null)
                 return null;
 
-            return _items[key];
+            return items[key];
         }
 
         /// <summary>
@@ -62,13 +62,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <param name="obj">object</param>
         public void Add(string key, object obj)
         {
-            var _items = GetItems();
-            if (_items == null)
+            var items = GetItems();
+            if (items == null)
                 return;
 
             if (IsEnabled && (obj != null))
             {
-                _items.Add(key, obj);
+                items.Add(key, obj);
             }
         }
 
@@ -78,11 +78,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <param name="key"></param>
         public void Remove(string key)
         {
-            var _items = GetItems();
-            if (_items == null)
+            var items = GetItems();
+            if (items == null)
                 return;
 
-            _items.Remove(key);
+            items.Remove(key);
         }
 
         /// <summary>
@@ -91,11 +91,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <param name="pattern">pattern</param>
         public void RemoveByPattern(string pattern)
         {
-            var _items = GetItems();
-            if (_items == null)
+            var items = GetItems();
+            if (items == null)
                 return;
 
-            IDictionaryEnumerator enumerator = _items.GetEnumerator();
+            IDictionaryEnumerator enumerator = items.GetEnumerator();
             Regex regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var keysToRemove = new List<String>();
             while (enumerator.MoveNext())
@@ -108,7 +108,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
 
             foreach (string key in keysToRemove)
             {
-                _items.Remove(key);
+                items.Remove(key);
             }
         }
 

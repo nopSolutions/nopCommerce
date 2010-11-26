@@ -82,8 +82,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("MessageTemplates.CaseInvariantReplacement"))
             {
-                int count, position0, position1;
-                count = position0 = position1 = 0;
+                int count = 0;
+                int position0 = 0;
+                int position1 = 0;
                 string upperString = original.ToUpper();
                 string upperPattern = pattern.ToUpper();
                 int inc = (original.Length / pattern.Length) * (replacement.Length - pattern.Length);
@@ -220,48 +221,48 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             #region Totals
 
-            string CusSubTotal = string.Empty;
+            string cusSubTotal = string.Empty;
             bool dislaySubTotalDiscount = false;
-            string CusSubTotalDiscount = string.Empty;
-            string CusShipTotal = string.Empty;
-            string CusPaymentMethodAdditionalFee = string.Empty;
+            string cusSubTotalDiscount = string.Empty;
+            string cusShipTotal = string.Empty;
+            string cusPaymentMethodAdditionalFee = string.Empty;
             SortedDictionary<decimal, decimal> taxRates = new SortedDictionary<decimal, decimal>();
-            string CusTaxTotal = string.Empty;
-            string CusDiscount = string.Empty;
-            string CusTotal = string.Empty;
+            string cusTaxTotal = string.Empty;
+            string cusDiscount = string.Empty;
+            string cusTotal = string.Empty;
             //subtotal, shipping, payment method fee
             switch (order.CustomerTaxDisplayType)
             {
                 case TaxDisplayTypeEnum.ExcludingTax:
                     {
                         //subtotal
-                        CusSubTotal = PriceHelper.FormatPrice(order.OrderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                        cusSubTotal = PriceHelper.FormatPrice(order.OrderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                         //discount (applied to order subtotal)
                         if (order.OrderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
                         {
-                            CusSubTotalDiscount = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                            cusSubTotalDiscount = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                             dislaySubTotalDiscount = true;
                         }
                         //shipping
-                        CusShipTotal = PriceHelper.FormatShippingPrice(order.OrderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                        cusShipTotal = PriceHelper.FormatShippingPrice(order.OrderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                         //payment method additional fee
-                        CusPaymentMethodAdditionalFee = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                        cusPaymentMethodAdditionalFee = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                     }
                     break;
                 case TaxDisplayTypeEnum.IncludingTax:
                     {
                         //subtotal
-                        CusSubTotal = PriceHelper.FormatPrice(order.OrderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                        cusSubTotal = PriceHelper.FormatPrice(order.OrderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                         //discount (applied to order subtotal)
                         if (order.OrderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
                         {
-                            CusSubTotalDiscount = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                            cusSubTotalDiscount = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                             dislaySubTotalDiscount = true;
                         }
                         //shipping
-                        CusShipTotal = PriceHelper.FormatShippingPrice(order.OrderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                        cusShipTotal = PriceHelper.FormatShippingPrice(order.OrderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                         //payment method additional fee
-                        CusPaymentMethodAdditionalFee = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                        cusPaymentMethodAdditionalFee = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                     }
                     break;
             }
@@ -299,7 +300,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                     displayTax = !displayTaxRates;
 
                     string taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
-                    CusTaxTotal = taxStr;
+                    cusTaxTotal = taxStr;
                 }
             }
 
@@ -307,43 +308,43 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             bool dislayDiscount = false;
             if (order.OrderDiscountInCustomerCurrency > decimal.Zero)
             {
-                CusDiscount = PriceHelper.FormatPrice(-order.OrderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                cusDiscount = PriceHelper.FormatPrice(-order.OrderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
                 dislayDiscount = true;
             }
             
             //total
-            CusTotal = PriceHelper.FormatPrice(order.OrderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+            cusTotal = PriceHelper.FormatPrice(order.OrderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
 
 
 
 
             //subtotal
-            sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Sub-Total", languageId), CusSubTotal));
+            sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Sub-Total", languageId), cusSubTotal));
             
             //discount (applied to order subtotal)
             if (dislaySubTotalDiscount)
             {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Discount", languageId), CusSubTotalDiscount));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Discount", languageId), cusSubTotalDiscount));
             }
             
 
             //shipping
             if (dislayShipping)
             {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Shipping", languageId), CusShipTotal));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Shipping", languageId), cusShipTotal));
             }
 
             //payment method fee
             if (displayPaymentMethodFee)
             {
                 string paymentMethodFeeTitle = localizationManager.GetLocaleResourceString("Order.PaymentMethodAdditionalFee", languageId);
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, paymentMethodFeeTitle, CusPaymentMethodAdditionalFee));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, paymentMethodFeeTitle, cusPaymentMethodAdditionalFee));
             }
 
             //tax
             if (displayTax)
             {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Tax", languageId), CusTaxTotal));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Tax", languageId), cusTaxTotal));
             }
             if (displayTaxRates)
             {
@@ -358,7 +359,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             //discount
             if (dislayDiscount)
             {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Discount", languageId), CusDiscount));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Discount", languageId), cusDiscount));
             }
             
             //gift cards
@@ -379,7 +380,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             }
 
             //total
-            sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.OrderTotal", languageId), CusTotal));
+            sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.OrderTotal", languageId), cusTotal));
             #endregion
             
             sb.AppendLine("</table>");

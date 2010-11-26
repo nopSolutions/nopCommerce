@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         public List<Language> GetAllLanguages()
         {
             bool showHidden = NopContext.Current.IsAdmin;
-            return (List<Language>)GetAllLanguages(showHidden);
+            return GetAllLanguages(showHidden);
         }
 
         /// <summary>

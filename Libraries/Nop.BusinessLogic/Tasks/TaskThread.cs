@@ -29,8 +29,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tasks
         private bool _disposed;
         private DateTime _started;
         private bool _isRunning;
-        private Dictionary<string, Task> _tasks;
-        private int _seconds;
+        private readonly Dictionary<string, Task> _tasks;
+        private readonly int _seconds;
 
         private TaskThread()
         {

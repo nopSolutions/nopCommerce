@@ -260,10 +260,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Installation
         public static void Backup(string fileName)
         {
             //TODO SQL Server only now
-            string _sqlConnectionString = NopSqlDataHelper.GetConnectionString("NopSqlConnection");
-            using (SqlConnection conn = new SqlConnection(_sqlConnectionString))
+            string sqlConnectionString = NopSqlDataHelper.GetConnectionString("NopSqlConnection");
+            using (SqlConnection conn = new SqlConnection(sqlConnectionString))
             {
-                string dbName = NopSqlDataHelper.GetDatabaseName(_sqlConnectionString);
+                string dbName = NopSqlDataHelper.GetDatabaseName(sqlConnectionString);
                 string commandText = string.Format(
                     "BACKUP DATABASE [{0}] TO DISK = '{1}' WITH FORMAT",
                     dbName,
@@ -284,11 +284,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Installation
         {
             //TODO SQL Server only now
 
-            string _sqlConnectionString = NopSqlDataHelper.GetConnectionString("NopSqlConnection");
-            string masterConnectionString = NopSqlDataHelper.GetMasterConnectionString(_sqlConnectionString);
+            string sqlConnectionString = NopSqlDataHelper.GetConnectionString("NopSqlConnection");
+            string masterConnectionString = NopSqlDataHelper.GetMasterConnectionString(sqlConnectionString);
             using (SqlConnection conn = new SqlConnection(masterConnectionString))
             {
-                string dbName = NopSqlDataHelper.GetDatabaseName(_sqlConnectionString);
+                string dbName = NopSqlDataHelper.GetDatabaseName(sqlConnectionString);
                 string commandText = string.Format(
                     "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
                     "ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE\n" +

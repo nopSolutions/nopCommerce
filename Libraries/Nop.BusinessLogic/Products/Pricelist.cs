@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         newPrice = GetAdjustedPrice(productVariant.Price, productVariantPricelist.PriceAdjustmentType, productVariantPricelist.PriceAdjustment);
                     }
                 }
-                strContents += replaceMessageTemplateTokens(productVariant, this.Body,
+                strContents += ReplaceMessageTemplateTokens(productVariant, this.Body,
                     this.FormatLocalization, new System.Collections.Specialized.NameValueCollection(), AffiliateId, newPrice);
                 if (!this.Body.EndsWith("\n"))
                     strContents += "\n";
@@ -178,7 +178,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <param name="price">Price</param>
         /// <returns>New template</returns>
-        protected string replaceMessageTemplateTokens(ProductVariant productVariant, 
+        protected string ReplaceMessageTemplateTokens(ProductVariant productVariant, 
             string template, string localFormat, NameValueCollection additionalKeys,
             int affiliateId, decimal price)
         {

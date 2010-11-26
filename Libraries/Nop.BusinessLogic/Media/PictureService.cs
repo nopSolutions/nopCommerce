@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
     {
         #region Fields
 
-        private static object s_lock = new object();
+        private static readonly object _lock = new object();
 
         /// <summary>
         /// Object context
@@ -105,10 +105,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <summary>
         /// Save picture on file system
         /// </summary>
-        /// <param name="PictureId">Picture identifier</param>
+        /// <param name="pictureId">Picture identifier</param>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
-        private void SavePictureInFile(int PictureId, byte[] pictureBinary, string mimeType)
+        private void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
         {
             string[] parts = mimeType.Split('/');
             string lastPart = parts[parts.Length - 1];
@@ -124,7 +124,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                     lastPart = "ico";
                     break;
             }
-            string localFilename = string.Format("{0}_0.{1}", PictureId.ToString("0000000"), lastPart);            
+            string localFilename = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);            
             File.WriteAllBytes(Path.Combine(LocalImagePath, localFilename), pictureBinary);
         }
 
@@ -365,7 +365,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
             List<String> urls = new List<string>();
 
-            string orginalURL = GetPictureUrl(pictureId);
+            string orginalUrl = GetPictureUrl(pictureId);
 
             string[] currentFiles = System.IO.Directory.GetFiles(this.LocalThumbImagePath, filter);
 
@@ -373,12 +373,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             {
                 string url = CommonHelper.GetStoreLocation() + "images/thumbs/" + Path.GetFileName(currentFileName);
 
-                if (url != orginalURL)
+                if (url != orginalUrl)
                     urls.Add(url);
             }
             
             //add original picture to array
-            urls.Add(orginalURL);
+            urls.Add(orginalUrl);
 
             if (urls.Count > 0)
             {
@@ -434,7 +434,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
                 picture = UpdatePicture(picture.PictureId, picture.LoadPictureBinary(), picture.MimeType, false);
             }
-            lock (s_lock)
+            lock (_lock)
             {
                 if (targetSize == 0)
                 {

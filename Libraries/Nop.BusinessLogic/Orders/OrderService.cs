@@ -2629,14 +2629,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                 //recurring or standard shopping cart
                 bool isRecurringShoppingCart = false;
-                int recurringCycleLength = 0;
-                int recurringCyclePeriod = 0;
-                int recurringTotalCycles = 0;
                 if (!paymentInfo.IsRecurringPayment)
                 {
                     isRecurringShoppingCart = cart.IsRecurring;
                     if (isRecurringShoppingCart)
                     {
+                        int recurringCycleLength = 0;
+                        int recurringCyclePeriod = 0;
+                        int recurringTotalCycles = 0;
                         string recurringCyclesError = shoppingCartService.GetReccuringCycleInfo(cart, out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
                         if (!string.IsNullOrEmpty(recurringCyclesError))
                         {
@@ -4168,11 +4168,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 Discount orderSubTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
-                string SubTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
+                string subTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
                     customer, out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
                 subtotalBase = subTotalWithoutDiscountBase;
-                if (String.IsNullOrEmpty(SubTotalError))
+                if (String.IsNullOrEmpty(subTotalError))
                 {
                     if (subtotalBase < this.MinOrderSubtotalAmount)
                     {

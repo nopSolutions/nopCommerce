@@ -591,11 +591,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     NopContext.Current.Session = NopContext.Current.GetSession(true);
                 }
 
-                DateTime LastAccessed = DateTime.UtcNow;
+                DateTime lastAccessed = DateTime.UtcNow;
 
                 var customerSession = NopContext.Current.Session;
                 customerSession.CustomerId = guestCustomer.CustomerId;
-                customerSession.LastAccessed = LastAccessed;
+                customerSession.LastAccessed = lastAccessed;
                 UpdateCustomerSession(customerSession);
                 NopContext.Current.Session = customerSession;
             }

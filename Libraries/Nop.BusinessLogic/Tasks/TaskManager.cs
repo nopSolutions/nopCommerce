@@ -25,7 +25,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tasks
     public partial class TaskManager
     {
         private static readonly TaskManager _taskManager = new TaskManager();
-        private List<TaskThread> _taskThreads = new List<TaskThread>();
+        private readonly List<TaskThread> _taskThreads = new List<TaskThread>();
 
         private TaskManager()
         {

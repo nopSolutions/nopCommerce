@@ -56,10 +56,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                     if (HttpContext.Current != null && !HttpContext.Current.Request.Url.IsLoopback)
                     {
                         HttpApplication application = sender as HttpApplication;
-                        var clientIP = new BannedIpAddress();
-                        clientIP.Address = application.Request.UserHostAddress;
+                        var clientIp = new BannedIpAddress();
+                        clientIp.Address = application.Request.UserHostAddress;
                         // On any unexpected error we let visitor to visit website
-                        if (IoC.Resolve<IBlacklistService>().IsIpAddressBanned(clientIP))
+                        if (IoC.Resolve<IBlacklistService>().IsIpAddressBanned(clientIp))
                         {
                             // Blocking process
 

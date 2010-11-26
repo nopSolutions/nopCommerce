@@ -382,9 +382,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 string error1 = string.Empty;
                 string error2 = string.Empty;
 
-                decimal paymentMethodAdditionalFee = IoC.Resolve<IPaymentService>().GetAdditionalHandlingFee(paymentMethodId);
-                decimal? paymentMethodAdditionalFeeExclTax = this.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate, ref error1);
-                decimal? paymentMethodAdditionalFeeInclTax = this.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate, ref error2);
+                decimal paymentMethodAdditionalFee =
+                    IoC.Resolve<IPaymentService>().GetAdditionalHandlingFee(paymentMethodId);
+                decimal paymentMethodAdditionalFeeExclTax = this.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate,
+                                                       ref error1);
+                decimal paymentMethodAdditionalFeeInclTax = this.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate,
+                                                       ref error2);
                 if (!String.IsNullOrEmpty(error1))
                 {
                     error = error1;
@@ -393,21 +396,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 {
                     error = error2;
                 }
-                if (paymentMethodAdditionalFeeExclTax.HasValue && paymentMethodAdditionalFeeInclTax.HasValue)
-                {
-                    paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax.Value - paymentMethodAdditionalFeeExclTax.Value;
 
-                    //tax rates
-                    if (taxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
+                paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax - paymentMethodAdditionalFeeExclTax;
+
+                //tax rates
+                if (taxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
+                {
+                    if (!taxRates.ContainsKey(taxRate))
                     {
-                        if (!taxRates.ContainsKey(taxRate))
-                        {
-                            taxRates.Add(taxRate, paymentMethodAdditionalFeeTax);
-                        }
-                        else
-                        {
-                            taxRates[taxRate] = taxRates[taxRate] + paymentMethodAdditionalFeeTax;
-                        }
+                        taxRates.Add(taxRate, paymentMethodAdditionalFeeTax);
+                    }
+                    else
+                    {
+                        taxRates[taxRate] = taxRates[taxRate] + paymentMethodAdditionalFeeTax;
                     }
                 }
             }

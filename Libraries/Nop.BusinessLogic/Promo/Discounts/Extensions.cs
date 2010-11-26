@@ -91,12 +91,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 if (!discount.CouponCode.Equals(couponCodeToValidate, StringComparison.InvariantCultureIgnoreCase))
                     return false;
             }
-            DateTime _now = DateTime.UtcNow;
-            DateTime _startDate = DateTime.SpecifyKind(discount.StartDate, DateTimeKind.Utc);
-            DateTime _endDate = DateTime.SpecifyKind(discount.EndDate, DateTimeKind.Utc);
+            DateTime now = DateTime.UtcNow;
+            DateTime startDate = DateTime.SpecifyKind(discount.StartDate, DateTimeKind.Utc);
+            DateTime endDate = DateTime.SpecifyKind(discount.EndDate, DateTimeKind.Utc);
             bool isActive = (!discount.Deleted) &&
-                (_startDate.CompareTo(_now) < 0) &&
-                (_endDate.CompareTo(_now) > 0);
+                (startDate.CompareTo(now) < 0) &&
+                (endDate.CompareTo(now) > 0);
             return isActive;
         }
 
@@ -141,10 +141,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         {
                             var customerRoles = customer.CustomerRoles;
                             var assignedRoles = discount.CustomerRoles;
-                            foreach (CustomerRole _customerRole in customerRoles)
-                                foreach (CustomerRole _assignedRole in assignedRoles)
+                            foreach (CustomerRole customerRole in customerRoles)
+                                foreach (CustomerRole assignedRole in assignedRoles)
                                 {
-                                    if (_customerRole.Name == _assignedRole.Name)
+                                    if (customerRole.Name == assignedRole.Name)
                                     {
                                         return true;
                                     }
@@ -170,12 +170,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                                 var cart = IoC.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
 
                                 bool allFound = true;
-                                foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                                foreach (ProductVariant restrictedPv in restrictedProductVariants)
                                 {
                                     bool found1 = false;
                                     foreach (ShoppingCartItem sci in cart)
                                     {
-                                        if (restrictedPV.ProductVariantId == sci.ProductVariantId)
+                                        if (restrictedPv.ProductVariantId == sci.ProductVariantId)
                                         {
                                             found1 = true;
                                             break;
@@ -207,11 +207,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                                 var cart = IoC.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
 
                                 bool found = false;
-                                foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                                foreach (ProductVariant restrictedPv in restrictedProductVariants)
                                 {
                                     foreach (ShoppingCartItem sci in cart)
                                     {
-                                        if (restrictedPV.ProductVariantId == sci.ProductVariantId)
+                                        if (restrictedPv.ProductVariantId == sci.ProductVariantId)
                                         {
                                             found = true;
                                             break;
@@ -239,12 +239,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                             var purchasedProductVariants = IoC.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
 
                             bool allFound = true;
-                            foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                            foreach (ProductVariant restrictedPv in restrictedProductVariants)
                             {
                                 bool found1 = false;
-                                foreach (OrderProductVariant purchasedPV in purchasedProductVariants)
+                                foreach (OrderProductVariant purchasedPv in purchasedProductVariants)
                                 {
-                                    if (restrictedPV.ProductVariantId == purchasedPV.ProductVariantId)
+                                    if (restrictedPv.ProductVariantId == purchasedPv.ProductVariantId)
                                     {
                                         found1 = true;
                                         break;
@@ -272,11 +272,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                             var purchasedProductVariants = IoC.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
 
                             bool found = false;
-                            foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                            foreach (ProductVariant restrictedPv in restrictedProductVariants)
                             {
-                                foreach (OrderProductVariant purchasedPV in purchasedProductVariants)
+                                foreach (OrderProductVariant purchasedPv in purchasedProductVariants)
                                 {
-                                    if (restrictedPV.ProductVariantId == purchasedPV.ProductVariantId)
+                                    if (restrictedPv.ProductVariantId == purchasedPv.ProductVariantId)
                                     {
                                         found = true;
                                         break;

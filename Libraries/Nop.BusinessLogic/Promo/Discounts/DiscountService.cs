@@ -81,13 +81,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             Discount preferredDiscount = null;
             decimal maximumDiscountValue = decimal.Zero;
-            foreach (var _discount in discounts)
+            foreach (var discount in discounts)
             {
-                decimal currentDiscountValue = _discount.GetDiscountAmount(amount);
+                decimal currentDiscountValue = discount.GetDiscountAmount(amount);
                 if (currentDiscountValue > maximumDiscountValue)
                 {
                     maximumDiscountValue = currentDiscountValue;
-                    preferredDiscount = _discount;
+                    preferredDiscount = discount;
                 }
             }
 

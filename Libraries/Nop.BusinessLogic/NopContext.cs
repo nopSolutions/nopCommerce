@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         private bool _isCurrentCustomerImpersonated;
         private Customer _originalCustomer;
         private bool? _isAdmin;
-        private HttpContext _context = HttpContext.Current;
+        private readonly HttpContext _context = HttpContext.Current;
         private Language _workingLanguage;
         private Currency _workingCurrency;
         private bool? _localizedEntityPropertiesEnabled;
@@ -71,13 +71,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             while (IoC.Resolve<ICustomerService>().GetCustomerSessionByGuid(sessionId) != null)
                 sessionId = Guid.NewGuid();
             var session = new CustomerSession();
-            int CustomerId = 0;
+            int customerId = 0;
             if (this.User != null)
             {
-                CustomerId = this.User.CustomerId;
+                customerId = this.User.CustomerId;
             }
             session.CustomerSessionGuid = sessionId;
-            session.CustomerId = CustomerId;
+            session.CustomerId = customerId;
             session.LastAccessed = DateTime.UtcNow;
             session.IsExpired = false;
             session = IoC.Resolve<ICustomerService>().SaveCustomerSession(session.CustomerSessionGuid, session.CustomerId, session.LastAccessed, session.IsExpired);
@@ -164,7 +164,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             }
             else
             {
-                cookie.Expires = DateTime.Now.AddHours((double)NopConfig.CookieExpires);
+                cookie.Expires = DateTime.Now.AddHours(NopConfig.CookieExpires);
             }
             application.Response.Cookies.Remove(key);
             application.Response.Cookies.Add(cookie);
@@ -418,12 +418,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 else if (CommonHelper.GetCookieInt("Nop.CustomerLanguage") > 0)
                 {
                     var customerLanguage = IoC.Resolve<ILanguageService>().GetLanguageById(CommonHelper.GetCookieInt("Nop.CustomerLanguage"));
-                    if (customerLanguage != null)
-                        if (customerLanguage != null && customerLanguage.Published)
-                        {
-                            this._workingLanguage = customerLanguage;
-                            return this._workingLanguage;
-                        }
+                    if (customerLanguage != null && customerLanguage.Published)
+                    {
+                        this._workingLanguage = customerLanguage;
+                        return this._workingLanguage;
+                    }
                 }
                 var publishedLanguages = IoC.Resolve<ILanguageService>().GetAllLanguages(false);
                 foreach (var language in publishedLanguages)

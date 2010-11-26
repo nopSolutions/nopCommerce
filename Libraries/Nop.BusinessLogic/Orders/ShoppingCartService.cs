@@ -668,17 +668,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             var allDiscounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(DiscountTypeEnum.AssignedToOrderSubTotal);
             var allowedDiscounts = new List<Discount>();
-            foreach (var _discount in allDiscounts)
+            foreach (var discount in allDiscounts)
             {
-                if (_discount.IsActive(customerCouponCode) &&
-                    _discount.DiscountType == DiscountTypeEnum.AssignedToOrderSubTotal &&
-                    !allowedDiscounts.ContainsDiscount(_discount.Name))
+                if (discount.IsActive(customerCouponCode) &&
+                    discount.DiscountType == DiscountTypeEnum.AssignedToOrderSubTotal &&
+                    !allowedDiscounts.ContainsDiscount(discount.Name))
                 {
                     //discount requirements
-                    if (_discount.CheckDiscountRequirements(customer)
-                        && _discount.CheckDiscountLimitations(customer))
+                    if (discount.CheckDiscountRequirements(customer)
+                        && discount.CheckDiscountLimitations(customer))
                     {
-                        allowedDiscounts.Add(_discount);
+                        allowedDiscounts.Add(discount);
                     }
                 }
             }
@@ -715,17 +715,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             var allDiscounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(DiscountTypeEnum.AssignedToOrderTotal);
             var allowedDiscounts = new List<Discount>();
-            foreach (var _discount in allDiscounts)
+            foreach (var discount in allDiscounts)
             {
-                if (_discount.IsActive(customerCouponCode) &&
-                    _discount.DiscountType == DiscountTypeEnum.AssignedToOrderTotal &&
-                    !allowedDiscounts.ContainsDiscount(_discount.Name))
+                if (discount.IsActive(customerCouponCode) &&
+                    discount.DiscountType == DiscountTypeEnum.AssignedToOrderTotal &&
+                    !allowedDiscounts.ContainsDiscount(discount.Name))
                 {
                     //discount requirements
-                    if (_discount.CheckDiscountRequirements(customer)
-                        && _discount.CheckDiscountLimitations(customer))
+                    if (discount.CheckDiscountRequirements(customer)
+                        && discount.CheckDiscountLimitations(customer))
                     {
-                        allowedDiscounts.Add(_discount);
+                        allowedDiscounts.Add(discount);
                     }
                 }
             }
@@ -865,9 +865,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             bool availableStartDateError = false;
             if (productVariant.AvailableStartDateTime.HasValue)
             {
-                DateTime _now = DateTime.UtcNow;
-                DateTime _availableStartDateTime = DateTime.SpecifyKind(productVariant.AvailableStartDateTime.Value, DateTimeKind.Utc);
-                if (_availableStartDateTime.CompareTo(_now) > 0)
+                DateTime now = DateTime.UtcNow;
+                DateTime availableStartDateTime = DateTime.SpecifyKind(productVariant.AvailableStartDateTime.Value, DateTimeKind.Utc);
+                if (availableStartDateTime.CompareTo(now) > 0)
                 {
                     warnings.Add("Product is not available");
                     availableStartDateError = true;
@@ -875,9 +875,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             }
             if (productVariant.AvailableEndDateTime.HasValue && !availableStartDateError)
             {
-                DateTime _now = DateTime.UtcNow;
-                DateTime _availableEndDateTime = DateTime.SpecifyKind(productVariant.AvailableEndDateTime.Value, DateTimeKind.Utc);
-                if (_availableEndDateTime.CompareTo(_now) < 0)
+                DateTime now = DateTime.UtcNow;
+                DateTime availableEndDateTime = DateTime.SpecifyKind(productVariant.AvailableEndDateTime.Value, DateTimeKind.Utc);
+                if (availableEndDateTime.CompareTo(now) < 0)
                 {
                     warnings.Add("Product is not available");
                 }
@@ -1055,9 +1055,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             bool hasStandartProducts = false;
             bool hasRecurringProducts = false;
-            int cycleLength = 0;
-            int cyclePeriod = 0;
-            int totalCycles = 0;
 
             foreach (var sci in shoppingCart)
             {
@@ -1085,6 +1082,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (hasRecurringProducts)
             {
+                int cycleLength = 0;
+                int cyclePeriod = 0;
+                int totalCycles = 0;
                 string cyclesError = GetReccuringCycleInfo(shoppingCart, out cycleLength, out cyclePeriod, out totalCycles);
                 if (!string.IsNullOrEmpty(cyclesError))
                 {

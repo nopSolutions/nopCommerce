@@ -24,10 +24,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tasks
     {
         private ITask _task;
         private bool _enabled;
-        private Type _taskType;
-        private string _name;
-        private bool _stopOnError;
-        private XmlNode _configNode;
+        private readonly Type _taskType;
+        private readonly string _name;
+        private readonly bool _stopOnError;
+        private readonly XmlNode _configNode;
         private DateTime _lastStarted;
         private DateTime _lastSuccess;
         private DateTime _lastEnd;

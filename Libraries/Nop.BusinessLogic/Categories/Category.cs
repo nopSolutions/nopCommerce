@@ -396,7 +396,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                int totalFeaturedRecords = 0;
+                int totalFeaturedRecords;
                 var featuredProducts = IoC.Resolve<IProductService>().GetAllProducts(this.CategoryId,
                     0, 0, true, int.MaxValue - 1, 0, out totalFeaturedRecords);
                 return featuredProducts;

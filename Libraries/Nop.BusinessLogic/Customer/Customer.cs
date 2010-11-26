@@ -663,9 +663,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 CustomerAttribute vatNumberStatusAttr = customerAttributes.FindAttribute("VatNumberStatus", this.CustomerId);
                 if (vatNumberStatusAttr != null)
                 {
-                    int _vatNumberStatusId = 0;
-                    int.TryParse(vatNumberStatusAttr.Value, out _vatNumberStatusId);
-                    return (VatNumberStatusEnum)_vatNumberStatusId;
+                    int vatNumberStatusId = 0;
+                    int.TryParse(vatNumberStatusAttr.Value, out vatNumberStatusId);
+                    return (VatNumberStatusEnum)vatNumberStatusId;
                 }
                 else
                     return VatNumberStatusEnum.Empty;
@@ -955,9 +955,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 CustomerAttribute countryIdAttr = customerAttributes.FindAttribute("CountryId", this.CustomerId);
                 if (countryIdAttr != null)
                 {
-                    int _countryId = 0;
-                    int.TryParse(countryIdAttr.Value, out _countryId);
-                    return _countryId;
+                    int countryId = 0;
+                    int.TryParse(countryIdAttr.Value, out countryId);
+                    return countryId;
                 }
                 else
                     return 0;
@@ -997,9 +997,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 CustomerAttribute stateProvinceIdAttr = customerAttributes.FindAttribute("StateProvinceId", this.CustomerId);
                 if (stateProvinceIdAttr != null)
                 {
-                    int _stateProvinceId = 0;
-                    int.TryParse(stateProvinceIdAttr.Value, out _stateProvinceId);
-                    return _stateProvinceId;
+                    int stateProvinceId = 0;
+                    int.TryParse(stateProvinceIdAttr.Value, out stateProvinceId);
+                    return stateProvinceId;
                 }
                 else
                     return 0;
@@ -1221,9 +1221,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 CustomerAttribute useRewardPointsAttr = customerAttributes.FindAttribute("UseRewardPointsDuringCheckout", this.CustomerId);
                 if (useRewardPointsAttr != null)
                 {
-                    bool _useRewardPoints = false;
-                    bool.TryParse(useRewardPointsAttr.Value, out _useRewardPoints);
-                    return _useRewardPoints;
+                    bool useRewardPoints = false;
+                    bool.TryParse(useRewardPointsAttr.Value, out useRewardPoints);
+                    return useRewardPoints;
                 }
                 else
                     return false;
@@ -1263,9 +1263,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 CustomerAttribute attr = customerAttributes.FindAttribute("NotifiedAboutNewPrivateMessages", this.CustomerId);
                 if (attr != null)
                 {
-                    bool _result = false;
-                    bool.TryParse(attr.Value, out _result);
-                    return _result;
+                    bool result = false;
+                    bool.TryParse(attr.Value, out result);
+                    return result;
                 }
                 else
                     return false;

@@ -24,7 +24,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
     /// </summary>
     public class UnityServiceLocator : ServiceLocatorImplBase
     {
-        readonly IUnityContainer unityContainer;
+        readonly IUnityContainer _unityContainer;
 
         /// <summary>
         /// Ctor
@@ -32,17 +32,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
         /// <param name="unityContainer">Unity container</param>
         public UnityServiceLocator(IUnityContainer unityContainer)
         {
-            this.unityContainer = unityContainer;
+            _unityContainer = unityContainer;
         }
 
         protected override object DoGetInstance(Type serviceType, string key)
         {
-            return unityContainer.Resolve(serviceType, key);
+            return _unityContainer.Resolve(serviceType, key);
         }
 
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
-            return unityContainer.ResolveAll(serviceType);
+            return _unityContainer.ResolveAll(serviceType);
         }
     }
 }

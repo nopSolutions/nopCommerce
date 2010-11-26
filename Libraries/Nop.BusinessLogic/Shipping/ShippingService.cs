@@ -806,17 +806,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 
             var allDiscounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(DiscountTypeEnum.AssignedToShipping);
             var allowedDiscounts = new List<Discount>();
-            foreach (var _discount in allDiscounts)
+            foreach (var discount in allDiscounts)
             {
-                if (_discount.IsActive(customerCouponCode) &&
-                    _discount.DiscountType == DiscountTypeEnum.AssignedToShipping &&
-                    !allowedDiscounts.ContainsDiscount(_discount.Name))
+                if (discount.IsActive(customerCouponCode) &&
+                    discount.DiscountType == DiscountTypeEnum.AssignedToShipping &&
+                    !allowedDiscounts.ContainsDiscount(discount.Name))
                 {
                     //discount requirements
-                    if (_discount.CheckDiscountRequirements(customer)
-                        && _discount.CheckDiscountLimitations(customer))
+                    if (discount.CheckDiscountRequirements(customer)
+                        && discount.CheckDiscountLimitations(customer))
                     {
-                        allowedDiscounts.Add(_discount);
+                        allowedDiscounts.Add(discount);
                     }
                 }
             }

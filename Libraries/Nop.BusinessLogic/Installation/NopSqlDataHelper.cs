@@ -25,11 +25,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Installation
     {
         #region Methods
 
-        internal static string GetConnectionString(string ConnectionStringName)
+        internal static string GetConnectionString(string connectionStringName)
         {
             string connectionString = null;
 
-            ConnectionStringSettings settings = WebConfigurationManager.ConnectionStrings[ConnectionStringName];
+            ConnectionStringSettings settings = WebConfigurationManager.ConnectionStrings[connectionStringName];
             if (settings != null)
             {
                 connectionString = settings.ConnectionString;

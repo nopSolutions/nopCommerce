@@ -48,37 +48,37 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (customer != null)
                 customerCouponCode = customer.LastAppliedCouponCode;
 
-            foreach (var _discount in productVariant.AllDiscounts)
+            foreach (var discount in productVariant.AllDiscounts)
             {
-                if (_discount.IsActive(customerCouponCode) &&
-                    _discount.DiscountType == DiscountTypeEnum.AssignedToSKUs &&
-                    !allowedDiscounts.ContainsDiscount(_discount.Name))
+                if (discount.IsActive(customerCouponCode) &&
+                    discount.DiscountType == DiscountTypeEnum.AssignedToSKUs &&
+                    !allowedDiscounts.ContainsDiscount(discount.Name))
                 {
                     //discount requirements
-                    if (_discount.CheckDiscountRequirements(customer)
-                        && _discount.CheckDiscountLimitations(customer))
+                    if (discount.CheckDiscountRequirements(customer)
+                        && discount.CheckDiscountLimitations(customer))
                     {
-                        allowedDiscounts.Add(_discount);
+                        allowedDiscounts.Add(discount);
                     }
                 }
             }
 
             var productCategories = IoC.Resolve<ICategoryService>().GetProductCategoriesByProductId(productVariant.ProductId);
-            foreach (var _productCategory in productCategories)
+            foreach (var productCategory in productCategories)
             {
                 //UNDONE should we filter categories by ACL here?
-                var _categoryDiscounts = IoC.Resolve<IDiscountService>().GetDiscountsByCategoryId(_productCategory.CategoryId);
-                foreach (var _discount in _categoryDiscounts)
+                var categoryDiscounts = IoC.Resolve<IDiscountService>().GetDiscountsByCategoryId(productCategory.CategoryId);
+                foreach (var discount in categoryDiscounts)
                 {
-                    if (_discount.IsActive(customerCouponCode) &&
-                        _discount.DiscountType == DiscountTypeEnum.AssignedToCategories &&
-                        !allowedDiscounts.ContainsDiscount(_discount.Name))
+                    if (discount.IsActive(customerCouponCode) &&
+                        discount.DiscountType == DiscountTypeEnum.AssignedToCategories &&
+                        !allowedDiscounts.ContainsDiscount(discount.Name))
                     {
                         //discount requirements
-                        if (_discount.CheckDiscountRequirements(customer)
-                            && _discount.CheckDiscountLimitations(customer))
+                        if (discount.CheckDiscountRequirements(customer)
+                            && discount.CheckDiscountLimitations(customer))
                         {
-                            allowedDiscounts.Add(_discount);
+                            allowedDiscounts.Add(discount);
                         }
                     }
                 }
@@ -561,9 +561,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Price</returns>
         public static string FormatPrice(decimal price)
         {
-            bool ShowCurrency = true;
-            var TargetCurrency = NopContext.Current.WorkingCurrency;
-            return FormatPrice(price, ShowCurrency, TargetCurrency);
+            bool showCurrency = true;
+            var targetCurrency = NopContext.Current.WorkingCurrency;
+            return FormatPrice(price, showCurrency, targetCurrency);
         }
 
         /// <summary>
