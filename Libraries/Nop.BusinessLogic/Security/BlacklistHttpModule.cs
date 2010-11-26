@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 {
     public partial class BlacklistHttpModule : IHttpModule
     {
-        #region Constructor
-        /// <summary>
-        /// Creates a new instance of BlacklistHttpModule
-        /// </summary>
-        public BlacklistHttpModule() { }
-        #endregion
-
-        #region IHttpModule Members
-
         /// <summary>
         /// Disposes the object
         /// </summary>
@@ -44,16 +35,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             context.BeginRequest += new EventHandler(Context_BeginRequest);
         }
 
-        #endregion
-
-        #region Handlers
-
         /// <summary>
         /// Event handler for BeginRequest.
         /// </summary>
         /// <param name="sender">Sender object instance.</param>
         /// <param name="e">Event arguments.</param>
-        void Context_BeginRequest(object sender, EventArgs e)
+        private void Context_BeginRequest(object sender, EventArgs e)
         {
             if (InstallerHelper.ConnectionStringIsSet())
             {
@@ -91,8 +78,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                 }
             }
         }
-
-        #endregion
 
     }
 }

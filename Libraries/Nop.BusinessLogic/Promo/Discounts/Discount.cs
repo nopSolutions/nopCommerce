@@ -26,15 +26,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
     /// </summary>
     public partial class Discount : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Discount class
-        /// </summary>
-        public Discount()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the discount identifier

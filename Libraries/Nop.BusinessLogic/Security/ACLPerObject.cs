@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
     /// </summary>
     public partial class ACLPerObject : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ACLPerObject class
-        /// </summary>
-        public ACLPerObject()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

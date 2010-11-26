@@ -19,15 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class ProductReviewHelpfulness : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductReviewHelpfulness class
-        /// </summary>
-        public ProductReviewHelpfulness()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

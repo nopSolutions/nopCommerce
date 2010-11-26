@@ -19,17 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// </summary>
     public partial class SearchTermReportLine : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the SearchTermReportLine class
-        /// </summary>
-        public SearchTermReportLine()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the search term
         /// </summary>
@@ -39,8 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Gets or sets the search count
         /// </summary>
         public int SearchCount { get; set; }
-
-        #endregion 
     }
 
 }

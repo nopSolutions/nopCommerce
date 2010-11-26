@@ -27,15 +27,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private OrderProductVariant _opv = null;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the GiftCardUsageHistory class
-        /// </summary>
-        public GiftCard()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

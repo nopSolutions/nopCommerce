@@ -26,15 +26,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
     [ExpressionPrefix("NopResources")]
 	public partial class NopResourceExpressionBuilder : ExpressionBuilder
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the NopResourceExpressionBuilder class
-        /// </summary>
-        public NopResourceExpressionBuilder()
-        {
-        }
-        #endregion
-
         #region Methods
         /// <summary>
         /// Gets value

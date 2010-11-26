@@ -30,14 +30,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWay
         int _timeout = 36000;
 
         /// <summary>
-        /// GatewayConnector ctor
-        /// </summary>
-        public GatewayConnector()
-        {
-
-        }
-
-        /// <summary>
         /// The Uri of the Eway payment gateway
         /// </summary>
         public string Uri

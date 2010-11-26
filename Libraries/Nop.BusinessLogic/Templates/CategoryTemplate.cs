@@ -21,16 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
     /// </summary>
     public partial class CategoryTemplate : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CategoryTemplate class
-        /// </summary>
-        public CategoryTemplate()
-        {
-        }
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Gets or sets the category template identifier
         /// </summary>
@@ -60,6 +50,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOn { get; set; }
-        #endregion 
     }
 }

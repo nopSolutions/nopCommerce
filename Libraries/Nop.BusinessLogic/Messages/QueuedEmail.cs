@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
     /// </summary>
     public partial class QueuedEmail : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the QueuedEmail class
-        /// </summary>
-        public QueuedEmail()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the ueued email identifier

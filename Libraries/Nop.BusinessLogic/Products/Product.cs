@@ -34,15 +34,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         private List<ProductLocalized> _productLocalized;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Product class
-        /// </summary>
-        public Product()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

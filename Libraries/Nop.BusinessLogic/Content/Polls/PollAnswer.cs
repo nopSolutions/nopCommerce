@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
     /// </summary>
     public partial class PollAnswer : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PollAnswer class
-        /// </summary>
-        public PollAnswer()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the poll answer identifier

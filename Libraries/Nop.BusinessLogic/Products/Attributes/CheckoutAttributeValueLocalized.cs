@@ -19,15 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
     /// </summary>
     public partial class CheckoutAttributeValueLocalized : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CheckoutAttributeValueLocalized class
-        /// </summary>
-        public CheckoutAttributeValueLocalized()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the localized checkout attribute value identifier

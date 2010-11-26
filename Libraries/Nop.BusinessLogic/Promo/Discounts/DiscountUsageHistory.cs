@@ -24,15 +24,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
     /// </summary>
     public partial class DiscountUsageHistory : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the DiscountUsageHistory class
-        /// </summary>
-        public DiscountUsageHistory()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

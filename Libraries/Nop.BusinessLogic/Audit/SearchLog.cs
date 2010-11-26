@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// </summary>
     public partial class SearchLog : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the SearchLog class
-        /// </summary>
-        public SearchLog()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the search log identifier

@@ -19,17 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
     /// </summary>
     public partial class BlogPostTag
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the BlogPostTag class
-        /// </summary>
-        public BlogPostTag()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -39,7 +28,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// Gets or sets the tagged product count
         /// </summary>
         public int BlogPostCount { get; set; }
-
-        #endregion
     }
 }

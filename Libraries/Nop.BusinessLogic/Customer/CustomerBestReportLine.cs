@@ -19,16 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     /// </summary>
     public partial class CustomerBestReportLine : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CustomerBestReportLine class
-        /// </summary>
-        public CustomerBestReportLine()
-        {
-        }
-        #endregion
-        
-        #region Properties
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
@@ -43,7 +33,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets or sets the order count
         /// </summary>
         public int OrderCount { get; set; }
-
-        #endregion
     }
 }

@@ -24,15 +24,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class ProductReview : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductReview class
-        /// </summary>
-        public ProductReview()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the product review identifier

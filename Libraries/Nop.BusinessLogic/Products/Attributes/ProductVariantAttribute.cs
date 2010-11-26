@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
     /// </summary>
     public partial class ProductVariantAttribute : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductVariantAttribute class
-        /// </summary>
-        public ProductVariantAttribute()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the product variant attribute mapping identifier

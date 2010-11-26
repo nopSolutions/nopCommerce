@@ -28,15 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private Customer _customer = null;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of ReturnRequest class
-        /// </summary>
-        public ReturnRequest()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

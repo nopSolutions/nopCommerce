@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
     /// </summary>
     public partial class ProductSpecificationAttribute : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductSpecificationAttribute class
-        /// </summary>
-        public ProductSpecificationAttribute()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the product specification attribute identifier

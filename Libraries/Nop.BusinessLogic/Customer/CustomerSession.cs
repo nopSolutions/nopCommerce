@@ -26,15 +26,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         private Customer _customer = null;
         #endregion 
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CustomerSession class
-        /// </summary>
-        public CustomerSession()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the customer session identifier

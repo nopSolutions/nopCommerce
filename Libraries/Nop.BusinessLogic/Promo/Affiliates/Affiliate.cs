@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
     /// </summary>
     public partial class Affiliate : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Affiliate class
-        /// </summary>
-        public Affiliate()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the affiliate identifier

@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
     /// </summary>
     public partial class Picture : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Picture class
-        /// </summary>
-        public Picture()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

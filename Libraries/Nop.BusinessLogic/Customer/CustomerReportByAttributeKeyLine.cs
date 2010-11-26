@@ -19,16 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     /// </summary>
     public partial class CustomerReportByAttributeKeyLine : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CustomerReportByAttributeKeyLine class
-        /// </summary>
-        public CustomerReportByAttributeKeyLine()
-        {
-        }
-        #endregion
-        
-        #region Properties
         /// <summary>
         /// Gets or sets the attribute key
         /// </summary>
@@ -38,7 +28,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets or sets the customer count
         /// </summary>
         public int CustomerCount { get; set; }
-
-        #endregion
     }
 }

@@ -36,17 +36,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private RewardPointsHistory _rph = null;
         #endregion
 
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the Order class
-        /// </summary>
-        public Order()
-        {
-        }
-
-        #endregion
-
         #region Utilities
 
         protected SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)

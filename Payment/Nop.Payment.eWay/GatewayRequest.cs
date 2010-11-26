@@ -39,15 +39,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWay
         private string _txOption1 = "";
         private string _txOption2 = "";
         private string _txOption3 = "";
-
-        /// <summary>
-        /// Creates a new instance of the GatewayRequest class
-        /// </summary>
-        public GatewayRequest()
-        {
-
-        }
-
+        
         /// <summary>
         /// Gets or sets an Eway customer identifier
         /// </summary>

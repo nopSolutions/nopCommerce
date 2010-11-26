@@ -19,17 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
     /// </summary>
     public partial class CreditCardType : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CreditCardType class
-        /// </summary>
-        public CreditCardType()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the credit card type identifier
         /// </summary>
@@ -54,8 +43,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public bool Deleted { get; set; }
-
-        #endregion 
     }
 
 }

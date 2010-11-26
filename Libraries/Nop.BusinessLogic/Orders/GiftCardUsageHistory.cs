@@ -28,16 +28,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private Customer _customer = null;
         private Order _order = null;
         #endregion
-
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the GiftCardUsageHistory class
-        /// </summary>
-        public GiftCardUsageHistory()
-        {
-        }
-        #endregion
-
+        
         #region Properties
 
         /// <summary>

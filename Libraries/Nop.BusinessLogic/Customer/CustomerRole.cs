@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     /// </summary>
     public partial class CustomerRole : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CustomerRole class
-        /// </summary>
-        public CustomerRole()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the customer role identifier

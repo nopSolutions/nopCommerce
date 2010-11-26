@@ -25,17 +25,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates
     /// </summary>
     public partial class McExchangeRateProvider : IExchangeRateProvider
     {
-        #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public McExchangeRateProvider()
-        {
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>

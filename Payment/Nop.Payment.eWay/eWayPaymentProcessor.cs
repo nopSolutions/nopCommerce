@@ -35,16 +35,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWay
         private string HONOUR_RESPONSE = "08";
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the eWayPaymentProcessor class
-        /// </summary>
-        public eWayPaymentProcessor()
-        {
-
-        }
-        #endregion
-
         #region Methods
 
         /// <summary>

@@ -19,17 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
     /// </summary>
     public partial class NopNullCache : ICacheManager
     {
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the NopNullCache class
-        /// </summary>
-        public NopNullCache()
-        {
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>

@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial class ShippingRateComputationMethod : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ShippingRateComputationMethod class
-        /// </summary>
-        public ShippingRateComputationMethod()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

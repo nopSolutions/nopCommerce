@@ -39,16 +39,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         private PayPalAPIAASoapBinding service2;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PayPalExpressPaymentProcessor class
-        /// </summary>
-        public PayPalExpressPaymentProcessor()
-        {
-
-        }
-        #endregion
-
         #region Methods
         /// <summary>
         /// Gets transaction mode configured by store owner

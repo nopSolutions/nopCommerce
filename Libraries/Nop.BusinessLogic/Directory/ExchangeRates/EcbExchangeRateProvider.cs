@@ -26,16 +26,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates
     /// </summary>
     public partial class EcbExchangeRateProvider : IExchangeRateProvider 
     {
-        #region Ctor
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public EcbExchangeRateProvider()
-        {
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>

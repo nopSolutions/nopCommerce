@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial class ShippingMethod : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ShippingMethod class
-        /// </summary>
-        public ShippingMethod()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the shipping method identifier

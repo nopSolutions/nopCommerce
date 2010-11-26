@@ -22,17 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
     /// </summary>
     public partial class EmailAccount : BaseEntity
     {
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the EmailAccount class
-        /// </summary>
-        public EmailAccount()
-        {
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>

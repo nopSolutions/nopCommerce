@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
     /// </summary>
     public partial class Language : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Language class
-        /// </summary>
-        public Language()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the language identifier

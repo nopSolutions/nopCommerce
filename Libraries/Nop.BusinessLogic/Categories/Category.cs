@@ -31,16 +31,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         #region Fields
         private List<CategoryLocalized> _categoryLocalized;
         #endregion
-
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Category class
-        /// </summary>
-        public Category()
-        {
-        }
-        #endregion
-
+        
         #region Properties
         /// <summary>
         /// Gets or sets the category identifier

@@ -19,16 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
     /// </summary>
     public partial class Download : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Download class
-        /// </summary>
-        public Download()
-        {
-        }
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Gets or sets the download identifier
         /// </summary>
@@ -68,7 +58,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Gets or sets a value indicating whether the download is new
         /// </summary>
         public bool IsNew { get; set; }
-        #endregion 
     }
 
 }

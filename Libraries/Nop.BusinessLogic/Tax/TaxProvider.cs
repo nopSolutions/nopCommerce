@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
     /// </summary>
     public partial class TaxProvider : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the tax provider class
-        /// </summary>
-        public TaxProvider()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

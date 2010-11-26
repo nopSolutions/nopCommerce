@@ -39,16 +39,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayJunction
         private string pjpassword = string.Empty;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PayJunctionPaymentProcessor class
-        /// </summary>
-        public PayJunctionPaymentProcessor()
-        {
-
-        }
-        #endregion
-
         #region Utilities
 
         /// <summary>

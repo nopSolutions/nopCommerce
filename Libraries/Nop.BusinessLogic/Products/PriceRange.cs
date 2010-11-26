@@ -19,16 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class PriceRange
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PriceRange class
-        /// </summary>
-        public PriceRange()
-        {
-        }
-        #endregion
-                
-        #region Properties
         /// <summary>
         /// From
         /// </summary>
@@ -37,6 +27,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// To
         /// </summary>
         public decimal? To { get; set; }
-        #endregion
     }
 }

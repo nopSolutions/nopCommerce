@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
     /// </summary>
     public partial class MessageTemplate : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the MessageTemplate class
-        /// </summary>
-        public MessageTemplate()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

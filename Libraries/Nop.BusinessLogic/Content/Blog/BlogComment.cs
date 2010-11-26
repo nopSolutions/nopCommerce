@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
     /// </summary>
     public partial class BlogComment : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the BlogComment class
-        /// </summary>
-        public BlogComment()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the blog comment identifier

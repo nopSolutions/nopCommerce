@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 	/// </summary>
     public partial class ProductVariantPricelist : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductVariantPricelist class
-        /// </summary>
-        public ProductVariantPricelist()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the product variant pricelist identifier

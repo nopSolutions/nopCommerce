@@ -28,15 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         private List<ProductVariantAttributeValueLocalized> _pvavLocalized;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductVariantAttributeValue class
-        /// </summary>
-        public ProductVariantAttributeValue()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the product variant attribute value identifier

@@ -19,16 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// </summary>
     public partial class OrderAverageReportLineSummary : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the OrderAverageReportLineSummary class
-        /// </summary>
-        public OrderAverageReportLineSummary()
-        {
-        }
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Gets or sets the order status
         /// </summary>
@@ -83,8 +73,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Gets or sets the all time count
         /// </summary>
         public int CountAllTimeOrders { get; set; }
-
-        #endregion
     }
 
 }

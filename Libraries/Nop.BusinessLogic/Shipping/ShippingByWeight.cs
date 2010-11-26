@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial class ShippingByWeight : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ShippingByWeight class
-        /// </summary>
-        public ShippingByWeight()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the ShippingByWeight identifier

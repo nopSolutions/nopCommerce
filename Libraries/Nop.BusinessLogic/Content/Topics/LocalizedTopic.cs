@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
     /// </summary>
     public partial class LocalizedTopic : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the LocalizedTopic class
-        /// </summary>
-        public LocalizedTopic()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the localized topic identifier

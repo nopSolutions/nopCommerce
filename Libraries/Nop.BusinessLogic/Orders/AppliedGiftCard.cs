@@ -25,17 +25,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private GiftCard _gc = null;
         #endregion
 
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the AppliedGiftCard class
-        /// </summary>
-        public AppliedGiftCard()
-        {
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>

@@ -41,16 +41,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         private PayPalAPIAASoapBinding service2;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PayPalDirectPaymentProcessor class
-        /// </summary>
-        public PayPalDirectPaymentProcessor()
-        {
-
-        }
-        #endregion
-
         #region Methods
         /// <summary>
         /// Gets transaction mode configured by store owner

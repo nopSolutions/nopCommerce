@@ -21,23 +21,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class ProductVariantEventArgs : EventArgs
     {
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the ProductVariantEventArgs class
-        /// </summary>
-        public ProductVariantEventArgs()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the product variant
         /// </summary>
         public ProductVariant ProductVariant { get; set; }
-
-        #endregion
     }
 }

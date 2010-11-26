@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// </summary>
     public partial class RecurringPaymentHistory : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the RecurringPaymentHistory class
-        /// </summary>
-        public RecurringPaymentHistory()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

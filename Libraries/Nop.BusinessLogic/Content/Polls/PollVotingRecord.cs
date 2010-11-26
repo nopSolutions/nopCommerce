@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
     /// </summary>
     public partial class PollVotingRecord : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PollVotingRecord class
-        /// </summary>
-        public PollVotingRecord()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the poll voting record identifier

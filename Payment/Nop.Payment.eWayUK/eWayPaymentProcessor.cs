@@ -40,16 +40,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWayUK
         private string paymentPage;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the eWayPaymentProcessor class
-        /// </summary>
-        public eWayPaymentProcessor()
-        {
-
-        }
-        #endregion
-
         #region Classes
         public class TransactionRequestResult
         {

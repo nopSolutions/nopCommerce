@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class ProductTag : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductTag class
-        /// </summary>
-        public ProductTag()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

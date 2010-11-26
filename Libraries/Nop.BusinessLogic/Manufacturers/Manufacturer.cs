@@ -31,15 +31,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         private List<ManufacturerLocalized> _manufacturerLocalized;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Manufacturer class
-        /// </summary>
-        public Manufacturer()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the manufacturer identifier

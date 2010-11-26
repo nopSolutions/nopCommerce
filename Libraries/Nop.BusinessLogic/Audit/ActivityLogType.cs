@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// </summary>
     public partial class ActivityLogType : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ActivityLogType class
-        /// </summary>
-        public ActivityLogType()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the activity log type identifier

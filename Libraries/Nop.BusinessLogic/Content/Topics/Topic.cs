@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
     /// </summary>
     public partial class Topic : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Topic class
-        /// </summary>
-        public Topic()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

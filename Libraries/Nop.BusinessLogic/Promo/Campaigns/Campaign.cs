@@ -21,16 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
     /// </summary>
     public partial class Campaign : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Campaign class
-        /// </summary>
-        public Campaign()
-        {
-        }
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Gets or sets the campaign identifier
         /// </summary>
@@ -55,7 +45,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOn { get; set; }
-        #endregion
     }
 
 }

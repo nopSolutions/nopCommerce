@@ -40,16 +40,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PSIGate
         private string passphrase;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PSIGatePaymentProcessor class
-        /// </summary>
-        public PSIGatePaymentProcessor()
-        {
-
-        }
-        #endregion
-
         #region Methods
 
         /// <summary>

@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
     /// </summary>
     public partial class ForumSubscription : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ForumSubscription class
-        /// </summary>
-        public ForumSubscription()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the forum subscription identifier

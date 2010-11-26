@@ -30,15 +30,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         protected PaymentMethodTypeEnum paymentMethodType =  PaymentMethodTypeEnum.Unknown;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PaymentMethod class
-        /// </summary>
-        public PaymentMethod()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

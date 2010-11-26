@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
     /// </summary>
     public partial class TaxRate : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the TaxRate class
-        /// </summary>
-        public TaxRate()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the tax rate identifier

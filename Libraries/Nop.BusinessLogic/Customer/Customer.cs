@@ -36,23 +36,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     public partial class Customer : BaseEntity
     {
         #region Fields
+
         private List<CustomerAttribute> _customerAttributesCache = null;
         private List<CustomerRole> _customerRolesCache = null;
         private Address _billingAddressCache = null;
         private Address _shippingAddressCache = null;
         private List<RewardPointsHistory> _rewardPointsHistoryCache = null;
-        #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Customer class
-        /// </summary>
-        public Customer()
-        {
-        }
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Resets cached values for an instance
         /// </summary>
@@ -64,9 +58,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             _shippingAddressCache = null;
             _rewardPointsHistoryCache = null;
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>

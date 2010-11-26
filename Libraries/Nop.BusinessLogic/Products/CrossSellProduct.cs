@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class CrossSellProduct : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CrossSellProduct class
-        /// </summary>
-        public CrossSellProduct()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the cross-sell product identifier

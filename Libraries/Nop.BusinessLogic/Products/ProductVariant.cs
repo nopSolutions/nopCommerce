@@ -34,15 +34,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         private List<ProductVariantLocalized> _pvLocalized;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductVariant class
-        /// </summary>
-        public ProductVariant()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

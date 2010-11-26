@@ -41,17 +41,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayFlowPro
         private string partner;
         private string password;
         #endregion
-
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PayFlowPaymentProcessor class
-        /// </summary>
-        public PayFlowProPaymentProcessor()
-        {
-
-        }
-        #endregion
-
+        
         #region Utilities
         /// <summary>
         /// Gets Paypal URL

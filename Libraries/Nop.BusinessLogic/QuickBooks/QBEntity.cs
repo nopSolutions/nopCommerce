@@ -10,15 +10,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
     /// </summary>
     public partial class QBEntity : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the QBEntity class
-        /// </summary>
-        public QBEntity()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the entity ID

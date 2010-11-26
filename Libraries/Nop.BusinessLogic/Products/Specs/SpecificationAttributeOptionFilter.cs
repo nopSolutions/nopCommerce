@@ -19,19 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
     /// </summary>
     public class SpecificationAttributeOptionFilter : BaseEntity
     {
-        #region Ctor
-
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public SpecificationAttributeOptionFilter()
-        { 
-        }
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
@@ -56,7 +43,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Gets or sets the SpecificationAttributeOptionName
         /// </summary>
         public string SpecificationAttributeOptionName { get; set; }
-
-        #endregion
     }
 }

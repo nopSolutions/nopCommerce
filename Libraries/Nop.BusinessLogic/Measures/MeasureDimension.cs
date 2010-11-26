@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
     /// </summary>
     public partial class MeasureDimension : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the MeasureDimension class
-        /// </summary>
-        public MeasureDimension()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the measure dimension identifier

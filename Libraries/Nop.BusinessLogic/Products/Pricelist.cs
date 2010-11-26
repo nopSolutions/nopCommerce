@@ -31,15 +31,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 	/// </summary>
     public partial class Pricelist : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Ctor for Pricelist
-        /// </summary>
-        public Pricelist()
-        {
-        }
-        #endregion
-
         #region Utilities
 
         private string CreatePricelistContents()

@@ -20,10 +20,6 @@ namespace NopSolutions.NopCommerce.Controls
 {
     public class ImageCheckBox : CheckBox
     {
-        public ImageCheckBox()
-        {
-        }
-
         protected override void Render(HtmlTextWriter output)
         {
             var image = new Image();

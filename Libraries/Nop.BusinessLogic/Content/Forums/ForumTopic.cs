@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
     /// </summary>
     public partial class ForumTopic : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ForumTopic class
-        /// </summary>
-        public ForumTopic()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the forum topic identifier

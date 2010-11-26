@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
     /// </summary>
     public partial class NewsComment : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the NewsComment class
-        /// </summary>
-        public NewsComment()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the news comment identifier

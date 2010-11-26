@@ -19,15 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class ProductVariantLocalized : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductVariantLocalized class
-        /// </summary>
-        public ProductVariantLocalized()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

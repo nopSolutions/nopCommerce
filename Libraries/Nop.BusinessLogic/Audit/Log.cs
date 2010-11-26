@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// </summary>
     public partial class Log : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Log class
-        /// </summary>
-        public Log()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the log identifier

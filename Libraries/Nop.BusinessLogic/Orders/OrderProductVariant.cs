@@ -30,15 +30,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private ProductVariant _pv = null;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the OrderProductVariant class
-        /// </summary>
-        public OrderProductVariant()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the order product variant identifier

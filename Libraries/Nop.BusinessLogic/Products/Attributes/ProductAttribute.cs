@@ -28,15 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         private List<ProductAttributeLocalized> _paLocalized;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductAttribute class
-        /// </summary>
-        public ProductAttribute()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the product attribute identifier

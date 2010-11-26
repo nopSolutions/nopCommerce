@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
     /// </summary>
     public partial class SMSProvider : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the SMSProvider class
-        /// </summary>
-        public SMSProvider()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the SMS provider identifier

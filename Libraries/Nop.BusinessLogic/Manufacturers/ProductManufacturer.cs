@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
     /// </summary>
     public partial class ProductManufacturer : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductManufacturer class
-        /// </summary>
-        public ProductManufacturer()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

@@ -36,20 +36,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
     public class AuthorizeNetPaymentProcessor : IPaymentMethod
     {
         #region Fields
+
         private bool useSandBox = true;
         private string loginID;
         private string transactionKey;
         private Service webService = null;
-        #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the AuthorizeNetPaymentProcessor class
-        /// </summary>
-        public AuthorizeNetPaymentProcessor()
-        {
-
-        }
         #endregion
 
         #region Utilities

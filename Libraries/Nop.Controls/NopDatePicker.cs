@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.Controls
     /// </summary>
     public partial class NopDatePicker : Control, INamingContainer
     {
-        #region Ctor
-        /// <summary>
-        /// Initializes a new instance of the DatePicker class.
-        /// </summary>
-        public NopDatePicker()
-        {
-        }
-        #endregion
-
         #region Utilities
 
         protected override void CreateChildControls()

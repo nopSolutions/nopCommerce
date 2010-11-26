@@ -91,17 +91,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             }
         }
 
-        #region Ctor
-
-        /// <summary>
-        ///Ctor
-        /// </summary>
-        public ExportManager()
-        {
-        }
-
-        #endregion
-
         #endregion
 
         #region Methods

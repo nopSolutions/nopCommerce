@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
     /// </summary>
     public partial class Warehouse : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Warehouse class
-        /// </summary>
-        public Warehouse()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the warehouse identifier

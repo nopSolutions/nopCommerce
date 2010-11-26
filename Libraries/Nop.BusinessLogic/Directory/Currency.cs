@@ -22,16 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
     /// </summary>
     public partial class Currency : BaseEntity
     {
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the Currency class
-        /// </summary>
-        public Currency()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

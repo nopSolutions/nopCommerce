@@ -21,16 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
     /// </summary>
     public partial class ProductTemplate : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductTemplate class
-        /// </summary>
-        public ProductTemplate()
-        {
-        }
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Gets or sets the product template identifier
         /// </summary>
@@ -60,7 +50,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOn { get; set; }
-        #endregion 
     }
 
 }

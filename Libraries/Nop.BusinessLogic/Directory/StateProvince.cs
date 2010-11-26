@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
     /// </summary>
     public partial class StateProvince : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the StateProvince class
-        /// </summary>
-        public StateProvince()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the state/province identifier

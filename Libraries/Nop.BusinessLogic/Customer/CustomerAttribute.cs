@@ -19,15 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     /// </summary>
     public partial class CustomerAttribute : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CustomerAttribute class
-        /// </summary>
-        public CustomerAttribute()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the customer attribute identifier

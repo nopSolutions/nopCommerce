@@ -29,15 +29,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private ProductVariant _cachedProductVariant;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the shopping cart class
-        /// </summary>
-        public ShoppingCartItem()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the shopping cart item identifier

@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class ProductPicture : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductPicture class
-        /// </summary>
-        public ProductPicture()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the ProductPicture identifier

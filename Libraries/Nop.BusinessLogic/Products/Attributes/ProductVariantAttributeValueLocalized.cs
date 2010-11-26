@@ -19,15 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
     /// </summary>
     public partial class ProductVariantAttributeValueLocalized : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductVariantAttributeValueLocalized class
-        /// </summary>
-        public ProductVariantAttributeValueLocalized()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the localized product variant attribute value identifier

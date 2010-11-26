@@ -19,17 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
     /// </summary>
     public partial class CustomerAction : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CustomerAction class
-        /// </summary>
-        public CustomerAction()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the customer action identifier
         /// </summary>
@@ -54,8 +43,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
-        #endregion
     }
 
 }

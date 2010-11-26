@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class RelatedProduct : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the RelatedProduct class
-        /// </summary>
-        public RelatedProduct()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the related product identifier

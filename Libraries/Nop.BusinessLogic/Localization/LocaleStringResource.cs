@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
     /// </summary>
     public partial class LocaleStringResource : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the LocaleStringResource class
-        /// </summary>
-        public LocaleStringResource()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the locale string resource identifier

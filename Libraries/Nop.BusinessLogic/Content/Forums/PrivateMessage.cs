@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
     /// </summary>
     public partial class PrivateMessage : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the PrivateMessage class
-        /// </summary>
-        public PrivateMessage()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the private message identifier

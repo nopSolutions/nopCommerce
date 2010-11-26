@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// </summary>
     public partial class OrderNote : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the OrderNote class
-        /// </summary>
-        public OrderNote()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the order note identifier

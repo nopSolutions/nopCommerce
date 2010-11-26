@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
     /// </summary>
     public partial class MeasureWeight : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the MeasureWeight class
-        /// </summary>
-        public MeasureWeight()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the measure weight identifier

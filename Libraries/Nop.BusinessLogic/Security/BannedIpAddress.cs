@@ -21,14 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
     /// </summary>
     public partial class BannedIpAddress : BaseEntity
     {
-        #region Constructor
-        /// <summary>
-        /// Default constructor. Creates a new instance of IpAddress
-        /// </summary>
-        public BannedIpAddress() { }
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Gets or sets the IP address unique identifier
         /// </summary>
@@ -53,6 +45,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Gets or sets when the banned IP address record was last updated
         /// </summary>
         public DateTime UpdatedOn { get; set; }
-        #endregion
     }
 }

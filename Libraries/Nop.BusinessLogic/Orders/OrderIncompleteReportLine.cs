@@ -19,17 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// </summary>
     public partial class OrderIncompleteReportLine : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the OrderIncompleteReportLine class
-        /// </summary>
-        public OrderIncompleteReportLine()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the sum total
         /// </summary>
@@ -39,8 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Gets or sets the count
         /// </summary>
         public int Count { get; set; }
-
-        #endregion
     }
 
 }

@@ -21,17 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class ProductRating : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductRating class
-        /// </summary>
-        public ProductRating()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the product rating identifier
         /// </summary>
@@ -56,8 +45,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime RatedOn { get; set; }
-
-        #endregion 
     }
 
 }

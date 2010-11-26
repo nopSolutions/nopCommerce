@@ -19,15 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
     /// </summary>
     public partial class ManufacturerLocalized : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ManufacturerLocalized class
-        /// </summary>
-        public ManufacturerLocalized()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the localized manufacturer identifier

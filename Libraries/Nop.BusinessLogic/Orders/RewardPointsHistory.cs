@@ -28,15 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private Order _order = null;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the RewardPointsHistory class
-        /// </summary>
-        public RewardPointsHistory()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

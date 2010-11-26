@@ -25,14 +25,6 @@ namespace NopSolutions.NopCommerce.Controls
     [ToolboxData("<{0}:GlobalRadioButton runat=server></{0}:GlobalRadioButton>")]
     public partial class GlobalRadioButton : RadioButton, IPostBackDataHandler
     {
-        /// <summary>
-        /// Creates a new instance of the GlobalRadioButton class
-        /// </summary>
-        public GlobalRadioButton()
-            : base()
-		{
-		}
-
         private string Value
         {
             get

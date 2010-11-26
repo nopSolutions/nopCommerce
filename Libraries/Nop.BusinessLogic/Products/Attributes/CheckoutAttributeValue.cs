@@ -28,15 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         private List<CheckoutAttributeValueLocalized> _cavLocalized;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CheckoutAttributeValue class
-        /// </summary>
-        public CheckoutAttributeValue()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the checkout attribute value identifier

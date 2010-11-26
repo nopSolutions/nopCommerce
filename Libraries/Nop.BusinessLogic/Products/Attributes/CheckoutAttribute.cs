@@ -27,16 +27,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         #region Fields
         private List<CheckoutAttributeLocalized> _checkoutAttributeLocalized;
         #endregion
-
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CheckoutAttribute class
-        /// </summary>
-        public CheckoutAttribute()
-        {
-        }
-        #endregion
-
+        
         #region Properties
         /// <summary>
         /// Gets or sets the checkout attribute identifier

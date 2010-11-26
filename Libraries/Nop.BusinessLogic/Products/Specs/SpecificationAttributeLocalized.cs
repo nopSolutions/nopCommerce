@@ -19,15 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
     /// </summary>
     public partial class SpecificationAttributeLocalized : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the SpecificationAttributeLocalized class
-        /// </summary>
-        public SpecificationAttributeLocalized()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the localized specification attribute identifier

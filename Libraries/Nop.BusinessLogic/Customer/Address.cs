@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     /// </summary>
     public partial class Address : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Address class
-        /// </summary>
-        public Address()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the address identifier

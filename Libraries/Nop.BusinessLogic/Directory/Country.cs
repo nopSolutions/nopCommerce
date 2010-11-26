@@ -24,15 +24,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
     /// </summary>
     public partial class Country : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Country class
-        /// </summary>
-        public Country()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the country identifier

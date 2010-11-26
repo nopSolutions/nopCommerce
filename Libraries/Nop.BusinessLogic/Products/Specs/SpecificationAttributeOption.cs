@@ -28,16 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         private List<SpecificationAttributeOptionLocalized> _saoLocalized;
         #endregion
 
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the SpecificationAttributeOption class
-        /// </summary>
-        public SpecificationAttributeOption()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

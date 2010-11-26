@@ -19,17 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class CustomerRoleProductPrice : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CustomerRoleProductPrice class
-        /// </summary>
-        public CustomerRoleProductPrice()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the identifier
         /// </summary>
@@ -49,8 +38,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// Gets or sets the price
         /// </summary>
         public decimal Price { get; set; }
-
-        #endregion 
     }
 
 }

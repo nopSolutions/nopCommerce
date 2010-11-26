@@ -19,15 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
     /// </summary>
     public partial class CategoryLocalized : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the CategoryLocalized class
-        /// </summary>
-        public CategoryLocalized()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the localized category identifier

@@ -19,17 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// </summary>
     public partial class OrderProductVariantReportLine : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the OrderIncompleteReportLine class
-        /// </summary>
-        public OrderProductVariantReportLine()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the product variant identifier
         /// </summary>
@@ -44,8 +33,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Gets or sets the quantity
         /// </summary>
         public int Quantity { get; set; }
-
-        #endregion
     }
 
 }

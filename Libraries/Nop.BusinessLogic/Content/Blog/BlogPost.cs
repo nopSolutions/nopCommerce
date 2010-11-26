@@ -25,15 +25,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
     /// </summary>
     public partial class BlogPost : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the BlogPost class
-        /// </summary>
-        public BlogPost()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the blog post identifier

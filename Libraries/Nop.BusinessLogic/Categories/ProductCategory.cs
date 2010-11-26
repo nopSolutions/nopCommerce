@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
     /// </summary>
     public partial class ProductCategory : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ProductCategory class
-        /// </summary>
-        public ProductCategory()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the ProductCategory identifier

@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
     /// </summary>
     public partial class TierPrice : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the TierPrice class
-        /// </summary>
-        public TierPrice()
-        {
-        }
-        #endregion
-
         #region Properties
 
         /// <summary>

@@ -19,5 +19,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic
     /// </summary>
     public abstract partial class BaseEntity
     {
+        public BaseEntity()
+        {
+            
+        }
     }
 }

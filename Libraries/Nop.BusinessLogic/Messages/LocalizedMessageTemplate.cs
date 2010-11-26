@@ -22,15 +22,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
     /// </summary>
     public partial class LocalizedMessageTemplate : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the LocalizedMessageTemplate class
-        /// </summary>
-        public LocalizedMessageTemplate()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the localized message template identifier

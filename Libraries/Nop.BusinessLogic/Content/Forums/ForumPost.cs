@@ -23,15 +23,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
     /// </summary>
     public partial class ForumPost : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ForumPost class
-        /// </summary>
-        public ForumPost()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the forum post identifier

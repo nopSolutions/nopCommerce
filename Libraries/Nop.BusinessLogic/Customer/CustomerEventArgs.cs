@@ -21,23 +21,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     /// </summary>
     public partial class CustomerEventArgs : EventArgs
     {
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the CustomerEventArgs class
-        /// </summary>
-        public CustomerEventArgs()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the customer
         /// </summary>
         public Customer Customer { get; set; }
-
-        #endregion
     }
 }

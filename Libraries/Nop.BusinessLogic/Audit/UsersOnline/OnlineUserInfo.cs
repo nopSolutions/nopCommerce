@@ -21,17 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
     /// </summary>
     public partial class OnlineUserInfo
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the OnlineUserInfo class
-        /// </summary>
-        public OnlineUserInfo()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the unique identifier
         /// </summary>
@@ -61,7 +50,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// Gets or sets the last visit date and time
         /// </summary>
         public DateTime LastVisit { get; set; }
-
-        #endregion
     }
 }

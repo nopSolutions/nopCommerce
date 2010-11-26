@@ -21,16 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
     /// </summary>
     public partial class TaxCategory : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the TaxCategory class
-        /// </summary>
-        public TaxCategory()
-        {
-        }
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
@@ -55,7 +45,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOn { get; set; }
-        #endregion 
     }
 
 }

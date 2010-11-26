@@ -21,23 +21,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// </summary>
     public partial class OrderEventArgs : EventArgs
     {
-        #region Ctor
-
-        /// <summary>
-        /// Creates a new instance of the OrderEventArg class
-        /// </summary>
-        public OrderEventArgs()
-        {
-        }
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the order
         /// </summary>
         public Order Order { get; set; }
-
-        #endregion
     }
 }

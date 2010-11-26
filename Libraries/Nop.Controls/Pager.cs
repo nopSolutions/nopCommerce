@@ -32,15 +32,6 @@ namespace NopSolutions.NopCommerce.Controls
         private StateBag attState;
         #endregion
 
-        #region Ctor
-        /// <summary>
-        /// Initializes a new instance of the Pager class.
-        /// </summary>
-        public Pager()
-        {
-        }
-        #endregion
-
         #region Utilities
         /// <summary>
         /// Binds default pager content

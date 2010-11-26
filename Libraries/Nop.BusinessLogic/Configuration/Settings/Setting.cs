@@ -19,16 +19,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
     /// </summary>
     public partial class Setting : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the Setting class
-        /// </summary>
-        public Setting()
-        {
-        }
-        #endregion
-
-        #region Properties
         /// <summary>
         /// Gets or sets the setting identifier
         /// </summary>
@@ -48,7 +38,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// Gets or sets the description
         /// </summary>
         public string Description { get; set; }
-
-        #endregion
     }
 }

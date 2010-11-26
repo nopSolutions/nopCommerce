@@ -25,16 +25,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         #region Fields
         private ProductVariant _pv = null;
         #endregion
-
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the BestSellersReportLine class
-        /// </summary>
-        public BestSellersReportLine()
-        {
-        }
-        #endregion
-
+        
         #region Properties
         /// <summary>
         /// Gets or sets the product variant identifier

@@ -26,18 +26,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
     /// </summary>
     public partial class ImportManager : IImportManager
     {
-        #region Ctor
-
-        /// <summary>
-        ///Ctor
-        /// </summary>
-        public ImportManager()
-        {
-        }
-
-        #endregion
-        #region Methods
-
         /// <summary>
         /// Import customer list from XLS file
         /// </summary>
@@ -437,6 +425,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 }
             }
         }
-        #endregion
     }
 }

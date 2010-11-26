@@ -21,15 +21,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial class ShippingByTotal : BaseEntity
     {
-        #region Ctor
-        /// <summary>
-        /// Creates a new instance of the ShippingByTotal class
-        /// </summary>
-        public ShippingByTotal()
-        {
-        }
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the ShippingByTotal identifier
