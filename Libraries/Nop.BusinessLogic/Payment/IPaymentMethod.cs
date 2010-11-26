@@ -13,12 +13,8 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
-
-
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 {

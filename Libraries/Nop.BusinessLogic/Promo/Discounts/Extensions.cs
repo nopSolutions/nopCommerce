@@ -15,14 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 {

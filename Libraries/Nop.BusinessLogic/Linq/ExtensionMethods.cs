@@ -12,16 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Web;
-using System.Web.Compilation;
-using System.Xml;
-using NopSolutions.NopCommerce.BusinessLogic.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.Utils;
-
 namespace NopSolutions.NopCommerce.BusinessLogic.Linq
 {
     /// <summary>

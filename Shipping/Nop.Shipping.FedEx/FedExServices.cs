@@ -12,27 +12,6 @@
 // Contributor(s): mb. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Web.Services.Protocols;
-using System.Xml;
-using Nop.Shipping.FedEx.RateServiceWebReference;
-using NopSolutions.NopCommerce.BusinessLogic;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.Measures;
-using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
-using NopSolutions.NopCommerce.BusinessLogic.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.Utils;
-using NopSolutions.NopCommerce.Common;
-
 namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
 {
     /// <summary>

@@ -12,10 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 {
     /// <summary>

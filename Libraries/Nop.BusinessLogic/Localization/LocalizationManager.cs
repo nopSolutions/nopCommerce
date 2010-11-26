@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Objects;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
@@ -26,7 +25,6 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
- 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Localization
 {

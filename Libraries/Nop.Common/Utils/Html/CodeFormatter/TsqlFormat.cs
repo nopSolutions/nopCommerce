@@ -22,11 +22,6 @@
  */ 
 #endregion
 
-using System;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-
 namespace NopSolutions.NopCommerce.Common.Utils.Html.CodeFormatter
 {
 	/// <summary>

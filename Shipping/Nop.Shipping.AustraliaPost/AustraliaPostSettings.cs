@@ -14,8 +14,8 @@
 
 using System.Globalization;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
+using NopSolutions.NopCommerce.BusinessLogic.Measures;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
 {

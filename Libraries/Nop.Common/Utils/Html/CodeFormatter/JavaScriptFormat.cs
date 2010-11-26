@@ -22,12 +22,7 @@
 
 namespace NopSolutions.NopCommerce.Common.Utils.Html.CodeFormatter
 {
-	using System;
-	using System.IO;
-	using System.Text;
-	using System.Text.RegularExpressions;
-
-	/// <summary>
+    /// <summary>
 	/// Generates color-coded HTML 4.01 from JavaSctript source code.
 	/// </summary>
     public partial class JavaScriptFormat : CLikeFormat

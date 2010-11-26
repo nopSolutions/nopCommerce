@@ -13,26 +13,19 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Web;
+using System.Threading;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.Utils;
-using PayPal.Payments.DataObjects;
-using PayPal.Payments.Common.Utility;
-using PayPal.Payments.Transactions;
-using System.Threading;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
-
+using PayPal.Payments.Common.Utility;
+using PayPal.Payments.DataObjects;
+using PayPal.Payments.Transactions;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.PayFlowPro
 {

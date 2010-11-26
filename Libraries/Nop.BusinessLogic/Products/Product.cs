@@ -23,7 +23,6 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common;
 
-
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {
     /// <summary>

@@ -13,15 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Text;
-using System.Web;
-using System.Xml;
-using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
-
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 {

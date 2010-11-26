@@ -22,9 +22,9 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Reflection;
 
 namespace NopSolutions.NopCommerce.Common.Utils.Html.CodeFormatter
 {

@@ -13,26 +13,13 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Configuration.Provider;
-using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Xml;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.Payment;
-using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
+using NopSolutions.NopCommerce.BusinessLogic.Orders;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Security
 {

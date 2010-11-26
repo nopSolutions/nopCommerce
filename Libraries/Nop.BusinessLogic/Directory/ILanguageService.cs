@@ -12,20 +12,7 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.Common;
-using System.Data.Objects;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.Caching;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.Data;
-using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 {

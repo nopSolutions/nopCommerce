@@ -18,16 +18,6 @@ using System.Data;
 using System.Data.OleDb;
 using System.IO;
 using System.Text;
-using System.Web;
-using System.Web.Compilation;
-using System.Web.Security;
-using System.Xml;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.Localization;
-using NopSolutions.NopCommerce.BusinessLogic.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.BusinessLogic.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
 {

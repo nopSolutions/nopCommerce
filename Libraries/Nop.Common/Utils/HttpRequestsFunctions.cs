@@ -12,25 +12,10 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Configuration;
-using System.Configuration.Provider;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Xml;
-using NopSolutions.NopCommerce.Common.Utils.Html;
 using System.Net;
+using System.Text;
+using System.Xml;
 
 namespace NopSolutions.NopCommerce.Common.Utils
 {

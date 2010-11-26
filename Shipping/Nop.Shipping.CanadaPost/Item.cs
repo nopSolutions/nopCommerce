@@ -12,17 +12,9 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Web.Services.Protocols;
-using System.Xml;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
 {

@@ -14,13 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.ComponentModel;
-using System.Xml;
-using System.Xml.Serialization;
 using System.Collections.ObjectModel;
+using System.Xml;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tasks
 {

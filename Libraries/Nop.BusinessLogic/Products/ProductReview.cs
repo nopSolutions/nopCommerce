@@ -14,10 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
-
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {

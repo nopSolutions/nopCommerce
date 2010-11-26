@@ -13,12 +13,10 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
+using System.Security.Cryptography;
 using System.Text;
 using NopSolutions.NopCommerce.Common.Utils;
-using System.Security.Cryptography;
-using System.Collections.Specialized;
 using NopSolutions.NopCommerce.Payment.Methods.USAePay.services;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.USAePay

@@ -13,21 +13,11 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Configuration.Provider;
 using System.Diagnostics;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Security;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
-using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
-
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Profile
 {

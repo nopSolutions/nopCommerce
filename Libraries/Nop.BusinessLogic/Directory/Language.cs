@@ -13,15 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Web;
-using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
-using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
-
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 {

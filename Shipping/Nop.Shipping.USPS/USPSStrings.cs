@@ -12,16 +12,6 @@
 // Contributor(s): RJH 08/07/2009. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Xml;
-using NopSolutions.NopCommerce.BusinessLogic.Shipping;
-
 namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
 {
     /// <summary>

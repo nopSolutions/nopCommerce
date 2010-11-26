@@ -15,21 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Data.EntityClient;
-using System.Diagnostics;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.Remoting.Messaging;
-using System.ServiceModel;
-using System.Text;
-using System.Web;
-using System.Web.Compilation;
-using System.Xml;
 using Microsoft.Practices.Unity;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
-using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
@@ -42,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
+using NopSolutions.NopCommerce.BusinessLogic.Installation;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Maintenance;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
@@ -63,7 +53,6 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
-using NopSolutions.NopCommerce.BusinessLogic.Installation;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {

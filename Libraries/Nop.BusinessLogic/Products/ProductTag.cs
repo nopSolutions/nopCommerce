@@ -12,13 +12,7 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using NopSolutions.NopCommerce.BusinessLogic.Categories;
-using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
-using NopSolutions.NopCommerce.BusinessLogic.Templates;
-using NopSolutions.NopCommerce.Common;
-
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {

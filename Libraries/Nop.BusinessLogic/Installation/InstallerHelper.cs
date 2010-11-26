@@ -13,21 +13,14 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
 using System.Web;
 using System.Web.Configuration;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration;
-using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Installation

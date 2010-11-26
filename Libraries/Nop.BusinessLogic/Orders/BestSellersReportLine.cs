@@ -12,12 +12,8 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
-
+using NopSolutions.NopCommerce.BusinessLogic.Products;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {

@@ -13,12 +13,6 @@
 //------------------------------------------------------------------------------
 
 
-using System;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
-
 namespace NopSolutions.NopCommerce.Common.Utils.Html.CodeFormatter
 {
     /// <summary>

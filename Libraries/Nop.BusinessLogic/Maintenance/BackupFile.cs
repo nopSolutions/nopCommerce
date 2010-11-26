@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-
-namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
+﻿namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
 {
     /// <summary>
     /// Represents a backup file

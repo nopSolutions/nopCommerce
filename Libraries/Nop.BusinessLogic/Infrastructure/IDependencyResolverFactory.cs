@@ -12,18 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.EntityClient;
-using System.IO;
-using System.Runtime.Remoting.Messaging;
-using System.ServiceModel;
-using System.Text;
-using System.Web;
-using System.Web.Compilation;
-using System.Xml;
-
 namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {
     /// <summary>

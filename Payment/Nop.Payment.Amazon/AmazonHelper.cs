@@ -13,15 +13,15 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Text;
-using System.Security.Cryptography;
-using NopSolutions.NopCommerce.Common;
-using System.Web;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Collections.Specialized;
+using System.IO;
+using System.Net;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Web;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
 {

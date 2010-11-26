@@ -12,13 +12,9 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using System.Web.Configuration;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Web.Configuration;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Installation
 {

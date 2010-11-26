@@ -13,16 +13,10 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Runtime.Remoting.Messaging;
 using System.ServiceModel;
-using System.Text;
 using System.Web;
-using System.Web.Compilation;
-using System.Xml;
 using Microsoft.Practices.Unity;
-using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {

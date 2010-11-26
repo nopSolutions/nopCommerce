@@ -14,10 +14,9 @@
 
 using System;
 using System.Xml;
-using NopSolutions.NopCommerce.BusinessLogic.Tasks;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
-using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
+using NopSolutions.NopCommerce.BusinessLogic.Tasks;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Caching
 {

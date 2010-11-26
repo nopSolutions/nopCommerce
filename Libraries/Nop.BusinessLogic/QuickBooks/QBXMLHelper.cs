@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using System.Globalization;
-using NopSolutions.NopCommerce.BusinessLogic.Products;
-using System.Text.RegularExpressions;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using System.Text;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.Payment;
-using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.Common.Utils.Html;
-using System.Web;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
+using NopSolutions.NopCommerce.BusinessLogic.Orders;
+using NopSolutions.NopCommerce.BusinessLogic.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
 {

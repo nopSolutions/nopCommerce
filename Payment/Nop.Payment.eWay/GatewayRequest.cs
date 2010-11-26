@@ -12,8 +12,6 @@
 // Contributor(s): 
 //------------------------------------------------------------------------------
 
-using System;
-
 namespace NopSolutions.NopCommerce.Payment.Methods.eWay
 {
     /// <summary>
