@@ -23,7 +23,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     public partial class CustomerSession : BaseEntity
     {
         #region Fields
-        private Customer _customer = null;
+        private Customer _customer;
         #endregion 
 
         #region Properties

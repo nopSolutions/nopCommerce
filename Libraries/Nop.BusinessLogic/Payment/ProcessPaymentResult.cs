@@ -30,7 +30,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         private string _error = string.Empty;
         private string _fullError = string.Empty;
         private PaymentStatusEnum _paymentStatus = PaymentStatusEnum.Pending;
-        private bool _allowStoringCreditCardNumber = false;
+        private bool _allowStoringCreditCardNumber;
         #endregion
 
         #region Properties

@@ -24,8 +24,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     public partial class RewardPointsHistory : BaseEntity
     {
         #region Fields
-        private Customer _customer = null;
-        private Order _order = null;
+        private Customer _customer;
+        private Order _order;
         #endregion
 
         #region Properties

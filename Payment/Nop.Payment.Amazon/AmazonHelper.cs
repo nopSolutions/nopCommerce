@@ -126,7 +126,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
                 stringToSign.Append(hostHeader.ToLower());
             stringToSign.Append(NewLine);
 
-            if (requestURI == null || requestURI.Length == 0)
+            if (String.IsNullOrEmpty(requestURI))
                 stringToSign.Append(EmptyUriPath);
             else
                 stringToSign.Append(UrlEncode(requestURI, true));

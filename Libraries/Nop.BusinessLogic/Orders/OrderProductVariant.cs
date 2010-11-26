@@ -26,8 +26,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     public partial class OrderProductVariant : BaseEntity
     {
         #region Fields
-        private Order _order = null;
-        private ProductVariant _pv = null;
+        private Order _order;
+        private ProductVariant _pv;
         #endregion
 
         #region Properties

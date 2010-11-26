@@ -25,7 +25,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration
     {
         #region Fields
         private static string _connectionString = "";
-        private static bool _initialized = false;
+        private static bool _initialized;
         private static int _cookieExpires = 128;
         private static XmlNode _scheduleTasks;
         #endregion

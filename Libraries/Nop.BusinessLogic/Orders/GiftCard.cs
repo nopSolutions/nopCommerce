@@ -24,7 +24,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     public partial class GiftCard : BaseEntity
     {
         #region Fields
-        private OrderProductVariant _opv = null;
+        private OrderProductVariant _opv;
         #endregion
 
         #region Properties

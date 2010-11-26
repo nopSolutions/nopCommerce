@@ -28,7 +28,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
         #region Fields
 
         private const string DateFormat = @"yyyy-MM-dd";
-        private XmlTextWriter _writer = null;
+        private XmlTextWriter _writer;
 
         #endregion
 

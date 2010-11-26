@@ -37,11 +37,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     {
         #region Fields
 
-        private List<CustomerAttribute> _customerAttributesCache = null;
-        private List<CustomerRole> _customerRolesCache = null;
-        private Address _billingAddressCache = null;
-        private Address _shippingAddressCache = null;
-        private List<RewardPointsHistory> _rewardPointsHistoryCache = null;
+        private List<CustomerAttribute> _customerAttributesCache;
+        private List<CustomerRole> _customerRolesCache;
+        private Address _billingAddressCache;
+        private Address _shippingAddressCache;
+        private List<RewardPointsHistory> _rewardPointsHistoryCache;
 
         #endregion
 

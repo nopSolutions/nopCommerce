@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
     {
         #region Fields
 
-        private static readonly object _lock = new object();
+        private static readonly object s_lock = new object();
 
         /// <summary>
         /// Object context
@@ -434,7 +434,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
                 picture = UpdatePicture(picture.PictureId, picture.LoadPictureBinary(), picture.MimeType, false);
             }
-            lock (_lock)
+            lock (s_lock)
             {
                 if (targetSize == 0)
                 {

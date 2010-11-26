@@ -31,7 +31,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         private string _filepath = string.Empty;
         private string _hdr = "No";
         private string _imex = "1";
-        private OleDbConnection _con = null;
+        private OleDbConnection _con;
         #endregion
 
         #region Ctor

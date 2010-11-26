@@ -482,9 +482,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                 
                 // Get the exceptions as a list
                 var exceptionItem = new List<string>();
-                exceptionItem.AddRange(ipNetwork.IpException.ToString().Split(";".ToCharArray()));
+                exceptionItem.AddRange(ipNetwork.IpException.Split(";".ToCharArray()));
                 // Check if the IP is an exception 
-                if(exceptionItem.Contains(ipAddress.Address.ToString()))
+                if(exceptionItem.Contains(ipAddress.Address))
                     return false;
 
                 // Check if the 1st IP is valid
@@ -496,8 +496,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                     throw new NopException("The following isn't a valid IP address: " + rangeItem[1]);
 
                 //Check if the IP is in the given range
-                if (IsGreaterOrEqual(ipAddress.Address.ToString(), rangeItem[0].Trim())
-                    && IsLessOrEqual(ipAddress.Address.ToString(), rangeItem[1].Trim()))
+                if (IsGreaterOrEqual(ipAddress.Address, rangeItem[0].Trim())
+                    && IsLessOrEqual(ipAddress.Address, rangeItem[1].Trim()))
                     return true;
             }
             // Return false otherwise

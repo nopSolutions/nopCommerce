@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
         #region Fields
 
-        private static readonly object _lock = new object();
+        private static readonly object s_lock = new object();
 
         /// <summary>
         /// Object context
@@ -119,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
             int expMinutes = 20;
 
-            lock (_lock)
+            lock (s_lock)
             {
                 //user list
                 List<Guid> usersToRemove = new List<Guid>();
@@ -152,7 +152,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
                     HttpContext.Current == null)
                     return;
 
-                lock (_lock)
+                lock (s_lock)
                 {
                     //getting current user info (OnlineUserInfo)
                     OnlineUserInfo oui = null;
@@ -255,7 +255,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
             if (!this.Enabled)
                 return;
 
-            lock (_lock)
+            lock (s_lock)
             {
                 Dictionary<Guid, OnlineUserInfo> userList1 = GetAnonymousUserList();
                 Dictionary<Guid, OnlineUserInfo> userList2 = GetRegisteredUserList();
@@ -282,7 +282,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <returns>Online user list</returns>
         public List<OnlineUserInfo> GetGuestList()
         {
-            lock (_lock)
+            lock (s_lock)
             {
                 //user list
                 List<OnlineUserInfo> users = new List<OnlineUserInfo>();
@@ -303,7 +303,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <returns>Online user list</returns>
         public List<OnlineUserInfo> GetRegisteredUsersOnline()
         {
-            lock (_lock)
+            lock (s_lock)
             {
                 //user list
                 List<OnlineUserInfo> users = new List<OnlineUserInfo>();
@@ -324,7 +324,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <returns>Online user list</returns>
         public List<OnlineUserInfo> GetAllUserList()
         {
-            lock (_lock)
+            lock (s_lock)
             {
                 //user list
                 var allUsers = new List<OnlineUserInfo>();

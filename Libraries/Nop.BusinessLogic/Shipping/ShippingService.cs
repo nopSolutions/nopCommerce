@@ -935,7 +935,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                     error2 = errorSrcm;
                     IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.ShippingError,
                         string.Format("{0}. {1}", srcm.Name, errorSrcm),
-                            errorSrcm.ToString());
+                            errorSrcm);
                 }
             }
 

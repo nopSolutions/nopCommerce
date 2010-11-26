@@ -23,7 +23,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     public partial class BestSellersReportLine : BaseEntity
     {
         #region Fields
-        private ProductVariant _pv = null;
+        private ProductVariant _pv;
         #endregion
         
         #region Properties

@@ -24,9 +24,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     public partial class GiftCardUsageHistory : BaseEntity
     {
         #region Fields
-        private GiftCard _gc = null;
-        private Customer _customer = null;
-        private Order _order = null;
+        private GiftCard _gc;
+        private Customer _customer;
+        private Order _order;
         #endregion
         
         #region Properties

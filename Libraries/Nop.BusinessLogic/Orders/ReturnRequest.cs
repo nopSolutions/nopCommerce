@@ -24,8 +24,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     public partial class ReturnRequest : BaseEntity
     {
         #region Fields
-        private OrderProductVariant _opv = null;
-        private Customer _customer = null;
+        private OrderProductVariant _opv;
+        private Customer _customer;
         #endregion
 
         #region Properties

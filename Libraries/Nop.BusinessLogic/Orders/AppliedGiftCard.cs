@@ -22,7 +22,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     public class AppliedGiftCard
     {
         #region Fields
-        private GiftCard _gc = null;
+        private GiftCard _gc;
         #endregion
 
         #region Properties

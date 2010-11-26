@@ -412,7 +412,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Order.BillingFirstName", HttpUtility.HtmlEncode(order.BillingFirstName));
             tokens.Add("Order.BillingLastName", HttpUtility.HtmlEncode(order.BillingLastName));
             tokens.Add("Order.BillingPhoneNumber", HttpUtility.HtmlEncode(order.BillingPhoneNumber));
-            tokens.Add("Order.BillingEmail", HttpUtility.HtmlEncode(order.BillingEmail.ToString()));
+            tokens.Add("Order.BillingEmail", HttpUtility.HtmlEncode(order.BillingEmail));
             tokens.Add("Order.BillingFaxNumber", HttpUtility.HtmlEncode(order.BillingFaxNumber));
             tokens.Add("Order.BillingCompany", HttpUtility.HtmlEncode(order.BillingCompany));
             tokens.Add("Order.BillingAddress1", HttpUtility.HtmlEncode(order.BillingAddress1));
@@ -427,7 +427,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Order.ShippingFirstName", HttpUtility.HtmlEncode(order.ShippingFirstName));
             tokens.Add("Order.ShippingLastName", HttpUtility.HtmlEncode(order.ShippingLastName));
             tokens.Add("Order.ShippingPhoneNumber", HttpUtility.HtmlEncode(order.ShippingPhoneNumber));
-            tokens.Add("Order.ShippingEmail", HttpUtility.HtmlEncode(order.ShippingEmail.ToString()));
+            tokens.Add("Order.ShippingEmail", HttpUtility.HtmlEncode(order.ShippingEmail));
             tokens.Add("Order.ShippingFaxNumber", HttpUtility.HtmlEncode(order.ShippingFaxNumber));
             tokens.Add("Order.ShippingCompany", HttpUtility.HtmlEncode(order.ShippingCompany));
             tokens.Add("Order.ShippingAddress1", HttpUtility.HtmlEncode(order.ShippingAddress1));

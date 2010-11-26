@@ -40,23 +40,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
     {
         #region Fields
 
-        private static Dictionary<string, string> _seoCharacterTable = null;
-        private static readonly object _lock;
+        private static Dictionary<string, string> _seoCharacterTable;
+        private static readonly object s_lock = new object();
 
         #endregion
-
-        #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        static SEOHelper()
-        {
-            _lock = new object();
-        }
-
-        #endregion
-
+        
         #region Utilities
         
         /// <summary>
@@ -89,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// </summary>
         private static void InitializeSeoCharacterTable()
         {
-            lock (_lock)
+            lock (s_lock)
             {
                 if (_seoCharacterTable == null)
                 {
