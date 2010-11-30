@@ -952,6 +952,9 @@ set @resources='
   <LocaleResource Name="Profile.PostedOn">
     <Value>Posted</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CountryInfo.ThreeLetterISOCode">
+    <Value>Three letter ISO code:</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2466,3 +2469,4 @@ UPDATE [dbo].[Nop_Setting]
 SET [Value]='1.90'
 WHERE [Name]='Common.CurrentVersion'
 GO
+

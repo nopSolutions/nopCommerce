@@ -246,6 +246,10 @@ tr.adminSeparator hr
     padding:0;
 }
 
+span.nop-tooltip
+{
+	white-space:nowrap;
+}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
