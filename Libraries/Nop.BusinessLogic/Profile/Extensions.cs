@@ -79,7 +79,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
                 }
                 else if (delta < 86400) // 24 (hours) * 60 (minutes) * 60 (seconds)
                 {
-                    result = ts.Hours + " hours ago";
+                    int hours = ts.Hours;
+                    if (hours == 1)
+                        hours = 2;
+                    result = hours + " hours ago";
                 }
                 else if (delta < 172800) // 48 (hours) * 60 (minutes) * 60 (seconds)
                 {
