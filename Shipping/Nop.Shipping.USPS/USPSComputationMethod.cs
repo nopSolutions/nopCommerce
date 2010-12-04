@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
 {
@@ -112,6 +113,9 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
             if (isDomestic)
             {
                 #region domestic request
+                zipPostalCodeFrom = CommonHelper.EnsureMaximumLength(CommonHelper.EnsureNumericOnly(zipPostalCodeFrom), 5);
+                zipPostalCodeTo = CommonHelper.EnsureMaximumLength(CommonHelper.EnsureNumericOnly(zipPostalCodeTo), 5);
+
                 var sb = new StringBuilder();
                 sb.AppendFormat("<RateV3Request USERID=\"{0}\" PASSWORD=\"{1}\">", username, password);
 

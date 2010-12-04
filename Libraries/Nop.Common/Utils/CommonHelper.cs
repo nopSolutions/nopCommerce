@@ -1017,6 +1017,28 @@ namespace NopSolutions.NopCommerce.Common.Utils
         }
 
         /// <summary>
+        /// Ensures that a string only contains numeric values
+        /// </summary>
+        /// <param name="str">Input string</param>
+        /// <returns>Input string with only numeric values, empty string if input is null/empty</returns>
+        public static string EnsureNumericOnly(string str)
+        {
+            if (String.IsNullOrEmpty(str))
+                return string.Empty;
+
+            var result = new StringBuilder();
+            foreach (char c in str)
+            {
+                if (Char.IsDigit(c))
+                    result.Append(c);
+            }
+            return result.ToString();
+
+            // Loop is faster than RegEx
+            //return Regex.Replace(str, "\\D", "");
+        }
+
+        /// <summary>
         /// Ensure that a string is not null
         /// </summary>
         /// <param name="str">Input string</param>
