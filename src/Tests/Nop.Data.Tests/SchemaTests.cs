@@ -9,7 +9,7 @@ using Nop.Tests;
 namespace Nop.Data.Tests
 {
     [TestFixture]
-    public class SchemaTestFixture
+    public class SchemaTests
     {
         [Test]
         public void Can_generate_schema()
