@@ -18,15 +18,15 @@ using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Reflection;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Mapping;
-
+using Nop.Core;
+using Nop.Data.Mapping;
 
 namespace Nop.Data
 {
     /// <summary>
     /// Object context
     /// </summary>
-    public class NopObjectContext : DbContext
+    public class NopObjectContext : DbContext, IDbContext
     {
         public NopObjectContext()
             : base("name=NopSqlConnection")
@@ -55,6 +55,10 @@ namespace Nop.Data
 
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity  {
+            return base.Set<TEntity>();
         }
     }
 }

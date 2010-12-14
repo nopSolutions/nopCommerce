@@ -27,7 +27,6 @@ namespace Nop.Data
         void Insert(T entity);
         void Update(T entity);
         void Delete(T entity);
-
         IQueryable<T> Table { get; }
     }
 }
