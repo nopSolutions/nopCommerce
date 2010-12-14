@@ -51,6 +51,7 @@
     <Compile Include="Caching\NopNullCache.cs" />
     <Compile Include="Caching\NopRequestCache.cs" />
     <Compile Include="Caching\NopStaticCache.cs" />
+    <Compile Include="CommonHelper.cs" />
     <Compile Include="Domain\Language.cs" />
     <Compile Include="Domain\Mapping\LanguageMap.cs" />
     <Compile Include="Domain\Mapping\SettingMap.cs" />

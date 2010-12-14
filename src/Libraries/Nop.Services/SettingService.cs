@@ -19,6 +19,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Data;
 using System.Globalization;
+using Nop.Core;
 
 namespace Nop.Services
 {
@@ -57,6 +58,52 @@ namespace Nop.Services
         {
             this._cacheManager = cacheManager;
             this._settingRespository = settingRespository;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Adds a setting
+        /// </summary>
+        /// <param name="setting">Setting</param>
+        public void InsertSetting(Setting setting)
+        {
+            if (setting == null)
+                throw new ArgumentNullException("setting");
+
+            setting.Name = CommonHelper.EnsureNotNull(setting.Name);
+            setting.Name = CommonHelper.EnsureMaximumLength(setting.Name, 200);
+            setting.Value = CommonHelper.EnsureNotNull(setting.Value);
+            setting.Value = CommonHelper.EnsureMaximumLength(setting.Value, 2000);
+            setting.Description = CommonHelper.EnsureNotNull(setting.Description);
+
+            _settingRespository.Insert(setting);
+
+            //cache
+            _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+        }
+
+        /// <summary>
+        /// Updates a setting
+        /// </summary>
+        /// <param name="setting">Setting</param>
+        public void UpdateSetting(Setting setting)
+        {
+            if (setting == null)
+                throw new ArgumentNullException("setting");
+
+            setting.Name = CommonHelper.EnsureNotNull(setting.Name);
+            setting.Name = CommonHelper.EnsureMaximumLength(setting.Name, 200);
+            setting.Value = CommonHelper.EnsureNotNull(setting.Value);
+            setting.Value = CommonHelper.EnsureMaximumLength(setting.Value, 2000);
+            setting.Description = CommonHelper.EnsureNotNull(setting.Description);
+
+            _settingRespository.Insert(setting);
+
+            //cache
+            _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
         }
 
         #endregion
@@ -119,9 +166,29 @@ namespace Nop.Services
         /// <param name="value">Value</param>
         public void SetSetting<T>(string key, T value)
         {
-            throw new NotImplementedException();
-        }
+            var settings = GetAllSettings();
 
+            var valueStr = (string) Convert.ChangeType(value, typeof (string), CultureInfo.InvariantCulture);
+            Setting setting = null;
+            if (settings.ContainsKey(key))
+            {
+                //update
+                setting = settings[key];
+                setting.Value = valueStr;
+                UpdateSetting(setting);
+            }
+            else
+            {
+                //insert
+                setting = new Setting()
+                              {
+                                  Name = key,
+                                  Value = valueStr,
+                                  Description = string.Empty
+                              };
+                InsertSetting(setting);
+            }
+        }
 
         /// <summary>
         /// Deletes a setting

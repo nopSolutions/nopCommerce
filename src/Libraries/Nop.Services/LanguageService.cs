@@ -18,6 +18,7 @@ using System.Linq;
 using Nop.Data;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
+using Nop.Core;
 
 namespace Nop.Services
 {
@@ -150,6 +151,13 @@ namespace Nop.Services
             if (language == null)
                 throw new ArgumentNullException("language");
 
+            language.Name = CommonHelper.EnsureNotNull(language.Name);
+            language.Name = CommonHelper.EnsureMaximumLength(language.Name, 100);
+            language.LanguageCulture = CommonHelper.EnsureNotNull(language.LanguageCulture);
+            language.LanguageCulture = CommonHelper.EnsureMaximumLength(language.LanguageCulture, 20);
+            language.FlagImageFileName = CommonHelper.EnsureNotNull(language.FlagImageFileName);
+            language.FlagImageFileName = CommonHelper.EnsureMaximumLength(language.FlagImageFileName, 50);
+
             _languageRespository.Insert(language);
 
             //cache
@@ -164,6 +172,13 @@ namespace Nop.Services
         {
             if (language == null)
                 throw new ArgumentNullException("language");
+
+            language.Name = CommonHelper.EnsureNotNull(language.Name);
+            language.Name = CommonHelper.EnsureMaximumLength(language.Name, 100);
+            language.LanguageCulture = CommonHelper.EnsureNotNull(language.LanguageCulture);
+            language.LanguageCulture = CommonHelper.EnsureMaximumLength(language.LanguageCulture, 20);
+            language.FlagImageFileName = CommonHelper.EnsureNotNull(language.FlagImageFileName);
+            language.FlagImageFileName = CommonHelper.EnsureMaximumLength(language.FlagImageFileName, 50);
 
             _languageRespository.Update(language);
 
