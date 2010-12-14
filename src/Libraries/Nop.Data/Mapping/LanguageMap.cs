@@ -19,7 +19,7 @@ using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain;
 
 
-namespace Nop.Core.Domain.Mapping
+namespace Nop.Data.Mapping
 {
     public partial class LanguageMap : EntityTypeConfiguration<Language>
     {

@@ -25,23 +25,20 @@ namespace Nop.Data
     /// </summary>
     public partial class EfRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly NopObjectContext _context;
-
-        private readonly IDbSet<T> _entities;
+        private readonly IDbContext context;
+        private readonly IDbSet<T> entities;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="context">Object context</param>
-        public EfRepository(NopObjectContext context)
-        {
-            this._context = context;
-            this._entities = this._context.Set<T>();
+        public EfRepository(IDbContext context) {
+            this.context = context;
+            this.entities = context.Set<T>();
         }
         
-        public T GetById(object id)
-        {
-            return _entities.Find(id);
+        public T GetById(object id) {
+            return this.entities.Find(id);
         }
 
         public void Insert(T entity)
@@ -49,9 +46,9 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            this._entities.Add(entity);
+            this.entities.Add(entity);
 
-            this._context.SaveChanges();
+            this.context.SaveChanges();
         }
 
         public void Update(T entity)
@@ -62,7 +59,7 @@ namespace Nop.Data
             //if (!this._context.IsAttached(entity))
             //    this._entities.Attach(entity);
 
-            this._context.SaveChanges();
+            this.context.SaveChanges();
         }
 
         public void Delete(T entity)
@@ -73,16 +70,16 @@ namespace Nop.Data
             //if (!this._context.IsAttached(entity))
             //    this._entities.Attach(entity);
 
-            this._entities.Remove(entity);
+            this.entities.Remove(entity);
 
-            this._context.SaveChanges();
+            this.context.SaveChanges();
         }
 
         public virtual IQueryable<T> Table
         {
             get
             {
-                return this._entities;
+                return this.entities;
             }
         }
     }
