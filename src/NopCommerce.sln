@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Services.Tests", "Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Core.Tests", "Tests\Nop.Core.Tests\Nop.Core.Tests.csproj", "{7A9BDC6A-F880-43D5-9B2A-59C1674CE449}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Tests", "Nop.Tests\Nop.Tests.csproj", "{1D9EB579-3630-468A-BE94-49E7DF4F6E1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Tests", "Tests\Nop.Tests\Nop.Tests.csproj", "{1D9EB579-3630-468A-BE94-49E7DF4F6E1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

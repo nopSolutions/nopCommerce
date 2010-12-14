@@ -72,14 +72,16 @@
       <Project>{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}</Project>
       <Name>Nop.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Nop.Tests\Nop.Tests.csproj">
+    <ProjectReference Include="..\Nop.Tests\Nop.Tests.csproj">
       <Project>{1D9EB579-3630-468A-BE94-49E7DF4F6E1D}</Project>
       <Name>Nop.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

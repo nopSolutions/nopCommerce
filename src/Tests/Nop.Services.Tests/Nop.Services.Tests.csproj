@@ -47,7 +47,7 @@
       <Project>{210541AD-F659-47DA-8763-16F36C5CD2F4}</Project>
       <Name>Nop.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Nop.Tests\Nop.Tests.csproj">
+    <ProjectReference Include="..\Nop.Tests\Nop.Tests.csproj">
       <Project>{1D9EB579-3630-468A-BE94-49E7DF4F6E1D}</Project>
       <Name>Nop.Tests</Name>
     </ProjectReference>
