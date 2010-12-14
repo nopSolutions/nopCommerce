@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILanguageService.cs" />
+    <Compile Include="ILocalizationService.cs" />
     <Compile Include="ISettingService.cs" />
     <Compile Include="LanguageService.cs" />
+    <Compile Include="LocalizationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingService.cs" />
   </ItemGroup>

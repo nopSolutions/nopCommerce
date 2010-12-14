@@ -53,6 +53,8 @@
     <Compile Include="Caching\NopStaticCache.cs" />
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Domain\Language.cs" />
+    <Compile Include="Domain\LocaleStringResource.cs" />
+    <Compile Include="Domain\Mapping\LocaleStringResourceMap.cs" />
     <Compile Include="Domain\Mapping\LanguageMap.cs" />
     <Compile Include="Domain\Mapping\SettingMap.cs" />
     <Compile Include="Domain\Setting.cs" />

@@ -12,42 +12,33 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
+
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a language
+    /// Represents a locale string resource
     /// </summary>
-    public partial class Language : BaseEntity
+    public partial class LocaleStringResource : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the name
+        /// Gets or sets the language identifier
         /// </summary>
-        public string Name { get; set; }
+        public int LanguageId { get; set; }
 
         /// <summary>
-        /// Gets or sets the language culture
+        /// Gets or sets the resource name
         /// </summary>
-        public string LanguageCulture { get; set; }
+        public string ResourceName { get; set; }
 
         /// <summary>
-        /// Gets or sets the flag image file name
+        /// Gets or sets the resource value
         /// </summary>
-        public string FlagImageFileName { get; set; }
-
+        public string ResourceValue { get; set; }
+        
         /// <summary>
-        /// Gets or sets a value indicating whether the language is published
+        /// Gets or sets the language
         /// </summary>
-        public bool Published { get; set; }
-
-        /// <summary>
-        /// Gets or sets the display order
-        /// </summary>
-        public int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets locale string resources
-        /// </summary>
-        public ICollection<LocaleStringResource> LocaleStringResources { get; set; }
+        public Language Language { get; set; }
     }
+
 }
