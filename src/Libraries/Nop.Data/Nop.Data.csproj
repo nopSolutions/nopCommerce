@@ -48,6 +48,7 @@
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="Mapping\LanguageMap.cs" />
+    <Compile Include="Mapping\LocaleStringResourceMap.cs" />
     <Compile Include="Mapping\SettingMap.cs" />
     <Compile Include="NopObjectContext.cs" />
     <Compile Include="EfRepository.cs" />
