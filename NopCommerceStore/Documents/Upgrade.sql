@@ -1,1 +1,0 @@
-﻿--SQL script file is empty (nothing to execute)
