@@ -20,6 +20,7 @@ using System.Reflection;
 using Nop.Core.Domain;
 using Nop.Core;
 using Nop.Data.Mapping;
+using System.Data.Entity.Infrastructure;
 
 namespace Nop.Data
 {
@@ -28,8 +29,7 @@ namespace Nop.Data
     /// </summary>
     public class NopObjectContext : DbContext, IDbContext
     {
-        public NopObjectContext()
-            : base("name=NopSqlConnection")
+        public NopObjectContext(string connectionStringName) : base(connectionStringName)
         {
 
         }
@@ -55,6 +55,10 @@ namespace Nop.Data
 
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public string CreateDatabaseScript() {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
         }
 
         public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity  {
