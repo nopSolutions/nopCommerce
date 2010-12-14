@@ -13,7 +13,7 @@ namespace Nop.Data.Tests
     public abstract class PersistenceTest
     {
         const string dbName = "Nop.Data.Tests.Db";
-        NopObjectContext context;
+        protected NopObjectContext context;
 
         [SetUp]
         public void SetUp()
