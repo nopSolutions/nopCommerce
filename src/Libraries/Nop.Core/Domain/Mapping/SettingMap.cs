@@ -12,17 +12,24 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-namespace Nop.Core
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Database;
+using System.Data.Entity.ModelConfiguration;
+using Nop.Core.Domain;
+
+
+namespace Nop.Core.Domain.Mapping
 {
-    /// <summary>
-    /// Base class for entities
-    /// </summary>
-    public abstract partial class BaseEntity
+    public partial class SettingMap : EntityTypeConfiguration<Setting>
     {
-        /// <summary>
-        /// Gets or sets the entity identifier
-        /// </summary>
-        public virtual int Id { get; set; }
+        public SettingMap()
+        {
+            //modelBuilder.Entity<Setting>().ToTable("Nop_Setting");
+            this.HasKey(s => s.Id);
+            this.Property(s => s.Name).IsRequired().HasMaxLength(200);
+            this.Property(s => s.Value).IsRequired().HasMaxLength(2000);
+            this.Property(s => s.Description).IsRequired();
+        }
     }
 }

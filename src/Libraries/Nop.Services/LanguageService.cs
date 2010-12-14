@@ -132,12 +132,8 @@ namespace Nop.Services
             {
                 return (Language) obj2;
             }
-
-
-            var query = from l in _languageRespository.Table
-                        where l.LanguageId == languageId
-                        select l;
-            var language = query.SingleOrDefault();
+            
+            var language = _languageRespository.GetById(languageId);
 
             //cache
             _cacheManager.Add(key, language);

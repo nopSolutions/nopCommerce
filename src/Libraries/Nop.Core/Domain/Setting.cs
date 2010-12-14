@@ -20,11 +20,6 @@ namespace Nop.Core.Domain
     public partial class Setting : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the setting identifier
-        /// </summary>
-        public int SettingId { get; set; }
-
-        /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }

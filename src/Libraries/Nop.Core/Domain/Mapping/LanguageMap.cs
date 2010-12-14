@@ -12,17 +12,25 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-namespace Nop.Core
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Database;
+using System.Data.Entity.ModelConfiguration;
+using Nop.Core.Domain;
+
+
+namespace Nop.Core.Domain.Mapping
 {
-    /// <summary>
-    /// Base class for entities
-    /// </summary>
-    public abstract partial class BaseEntity
+    public partial class LanguageMap : EntityTypeConfiguration<Language>
     {
-        /// <summary>
-        /// Gets or sets the entity identifier
-        /// </summary>
-        public virtual int Id { get; set; }
+        public LanguageMap()
+        {
+            //this.ToTable("Nop_Language");
+            this.HasKey(l => l.Id);
+            this.Property(l => l.Name).IsRequired().HasMaxLength(100);
+            this.Property(l => l.LanguageCulture).IsRequired().HasMaxLength(20);
+            this.Property(l => l.FlagImageFileName).IsRequired().HasMaxLength(50);
+        
+        }
     }
 }

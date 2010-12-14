@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Database;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Nop.Data;
 
 namespace Nop.Web.MVC
 {
@@ -35,6 +37,8 @@ namespace Nop.Web.MVC
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            DbDatabase.SetInitializer<NopObjectContext>(new DatabaseInitializer());
         }
     }
 }

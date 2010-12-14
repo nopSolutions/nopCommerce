@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="NopObjectContext.cs" />
     <Compile Include="EfRepository.cs" />
     <Compile Include="IRepository.cs" />

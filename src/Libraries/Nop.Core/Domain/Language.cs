@@ -20,11 +20,6 @@ namespace Nop.Core.Domain
     public partial class Language : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public int LanguageId { get; set; }
-
-        /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }

@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -48,6 +52,8 @@
     <Compile Include="Caching\NopRequestCache.cs" />
     <Compile Include="Caching\NopStaticCache.cs" />
     <Compile Include="Domain\Language.cs" />
+    <Compile Include="Domain\Mapping\LanguageMap.cs" />
+    <Compile Include="Domain\Mapping\SettingMap.cs" />
     <Compile Include="Domain\Setting.cs" />
     <Compile Include="IPagedList.cs" />
     <Compile Include="NopException.cs" />

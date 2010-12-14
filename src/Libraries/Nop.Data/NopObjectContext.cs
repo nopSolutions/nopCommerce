@@ -12,9 +12,13 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
+using System.Linq;
+using System.Reflection;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Mapping;
 
 
 namespace Nop.Data
@@ -27,7 +31,7 @@ namespace Nop.Data
         public NopObjectContext()
             : base("name=NopSqlConnection")
         {
-            
+
         }
 
         public DbSet<Language> Languages { get; set; }
@@ -36,28 +40,21 @@ namespace Nop.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // TODO: Use Fluent API Here 
+            //dynamically load all configuration
+            System.Type configType = typeof(LanguageMap);   //any of your configuration classes here
+            var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
+            .Where(type => type.Namespace != null && type.Namespace.Equals(configType.Namespace))
+            .Where(type => type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>));
+            foreach (var type in typesToRegister)
+            {
+                dynamic configurationInstance = Activator.CreateInstance(type);
+                modelBuilder.Configurations.Add(configurationInstance);
+            }
+            //...or do it manually below. For example,
+            //modelBuilder.Configurations.Add(new LanguageMap());
 
-            // TODO: move this Fluent API configuration to Setting class
-            // just loop through each class of existing DbSet and invoke appropriate method (e.g. GenerateModel(ModelBuilder modelBuilder))
 
-
-            // TODO: rename columns into database to match properties (e.g. rename SettingID to SettingId)
-
-            //setting
-            modelBuilder.Entity<Setting>().ToTable("Nop_Setting");
-            modelBuilder.Entity<Setting>().HasKey(s => s.SettingId);
-            modelBuilder.Entity<Setting>().Property(s => s.SettingId).HasColumnName("SettingID");
-            modelBuilder.Entity<Setting>().Property(s => s.Name).IsRequired().HasMaxLength(200);
-            modelBuilder.Entity<Setting>().Property(s => s.Value).IsRequired().HasMaxLength(2000);
-            modelBuilder.Entity<Setting>().Property(s => s.Description).IsRequired();
-
-            //language
-            modelBuilder.Entity<Language>().ToTable("Nop_Language");
-            modelBuilder.Entity<Language>().HasKey(l => l.LanguageId);
-            modelBuilder.Entity<Language>().Property(l => l.Name).IsRequired().HasMaxLength(100);
-            modelBuilder.Entity<Language>().Property(l => l.LanguageCulture).IsRequired().HasMaxLength(20);
-            modelBuilder.Entity<Language>().Property(l => l.FlagImageFileName).IsRequired().HasMaxLength(50);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
