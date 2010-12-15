@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Database;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
-using System.Data.Entity.Database;
 using Nop.Core;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Data.Tests
 {
     [TestFixture]
     public abstract class PersistenceTest
     {
-        public static const string TestDbName = "Nop.Data.Tests.Db";
+        public const string TestDbName = "Nop.Data.Tests.Db";
         protected NopObjectContext context;
 
         [SetUp]
