@@ -62,7 +62,7 @@ namespace Nop.Core.Domain
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets the log level
+        /// Gets or sets the log level
         /// </summary>
         public LogLevel LogLevel
         {

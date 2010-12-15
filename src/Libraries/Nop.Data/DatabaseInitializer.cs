@@ -28,7 +28,8 @@ namespace Nop.Data
     {
         protected override void Seed(NopObjectContext context)
         {
-            //settings
+            #region Settings
+
             var settings = new List<Setting>
                                {
                                    new Setting
@@ -47,7 +48,10 @@ namespace Nop.Data
             settings.ForEach(s => context.Settings.Add(s));
             context.SaveChanges();
 
-            //customers
+            #endregion
+
+            #region Customers
+
             string password = "admin";
             string saltKey = SecurityHelper.CreateSalt(5);
             string passwordHash = SecurityHelper.CreatePasswordHash(password, saltKey, "SHA1");
@@ -68,6 +72,64 @@ namespace Nop.Data
                                 };
             customers.ForEach(c => context.Customers.Add(c));
             context.SaveChanges();
+
+            #endregion
+
+            #region Products
+
+            var product1 = new Product()
+                               {
+                                   Name = "Black & White Diamond Heart",
+                                   ShortDescription = "Heart Pendant 1/4 Carat (ctw) in Sterling Silver",
+                                   FullDescription =
+                                       "<p>Bold black diamonds alternate with sparkling white diamonds along a crisp sterling silver heart to create a look that is simple and beautiful. This sleek and stunning 1/4 carat (ctw) diamond heart pendant which includes an 18 inch silver chain, and a free box of godiva chocolates makes the perfect Valentine's Day gift.</p>",
+                                   AdminComment = string.Empty,
+                                   TemplateId = 0,
+                                   //TODO: set TemplateId
+                                   ShowOnHomePage = false,
+                                   MetaKeywords = string.Empty,
+                                   MetaDescription = string.Empty,
+                                   MetaTitle = string.Empty,
+                                   SeName = string.Empty,
+                                   AllowCustomerReviews = true,
+                                   AllowCustomerRatings = true,
+                                   RatingSum = 0,
+                                   TotalRatingVotes = 0,
+                                   Published = true,
+                                   CreatedOnUtc = DateTime.UtcNow,
+                                   UpdatedOnUtc = DateTime.UtcNow
+                               };
+            var productVariant1 = new ProductVariant()
+                                      {
+                                          Name = string.Empty,
+                                          Sku = string.Empty,
+                                          Description = string.Empty,
+                                          AdminComment = string.Empty,
+                                          ManufacturerPartNumber = string.Empty,
+                                          UserAgreementText = string.Empty,
+                                          IsShipEnabled = true,
+                                          ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                                          LowStockActivity = LowStockActivity.Nothing,
+                                          BackorderMode = BackorderMode.NoBackorders,
+                                          OrderMinimumQuantity = 1,
+                                          OrderMaximumQuantity = 10000,
+                                          Price = 130.12345M,
+                                          Weight = 1,
+                                          Length = 1,
+                                          Width = 1,
+                                          Height = 1,
+                                          Published = true,
+                                          Product = product1,
+                                          CreatedOnUtc = DateTime.UtcNow,
+                                          UpdatedOnUtc = DateTime.UtcNow
+                                      };
+            product1.ProductVariants = new List<ProductVariant>();
+            product1.ProductVariants.Add(productVariant1);
+            context.Products.Add(product1);
+            //context.ProductVariants.Add(productVariant1);
+            context.SaveChanges();
+
+            #endregion
 
             base.Seed(context);
         }

@@ -41,7 +41,6 @@ namespace Nop.Web.MVC
 
             DbDatabase.SetInitializer<NopObjectContext>(new DatabaseInitializer());
 
-
         }
     }
 }

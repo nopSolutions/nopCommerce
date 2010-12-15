@@ -48,6 +48,14 @@
     <Compile Include="Caching\NopRequestCache.cs" />
     <Compile Include="Caching\NopStaticCache.cs" />
     <Compile Include="CommonHelper.cs" />
+    <Compile Include="Domain\BackorderMode.cs" />
+    <Compile Include="Domain\DownloadActivationType.cs" />
+    <Compile Include="Domain\GiftCardType.cs" />
+    <Compile Include="Domain\LowStockActivity.cs" />
+    <Compile Include="Domain\ManageInventoryMethod.cs" />
+    <Compile Include="Domain\Product.cs" />
+    <Compile Include="Domain\ProductVariant.cs" />
+    <Compile Include="Domain\RecurringProductCyclePeriod.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="SecurityHelper.cs" />
     <Compile Include="Domain\Customer.cs" />
