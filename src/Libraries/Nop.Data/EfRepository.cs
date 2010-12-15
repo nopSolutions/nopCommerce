@@ -25,20 +25,20 @@ namespace Nop.Data
     /// </summary>
     public partial class EfRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly IDbContext context;
-        private readonly IDbSet<T> entities;
+        private readonly IDbContext _context;
+        private readonly IDbSet<T> _entities;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="context">Object context</param>
         public EfRepository(IDbContext context) {
-            this.context = context;
-            this.entities = context.Set<T>();
+            this._context = context;
+            this._entities = context.Set<T>();
         }
         
         public T GetById(object id) {
-            return this.entities.Find(id);
+            return this._entities.Find(id);
         }
 
         public void Insert(T entity)
@@ -46,9 +46,9 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            this.entities.Add(entity);
+            this._entities.Add(entity);
 
-            this.context.SaveChanges();
+            this._context.SaveChanges();
         }
 
         public void Update(T entity)
@@ -59,7 +59,7 @@ namespace Nop.Data
             //if (!this._context.IsAttached(entity))
             //    this._entities.Attach(entity);
 
-            this.context.SaveChanges();
+            this._context.SaveChanges();
         }
 
         public void Delete(T entity)
@@ -70,16 +70,16 @@ namespace Nop.Data
             //if (!this._context.IsAttached(entity))
             //    this._entities.Attach(entity);
 
-            this.entities.Remove(entity);
+            this._entities.Remove(entity);
 
-            this.context.SaveChanges();
+            this._context.SaveChanges();
         }
 
         public virtual IQueryable<T> Table
         {
             get
             {
-                return this.entities;
+                return this._entities;
             }
         }
     }

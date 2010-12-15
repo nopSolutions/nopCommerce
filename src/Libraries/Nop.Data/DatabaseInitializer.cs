@@ -13,9 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Database;
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain;
 
 

@@ -35,14 +35,7 @@ namespace Nop.Services
 
         #region Fields
 
-        /// <summary>
-        /// Language repository
-        /// </summary>
         private readonly IRepository<Language> _languageRespository;
-
-        /// <summary>
-        /// Cache manager
-        /// </summary>
         private readonly ICacheManager _cacheManager;
 
         #endregion

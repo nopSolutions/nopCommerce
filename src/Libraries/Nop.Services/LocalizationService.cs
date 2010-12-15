@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -35,14 +34,7 @@ namespace Nop.Services
 
         #region Fields
 
-        /// <summary>
-        /// Locale string resource repository
-        /// </summary>
         private readonly IRepository<LocaleStringResource> _lsrRespository;
-
-        /// <summary>
-        /// Cache manager
-        /// </summary>
         private readonly ICacheManager _cacheManager;
 
         #endregion

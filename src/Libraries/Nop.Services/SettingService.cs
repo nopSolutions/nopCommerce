@@ -33,15 +33,8 @@ namespace Nop.Services
         #endregion
 
         #region Fields
-
-        /// <summary>
-        /// Setting repository
-        /// </summary>
+        
         private readonly IRepository<Setting> _settingRespository;
-
-        /// <summary>
-        /// Cache manager
-        /// </summary>
         private readonly ICacheManager _cacheManager;
 
         #endregion

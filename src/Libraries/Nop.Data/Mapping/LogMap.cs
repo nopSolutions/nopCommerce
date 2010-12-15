@@ -18,15 +18,18 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class LanguageMap : EntityTypeConfiguration<Language>
+    public partial class LogMap : EntityTypeConfiguration<Log>
     {
-        public LanguageMap()
+        public LogMap()
         {
+            this.ToTable("Log");
             this.HasKey(l => l.Id);
-            this.Property(l => l.Name).IsRequired().HasMaxLength(100);
-            this.Property(l => l.LanguageCulture).IsRequired().HasMaxLength(20);
-            this.Property(l => l.FlagImageFileName).IsRequired().HasMaxLength(50);
-        
+            this.Property(l => l.Message).IsRequired();
+            this.Property(l => l.Exception).IsRequired();
+            this.Property(l => l.IpAddress).IsRequired().HasMaxLength(200);
+            this.Property(l => l.PageUrl).IsRequired();
+            this.Property(l => l.ReferrerUrl).IsRequired();
+            this.Ignore(l => l.LogType);
         }
     }
 }

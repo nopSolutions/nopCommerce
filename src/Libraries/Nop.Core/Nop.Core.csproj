@@ -50,6 +50,8 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Domain\Language.cs" />
     <Compile Include="Domain\LocaleStringResource.cs" />
+    <Compile Include="Domain\Log.cs" />
+    <Compile Include="Domain\LogTypeEnum.cs" />
     <Compile Include="Domain\Setting.cs" />
     <Compile Include="IPagedList.cs" />
     <Compile Include="NopException.cs" />

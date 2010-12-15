@@ -12,9 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Database;
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain;
 
@@ -25,7 +22,6 @@ namespace Nop.Data.Mapping
     {
         public SettingMap()
         {
-            //modelBuilder.Entity<Setting>().ToTable("Nop_Setting");
             this.HasKey(s => s.Id);
             this.Property(s => s.Name).IsRequired().HasMaxLength(200);
             this.Property(s => s.Value).IsRequired().HasMaxLength(2000);

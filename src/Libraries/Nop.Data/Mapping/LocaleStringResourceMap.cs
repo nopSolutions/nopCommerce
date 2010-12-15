@@ -12,9 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Database;
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain;
 
@@ -25,7 +22,6 @@ namespace Nop.Data.Mapping
     {
         public LocaleStringResourceMap()
         {
-            //this.ToTable("Nop_LocaleStringResource");
             this.HasKey(lsr => lsr.Id);
             this.Property(lsr => lsr.ResourceName).IsRequired().HasMaxLength(200);
             this.Property(lsr => lsr.ResourceValue).IsRequired();
