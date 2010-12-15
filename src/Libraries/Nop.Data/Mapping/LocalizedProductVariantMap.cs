@@ -18,18 +18,23 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class CustomerMap : EntityTypeConfiguration<Customer>
+    public partial class LocalizedProductVariantMap : EntityTypeConfiguration<LocalizedProductVariant>
     {
-        public CustomerMap()
+        public LocalizedProductVariantMap()
         {
-            this.ToTable("Customer");
-            this.HasKey(c => c.Id);
-            this.Property(c => c.Email).IsRequired().HasMaxLength(255);
-            this.Property(c => c.Username).IsRequired().HasMaxLength(255);
-            this.Property(c => c.PasswordHash).IsRequired().HasMaxLength(255);
-            this.Property(c => c.SaltKey).IsRequired().HasMaxLength(255);
-            this.Property(c => c.AdminComment).HasMaxLength(int.MaxValue);
-        
+            this.ToTable("ProductVariantLocalized");
+            this.HasKey(lpv => lpv.Id);
+            this.Property(lpv => lpv.Name).IsRequired().HasMaxLength(400);
+            this.Property(lpv => lpv.Description).IsRequired().HasMaxLength(int.MaxValue);
+
+            this.HasRequired(lpv => lpv.ProductVariant)
+                .WithMany(pv => pv.LocalizedProductVariants)
+                .HasForeignKey(lpv => lpv.ProductVariantId);
+
+
+            this.HasRequired(lpv => lpv.Language)
+                .WithMany(l => l.LocalizedProductVariants)
+                .HasForeignKey(lpv => lpv.LanguageId);
         }
     }
 }

@@ -19,9 +19,9 @@ using System.Linq;
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a product
+    /// Represents a category
     /// </summary>
-    public partial class Product : BaseEntity
+    public partial class Category : BaseEntity
     {
         /// <summary>
         /// Gets or sets the name
@@ -29,29 +29,14 @@ namespace Nop.Core.Domain
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the short description
+        /// Gets or sets the description
         /// </summary>
-        public string ShortDescription { get; set; }
-
-        /// <summary>
-        /// Gets or sets the full description
-        /// </summary>
-        public string FullDescription { get; set; }
-
-        /// <summary>
-        /// Gets or sets the admin comment
-        /// </summary>
-        public string AdminComment { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the template identifier
         /// </summary>
         public int TemplateId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show the product on home page
-        /// </summary>
-        public bool ShowOnHomePage { get; set; }
 
         /// <summary>
         /// Gets or sets the meta keywords
@@ -74,24 +59,29 @@ namespace Nop.Core.Domain
         public string SeName { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the product allows customer reviews
+        /// Gets or sets the parent category identifier
         /// </summary>
-        public bool AllowCustomerReviews { get; set; }
+        public int ParentCategoryId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the product allows customer ratings
+        /// Gets or sets the picture identifier
         /// </summary>
-        public bool AllowCustomerRatings { get; set; }
+        public int PictureId { get; set; }
 
         /// <summary>
-        /// Gets or sets the rating sum
+        /// Gets or sets the page size
         /// </summary>
-        public int RatingSum { get; set; }
+        public int PageSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the total rating votes
+        /// Gets or sets the available price ranges
         /// </summary>
-        public int TotalRatingVotes { get; set; }
+        public string PriceRanges { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the category on home page
+        /// </summary>
+        public bool ShowOnHomePage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
@@ -104,24 +94,24 @@ namespace Nop.Core.Domain
         public bool Deleted { get; set; }
 
         /// <summary>
-        /// Gets or sets the date and time of product creation
+        /// Gets or sets the display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the date and time of product update
+        /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the product variants
+        /// Gets or sets the localized category
         /// </summary>
-        public virtual ICollection<ProductVariant> ProductVariants { get; set; }
-
-        /// <summary>
-        /// Gets or sets the localized products
-        /// </summary>
-        public virtual ICollection<LocalizedProduct> LocalizedProducts { get; set; }
+        public virtual ICollection<LocalizedCategory> LocalizedCategories { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of ProductCategory

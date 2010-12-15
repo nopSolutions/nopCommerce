@@ -23,19 +23,19 @@ namespace Nop.Data.Mapping
         public ProductVariantMap()
         {
             this.ToTable("ProductVariant");
-            this.HasKey(p => p.Id);
-            this.Property(p => p.Name).IsRequired().HasMaxLength(400);
-            this.Property(p => p.Sku).IsRequired().HasMaxLength(400);
-            this.Property(p => p.Description).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(p => p.AdminComment).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(p => p.ManufacturerPartNumber).IsRequired().HasMaxLength(400);
-            this.Property(p => p.UserAgreementText).IsRequired().HasMaxLength(int.MaxValue);
-            this.Ignore(p => p.BackorderMode);
-            this.Ignore(p => p.DownloadActivationType);
-            this.Ignore(p => p.GiftCardType);
-            this.Ignore(p => p.LowStockActivityId);
-            this.Ignore(p => p.ManageInventoryMethod);
-            this.Ignore(p => p.RecurringProductCyclePeriod);
+            this.HasKey(pv => pv.Id);
+            this.Property(pv => pv.Name).IsRequired().HasMaxLength(400);
+            this.Property(pv => pv.Sku).IsRequired().HasMaxLength(400);
+            this.Property(pv => pv.Description).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(pv => pv.AdminComment).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(pv => pv.ManufacturerPartNumber).IsRequired().HasMaxLength(400);
+            this.Property(pv => pv.UserAgreementText).IsRequired().HasMaxLength(int.MaxValue);
+            this.Ignore(pv => pv.BackorderMode);
+            this.Ignore(pv => pv.DownloadActivationType);
+            this.Ignore(pv => pv.GiftCardType);
+            this.Ignore(pv => pv.LowStockActivityId);
+            this.Ignore(pv => pv.ManageInventoryMethod);
+            this.Ignore(pv => pv.RecurringProductCyclePeriod);
 
             this.HasRequired(pv => pv.Product)
                 .WithMany(p => p.ProductVariants)

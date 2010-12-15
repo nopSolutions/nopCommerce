@@ -12,58 +12,44 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a language
+    /// Represents a product category mapping
     /// </summary>
-    public partial class Language : BaseEntity
+    public partial class ProductCategory : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the name
+        /// Gets or sets the product identifier
         /// </summary>
-        public string Name { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
-        /// Gets or sets the language culture
+        /// Gets or sets the category identifier
         /// </summary>
-        public string LanguageCulture { get; set; }
+        public int CategoryId { get; set; }
 
         /// <summary>
-        /// Gets or sets the flag image file name
+        /// Gets or sets a value indicating whether the product is featured
         /// </summary>
-        public string FlagImageFileName { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the language is published
-        /// </summary>
-        public bool Published { get; set; }
+        public bool IsFeaturedProduct { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+        
+        /// <summary>
+        /// Gets the category
+        /// </summary>
+        public virtual Category Category { get; set; }
 
         /// <summary>
-        /// Gets or sets locale string resources
+        /// Gets the product
         /// </summary>
-        public ICollection<LocaleStringResource> LocaleStringResources { get; set; }
+        public virtual Product Product { get; set; }
 
-        /// <summary>
-        /// Gets or sets localized categories
-        /// </summary>
-        public ICollection<LocalizedCategory> LocalizedCategories { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized products
-        /// </summary>
-        public ICollection<LocalizedProduct> LocalizedProducts { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized product variants
-        /// </summary>
-        public ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
     }
+
 }

@@ -18,18 +18,19 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class CustomerMap : EntityTypeConfiguration<Customer>
+    public partial class CategoryMap : EntityTypeConfiguration<Category>
     {
-        public CustomerMap()
+        public CategoryMap()
         {
-            this.ToTable("Customer");
+            this.ToTable("Category");
             this.HasKey(c => c.Id);
-            this.Property(c => c.Email).IsRequired().HasMaxLength(255);
-            this.Property(c => c.Username).IsRequired().HasMaxLength(255);
-            this.Property(c => c.PasswordHash).IsRequired().HasMaxLength(255);
-            this.Property(c => c.SaltKey).IsRequired().HasMaxLength(255);
-            this.Property(c => c.AdminComment).HasMaxLength(int.MaxValue);
-        
+            this.Property(c => c.Name).IsRequired().HasMaxLength(400);
+            this.Property(c => c.Description).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(c => c.MetaKeywords).IsRequired().HasMaxLength(400);
+            this.Property(c => c.MetaDescription).IsRequired();
+            this.Property(c => c.MetaTitle).IsRequired().HasMaxLength(400);
+            this.Property(c => c.SeName).IsRequired().HasMaxLength(100);
+            this.Property(c => c.PriceRanges).IsRequired().HasMaxLength(400);
         }
     }
 }

@@ -32,11 +32,6 @@ namespace Nop.Data.Mapping
             this.Property(p => p.MetaDescription).IsRequired();
             this.Property(p => p.MetaTitle).IsRequired().HasMaxLength(400);
             this.Property(p => p.SeName).IsRequired().HasMaxLength(100);
-
-
-            //this.HasMany(p => p.ProductVariants)
-            //    .WithRequired(pv => pv.Product)
-            //    .HasForeignKey(pv => pv.ProductId);
         }
     }
 }

@@ -50,6 +50,21 @@ namespace Nop.Data
 
             #endregion
 
+            #region Lanaguage
+
+            var language1 = new Language
+                               {
+                                           Name = "English",
+                                           LanguageCulture = "en-US",
+                                           FlagImageFileName = string.Empty,
+                                           Published= true,
+                                           DisplayOrder= 1
+                               };
+            context.Languages.Add(language1);
+            context.SaveChanges();
+
+            #endregion
+
             #region Customers
 
             string password = "admin";
@@ -75,6 +90,30 @@ namespace Nop.Data
 
             #endregion
 
+            #region Categories
+
+            var category1 = new Category()
+            {
+                Name = "Jewelry",
+                Description = string.Empty,
+                TemplateId = 0, //TODO: set TemplateId
+                MetaKeywords = string.Empty,
+                MetaDescription = string.Empty,
+                MetaTitle = string.Empty,
+                SeName = string.Empty,
+                ParentCategoryId = 0,
+                PageSize = 3,
+                PriceRanges = string.Empty,
+                Published = true,
+                DisplayOrder = 7,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            context.Categories.Add(category1);
+            context.SaveChanges();
+
+            #endregion
+
             #region Products
 
             var product1 = new Product()
@@ -84,8 +123,7 @@ namespace Nop.Data
                                    FullDescription =
                                        "<p>Bold black diamonds alternate with sparkling white diamonds along a crisp sterling silver heart to create a look that is simple and beautiful. This sleek and stunning 1/4 carat (ctw) diamond heart pendant which includes an 18 inch silver chain, and a free box of godiva chocolates makes the perfect Valentine's Day gift.</p>",
                                    AdminComment = string.Empty,
-                                   TemplateId = 0,
-                                   //TODO: set TemplateId
+                                   TemplateId = 0, //TODO: set TemplateId
                                    ShowOnHomePage = false,
                                    MetaKeywords = string.Empty,
                                    MetaDescription = string.Empty,
@@ -119,14 +157,20 @@ namespace Nop.Data
                                           Width = 1,
                                           Height = 1,
                                           Published = true,
-                                          Product = product1,
                                           CreatedOnUtc = DateTime.UtcNow,
                                           UpdatedOnUtc = DateTime.UtcNow
                                       };
             product1.ProductVariants = new List<ProductVariant>();
             product1.ProductVariants.Add(productVariant1);
+
+            var pcm1 = new ProductCategory()
+                           {
+                               Category = category1,
+                               Product = product1,
+                               DisplayOrder = 1
+                           };
+            context.ProductCategories.Add(pcm1);
             context.Products.Add(product1);
-            //context.ProductVariants.Add(productVariant1);
             context.SaveChanges();
 
             #endregion

@@ -12,58 +12,66 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a language
+    /// Represents a localized product
     /// </summary>
-    public partial class Language : BaseEntity
+    public partial class LocalizedProduct : BaseEntity
     {
+        /// <summary>
+        /// Gets or sets the product identifier
+        /// </summary>
+        public int ProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language identifier
+        /// </summary>
+        public int LanguageId { get; set; }
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the language culture
+        /// Gets or sets the short description
         /// </summary>
-        public string LanguageCulture { get; set; }
+        public string ShortDescription { get; set; }
 
         /// <summary>
-        /// Gets or sets the flag image file name
+        /// Gets or sets the full description
         /// </summary>
-        public string FlagImageFileName { get; set; }
+        public string FullDescription { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the language is published
+        /// Gets or sets the meta keywords
         /// </summary>
-        public bool Published { get; set; }
+        public string MetaKeywords { get; set; }
 
         /// <summary>
-        /// Gets or sets the display order
+        /// Gets or sets the meta description
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public string MetaDescription { get; set; }
 
         /// <summary>
-        /// Gets or sets locale string resources
+        /// Gets or sets the meta title
         /// </summary>
-        public ICollection<LocaleStringResource> LocaleStringResources { get; set; }
+        public string MetaTitle { get; set; }
 
         /// <summary>
-        /// Gets or sets localized categories
+        /// Gets or sets the search-engine name
         /// </summary>
-        public ICollection<LocalizedCategory> LocalizedCategories { get; set; }
+        public string SeName { get; set; }
 
         /// <summary>
-        /// Gets or sets localized products
+        /// Gets the product
         /// </summary>
-        public ICollection<LocalizedProduct> LocalizedProducts { get; set; }
+        public virtual Product Product { get; set; }
 
         /// <summary>
-        /// Gets or sets localized product variants
+        /// Gets the language
         /// </summary>
-        public ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
+        public virtual Language Language { get; set; }
     }
 }

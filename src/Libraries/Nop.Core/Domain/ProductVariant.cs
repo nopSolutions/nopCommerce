@@ -408,5 +408,11 @@ namespace Nop.Core.Domain
         /// Gets or sets the product
         /// </summary>
         public Product Product { get; set; }
+
+        /// <summary>
+        /// Gets or sets the localized product variants
+        /// </summary>
+        public virtual ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
+
     }
 }

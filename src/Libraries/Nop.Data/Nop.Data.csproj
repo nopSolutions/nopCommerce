@@ -47,6 +47,11 @@
   <ItemGroup>
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="Mapping\ProductCategoryMap.cs" />
+    <Compile Include="Mapping\LocalizedCategoryMap.cs" />
+    <Compile Include="Mapping\CategoryMap.cs" />
+    <Compile Include="Mapping\LocalizedProductMap.cs" />
+    <Compile Include="Mapping\LocalizedProductVariantMap.cs" />
     <Compile Include="Mapping\ProductMap.cs" />
     <Compile Include="Mapping\ProductVariantMap.cs" />
     <Compile Include="Mapping\CustomerMap.cs" />
