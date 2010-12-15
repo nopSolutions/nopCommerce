@@ -48,6 +48,7 @@
     <Compile Include="Caching\NopRequestCache.cs" />
     <Compile Include="Caching\NopStaticCache.cs" />
     <Compile Include="CommonHelper.cs" />
+    <Compile Include="Domain\Customer.cs" />
     <Compile Include="Domain\Language.cs" />
     <Compile Include="Domain\LocaleStringResource.cs" />
     <Compile Include="Domain\Log.cs" />

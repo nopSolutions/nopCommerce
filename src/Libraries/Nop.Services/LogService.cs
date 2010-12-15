@@ -162,15 +162,11 @@ namespace Nop.Services
             string referrerUrl = CommonHelper.GetUrlReferrer();
            
             message = CommonHelper.EnsureNotNull(message);
-            message = CommonHelper.EnsureMaximumLength(message, 1000);
             exceptionStr = CommonHelper.EnsureNotNull(exceptionStr);
-            exceptionStr = CommonHelper.EnsureMaximumLength(exceptionStr, 4000);
             ipAddress = CommonHelper.EnsureNotNull(ipAddress);
-            ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
+            ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 200);
             pageUrl = CommonHelper.EnsureNotNull(pageUrl);
-            pageUrl = CommonHelper.EnsureMaximumLength(pageUrl, 100);
             referrerUrl = CommonHelper.EnsureNotNull(referrerUrl);
-            referrerUrl = CommonHelper.EnsureMaximumLength(referrerUrl, 100);
 
             var log = new Log()
                           {

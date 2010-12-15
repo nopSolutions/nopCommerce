@@ -12,9 +12,11 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Database;
 using Nop.Core.Domain;
+using Nop.Core;
 
 
 namespace Nop.Data
@@ -28,21 +30,43 @@ namespace Nop.Data
         {
             //settings
             var settings = new List<Setting>
-            {
-                new Setting
-                {
-                    Name = "TestSetting1",
-                    Value = "Value1",
-                    Description = string.Empty
-                },
-                new Setting
-                {
-                    Name = "TestSetting2",
-                    Value = "Value2",
-                    Description = string.Empty
-                }
-            };
+                               {
+                                   new Setting
+                                       {
+                                           Name = "TestSetting1",
+                                           Value = "Value1",
+                                           Description = string.Empty
+                                       },
+                                   new Setting
+                                       {
+                                           Name = "TestSetting2",
+                                           Value = "Value2",
+                                           Description = string.Empty
+                                       }
+                               };
             settings.ForEach(s => context.Settings.Add(s));
+            context.SaveChanges();
+
+            //customers
+            string password = "admin";
+            string saltKey = CommonHelper.CreateSalt(5);
+            string passwordHash = CommonHelper.CreatePasswordHash(password, saltKey, "SHA1");
+            var customers = new List<Customer>
+                                {
+                                    new Customer
+                                        {
+                                            CustomerGuid = Guid.NewGuid(),
+                                            Email = "admin@yourStore.com",
+                                            Username = "admin@yourStore.com",
+                                            SaltKey = saltKey,
+                                            PasswordHash = passwordHash,
+                                            AdminComment = string.Empty,
+                                            Active = true,
+                                            Deleted = false,
+                                            RegistrationDateUtc = DateTime.UtcNow
+                                        }
+                                };
+            customers.ForEach(c => context.Customers.Add(c));
             context.SaveChanges();
 
             base.Seed(context);

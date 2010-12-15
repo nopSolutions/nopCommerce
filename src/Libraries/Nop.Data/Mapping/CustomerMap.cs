@@ -18,18 +18,18 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class LogMap : EntityTypeConfiguration<Log>
+    public partial class CustomerMap : EntityTypeConfiguration<Customer>
     {
-        public LogMap()
+        public CustomerMap()
         {
-            this.ToTable("Log");
+            this.ToTable("Customer");
             this.HasKey(l => l.Id);
-            this.Property(l => l.Message).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(l => l.Exception).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(l => l.IpAddress).IsRequired().HasMaxLength(200);
-            this.Property(l => l.PageUrl).IsRequired();
-            this.Property(l => l.ReferrerUrl).IsRequired();
-            this.Ignore(l => l.LogType);
+            this.Property(l => l.Email).IsRequired().HasMaxLength(255);
+            this.Property(l => l.Username).IsRequired().HasMaxLength(255);
+            this.Property(l => l.PasswordHash).IsRequired().HasMaxLength(255);
+            this.Property(l => l.SaltKey).IsRequired().HasMaxLength(255);
+            this.Property(l => l.AdminComment).HasMaxLength(int.MaxValue);
+        
         }
     }
 }

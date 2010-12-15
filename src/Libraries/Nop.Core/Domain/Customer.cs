@@ -12,43 +12,59 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a language
+    /// Represents a customer
     /// </summary>
-    public partial class Language : BaseEntity
+    public partial class Customer : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the name
+        /// Gets or sets the customer Guid
         /// </summary>
-        public string Name { get; set; }
+        public Guid CustomerGuid { get; set; }
 
         /// <summary>
-        /// Gets or sets the language culture
+        /// Gets or sets the email
         /// </summary>
-        public string LanguageCulture { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
-        /// Gets or sets the flag image file name
+        /// Gets or sets the username
         /// </summary>
-        public string FlagImageFileName { get; set; }
+        public string Username { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the language is published
+        /// Gets or sets the password hash
         /// </summary>
-        public bool Published { get; set; }
+        public string PasswordHash { get; set; }
 
         /// <summary>
-        /// Gets or sets the display order
+        /// Gets or sets the salt key
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public string SaltKey { get; set; }
 
         /// <summary>
-        /// Gets or sets locale string resources
+        /// Gets or sets the admin comment
         /// </summary>
-        public ICollection<LocaleStringResource> LocaleStringResources { get; set; }
+        public string AdminComment { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the customer is active
+        /// </summary>
+        public bool Active { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the customer has been deleted
+        /// </summary>
+        public bool Deleted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time of customer registration
+        /// </summary>
+        public DateTime RegistrationDateUtc { get; set; }
     }
 }

@@ -14,8 +14,10 @@
 
 using System;
 using System.Configuration;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Security;
 
 namespace Nop.Core
 {
@@ -244,6 +246,34 @@ namespace Nop.Core
                 result += "/";
 
             return result.ToLowerInvariant();
+        }
+        
+        /// <summary>
+        /// Creates a password hash
+        /// </summary>
+        /// <param name="password">Password</param>
+        /// <param name="salt">Salt</param>
+        /// <param name="passwordFormat">Password format (MD5, SHA1)</param>
+        /// <returns>Password hash</returns>
+        public static string CreatePasswordHash(string password, string salt, string passwordFormat)
+        {
+            if (String.IsNullOrEmpty(passwordFormat))
+                passwordFormat = "SHA1";
+
+            return FormsAuthentication.HashPasswordForStoringInConfigFile(password + salt, passwordFormat);
+        }
+
+        /// <summary>
+        /// Creates a salt
+        /// </summary>
+        /// <param name="size">A salt size</param>
+        /// <returns>A salt</returns>
+        public static string CreateSalt(int size)
+        {
+            var provider = new RNGCryptoServiceProvider();
+            byte[] data = new byte[size];
+            provider.GetBytes(data);
+            return Convert.ToBase64String(data);
         }
     }
 }
