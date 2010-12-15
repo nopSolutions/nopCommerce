@@ -160,9 +160,9 @@ namespace Nop.Services.Logging
             //TODO: uncomment when customers are implemented
             //if (NopContext.Current.User != null)
             //    customerId = NopContext.Current.User.Id;
-            string ipAddress = CommonHelper.GetCurrentIpAddress();
-            string pageUrl = CommonHelper.GetThisPageUrl(true);
-            string referrerUrl = CommonHelper.GetUrlReferrer();
+            string ipAddress = WebHelper.GetCurrentIpAddress();
+            string pageUrl = WebHelper.GetThisPageUrl(true);
+            string referrerUrl = WebHelper.GetUrlReferrer();
 
             message = CommonHelper.EnsureNotNull(message);
             exceptionStr = CommonHelper.EnsureNotNull(exceptionStr);

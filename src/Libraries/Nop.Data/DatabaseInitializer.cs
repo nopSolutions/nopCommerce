@@ -49,8 +49,8 @@ namespace Nop.Data
 
             //customers
             string password = "admin";
-            string saltKey = CommonHelper.CreateSalt(5);
-            string passwordHash = CommonHelper.CreatePasswordHash(password, saltKey, "SHA1");
+            string saltKey = SecurityHelper.CreateSalt(5);
+            string passwordHash = SecurityHelper.CreatePasswordHash(password, saltKey, "SHA1");
             var customers = new List<Customer>
                                 {
                                     new Customer
