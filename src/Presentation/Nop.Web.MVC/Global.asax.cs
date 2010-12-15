@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Data;
+using Nop.Services.Logging;
 
 namespace Nop.Web.MVC
 {
@@ -39,6 +40,8 @@ namespace Nop.Web.MVC
             RegisterRoutes(RouteTable.Routes);
 
             DbDatabase.SetInitializer<NopObjectContext>(new DatabaseInitializer());
+
+
         }
     }
 }

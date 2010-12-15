@@ -22,14 +22,9 @@ namespace Nop.Core.Domain
     public partial class Log : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the log type identifier
+        /// Gets or sets the log level identifier
         /// </summary>
-        public int LogTypeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the severity
-        /// </summary>
-        public int Severity { get; set; }
+        public int LogLevelId { get; set; }
 
         /// <summary>
         /// Gets or sets the short message
@@ -67,17 +62,17 @@ namespace Nop.Core.Domain
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets the log type
+        /// Gets the log level
         /// </summary>
-        public LogTypeEnum LogType
+        public LogLevel LogLevel
         {
             get
             {
-                return (LogTypeEnum)this.LogTypeId;
+                return (LogLevel)this.LogLevelId;
             }
             set
             {
-                this.LogTypeId = (int)value;
+                this.LogLevelId = (int)value;
             }
         }
     }

@@ -12,24 +12,17 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain;
-
-
-namespace Nop.Data.Mapping
+namespace Nop.Core.Domain
 {
-    public partial class LogMap : EntityTypeConfiguration<Log>
+    /// <summary>
+    /// Represents a log level
+    /// </summary>
+    public enum LogLevel
     {
-        public LogMap()
-        {
-            this.ToTable("Log");
-            this.HasKey(l => l.Id);
-            this.Property(l => l.Message).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(l => l.Exception).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(l => l.IpAddress).IsRequired().HasMaxLength(200);
-            this.Property(l => l.PageUrl).IsRequired();
-            this.Property(l => l.ReferrerUrl).IsRequired();
-            this.Ignore(l => l.LogLevel);
-        }
+        Debug = 10,
+        Information = 20,
+        Warning = 30,
+        Error = 40 ,
+        Fatal = 50
     }
 }

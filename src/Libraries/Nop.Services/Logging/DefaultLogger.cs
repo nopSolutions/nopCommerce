@@ -19,12 +19,12 @@ using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Data;
 
-namespace Nop.Services
+namespace Nop.Services.Logging
 {
     /// <summary>
-    /// Log service
+    /// Default logger
     /// </summary>
-    public partial class LogService : ILogService
+    public partial class DefaultLogger : ILogger
     {
         #region Fields
 
@@ -38,7 +38,7 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="logRespository">Log repository</param>
-        public LogService(IRepository<Log> logRespository)
+        public DefaultLogger(IRepository<Log> logRespository)
         {
             this._logRespository = logRespository;
         }
@@ -46,6 +46,23 @@ namespace Nop.Services
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Determines whether a log level is enabled
+        /// </summary>
+        /// <param name="level">Log level</param>
+        /// <returns>Result</returns>
+        public bool IsEnabled(LogLevel level)
+        {
+            //TODO: use ISettingService to determine it
+            switch(level)
+            {
+                case LogLevel.Debug:
+                    return false;
+                default:
+                    return true;
+            }
+        }
 
         /// <summary>
         /// Deletes a log item
@@ -72,20 +89,24 @@ namespace Nop.Services
         /// <summary>
         /// Gets all log items
         /// </summary>
-        /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
-        /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
+        /// <param name="fromUtc">Log item creation from; null to load all records</param>
+        /// <param name="toUtc">Log item creation to; null to load all records</param>
         /// <param name="message">Message</param>
-        /// <param name="logTypeId">Log type identifier</param>
+        /// <param name="logLevel">Log level; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item collection</returns>
-        public PagedList<Log> GetAllLogs(DateTime? createdOnFrom,
-           DateTime? createdOnTo, string message, int logTypeId, int pageIndex, int pageSize)
+        public PagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc,
+            string message, LogLevel? logLevel, int pageIndex, int pageSize)
         {
+            int? logLevelId = null;
+            if (logLevel.HasValue)
+                logLevelId = (int)logLevel.Value;
+
             var query = from l in _logRespository.Table
-                        where (!createdOnFrom.HasValue || createdOnFrom.Value <= l.CreatedOnUtc) &&
-                        (!createdOnTo.HasValue || createdOnTo.Value >= l.CreatedOnUtc) &&
-                        (logTypeId == 0 || logTypeId == l.LogTypeId) &&
+                        where (!fromUtc.HasValue || fromUtc.Value <= l.CreatedOnUtc) &&
+                        (!toUtc.HasValue || toUtc.Value >= l.CreatedOnUtc) &&
+                        (!logLevelId.HasValue || logLevelId.Value == l.LogLevelId) &&
                         (String.IsNullOrEmpty(message) || l.Message.Contains(message) || l.Exception.Contains(message))
                         orderby l.CreatedOnUtc descending
                         select l;
@@ -110,48 +131,23 @@ namespace Nop.Services
         /// <summary>
         /// Inserts a log item
         /// </summary>
-        /// <param name="logType">Log item type</param>
+        /// <param name="logLevel">Log level</param>
         /// <param name="message">The short message</param>
         /// <param name="exception">The exception</param>
         /// <returns>A log item</returns>
-        public Log InsertLog(LogTypeEnum logType, string message, string exception)
+        public Log InsertLog(LogLevel logLevel, string message, string exception)
         {
-            return InsertLog(logType, message, new Exception(String.IsNullOrEmpty(exception) ? string.Empty : exception));
+            return InsertLog(logLevel, message, new Exception(String.IsNullOrEmpty(exception) ? string.Empty : exception));
         }
 
         /// <summary>
         /// Inserts a log item
         /// </summary>
-        /// <param name="logType">Log item type</param>
+        /// <param name="logLevel">Log level</param>
         /// <param name="message">The short message</param>
         /// <param name="exception">The exception</param>
         /// <returns>A log item</returns>
-        public Log InsertLog(LogTypeEnum logType, string message, Exception exception)
-        {
-            int customerId = 0;
-            //TODO: uncomment when customers are implemented
-            //if (NopContext.Current.User != null)
-            //    customerId = NopContext.Current.User.Id;
-            string ipAddress = CommonHelper.GetCurrentIpAddress();
-            string pageUrl = CommonHelper.GetThisPageUrl(true);
-
-            return InsertLog(logType, 11, message, exception, ipAddress, customerId, pageUrl);
-        }
-
-        /// <summary>
-        /// Inserts a log item
-        /// </summary>
-        /// <param name="logType">Log item type</param>
-        /// <param name="severity">The severity</param>
-        /// <param name="message">The short message</param>
-        /// <param name="exception">The full exception</param>
-        /// <param name="ipAddress">The IP address</param>
-        /// <param name="customerId">The customer identifier</param>
-        /// <param name="pageUrl">The page URL</param>
-        /// <returns>Log item</returns>
-        public Log InsertLog(LogTypeEnum logType, int severity, string message,
-            Exception exception, string ipAddress,
-            int customerId, string pageUrl)
+        public Log InsertLog(LogLevel logLevel, string message, Exception exception)
         {
             //don't log thread abort exception
             if ((exception != null) && (exception is System.Threading.ThreadAbortException))
@@ -159,8 +155,15 @@ namespace Nop.Services
 
             string exceptionStr = exception == null ? string.Empty : exception.ToString();
 
+
+            int customerId = 0;
+            //TODO: uncomment when customers are implemented
+            //if (NopContext.Current.User != null)
+            //    customerId = NopContext.Current.User.Id;
+            string ipAddress = CommonHelper.GetCurrentIpAddress();
+            string pageUrl = CommonHelper.GetThisPageUrl(true);
             string referrerUrl = CommonHelper.GetUrlReferrer();
-           
+
             message = CommonHelper.EnsureNotNull(message);
             exceptionStr = CommonHelper.EnsureNotNull(exceptionStr);
             ipAddress = CommonHelper.EnsureNotNull(ipAddress);
@@ -169,17 +172,16 @@ namespace Nop.Services
             referrerUrl = CommonHelper.EnsureNotNull(referrerUrl);
 
             var log = new Log()
-                          {
-                              LogTypeId = (int) logType,
-                              Severity = severity,
-                              Message = message,
-                              Exception = exceptionStr,
-                              IpAddress = ipAddress,
-                              CustomerId = customerId,
-                              PageUrl = pageUrl,
-                              ReferrerUrl = referrerUrl,
-                              CreatedOnUtc = DateTime.UtcNow
-                          };
+            {
+                LogLevel = logLevel,
+                Message = message,
+                Exception = exceptionStr,
+                IpAddress = ipAddress,
+                CustomerId = customerId,
+                PageUrl = pageUrl,
+                ReferrerUrl = referrerUrl,
+                CreatedOnUtc = DateTime.UtcNow
+            };
 
             _logRespository.Insert(log);
 

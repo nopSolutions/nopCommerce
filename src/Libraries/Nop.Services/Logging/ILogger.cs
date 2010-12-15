@@ -16,13 +16,20 @@ using System;
 using Nop.Core;
 using Nop.Core.Domain;
 
-namespace Nop.Services
+namespace Nop.Services.Logging
 {
     /// <summary>
-    /// Log service interface
+    /// Logger interface
     /// </summary>
-    public partial interface ILogService
+    public partial interface ILogger
     {
+        /// <summary>
+        /// Determines whether a log level is enabled
+        /// </summary>
+        /// <param name="level">Log level</param>
+        /// <returns>Result</returns>
+        bool IsEnabled(LogLevel level);
+
         /// <summary>
         /// Deletes a log item
         /// </summary>
@@ -37,15 +44,15 @@ namespace Nop.Services
         /// <summary>
         /// Gets all log items
         /// </summary>
-        /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
-        /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
+        /// <param name="fromUtc">Log item creation from; null to load all records</param>
+        /// <param name="toUtc">Log item creation to; null to load all records</param>
         /// <param name="message">Message</param>
-        /// <param name="logTypeId">Log type identifier</param>
+        /// <param name="logLevel">Log level; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item collection</returns>
-        PagedList<Log> GetAllLogs(DateTime? createdOnFrom,
-           DateTime? createdOnTo, string message,  int logTypeId, int pageIndex, int pageSize);
+        PagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc, 
+            string message, LogLevel? logLevel, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets a log item
@@ -57,34 +64,19 @@ namespace Nop.Services
         /// <summary>
         /// Inserts a log item
         /// </summary>
-        /// <param name="logType">Log item type</param>
+        /// <param name="logLevel">Log level</param>
         /// <param name="message">The short message</param>
         /// <param name="exception">The exception</param>
         /// <returns>A log item</returns>
-        Log InsertLog(LogTypeEnum logType, string message, string exception);
+        Log InsertLog(LogLevel logLevel, string message, string exception);
 
         /// <summary>
         /// Inserts a log item
         /// </summary>
-        /// <param name="logType">Log item type</param>
+        /// <param name="logLevel">Log level</param>
         /// <param name="message">The short message</param>
         /// <param name="exception">The exception</param>
         /// <returns>A log item</returns>
-        Log InsertLog(LogTypeEnum logType, string message, Exception exception);
-
-        /// <summary>
-        /// Inserts a log item
-        /// </summary>
-        /// <param name="logType">Log item type</param>
-        /// <param name="severity">The severity</param>
-        /// <param name="message">The short message</param>
-        /// <param name="exception">The full exception</param>
-        /// <param name="ipAddress">The IP address</param>
-        /// <param name="customerId">The customer identifier</param>
-        /// <param name="pageUrl">The page URL</param>
-        /// <returns>Log item</returns>
-        Log InsertLog(LogTypeEnum logType, int severity, string message,
-            Exception exception, string ipAddress,
-            int customerId, string pageUrl);
+        Log InsertLog(LogLevel logLevel, string message, Exception exception);
     }
 }
