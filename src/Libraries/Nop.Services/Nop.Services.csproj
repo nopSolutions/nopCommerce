@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CategoryService.cs" />
+    <Compile Include="CategoryExtensions.cs" />
+    <Compile Include="ICategoryService.cs" />
     <Compile Include="ILanguageService.cs" />
     <Compile Include="ILocalizationService.cs" />
     <Compile Include="Logging\LoggingExtensions.cs" />
