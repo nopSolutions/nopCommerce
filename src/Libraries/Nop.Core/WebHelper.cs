@@ -17,6 +17,7 @@ using System.Configuration;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Security;
 
 namespace Nop.Core
@@ -185,5 +186,33 @@ namespace Nop.Core
             return result.ToLowerInvariant();
         }
         
+        /// <summary>
+        /// Gets store location
+        /// </summary>
+        /// <returns>Store location</returns>
+        public static string GetStoreLocation()
+        {
+            bool useSsl = IsCurrentConnectionSecured();
+            return GetStoreLocation(useSsl);
+        }
+
+        /// <summary>
+        /// Gets store location
+        /// </summary>
+        /// <param name="useSsl">Use SSL</param>
+        /// <returns>Store location</returns>
+        public static string GetStoreLocation(bool useSsl)
+        {
+            //return HostingEnvironment.ApplicationVirtualPath;
+
+            string result = GetStoreHost(useSsl);
+            if (result.EndsWith("/"))
+                result = result.Substring(0, result.Length - 1);
+            result = result + HttpContext.Current.Request.ApplicationPath;
+            if (!result.EndsWith("/"))
+                result += "/";
+
+            return result.ToLowerInvariant();
+        }
     }
 }

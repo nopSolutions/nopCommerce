@@ -38,11 +38,16 @@ namespace Nop.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LocalizedCategory> LocalizedCategories { get; set; }
+        public DbSet<LocalizedManufacturer> LocalizedManufacturers { get; set; }
         public DbSet<LocalizedProduct> LocalizedProducts { get; set; }
         public DbSet<LocalizedProductVariant> LocalizedProductVariants { get; set; }
         public DbSet<Log> Log { get; set; }
+        public DbSet<Manufacturer> Manufacturers { get; set; }
+        public DbSet<Picture> Pictures { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<ProductManufacturer> ProductManufacturers { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductPicture> ProductPictures { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Setting> Settings { get; set; }
 

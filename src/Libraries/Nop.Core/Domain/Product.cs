@@ -132,5 +132,11 @@ namespace Nop.Core.Domain
         /// Gets or sets the collection of ProductManufacturer
         /// </summary>
         public virtual ICollection<ProductManufacturer> ProductManufacturers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of ProductPicture
+        /// </summary>
+        public virtual ICollection<ProductPicture> ProductPictures { get; set; }
+
     }
 }

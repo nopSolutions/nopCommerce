@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="Mapping\PictureMap.cs" />
+    <Compile Include="Mapping\ProductPictureMap.cs" />
     <Compile Include="Mapping\ManufacturerMap.cs" />
     <Compile Include="Mapping\LocalizedManufacturerMap.cs" />
     <Compile Include="Mapping\ProductManufacturerMap.cs" />
