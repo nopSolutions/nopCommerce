@@ -56,7 +56,7 @@ namespace Nop.Services
         /// <param name="categoryRespository">Category repository</param>
         /// <param name="localizedCategoryRespository">Localized category repository</param>
         /// <param name="productCategoryRespository">ProductCategory repository</param>
-        /// <param name="productRespository">Productrepository</param>
+        /// <param name="productRespository">Product repository</param>
         public CategoryService(ICacheManager cacheManager,
             IRepository<Category> categoryRespository,
             IRepository<LocalizedCategory> localizedCategoryRespository,

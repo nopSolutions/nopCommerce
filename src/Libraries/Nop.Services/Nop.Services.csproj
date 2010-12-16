@@ -46,6 +46,7 @@
     <Compile Include="ILanguageService.cs" />
     <Compile Include="ILocalizationService.cs" />
     <Compile Include="IManufacturerService.cs" />
+    <Compile Include="IProductService.cs" />
     <Compile Include="Logging\LoggingExtensions.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="LocalizationService.cs" />
     <Compile Include="Logging\DefaultLogger.cs" />
     <Compile Include="ManufacturerService.cs" />
+    <Compile Include="ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingService.cs" />
   </ItemGroup>
