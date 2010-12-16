@@ -102,7 +102,7 @@ namespace Nop.Services
         /// <param name="categoryId">Category identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Category content</returns>
-        LocalizedCategory GetCategoryLocalizedByCategoryIdAndLanguageId(int categoryId, int languageId);
+        LocalizedCategory GetLocalizedCategoryByCategoryIdAndLanguageId(int categoryId, int languageId);
 
         /// <summary>
         /// Inserts a localized category

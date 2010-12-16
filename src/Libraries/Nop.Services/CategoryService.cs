@@ -105,7 +105,6 @@ namespace Nop.Services
         /// <returns>Categories</returns>
         public List<Category> GetAllCategories(bool showHidden)
         {
-            
             var query = from c in _categoryRespository.Table
                         orderby c.ParentCategoryId, c.DisplayOrder
                         where (showHidden || c.Published) &&
@@ -329,7 +328,7 @@ namespace Nop.Services
         /// <param name="categoryId">Category identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Category content</returns>
-        public LocalizedCategory GetCategoryLocalizedByCategoryIdAndLanguageId(int categoryId, int languageId)
+        public LocalizedCategory GetLocalizedCategoryByCategoryIdAndLanguageId(int categoryId, int languageId)
         {
             if (categoryId == 0 || languageId == 0)
                 return null;

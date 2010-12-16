@@ -55,9 +55,12 @@
     <Compile Include="Domain\GiftCardType.cs" />
     <Compile Include="Domain\LowStockActivity.cs" />
     <Compile Include="Domain\ManageInventoryMethod.cs" />
+    <Compile Include="Domain\Manufacturer.cs" />
+    <Compile Include="Domain\LocalizedManufacturer.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\LocalizedProduct.cs" />
     <Compile Include="Domain\ProductCategory.cs" />
+    <Compile Include="Domain\ProductManufacturer.cs" />
     <Compile Include="Domain\ProductVariant.cs" />
     <Compile Include="Domain\LocalizedProductVariant.cs" />
     <Compile Include="Domain\RecurringProductCyclePeriod.cs" />

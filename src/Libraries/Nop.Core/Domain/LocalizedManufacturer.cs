@@ -12,63 +12,61 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a language
+    /// Represents a localized manufacturer
     /// </summary>
-    public partial class Language : BaseEntity
+    public partial class LocalizedManufacturer : BaseEntity
     {
+        /// <summary>
+        /// Gets or sets the manufacturer identifier
+        /// </summary>
+        public int ManufacturerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language identifier
+        /// </summary>
+        public int LanguageId { get; set; }
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the language culture
+        /// Gets or sets the description
         /// </summary>
-        public string LanguageCulture { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the flag image file name
+        /// Gets or sets the meta keywords
         /// </summary>
-        public string FlagImageFileName { get; set; }
+        public string MetaKeywords { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the language is published
+        /// Gets or sets the meta description
         /// </summary>
-        public bool Published { get; set; }
+        public string MetaDescription { get; set; }
 
         /// <summary>
-        /// Gets or sets the display order
+        /// Gets or sets the meta title
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public string MetaTitle { get; set; }
 
         /// <summary>
-        /// Gets or sets locale string resources
+        /// Gets or sets the search-engine name
         /// </summary>
-        public ICollection<LocaleStringResource> LocaleStringResources { get; set; }
+        public string SeName { get; set; }
 
         /// <summary>
-        /// Gets or sets localized categories
+        /// Gets or sets the manufacturer
         /// </summary>
-        public ICollection<LocalizedCategory> LocalizedCategories { get; set; }
+        public virtual Manufacturer Manufacturer { get; set; }
 
         /// <summary>
-        /// Gets or sets localized manufacturers
+        /// Gets the language
         /// </summary>
-        public ICollection<LocalizedManufacturer> LocalizedManufacturers { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized products
-        /// </summary>
-        public ICollection<LocalizedProduct> LocalizedProducts { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized product variants
-        /// </summary>
-        public ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
+        public virtual Language Language { get; set; }
     }
 }
