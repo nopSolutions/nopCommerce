@@ -25,9 +25,9 @@ namespace Nop.Data.Mapping
             this.ToTable("Product");
             this.HasKey(p => p.Id);
             this.Property(p => p.Name).IsRequired().HasMaxLength(400);
-            this.Property(p => p.ShortDescription).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(p => p.FullDescription).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(p => p.AdminComment).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(p => p.ShortDescription).IsRequired().IsMaxLength();
+            this.Property(p => p.FullDescription).IsRequired().IsMaxLength();
+            this.Property(p => p.AdminComment).IsRequired().IsMaxLength();
             this.Property(p => p.MetaKeywords).IsRequired().HasMaxLength(400);
             this.Property(p => p.MetaDescription).IsRequired();
             this.Property(p => p.MetaTitle).IsRequired().HasMaxLength(400);

@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping
             this.ToTable("CategoryLocalized");
             this.HasKey(lc => lc.Id);
             this.Property(lc => lc.Name).IsRequired().HasMaxLength(400);
-            this.Property(lc => lc.Description).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(lc => lc.Description).IsRequired().IsMaxLength();
             this.Property(lc => lc.MetaKeywords).IsRequired().HasMaxLength(400);
             this.Property(lc => lc.MetaDescription).IsRequired();
             this.Property(lc => lc.MetaTitle).IsRequired().HasMaxLength(400);

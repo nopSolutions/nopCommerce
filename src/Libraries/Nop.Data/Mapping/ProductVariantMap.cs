@@ -26,10 +26,10 @@ namespace Nop.Data.Mapping
             this.HasKey(pv => pv.Id);
             this.Property(pv => pv.Name).IsRequired().HasMaxLength(400);
             this.Property(pv => pv.Sku).IsRequired().HasMaxLength(400);
-            this.Property(pv => pv.Description).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(pv => pv.AdminComment).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(pv => pv.Description).IsRequired().IsMaxLength();
+            this.Property(pv => pv.AdminComment).IsRequired().IsMaxLength();
             this.Property(pv => pv.ManufacturerPartNumber).IsRequired().HasMaxLength(400);
-            this.Property(pv => pv.UserAgreementText).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(pv => pv.UserAgreementText).IsRequired().IsMaxLength();
             this.Ignore(pv => pv.BackorderMode);
             this.Ignore(pv => pv.DownloadActivationType);
             this.Ignore(pv => pv.GiftCardType);

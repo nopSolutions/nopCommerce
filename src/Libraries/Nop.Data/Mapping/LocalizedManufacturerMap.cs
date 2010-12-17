@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping
             this.ToTable("ManufacturerLocalized");
             this.HasKey(lm => lm.Id);
             this.Property(lm => lm.Name).IsRequired().HasMaxLength(400);
-            this.Property(lm => lm.Description).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(lm => lm.Description).IsRequired().IsMaxLength();
             this.Property(lm => lm.MetaKeywords).IsRequired().HasMaxLength(400);
             this.Property(lm => lm.MetaDescription).IsRequired();
             this.Property(lm => lm.MetaTitle).IsRequired().HasMaxLength(400);

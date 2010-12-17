@@ -24,8 +24,8 @@ namespace Nop.Data.Mapping
         {
             this.ToTable("Log");
             this.HasKey(l => l.Id);
-            this.Property(l => l.Message).IsRequired().HasMaxLength(int.MaxValue);
-            this.Property(l => l.Exception).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(l => l.Message).IsRequired().IsMaxLength();
+            this.Property(l => l.Exception).IsRequired().IsMaxLength();
             this.Property(l => l.IpAddress).IsRequired().HasMaxLength(200);
             this.Property(l => l.PageUrl).IsRequired();
             this.Property(l => l.ReferrerUrl).IsRequired();

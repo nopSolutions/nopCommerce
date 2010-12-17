@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping
             this.ToTable("ProductVariantLocalized");
             this.HasKey(lpv => lpv.Id);
             this.Property(lpv => lpv.Name).IsRequired().HasMaxLength(400);
-            this.Property(lpv => lpv.Description).IsRequired().HasMaxLength(int.MaxValue);
+            this.Property(lpv => lpv.Description).IsRequired().IsMaxLength();
 
             this.HasRequired(lpv => lpv.ProductVariant)
                 .WithMany(pv => pv.LocalizedProductVariants)
