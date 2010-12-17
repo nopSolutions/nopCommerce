@@ -66,6 +66,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryPersistenceTests.cs" />
+    <Compile Include="ProductPicturePersistenceTests.cs" />
+    <Compile Include="ProductManufacturerPersistenceTests.cs" />
+    <Compile Include="ProductCategoryPersistenceTests.cs" />
+    <Compile Include="ProductVariantPersistenceTests.cs" />
+    <Compile Include="ProductPersistenceTests.cs" />
+    <Compile Include="PicturePersistenceTests.cs" />
+    <Compile Include="ManufacturerPersistenceTests.cs" />
+    <Compile Include="LocalizedManufacturerPersistenceTests.cs" />
+    <Compile Include="LocalizedCategoryPersistenceTests.cs" />
     <Compile Include="LocaleStringResourcePersistenceTests.cs" />
     <Compile Include="CustomerPersistenceTests.cs" />
     <Compile Include="SettingPersistenceTests.cs" />

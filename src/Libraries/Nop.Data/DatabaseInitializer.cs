@@ -147,7 +147,7 @@ namespace Nop.Data
                                           UserAgreementText = string.Empty,
                                           IsShipEnabled = true,
                                           ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                                          LowStockActivity = LowStockActivity.Nothing,
+                                          LowStockActivity = LowStockActivity.Unpublish,
                                           BackorderMode = BackorderMode.NoBackorders,
                                           OrderMinimumQuantity = 1,
                                           OrderMaximumQuantity = 10000,

@@ -33,7 +33,7 @@ namespace Nop.Data.Mapping
             this.Ignore(pv => pv.BackorderMode);
             this.Ignore(pv => pv.DownloadActivationType);
             this.Ignore(pv => pv.GiftCardType);
-            this.Ignore(pv => pv.LowStockActivityId);
+            this.Ignore(pv => pv.LowStockActivity);
             this.Ignore(pv => pv.ManageInventoryMethod);
             this.Ignore(pv => pv.RecurringProductCyclePeriod);
 
