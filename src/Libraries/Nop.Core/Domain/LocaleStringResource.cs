@@ -38,7 +38,7 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets or sets the language
         /// </summary>
-        public Language Language { get; set; }
+        public virtual Language Language { get; set; }
     }
 
 }

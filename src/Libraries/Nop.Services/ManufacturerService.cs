@@ -158,20 +158,6 @@ namespace Nop.Services
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
 
-            manufacturer.Name = CommonHelper.EnsureNotNull(manufacturer.Name);
-            manufacturer.Name = CommonHelper.EnsureMaximumLength(manufacturer.Name, 400);
-            manufacturer.Description = CommonHelper.EnsureNotNull(manufacturer.Description);
-            manufacturer.MetaKeywords = CommonHelper.EnsureNotNull(manufacturer.MetaKeywords);
-            manufacturer.MetaKeywords = CommonHelper.EnsureMaximumLength(manufacturer.MetaKeywords, 400);
-            manufacturer.MetaDescription = CommonHelper.EnsureNotNull(manufacturer.MetaDescription);
-            manufacturer.MetaDescription = CommonHelper.EnsureMaximumLength(manufacturer.MetaDescription, 4000);
-            manufacturer.MetaTitle = CommonHelper.EnsureNotNull(manufacturer.MetaTitle);
-            manufacturer.MetaTitle = CommonHelper.EnsureMaximumLength(manufacturer.MetaTitle, 400);
-            manufacturer.SeName = CommonHelper.EnsureNotNull(manufacturer.SeName);
-            manufacturer.SeName = CommonHelper.EnsureMaximumLength(manufacturer.SeName, 100);
-            manufacturer.PriceRanges = CommonHelper.EnsureNotNull(manufacturer.PriceRanges);
-            manufacturer.PriceRanges = CommonHelper.EnsureMaximumLength(manufacturer.PriceRanges, 400);
-            
             _manufacturerRespository.Insert(manufacturer);
 
             //cache
@@ -187,20 +173,6 @@ namespace Nop.Services
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
-
-            manufacturer.Name = CommonHelper.EnsureNotNull(manufacturer.Name);
-            manufacturer.Name = CommonHelper.EnsureMaximumLength(manufacturer.Name, 400);
-            manufacturer.Description = CommonHelper.EnsureNotNull(manufacturer.Description);
-            manufacturer.MetaKeywords = CommonHelper.EnsureNotNull(manufacturer.MetaKeywords);
-            manufacturer.MetaKeywords = CommonHelper.EnsureMaximumLength(manufacturer.MetaKeywords, 400);
-            manufacturer.MetaDescription = CommonHelper.EnsureNotNull(manufacturer.MetaDescription);
-            manufacturer.MetaDescription = CommonHelper.EnsureMaximumLength(manufacturer.MetaDescription, 4000);
-            manufacturer.MetaTitle = CommonHelper.EnsureNotNull(manufacturer.MetaTitle);
-            manufacturer.MetaTitle = CommonHelper.EnsureMaximumLength(manufacturer.MetaTitle, 400);
-            manufacturer.SeName = CommonHelper.EnsureNotNull(manufacturer.SeName);
-            manufacturer.SeName = CommonHelper.EnsureMaximumLength(manufacturer.SeName, 100);
-            manufacturer.PriceRanges = CommonHelper.EnsureNotNull(manufacturer.PriceRanges);
-            manufacturer.PriceRanges = CommonHelper.EnsureMaximumLength(manufacturer.PriceRanges, 400);
 
             _manufacturerRespository.Update(manufacturer);
 
@@ -270,18 +242,6 @@ namespace Nop.Services
             if (localizedManufacturer == null)
                 throw new ArgumentNullException("localizedManufacturer");
 
-            localizedManufacturer.Name = CommonHelper.EnsureNotNull(localizedManufacturer.Name);
-            localizedManufacturer.Name = CommonHelper.EnsureMaximumLength(localizedManufacturer.Name, 400);
-            localizedManufacturer.Description = CommonHelper.EnsureNotNull(localizedManufacturer.Description);
-            localizedManufacturer.MetaKeywords = CommonHelper.EnsureNotNull(localizedManufacturer.MetaKeywords);
-            localizedManufacturer.MetaKeywords = CommonHelper.EnsureMaximumLength(localizedManufacturer.MetaKeywords, 400);
-            localizedManufacturer.MetaDescription = CommonHelper.EnsureNotNull(localizedManufacturer.MetaDescription);
-            localizedManufacturer.MetaDescription = CommonHelper.EnsureMaximumLength(localizedManufacturer.MetaDescription, 4000);
-            localizedManufacturer.MetaTitle = CommonHelper.EnsureNotNull(localizedManufacturer.MetaTitle);
-            localizedManufacturer.MetaTitle = CommonHelper.EnsureMaximumLength(localizedManufacturer.MetaTitle, 400);
-            localizedManufacturer.SeName = CommonHelper.EnsureNotNull(localizedManufacturer.SeName);
-            localizedManufacturer.SeName = CommonHelper.EnsureMaximumLength(localizedManufacturer.SeName, 100);
-            
             _localizedManufacturerRespository.Insert(localizedManufacturer);
          
             //cache
@@ -296,20 +256,6 @@ namespace Nop.Services
         {
             if (localizedManufacturer == null)
                 throw new ArgumentNullException("localizedManufacturer");
-
-            localizedManufacturer.Name = CommonHelper.EnsureNotNull(localizedManufacturer.Name);
-            localizedManufacturer.Name = CommonHelper.EnsureMaximumLength(localizedManufacturer.Name, 400);
-            localizedManufacturer.Description = CommonHelper.EnsureNotNull(localizedManufacturer.Description);
-            localizedManufacturer.MetaKeywords = CommonHelper.EnsureNotNull(localizedManufacturer.MetaKeywords);
-            localizedManufacturer.MetaKeywords = CommonHelper.EnsureMaximumLength(localizedManufacturer.MetaKeywords,
-                                                                                  400);
-            localizedManufacturer.MetaDescription = CommonHelper.EnsureNotNull(localizedManufacturer.MetaDescription);
-            localizedManufacturer.MetaDescription =
-                CommonHelper.EnsureMaximumLength(localizedManufacturer.MetaDescription, 4000);
-            localizedManufacturer.MetaTitle = CommonHelper.EnsureNotNull(localizedManufacturer.MetaTitle);
-            localizedManufacturer.MetaTitle = CommonHelper.EnsureMaximumLength(localizedManufacturer.MetaTitle, 400);
-            localizedManufacturer.SeName = CommonHelper.EnsureNotNull(localizedManufacturer.SeName);
-            localizedManufacturer.SeName = CommonHelper.EnsureMaximumLength(localizedManufacturer.SeName, 100);
 
             bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedManufacturer.Name) &&
                                      string.IsNullOrEmpty(localizedManufacturer.Description) &&

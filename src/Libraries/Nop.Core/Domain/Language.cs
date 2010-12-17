@@ -49,26 +49,26 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets or sets locale string resources
         /// </summary>
-        public ICollection<LocaleStringResource> LocaleStringResources { get; set; }
+        public virtual ICollection<LocaleStringResource> LocaleStringResources { get; set; }
 
         /// <summary>
         /// Gets or sets localized categories
         /// </summary>
-        public ICollection<LocalizedCategory> LocalizedCategories { get; set; }
+        public virtual ICollection<LocalizedCategory> LocalizedCategories { get; set; }
 
         /// <summary>
         /// Gets or sets localized manufacturers
         /// </summary>
-        public ICollection<LocalizedManufacturer> LocalizedManufacturers { get; set; }
+        public virtual ICollection<LocalizedManufacturer> LocalizedManufacturers { get; set; }
 
         /// <summary>
         /// Gets or sets localized products
         /// </summary>
-        public ICollection<LocalizedProduct> LocalizedProducts { get; set; }
+        public virtual ICollection<LocalizedProduct> LocalizedProducts { get; set; }
 
         /// <summary>
         /// Gets or sets localized product variants
         /// </summary>
-        public ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
+        public virtual ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
     }
 }

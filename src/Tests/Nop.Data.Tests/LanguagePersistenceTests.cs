@@ -17,14 +17,18 @@ namespace Nop.Data.Tests
             var lang = new Language
             {
                 Name = "English",
-                LanguageCulture = "en-GB",
-                FlagImageFileName = string.Empty,
+                LanguageCulture = "en-Us",
+                FlagImageFileName = "us.png",
                 Published = true,
                 DisplayOrder = 1
             };
 
             var fromDb = SaveAndLoadEntity(lang);
             fromDb.Name.ShouldEqual("English");
+            fromDb.LanguageCulture.ShouldEqual("en-Us");
+            fromDb.FlagImageFileName.ShouldEqual("us.png");
+            fromDb.Published.ShouldEqual(true);
+            fromDb.DisplayOrder.ShouldEqual(1);
         }
     }
 }

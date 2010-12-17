@@ -407,7 +407,7 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets or sets the product
         /// </summary>
-        public Product Product { get; set; }
+        public virtual Product Product { get; set; }
 
         /// <summary>
         /// Gets or sets the localized product variants

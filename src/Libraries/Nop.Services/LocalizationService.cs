@@ -121,12 +121,7 @@ namespace Nop.Services
         {
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
-
-            localeStringResource.ResourceName = CommonHelper.EnsureNotNull(localeStringResource.ResourceName);
-            localeStringResource.ResourceName = CommonHelper.EnsureMaximumLength(localeStringResource.ResourceName, 200);
-            localeStringResource.ResourceValue = CommonHelper.EnsureNotNull(localeStringResource.ResourceValue);
-
-
+            
             _lsrRespository.Insert(localeStringResource);
 
             //cache
@@ -141,10 +136,6 @@ namespace Nop.Services
         {
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
-
-            localeStringResource.ResourceName = CommonHelper.EnsureNotNull(localeStringResource.ResourceName);
-            localeStringResource.ResourceName = CommonHelper.EnsureMaximumLength(localeStringResource.ResourceName, 200);
-            localeStringResource.ResourceValue = CommonHelper.EnsureNotNull(localeStringResource.ResourceValue);
 
             _lsrRespository.Update(localeStringResource);
 

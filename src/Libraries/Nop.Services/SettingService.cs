@@ -66,12 +66,6 @@ namespace Nop.Services
             if (setting == null)
                 throw new ArgumentNullException("setting");
 
-            setting.Name = CommonHelper.EnsureNotNull(setting.Name);
-            setting.Name = CommonHelper.EnsureMaximumLength(setting.Name, 200);
-            setting.Value = CommonHelper.EnsureNotNull(setting.Value);
-            setting.Value = CommonHelper.EnsureMaximumLength(setting.Value, 2000);
-            setting.Description = CommonHelper.EnsureNotNull(setting.Description);
-
             _settingRespository.Insert(setting);
 
             //cache
@@ -86,12 +80,6 @@ namespace Nop.Services
         {
             if (setting == null)
                 throw new ArgumentNullException("setting");
-
-            setting.Name = CommonHelper.EnsureNotNull(setting.Name);
-            setting.Name = CommonHelper.EnsureMaximumLength(setting.Name, 200);
-            setting.Value = CommonHelper.EnsureNotNull(setting.Value);
-            setting.Value = CommonHelper.EnsureMaximumLength(setting.Value, 2000);
-            setting.Description = CommonHelper.EnsureNotNull(setting.Description);
 
             _settingRespository.Insert(setting);
 

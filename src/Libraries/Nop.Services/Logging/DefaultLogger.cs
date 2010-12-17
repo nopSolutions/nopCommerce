@@ -164,10 +164,7 @@ namespace Nop.Services.Logging
             string pageUrl = WebHelper.GetThisPageUrl(true);
             string referrerUrl = WebHelper.GetUrlReferrer();
 
-            message = CommonHelper.EnsureNotNull(message);
-            exceptionStr = CommonHelper.EnsureNotNull(exceptionStr);
             ipAddress = CommonHelper.EnsureNotNull(ipAddress);
-            ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 200);
             pageUrl = CommonHelper.EnsureNotNull(pageUrl);
             referrerUrl = CommonHelper.EnsureNotNull(referrerUrl);
 

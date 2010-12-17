@@ -228,20 +228,6 @@ namespace Nop.Services
             if (category == null)
                 throw new ArgumentNullException("category");
 
-            category.Name = CommonHelper.EnsureNotNull(category.Name);
-            category.Name = CommonHelper.EnsureMaximumLength(category.Name, 400);
-            category.Description = CommonHelper.EnsureNotNull(category.Description);
-            category.MetaKeywords = CommonHelper.EnsureNotNull(category.MetaKeywords);
-            category.MetaKeywords = CommonHelper.EnsureMaximumLength(category.MetaKeywords, 400);
-            category.MetaDescription = CommonHelper.EnsureNotNull(category.MetaDescription);
-            category.MetaDescription = CommonHelper.EnsureMaximumLength(category.MetaDescription, 4000);
-            category.MetaTitle = CommonHelper.EnsureNotNull(category.MetaTitle);
-            category.MetaTitle = CommonHelper.EnsureMaximumLength(category.MetaTitle, 400);
-            category.SeName = CommonHelper.EnsureNotNull(category.SeName);
-            category.SeName = CommonHelper.EnsureMaximumLength(category.SeName, 100);
-            category.PriceRanges = CommonHelper.EnsureNotNull(category.PriceRanges);
-            category.PriceRanges = CommonHelper.EnsureMaximumLength(category.PriceRanges, 400);
-
             _categoryRespository.Insert(category);
 
             //cache
@@ -257,20 +243,6 @@ namespace Nop.Services
         {
             if (category == null)
                 throw new ArgumentNullException("category");
-
-            category.Name = CommonHelper.EnsureNotNull(category.Name);
-            category.Name = CommonHelper.EnsureMaximumLength(category.Name, 400);
-            category.Description = CommonHelper.EnsureNotNull(category.Description);
-            category.MetaKeywords = CommonHelper.EnsureNotNull(category.MetaKeywords);
-            category.MetaKeywords = CommonHelper.EnsureMaximumLength(category.MetaKeywords, 400);
-            category.MetaDescription = CommonHelper.EnsureNotNull(category.MetaDescription);
-            category.MetaDescription = CommonHelper.EnsureMaximumLength(category.MetaDescription, 4000);
-            category.MetaTitle = CommonHelper.EnsureNotNull(category.MetaTitle);
-            category.MetaTitle = CommonHelper.EnsureMaximumLength(category.MetaTitle, 400);
-            category.SeName = CommonHelper.EnsureNotNull(category.SeName);
-            category.SeName = CommonHelper.EnsureMaximumLength(category.SeName, 100);
-            category.PriceRanges = CommonHelper.EnsureNotNull(category.PriceRanges);
-            category.PriceRanges = CommonHelper.EnsureMaximumLength(category.PriceRanges, 400);
 
             //validate category hierarchy
             var parentCategory = GetCategoryById(category.ParentCategoryId);
@@ -351,18 +323,6 @@ namespace Nop.Services
             if (localizedCategory == null)
                 throw new ArgumentNullException("localizedCategory");
 
-            localizedCategory.Name = CommonHelper.EnsureNotNull(localizedCategory.Name);
-            localizedCategory.Name = CommonHelper.EnsureMaximumLength(localizedCategory.Name, 400);
-            localizedCategory.Description = CommonHelper.EnsureNotNull(localizedCategory.Description);
-            localizedCategory.MetaKeywords = CommonHelper.EnsureNotNull(localizedCategory.MetaKeywords);
-            localizedCategory.MetaKeywords = CommonHelper.EnsureMaximumLength(localizedCategory.MetaKeywords, 400);
-            localizedCategory.MetaDescription = CommonHelper.EnsureNotNull(localizedCategory.MetaDescription);
-            localizedCategory.MetaDescription = CommonHelper.EnsureMaximumLength(localizedCategory.MetaDescription, 4000);
-            localizedCategory.MetaTitle = CommonHelper.EnsureNotNull(localizedCategory.MetaTitle);
-            localizedCategory.MetaTitle = CommonHelper.EnsureMaximumLength(localizedCategory.MetaTitle, 400);
-            localizedCategory.SeName = CommonHelper.EnsureNotNull(localizedCategory.SeName);
-            localizedCategory.SeName = CommonHelper.EnsureMaximumLength(localizedCategory.SeName, 100);
-
             _localizedCategoryRespository.Insert(localizedCategory);
 
             //cache
@@ -377,18 +337,6 @@ namespace Nop.Services
         {
             if (localizedCategory == null)
                 throw new ArgumentNullException("localizedCategory");
-
-            localizedCategory.Name = CommonHelper.EnsureNotNull(localizedCategory.Name);
-            localizedCategory.Name = CommonHelper.EnsureMaximumLength(localizedCategory.Name, 400);
-            localizedCategory.Description = CommonHelper.EnsureNotNull(localizedCategory.Description);
-            localizedCategory.MetaKeywords = CommonHelper.EnsureNotNull(localizedCategory.MetaKeywords);
-            localizedCategory.MetaKeywords = CommonHelper.EnsureMaximumLength(localizedCategory.MetaKeywords, 400);
-            localizedCategory.MetaDescription = CommonHelper.EnsureNotNull(localizedCategory.MetaDescription);
-            localizedCategory.MetaDescription = CommonHelper.EnsureMaximumLength(localizedCategory.MetaDescription, 4000);
-            localizedCategory.MetaTitle = CommonHelper.EnsureNotNull(localizedCategory.MetaTitle);
-            localizedCategory.MetaTitle = CommonHelper.EnsureMaximumLength(localizedCategory.MetaTitle, 400);
-            localizedCategory.SeName = CommonHelper.EnsureNotNull(localizedCategory.SeName);
-            localizedCategory.SeName = CommonHelper.EnsureMaximumLength(localizedCategory.SeName, 100);
 
             bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedCategory.Name) &&
                                      string.IsNullOrEmpty(localizedCategory.Description) &&

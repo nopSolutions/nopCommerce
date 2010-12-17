@@ -171,20 +171,6 @@ namespace Nop.Services
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            product.Name = CommonHelper.EnsureNotNull(product.Name);
-            product.Name = CommonHelper.EnsureMaximumLength(product.Name, 400);
-            product.ShortDescription = CommonHelper.EnsureNotNull(product.ShortDescription);
-            product.FullDescription = CommonHelper.EnsureNotNull(product.FullDescription);
-            product.AdminComment = CommonHelper.EnsureNotNull(product.AdminComment);
-            product.MetaKeywords = CommonHelper.EnsureNotNull(product.MetaKeywords);
-            product.MetaKeywords = CommonHelper.EnsureMaximumLength(product.MetaKeywords, 400);
-            product.MetaDescription = CommonHelper.EnsureNotNull(product.MetaDescription);
-            product.MetaDescription = CommonHelper.EnsureMaximumLength(product.MetaDescription, 4000);
-            product.MetaTitle = CommonHelper.EnsureNotNull(product.MetaTitle);
-            product.MetaTitle = CommonHelper.EnsureMaximumLength(product.MetaTitle, 400);
-            product.SeName = CommonHelper.EnsureNotNull(product.SeName);
-            product.SeName = CommonHelper.EnsureMaximumLength(product.SeName, 100);
-            
             _productRespository.Insert(product);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
@@ -199,20 +185,6 @@ namespace Nop.Services
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-
-            product.Name = CommonHelper.EnsureNotNull(product.Name);
-            product.Name = CommonHelper.EnsureMaximumLength(product.Name, 400);
-            product.ShortDescription = CommonHelper.EnsureNotNull(product.ShortDescription);
-            product.FullDescription = CommonHelper.EnsureNotNull(product.FullDescription);
-            product.AdminComment = CommonHelper.EnsureNotNull(product.AdminComment);
-            product.MetaKeywords = CommonHelper.EnsureNotNull(product.MetaKeywords);
-            product.MetaKeywords = CommonHelper.EnsureMaximumLength(product.MetaKeywords, 400);
-            product.MetaDescription = CommonHelper.EnsureNotNull(product.MetaDescription);
-            product.MetaDescription = CommonHelper.EnsureMaximumLength(product.MetaDescription, 4000);
-            product.MetaTitle = CommonHelper.EnsureNotNull(product.MetaTitle);
-            product.MetaTitle = CommonHelper.EnsureMaximumLength(product.MetaTitle, 400);
-            product.SeName = CommonHelper.EnsureNotNull(product.SeName);
-            product.SeName = CommonHelper.EnsureMaximumLength(product.SeName, 100);
 
             _productRespository.Update(product);
 
@@ -280,19 +252,6 @@ namespace Nop.Services
             if (localizedProduct == null)
                 throw new ArgumentNullException("localizedProduct");
 
-            localizedProduct.Name = CommonHelper.EnsureNotNull(localizedProduct.Name);
-            localizedProduct.Name = CommonHelper.EnsureMaximumLength(localizedProduct.Name, 400);
-            localizedProduct.ShortDescription = CommonHelper.EnsureNotNull(localizedProduct.ShortDescription);
-            localizedProduct.FullDescription = CommonHelper.EnsureNotNull(localizedProduct.FullDescription);
-            localizedProduct.MetaKeywords = CommonHelper.EnsureNotNull(localizedProduct.MetaKeywords);
-            localizedProduct.MetaKeywords = CommonHelper.EnsureMaximumLength(localizedProduct.MetaKeywords, 400);
-            localizedProduct.MetaDescription = CommonHelper.EnsureNotNull(localizedProduct.MetaDescription);
-            localizedProduct.MetaDescription = CommonHelper.EnsureMaximumLength(localizedProduct.MetaDescription, 4000);
-            localizedProduct.MetaTitle = CommonHelper.EnsureNotNull(localizedProduct.MetaTitle);
-            localizedProduct.MetaTitle = CommonHelper.EnsureMaximumLength(localizedProduct.MetaTitle, 400);
-            localizedProduct.SeName = CommonHelper.EnsureNotNull(localizedProduct.SeName);
-            localizedProduct.SeName = CommonHelper.EnsureMaximumLength(localizedProduct.SeName, 100);
-
             _localizedProductRespository.Insert(localizedProduct);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
@@ -307,19 +266,6 @@ namespace Nop.Services
         {
             if (localizedProduct == null)
                 throw new ArgumentNullException("localizedProduct");
-
-            localizedProduct.Name = CommonHelper.EnsureNotNull(localizedProduct.Name);
-            localizedProduct.Name = CommonHelper.EnsureMaximumLength(localizedProduct.Name, 400);
-            localizedProduct.ShortDescription = CommonHelper.EnsureNotNull(localizedProduct.ShortDescription);
-            localizedProduct.FullDescription = CommonHelper.EnsureNotNull(localizedProduct.FullDescription);
-            localizedProduct.MetaKeywords = CommonHelper.EnsureNotNull(localizedProduct.MetaKeywords);
-            localizedProduct.MetaKeywords = CommonHelper.EnsureMaximumLength(localizedProduct.MetaKeywords, 400);
-            localizedProduct.MetaDescription = CommonHelper.EnsureNotNull(localizedProduct.MetaDescription);
-            localizedProduct.MetaDescription = CommonHelper.EnsureMaximumLength(localizedProduct.MetaDescription, 4000);
-            localizedProduct.MetaTitle = CommonHelper.EnsureNotNull(localizedProduct.MetaTitle);
-            localizedProduct.MetaTitle = CommonHelper.EnsureMaximumLength(localizedProduct.MetaTitle, 400);
-            localizedProduct.SeName = CommonHelper.EnsureNotNull(localizedProduct.SeName);
-            localizedProduct.SeName = CommonHelper.EnsureMaximumLength(localizedProduct.SeName, 100);
 
             bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedProduct.Name) &&
                                      string.IsNullOrEmpty(localizedProduct.ShortDescription) &&
@@ -416,23 +362,8 @@ namespace Nop.Services
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
 
-            productVariant.Name = CommonHelper.EnsureNotNull(productVariant.Name);
-            productVariant.Name = CommonHelper.EnsureMaximumLength(productVariant.Name, 400);
-            productVariant.Sku = CommonHelper.EnsureNotNull(productVariant.Sku);
-            productVariant.Sku = productVariant.Sku.Trim();
-            productVariant.Sku = CommonHelper.EnsureMaximumLength(productVariant.Sku, 100);
-            productVariant.Description = CommonHelper.EnsureNotNull(productVariant.Description);
-            productVariant.Description = CommonHelper.EnsureMaximumLength(productVariant.Description, 4000);
-            productVariant.AdminComment = CommonHelper.EnsureNotNull(productVariant.AdminComment);
-            productVariant.AdminComment = CommonHelper.EnsureMaximumLength(productVariant.AdminComment, 4000);
-            productVariant.ManufacturerPartNumber = CommonHelper.EnsureNotNull(productVariant.ManufacturerPartNumber);
-            productVariant.ManufacturerPartNumber =
-                CommonHelper.EnsureMaximumLength(productVariant.ManufacturerPartNumber, 100);
-            productVariant.UserAgreementText = CommonHelper.EnsureNotNull(productVariant.UserAgreementText);
-
             _productVariantRespository.Insert(productVariant);
-
-
+            
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
         }
@@ -445,20 +376,6 @@ namespace Nop.Services
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
-
-            productVariant.Name = CommonHelper.EnsureNotNull(productVariant.Name);
-            productVariant.Name = CommonHelper.EnsureMaximumLength(productVariant.Name, 400);
-            productVariant.Sku = CommonHelper.EnsureNotNull(productVariant.Sku);
-            productVariant.Sku = productVariant.Sku.Trim();
-            productVariant.Sku = CommonHelper.EnsureMaximumLength(productVariant.Sku, 100);
-            productVariant.Description = CommonHelper.EnsureNotNull(productVariant.Description);
-            productVariant.Description = CommonHelper.EnsureMaximumLength(productVariant.Description, 4000);
-            productVariant.AdminComment = CommonHelper.EnsureNotNull(productVariant.AdminComment);
-            productVariant.AdminComment = CommonHelper.EnsureMaximumLength(productVariant.AdminComment, 4000);
-            productVariant.ManufacturerPartNumber = CommonHelper.EnsureNotNull(productVariant.ManufacturerPartNumber);
-            productVariant.ManufacturerPartNumber =
-                CommonHelper.EnsureMaximumLength(productVariant.ManufacturerPartNumber, 100);
-            productVariant.UserAgreementText = CommonHelper.EnsureNotNull(productVariant.UserAgreementText);
 
             _productVariantRespository.Update(productVariant);
 
@@ -579,10 +496,6 @@ namespace Nop.Services
             if (localizedProductVariant == null)
                 throw new ArgumentNullException("localizedProductVariant");
 
-            localizedProductVariant.Name = CommonHelper.EnsureNotNull(localizedProductVariant.Name);
-            localizedProductVariant.Name = CommonHelper.EnsureMaximumLength(localizedProductVariant.Name, 400);
-            localizedProductVariant.Description = CommonHelper.EnsureNotNull(localizedProductVariant.Description);
-
             _localizedProductVariantRespository.Insert(localizedProductVariant);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
@@ -597,10 +510,6 @@ namespace Nop.Services
         {
             if (localizedProductVariant == null)
                 throw new ArgumentNullException("localizedProductVariant");
-
-            localizedProductVariant.Name = CommonHelper.EnsureNotNull(localizedProductVariant.Name);
-            localizedProductVariant.Name = CommonHelper.EnsureMaximumLength(localizedProductVariant.Name, 400);
-            localizedProductVariant.Description = CommonHelper.EnsureNotNull(localizedProductVariant.Description);
 
             bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedProductVariant.Name) &&
                                      string.IsNullOrEmpty(localizedProductVariant.Description);

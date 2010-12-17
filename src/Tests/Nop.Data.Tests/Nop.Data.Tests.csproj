@@ -65,6 +65,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CategoryPersistenceTests.cs" />
+    <Compile Include="LocaleStringResourcePersistenceTests.cs" />
+    <Compile Include="CustomerPersistenceTests.cs" />
     <Compile Include="SettingPersistenceTests.cs" />
     <Compile Include="LanguagePersistenceTests.cs" />
     <Compile Include="PersistenceTest.cs" />

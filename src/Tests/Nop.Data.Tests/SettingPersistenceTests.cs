@@ -23,6 +23,8 @@ namespace Nop.Data.Tests
 
             var fromDb = SaveAndLoadEntity(setting);
             fromDb.Name.ShouldEqual("Setting1");
+            fromDb.Value.ShouldEqual("Value1");
+            fromDb.Description.ShouldEqual("Description1");
         }
     }
 }

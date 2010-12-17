@@ -31,12 +31,13 @@ namespace Nop.Data
     {
         public NopObjectContext(string connectionStringName) : base(connectionStringName)
         {
-
+            //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Language> Languages { get; set; }
+        public DbSet<LocaleStringResource> LocaleStringResources { get; set; }
         public DbSet<LocalizedCategory> LocalizedCategories { get; set; }
         public DbSet<LocalizedManufacturer> LocalizedManufacturers { get; set; }
         public DbSet<LocalizedProduct> LocalizedProducts { get; set; }
