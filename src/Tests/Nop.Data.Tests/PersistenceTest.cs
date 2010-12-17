@@ -12,16 +12,21 @@ namespace Nop.Data.Tests
     [TestFixture]
     public abstract class PersistenceTest
     {
-        public const string TestDbName = "Nop.Data.Tests.Db";
         protected NopObjectContext context;
 
         [SetUp]
         public void SetUp()
         {
             DbDatabase.DefaultConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
-            context = new NopObjectContext(TestDbName);
+            context = new NopObjectContext(GetTestDbName());
             context.Database.Delete();
             context.Database.Create();
+        }
+
+        private string GetTestDbName()
+        {
+            string testDbName = "Data Source=" + (System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)) + @"\\Nop.Data.Tests.Db.sdf;Persist Security Info=False";
+            return testDbName;
         }
         
         
@@ -38,7 +43,7 @@ namespace Nop.Data.Tests
             object id = entity.Id;
 
             context.Dispose();
-            context = new NopObjectContext(TestDbName);
+            context = new NopObjectContext(GetTestDbName());
 
             var fromDb = context.Set<T>().Find(id);
             fromDb.ShouldNotBeNull();
