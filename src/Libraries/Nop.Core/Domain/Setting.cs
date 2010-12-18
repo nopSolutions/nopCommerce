@@ -19,6 +19,14 @@ namespace Nop.Core.Domain
     /// </summary>
     public partial class Setting : BaseEntity
     {
+        public Setting() { }
+        
+        public Setting(string name, string value, string description = "") {
+            this.Name = name;
+            this.Value = value;
+            this.Description = description;
+        }
+        
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -33,5 +41,12 @@ namespace Nop.Core.Domain
         /// Gets or sets the description
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Returns the setting value as the specified type
+        /// </summary>
+        public T As<T>() {
+            return CommonHelper.To<T>(this.Value);
+        }
     }
 }

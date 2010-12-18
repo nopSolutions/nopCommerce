@@ -110,20 +110,9 @@ namespace Nop.Services
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">Key</param>
-        /// <returns>Setting value</returns>
-        public T GetSettingByKey<T>(string key)
-        {
-            return GetSettingByKey(key, default(T));
-        }
-
-        /// <summary>
-        /// Get setting value by key
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="key">Key</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>Setting value</returns>
-        public T GetSettingByKey<T>(string key, T defaultValue)
+        public T GetSettingByKey<T>(string key, T defaultValue = default(T))
         {
             if (String.IsNullOrEmpty(key))
                 return defaultValue;
@@ -131,10 +120,9 @@ namespace Nop.Services
             key = key.Trim().ToLowerInvariant();
 
             var settings = GetAllSettings();
-            if (settings.ContainsKey(key))
-            {
+            if (settings.ContainsKey(key)) {
                 var setting = settings[key];
-                return (T)Convert.ChangeType(setting.Value, typeof(T), CultureInfo.InvariantCulture);
+                return setting.As<T>();
             }
             return defaultValue;
         }
@@ -149,13 +137,12 @@ namespace Nop.Services
         {
             var settings = GetAllSettings();
 
-            var valueStr = (string) Convert.ChangeType(value, typeof (string), CultureInfo.InvariantCulture);
             Setting setting = null;
             if (settings.ContainsKey(key))
             {
                 //update
                 setting = settings[key];
-                setting.Value = valueStr;
+                setting.Value = value.ToString();
                 UpdateSetting(setting);
             }
             else
@@ -164,7 +151,7 @@ namespace Nop.Services
                 setting = new Setting()
                               {
                                   Name = key,
-                                  Value = valueStr,
+                                  Value = value.ToString(),
                                   Description = string.Empty
                               };
                 InsertSetting(setting);
@@ -190,7 +177,7 @@ namespace Nop.Services
         /// Gets all settings
         /// </summary>
         /// <returns>Setting collection</returns>
-        public Dictionary<string, Setting> GetAllSettings()
+        public IDictionary<string, Setting> GetAllSettings()
         {
             //cache
             string cacheKey = string.Format(SETTINGS_ALL_KEY);

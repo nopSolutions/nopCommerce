@@ -18,6 +18,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Security;
+using System.Globalization;
 
 namespace Nop.Core
 {
@@ -87,6 +88,13 @@ namespace Nop.Core
                 return string.Empty;
 
             return str;
+        }
+
+        /// <summary>
+        /// Converts a string to the specified type
+        /// </summary>
+        public static T To<T>(string obj) {
+            return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
         }
     }
 }

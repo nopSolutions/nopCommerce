@@ -34,25 +34,9 @@ namespace Nop.Services
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">Key</param>
-        /// <returns>Setting value</returns>
-        T GetSettingByKey<T>(string key);
-
-        /// <summary>
-        /// Get setting value by key
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="key">Key</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>Setting value</returns>
-        T GetSettingByKey<T>(string key, T defaultValue);
-
-        /// <summary>
-        /// Set setting value
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="key">Key</param>
-        /// <param name="value">Value</param>
-        void SetSetting<T>(string key, T value);
+        T GetSettingByKey<T>(string key, T defaultValue = default(T));
 
         /// <summary>
         /// Deletes a setting
@@ -64,6 +48,6 @@ namespace Nop.Services
         /// Gets all settings
         /// </summary>
         /// <returns>Setting collection</returns>
-        Dictionary<string, Setting> GetAllSettings();
+        IDictionary<string, Setting> GetAllSettings();
     }
 }
