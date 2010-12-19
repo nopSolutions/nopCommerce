@@ -48,6 +48,8 @@
     <Compile Include="Caching\NopRequestCache.cs" />
     <Compile Include="Caching\NopStaticCache.cs" />
     <Compile Include="CommonHelper.cs" />
+    <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Domain\BackorderMode.cs" />
     <Compile Include="Domain\Category.cs" />
     <Compile Include="Domain\LocalizedCategory.cs" />

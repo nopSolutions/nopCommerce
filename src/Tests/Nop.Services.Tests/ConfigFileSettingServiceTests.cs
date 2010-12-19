@@ -28,7 +28,7 @@ namespace Nop.Services.Tests
         {
             var settings = config.GetAllSettings();
             settings.ShouldNotBeNull();
-            settings.Count.ShouldEqual(3);
+            (settings.Count > 0).ShouldBeTrue();
         }
 
         [Test]

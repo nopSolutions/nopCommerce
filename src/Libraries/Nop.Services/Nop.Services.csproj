@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="CategoryService.cs" />
     <Compile Include="CategoryExtensions.cs" />
+    <Compile Include="ConfigurationProvider.cs" />
     <Compile Include="ICategoryService.cs" />
     <Compile Include="ILanguageService.cs" />
     <Compile Include="ILocalizationService.cs" />

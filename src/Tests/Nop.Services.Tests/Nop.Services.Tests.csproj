@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigFileSettingService.cs" />
+    <Compile Include="ConfigurationProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfigFileSettingServiceTests.cs" />
   </ItemGroup>
