@@ -92,22 +92,15 @@ namespace Nop.Services
         public List<Language> GetAllLanguages(bool showHidden)
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (List<Language>) obj2;
-            }
-
-            var query = from l in _languageRespository.Table
-                        orderby l.DisplayOrder
-                        where showHidden || l.Published
-                        select l;
-            var languages = query.ToList();
-
-            //cache
-            _cacheManager.Add(key, languages);
-
-            return languages;
+                var query = from l in _languageRespository.Table
+                            orderby l.DisplayOrder
+                            where showHidden || l.Published
+                            select l;
+                var languages = query.ToList();
+                return languages;
+            });
         }
 
         /// <summary>
@@ -121,18 +114,10 @@ namespace Nop.Services
                 return null;
 
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
-            {
-                return (Language) obj2;
-            }
-            
-            var language = _languageRespository.GetById(languageId);
-
-            //cache
-            _cacheManager.Add(key, language);
-
-            return language;
+            return _cacheManager.Get(key, () =>
+                                              {
+                                                  return _languageRespository.GetById(languageId);
+                                              });
         }
 
         /// <summary>

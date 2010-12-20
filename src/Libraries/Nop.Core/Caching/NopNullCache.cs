@@ -19,31 +19,41 @@ namespace Nop.Core.Caching
     /// </summary>
     public partial class NopNullCache : ICacheManager
     {
-        #region Methods
-
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// </summary>
+        /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        public object Get(string key)
+        public T Get<T>(string key)
         {
-            return null;
+            return default(T);
         }
 
         /// <summary>
         /// Adds the specified key and object to the cache.
         /// </summary>
         /// <param name="key">key</param>
-        /// <param name="obj">object</param>
-        public void Add(string key, object obj)
+        /// <param name="data">Data</param>
+        /// <param name="cacheTime">Cache time</param>
+        public void Set(string key, object data, int cacheTime)
         {
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the value associated with the specified key is cached
+        /// </summary>
+        /// <param name="key">key</param>
+        /// <returns>Result</returns>
+        public bool IsSet(string key)
+        {
+            return false;
         }
 
         /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">/key</param>
         public void Remove(string key)
         {
         }
@@ -56,21 +66,11 @@ namespace Nop.Core.Caching
         {
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
-        /// Gets or sets a value indicating whether the cache is enabled
+        /// Clear all cache data
         /// </summary>
-        public bool IsEnabled
+        public void Clear()
         {
-            get
-            {
-                return true;
-            }
         }
-
-        #endregion
     }
 }

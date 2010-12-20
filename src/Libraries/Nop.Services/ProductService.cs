@@ -149,17 +149,10 @@ namespace Nop.Services
                 return null;
 
             string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (Product)obj2;
-            }
-
-            var product = _productRespository.GetById(productId);
-
-                _cacheManager.Add(key, product);
-            
-            return product;
+                return _productRespository.GetById(productId);
+            });
         }
         
         /// <summary>
@@ -319,17 +312,10 @@ namespace Nop.Services
                 return null;
 
             string key = string.Format(PRODUCTVARIANTS_BY_ID_KEY, productVariantId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (ProductVariant) obj2;
-            }
-
-            var productVariant = _productVariantRespository.GetById(productVariantId);
-
-            _cacheManager.Add(key, productVariant);
-
-            return productVariant;
+                return _productVariantRespository.GetById(productVariantId);
+            });
         }
 
         /// <summary>
@@ -404,36 +390,33 @@ namespace Nop.Services
         public List<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden)
         {
             string key = string.Format(PRODUCTVARIANTS_ALL_KEY, showHidden, productId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
-            {
-                return (List<ProductVariant>) obj2;
-            }
+            return _cacheManager.Get(key, () =>
+                                              {
+                                                  var query = (IQueryable<ProductVariant>) _productVariantRespository.Table;
+                                                  if (!showHidden)
+                                                  {
+                                                      query = query.Where(pv => pv.Published);
+                                                  }
+                                                  if (!showHidden)
+                                                  {
+                                                      query =
+                                                          query.Where(
+                                                              pv =>
+                                                              !pv.AvailableStartDateTimeUtc.HasValue ||
+                                                              pv.AvailableStartDateTimeUtc <= DateTime.UtcNow);
+                                                      query =
+                                                          query.Where(
+                                                              pv =>
+                                                              !pv.AvailableEndDateTimeUtc.HasValue ||
+                                                              pv.AvailableEndDateTimeUtc >= DateTime.UtcNow);
+                                                  }
+                                                  query = query.Where(pv => !pv.Deleted);
+                                                  query = query.Where(pv => pv.ProductId == productId);
+                                                  query = query.OrderBy(pv => pv.DisplayOrder);
 
-            var query = (IQueryable<ProductVariant>) _productVariantRespository.Table;
-            if (!showHidden)
-            {
-                query = query.Where(pv => pv.Published);
-            }
-            if (!showHidden)
-            {
-                query =
-                    query.Where(
-                        pv => !pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc <= DateTime.UtcNow);
-                query =
-                    query.Where(
-                        pv => !pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc >= DateTime.UtcNow);
-            }
-            query = query.Where(pv => !pv.Deleted);
-            query = query.Where(pv => pv.ProductId == productId);
-            query = query.OrderBy(pv => pv.DisplayOrder);
-
-            var productVariants = query.ToList();
-
-            //cache
-            _cacheManager.Add(key, productVariants);
-
-            return productVariants;
+                                                  var productVariants = query.ToList();
+                                                  return productVariants;
+                                              });
         }
 
         /// <summary>

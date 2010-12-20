@@ -14,16 +14,17 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Caching;
+using System.Collections.Generic;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a NopRequestCache
+    /// Represents a NopStaticCache
     /// </summary>
-    public partial class NopRequestCache : ICacheManager
+    public partial class PerRequestCacheManager : ICacheManager
     {
         private HttpContextBase _context;
 
@@ -31,7 +32,7 @@ namespace Nop.Core.Caching
         /// Ctor
         /// </summary>
         /// <param name="context">Context</param>
-        public NopRequestCache(HttpContextBase context)
+        public PerRequestCacheManager(HttpContextBase context)
         {
             this._context = context;
         }
@@ -50,38 +51,54 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// </summary>
+        /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        public object Get(string key)
+        public T Get<T>(string key)
         {
             var items = GetItems();
             if (items == null)
-                return null;
+                return default(T);
 
-            return items[key];
+            return (T)items[key];
         }
 
         /// <summary>
         /// Adds the specified key and object to the cache.
         /// </summary>
         /// <param name="key">key</param>
-        /// <param name="obj">object</param>
-        public void Add(string key, object obj)
+        /// <param name="data">Data</param>
+        /// <param name="cacheTime">Cache time</param>
+        public void Set(string key, object data, int cacheTime)
         {
             var items = GetItems();
             if (items == null)
                 return;
 
-            if (IsEnabled && (obj != null))
+            if (data != null)
             {
-                items.Add(key, obj);
+                items.Add(key, data);
             }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the value associated with the specified key is cached
+        /// </summary>
+        /// <param name="key">key</param>
+        /// <returns>Result</returns>
+        public bool IsSet(string key)
+        {
+            var items = GetItems();
+            if (items == null)
+                return false;
+
+            return (items[key] != null);
         }
 
         /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">/key</param>
         public void Remove(string key)
         {
             var items = GetItems();
@@ -101,8 +118,8 @@ namespace Nop.Core.Caching
             if (items == null)
                 return;
 
-            IDictionaryEnumerator enumerator = items.GetEnumerator();
-            Regex regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var enumerator = items.GetEnumerator();
+            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var keysToRemove = new List<String>();
             while (enumerator.MoveNext())
             {
@@ -119,13 +136,24 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the cache is enabled
+        /// Clear all cache data
         /// </summary>
-        public bool IsEnabled
+        public void Clear()
         {
-            get
+            var items = GetItems();
+            if (items == null)
+                return;
+
+            var enumerator = items.GetEnumerator();
+            var keysToRemove = new List<String>();
+            while (enumerator.MoveNext())
             {
-                return true;
+                keysToRemove.Add(enumerator.Key.ToString());
+            }
+
+            foreach (string key in keysToRemove)
+            {
+                items.Remove(key);
             }
         }
     }

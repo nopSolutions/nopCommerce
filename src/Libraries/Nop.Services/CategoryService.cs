@@ -199,24 +199,17 @@ namespace Nop.Services
                 return null;
 
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
-            {
-                return (Category) obj2;
-            }
+            return _cacheManager.Get(key, () =>
+                                              {
+                                                  var category = _categoryRespository.GetById(categoryId);
+                                                  //filter by access control list (public store)
+                                                  //if (category != null && !showHidden && IsCategoryAccessDenied(category))
+                                                  //{
+                                                  //    category = null;
+                                                  //}
 
-            var category = _categoryRespository.GetById(categoryId);
-
-            //filter by access control list (public store)
-            //if (category != null && !showHidden && IsCategoryAccessDenied(category))
-            //{
-            //    category = null;
-            //}
-
-            //cache
-            _cacheManager.Add(key, category);
-
-            return category;
+                                                  return category;
+                                              });
         }
 
         /// <summary>
@@ -389,26 +382,18 @@ namespace Nop.Services
             bool showHidden = true;
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (List<ProductCategory>) obj2;
-            }
-
-
-            var query = from pc in _productCategoryRespository.Table
-                        join p in _productRespository.Table on pc.ProductId equals p.Id
-                        where pc.CategoryId == categoryId &&
-                              !p.Deleted &&
-                              (showHidden || p.Published)
-                        orderby pc.DisplayOrder
-                        select pc;
-            var productCategories = query.ToList();
-
-            //cache
-            _cacheManager.Add(key, productCategories);
-
-            return productCategories;
+                var query = from pc in _productCategoryRespository.Table
+                            join p in _productRespository.Table on pc.ProductId equals p.Id
+                            where pc.CategoryId == categoryId &&
+                                  !p.Deleted &&
+                                  (showHidden || p.Published)
+                            orderby pc.DisplayOrder
+                            select pc;
+                var productCategories = query.ToList();
+                return productCategories;
+            });
         }
 
         /// <summary>
@@ -425,26 +410,18 @@ namespace Nop.Services
             bool showHidden = true;
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (List<ProductCategory>) obj2;
-            }
-
-
-            var query = from pc in _productCategoryRespository.Table
-                        join c in _categoryRespository.Table on pc.CategoryId equals c.Id
-                        where pc.ProductId == productId &&
-                              !c.Deleted &&
-                              (showHidden || c.Published)
-                        orderby pc.DisplayOrder
-                        select pc;
-            var productCategories = query.ToList();
-
-            //cahe
-            _cacheManager.Add(key, productCategories);
-
-            return productCategories;
+                var query = from pc in _productCategoryRespository.Table
+                            join c in _categoryRespository.Table on pc.CategoryId equals c.Id
+                            where pc.ProductId == productId &&
+                                  !c.Deleted &&
+                                  (showHidden || c.Published)
+                            orderby pc.DisplayOrder
+                            select pc;
+                var productCategories = query.ToList();
+                return productCategories;
+            });
         }
 
         /// <summary>
@@ -458,18 +435,10 @@ namespace Nop.Services
                 return null;
 
             string key = string.Format(PRODUCTCATEGORIES_BY_ID_KEY, productCategoryId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (ProductCategory)obj2;
-            }
-
-            var productCategory = _productCategoryRespository.GetById(productCategoryId);
-
-           //cache
-                _cacheManager.Add(key, productCategory);
-            
-            return productCategory;
+                return _productCategoryRespository.GetById(productCategoryId);
+            });
         }
 
         /// <summary>

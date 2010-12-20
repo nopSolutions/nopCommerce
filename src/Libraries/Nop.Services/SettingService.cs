@@ -180,22 +180,16 @@ namespace Nop.Services
         public IDictionary<string, Setting> GetAllSettings()
         {
             //cache
-            string cacheKey = string.Format(SETTINGS_ALL_KEY);
-            object obj2 = _cacheManager.Get(cacheKey);
-            if (obj2 != null)
-            {
-                return (Dictionary<string, Setting>)obj2;
-            }
+            string key = string.Format(SETTINGS_ALL_KEY);
+            return _cacheManager.Get(key, () =>
+                                              {
+                                                  var query = from s in _settingRespository.Table
+                                                              orderby s.Name
+                                                              select s;
+                                                  var settings = query.ToDictionary(s => s.Name.ToLowerInvariant());
 
-            var query = from s in _settingRespository.Table
-                        orderby s.Name
-                        select s;
-            var settings = query.ToDictionary(s => s.Name.ToLowerInvariant());
-
-            //cache
-            _cacheManager.Add(cacheKey, settings);
-
-            return settings;
+                                                  return settings;
+                                              });
         }
 
         #endregion

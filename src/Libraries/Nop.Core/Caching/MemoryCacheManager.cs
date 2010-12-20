@@ -14,98 +14,71 @@
 
 using System;
 using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.Caching;
+using System.Runtime.Caching;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a NopStaticCache
+    /// Represents a MemoryCacheCache
     /// </summary>
-    public partial class NopStaticCache : ICacheManager
+    public partial class MemoryCacheManager : ICacheManager
     {
-        #region Fields
-
-        private readonly Cache _cache;
-
-        #endregion
-
-        #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="context">Context</param>
-        public NopStaticCache(HttpContextBase context)
+        protected ObjectCache Cache
         {
-            if (context != null)
+            get
             {
-                _cache = context.Cache;
-            }
-            else
-            {
-                _cache = HttpRuntime.Cache;
+                return MemoryCache.Default;
             }
         }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Removes all keys and values from the cache
-        /// </summary>
-        public void Clear()
-        {
-            IDictionaryEnumerator enumerator = _cache.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                _cache.Remove(enumerator.Key.ToString());
-            }
-        }
-
+        
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// </summary>
+        /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        public object Get(string key)
+        public T Get<T>(string key)
         {
-            return _cache[key];
+            return (T)Cache[key];
         }
 
         /// <summary>
         /// Adds the specified key and object to the cache.
         /// </summary>
         /// <param name="key">key</param>
-        /// <param name="obj">object</param>
-        public void Add(string key, object obj)
+        /// <param name="data">Data</param>
+        /// <param name="cacheTime">Cache time</param>
+        public void Set(string key, object data, int cacheTime)
         {
-            Add(key, obj, null);
+            if (data == null)
+                return;
+
+            var policy = new CacheItemPolicy();
+            policy.AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime);
+            Cache.Add(new CacheItem(key, data), policy);
         }
 
         /// <summary>
-        /// Adds the specified key and object to the cache.
+        /// Gets a value indicating whether the value associated with the specified key is cached
         /// </summary>
         /// <param name="key">key</param>
-        /// <param name="obj">object</param>
-        /// <param name="dep">cache dependency</param>
-        public void Add(string key, object obj, CacheDependency dep)
+        /// <returns>Result</returns>
+        public bool IsSet(string key)
         {
-            if (IsEnabled && (obj != null))
-            {
-                _cache.Insert(key, obj, dep, DateTime.MaxValue, TimeSpan.Zero, CacheItemPriority.AboveNormal, null);
-            }
+            return (Cache.Contains(key));
         }
 
         /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">/key</param>
         public void Remove(string key)
         {
-            _cache.Remove(key);
+            Cache.Remove(key);
         }
 
         /// <summary>
@@ -114,32 +87,26 @@ namespace Nop.Core.Caching
         /// <param name="pattern">pattern</param>
         public void RemoveByPattern(string pattern)
         {
-            IDictionaryEnumerator enumerator = _cache.GetEnumerator();
             Regex regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            while (enumerator.MoveNext())
+            var keysToRemove = new List<String>();
+
+            foreach (var item in Cache)
+                if (regex.IsMatch(item.Key))
+                    keysToRemove.Add(item.Key);
+
+            foreach (string key in keysToRemove)
             {
-                if (regex.IsMatch(enumerator.Key.ToString()))
-                {
-                    _cache.Remove(enumerator.Key.ToString());
-                }
+                Remove(key);
             }
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
-        /// Gets or sets a value indicating whether the cache is enabled
+        /// Clear all cache data
         /// </summary>
-        public bool IsEnabled
+        public void Clear()
         {
-            get
-            {
-                return true;
-            }
+            foreach (var item in Cache)
+                Remove(item.Key);
         }
-
-        #endregion
     }
 }

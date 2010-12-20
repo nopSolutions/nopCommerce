@@ -104,24 +104,16 @@ namespace Nop.Services
         public List<Manufacturer> GetAllManufacturers(bool showHidden)
         {
             string key = string.Format(MANUFACTURERS_ALL_KEY, showHidden);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (List<Manufacturer>)obj2;
-            }
-
-            
-            var query = from m in _manufacturerRespository.Table
-                        orderby m.DisplayOrder
-                        where (showHidden || m.Published) &&
-                        !m.Deleted
-                        select m;
-            var manufacturers = query.ToList();
-
-            //cache
-                _cacheManager.Add(key, manufacturers);
-            
-            return manufacturers;
+                var query = from m in _manufacturerRespository.Table
+                            orderby m.DisplayOrder
+                            where (showHidden || m.Published) &&
+                            !m.Deleted
+                            select m;
+                var manufacturers = query.ToList();
+                return manufacturers;
+            });
         }
 
         /// <summary>
@@ -135,18 +127,10 @@ namespace Nop.Services
                 return null;
 
             string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
-            {
-                return (Manufacturer)obj2;
-            }
-            
-            var manufacturer = _manufacturerRespository.GetById(manufacturerId);
-
-            //cache
-                _cacheManager.Add(key, manufacturer);
-
-            return manufacturer;
+            return _cacheManager.Get(key, () =>
+                                              {
+                                                  return _manufacturerRespository.GetById(manufacturerId);
+                                              });
         }
 
         /// <summary>
@@ -308,25 +292,18 @@ namespace Nop.Services
             bool showHidden = true;
 
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (List<ProductManufacturer>) obj2;
-            }
-            
-            var query = from pm in _productManufacturerRespository.Table
-                        join p in _productRespository.Table on pm.ProductId equals p.Id
-                        where pm.ManufacturerId == manufacturerId &&
-                              !p.Deleted &&
-                              (showHidden || p.Published)
-                        orderby pm.DisplayOrder
-                        select pm;
-            var productManufacturers = query.ToList();
-
-            //cache
-            _cacheManager.Add(key, productManufacturers);
-
-            return productManufacturers;
+                var query = from pm in _productManufacturerRespository.Table
+                            join p in _productRespository.Table on pm.ProductId equals p.Id
+                            where pm.ManufacturerId == manufacturerId &&
+                                  !p.Deleted &&
+                                  (showHidden || p.Published)
+                            orderby pm.DisplayOrder
+                            select pm;
+                var productManufacturers = query.ToList();
+                return productManufacturers;
+            });
         }
 
         /// <summary>
@@ -343,26 +320,19 @@ namespace Nop.Services
             bool showHidden = true;
 
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
-            {
-                return (List<ProductManufacturer>) obj2;
-            }
-
-
-            var query = from pm in _productManufacturerRespository.Table
-                        join m in _manufacturerRespository.Table on pm.ManufacturerId equals m.Id
-                        where pm.ProductId == productId &&
-                              !m.Deleted &&
-                              (showHidden || m.Published)
-                        orderby pm.DisplayOrder
-                        select pm;
-            var productManufacturers = query.ToList();
-
-            //cache
-            _cacheManager.Add(key, productManufacturers);
-
-            return productManufacturers;
+            return _cacheManager.Get(key, () =>
+                                              {
+                                                  var query = from pm in _productManufacturerRespository.Table
+                                                              join m in _manufacturerRespository.Table on
+                                                                  pm.ManufacturerId equals m.Id
+                                                              where pm.ProductId == productId &&
+                                                                    !m.Deleted &&
+                                                                    (showHidden || m.Published)
+                                                              orderby pm.DisplayOrder
+                                                              select pm;
+                                                  var productManufacturers = query.ToList();
+                                                  return productManufacturers;
+                                              });
         }
 
         /// <summary>
@@ -376,18 +346,10 @@ namespace Nop.Services
                 return null;
 
             string key = string.Format(PRODUCTMANUFACTURERS_BY_ID_KEY, productManufacturerId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
+            return _cacheManager.Get(key, () =>
             {
-                return (ProductManufacturer)obj2;
-            }
-
-            var productManufacturer = _productManufacturerRespository.GetById(productManufacturerId);
-
-            //cache
-                _cacheManager.Add(key, productManufacturer);
-            
-            return productManufacturer;
+                return _productManufacturerRespository.GetById(productManufacturerId);
+            });
         }
 
         /// <summary>

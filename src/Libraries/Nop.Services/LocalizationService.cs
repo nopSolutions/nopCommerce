@@ -95,22 +95,16 @@ namespace Nop.Services
         public Dictionary<string, LocaleStringResource> GetAllResourcesByLanguageId(int languageId)
         {
             string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
-            object obj2 = _cacheManager.Get(key);
-            if (obj2 != null)
-            {
-                return (Dictionary<string, LocaleStringResource>) obj2;
-            }
-            
-            var query = from l in _lsrRespository.Table
-                        orderby l.ResourceName
-                        where l.LanguageId == languageId
-                        select l;
-            var localeStringResourceDictionary = query.ToDictionary(s => s.ResourceName.ToLowerInvariant());
-
-            //cache
-            _cacheManager.Add(key, localeStringResourceDictionary);
-
-            return localeStringResourceDictionary;
+            return _cacheManager.Get(key, () =>
+                                              {
+                                                  var query = from l in _lsrRespository.Table
+                                                              orderby l.ResourceName
+                                                              where l.LanguageId == languageId
+                                                              select l;
+                                                  var localeStringResourceDictionary =
+                                                      query.ToDictionary(s => s.ResourceName.ToLowerInvariant());
+                                                  return localeStringResourceDictionary;
+                                              });
         }
 
         /// <summary>
