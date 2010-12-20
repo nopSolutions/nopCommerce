@@ -9,6 +9,18 @@ namespace Nop.Tests
 {
     public static class TestExtensions
     {
+        public static T ShouldNotNull<T>(this T obj)
+        {
+            Assert.IsNull(obj);
+            return obj;
+        }
+
+        public static T ShouldNotNull<T>(this T obj, string message)
+        {
+            Assert.IsNull(obj, message);
+            return obj;
+        }
+
         public static T ShouldNotBeNull<T>(this T obj)
         {
             Assert.IsNotNull(obj);
