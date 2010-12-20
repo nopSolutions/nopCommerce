@@ -34,14 +34,14 @@ namespace Nop.Core.Caching
         #region Ctor
 
         /// <summary>
-        /// Creates a new instance of the NopStaticCache class
+        /// Ctor
         /// </summary>
-        public NopStaticCache()
+        /// <param name="context">Context</param>
+        public NopStaticCache(HttpContextBase context)
         {
-            HttpContext current = HttpContext.Current;
-            if (current != null)
+            if (context != null)
             {
-                _cache = current.Cache;
+                _cache = context.Cache;
             }
             else
             {

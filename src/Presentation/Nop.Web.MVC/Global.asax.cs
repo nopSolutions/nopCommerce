@@ -41,46 +41,6 @@ namespace Nop.Web.MVC
 
             DbDatabase.SetInitializer<NopObjectContext>(new DatabaseInitializer());
 
-
-
-            using (Nop.Data.NopObjectContext context = new Data.NopObjectContext("NopSqlConnection"))
-            {
-                Nop.Data.EfRepository<Nop.Core.Domain.Language> repo1 = new Data.EfRepository<Core.Domain.Language>(context);
-                Nop.Data.EfRepository<Nop.Core.Domain.LocaleStringResource> repo2 = new Data.EfRepository<Core.Domain.LocaleStringResource>(context);
-                Nop.Data.EfRepository<Nop.Core.Domain.Log> repo3 = new Data.EfRepository<Core.Domain.Log>(context);
-
-                var cacheManager = new Nop.Core.Caching.NopNullCache();
-
-                Nop.Services.LanguageService service1 = new Services.LanguageService(cacheManager, repo1);
-                Nop.Services.LocalizationService service2 = new Services.LocalizationService(cacheManager, repo2);
-                Nop.Services.Logging.ILogger logger = new Nop.Services.Logging.DefaultLogger(repo3);
-
-                var list = service1.GetAllLanguages();
-                var l1 = service1.GetLanguageById(7);
-                var l2 = service1.GetLanguageById(8);
-                var l3 = new Nop.Core.Domain.Language()
-                {
-                    Name = "test1",
-                    LanguageCulture = "en-US",
-                    FlagImageFileName = "1",
-                    DisplayOrder = 2,
-                    Published = true
-                };
-                service1.InsertLanguage(l3);
-
-                var lsr1 = new Nop.Core.Domain.LocaleStringResource()
-                {
-                    Language = l3,
-                    ResourceName = "1",
-                    ResourceValue = "2"
-                };
-                service2.InsertLocaleStringResource(lsr1);
-
-                logger.Debug("test");
-                logger.Error("test");
-                logger.GetAllLogs(null, null, string.Empty, null, 0, 10);
-
-            }
         }
     }
 }

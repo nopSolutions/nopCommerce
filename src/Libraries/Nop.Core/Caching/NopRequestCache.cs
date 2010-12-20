@@ -25,18 +25,24 @@ namespace Nop.Core.Caching
     /// </summary>
     public partial class NopRequestCache : ICacheManager
     {
-        #region Methods
+        private HttpContextBase _context;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Context</param>
+        public NopRequestCache(HttpContextBase context)
+        {
+            this._context = context;
+        }
+        
         /// <summary>
         /// Creates a new instance of the NopRequestCache class
         /// </summary>
         protected IDictionary GetItems()
         {
-            HttpContext current = HttpContext.Current;
-            if (current != null)
-            {
-                return current.Items;
-            }
+            if (_context != null)
+                return _context.Items;
 
             return null;
         }
@@ -112,10 +118,6 @@ namespace Nop.Core.Caching
             }
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets a value indicating whether the cache is enabled
         /// </summary>
@@ -126,7 +128,5 @@ namespace Nop.Core.Caching
                 return true;
             }
         }
-
-        #endregion
     }
 }
