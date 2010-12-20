@@ -70,6 +70,11 @@
     <Compile Include="Domain\ProductVariant.cs" />
     <Compile Include="Domain\LocalizedProductVariant.cs" />
     <Compile Include="Domain\RecurringProductCyclePeriod.cs" />
+    <Compile Include="IO\FileSystemSettings.cs" />
+    <Compile Include="IO\FileSystemStorageProvider.cs" />
+    <Compile Include="IO\IStorageFile.cs" />
+    <Compile Include="IO\IStorageFolder.cs" />
+    <Compile Include="IO\IStorageProvider.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="SecurityHelper.cs" />
     <Compile Include="Domain\Customer.cs" />
