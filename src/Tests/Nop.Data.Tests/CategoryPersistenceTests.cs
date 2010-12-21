@@ -15,25 +15,25 @@ namespace Nop.Data.Tests
         public void Can_save_and_load_category()
         {
             var category = new Category
-            {
-                Name = "Books",
-                Description = "Description 1",
-                TemplateId = 1,
-                MetaKeywords = "Meta keywords",
-                MetaDescription = "Meta description",
-                MetaTitle = "Meta title",
-                SeName = "SE name",
-                ParentCategoryId =2,
-                PictureId= 3,
-                PageSize=4,
-                PriceRanges = "1-3;",
-                ShowOnHomePage= false,
-                Published = true,
-                Deleted= false,
-                DisplayOrder = 5,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                UpdatedOnUtc = new DateTime(2010, 01, 02),
-            };
+                               {
+                                   Name = "Books",
+                                   Description = "Description 1",
+                                   TemplateId = 1,
+                                   MetaKeywords = "Meta keywords",
+                                   MetaDescription = "Meta description",
+                                   MetaTitle = "Meta title",
+                                   SeName = "SE name",
+                                   ParentCategoryId = 2,
+                                   PictureId = 3,
+                                   PageSize = 4,
+                                   PriceRanges = "1-3;",
+                                   ShowOnHomePage = false,
+                                   Published = true,
+                                   Deleted = false,
+                                   DisplayOrder = 5,
+                                   CreatedOnUtc = new DateTime(2010, 01, 01),
+                                   UpdatedOnUtc = new DateTime(2010, 01, 02),
+                               };
 
             var fromDb = SaveAndLoadEntity(category);
             fromDb.Name.ShouldEqual("Books");
@@ -53,5 +53,152 @@ namespace Nop.Data.Tests
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.UpdatedOnUtc.ShouldEqual(new DateTime(2010, 01, 02));
         }
+
+        [Test]
+        public void Can_save_and_load_category_with_productCategories()
+        {
+            var category = new Category
+                               {
+                                   Name = "Books",
+                                   Description = "Description 1",
+                                   TemplateId = 1,
+                                   MetaKeywords = "Meta keywords",
+                                   MetaDescription = "Meta description",
+                                   MetaTitle = "Meta title",
+                                   SeName = "SE name",
+                                   ParentCategoryId = 2,
+                                   PictureId = 3,
+                                   PageSize = 4,
+                                   PriceRanges = "1-3;",
+                                   ShowOnHomePage = false,
+                                   Published = true,
+                                   Deleted = false,
+                                   DisplayOrder = 5,
+                                   CreatedOnUtc = new DateTime(2010, 01, 01),
+                                   UpdatedOnUtc = new DateTime(2010, 01, 02),
+                                   ProductCategories = new List<ProductCategory>()
+                                                           {
+                                                               new ProductCategory
+                                                                   {
+                                                                       IsFeaturedProduct = true,
+                                                                       DisplayOrder = 1,
+                                                                       Product = new Product()
+                                                                                     {
+                                                                                         Name = "Name 1",
+                                                                                         ShortDescription =
+                                                                                             "ShortDescription 1",
+                                                                                         FullDescription =
+                                                                                             "FullDescription 1",
+                                                                                         AdminComment = "AdminComment 1",
+                                                                                         TemplateId = 1,
+                                                                                         ShowOnHomePage = false,
+                                                                                         MetaKeywords = "Meta keywords",
+                                                                                         MetaDescription =
+                                                                                             "Meta description",
+                                                                                         MetaTitle = "Meta title",
+                                                                                         SeName = "SE name",
+                                                                                         AllowCustomerReviews = true,
+                                                                                         AllowCustomerRatings = true,
+                                                                                         RatingSum = 2,
+                                                                                         TotalRatingVotes = 3,
+                                                                                         Published = true,
+                                                                                         Deleted = false,
+                                                                                         CreatedOnUtc =
+                                                                                             new DateTime(2010, 01, 01),
+                                                                                         UpdatedOnUtc =
+                                                                                             new DateTime(2010, 01, 02)
+                                                                                     }
+                                                                   }
+                                                           }
+                               };
+
+            var fromDb = SaveAndLoadEntity(category);
+            fromDb.Name.ShouldEqual("Books");
+
+            fromDb.ProductCategories.ShouldNotBeNull();
+            (fromDb.ProductCategories.Count == 1).ShouldBeTrue();
+            fromDb.ProductCategories.First().IsFeaturedProduct.ShouldEqual(true);
+        }
+
+        [Test]
+        public void Can_save_and_load_category_with_localizedCategories()
+        {
+            var lang = new Language()
+                           {
+                               Name = "English",
+                               LanguageCulture = "en-Us",
+                               FlagImageFileName = "us.png",
+                               Published = true,
+                               DisplayOrder = 1
+                           };
+
+            var category = new Category
+                           {
+                               Name = "Books",
+                               Description = "Description 1",
+                               TemplateId = 1,
+                               MetaKeywords = "Meta keywords",
+                               MetaDescription = "Meta description",
+                               MetaTitle = "Meta title",
+                               SeName = "SE name",
+                               ParentCategoryId = 2,
+                               PictureId = 3,
+                               PageSize = 4,
+                               PriceRanges = "1-3;",
+                               ShowOnHomePage = false,
+                               Published = true,
+                               Deleted = false,
+                               DisplayOrder = 5,
+                               CreatedOnUtc = new DateTime(2010, 01, 01),
+                               UpdatedOnUtc = new DateTime(2010, 01, 02),
+                               LocalizedCategories = new List<LocalizedCategory>()
+                                                     {
+                                                         new LocalizedCategory
+                                                         {
+                                                             Name = "Books localized 1",
+                                                             Description = "Description 1 localized",
+                                                             MetaKeywords = "Meta keywords localized",
+                                                             MetaDescription = "Meta description localized",
+                                                             MetaTitle = "Meta title localized",
+                                                             SeName = "SE name localized",
+                                                             Language = lang
+                                                         },
+                                                         new LocalizedCategory
+                                                         {
+                                                             Name = "Books localized 2",
+                                                             Description = "Description 2 localized",
+                                                             MetaKeywords = "Meta keywords localized",
+                                                             MetaDescription = "Meta description localized",
+                                                             MetaTitle = "Meta title localized",
+                                                             SeName = "SE name localized",
+                                                             Language = lang
+                                                         },
+                                                         new LocalizedCategory
+                                                         {
+                                                             Name = "Books localized 2",
+                                                             Description = "Description 2 localized",
+                                                             MetaKeywords = "Meta keywords localized",
+                                                             MetaDescription = "Meta description localized",
+                                                             MetaTitle = "Meta title localized",
+                                                             SeName = "SE name localized",
+                                                             Language = new Language()
+                                                                        {
+                                                                            Name = "English 2",
+                                                                            LanguageCulture = "en-Us",
+                                                                            FlagImageFileName = "us.png",
+                                                                            Published = true,
+                                                                            DisplayOrder = 2
+                                                                        }
+                                                         },
+                                                     }
+                           };
+
+            var fromDb = SaveAndLoadEntity(category);
+            fromDb.Name.ShouldEqual("Books");
+
+            fromDb.LocalizedCategories.ShouldNotBeNull();
+            (fromDb.LocalizedCategories.Count == 3).ShouldBeTrue();
+        }
+
     }
 }

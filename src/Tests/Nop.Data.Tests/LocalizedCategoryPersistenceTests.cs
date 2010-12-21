@@ -59,7 +59,11 @@ namespace Nop.Data.Tests
             fromDb.MetaKeywords.ShouldEqual("Meta keywords localized");
             fromDb.MetaDescription.ShouldEqual("Meta description localized");
             fromDb.SeName.ShouldEqual("SE name localized");
+
+            fromDb.Category.ShouldNotBeNull();
             fromDb.Category.Name.ShouldEqual("Books");
+
+            fromDb.Language.ShouldNotBeNull();
             fromDb.Language.Name.ShouldEqual("English");
         }
     }

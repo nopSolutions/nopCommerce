@@ -48,7 +48,11 @@ namespace Nop.Data.Tests
 
             var fromDb = SaveAndLoadEntity(productPicture);
             fromDb.DisplayOrder.ShouldEqual(1);
+
+            fromDb.Product.ShouldNotBeNull();
             fromDb.Product.Name.ShouldEqual("Name 1");
+
+            fromDb.Picture.ShouldNotBeNull();
             fromDb.Picture.MimeType.ShouldEqual("image/pjpeg");
         }
     }

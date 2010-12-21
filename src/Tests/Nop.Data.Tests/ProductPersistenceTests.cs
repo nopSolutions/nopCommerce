@@ -28,10 +28,10 @@ namespace Nop.Data.Tests
                 SeName = "SE name",
                 AllowCustomerReviews = true,
                 AllowCustomerRatings = true,
-                RatingSum =2,
+                RatingSum = 2,
                 TotalRatingVotes = 3,
                 Published = true,
-                Deleted= false,
+                Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
             };
@@ -54,6 +54,364 @@ namespace Nop.Data.Tests
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.UpdatedOnUtc.ShouldEqual(new DateTime(2010, 01, 02));
+        }
+
+        [Test]
+        public void Can_save_and_load_product_with_productVariants()
+        {
+            var product = new Product
+                          {
+                              Name = "Name 1",
+                              ShortDescription = "ShortDescription 1",
+                              FullDescription = "FullDescription 1",
+                              AdminComment = "AdminComment 1",
+                              TemplateId = 1,
+                              ShowOnHomePage = false,
+                              MetaKeywords = "Meta keywords",
+                              MetaDescription = "Meta description",
+                              MetaTitle = "Meta title",
+                              SeName = "SE name",
+                              AllowCustomerReviews = true,
+                              AllowCustomerRatings = true,
+                              RatingSum = 2,
+                              TotalRatingVotes = 3,
+                              Published = true,
+                              Deleted = false,
+                              CreatedOnUtc = new DateTime(2010, 01, 01),
+                              UpdatedOnUtc = new DateTime(2010, 01, 02),
+                              ProductVariants = new List<ProductVariant>()
+                                                {
+                                                    new ProductVariant
+                                                    {
+                                                        Name = "Product variant name 1",
+                                                        Sku = "sku 1",
+                                                        Description = "description",
+                                                        AdminComment = "adminComment",
+                                                        ManufacturerPartNumber = "manufacturerPartNumber",
+                                                        IsGiftCard = true,
+                                                        GiftCardTypeId = 1,
+                                                        IsDownload = true,
+                                                        DownloadId = 2,
+                                                        UnlimitedDownloads = true,
+                                                        MaxNumberOfDownloads = 3,
+                                                        DownloadExpirationDays = 4,
+                                                        DownloadActivationTypeId = 5,
+                                                        HasSampleDownload = true,
+                                                        SampleDownloadId = 6,
+                                                        HasUserAgreement = true,
+                                                        UserAgreementText = "userAgreementText",
+                                                        IsRecurring = true,
+                                                        RecurringCycleLength = 7,
+                                                        RecurringCyclePeriodId = 8,
+                                                        RecurringTotalCycles = 9,
+                                                        IsShipEnabled = true,
+                                                        IsFreeShipping = true,
+                                                        AdditionalShippingCharge = 10,
+                                                        IsTaxExempt = true,
+                                                        TaxCategoryId = 11,
+                                                        ManageInventoryMethodId = 12,
+                                                        StockQuantity = 13,
+                                                        DisplayStockAvailability = true,
+                                                        DisplayStockQuantity = true,
+                                                        MinStockQuantity = 14,
+                                                        LowStockActivityId = 15,
+                                                        NotifyAdminForQuantityBelow = 16,
+                                                        BackorderModeId = 17,
+                                                        OrderMinimumQuantity = 18,
+                                                        OrderMaximumQuantity = 19,
+                                                        WarehouseId = 20,
+                                                        DisableBuyButton = true,
+                                                        CallForPrice = true,
+                                                        Price = 21,
+                                                        OldPrice = 22,
+                                                        ProductCost = 23,
+                                                        CustomerEntersPrice = true,
+                                                        MinimumCustomerEnteredPrice = 24,
+                                                        MaximumCustomerEnteredPrice = 25,
+                                                        Weight = 26,
+                                                        Length = 27,
+                                                        Width = 28,
+                                                        Height = 29,
+                                                        PictureId = 0,
+                                                        AvailableStartDateTimeUtc = new DateTime(2010, 01, 01),
+                                                        AvailableEndDateTimeUtc = new DateTime(2010, 01, 02),
+                                                        Published = true,
+                                                        Deleted = false,
+                                                        DisplayOrder = 31,
+                                                        CreatedOnUtc = new DateTime(2010, 01, 03),
+                                                        UpdatedOnUtc = new DateTime(2010, 01, 04)
+                                                    }
+                                                }
+                          };
+
+            var fromDb = SaveAndLoadEntity(product);
+            fromDb.Name.ShouldEqual("Name 1");
+
+
+            fromDb.ProductVariants.ShouldNotBeNull();
+            (fromDb.ProductVariants.Count == 1).ShouldBeTrue();
+            fromDb.ProductVariants.First().Name.ShouldEqual("Product variant name 1");
+        }
+
+        [Test]
+        public void Can_save_and_load_product_with_localizedProducts()
+        {
+            var lang = new Language()
+                       {
+                           Name = "English",
+                           LanguageCulture = "en-Us",
+                           FlagImageFileName = "us.png",
+                           Published = true,
+                           DisplayOrder = 1
+                       };
+
+            var product = new Product
+                          {
+                              Name = "Name 1",
+                              ShortDescription = "ShortDescription 1",
+                              FullDescription = "FullDescription 1",
+                              AdminComment = "AdminComment 1",
+                              TemplateId = 1,
+                              ShowOnHomePage = false,
+                              MetaKeywords = "Meta keywords",
+                              MetaDescription = "Meta description",
+                              MetaTitle = "Meta title",
+                              SeName = "SE name",
+                              AllowCustomerReviews = true,
+                              AllowCustomerRatings = true,
+                              RatingSum = 2,
+                              TotalRatingVotes = 3,
+                              Published = true,
+                              Deleted = false,
+                              CreatedOnUtc = new DateTime(2010, 01, 01),
+                              UpdatedOnUtc = new DateTime(2010, 01, 02),
+                              LocalizedProducts = new List<LocalizedProduct>()
+                                                  {
+                                                      new LocalizedProduct
+                                                      {
+                                                          Name = "Name localized 1",
+                                                          ShortDescription = "ShortDescription 1 localized",
+                                                          FullDescription = "FullDescription 1 localized",
+                                                          MetaKeywords = "Meta keywords localized",
+                                                          MetaDescription = "Meta description localized",
+                                                          MetaTitle = "Meta title localized",
+                                                          SeName = "SE name localized",
+                                                          Language = lang
+                                                      },
+                                                      new LocalizedProduct
+                                                      {
+                                                          Name = "Name localized 2",
+                                                          ShortDescription = "ShortDescription 2 localized",
+                                                          FullDescription = "FullDescription 2 localized",
+                                                          MetaKeywords = "Meta keywords localized",
+                                                          MetaDescription = "Meta description localized",
+                                                          MetaTitle = "Meta title localized",
+                                                          SeName = "SE name localized",
+                                                          Language = lang
+                                                      },
+                                                      new LocalizedProduct
+                                                      {
+                                                          Name = "Name localized 2",
+                                                          ShortDescription = "ShortDescription 2 localized",
+                                                          FullDescription = "FullDescription 2 localized",
+                                                          MetaKeywords = "Meta keywords localized",
+                                                          MetaDescription = "Meta description localized",
+                                                          MetaTitle = "Meta title localized",
+                                                          SeName = "SE name localized",
+                                                          Language = new Language()
+                                                                     {
+                                                                         Name = "English 2",
+                                                                         LanguageCulture = "en-Us",
+                                                                         FlagImageFileName = "us.png",
+                                                                         Published = true,
+                                                                         DisplayOrder = 2
+                                                                     }
+                                                      },
+                                                  }
+                          };
+
+            var fromDb = SaveAndLoadEntity(product);
+            fromDb.Name.ShouldEqual("Name 1");
+
+            fromDb.LocalizedProducts.ShouldNotBeNull();
+            (fromDb.LocalizedProducts.Count == 3).ShouldBeTrue();
+        }
+
+        [Test]
+        public void Can_save_and_load_product_with_productCategories()
+        {
+            var product = new Product
+                          {
+                              Name = "Name 1",
+                              ShortDescription = "ShortDescription 1",
+                              FullDescription = "FullDescription 1",
+                              AdminComment = "AdminComment 1",
+                              TemplateId = 1,
+                              ShowOnHomePage = false,
+                              MetaKeywords = "Meta keywords",
+                              MetaDescription = "Meta description",
+                              MetaTitle = "Meta title",
+                              SeName = "SE name",
+                              AllowCustomerReviews = true,
+                              AllowCustomerRatings = true,
+                              RatingSum = 2,
+                              TotalRatingVotes = 3,
+                              Published = true,
+                              Deleted = false,
+                              CreatedOnUtc = new DateTime(2010, 01, 01),
+                              UpdatedOnUtc = new DateTime(2010, 01, 02),
+                              ProductCategories = new List<ProductCategory>()
+                                                  {
+                                                      new ProductCategory
+                                                      {
+                                                          IsFeaturedProduct = true,
+                                                          DisplayOrder = 1,
+                                                          Category = new Category()
+                                                                     {
+                                                                         Name = "Books",
+                                                                         Description = "Description 1",
+                                                                         TemplateId = 1,
+                                                                         MetaKeywords = "Meta keywords",
+                                                                         MetaDescription = "Meta description",
+                                                                         MetaTitle = "Meta title",
+                                                                         SeName = "SE name",
+                                                                         ParentCategoryId = 2,
+                                                                         PictureId = 3,
+                                                                         PageSize = 4,
+                                                                         PriceRanges = "1-3;",
+                                                                         ShowOnHomePage = false,
+                                                                         Published = true,
+                                                                         Deleted = false,
+                                                                         DisplayOrder = 5,
+                                                                         CreatedOnUtc = new DateTime(2010, 01, 01),
+                                                                         UpdatedOnUtc = new DateTime(2010, 01, 02),
+                                                                     }
+                                                      }
+                                                  }
+                          };
+
+            var fromDb = SaveAndLoadEntity(product);
+            fromDb.Name.ShouldEqual("Name 1");
+
+            fromDb.ProductCategories.ShouldNotBeNull();
+            (fromDb.ProductCategories.Count == 1).ShouldBeTrue();
+            fromDb.ProductCategories.First().IsFeaturedProduct.ShouldEqual(true);
+
+            fromDb.ProductCategories.First().Category.ShouldNotBeNull();
+            fromDb.ProductCategories.First().Category.Name.ShouldEqual("Books");
+        }
+
+        [Test]
+        public void Can_save_and_load_product_with_productManufacturers()
+        {
+            var product = new Product
+                          {
+                              Name = "Name 1",
+                              ShortDescription = "ShortDescription 1",
+                              FullDescription = "FullDescription 1",
+                              AdminComment = "AdminComment 1",
+                              TemplateId = 1,
+                              ShowOnHomePage = false,
+                              MetaKeywords = "Meta keywords",
+                              MetaDescription = "Meta description",
+                              MetaTitle = "Meta title",
+                              SeName = "SE name",
+                              AllowCustomerReviews = true,
+                              AllowCustomerRatings = true,
+                              RatingSum = 2,
+                              TotalRatingVotes = 3,
+                              Published = true,
+                              Deleted = false,
+                              CreatedOnUtc = new DateTime(2010, 01, 01),
+                              UpdatedOnUtc = new DateTime(2010, 01, 02),
+                              ProductManufacturers = new List<ProductManufacturer>()
+                                                     {
+                                                         new ProductManufacturer
+                                                         {
+                                                             IsFeaturedProduct = true,
+                                                             DisplayOrder = 1,
+                                                             Manufacturer = new Manufacturer()
+                                                                            {
+                                                                                Name = "Name",
+                                                                                Description = "Description 1",
+                                                                                TemplateId = 1,
+                                                                                MetaKeywords = "Meta keywords",
+                                                                                MetaDescription = "Meta description",
+                                                                                MetaTitle = "Meta title",
+                                                                                SeName = "SE name",
+                                                                                PictureId = 3,
+                                                                                PageSize = 4,
+                                                                                PriceRanges = "1-3;",
+                                                                                Published = true,
+                                                                                Deleted = false,
+                                                                                DisplayOrder = 5,
+                                                                                CreatedOnUtc =
+                                                                                    new DateTime(2010, 01, 01),
+                                                                                UpdatedOnUtc =
+                                                                                    new DateTime(2010, 01, 02),
+                                                                            }
+                                                         }
+                                                     }
+                          };
+
+            var fromDb = SaveAndLoadEntity(product);
+            fromDb.Name.ShouldEqual("Name 1");
+
+            fromDb.ProductManufacturers.ShouldNotBeNull();
+            (fromDb.ProductManufacturers.Count == 1).ShouldBeTrue();
+            fromDb.ProductManufacturers.First().IsFeaturedProduct.ShouldEqual(true);
+
+            fromDb.ProductManufacturers.First().Manufacturer.ShouldNotBeNull();
+            fromDb.ProductManufacturers.First().Manufacturer.Name.ShouldEqual("Name");
+        }
+
+        [Test]
+        public void Can_save_and_load_product_with_productPictures()
+        {
+            var product = new Product
+                          {
+                              Name = "Name 1",
+                              ShortDescription = "ShortDescription 1",
+                              FullDescription = "FullDescription 1",
+                              AdminComment = "AdminComment 1",
+                              TemplateId = 1,
+                              ShowOnHomePage = false,
+                              MetaKeywords = "Meta keywords",
+                              MetaDescription = "Meta description",
+                              MetaTitle = "Meta title",
+                              SeName = "SE name",
+                              AllowCustomerReviews = true,
+                              AllowCustomerRatings = true,
+                              RatingSum = 2,
+                              TotalRatingVotes = 3,
+                              Published = true,
+                              Deleted = false,
+                              CreatedOnUtc = new DateTime(2010, 01, 01),
+                              UpdatedOnUtc = new DateTime(2010, 01, 02),
+                              ProductPictures = new List<ProductPicture>()
+                                                {
+                                                    new ProductPicture
+                                                    {
+                                                        DisplayOrder = 1,
+                                                        Picture = new Picture()
+                                                                  {
+                                                                      PictureBinary = new byte[] {1, 2, 3},
+                                                                      MimeType = "image/pjpeg",
+                                                                      IsNew = true
+                                                                  }
+                                                    }
+                                                }
+                          };
+
+            var fromDb = SaveAndLoadEntity(product);
+            fromDb.Name.ShouldEqual("Name 1");
+
+            fromDb.ProductPictures.ShouldNotBeNull();
+            (fromDb.ProductPictures.Count == 1).ShouldBeTrue();
+            fromDb.ProductPictures.First().DisplayOrder.ShouldEqual(1);
+
+            fromDb.ProductPictures.First().Picture.ShouldNotBeNull();
+            fromDb.ProductPictures.First().Picture.MimeType.ShouldEqual("image/pjpeg");
         }
     }
 }

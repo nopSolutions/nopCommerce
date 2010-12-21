@@ -31,6 +31,7 @@ namespace Nop.Data.Tests
             var fromDb = SaveAndLoadEntity(lst);
             fromDb.ResourceName.ShouldEqual("ResourceName1");
             fromDb.ResourceValue.ShouldEqual("ResourceValue2");
+            fromDb.Language.ShouldNotBeNull();
             fromDb.Language.Name.ShouldEqual("English");
         }
     }

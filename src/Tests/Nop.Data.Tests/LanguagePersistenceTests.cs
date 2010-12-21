@@ -30,5 +30,33 @@ namespace Nop.Data.Tests
             fromDb.Published.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);
         }
+
+        [Test]
+        public void Can_save_and_load_language_with_localeStringResources()
+        {
+            var lang = new Language
+                           {
+                               Name = "English",
+                               LanguageCulture = "en-Us",
+                               FlagImageFileName = "us.png",
+                               Published = true,
+                               DisplayOrder = 1,
+                               LocaleStringResources = new List<LocaleStringResource>()
+                                                           {
+                                                               new LocaleStringResource()
+                                                                   {
+                                                                       ResourceName = "ResourceName1",
+                                                                       ResourceValue = "ResourceValue2"
+                                                                   }
+                                                           }
+                           };
+
+            var fromDb = SaveAndLoadEntity(lang);
+            fromDb.Name.ShouldEqual("English");
+
+            fromDb.LocaleStringResources.ShouldNotBeNull();
+            (fromDb.LocaleStringResources.Count == 1).ShouldBeTrue();
+            fromDb.LocaleStringResources.First().ResourceName.ShouldEqual("ResourceName1");
+        }
     }
 }

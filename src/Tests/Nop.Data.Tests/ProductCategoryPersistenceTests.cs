@@ -64,7 +64,11 @@ namespace Nop.Data.Tests
             var fromDb = SaveAndLoadEntity(productCategory);
             fromDb.IsFeaturedProduct.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);
+
+            fromDb.Product.ShouldNotBeNull();
             fromDb.Product.Name.ShouldEqual("Name 1");
+
+            fromDb.Category.ShouldNotBeNull();
             fromDb.Category.Name.ShouldEqual("Books");
         }
     }
