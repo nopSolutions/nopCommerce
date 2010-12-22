@@ -46,6 +46,7 @@
     <Compile Include="CategoryExtensions.cs" />
     <Compile Include="ConfigurationProvider.cs" />
     <Compile Include="IProductAttributeService.cs" />
+    <Compile Include="ISpecificationAttributeService.cs" />
     <Compile Include="ProductAttributeExtensions.cs" />
     <Compile Include="ICategoryService.cs" />
     <Compile Include="ILanguageService.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingService.cs" />
+    <Compile Include="SpecificationAttributeService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nop.Core\Nop.Core.csproj">

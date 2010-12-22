@@ -44,6 +44,8 @@ namespace Nop.Data
         public DbSet<LocalizedProduct> LocalizedProducts { get; set; }
         public DbSet<LocalizedProductVariantAttributeValue> LocalizedProductVariantAttributeValues { get; set; }
         public DbSet<LocalizedProductVariant> LocalizedProductVariants { get; set; }
+        public DbSet<LocalizedSpecificationAttribute> LocalizedSpecificationAttributes { get; set; }
+        public DbSet<LocalizedSpecificationAttributeOption> LocalizedSpecificationAttributeOptions { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Picture> Pictures { get; set; }
@@ -52,11 +54,14 @@ namespace Nop.Data
         public DbSet<ProductManufacturer> ProductManufacturers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductPicture> ProductPictures { get; set; }
+        public DbSet<ProductSpecificationAttribute> ProductSpecificationAttributes { get; set; }
         public DbSet<ProductVariantAttribute> ProductVariantAttributes { get; set; }
         public DbSet<ProductVariantAttributeCombination> ProductVariantAttributeCombinations { get; set; }
         public DbSet<ProductVariantAttributeValue> ProductVariantAttributeValues { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<SpecificationAttribute> SpecificationAttributes { get; set; }
+        public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

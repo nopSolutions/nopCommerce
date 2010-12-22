@@ -138,5 +138,10 @@ namespace Nop.Core.Domain
         /// </summary>
         public virtual ICollection<ProductPicture> ProductPictures { get; set; }
 
+        /// <summary>
+        /// Gets or sets the product specification attribute
+        /// </summary>
+        public virtual ICollection<ProductSpecificationAttribute> ProductSpecificationAttributes { get; set; }
+
     }
 }

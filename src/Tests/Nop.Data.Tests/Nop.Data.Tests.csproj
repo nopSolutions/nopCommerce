@@ -66,6 +66,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryPersistenceTests.cs" />
+    <Compile Include="ProductSpecificationAttributePersistenceTests.cs" />
+    <Compile Include="LocalizedSpecificationAttributeOptionPersistenceTests.cs" />
+    <Compile Include="SpecificationAttributeOptionPersistenceTests.cs" />
+    <Compile Include="LocalizedSpecificationAttributePersistenceTests.cs" />
+    <Compile Include="SpecificationAttributePersistenceTests.cs" />
     <Compile Include="LocalizedProductVariantAttributeValuePersistenceTests.cs" />
     <Compile Include="ProductVariantAttributeValueTests.cs" />
     <Compile Include="ProductVariantAttributeCombinationPersistenceTests.cs" />
