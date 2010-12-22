@@ -18,21 +18,17 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class ProductCategoryMap : EntityTypeConfiguration<ProductCategory>
+    public partial class ProductVariantAttributeValueMap : EntityTypeConfiguration<ProductVariantAttributeValue>
     {
-        public ProductCategoryMap()
+        public ProductVariantAttributeValueMap()
         {
-            this.ToTable("Product_Category_Mapping");
+            this.ToTable("ProductVariantAttributeValue");
+            this.HasKey(pvav => pvav.Id);
+            this.Property(pvav => pvav.Name).IsRequired().HasMaxLength(400);
 
-            
-            this.HasRequired(pc => pc.Category)
-                .WithMany(c => c.ProductCategories)
-                .HasForeignKey(pc => pc.CategoryId);
-
-
-            this.HasRequired(pc => pc.Product)
-                .WithMany(p => p.ProductCategories)
-                .HasForeignKey(pc => pc.ProductId);
+            this.HasRequired(pvav => pvav.ProductVariantAttribute)
+                .WithMany(pva => pva.ProductVariantAttributeValues)
+                .HasForeignKey(pvav => pvav.ProductVariantAttributeId);
         }
     }
 }

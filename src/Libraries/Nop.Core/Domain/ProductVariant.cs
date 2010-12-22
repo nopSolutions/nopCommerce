@@ -403,7 +403,6 @@ namespace Nop.Core.Domain
             }
         }
 
-
         /// <summary>
         /// Gets or sets the product
         /// </summary>
@@ -413,6 +412,16 @@ namespace Nop.Core.Domain
         /// Gets or sets the localized product variants
         /// </summary>
         public virtual ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product variant attributes
+        /// </summary>
+        public virtual ICollection<ProductVariantAttribute> ProductVariantAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product variant attribute combinations
+        /// </summary>
+        public virtual ICollection<ProductVariantAttributeCombination> ProductVariantAttributeCombinations { get; set; }
 
     }
 }

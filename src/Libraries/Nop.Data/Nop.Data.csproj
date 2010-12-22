@@ -47,6 +47,12 @@
   <ItemGroup>
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="Mapping\LocalizedProductVariantAttributeValueMap.cs" />
+    <Compile Include="Mapping\ProductVariantAttributeValueMap.cs" />
+    <Compile Include="Mapping\ProductVariantAttributeCombinationMap.cs" />
+    <Compile Include="Mapping\ProductVariantAttributeMap.cs" />
+    <Compile Include="Mapping\LocalizedProductAttributeMap.cs" />
+    <Compile Include="Mapping\ProductAttributeMap.cs" />
     <Compile Include="Mapping\PictureMap.cs" />
     <Compile Include="Mapping\ProductPictureMap.cs" />
     <Compile Include="Mapping\ManufacturerMap.cs" />

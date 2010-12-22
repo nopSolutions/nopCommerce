@@ -12,61 +12,56 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a localized manufacturer
+    /// Represents a product variant attribute value
     /// </summary>
-    public partial class LocalizedManufacturer : BaseEntity
+    public partial class ProductVariantAttributeValue : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the manufacturer identifier
+        /// Gets or sets the product variant attribute mapping identifier
         /// </summary>
-        public int ManufacturerId { get; set; }
+        public int ProductVariantAttributeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public int LanguageId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name
+        /// Gets or sets the product variant attribute name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the description
+        /// Gets or sets the price adjustment
         /// </summary>
-        public string Description { get; set; }
+        public decimal PriceAdjustment { get; set; }
 
         /// <summary>
-        /// Gets or sets the meta keywords
+        /// Gets or sets the weight adjustment
         /// </summary>
-        public string MetaKeywords { get; set; }
+        public decimal WeightAdjustment { get; set; }
 
         /// <summary>
-        /// Gets or sets the meta description
+        /// Gets or sets a value indicating whether the value is pre-selected
         /// </summary>
-        public string MetaDescription { get; set; }
+        public bool IsPreSelected { get; set; }
 
         /// <summary>
-        /// Gets or sets the meta title
+        /// Gets or sets the display order
         /// </summary>
-        public string MetaTitle { get; set; }
+        public int DisplayOrder { get; set; }
+        
+        /// <summary>
+        /// Gets the product variant attribute
+        /// </summary>
+        public virtual ProductVariantAttribute ProductVariantAttribute { get; set; }
 
         /// <summary>
-        /// Gets or sets the search-engine name
+        /// Gets the localized product variant attribute values
         /// </summary>
-        public string SeName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the manufacturer
-        /// </summary>
-        public virtual Manufacturer Manufacturer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
+        public virtual ICollection<LocalizedProductVariantAttributeValue> LocalizedProductVariantAttributeValues { get; set; }
     }
+
 }

@@ -12,33 +12,36 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a picture
+    /// Represents a localized product variant attribute value
     /// </summary>
-    public partial class Picture : BaseEntity
+    public partial class LocalizedProductVariantAttributeValue : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the picture binary
+        /// Gets or sets the product variant attribute value identifier
         /// </summary>
-        public byte[] PictureBinary { get; set; }
+        public int ProductVariantAttributeValueId { get; set; }
 
         /// <summary>
-        /// Gets or sets the picture mime type
+        /// Gets or sets the language identifier
         /// </summary>
-        public string MimeType { get; set; }
+        public int LanguageId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the picture is new
+        /// Gets or sets the name
         /// </summary>
-        public bool IsNew { get; set; }
+        public string Name { get; set; }
+        
+        /// <summary>
+        /// Gets the product variant attribute value
+        /// </summary>
+        public virtual ProductVariantAttributeValue ProductVariantAttributeValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the product pictures
+        /// Gets or sets the language
         /// </summary>
-        public virtual ICollection<ProductPicture> ProductPictures { get; set; }
-}
+        public virtual Language Language { get; set; }
+    }
 }

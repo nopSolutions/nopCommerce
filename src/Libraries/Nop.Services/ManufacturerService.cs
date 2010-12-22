@@ -128,9 +128,9 @@ namespace Nop.Services
 
             string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
             return _cacheManager.Get(key, () =>
-                                              {
-                                                  return _manufacturerRespository.GetById(manufacturerId);
-                                              });
+            {
+                return _manufacturerRespository.GetById(manufacturerId);
+            });
         }
 
         /// <summary>

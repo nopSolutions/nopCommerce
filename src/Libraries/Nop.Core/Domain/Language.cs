@@ -70,5 +70,15 @@ namespace Nop.Core.Domain
         /// Gets or sets localized product variants
         /// </summary>
         public virtual ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
+
+        /// <summary>
+        /// Gets or sets localized product attributes
+        /// </summary>
+        public virtual ICollection<LocalizedProductAttribute> LocalizedProductAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets localized product variant attribute values
+        /// </summary>
+        public virtual ICollection<LocalizedProductVariantAttributeValue> LocalizedProductVariantAttributeValues { get; set; }
     }
 }

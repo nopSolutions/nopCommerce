@@ -45,6 +45,8 @@
     <Compile Include="CategoryService.cs" />
     <Compile Include="CategoryExtensions.cs" />
     <Compile Include="ConfigurationProvider.cs" />
+    <Compile Include="IProductAttributeService.cs" />
+    <Compile Include="ProductAttributeExtensions.cs" />
     <Compile Include="ICategoryService.cs" />
     <Compile Include="ILanguageService.cs" />
     <Compile Include="ILocalizationService.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="LocalizationService.cs" />
     <Compile Include="Logging\DefaultLogger.cs" />
     <Compile Include="ManufacturerService.cs" />
+    <Compile Include="ProductAttributeService.cs" />
     <Compile Include="ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingService.cs" />

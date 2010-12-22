@@ -12,33 +12,37 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace Nop.Core.Domain
 {
     /// <summary>
-    /// Represents a picture
+    /// Represents a product variant attribute combination
     /// </summary>
-    public partial class Picture : BaseEntity
+    public partial class ProductVariantAttributeCombination : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the picture binary
+        /// Gets or sets the product variant identifier
         /// </summary>
-        public byte[] PictureBinary { get; set; }
+        public int ProductVariantId { get; set; }
 
         /// <summary>
-        /// Gets or sets the picture mime type
+        /// Gets or sets the attributes
         /// </summary>
-        public string MimeType { get; set; }
+        public string AttributesXml { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the picture is new
+        /// Gets or sets the stock quantity
         /// </summary>
-        public bool IsNew { get; set; }
+        public int StockQuantity { get; set; }
 
         /// <summary>
-        /// Gets or sets the product pictures
+        /// Gets or sets a value indicating whether to allow orders when out of stock
         /// </summary>
-        public virtual ICollection<ProductPicture> ProductPictures { get; set; }
-}
+        public bool AllowOutOfStockOrders { get; set; }
+        
+        /// <summary>
+        /// Gets the product variant
+        /// </summary>
+        public virtual ProductVariant ProductVariant { get; set; }
+
+    }
 }

@@ -52,6 +52,7 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Domain\AttributeControlTypeEnum.cs" />
     <Compile Include="Domain\BackorderMode.cs" />
     <Compile Include="Domain\Category.cs" />
     <Compile Include="Domain\LocalizedCategory.cs" />
@@ -64,11 +65,17 @@
     <Compile Include="Domain\Picture.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\LocalizedProduct.cs" />
+    <Compile Include="Domain\ProductAttribute.cs" />
+    <Compile Include="Domain\LocalizedProductAttribute.cs" />
     <Compile Include="Domain\ProductCategory.cs" />
     <Compile Include="Domain\ProductManufacturer.cs" />
     <Compile Include="Domain\ProductPicture.cs" />
     <Compile Include="Domain\ProductVariant.cs" />
     <Compile Include="Domain\LocalizedProductVariant.cs" />
+    <Compile Include="Domain\ProductVariantAttribute.cs" />
+    <Compile Include="Domain\ProductVariantAttributeCombination.cs" />
+    <Compile Include="Domain\ProductVariantAttributeValue.cs" />
+    <Compile Include="Domain\LocalizedProductVariantAttributeValue.cs" />
     <Compile Include="Domain\RecurringProductCyclePeriod.cs" />
     <Compile Include="IO\FileSystemSettings.cs" />
     <Compile Include="IO\FileSystemStorageProvider.cs" />

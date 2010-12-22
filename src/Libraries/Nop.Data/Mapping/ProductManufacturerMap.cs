@@ -22,7 +22,7 @@ namespace Nop.Data.Mapping
     {
         public ProductManufacturerMap()
         {
-            this.ToTable("ProductManufacturerMapping");
+            this.ToTable("Product_Manufacturer_Mapping");
 
 
             this.HasRequired(pm => pm.Manufacturer)

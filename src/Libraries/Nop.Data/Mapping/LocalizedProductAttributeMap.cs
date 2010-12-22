@@ -18,21 +18,22 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class ProductCategoryMap : EntityTypeConfiguration<ProductCategory>
+    public partial class LocalizedProductAttributeMap : EntityTypeConfiguration<LocalizedProductAttribute>
     {
-        public ProductCategoryMap()
+        public LocalizedProductAttributeMap()
         {
-            this.ToTable("Product_Category_Mapping");
+            this.ToTable("ProductAttributeLocalized");
+            this.HasKey(lpa => lpa.Id);
+            this.Property(lpa => lpa.Name).IsRequired().HasMaxLength(100);
+            this.Property(lpa => lpa.Description).IsRequired().IsMaxLength();
 
-            
-            this.HasRequired(pc => pc.Category)
-                .WithMany(c => c.ProductCategories)
-                .HasForeignKey(pc => pc.CategoryId);
+            this.HasRequired(lpa => lpa.ProductAttribute)
+                .WithMany(pa => pa.LocalizedProductAttributes)
+                .HasForeignKey(lpa => lpa.ProductAttributeId);
 
-
-            this.HasRequired(pc => pc.Product)
-                .WithMany(p => p.ProductCategories)
-                .HasForeignKey(pc => pc.ProductId);
+            this.HasRequired(lpa => lpa.Language)
+                .WithMany(l => l.LocalizedProductAttributes)
+                .HasForeignKey(lpa => lpa.LanguageId);
         }
     }
 }

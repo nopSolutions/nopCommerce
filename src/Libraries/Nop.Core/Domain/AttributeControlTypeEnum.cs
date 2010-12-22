@@ -12,27 +12,36 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain;
-
-
-namespace Nop.Data.Mapping
+namespace Nop.Core.Domain
 {
-    public partial class ProductCategoryMap : EntityTypeConfiguration<ProductCategory>
+    /// <summary>
+    /// Represents an attribute control type
+    /// </summary>
+    public enum AttributeControlTypeEnum
     {
-        public ProductCategoryMap()
-        {
-            this.ToTable("Product_Category_Mapping");
-
-            
-            this.HasRequired(pc => pc.Category)
-                .WithMany(c => c.ProductCategories)
-                .HasForeignKey(pc => pc.CategoryId);
-
-
-            this.HasRequired(pc => pc.Product)
-                .WithMany(p => p.ProductCategories)
-                .HasForeignKey(pc => pc.ProductId);
-        }
+        /// <summary>
+        /// Dropdown list
+        /// </summary>
+        DropdownList = 1,
+        /// <summary>
+        /// Radio list
+        /// </summary>
+        RadioList = 2,
+        /// <summary>
+        /// Checkboxes
+        /// </summary>
+        Checkboxes = 3,
+        /// <summary>
+        /// TextBox
+        /// </summary>
+        TextBox = 4,
+        /// <summary>
+        /// Multiline textbox
+        /// </summary>
+        MultilineTextbox = 10,
+        /// <summary>
+        /// Datepicker
+        /// </summary>
+        Datepicker = 20,
     }
 }
