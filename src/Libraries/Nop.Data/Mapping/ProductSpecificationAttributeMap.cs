@@ -23,6 +23,7 @@ namespace Nop.Data.Mapping
         public ProductSpecificationAttributeMap()
         {
             this.ToTable("Product_SpecificationAttribute_Mapping");
+            this.HasKey(psa => psa.Id);
 
             this.HasRequired(psa => psa.SpecificationAttributeOption)
                 .WithMany(sao => sao.ProductSpecificationAttributes)

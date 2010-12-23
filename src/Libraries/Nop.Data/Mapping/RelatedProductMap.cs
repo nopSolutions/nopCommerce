@@ -18,22 +18,12 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class ProductCategoryMap : EntityTypeConfiguration<ProductCategory>
+    public partial class RelatedProductMap : EntityTypeConfiguration<RelatedProduct>
     {
-        public ProductCategoryMap()
+        public RelatedProductMap()
         {
-            this.ToTable("Product_Category_Mapping");
-            this.HasKey(pc => pc.Id);
-
-            
-            this.HasRequired(pc => pc.Category)
-                .WithMany(c => c.ProductCategories)
-                .HasForeignKey(pc => pc.CategoryId);
-
-
-            this.HasRequired(pc => pc.Product)
-                .WithMany(p => p.ProductCategories)
-                .HasForeignKey(pc => pc.ProductId);
+            this.ToTable("RelatedProduct");
+            this.HasKey(c => c.Id);
         }
     }
 }

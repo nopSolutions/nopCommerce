@@ -35,6 +35,7 @@ namespace Nop.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<CrossSellProduct> CrossSellProducts { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LocaleStringResource> LocaleStringResources { get; set; }
@@ -59,6 +60,7 @@ namespace Nop.Data
         public DbSet<ProductVariantAttributeCombination> ProductVariantAttributeCombinations { get; set; }
         public DbSet<ProductVariantAttributeValue> ProductVariantAttributeValues { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
+        public DbSet<RelatedProduct> RelatedProducts { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<SpecificationAttribute> SpecificationAttributes { get; set; }
         public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }

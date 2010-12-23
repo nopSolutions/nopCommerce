@@ -12,28 +12,22 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain;
-
-
-namespace Nop.Data.Mapping
+namespace Nop.Core.Domain
 {
-    public partial class ProductCategoryMap : EntityTypeConfiguration<ProductCategory>
+    /// <summary>
+    /// Represents a cross-sell product
+    /// </summary>
+    public partial class CrossSellProduct : BaseEntity
     {
-        public ProductCategoryMap()
-        {
-            this.ToTable("Product_Category_Mapping");
-            this.HasKey(pc => pc.Id);
+        /// <summary>
+        /// Gets or sets the first product identifier
+        /// </summary>
+        public int ProductId1 { get; set; }
 
-            
-            this.HasRequired(pc => pc.Category)
-                .WithMany(c => c.ProductCategories)
-                .HasForeignKey(pc => pc.CategoryId);
-
-
-            this.HasRequired(pc => pc.Product)
-                .WithMany(p => p.ProductCategories)
-                .HasForeignKey(pc => pc.ProductId);
-        }
+        /// <summary>
+        /// Gets or sets the second product identifier
+        /// </summary>
+        public int ProductId2 { get; set; }
     }
+
 }

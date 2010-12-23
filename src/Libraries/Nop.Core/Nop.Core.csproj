@@ -55,6 +55,7 @@
     <Compile Include="Domain\AttributeControlTypeEnum.cs" />
     <Compile Include="Domain\BackorderMode.cs" />
     <Compile Include="Domain\Category.cs" />
+    <Compile Include="Domain\CrossSellProduct.cs" />
     <Compile Include="Domain\LocalizedCategory.cs" />
     <Compile Include="Domain\DownloadActivationType.cs" />
     <Compile Include="Domain\GiftCardType.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Domain\ProductVariantAttributeValue.cs" />
     <Compile Include="Domain\LocalizedProductVariantAttributeValue.cs" />
     <Compile Include="Domain\RecurringProductCyclePeriod.cs" />
+    <Compile Include="Domain\RelatedProduct.cs" />
     <Compile Include="Domain\SpecificationAttribute.cs" />
     <Compile Include="Domain\LocalizedSpecificationAttribute.cs" />
     <Compile Include="Domain\SpecificationAttributeOption.cs" />

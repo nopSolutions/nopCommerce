@@ -23,8 +23,8 @@ namespace Nop.Data.Mapping
         public ProductManufacturerMap()
         {
             this.ToTable("Product_Manufacturer_Mapping");
-
-
+            this.HasKey(pm => pm.Id);
+            
             this.HasRequired(pm => pm.Manufacturer)
                 .WithMany(m => m.ProductManufacturers)
                 .HasForeignKey(pm => pm.ManufacturerId);

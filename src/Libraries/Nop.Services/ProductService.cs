@@ -41,6 +41,8 @@ namespace Nop.Services
         private readonly IRepository<LocalizedProduct> _localizedProductRespository;
         private readonly IRepository<ProductVariant> _productVariantRespository;
         private readonly IRepository<LocalizedProductVariant> _localizedProductVariantRespository;
+        private readonly IRepository<RelatedProduct> _relatedProductRespository;
+        private readonly IRepository<CrossSellProduct> _crossSellProductRespository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -55,17 +57,23 @@ namespace Nop.Services
         /// <param name="localizedProductRespository">Localized product repository</param>
         /// <param name="productVariantRespository">Product variant repository</param>
         /// <param name="localizedProductVariantRespository">Localized product variant repository</param>
+        /// <param name="relatedProductRespository">Related product repository</param>
+        /// <param name="crossSellProductRespository">Cross-sell product repository</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRespository,
             IRepository<LocalizedProduct> localizedProductRespository,
             IRepository<ProductVariant> productVariantRespository,
-            IRepository<LocalizedProductVariant> localizedProductVariantRespository)
+            IRepository<LocalizedProductVariant> localizedProductVariantRespository,
+            IRepository<RelatedProduct> relatedProductRespository,
+            IRepository<CrossSellProduct> crossSellProductRespository)
         {
             this._cacheManager = cacheManager;
             this._productRespository = productRespository;
             this._localizedProductRespository = localizedProductRespository;
             this._productVariantRespository = productVariantRespository;
             this._localizedProductVariantRespository = localizedProductVariantRespository;
+            this._relatedProductRespository = relatedProductRespository;
+            this._crossSellProductRespository = crossSellProductRespository;
         }
 
         #endregion
@@ -522,6 +530,157 @@ namespace Nop.Services
 
             productVariant.Deleted = true;
             UpdateProductVariant(productVariant);
+        }
+
+        #endregion
+
+        #region Related products
+
+        /// <summary>
+        /// Deletes a related product
+        /// </summary>
+        /// <param name="relatedProduct">Related product</param>
+        public void DeleteRelatedProduct(RelatedProduct relatedProduct)
+        {
+            if (relatedProduct == null)
+                return;
+
+            _relatedProductRespository.Delete(relatedProduct);
+        }
+
+        /// <summary>
+        /// Gets a related product collection by product identifier
+        /// </summary>
+        /// <param name="productId1">The first product identifier</param>
+        /// <returns>Related product collection</returns>
+        public List<RelatedProduct> GetRelatedProductsByProductId1(int productId1)
+        {
+            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
+            bool showHidden = true;
+
+            var query = from rp in _relatedProductRespository.Table
+                        join p in _productRespository.Table on rp.ProductId2 equals p.Id
+                        where rp.ProductId1 == productId1 &&
+                        !p.Deleted &&
+                        (showHidden || p.Published)
+                        orderby rp.DisplayOrder
+                        select rp;
+            var relatedProducts = query.ToList();
+
+            return relatedProducts;
+        }
+
+        /// <summary>
+        /// Gets a related product
+        /// </summary>
+        /// <param name="relatedProductId">Related product identifer</param>
+        /// <returns>Related product</returns>
+        public RelatedProduct GetRelatedProductById(int relatedProductId)
+        {
+            if (relatedProductId == 0)
+                return null;
+            
+            var relatedProduct = _relatedProductRespository.GetById(relatedProductId);
+            return relatedProduct;
+        }
+
+        /// <summary>
+        /// Inserts a related product
+        /// </summary>
+        /// <param name="relatedProduct">Related product</param>
+        public void InsertRelatedProduct(RelatedProduct relatedProduct)
+        {
+            if (relatedProduct == null)
+                throw new ArgumentNullException("relatedProduct");
+
+            _relatedProductRespository.Insert(relatedProduct);
+        }
+
+        /// <summary>
+        /// Updates a related product
+        /// </summary>
+        /// <param name="relatedProduct">Related product</param>
+        public void UpdateRelatedProduct(RelatedProduct relatedProduct)
+        {
+            if (relatedProduct == null)
+                throw new ArgumentNullException("relatedProduct");
+
+            _relatedProductRespository.Update(relatedProduct);
+        }
+
+        #endregion
+
+        #region Cross-sell products
+
+        /// <summary>
+        /// Deletes a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProduct">Cross-sell intifer</param>
+        public void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
+        {
+            if (crossSellProduct == null)
+                return;
+
+            _crossSellProductRespository.Delete(crossSellProduct);
+        }
+
+        /// <summary>
+        /// Gets a cross-sell product collection by product identifier
+        /// </summary>
+        /// <param name="productId1">The first product identifier</param>
+        /// <returns>Cross-sell product collection</returns>
+        public List<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1)
+        {
+            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
+            bool showHidden = true;
+
+            var query = from csp in _crossSellProductRespository.Table
+                        join p in _productRespository.Table on csp.ProductId2 equals p.Id
+                        where csp.ProductId1 == productId1 &&
+                        !p.Deleted &&
+                        (showHidden || p.Published)
+                        orderby csp.Id
+                        select csp;
+            var crossSellProducts = query.ToList();
+            return crossSellProducts;
+        }
+
+        /// <summary>
+        /// Gets a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProductId">Cross-sell product identifer</param>
+        /// <returns>Cross-sell product</returns>
+        public CrossSellProduct GetCrossSellProductById(int crossSellProductId)
+        {
+            if (crossSellProductId == 0)
+                return null;
+
+            var crossSellProduct = _crossSellProductRespository.GetById(crossSellProductId);
+            return crossSellProduct;
+        }
+
+        /// <summary>
+        /// Inserts a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProduct">Cross-sell product</param>
+        public void InsertCrossSellProduct(CrossSellProduct crossSellProduct)
+        {
+            if (crossSellProduct == null)
+                throw new ArgumentNullException("crossSellProduct");
+
+            _crossSellProductRespository.Insert(crossSellProduct);
+        }
+
+        /// <summary>
+        /// Updates a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProduct">Cross-sell product</param>
+        public void UpdateCrossSellProduct(CrossSellProduct crossSellProduct)
+        {
+            if (crossSellProduct == null)
+                throw new ArgumentNullException("crossSellProduct");
+
+            _crossSellProductRespository.Update(crossSellProduct);
         }
 
         #endregion

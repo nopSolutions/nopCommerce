@@ -23,7 +23,7 @@ namespace Nop.Data.Mapping
         public ProductVariantAttributeMap()
         {
             this.ToTable("ProductVariant_ProductAttribute_Mapping");
-
+            this.HasKey(pva => pva.Id);
             this.Property(pva => pva.TextPrompt).IsRequired().HasMaxLength(200);
             this.Ignore(pva => pva.AttributeControlType);
 

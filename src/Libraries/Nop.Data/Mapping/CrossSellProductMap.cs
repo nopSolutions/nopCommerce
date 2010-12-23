@@ -18,22 +18,12 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class ProductCategoryMap : EntityTypeConfiguration<ProductCategory>
+    public partial class CrossSellProductMap : EntityTypeConfiguration<CrossSellProduct>
     {
-        public ProductCategoryMap()
+        public CrossSellProductMap()
         {
-            this.ToTable("Product_Category_Mapping");
-            this.HasKey(pc => pc.Id);
-
-            
-            this.HasRequired(pc => pc.Category)
-                .WithMany(c => c.ProductCategories)
-                .HasForeignKey(pc => pc.CategoryId);
-
-
-            this.HasRequired(pc => pc.Product)
-                .WithMany(p => p.ProductCategories)
-                .HasForeignKey(pc => pc.ProductId);
+            this.ToTable("CrossSellProduct");
+            this.HasKey(c => c.Id);
         }
     }
 }

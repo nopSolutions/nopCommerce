@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="Mapping\RelatedProductMap.cs" />
+    <Compile Include="Mapping\CrossSellProductMap.cs" />
     <Compile Include="Mapping\ProductSpecificationAttributeMap.cs" />
     <Compile Include="Mapping\LocalizedSpecificationAttributeOptionMap.cs" />
     <Compile Include="Mapping\SpecificationAttributeOptionMap.cs" />

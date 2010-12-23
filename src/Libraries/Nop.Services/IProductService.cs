@@ -195,5 +195,78 @@ namespace Nop.Services
         void DeleteProductVariant(ProductVariant productVariant);
 
         #endregion
+
+        #region Related products
+
+        /// <summary>
+        /// Deletes a related product
+        /// </summary>
+        /// <param name="relatedProduct">Related product</param>
+        void DeleteRelatedProduct(RelatedProduct relatedProduct);
+
+        /// <summary>
+        /// Gets a related product collection by product identifier
+        /// </summary>
+        /// <param name="productId1">The first product identifier</param>
+        /// <returns>Related product collection</returns>
+        List<RelatedProduct> GetRelatedProductsByProductId1(int productId1);
+
+        /// <summary>
+        /// Gets a related product
+        /// </summary>
+        /// <param name="relatedProductId">Related product identifer</param>
+        /// <returns>Related product</returns>
+        RelatedProduct GetRelatedProductById(int relatedProductId);
+
+        /// <summary>
+        /// Inserts a related product
+        /// </summary>
+        /// <param name="relatedProduct">Related product</param>
+        void InsertRelatedProduct(RelatedProduct relatedProduct);
+
+        /// <summary>
+        /// Updates a related product
+        /// </summary>
+        /// <param name="relatedProduct">Related product</param>
+        void UpdateRelatedProduct(RelatedProduct relatedProduct);
+
+        #endregion
+
+        #region Cross-sell products
+
+        /// <summary>
+        /// Deletes a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProduct">Cross-sell</param>
+        void DeleteCrossSellProduct(CrossSellProduct crossSellProduct);
+
+        /// <summary>
+        /// Gets a cross-sell product collection by product identifier
+        /// </summary>
+        /// <param name="productId1">The first product identifier</param>
+        /// <returns>Cross-sell product collection</returns>
+        List<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1);
+
+        /// <summary>
+        /// Gets a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProductId">Cross-sell product identifer</param>
+        /// <returns>Cross-sell product</returns>
+        CrossSellProduct GetCrossSellProductById(int crossSellProductId);
+
+        /// <summary>
+        /// Inserts a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProduct">Cross-sell product</param>
+        void InsertCrossSellProduct(CrossSellProduct crossSellProduct);
+
+        /// <summary>
+        /// Updates a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProduct">Cross-sell product</param>
+        void UpdateCrossSellProduct(CrossSellProduct crossSellProduct);
+
+        #endregion
+
     }
 }

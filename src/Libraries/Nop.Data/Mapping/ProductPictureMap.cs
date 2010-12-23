@@ -23,6 +23,7 @@ namespace Nop.Data.Mapping
         public ProductPictureMap()
         {
             this.ToTable("Product_Picture_Mapping");
+            this.HasKey(pp => pp.Id);
             
             this.HasRequired(pp => pp.Picture)
                 .WithMany(p => p.ProductPictures)
