@@ -64,6 +64,7 @@ namespace Nop.Data
         public DbSet<Setting> Settings { get; set; }
         public DbSet<SpecificationAttribute> SpecificationAttributes { get; set; }
         public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
+        public DbSet<TierPrice> TierPrices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
