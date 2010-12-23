@@ -423,5 +423,10 @@ namespace Nop.Core.Domain
         /// </summary>
         public virtual ICollection<ProductVariantAttributeCombination> ProductVariantAttributeCombinations { get; set; }
 
+        /// <summary>
+        /// Gets or sets the tier prices
+        /// </summary>
+        public virtual ICollection<TierPrice> TierPrices { get; set; }
+
     }
 }

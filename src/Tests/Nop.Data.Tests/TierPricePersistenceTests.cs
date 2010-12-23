@@ -9,17 +9,15 @@ using Nop.Core.Domain;
 namespace Nop.Data.Tests
 {
     [TestFixture]
-    public class ProductVariantAttributePersistenceTests : PersistenceTest
+    public class TierPricePersistenceTests : PersistenceTest
     {
         [Test]
-        public void Can_save_and_load_productVariantAttribute()
+        public void Can_save_and_load_tierPrice()
         {
-            var pva = new ProductVariantAttribute
+            var tierPrice = new TierPrice
                       {
-                          TextPrompt = "TextPrompt 1",
-                          IsRequired = true,
-                          AttributeControlType = AttributeControlTypeEnum.DropdownList,
-                          DisplayOrder = 1,
+                          Quantity = 1,
+                          Price = 2,
                           ProductVariant = new ProductVariant()
                                            {
                                                Name = "Product variant name 1",
@@ -101,24 +99,14 @@ namespace Nop.Data.Tests
                                                              UpdatedOnUtc = new DateTime(2010, 01, 02),
                                                          }
                                            },
-                          ProductAttribute = new ProductAttribute()
-                          {
-                              Name = "Name 1",
-                              Description = "Description 1",
-                          }
                       };
 
-            var fromDb = SaveAndLoadEntity(pva);
-            fromDb.TextPrompt.ShouldEqual("TextPrompt 1");
-            fromDb.IsRequired.ShouldEqual(true);
-            fromDb.AttributeControlType.ShouldEqual(AttributeControlTypeEnum.DropdownList);
-            fromDb.DisplayOrder.ShouldEqual(1);
+            var fromDb = SaveAndLoadEntity(tierPrice);
+            fromDb.Quantity.ShouldEqual(1);
+            fromDb.Price.ShouldEqual(2);
 
             fromDb.ProductVariant.ShouldNotBeNull();
             fromDb.ProductVariant.Name.ShouldEqual("Product variant name 1");
-
-            fromDb.ProductAttribute.ShouldNotBeNull();
-            fromDb.ProductAttribute.Name.ShouldEqual("Name 1");
         }
     }
 }

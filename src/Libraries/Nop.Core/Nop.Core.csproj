@@ -84,6 +84,7 @@
     <Compile Include="Domain\LocalizedSpecificationAttribute.cs" />
     <Compile Include="Domain\SpecificationAttributeOption.cs" />
     <Compile Include="Domain\LocalizedSpecificationAttributeOption.cs" />
+    <Compile Include="Domain\TierPrice.cs" />
     <Compile Include="IO\FileSystemSettings.cs" />
     <Compile Include="IO\FileSystemStorageProvider.cs" />
     <Compile Include="IO\IStorageFile.cs" />

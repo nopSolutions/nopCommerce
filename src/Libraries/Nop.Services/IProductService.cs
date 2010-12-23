@@ -267,6 +267,41 @@ namespace Nop.Services
         void UpdateCrossSellProduct(CrossSellProduct crossSellProduct);
 
         #endregion
+        
+        #region Tier prices
 
+        /// <summary>
+        /// Deletes a tier price
+        /// </summary>
+        /// <param name="tierPrice">Tier price</param>
+        void DeleteTierPrice(TierPrice tierPrice);
+
+        /// <summary>
+        /// Gets a tier price
+        /// </summary>
+        /// <param name="tierPriceId">Tier price identifier</param>
+        /// <returns>Tier price</returns>
+        TierPrice GetTierPriceById(int tierPriceId);
+
+        /// <summary>
+        /// Gets tier prices by product variant identifier
+        /// </summary>
+        /// <param name="productVariantId">Product variant identifier</param>
+        /// <returns>Tier price collection</returns>
+        List<TierPrice> GetTierPricesByProductVariantId(int productVariantId);
+        
+        /// <summary>
+        /// Inserts a tier price
+        /// </summary>
+        /// <param name="tierPrice">Tier price</param>
+        void InsertTierPrice(TierPrice tierPrice);
+
+        /// <summary>
+        /// Updates the tier price
+        /// </summary>
+        /// <param name="tierPrice">Tier price</param>
+        void UpdateTierPrice(TierPrice tierPrice);
+
+        #endregion
     }
 }

@@ -31,8 +31,10 @@ namespace Nop.Services
         private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
         private const string PRODUCTVARIANTS_ALL_KEY = "Nop.productvariant.all-{0}-{1}";
         private const string PRODUCTVARIANTS_BY_ID_KEY = "Nop.productvariant.id-{0}";
+        private const string TIERPRICES_ALLBYPRODUCTVARIANTID_KEY = "Nop.tierprice.allbyproductvariantid-{0}";
         private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
         private const string PRODUCTVARIANTS_PATTERN_KEY = "Nop.productvariant.";
+        private const string TIERPRICES_PATTERN_KEY = "Nop.tierprice.";
         #endregion
 
         #region Fields
@@ -43,6 +45,7 @@ namespace Nop.Services
         private readonly IRepository<LocalizedProductVariant> _localizedProductVariantRespository;
         private readonly IRepository<RelatedProduct> _relatedProductRespository;
         private readonly IRepository<CrossSellProduct> _crossSellProductRespository;
+        private readonly IRepository<TierPrice> _tierPriceRespository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -59,13 +62,15 @@ namespace Nop.Services
         /// <param name="localizedProductVariantRespository">Localized product variant repository</param>
         /// <param name="relatedProductRespository">Related product repository</param>
         /// <param name="crossSellProductRespository">Cross-sell product repository</param>
+        /// <param name="tierPriceRespository">Tier price repository</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRespository,
             IRepository<LocalizedProduct> localizedProductRespository,
             IRepository<ProductVariant> productVariantRespository,
             IRepository<LocalizedProductVariant> localizedProductVariantRespository,
             IRepository<RelatedProduct> relatedProductRespository,
-            IRepository<CrossSellProduct> crossSellProductRespository)
+            IRepository<CrossSellProduct> crossSellProductRespository,
+            IRepository<TierPrice> tierPriceRespository)
         {
             this._cacheManager = cacheManager;
             this._productRespository = productRespository;
@@ -74,6 +79,7 @@ namespace Nop.Services
             this._localizedProductVariantRespository = localizedProductVariantRespository;
             this._relatedProductRespository = relatedProductRespository;
             this._crossSellProductRespository = crossSellProductRespository;
+            this._tierPriceRespository = tierPriceRespository;
         }
 
         #endregion
@@ -176,6 +182,7 @@ namespace Nop.Services
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -191,6 +198,7 @@ namespace Nop.Services
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -257,6 +265,7 @@ namespace Nop.Services
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -288,6 +297,7 @@ namespace Nop.Services
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
         
         #endregion
@@ -360,6 +370,7 @@ namespace Nop.Services
             
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -375,6 +386,7 @@ namespace Nop.Services
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -491,6 +503,7 @@ namespace Nop.Services
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -517,6 +530,7 @@ namespace Nop.Services
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -681,6 +695,94 @@ namespace Nop.Services
                 throw new ArgumentNullException("crossSellProduct");
 
             _crossSellProductRespository.Update(crossSellProduct);
+        }
+
+        #endregion
+        
+        #region Tier prices
+        
+        /// <summary>
+        /// Deletes a tier price
+        /// </summary>
+        /// <param name="tierPrice">Tier price</param>
+        public void DeleteTierPrice(TierPrice tierPrice)
+        {
+            if (tierPrice == null)
+                return;
+
+            _tierPriceRespository.Delete(tierPrice);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+        }
+
+        /// <summary>
+        /// Gets a tier price
+        /// </summary>
+        /// <param name="tierPriceId">Tier price identifier</param>
+        /// <returns>Tier price</returns>
+        public TierPrice GetTierPriceById(int tierPriceId)
+        {
+            if (tierPriceId == 0)
+                return null;
+            
+            var tierPrice = _tierPriceRespository.GetById(tierPriceId);
+            return tierPrice;
+        }
+
+        /// <summary>
+        /// Gets tier prices by product variant identifier
+        /// </summary>
+        /// <param name="productVariantId">Product variant identifier</param>
+        /// <returns>Tier price collection</returns>
+        public List<TierPrice> GetTierPricesByProductVariantId(int productVariantId)
+        {
+            if (productVariantId == 0)
+                return new List<TierPrice>();
+
+            string key = string.Format(TIERPRICES_ALLBYPRODUCTVARIANTID_KEY, productVariantId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from tp in _tierPriceRespository.Table
+                            orderby tp.Quantity
+                            where tp.ProductVariantId == productVariantId
+                            select tp;
+                var tierPrices = query.ToList();
+                return tierPrices;
+            });
+        }
+
+        /// <summary>
+        /// Inserts a tier price
+        /// </summary>
+        /// <param name="tierPrice">Tier price</param>
+        public void InsertTierPrice(TierPrice tierPrice)
+        {
+            if (tierPrice == null)
+                throw new ArgumentNullException("tierPrice");
+
+            _tierPriceRespository.Insert(tierPrice);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+        }
+
+        /// <summary>
+        /// Updates the tier price
+        /// </summary>
+        /// <param name="tierPrice">Tier price</param>
+        public void UpdateTierPrice(TierPrice tierPrice)
+        {
+            if (tierPrice == null)
+                throw new ArgumentNullException("tierPrice");
+
+            _tierPriceRespository.Update(tierPrice);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         #endregion
