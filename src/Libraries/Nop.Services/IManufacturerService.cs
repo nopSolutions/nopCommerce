@@ -60,40 +60,6 @@ namespace Nop.Services
         void UpdateManufacturer(Manufacturer manufacturer);
 
         /// <summary>
-        /// Gets localized manufacturer by id
-        /// </summary>
-        /// <param name="localizedManufacturerId">Localized manufacturer identifier</param>
-        /// <returns>Manufacturer content</returns>
-        LocalizedManufacturer GetLocalizedManufacturerById(int localizedManufacturerId);
-
-        /// <summary>
-        /// Gets localized manufacturer by manufacturer id
-        /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <returns>Manufacturer content</returns>
-        List<LocalizedManufacturer> GetLocalizedManufacturerByManufacturerId(int manufacturerId);
-
-        /// <summary>
-        /// Gets localized manufacturer by manufacturer id and language id
-        /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Manufacturer content</returns>
-        LocalizedManufacturer GetLocalizedManufacturerByManufacturerIdAndLanguageId(int manufacturerId, int languageId);
-
-        /// <summary>
-        /// Inserts a localized manufacturer
-        /// </summary>
-        /// <param name="localizedManufacturer">Localized manufacturer</param>
-        void InsertLocalizedManufacturer(LocalizedManufacturer localizedManufacturer);
-
-        /// <summary>
-        /// Update a localized manufacturer
-        /// </summary>
-        /// <param name="localizedManufacturer">Localized manufacturer</param>
-        void UpdateLocalizedManufacturer(LocalizedManufacturer localizedManufacturer);
-
-        /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>

@@ -19,6 +19,8 @@ using Nop.Core.Domain;
 using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core;
+using Nop.Core.Localization;
+using System.Web;
 
 namespace Nop.Services
 {
@@ -39,8 +41,8 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly ILocalizedEntityService _leService;
         private readonly IRepository<Category> _categoryRespository;
-        private readonly IRepository<LocalizedCategory> _localizedCategoryRespository;
         private readonly IRepository<ProductCategory> _productCategoryRespository;
         private readonly IRepository<Product> _productRespository;
         private readonly ICacheManager _cacheManager;
@@ -53,19 +55,19 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="leService">Localized entity service</param>
         /// <param name="categoryRespository">Category repository</param>
-        /// <param name="localizedCategoryRespository">Localized category repository</param>
         /// <param name="productCategoryRespository">ProductCategory repository</param>
         /// <param name="productRespository">Product repository</param>
         public CategoryService(ICacheManager cacheManager,
+            ILocalizedEntityService leService,
             IRepository<Category> categoryRespository,
-            IRepository<LocalizedCategory> localizedCategoryRespository,
             IRepository<ProductCategory> productCategoryRespository,
             IRepository<Product> productRespository)
         {
             this._cacheManager = cacheManager;
+            this._leService = leService;
             this._categoryRespository = categoryRespository;
-            this._localizedCategoryRespository = localizedCategoryRespository;
             this._productCategoryRespository = productCategoryRespository;
             this._productRespository = productRespository;
         }
@@ -122,6 +124,8 @@ namespace Nop.Services
             //TODO sort categories on database layer
             var sortedCategories = unsortedCategories.SortCategoriesForTree(0);
 
+            sortedCategories.ForEach(c => 
+                new DefaultPropertyLocalizer<Category, LocalizedCategory>(_leService, c).Localize());
             return sortedCategories;
         }
         
@@ -161,6 +165,7 @@ namespace Nop.Services
             //}
 
             var categories = query.ToList();
+            categories.ForEach(c => new DefaultPropertyLocalizer<Category, LocalizedCategory>(_leService, c).Localize());
             return categories;
         }
         
@@ -185,6 +190,7 @@ namespace Nop.Services
             //}
 
             var categories = query.ToList();
+            categories.ForEach(c => new DefaultPropertyLocalizer<Category, LocalizedCategory>(_leService, c).Localize());
             return categories;
         }
                 
@@ -200,16 +206,16 @@ namespace Nop.Services
 
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
             return _cacheManager.Get(key, () =>
-                                              {
-                                                  var category = _categoryRespository.GetById(categoryId);
-                                                  //filter by access control list (public store)
-                                                  //if (category != null && !showHidden && IsCategoryAccessDenied(category))
-                                                  //{
-                                                  //    category = null;
-                                                  //}
-
-                                                  return category;
-                                              });
+            {
+                var category = _categoryRespository.GetById(categoryId);
+                //filter by access control list (public store)
+                //if (category != null && !showHidden && IsCategoryAccessDenied(category))
+                //{
+                //    category = null;
+                //}
+                new DefaultPropertyLocalizer<Category, LocalizedCategory>(_leService, category).Localize();
+                return category;
+            });
         }
 
         /// <summary>
@@ -255,103 +261,7 @@ namespace Nop.Services
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
         }
-
-        /// <summary>
-        /// Gets localized category by id
-        /// </summary>
-        /// <param name="localizedCategoryId">Localized category identifier</param>
-        /// <returns>Category content</returns>
-        public LocalizedCategory GetLocalizedCategoryById(int localizedCategoryId)
-        {
-            if (localizedCategoryId == 0)
-                return null;
-            
-            var categoryLocalized = _localizedCategoryRespository.GetById(localizedCategoryId);
-            return categoryLocalized;
-        }
-
-        /// <summary>
-        /// Gets localized category by category id
-        /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        /// <returns>Category content</returns>
-        public List<LocalizedCategory> GetLocalizedCategoriesByCategoryId(int categoryId)
-        {
-            if (categoryId == 0)
-                return new List<LocalizedCategory>();
-            
-            var query = from cl in _localizedCategoryRespository.Table
-                        where cl.CategoryId == categoryId
-                        select cl;
-            var content = query.ToList();
-            return content;
-        }
-
-        /// <summary>
-        /// Gets localized category by category id and language id
-        /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Category content</returns>
-        public LocalizedCategory GetLocalizedCategoryByCategoryIdAndLanguageId(int categoryId, int languageId)
-        {
-            if (categoryId == 0 || languageId == 0)
-                return null;
-            
-            var query = from cl in _localizedCategoryRespository.Table
-                        orderby cl.Id
-                        where cl.CategoryId == categoryId &&
-                        cl.LanguageId == languageId
-                        select cl;
-            var categoryLocalized = query.FirstOrDefault();
-            return categoryLocalized;
-        }
-
-        /// <summary>
-        /// Inserts a localized category
-        /// </summary>
-        /// <param name="localizedCategory">Localized category</param>
-        public void InsertLocalizedCategory(LocalizedCategory localizedCategory)
-        {
-            if (localizedCategory == null)
-                throw new ArgumentNullException("localizedCategory");
-
-            _localizedCategoryRespository.Insert(localizedCategory);
-
-            //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Update a localized category
-        /// </summary>
-        /// <param name="localizedCategory">Localized category</param>
-        public void UpdateLocalizedCategory(LocalizedCategory localizedCategory)
-        {
-            if (localizedCategory == null)
-                throw new ArgumentNullException("localizedCategory");
-
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedCategory.Name) &&
-                                     string.IsNullOrEmpty(localizedCategory.Description) &&
-                                     string.IsNullOrEmpty(localizedCategory.MetaKeywords) &&
-                                     string.IsNullOrEmpty(localizedCategory.MetaDescription) &&
-                                     string.IsNullOrEmpty(localizedCategory.MetaTitle) &&
-                                     string.IsNullOrEmpty(localizedCategory.SeName);
-
-            if (allFieldsAreEmpty)
-            {
-                //delete if all fields are empty
-                _localizedCategoryRespository.Delete(localizedCategory);
-            }
-            else
-            {
-                _localizedCategoryRespository.Update(localizedCategory);
-            }
-
-            //cache
-            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-        }
-
+        
         /// <summary>
         /// Deletes a product category mapping
         /// </summary>

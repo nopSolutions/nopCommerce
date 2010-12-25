@@ -39,8 +39,8 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly ILocalizedEntityService _leService;
         private readonly IRepository<Manufacturer> _manufacturerRespository;
-        private readonly IRepository<LocalizedManufacturer> _localizedManufacturerRespository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRespository;
         private readonly IRepository<Product> _productRespository;
         private readonly ICacheManager _cacheManager;
@@ -52,19 +52,19 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="categoryRespository">Category repository</param>
-        /// <param name="localizedCategoryRespository">Localized category repository</param>
-        /// <param name="productCategoryRespository">ProductCategory repository</param>
+        /// <param name="leService">Localized entity service</param>
+        /// <param name="manufacturerRespository">Category repository</param>
+        /// <param name="productManufacturerRespository">ProductCategory repository</param>
         /// <param name="productRespository">Product repository</param>
         public ManufacturerService(ICacheManager cacheManager,
+            ILocalizedEntityService leService,
             IRepository<Manufacturer> manufacturerRespository,
-            IRepository<LocalizedManufacturer> localizedManufacturerRespository,
             IRepository<ProductManufacturer> productManufacturerRespository,
             IRepository<Product> productRespository)
         {
             this._cacheManager = cacheManager;
+            this._leService = leService;
             this._manufacturerRespository = manufacturerRespository;
-            this._localizedManufacturerRespository = localizedManufacturerRespository;
             this._productManufacturerRespository = productManufacturerRespository;
             this._productRespository = productRespository;
         }
@@ -112,6 +112,7 @@ namespace Nop.Services
                             !m.Deleted
                             select m;
                 var manufacturers = query.ToList();
+                manufacturers.ForEach(m => new DefaultPropertyLocalizer<Manufacturer, LocalizedManufacturer>(_leService, m).Localize());
                 return manufacturers;
             });
         }
@@ -129,7 +130,9 @@ namespace Nop.Services
             string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
             return _cacheManager.Get(key, () =>
             {
-                return _manufacturerRespository.GetById(manufacturerId);
+                var manufacturer = _manufacturerRespository.GetById(manufacturerId);
+                new DefaultPropertyLocalizer<Manufacturer, LocalizedManufacturer>(_leService, manufacturer).Localize();
+                return manufacturer;
             });
         }
 
@@ -163,103 +166,6 @@ namespace Nop.Services
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Gets localized manufacturer by id
-        /// </summary>
-        /// <param name="localizedManufacturerId">Localized manufacturer identifier</param>
-        /// <returns>Manufacturer content</returns>
-        public LocalizedManufacturer GetLocalizedManufacturerById(int localizedManufacturerId)
-        {
-            if (localizedManufacturerId == 0)
-                return null;
-
-            var manufacturerLocalized = _localizedManufacturerRespository.GetById(localizedManufacturerId);
-            
-            return manufacturerLocalized;
-        }
-
-        /// <summary>
-        /// Gets localized manufacturer by manufacturer id
-        /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <returns>Manufacturer content</returns>
-        public List<LocalizedManufacturer> GetLocalizedManufacturerByManufacturerId(int manufacturerId)
-        {
-            if (manufacturerId == 0)
-                return new List<LocalizedManufacturer>();
-            
-            var query = from ml in _localizedManufacturerRespository.Table
-                        where ml.ManufacturerId == manufacturerId
-                        select ml;
-            var content = query.ToList();
-            return content;
-        }
-
-        /// <summary>
-        /// Gets localized manufacturer by manufacturer id and language id
-        /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Manufacturer content</returns>
-        public LocalizedManufacturer GetLocalizedManufacturerByManufacturerIdAndLanguageId(int manufacturerId, int languageId)
-        {
-            if (manufacturerId == 0 || languageId == 0)
-                return null;
-
-            var query = from ml in _localizedManufacturerRespository.Table
-                        orderby ml.Id
-                        where ml.ManufacturerId == manufacturerId &&
-                        ml.LanguageId == languageId
-                        select ml;
-            var manufacturerLocalized = query.FirstOrDefault();
-            return manufacturerLocalized;
-        }
-
-        /// <summary>
-        /// Inserts a localized manufacturer
-        /// </summary>
-        /// <param name="localizedManufacturer">Localized manufacturer</param>
-        public void InsertLocalizedManufacturer(LocalizedManufacturer localizedManufacturer)
-        {
-            if (localizedManufacturer == null)
-                throw new ArgumentNullException("localizedManufacturer");
-
-            _localizedManufacturerRespository.Insert(localizedManufacturer);
-         
-            //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Update a localized manufacturer
-        /// </summary>
-        /// <param name="localizedManufacturer">Localized manufacturer</param>
-        public void UpdateLocalizedManufacturer(LocalizedManufacturer localizedManufacturer)
-        {
-            if (localizedManufacturer == null)
-                throw new ArgumentNullException("localizedManufacturer");
-
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedManufacturer.Name) &&
-                                     string.IsNullOrEmpty(localizedManufacturer.Description) &&
-                                     string.IsNullOrEmpty(localizedManufacturer.MetaKeywords) &&
-                                     string.IsNullOrEmpty(localizedManufacturer.MetaDescription) &&
-                                     string.IsNullOrEmpty(localizedManufacturer.MetaTitle) &&
-                                     string.IsNullOrEmpty(localizedManufacturer.SeName);
-
-            if (allFieldsAreEmpty)
-            {
-                //delete if all fields are empty
-                _localizedManufacturerRespository.Delete(localizedManufacturer);
-            }
-            else
-            {
-                _localizedManufacturerRespository.Update(localizedManufacturer);
-            }
-
-            //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
         }
 
         /// <summary>

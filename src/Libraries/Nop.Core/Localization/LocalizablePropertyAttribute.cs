@@ -12,27 +12,22 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain;
-
-
-namespace Nop.Data.Mapping
+using System;
+namespace Nop.Core.Localization
 {
-    public partial class LocalizedSpecificationAttributeMap : EntityTypeConfiguration<LocalizedSpecificationAttribute>
+    [AttributeUsage(AttributeTargets.Property)]
+    public partial class LocalizablePropertyAttribute: Attribute
     {
-        public LocalizedSpecificationAttributeMap()
+        string _localeKey;
+
+        public LocalizablePropertyAttribute(string localeKey)
         {
-            this.ToTable("SpecificationAttributeLocalized");
-            this.HasKey(lsa => lsa.Id);
-            this.Property(lsa => lsa.Name).IsRequired().HasMaxLength(400);
+            this._localeKey = localeKey;
+        }
 
-            this.HasRequired(lsa => lsa.SpecificationAttribute)
-                .WithMany(sa => sa.LocalizedSpecificationAttributes)
-                .HasForeignKey(lsa => lsa.SpecificationAttributeId);
-
-            this.HasRequired(lsa => lsa.Language)
-                .WithMany(l => l.LocalizedSpecificationAttributes)
-                .HasForeignKey(lsa => lsa.LanguageId);
+        public string LocaleKey
+        {
+            get { return _localeKey; }
         }
     }
 }

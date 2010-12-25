@@ -55,40 +55,6 @@ namespace Nop.Services
         /// <param name="specificationAttribute">The specification attribute</param>
         void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute);
 
-        /// <summary>
-        /// Gets localized specification attribute by id
-        /// </summary>
-        /// <param name="localizedSpecificationAttributeId">Localized specification identifier</param>
-        /// <returns>Specification attribute content</returns>
-        LocalizedSpecificationAttribute GetSpecificationAttributeLocalizedById(int localizedSpecificationAttributeId);
-
-        /// <summary>
-        /// Gets localized specification attribute by specification attribute id
-        /// </summary>
-        /// <param name="specificationAttributeId">Specification attribute identifier</param>
-        /// <returns>Secification attribute content</returns>
-        List<LocalizedSpecificationAttribute> GetSpecificationAttributeLocalizedBySpecificationAttributeId(int specificationAttributeId);
-
-        /// <summary>
-        /// Gets localized specification attribute by specification attribute id and language id
-        /// </summary>
-        /// <param name="specificationAttributeId">Specification attribute identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Specification attribute content</returns>
-        LocalizedSpecificationAttribute GetSpecificationAttributeLocalizedBySpecificationAttributeIdAndLanguageId(int specificationAttributeId, int languageId);
-
-        /// <summary>
-        /// Inserts a localized specification attribute
-        /// </summary>
-        /// <param name="localizedSpecificationAttribute">Localized specification attribute</param>
-        void InsertSpecificationAttributeLocalized(LocalizedSpecificationAttribute localizedSpecificationAttribute);
-
-        /// <summary>
-        /// Update a localized specification attribute
-        /// </summary>
-        /// <param name="localizedSpecificationAttribute">Localized specification attribute</param>
-        void UpdateSpecificationAttributeLocalized(LocalizedSpecificationAttribute localizedSpecificationAttribute);
-
         #endregion
 
         #region Specification attribute option
@@ -124,42 +90,6 @@ namespace Nop.Services
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
         void UpdateSpecificationAttributeOptions(SpecificationAttributeOption specificationAttributeOption);
-
-        /// <summary>
-        /// Gets localized specification attribute option by id
-        /// </summary>
-        /// <param name="localizedSpecificationAttributeOptionId">Localized specification attribute option identifier</param>
-        /// <returns>Localized specification attribute option</returns>
-        LocalizedSpecificationAttributeOption GetSpecificationAttributeOptionLocalizedById(int localizedSpecificationAttributeOptionId);
-
-        /// <summary>
-        /// Gets localized specification attribute option by category id
-        /// </summary>
-        /// <param name="specificationAttributeOptionId">Specification attribute option identifier</param>
-        /// <returns>Localized specification attribute option content</returns>
-        List<LocalizedSpecificationAttributeOption> GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionId(int specificationAttributeOptionId);
-        
-        /// <summary>
-        /// Gets localized specification attribute option by specification attribute option id and language id
-        /// </summary>
-        /// <param name="specificationAttributeOptionId">Specification attribute option identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Localized specification attribute option</returns>
-        LocalizedSpecificationAttributeOption GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(int specificationAttributeOptionId, int languageId);
-
-        /// <summary>
-        /// Inserts a localized specification attribute option
-        /// </summary>
-        /// <param name="localizedSpecificationAttributeOption">Localized specification attribute option</param>
-        /// <returns>Localized specification attribute option</returns>
-        void InsertSpecificationAttributeOptionLocalized(LocalizedSpecificationAttributeOption localizedSpecificationAttributeOption);
-
-        /// <summary>
-        /// Update a localized specification attribute option
-        /// </summary>
-        /// <param name="localizedSpecificationAttributeOption">Localized specification attribute option</param>
-        /// <returns>Localized specification attribute option</returns>
-        void UpdateSpecificationAttributeOptionLocalized(LocalizedSpecificationAttributeOption localizedSpecificationAttributeOption);
 
         #endregion
 

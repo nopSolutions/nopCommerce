@@ -15,17 +15,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Localization;
 
 namespace Nop.Core.Domain
 {
     /// <summary>
     /// Represents a specification attribute
     /// </summary>
+    [LocalizableEntity("SpecificationAttribute")]
     public partial class SpecificationAttribute : BaseEntity
     {
         /// <summary>
         /// Gets or sets the name
         /// </summary>
+        [LocalizableProperty("Name")]
         public string Name { get; set; }
 
         /// <summary>
@@ -34,13 +37,14 @@ namespace Nop.Core.Domain
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the localized specification attribute
-        /// </summary>
-        public virtual ICollection<LocalizedSpecificationAttribute> LocalizedSpecificationAttributes { get; set; }
-
-        /// <summary>
         /// Gets or sets the specification attribute options
         /// </summary>
         public virtual ICollection<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the localized entity
+        /// </summary>
+        [LocalizedEntityResult]
+        public virtual LocalizedSpecificationAttribute Localized { get; set; }
     }
 }

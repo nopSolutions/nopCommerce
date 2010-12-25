@@ -12,36 +12,17 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using Nop.Core.Localization;
 namespace Nop.Core.Domain
 {
     /// <summary>
     /// Represents a localized product variant attribute value
     /// </summary>
-    public partial class LocalizedProductVariantAttributeValue : BaseEntity
+    public partial class LocalizedProductVariantAttributeValue : LocalizedBaseEntity
     {
-        /// <summary>
-        /// Gets or sets the product variant attribute value identifier
-        /// </summary>
-        public int ProductVariantAttributeValueId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public int LanguageId { get; set; }
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
-        
-        /// <summary>
-        /// Gets the product variant attribute value
-        /// </summary>
-        public virtual ProductVariantAttributeValue ProductVariantAttributeValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
     }
 }

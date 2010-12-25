@@ -12,22 +12,10 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using Nop.Core.Localization;
-namespace Nop.Core.Domain
+namespace Nop.Core.Localization
 {
-    /// <summary>
-    /// Represents a localized product attribute
-    /// </summary>
-    public partial class LocalizedProductAttribute : LocalizedBaseEntity
-    {
-        /// <summary>
-        /// Gets or sets the name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the description
-        /// </summary>
-        public string Description { get; set; }
-    }
+    public partial interface IPropertyLocalizer<From, To>
+        where From : BaseEntity
+        where To : LocalizedBaseEntity
+    {}
 }

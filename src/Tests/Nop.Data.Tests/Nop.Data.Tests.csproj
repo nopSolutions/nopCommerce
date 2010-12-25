@@ -66,20 +66,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryPersistenceTests.cs" />
+    <Compile Include="LocalizedPropertyPersistenceTests.cs" />
     <Compile Include="TierPricePersistenceTests.cs" />
     <Compile Include="ProductSpecificationAttributePersistenceTests.cs" />
-    <Compile Include="LocalizedSpecificationAttributeOptionPersistenceTests.cs" />
     <Compile Include="SpecificationAttributeOptionPersistenceTests.cs" />
-    <Compile Include="LocalizedSpecificationAttributePersistenceTests.cs" />
     <Compile Include="SpecificationAttributePersistenceTests.cs" />
-    <Compile Include="LocalizedProductVariantAttributeValuePersistenceTests.cs" />
-    <Compile Include="ProductVariantAttributeValueTests.cs" />
+    <Compile Include="ProductVariantAttributeValuePersistenceTests.cs" />
     <Compile Include="ProductVariantAttributeCombinationPersistenceTests.cs" />
     <Compile Include="ProductVariantAttributePersistenceTests.cs" />
-    <Compile Include="LocalizedProductAttributePersistenceTests.cs" />
     <Compile Include="ProductAttributePersistenceTests.cs" />
-    <Compile Include="LocalizedProductVariantPersistenceTests.cs" />
-    <Compile Include="LocalizedProductPersistenceTests.cs" />
     <Compile Include="ProductPicturePersistenceTests.cs" />
     <Compile Include="ProductManufacturerPersistenceTests.cs" />
     <Compile Include="ProductCategoryPersistenceTests.cs" />
@@ -87,8 +82,6 @@
     <Compile Include="ProductPersistenceTests.cs" />
     <Compile Include="PicturePersistenceTests.cs" />
     <Compile Include="ManufacturerPersistenceTests.cs" />
-    <Compile Include="LocalizedManufacturerPersistenceTests.cs" />
-    <Compile Include="LocalizedCategoryPersistenceTests.cs" />
     <Compile Include="LocaleStringResourcePersistenceTests.cs" />
     <Compile Include="CustomerPersistenceTests.cs" />
     <Compile Include="SettingPersistenceTests.cs" />

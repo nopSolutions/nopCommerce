@@ -29,6 +29,8 @@ namespace Nop.Data.Mapping
             this.HasRequired(pvav => pvav.ProductVariantAttribute)
                 .WithMany(pva => pva.ProductVariantAttributeValues)
                 .HasForeignKey(pvav => pvav.ProductVariantAttributeId);
+
+            this.Ignore(pva => pva.Localized);
         }
     }
 }

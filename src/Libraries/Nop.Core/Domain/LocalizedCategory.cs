@@ -12,23 +12,14 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using Nop.Core.Localization;
 namespace Nop.Core.Domain
 {
     /// <summary>
     /// Represents a localized category
     /// </summary>
-    public partial class LocalizedCategory : BaseEntity
+    public partial class LocalizedCategory : LocalizedBaseEntity
     {
-        /// <summary>
-        /// Gets or sets the category identifier
-        /// </summary>
-        public int CategoryId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public int LanguageId { get; set; }
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -58,15 +49,5 @@ namespace Nop.Core.Domain
         /// Gets or sets the search-engine name
         /// </summary>
         public string SeName { get; set; }
-        
-        /// <summary>
-        /// Gets the category
-        /// </summary>
-        public virtual Category Category { get; set; }
-
-        /// <summary>
-        /// Gets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
     }
 }

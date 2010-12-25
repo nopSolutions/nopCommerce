@@ -23,14 +23,16 @@ namespace Nop.Data.Mapping
         public ManufacturerMap()
         {
             this.ToTable("Manufacturer");
-            this.HasKey(c => c.Id);
-            this.Property(c => c.Name).IsRequired().HasMaxLength(400);
-            this.Property(c => c.Description).IsRequired().IsMaxLength();
-            this.Property(c => c.MetaKeywords).IsRequired().HasMaxLength(400);
-            this.Property(c => c.MetaDescription).IsRequired();
-            this.Property(c => c.MetaTitle).IsRequired().HasMaxLength(400);
-            this.Property(c => c.SeName).IsRequired().HasMaxLength(100);
-            this.Property(c => c.PriceRanges).IsRequired().HasMaxLength(400);
+            this.HasKey(m => m.Id);
+            this.Property(m => m.Name).IsRequired().HasMaxLength(400);
+            this.Property(m => m.Description).IsRequired().IsMaxLength();
+            this.Property(m => m.MetaKeywords).IsRequired().HasMaxLength(400);
+            this.Property(m => m.MetaDescription).IsRequired();
+            this.Property(m => m.MetaTitle).IsRequired().HasMaxLength(400);
+            this.Property(m => m.SeName).IsRequired().HasMaxLength(100);
+            this.Property(m => m.PriceRanges).IsRequired().HasMaxLength(400);
+
+            this.Ignore(m => m.Localized);
         }
     }
 }

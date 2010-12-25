@@ -40,12 +40,11 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly ILocalizedEntityService _leService;
         private readonly IRepository<ProductAttribute> _productAttributeRespository;
-        private readonly IRepository<LocalizedProductAttribute> _localizedProductAttributeRespository;
         private readonly IRepository<ProductVariantAttribute> _productVariantAttributeRespository;
         private readonly IRepository<ProductVariantAttributeCombination> _productVariantAttributeCombinationRespository;
         private readonly IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRespository;
-        private readonly IRepository<LocalizedProductVariantAttributeValue> _localizedProductVariantAttributeValueRespository;
         private readonly ICacheManager _cacheManager;
 
 
@@ -57,28 +56,25 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="leService">Localized entity service</param>
         /// <param name="productAttributeRespository">Product attribute repository</param>
-        /// <param name="localizedProductAttributeRespository">Localized product attribute repository</param>
         /// <param name="productVariantAttributeRespository">Product variant attribute mapping repository</param>
         /// <param name="productVariantAttributeCombinationRespository">Product variant attribute combination repository</param>
         /// <param name="productVariantAttributeValueRespository">Product variant attribute value repository</param>
-        /// <param name="localizedProductVariantAttributeValueRespository">Localized product variant attribute value repository</param>
         public ProductAttributeService(ICacheManager cacheManager,
+            ILocalizedEntityService leService,
             IRepository<ProductAttribute> productAttributeRespository,
-            IRepository<LocalizedProductAttribute> localizedProductAttributeRespository,
             IRepository<ProductVariantAttribute> productVariantAttributeRespository,
             IRepository<ProductVariantAttributeCombination> productVariantAttributeCombinationRespository,
-            IRepository<ProductVariantAttributeValue> productVariantAttributeValueRespository,
-            IRepository<LocalizedProductVariantAttributeValue> localizedProductVariantAttributeValueRespository
+            IRepository<ProductVariantAttributeValue> productVariantAttributeValueRespository
             )
         {
             this._cacheManager = cacheManager;
+            this._leService = leService;
             this._productAttributeRespository = productAttributeRespository;
-            this._localizedProductAttributeRespository = localizedProductAttributeRespository;
             this._productVariantAttributeRespository = productVariantAttributeRespository;
             this._productVariantAttributeCombinationRespository = productVariantAttributeCombinationRespository;
             this._productVariantAttributeValueRespository = productVariantAttributeValueRespository;
-            this._localizedProductVariantAttributeValueRespository = localizedProductVariantAttributeValueRespository;
         }
 
         #endregion
@@ -117,6 +113,8 @@ namespace Nop.Services
                             orderby pa.Name
                             select pa;
                 var productAttributes = query.ToList();
+                productAttributes.ForEach(pa =>
+                    new DefaultPropertyLocalizer<ProductAttribute, LocalizedProductAttribute>(_leService, pa).Localize());
                 return productAttributes;
             });
         }
@@ -134,7 +132,9 @@ namespace Nop.Services
             string key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                return _productAttributeRespository.GetById(productAttributeId);
+                var pa = _productAttributeRespository.GetById(productAttributeId);
+                new DefaultPropertyLocalizer<ProductAttribute, LocalizedProductAttribute>(_leService, pa).Localize();
+                return pa;
             });
         }
 
@@ -165,101 +165,6 @@ namespace Nop.Services
 
             _productAttributeRespository.Update(productAttribute);
             
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Gets localized product attribute by id
-        /// </summary>
-        /// <param name="productAttributeLocalizedId">Localized product attribute identifier</param>
-        /// <returns>Product attribute content</returns>
-        public LocalizedProductAttribute GetLocalizedProductAttributeById(int productAttributeLocalizedId)
-        {
-            if (productAttributeLocalizedId == 0)
-                return null;
-
-            var productAttributeLocalized = _localizedProductAttributeRespository.GetById(productAttributeLocalizedId);
-            return productAttributeLocalized;
-        }
-
-        /// <summary>
-        /// Gets localized product attribute by product attribute id
-        /// </summary>
-        /// <param name="productAttributeId">Product attribute identifier</param>
-        /// <returns>Product attribute content</returns>
-        public List<LocalizedProductAttribute> GetLocalizedProductAttributeByProductAttributeId(int productAttributeId)
-        {
-            if (productAttributeId == 0)
-                return new List<LocalizedProductAttribute>();
-
-            var query = from lpa in _localizedProductAttributeRespository.Table
-                        where lpa.ProductAttributeId == productAttributeId
-                        select lpa;
-            var content = query.ToList();
-            return content;
-        }
-
-
-        /// <summary>
-        /// Gets localized product attribute by product attribute id and language id
-        /// </summary>
-        /// <param name="productAttributeId">Product attribute identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Product attribute content</returns>
-        public LocalizedProductAttribute GetLocalizedProductAttributeByProductAttributeIdAndLanguageId(int productAttributeId, int languageId)
-        {
-            if (productAttributeId == 0 || languageId == 0)
-                return null;
-
-            var query = from lpa in _localizedProductAttributeRespository.Table
-                        orderby lpa.Id
-                        where lpa.ProductAttributeId == productAttributeId &&
-                        lpa.LanguageId == languageId
-                        select lpa;
-            var productAttributeLocalized = query.FirstOrDefault();
-            return productAttributeLocalized;
-        }
-
-        /// <summary>
-        /// Inserts a localized product attribute
-        /// </summary>
-        /// <param name="localizedProductAttribute">Localized product attribute</param>
-        public void InsertLocalizedProductAttribute(LocalizedProductAttribute localizedProductAttribute)
-        {
-            if (localizedProductAttribute == null)
-                throw new ArgumentNullException("localizedProductAttribute");
-            
-            _localizedProductAttributeRespository.Insert(localizedProductAttribute);
-
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Update a localized product attribute
-        /// </summary>
-        /// <param name="localizedProductAttribute">Localized product attribute</param>
-        public void UpdateLocalizedProductAttribute(LocalizedProductAttribute localizedProductAttribute)
-        {
-            if (localizedProductAttribute == null)
-                throw new ArgumentNullException("localizedProductAttribute");
-
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedProductAttribute.Name) &&
-                string.IsNullOrEmpty(localizedProductAttribute.Description);
-
-            if (allFieldsAreEmpty)
-            {
-                //delete if all fields are empty
-                _localizedProductAttributeRespository.Delete(localizedProductAttribute);
-            }
-            else
-            {
-                _localizedProductAttributeRespository.Update(localizedProductAttribute);
-            }
-
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
@@ -389,6 +294,8 @@ namespace Nop.Services
                             where pvav.ProductVariantAttributeId == productVariantAttributeId
                             select pvav;
                 var productVariantAttributeValues = query.ToList();
+                productVariantAttributeValues.ForEach(pvav =>
+                new DefaultPropertyLocalizer<ProductVariantAttributeValue, LocalizedProductVariantAttributeValue>(_leService, pvav).Localize());
                 return productVariantAttributeValues;
             });
         }
@@ -406,7 +313,9 @@ namespace Nop.Services
             string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_BY_ID_KEY, productVariantAttributeValueId);
             return _cacheManager.Get(key, () =>
             {
-                return _productVariantAttributeValueRespository.GetById(productVariantAttributeValueId);
+                var pvav = _productVariantAttributeValueRespository.GetById(productVariantAttributeValueId);
+                new DefaultPropertyLocalizer<ProductVariantAttributeValue, LocalizedProductVariantAttributeValue>(_leService, pvav).Localize();
+                return pvav;
             });
         }
 
@@ -436,101 +345,6 @@ namespace Nop.Services
                 throw new ArgumentNullException("productVariantAttributeValue");
 
             _productVariantAttributeValueRespository.Update(productVariantAttributeValue);
-
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
-        }
-
-
-        /// <summary>
-        /// Gets localized product variant attribute value by id
-        /// </summary>
-        /// <param name="productVariantAttributeValueLocalizedId">Localized product variant attribute value identifier</param>
-        /// <returns>Localized product variant attribute value</returns>
-        public LocalizedProductVariantAttributeValue GetLocalizedProductVariantAttributeValueById(int productVariantAttributeValueLocalizedId)
-        {
-            if (productVariantAttributeValueLocalizedId == 0)
-                return null;
-
-            var productVariantAttributeValueLocalized = _localizedProductVariantAttributeValueRespository.GetById(productVariantAttributeValueLocalizedId);
-            return productVariantAttributeValueLocalized;
-        }
-
-        /// <summary>
-        /// Gets localized  product variant attribute value by id
-        /// </summary>
-        /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
-        /// <returns>Content</returns>
-        public List<LocalizedProductVariantAttributeValue> GetLocalizedProductVariantAttributeValueByProductVariantAttributeValueId(int productVariantAttributeValueId)
-        {
-            if (productVariantAttributeValueId == 0)
-                return new List<LocalizedProductVariantAttributeValue>();
-            
-            var query = from lpvav in _localizedProductVariantAttributeValueRespository.Table
-                        where lpvav.ProductVariantAttributeValueId == productVariantAttributeValueId
-                        select lpvav;
-            var content = query.ToList();
-            return content;
-        }
-
-        /// <summary>
-        /// Gets localized product variant attribute value by product variant attribute value id and language id
-        /// </summary>
-        /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Localized product variant attribute value</returns>
-        public LocalizedProductVariantAttributeValue GetLocalizedProductVariantAttributeValueByProductVariantAttributeValueIdAndLanguageId(int productVariantAttributeValueId, int languageId)
-        {
-            if (productVariantAttributeValueId == 0 || languageId == 0)
-                return null;
-
-            var query = from lpvav in _localizedProductVariantAttributeValueRespository.Table
-                        orderby lpvav.Id
-                        where lpvav.ProductVariantAttributeValueId == productVariantAttributeValueId &&
-                        lpvav.LanguageId == languageId
-                        select lpvav;
-            var productVariantAttributeValueLocalized = query.FirstOrDefault();
-            return productVariantAttributeValueLocalized;
-        }
-
-
-        /// <summary>
-        /// Inserts a localized product variant attribute value
-        /// </summary>
-        /// <param name="localizedProductVariantAttributeValue">Localized product variant attribute value</param>
-        public void InsertLocalizedProductVariantAttributeValue(LocalizedProductVariantAttributeValue localizedProductVariantAttributeValue)
-        {
-            if (localizedProductVariantAttributeValue == null)
-                throw new ArgumentNullException("localizedProductVariantAttributeValue");
-
-            _localizedProductVariantAttributeValueRespository.Insert(localizedProductVariantAttributeValue);
-
-            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Update a localized product variant attribute value
-        /// </summary>
-        /// <param name="localizedProductVariantAttributeValue">Localized product variant attribute value</param>
-        public void UpdateLocalizedProductVariantAttributeValue(LocalizedProductVariantAttributeValue localizedProductVariantAttributeValue)
-        {
-            if (localizedProductVariantAttributeValue == null)
-                throw new ArgumentNullException("localizedProductVariantAttributeValue");
-
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedProductVariantAttributeValue.Name);
-
-            if (allFieldsAreEmpty)
-            {
-                //delete if all fields are empty
-                _localizedProductVariantAttributeValueRespository.Delete(localizedProductVariantAttributeValue);
-            }
-            else
-            {
-                _localizedProductVariantAttributeValueRespository.Update(localizedProductVariantAttributeValue);
-            }
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);

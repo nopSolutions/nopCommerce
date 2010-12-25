@@ -25,38 +25,38 @@ namespace Nop.Data.Tests
             fromDb.Description.ShouldEqual("Description 1");
         }
 
-        [Test]
-        public void Can_save_and_load_productAttribute_with_localizedProductAttributes()
-        {
-            var pa = new ProductAttribute
-                     {
-                         Name = "Name 1",
-                         Description = "Description 1",
-                         LocalizedProductAttributes = new List<LocalizedProductAttribute>()
-                                                      {
-                                                          new LocalizedProductAttribute
-                                                          {
-                                                              Name = "Name localized 1",
-                                                              Description = "Description 1 localized",
-                                                              Language = new Language()
-                                                                         {
-                                                                             Name = "English",
-                                                                             LanguageCulture = "en-Us",
-                                                                             FlagImageFileName = "us.png",
-                                                                             Published = true,
-                                                                             DisplayOrder = 1
-                                                                         }
-                                                          },
-                                                      }
-                     };
+        //[Test]
+        //public void Can_save_and_load_productAttribute_with_localizedProductAttributes()
+        //{
+        //    var pa = new ProductAttribute
+        //             {
+        //                 Name = "Name 1",
+        //                 Description = "Description 1",
+        //                 LocalizedProductAttributes = new List<LocalizedProductAttribute>()
+        //                                              {
+        //                                                  new LocalizedProductAttribute
+        //                                                  {
+        //                                                      Name = "Name localized 1",
+        //                                                      Description = "Description 1 localized",
+        //                                                      Language = new Language()
+        //                                                                 {
+        //                                                                     Name = "English",
+        //                                                                     LanguageCulture = "en-Us",
+        //                                                                     FlagImageFileName = "us.png",
+        //                                                                     Published = true,
+        //                                                                     DisplayOrder = 1
+        //                                                                 }
+        //                                                  },
+        //                                              }
+        //             };
 
-            var fromDb = SaveAndLoadEntity(pa);
-            fromDb.Name.ShouldEqual("Name 1");
+        //    var fromDb = SaveAndLoadEntity(pa);
+        //    fromDb.Name.ShouldEqual("Name 1");
 
-            fromDb.LocalizedProductAttributes.ShouldNotBeNull();
-            (fromDb.LocalizedProductAttributes.Count == 1).ShouldBeTrue();
-            fromDb.LocalizedProductAttributes.First().Name.ShouldEqual("Name localized 1");
-        }
+        //    fromDb.LocalizedProductAttributes.ShouldNotBeNull();
+        //    (fromDb.LocalizedProductAttributes.Count == 1).ShouldBeTrue();
+        //    fromDb.LocalizedProductAttributes.First().Name.ShouldEqual("Name localized 1");
+        //}
 
         [Test]
         public void Can_save_and_load_productAttribute_with_productVariantAttributes()

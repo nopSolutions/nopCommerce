@@ -83,40 +83,6 @@ namespace Nop.Services
         void UpdateCategory(Category category);
 
         /// <summary>
-        /// Gets localized category by id
-        /// </summary>
-        /// <param name="localizedCategoryId">Localized category identifier</param>
-        /// <returns>Category content</returns>
-        LocalizedCategory GetLocalizedCategoryById(int localizedCategoryId);
-
-        /// <summary>
-        /// Gets localized category by category id
-        /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        /// <returns>Category content</returns>
-        List<LocalizedCategory> GetLocalizedCategoriesByCategoryId(int categoryId);
-
-        /// <summary>
-        /// Gets localized category by category id and language id
-        /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Category content</returns>
-        LocalizedCategory GetLocalizedCategoryByCategoryIdAndLanguageId(int categoryId, int languageId);
-
-        /// <summary>
-        /// Inserts a localized category
-        /// </summary>
-        /// <param name="localizedCategory">Localized category</param>
-        void InsertLocalizedCategory(LocalizedCategory localizedCategory);
-
-        /// <summary>
-        /// Update a localized category
-        /// </summary>
-        /// <param name="localizedCategory">Localized category</param>
-        void UpdateLocalizedCategory(LocalizedCategory localizedCategory);
-        
-        /// <summary>
         /// Deletes a product category mapping
         /// </summary>
         /// <param name="productCategory">Product category</param>

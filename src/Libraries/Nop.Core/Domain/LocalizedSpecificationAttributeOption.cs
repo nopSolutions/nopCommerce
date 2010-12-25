@@ -12,36 +12,17 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using Nop.Core.Localization;
 namespace Nop.Core.Domain
 {
     /// <summary>
     /// Represents a localized specification attribute option
     /// </summary>
-    public partial class LocalizedSpecificationAttributeOption : BaseEntity
+    public partial class LocalizedSpecificationAttributeOption : LocalizedBaseEntity
     {
-        /// <summary>
-        /// Gets or sets the specification attribute option identifier
-        /// </summary>
-        public int SpecificationAttributeOptionId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public int LanguageId { get; set; }
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the specification attribute option
-        /// </summary>
-        public virtual SpecificationAttributeOption SpecificationAttributeOption { get; set; }
-
-        /// <summary>
-        /// Gets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
     }
 }

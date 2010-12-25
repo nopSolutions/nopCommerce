@@ -15,12 +15,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Localization;
 
 namespace Nop.Core.Domain
 {
     /// <summary>
     /// Represents a product variant
     /// </summary>
+    [LocalizableEntity("ProductVariant")]
     public partial class ProductVariant : BaseEntity
     {
         /// <summary>
@@ -31,6 +33,7 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets or sets the name
         /// </summary>
+        [LocalizableProperty("Name")]
         public string Name { get; set; }
 
         /// <summary>
@@ -41,6 +44,7 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets or sets the description
         /// </summary>
+        [LocalizableProperty("Description")]
         public string Description { get; set; }
 
         /// <summary>
@@ -409,11 +413,6 @@ namespace Nop.Core.Domain
         public virtual Product Product { get; set; }
 
         /// <summary>
-        /// Gets or sets the localized product variants
-        /// </summary>
-        public virtual ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
-
-        /// <summary>
         /// Gets or sets the product variant attributes
         /// </summary>
         public virtual ICollection<ProductVariantAttribute> ProductVariantAttributes { get; set; }
@@ -428,5 +427,10 @@ namespace Nop.Core.Domain
         /// </summary>
         public virtual ICollection<TierPrice> TierPrices { get; set; }
 
+        /// <summary>
+        /// Gets or sets the localized entity
+        /// </summary>
+        [LocalizedEntityResult]
+        public virtual LocalizedProductVariant Localized { get; set; }
     }
 }

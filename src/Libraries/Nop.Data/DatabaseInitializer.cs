@@ -50,7 +50,7 @@ namespace Nop.Data
 
             #endregion
 
-            #region Lanaguage
+            #region Language
 
             var language1 = new Language
                                {
@@ -95,7 +95,7 @@ namespace Nop.Data
             var category1 = new Category()
             {
                 Name = "Jewelry",
-                Description = string.Empty,
+                Description = "Some description 1",
                 TemplateId = 0, //TODO: set TemplateId
                 MetaKeywords = string.Empty,
                 MetaDescription = string.Empty,
@@ -110,6 +110,18 @@ namespace Nop.Data
                 UpdatedOnUtc = DateTime.UtcNow
             };
             context.Categories.Add(category1);
+            context.SaveChanges();
+
+
+            var category1Localization1 = new LocalizedProperty()
+            { 
+                Language = language1,
+                LocaleKeyGroup = "Category",
+                LocaleKey = "Name",
+                LocaleValue = "Jewelry localized",
+                EntityId = category1.Id
+            };
+            context.LocalizedProperties.Add(category1Localization1);
             context.SaveChanges();
 
             #endregion

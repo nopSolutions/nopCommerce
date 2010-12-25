@@ -12,22 +12,11 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using Nop.Core.Localization;
-namespace Nop.Core.Domain
+using System;
+namespace Nop.Core.Localization
 {
-    /// <summary>
-    /// Represents a localized product attribute
-    /// </summary>
-    public partial class LocalizedProductAttribute : LocalizedBaseEntity
+    [AttributeUsage(AttributeTargets.Property)]
+    public partial class LocalizedEntityResultAttribute: Attribute
     {
-        /// <summary>
-        /// Gets or sets the name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the description
-        /// </summary>
-        public string Description { get; set; }
     }
 }

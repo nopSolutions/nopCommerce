@@ -69,40 +69,6 @@ namespace Nop.Services
         /// <param name="product">Product</param>
         void UpdateProduct(Product product);
 
-        /// <summary>
-        /// Gets localized product by id
-        /// </summary>
-        /// <param name="localizedProductId">Localized product identifier</param>
-        /// <returns>Product content</returns>
-        LocalizedProduct GetLocalizedProductById(int localizedProductId);
-
-        /// <summary>
-        /// Gets localized product by product id
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <returns>Product content</returns>
-        List<LocalizedProduct> GetLocalizedProductByProductId(int productId);
-
-        /// <summary>
-        /// Gets localized product by product id and language id
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Product content</returns>
-        LocalizedProduct GetLocalizedProductByProductIdAndLanguageId(int productId, int languageId);
-
-        /// <summary>
-        /// Inserts a localized product
-        /// </summary>
-        /// <param name="localizedProduct">Product content</param>
-        void InsertLocalizedProduct(LocalizedProduct localizedProduct);
-
-        /// <summary>
-        /// Update a localized product
-        /// </summary>
-        /// <param name="localizedProduct">Product content</param>
-        void UpdateLocalizedProduct(LocalizedProduct localizedProduct);
-
         #endregion
 
         #region Product variants
@@ -153,40 +119,6 @@ namespace Nop.Services
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variant collection</returns>
         List<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden);
-
-        /// <summary>
-        /// Gets localized product variant by id
-        /// </summary>
-        /// <param name="localizedProductVariantId">Localized product variant identifier</param>
-        /// <returns>Product variant content</returns>
-        LocalizedProductVariant GetLocalizedProductVariantById(int localizedProductVariantId);
-
-        /// <summary>
-        /// Gets localized product variant by product variant id
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        /// <returns>Product variant content</returns>
-        List<LocalizedProductVariant> GetLocalizedProductVariantByProductVariantId(int productVariantId);
-        
-        /// <summary>
-        /// Gets localized product variant by product variant id and language id
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Product variant content</returns>
-        LocalizedProductVariant GetLocalizedProductVariantByProductVariantIdAndLanguageId(int productVariantId, int languageId);
-
-        /// <summary>
-        /// Inserts a localized product variant
-        /// </summary>
-        /// <param name="localizedProductVariant">Localized product variant</param>
-        void InsertLocalizedProductVariant(LocalizedProductVariant localizedProductVariant);
-
-        /// <summary>
-        /// Update a localized product variant
-        /// </summary>
-        /// <param name="localizedProductVariant">Localized product variant</param>
-        void UpdateLocalizedProductVariant(LocalizedProductVariant localizedProductVariant);
 
         /// <summary>
         /// Delete a product variant

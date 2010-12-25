@@ -55,40 +55,6 @@ namespace Nop.Services
         /// <param name="productAttribute">Product attribute</param>
         void UpdateProductAttribute(ProductAttribute productAttribute);
 
-        /// <summary>
-        /// Gets localized product attribute by id
-        /// </summary>
-        /// <param name="productAttributeLocalizedId">Localized product attribute identifier</param>
-        /// <returns>Product attribute content</returns>
-        LocalizedProductAttribute GetLocalizedProductAttributeById(int productAttributeLocalizedId);
-
-        /// <summary>
-        /// Gets localized product attribute by product attribute id
-        /// </summary>
-        /// <param name="productAttributeId">Product attribute identifier</param>
-        /// <returns>Product attribute content</returns>
-        List<LocalizedProductAttribute> GetLocalizedProductAttributeByProductAttributeId(int productAttributeId);
-
-        /// <summary>
-        /// Gets localized product attribute by product attribute id and language id
-        /// </summary>
-        /// <param name="productAttributeId">Product attribute identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Product attribute content</returns>
-        LocalizedProductAttribute GetLocalizedProductAttributeByProductAttributeIdAndLanguageId(int productAttributeId, int languageId);
-
-        /// <summary>
-        /// Inserts a localized product attribute
-        /// </summary>
-        /// <param name="localizedProductAttribute">Localized product attribute</param>
-        void InsertLocalizedProductAttribute(LocalizedProductAttribute localizedProductAttribute);
-
-        /// <summary>
-        /// Update a localized product attribute
-        /// </summary>
-        /// <param name="localizedProductAttribute">Localized product attribute</param>
-        void UpdateLocalizedProductAttribute(LocalizedProductAttribute localizedProductAttribute);
-
         #endregion
 
         #region Product variant attributes mappings (ProductVariantAttribute)
@@ -160,40 +126,6 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantAttributeValue">The product variant attribute value</param>
         void UpdateProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue);
-
-        /// <summary>
-        /// Gets localized product variant attribute value by id
-        /// </summary>
-        /// <param name="productVariantAttributeValueLocalizedId">Localized product variant attribute value identifier</param>
-        /// <returns>Localized product variant attribute value</returns>
-        LocalizedProductVariantAttributeValue GetLocalizedProductVariantAttributeValueById(int productVariantAttributeValueLocalizedId);
-
-        /// <summary>
-        /// Gets localized  product variant attribute value by id
-        /// </summary>
-        /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
-        /// <returns>Content</returns>
-        List<LocalizedProductVariantAttributeValue> GetLocalizedProductVariantAttributeValueByProductVariantAttributeValueId(int productVariantAttributeValueId);
-
-        /// <summary>
-        /// Gets localized product variant attribute value by product variant attribute value id and language id
-        /// </summary>
-        /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Localized product variant attribute value</returns>
-        LocalizedProductVariantAttributeValue GetLocalizedProductVariantAttributeValueByProductVariantAttributeValueIdAndLanguageId(int productVariantAttributeValueId, int languageId);
-
-        /// <summary>
-        /// Inserts a localized product variant attribute value
-        /// </summary>
-        /// <param name="localizedProductVariantAttributeValue">Localized product variant attribute value</param>
-        void InsertLocalizedProductVariantAttributeValue(LocalizedProductVariantAttributeValue localizedProductVariantAttributeValue);
-
-        /// <summary>
-        /// Update a localized product variant attribute value
-        /// </summary>
-        /// <param name="localizedProductVariantAttributeValue">Localized product variant attribute value</param>
-        void UpdateLocalizedProductVariantAttributeValue(LocalizedProductVariantAttributeValue localizedProductVariantAttributeValue);
 
         #endregion
 

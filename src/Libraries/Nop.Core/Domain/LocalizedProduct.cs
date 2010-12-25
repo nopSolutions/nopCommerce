@@ -12,23 +12,14 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using Nop.Core.Localization;
 namespace Nop.Core.Domain
 {
     /// <summary>
     /// Represents a localized product
     /// </summary>
-    public partial class LocalizedProduct : BaseEntity
+    public partial class LocalizedProduct : LocalizedBaseEntity
     {
-        /// <summary>
-        /// Gets or sets the product identifier
-        /// </summary>
-        public int ProductId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public int LanguageId { get; set; }
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -63,15 +54,5 @@ namespace Nop.Core.Domain
         /// Gets or sets the search-engine name
         /// </summary>
         public string SeName { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
     }
 }

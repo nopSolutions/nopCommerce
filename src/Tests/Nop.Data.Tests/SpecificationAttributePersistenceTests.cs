@@ -51,38 +51,38 @@ namespace Nop.Data.Tests
             fromDb.SpecificationAttributeOptions.First().Name.ShouldEqual("SpecificationAttributeOption name 1");
         }
 
-        [Test]
-        public void Can_save_and_load_specificationAttribute_with_localizedSpecificationAttributes()
-        {
-            var lang = new Language()
-                       {
-                           Name = "English",
-                           LanguageCulture = "en-Us",
-                           FlagImageFileName = "us.png",
-                           Published = true,
-                           DisplayOrder = 1
-                       };
+        //[Test]
+        //public void Can_save_and_load_specificationAttribute_with_localizedSpecificationAttributes()
+        //{
+        //    var lang = new Language()
+        //               {
+        //                   Name = "English",
+        //                   LanguageCulture = "en-Us",
+        //                   FlagImageFileName = "us.png",
+        //                   Published = true,
+        //                   DisplayOrder = 1
+        //               };
 
-            var specificationAttribute = new SpecificationAttribute
-            {
-                Name = "Name 1",
-                DisplayOrder = 1,
-                LocalizedSpecificationAttributes = new List<LocalizedSpecificationAttribute>()
-                {
-                    new LocalizedSpecificationAttribute
-                    {
-                        Name = "Name localized 1",
-                        Language = lang
-                    }
-                }
-            };
+        //    var specificationAttribute = new SpecificationAttribute
+        //    {
+        //        Name = "Name 1",
+        //        DisplayOrder = 1,
+        //        LocalizedSpecificationAttributes = new List<LocalizedSpecificationAttribute>()
+        //        {
+        //            new LocalizedSpecificationAttribute
+        //            {
+        //                Name = "Name localized 1",
+        //                Language = lang
+        //            }
+        //        }
+        //    };
 
-            var fromDb = SaveAndLoadEntity(specificationAttribute);
-            fromDb.Name.ShouldEqual("Name 1");
+        //    var fromDb = SaveAndLoadEntity(specificationAttribute);
+        //    fromDb.Name.ShouldEqual("Name 1");
 
-            fromDb.LocalizedSpecificationAttributes.ShouldNotBeNull();
-            (fromDb.LocalizedSpecificationAttributes.Count == 1).ShouldBeTrue();
-            fromDb.LocalizedSpecificationAttributes.First().Name.ShouldEqual("Name localized 1");
-        }
+        //    fromDb.LocalizedSpecificationAttributes.ShouldNotBeNull();
+        //    (fromDb.LocalizedSpecificationAttributes.Count == 1).ShouldBeTrue();
+        //    fromDb.LocalizedSpecificationAttributes.First().Name.ShouldEqual("Name localized 1");
+        //}
     }
 }

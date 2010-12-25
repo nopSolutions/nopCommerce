@@ -18,26 +18,19 @@ using Nop.Core.Domain;
 
 namespace Nop.Data.Mapping
 {
-    public partial class LocalizedProductMap : EntityTypeConfiguration<LocalizedProduct>
+    public partial class LocalizedPropertyMap : EntityTypeConfiguration<LocalizedProperty>
     {
-        public LocalizedProductMap()
+        public LocalizedPropertyMap()
         {
-            this.ToTable("ProductLocalized");
+            this.ToTable("LocalizedProperty");
             this.HasKey(lp => lp.Id);
-            this.Property(lp => lp.Name).IsRequired().HasMaxLength(400);
-            this.Property(lp => lp.ShortDescription).IsRequired().IsMaxLength();
-            this.Property(lp => lp.FullDescription).IsRequired().IsMaxLength();
-            this.Property(lp => lp.MetaKeywords).IsRequired().HasMaxLength(400);
-            this.Property(lp => lp.MetaDescription).IsRequired();
-            this.Property(lp => lp.MetaTitle).IsRequired().HasMaxLength(400);
-            this.Property(lp => lp.SeName).IsRequired().HasMaxLength(100);
-            
-            this.HasRequired(lp => lp.Product)
-                .WithMany(p => p.LocalizedProducts)
-                .HasForeignKey(lp => lp.ProductId);
 
+            this.Property(lp => lp.LocaleKeyGroup).IsRequired().HasMaxLength(400);
+            this.Property(lp => lp.LocaleKey).IsRequired().HasMaxLength(400);
+            this.Property(lp => lp.LocaleValue).IsRequired().IsMaxLength();
+            
             this.HasRequired(lp => lp.Language)
-                .WithMany(l => l.LocalizedProducts)
+                .WithMany(l => l.LocalizedProperties)
                 .HasForeignKey(lp => lp.LanguageId);
         }
     }

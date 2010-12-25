@@ -15,12 +15,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Localization;
 
 namespace Nop.Core.Domain
 {
     /// <summary>
     /// Represents a product variant attribute value
     /// </summary>
+    [LocalizableEntity("ProductVariantAttributeValue")]
     public partial class ProductVariantAttributeValue : BaseEntity
     {
         /// <summary>
@@ -31,6 +33,7 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets or sets the product variant attribute name
         /// </summary>
+        [LocalizableProperty("Name")]
         public string Name { get; set; }
 
         /// <summary>
@@ -59,9 +62,10 @@ namespace Nop.Core.Domain
         public virtual ProductVariantAttribute ProductVariantAttribute { get; set; }
 
         /// <summary>
-        /// Gets the localized product variant attribute values
+        /// Gets or sets the localized entity
         /// </summary>
-        public virtual ICollection<LocalizedProductVariantAttributeValue> LocalizedProductVariantAttributeValues { get; set; }
+        [LocalizedEntityResult]
+        public virtual LocalizedProductVariantAttributeValue Localized { get; set; }
     }
 
 }

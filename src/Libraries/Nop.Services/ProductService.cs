@@ -39,10 +39,9 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly ILocalizedEntityService _leService;
         private readonly IRepository<Product> _productRespository;
-        private readonly IRepository<LocalizedProduct> _localizedProductRespository;
         private readonly IRepository<ProductVariant> _productVariantRespository;
-        private readonly IRepository<LocalizedProductVariant> _localizedProductVariantRespository;
         private readonly IRepository<RelatedProduct> _relatedProductRespository;
         private readonly IRepository<CrossSellProduct> _crossSellProductRespository;
         private readonly IRepository<TierPrice> _tierPriceRespository;
@@ -56,27 +55,24 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="leService">Localized entity service</param>
         /// <param name="productRespository">Product repository</param>
-        /// <param name="localizedProductRespository">Localized product repository</param>
         /// <param name="productVariantRespository">Product variant repository</param>
-        /// <param name="localizedProductVariantRespository">Localized product variant repository</param>
         /// <param name="relatedProductRespository">Related product repository</param>
         /// <param name="crossSellProductRespository">Cross-sell product repository</param>
         /// <param name="tierPriceRespository">Tier price repository</param>
         public ProductService(ICacheManager cacheManager,
+            ILocalizedEntityService leService,
             IRepository<Product> productRespository,
-            IRepository<LocalizedProduct> localizedProductRespository,
             IRepository<ProductVariant> productVariantRespository,
-            IRepository<LocalizedProductVariant> localizedProductVariantRespository,
             IRepository<RelatedProduct> relatedProductRespository,
             IRepository<CrossSellProduct> crossSellProductRespository,
             IRepository<TierPrice> tierPriceRespository)
         {
             this._cacheManager = cacheManager;
+            this._leService = leService;
             this._productRespository = productRespository;
-            this._localizedProductRespository = localizedProductRespository;
             this._productVariantRespository = productVariantRespository;
-            this._localizedProductVariantRespository = localizedProductVariantRespository;
             this._relatedProductRespository = relatedProductRespository;
             this._crossSellProductRespository = crossSellProductRespository;
             this._tierPriceRespository = tierPriceRespository;
@@ -130,6 +126,8 @@ namespace Nop.Services
                         !p.Deleted
                         select p;
             var products = query.ToList();
+            products.ForEach(p =>
+                new DefaultPropertyLocalizer<Product, LocalizedProduct>(_leService, p).Localize());
             return products;
         }
 
@@ -149,6 +147,8 @@ namespace Nop.Services
                         p.ShowOnHomePage
                         select p;
             var products = query.ToList();
+            products.ForEach(p =>
+                new DefaultPropertyLocalizer<Product, LocalizedProduct>(_leService, p).Localize());
             return products;
         }
         
@@ -165,7 +165,9 @@ namespace Nop.Services
             string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
             return _cacheManager.Get(key, () =>
             {
-                return _productRespository.GetById(productId);
+                var product = _productRespository.GetById(productId);
+                new DefaultPropertyLocalizer<Product, LocalizedProduct>(_leService, product).Localize();
+                return product;
             });
         }
         
@@ -201,105 +203,6 @@ namespace Nop.Services
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
-        /// <summary>
-        /// Gets localized product by id
-        /// </summary>
-        /// <param name="localizedProductId">Localized product identifier</param>
-        /// <returns>Product content</returns>
-        public LocalizedProduct GetLocalizedProductById(int localizedProductId)
-        {
-            if (localizedProductId == 0)
-                return null;
-
-            var productLocalized = _localizedProductRespository.GetById(localizedProductId);
-            return productLocalized;
-        }
-
-        /// <summary>
-        /// Gets localized product by product id
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <returns>Product content</returns>
-        public List<LocalizedProduct> GetLocalizedProductByProductId(int productId)
-        {
-            if (productId == 0)
-                return new List<LocalizedProduct>();
-            
-            var query = from pl in _localizedProductRespository.Table
-                        where pl.ProductId == productId
-                        select pl;
-            var content = query.ToList();
-            return content;
-        }
-
-        /// <summary>
-        /// Gets localized product by product id and language id
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Product content</returns>
-        public LocalizedProduct GetLocalizedProductByProductIdAndLanguageId(int productId, int languageId)
-        {
-            if (productId == 0 || languageId == 0)
-                return null;
-
-            var query = from pl in _localizedProductRespository.Table
-                        orderby pl.Id
-                        where pl.ProductId == productId &&
-                        pl.LanguageId == languageId
-                        select pl;
-            var productLocalized = query.FirstOrDefault();
-            return productLocalized;
-        }
-
-        /// <summary>
-        /// Inserts a localized product
-        /// </summary>
-        /// <param name="localizedProduct">Product content</param>
-        public void InsertLocalizedProduct(LocalizedProduct localizedProduct)
-        {
-            if (localizedProduct == null)
-                throw new ArgumentNullException("localizedProduct");
-
-            _localizedProductRespository.Insert(localizedProduct);
-
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Update a localized product
-        /// </summary>
-        /// <param name="localizedProduct">Product content</param>
-        public void UpdateLocalizedProduct(LocalizedProduct localizedProduct)
-        {
-            if (localizedProduct == null)
-                throw new ArgumentNullException("localizedProduct");
-
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedProduct.Name) &&
-                                     string.IsNullOrEmpty(localizedProduct.ShortDescription) &&
-                                     string.IsNullOrEmpty(localizedProduct.FullDescription) &&
-                                     string.IsNullOrEmpty(localizedProduct.MetaKeywords) &&
-                                     string.IsNullOrEmpty(localizedProduct.MetaDescription) &&
-                                     string.IsNullOrEmpty(localizedProduct.MetaTitle) &&
-                                     string.IsNullOrEmpty(localizedProduct.SeName);
-
-            if (allFieldsAreEmpty)
-            {
-                //delete if all fields are empty
-                _localizedProductRespository.Delete(localizedProduct);
-            }
-            else
-            {
-                _localizedProductRespository.Update(localizedProduct);
-            }
-
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
-        }
-        
         #endregion
 
         #region Product variants
@@ -316,6 +219,7 @@ namespace Nop.Services
                         pv.MinStockQuantity >= pv.StockQuantity
                         select pv;
             var productVariants = query.ToList();
+            productVariants.ForEach(pv => new DefaultPropertyLocalizer<ProductVariant, LocalizedProductVariant>(_leService, pv).Localize());
             return productVariants;
         }
         
@@ -332,7 +236,9 @@ namespace Nop.Services
             string key = string.Format(PRODUCTVARIANTS_BY_ID_KEY, productVariantId);
             return _cacheManager.Get(key, () =>
             {
-                return _productVariantRespository.GetById(productVariantId);
+                var pv = _productVariantRespository.GetById(productVariantId);
+                new DefaultPropertyLocalizer<ProductVariant, LocalizedProductVariant>(_leService, pv).Localize();
+                return pv;
             });
         }
 
@@ -354,6 +260,7 @@ namespace Nop.Services
                         pv.Sku == sku
                         select pv;
             var productVariant = query.FirstOrDefault();
+            new DefaultPropertyLocalizer<ProductVariant, LocalizedProductVariant>(_leService, productVariant).Localize();
             return productVariant;
         }
         
@@ -435,102 +342,9 @@ namespace Nop.Services
                                                   query = query.OrderBy(pv => pv.DisplayOrder);
 
                                                   var productVariants = query.ToList();
+                                                  productVariants.ForEach(pv => new DefaultPropertyLocalizer<ProductVariant, LocalizedProductVariant>(_leService, pv).Localize());
                                                   return productVariants;
                                               });
-        }
-
-        /// <summary>
-        /// Gets localized product variant by id
-        /// </summary>
-        /// <param name="localizedProductVariantId">Localized product variant identifier</param>
-        /// <returns>Product variant content</returns>
-        public LocalizedProductVariant GetLocalizedProductVariantById(int localizedProductVariantId)
-        {
-            if (localizedProductVariantId == 0)
-                return null;
-
-            var productVariantLocalized = _localizedProductVariantRespository.GetById(localizedProductVariantId);
-            return productVariantLocalized;
-        }
-
-        /// <summary>
-        /// Gets localized product variant by product variant id
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        /// <returns>Product variant content</returns>
-        public List<LocalizedProductVariant> GetLocalizedProductVariantByProductVariantId(int productVariantId)
-        {
-            if (productVariantId == 0)
-                return new List<LocalizedProductVariant>();
-            
-            var query = from pvl in _localizedProductVariantRespository.Table
-                        where pvl.ProductVariantId == productVariantId
-                        select pvl;
-            var content = query.ToList();
-            return content;
-        }
-
-        /// <summary>
-        /// Gets localized product variant by product variant id and language id
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Product variant content</returns>
-        public LocalizedProductVariant GetLocalizedProductVariantByProductVariantIdAndLanguageId(int productVariantId, int languageId)
-        {
-            if (productVariantId == 0 || languageId == 0)
-                return null;
-            
-            var query = from pvl in _localizedProductVariantRespository.Table
-                        orderby pvl.Id
-                        where pvl.ProductVariantId == productVariantId &&
-                        pvl.LanguageId == languageId
-                        select pvl;
-            var productVariantLocalized = query.FirstOrDefault();
-            return productVariantLocalized;
-        }
-
-        /// <summary>
-        /// Inserts a localized product variant
-        /// </summary>
-        /// <param name="localizedProductVariant">Localized product variant</param>
-        public void InsertLocalizedProductVariant(LocalizedProductVariant localizedProductVariant)
-        {
-            if (localizedProductVariant == null)
-                throw new ArgumentNullException("localizedProductVariant");
-
-            _localizedProductVariantRespository.Insert(localizedProductVariant);
-
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Update a localized product variant
-        /// </summary>
-        /// <param name="localizedProductVariant">Localized product variant</param>
-        public void UpdateLocalizedProductVariant(LocalizedProductVariant localizedProductVariant)
-        {
-            if (localizedProductVariant == null)
-                throw new ArgumentNullException("localizedProductVariant");
-
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedProductVariant.Name) &&
-                                     string.IsNullOrEmpty(localizedProductVariant.Description);
-            
-            if (allFieldsAreEmpty)
-            {
-                //delete if all fields are empty
-                _localizedProductVariantRespository.Delete(localizedProductVariant);
-            }
-            else
-            {
-                _localizedProductVariantRespository.Update(localizedProductVariant);
-            }
-
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
 
         /// <summary>

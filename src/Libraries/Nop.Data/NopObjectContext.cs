@@ -39,14 +39,7 @@ namespace Nop.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LocaleStringResource> LocaleStringResources { get; set; }
-        public DbSet<LocalizedCategory> LocalizedCategories { get; set; }
-        public DbSet<LocalizedManufacturer> LocalizedManufacturers { get; set; }
-        public DbSet<LocalizedProductAttribute> LocalizedProductAttributes { get; set; }
-        public DbSet<LocalizedProduct> LocalizedProducts { get; set; }
-        public DbSet<LocalizedProductVariantAttributeValue> LocalizedProductVariantAttributeValues { get; set; }
-        public DbSet<LocalizedProductVariant> LocalizedProductVariants { get; set; }
-        public DbSet<LocalizedSpecificationAttribute> LocalizedSpecificationAttributes { get; set; }
-        public DbSet<LocalizedSpecificationAttributeOption> LocalizedSpecificationAttributeOptions { get; set; }
+        public DbSet<LocalizedProperty> LocalizedProperties { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Picture> Pictures { get; set; }

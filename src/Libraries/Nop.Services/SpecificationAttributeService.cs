@@ -37,10 +37,9 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly ILocalizedEntityService _leService;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRespository;
-        private readonly IRepository<LocalizedSpecificationAttribute> _localizedSpecificationAttributeRespository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRespository;
-        private readonly IRepository<LocalizedSpecificationAttributeOption> _localizedSpecificationAttributeOptionRespository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRespository;
         private readonly ICacheManager _cacheManager;
 
@@ -52,23 +51,20 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="leService">Localized entity service</param>
         /// <param name="specificationAttributeRespository">Specification attribute repository</param>
-        /// <param name="localizedSpecificationAttributeRespository">localized specification attribute repository</param>
         /// <param name="specificationAttributeOptionRespository">Specification attribute option repository</param>
-        /// <param name="localizedSpecificationAttributeOptionRespository">Localized specification attribute option repository</param>
         /// <param name="productSpecificationAttributeRespository">Product specification attribute repository</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
+            ILocalizedEntityService leService,
             IRepository<SpecificationAttribute> specificationAttributeRespository,
-            IRepository<LocalizedSpecificationAttribute> localizedSpecificationAttributeRespository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRespository,
-            IRepository<LocalizedSpecificationAttributeOption> localizedSpecificationAttributeOptionRespository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRespository)
         {
             this._cacheManager = cacheManager;
+            this._leService = leService;
             this._specificationAttributeRespository = specificationAttributeRespository;
-            this._localizedSpecificationAttributeRespository = localizedSpecificationAttributeRespository;
             this._specificationAttributeOptionRespository = specificationAttributeOptionRespository;
-            this._localizedSpecificationAttributeOptionRespository = localizedSpecificationAttributeOptionRespository;
             this._productSpecificationAttributeRespository = productSpecificationAttributeRespository;
         }
 
@@ -91,7 +87,9 @@ namespace Nop.Services
             string key = string.Format(SPECIFICATIONATTRIBUTE_BY_ID_KEY, specificationAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                return _specificationAttributeRespository.GetById(specificationAttributeId);
+                var sa = _specificationAttributeRespository.GetById(specificationAttributeId);
+                new DefaultPropertyLocalizer<SpecificationAttribute, LocalizedSpecificationAttribute>(_leService, sa).Localize();
+                return sa;
             });
         }
 
@@ -105,6 +103,7 @@ namespace Nop.Services
                         orderby sa.DisplayOrder
                         select sa;
             var specificationAttributes = query.ToList();
+            specificationAttributes.ForEach(sa => new DefaultPropertyLocalizer<SpecificationAttribute, LocalizedSpecificationAttribute>(_leService, sa).Localize());
             return specificationAttributes;
         }
 
@@ -156,99 +155,6 @@ namespace Nop.Services
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
         }
 
-        /// <summary>
-        /// Gets localized specification attribute by id
-        /// </summary>
-        /// <param name="localizedSpecificationAttributeId">Localized specification identifier</param>
-        /// <returns>Specification attribute content</returns>
-        public LocalizedSpecificationAttribute GetSpecificationAttributeLocalizedById(int localizedSpecificationAttributeId)
-        {
-            if (localizedSpecificationAttributeId == 0)
-                return null;
-
-            var specificationAttributeLocalized = _localizedSpecificationAttributeRespository.GetById(localizedSpecificationAttributeId);
-            return specificationAttributeLocalized;
-        }
-
-        /// <summary>
-        /// Gets localized specification attribute by specification attribute id
-        /// </summary>
-        /// <param name="specificationAttributeId">Specification attribute identifier</param>
-        /// <returns>Secification attribute content</returns>
-        public List<LocalizedSpecificationAttribute> GetSpecificationAttributeLocalizedBySpecificationAttributeId(int specificationAttributeId)
-        {
-            if (specificationAttributeId == 0)
-                return new List<LocalizedSpecificationAttribute>();
-
-            var query = from sal in _localizedSpecificationAttributeRespository.Table
-                        where sal.SpecificationAttributeId == specificationAttributeId
-                        select sal;
-            var content = query.ToList();
-            return content;
-        }
-        
-        /// <summary>
-        /// Gets localized specification attribute by specification attribute id and language id
-        /// </summary>
-        /// <param name="specificationAttributeId">Specification attribute identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Specification attribute content</returns>
-        public LocalizedSpecificationAttribute GetSpecificationAttributeLocalizedBySpecificationAttributeIdAndLanguageId(int specificationAttributeId, int languageId)
-        {
-            if (specificationAttributeId == 0 || languageId == 0)
-                return null;
-
-            var query = from sal in _localizedSpecificationAttributeRespository.Table
-                        orderby sal.Id
-                        where sal.SpecificationAttributeId == specificationAttributeId &&
-                        sal.LanguageId == languageId
-                        select sal;
-            var specificationAttributeLocalized = query.FirstOrDefault();
-            return specificationAttributeLocalized;
-        }
-
-        /// <summary>
-        /// Inserts a localized specification attribute
-        /// </summary>
-        /// <param name="localizedSpecificationAttribute">Localized specification attribute</param>
-        public void InsertSpecificationAttributeLocalized(LocalizedSpecificationAttribute localizedSpecificationAttribute)
-        {
-            if (localizedSpecificationAttribute == null)
-                throw new ArgumentNullException("localizedSpecificationAttribute");
-
-            _localizedSpecificationAttributeRespository.Insert(localizedSpecificationAttribute);
-
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Update a localized specification attribute
-        /// </summary>
-        /// <param name="localizedSpecificationAttribute">Localized specification attribute</param>
-        public void UpdateSpecificationAttributeLocalized(LocalizedSpecificationAttribute localizedSpecificationAttribute)
-        {
-            if (localizedSpecificationAttribute == null)
-                throw new ArgumentNullException("localizedSpecificationAttribute");
-
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedSpecificationAttribute.Name);
-
-            if (allFieldsAreEmpty)
-            {
-                //delete if all fields are empty
-                _localizedSpecificationAttributeRespository.Delete(localizedSpecificationAttribute);
-            }
-            else
-            {
-                _localizedSpecificationAttributeRespository.Update(localizedSpecificationAttribute);
-            }
-
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-        }
-        
         #endregion
 
         #region Specification attribute option
@@ -266,7 +172,9 @@ namespace Nop.Services
             string key = string.Format(SPECIFICATIONATTRIBUTEOPTION_BY_ID_KEY, specificationAttributeOptionId);
             return _cacheManager.Get(key, () =>
             {
-                return _specificationAttributeOptionRespository.GetById(specificationAttributeOptionId);
+                var sao = _specificationAttributeOptionRespository.GetById(specificationAttributeOptionId);
+                new DefaultPropertyLocalizer<SpecificationAttributeOption, LocalizedSpecificationAttributeOption>(_leService, sao).Localize();
+                return sao;
             });
         }
 
@@ -282,7 +190,7 @@ namespace Nop.Services
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
             var specificationAttributeOptions = query.ToList();
-
+            specificationAttributeOptions.ForEach(sao => new DefaultPropertyLocalizer<SpecificationAttributeOption, LocalizedSpecificationAttributeOption>(_leService, sao).Localize());
             return specificationAttributeOptions;
         }
 
@@ -334,102 +242,6 @@ namespace Nop.Services
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
         }
 
-        /// <summary>
-        /// Gets localized specification attribute option by id
-        /// </summary>
-        /// <param name="localizedSpecificationAttributeOptionId">Localized specification attribute option identifier</param>
-        /// <returns>Localized specification attribute option</returns>
-        public LocalizedSpecificationAttributeOption GetSpecificationAttributeOptionLocalizedById(int localizedSpecificationAttributeOptionId)
-        {
-            if (localizedSpecificationAttributeOptionId == 0)
-                return null;
-
-            var specificationAttributeOptionLocalized = _localizedSpecificationAttributeOptionRespository.GetById(localizedSpecificationAttributeOptionId);
-            return specificationAttributeOptionLocalized;
-        }
-
-        /// <summary>
-        /// Gets localized specification attribute option by category id
-        /// </summary>
-        /// <param name="specificationAttributeOptionId">Specification attribute option identifier</param>
-        /// <returns>Localized specification attribute option content</returns>
-        public List<LocalizedSpecificationAttributeOption> GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionId(int specificationAttributeOptionId)
-        {
-            if (specificationAttributeOptionId == 0)
-                return new List<LocalizedSpecificationAttributeOption>();
-            
-            var query = from saol in _localizedSpecificationAttributeOptionRespository.Table
-                        where saol.SpecificationAttributeOptionId == specificationAttributeOptionId
-                        select saol;
-            var content = query.ToList();
-            return content;
-        }
-
-
-        /// <summary>
-        /// Gets localized specification attribute option by specification attribute option id and language id
-        /// </summary>
-        /// <param name="specificationAttributeOptionId">Specification attribute option identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Localized specification attribute option</returns>
-        public LocalizedSpecificationAttributeOption GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(int specificationAttributeOptionId, int languageId)
-        {
-            if (specificationAttributeOptionId == 0 || languageId == 0)
-                return null;
-
-            var query = from saol in _localizedSpecificationAttributeOptionRespository.Table
-                        orderby saol.Id
-                        where saol.SpecificationAttributeOptionId == specificationAttributeOptionId &&
-                        saol.LanguageId == languageId
-                        select saol;
-            var specificationAttributeOptionLocalized = query.FirstOrDefault();
-            return specificationAttributeOptionLocalized;
-        }
-
-        /// <summary>
-        /// Inserts a localized specification attribute option
-        /// </summary>
-        /// <param name="localizedSpecificationAttributeOption">Localized specification attribute option</param>
-        /// <returns>Localized specification attribute option</returns>
-        public void InsertSpecificationAttributeOptionLocalized(LocalizedSpecificationAttributeOption localizedSpecificationAttributeOption)
-        {
-            if (localizedSpecificationAttributeOption == null)
-                throw new ArgumentNullException("localizedSpecificationAttributeOption");
-
-            _localizedSpecificationAttributeOptionRespository.Insert(localizedSpecificationAttributeOption);
-
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-        }
-
-        /// <summary>
-        /// Update a localized specification attribute option
-        /// </summary>
-        /// <param name="localizedSpecificationAttributeOption">Localized specification attribute option</param>
-        /// <returns>Localized specification attribute option</returns>
-        public void UpdateSpecificationAttributeOptionLocalized(LocalizedSpecificationAttributeOption localizedSpecificationAttributeOption)
-        {
-            if (localizedSpecificationAttributeOption == null)
-                throw new ArgumentNullException("localizedSpecificationAttributeOption");
-
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(localizedSpecificationAttributeOption.Name);
-
-            if (allFieldsAreEmpty)
-            {
-                //delete if all fields are empty
-                _localizedSpecificationAttributeOptionRespository.Delete(localizedSpecificationAttributeOption);
-            }
-            else
-            {
-                _localizedSpecificationAttributeOptionRespository.Update(localizedSpecificationAttributeOption);
-            }
-
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-        }
-        
         #endregion
 
         #region Product specification attribute

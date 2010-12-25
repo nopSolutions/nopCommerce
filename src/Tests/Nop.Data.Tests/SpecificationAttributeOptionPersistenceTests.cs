@@ -33,43 +33,43 @@ namespace Nop.Data.Tests
             fromDb.SpecificationAttribute.Name.ShouldEqual("SpecificationAttribute name 1");
         }
 
-        [Test]
-        public void Can_save_and_load_specificationAttributeOption_with_localizedSpecificationAttributeOptions()
-        {
-            var lang = new Language()
-            {
-                Name = "English",
-                LanguageCulture = "en-Us",
-                FlagImageFileName = "us.png",
-                Published = true,
-                DisplayOrder = 1
-            };
+        //[Test]
+        //public void Can_save_and_load_specificationAttributeOption_with_localizedSpecificationAttributeOptions()
+        //{
+        //    var lang = new Language()
+        //    {
+        //        Name = "English",
+        //        LanguageCulture = "en-Us",
+        //        FlagImageFileName = "us.png",
+        //        Published = true,
+        //        DisplayOrder = 1
+        //    };
 
-            var specificationAttributeOption = new SpecificationAttributeOption
-            {
-                Name = "SpecificationAttributeOption name 1",
-                DisplayOrder = 1,
-                SpecificationAttribute = new SpecificationAttribute()
-                {
-                    Name = "SpecificationAttribute name 1",
-                    DisplayOrder = 2,
-                },
-                LocalizedSpecificationAttributeOptions = new List<LocalizedSpecificationAttributeOption>()
-                {
-                    new LocalizedSpecificationAttributeOption
-                    {
-                        Name = "SpecificationAttributeOption name 1 localized",
-                        Language = lang
-                    },
-                }
-            };
+        //    var specificationAttributeOption = new SpecificationAttributeOption
+        //    {
+        //        Name = "SpecificationAttributeOption name 1",
+        //        DisplayOrder = 1,
+        //        SpecificationAttribute = new SpecificationAttribute()
+        //        {
+        //            Name = "SpecificationAttribute name 1",
+        //            DisplayOrder = 2,
+        //        },
+        //        LocalizedSpecificationAttributeOptions = new List<LocalizedSpecificationAttributeOption>()
+        //        {
+        //            new LocalizedSpecificationAttributeOption
+        //            {
+        //                Name = "SpecificationAttributeOption name 1 localized",
+        //                Language = lang
+        //            },
+        //        }
+        //    };
 
-            var fromDb = SaveAndLoadEntity(specificationAttributeOption);
-            fromDb.Name.ShouldEqual("SpecificationAttributeOption name 1");
+        //    var fromDb = SaveAndLoadEntity(specificationAttributeOption);
+        //    fromDb.Name.ShouldEqual("SpecificationAttributeOption name 1");
 
-            fromDb.LocalizedSpecificationAttributeOptions.ShouldNotBeNull();
-            (fromDb.LocalizedSpecificationAttributeOptions.Count == 1).ShouldBeTrue();
-            fromDb.LocalizedSpecificationAttributeOptions.First().Name.ShouldEqual("SpecificationAttributeOption name 1 localized");
-        }
+        //    fromDb.LocalizedSpecificationAttributeOptions.ShouldNotBeNull();
+        //    (fromDb.LocalizedSpecificationAttributeOptions.Count == 1).ShouldBeTrue();
+        //    fromDb.LocalizedSpecificationAttributeOptions.First().Name.ShouldEqual("SpecificationAttributeOption name 1 localized");
+        //}
     }
 }

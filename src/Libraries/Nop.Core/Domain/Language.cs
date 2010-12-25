@@ -52,43 +52,8 @@ namespace Nop.Core.Domain
         public virtual ICollection<LocaleStringResource> LocaleStringResources { get; set; }
 
         /// <summary>
-        /// Gets or sets localized categories
+        /// Gets or sets localized properties
         /// </summary>
-        public virtual ICollection<LocalizedCategory> LocalizedCategories { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized manufacturers
-        /// </summary>
-        public virtual ICollection<LocalizedManufacturer> LocalizedManufacturers { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized products
-        /// </summary>
-        public virtual ICollection<LocalizedProduct> LocalizedProducts { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized product variants
-        /// </summary>
-        public virtual ICollection<LocalizedProductVariant> LocalizedProductVariants { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized product attributes
-        /// </summary>
-        public virtual ICollection<LocalizedProductAttribute> LocalizedProductAttributes { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized product variant attribute values
-        /// </summary>
-        public virtual ICollection<LocalizedProductVariantAttributeValue> LocalizedProductVariantAttributeValues { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized specification attributes
-        /// </summary>
-        public virtual ICollection<LocalizedSpecificationAttribute> LocalizedSpecificationAttributes { get; set; }
-
-        /// <summary>
-        /// Gets or sets localized specification attribute options
-        /// </summary>
-        public virtual ICollection<LocalizedSpecificationAttributeOption> LocalizedSpecificationAttributeOptions { get; set; }
+        public virtual ICollection<LocalizedProperty> LocalizedProperties { get; set; }
     }
 }
