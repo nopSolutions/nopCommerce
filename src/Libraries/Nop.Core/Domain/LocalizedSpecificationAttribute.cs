@@ -18,7 +18,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a localized specification attribute
     /// </summary>
-    public partial class LocalizedSpecificationAttribute : LocalizedBaseEntity
+    public partial class LocalizedSpecificationAttribute : LocalizedBaseEntity<SpecificationAttribute>
     {
         /// <summary>
         /// Gets or sets the name

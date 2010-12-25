@@ -17,8 +17,13 @@ namespace Nop.Core.Localization
     /// <summary>
     /// Base class for entities
     /// </summary>
-    public abstract partial class LocalizedBaseEntity
+    public abstract partial class LocalizedBaseEntity<T> where T:BaseEntity
     {
+        /// <summary>
+        /// Gets or sets the entity identifier
+        /// </summary>
+        public virtual int EntityId { get; set; }
+
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>

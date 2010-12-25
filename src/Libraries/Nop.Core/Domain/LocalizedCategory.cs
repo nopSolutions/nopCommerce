@@ -18,7 +18,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a localized category
     /// </summary>
-    public partial class LocalizedCategory : LocalizedBaseEntity
+    public partial class LocalizedCategory : LocalizedBaseEntity<Category>
     {
         /// <summary>
         /// Gets or sets the name

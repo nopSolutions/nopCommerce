@@ -19,6 +19,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Data;
 using Nop.Core;
+using Nop.Core.Localization;
 
 namespace Nop.Services
 {
@@ -56,7 +57,7 @@ namespace Nop.Services
         /// Deletes a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
-        public void DeleteLocaleStringResource(LocalizedProperty localizedProperty)
+        public void DeleteLocalizedProperty(LocalizedProperty localizedProperty)
         {
             if (localizedProperty == null)
                 throw new ArgumentNullException("localizedProperty");
@@ -122,6 +123,43 @@ namespace Nop.Services
                 throw new ArgumentNullException("localizedProperty");
 
             _localizedPropertyRespository.Update(localizedProperty);
+        }
+
+        /// <summary>
+        /// Save localized entity
+        /// </summary>
+        /// <typeparam name="From">From type</typeparam>
+        /// <typeparam name="To">To type</typeparam>
+        /// <param name="localizedEntity">Localized entity</param>
+        public void SaveLocalizedEntity<From, To>(LocalizedBaseEntity<From> localizedEntity)
+            where From : BaseEntity
+            where To : LocalizedBaseEntity<From>
+        {
+            var localizer = new DefaultPropertyLocalizer<From, To>(this, null);
+            var localizedProperties = localizer.GetLozalizedProperties(localizedEntity);
+            foreach (var lp in localizedProperties)
+            {
+                if (lp.Id == 0)
+                {
+                    //insert
+                    if (!String.IsNullOrEmpty(lp.LocaleValue))
+                    {
+                        InsertLocalizedProperty(lp);
+                    }
+                }
+                else
+                {
+                    //update
+                    if (!String.IsNullOrEmpty(lp.LocaleValue))
+                    {
+                        UpdateLocalizedProperty(lp);
+                    }
+                    else
+                    {
+                        DeleteLocalizedProperty(lp);
+                    }
+                }
+            }
         }
 
         #endregion

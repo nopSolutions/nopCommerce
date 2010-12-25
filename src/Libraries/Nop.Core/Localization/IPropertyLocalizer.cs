@@ -12,10 +12,16 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using Nop.Core.Domain;
+using System.Collections.Generic;
 namespace Nop.Core.Localization
 {
     public partial interface IPropertyLocalizer<From, To>
         where From : BaseEntity
-        where To : LocalizedBaseEntity
-    {}
+        where To : LocalizedBaseEntity<From>
+    {
+        void Localize();
+        
+        List<LocalizedProperty> GetLozalizedProperties(LocalizedBaseEntity<From> localizedEntity);
+    }
 }

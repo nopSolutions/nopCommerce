@@ -18,7 +18,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a localized product variant attribute value
     /// </summary>
-    public partial class LocalizedProductVariantAttributeValue : LocalizedBaseEntity
+    public partial class LocalizedProductVariantAttributeValue : LocalizedBaseEntity<ProductVariantAttributeValue>
     {
         /// <summary>
         /// Gets or sets the name

@@ -13,19 +13,21 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Localization;
 
 namespace Nop.Services
 {
     public partial class DefaultPropertyLocalizer<From, To> : IPropertyLocalizer<From, To>
         where From : BaseEntity
-        where To : LocalizedBaseEntity
+        where To : LocalizedBaseEntity<From>
     {
-        protected ILocalizedEntityService _leService;
-        protected BaseEntity _entity;
+        private readonly ILocalizedEntityService _leService;
+        private readonly BaseEntity _entity;
 
         public DefaultPropertyLocalizer(ILocalizedEntityService leService, From entity)
         {
@@ -33,7 +35,7 @@ namespace Nop.Services
             this._entity = entity;
         }
 
-        public To GetLocalizedEntity(bool setDefaultValueIfNotFound, int languageId)
+        protected To GetLocalizedEntity(bool setDefaultValueIfNotFound, int languageId)
         {
             if (_entity == null)
                 return null;
@@ -73,7 +75,6 @@ namespace Nop.Services
                     {
                         if (pFrom.Name.Equals(pTo.Name))
                         {
-                            //UNDONE get localized property from storage
                             string localizedValue = "";
                             if (localizedProperties.ContainsKey(lpAttribute.LocaleKey))
                                 localizedValue = localizedProperties[lpAttribute.LocaleKey].LocaleValue;
@@ -92,6 +93,7 @@ namespace Nop.Services
                 }
             }
             localizedEntity.LanguageId = languageId;
+            localizedEntity.EntityId = _entity.Id;
             return localizedEntity;
         }
 
@@ -100,22 +102,86 @@ namespace Nop.Services
             if (_entity == null)
                 return;
 
+            //load a property with localized entity
+            var resultProperty = (from p in typeof(From).GetProperties()
+                        where p.CanRead && p.CanWrite
+                        && p.GetCustomAttributes(typeof(LocalizedEntityResultAttribute), false).Any()
+                        select p).FirstOrDefault();
+            if (resultProperty == null)
+                return;
+
+            //set it to null
+            resultProperty.SetValue(_entity, null, null);
+            
             //TODO set current language identifier here
             int languageId = 1;
 
             //get localized entity
             var localizedEntity = GetLocalizedEntity(true, languageId);
 
-            //save it
-            var props = from p in typeof(From).GetProperties()
-                        where p.CanRead && p.CanWrite
-                        && p.GetCustomAttributes(typeof(LocalizedEntityResultAttribute), false).Any()
-                        select p;
-            var resultProperty = props.FirstOrDefault();
-            if (resultProperty != null)
+            //save new localized entity
+            resultProperty.SetValue(_entity, localizedEntity, null);
+        }
+        
+        public List<LocalizedProperty> GetLozalizedProperties(LocalizedBaseEntity<From> localizedEntity)
+        {
+            if (localizedEntity == null)
+                throw new ArgumentNullException("localizedEntity");
+
+            if (localizedEntity.LanguageId == 0)
+                throw new ArgumentException("Language ID should not be 0");
+
+            var result = new List<LocalizedProperty>();
+
+            //load localized properties
+            var leAttributes = typeof(From).GetCustomAttributes(typeof(LocalizableEntityAttribute), false);
+            if (leAttributes == null || leAttributes.Length == 0)
+                return result;
+            string localeKeyGroup = ((LocalizableEntityAttribute)leAttributes[0]).LocaleKeyGroup;
+            if (String.IsNullOrEmpty(localeKeyGroup))
+                return result;
+
+            //load appropriate properties
+            var propsFrom = from p in typeof(From).GetProperties()
+                            where p.CanRead && p.CanWrite
+                            && p.GetCustomAttributes(typeof(LocalizablePropertyAttribute), false).Any()
+                            select p;
+
+            var propsTo = from p in typeof(To).GetProperties()
+                          where p.CanRead && p.CanWrite
+                          select p;
+            
+            //UNDONE validate whether we have more than one active language
+            var existingLocalizedProperties = _leService.GetLocalizedProperties(localizedEntity.EntityId, localizedEntity.LanguageId, localeKeyGroup);
+            foreach (var pFrom in propsFrom)
             {
-                resultProperty.SetValue(_entity, localizedEntity, null);
+                var lpAttribute = pFrom.GetCustomAttributes(typeof(LocalizablePropertyAttribute), false).SingleOrDefault() as LocalizablePropertyAttribute;
+                if (lpAttribute != null)
+                {
+                    foreach (var pTo in propsTo)
+                    {
+                        if (pFrom.Name.Equals(pTo.Name))
+                        {
+                            if (existingLocalizedProperties.ContainsKey(lpAttribute.LocaleKey))
+                            {
+                                result.Add(existingLocalizedProperties[lpAttribute.LocaleKey]);
+                            }
+                            else
+                            {
+                                result.Add(new LocalizedProperty()
+                                {
+                                    EntityId = localizedEntity.EntityId,
+                                    LanguageId = localizedEntity.LanguageId,
+                                    LocaleKeyGroup = localeKeyGroup,
+                                    LocaleKey = lpAttribute.LocaleKey,
+                                    LocaleValue = (string)pTo.GetValue(localizedEntity, null)
+                                });
+                            }
+                        }
+                    }
+                }
             }
+            return result;
         }
     }
 }
