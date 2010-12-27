@@ -113,15 +113,38 @@ namespace Nop.Data
             context.SaveChanges();
 
 
-            var category1Localization1 = new LocalizedProperty()
-            { 
-                Language = language1,
-                LocaleKeyGroup = "Category",
-                LocaleKey = "Name",
-                LocaleValue = "Jewelry localized",
-                EntityId = category1.Id
+            //var category1Localization1 = new LocalizedProperty()
+            //{ 
+            //    Language = language1,
+            //    LocaleKeyGroup = "Category",
+            //    LocaleKey = "Name",
+            //    LocaleValue = "Jewelry localized",
+            //    EntityId = category1.Id
+            //};
+            //context.LocalizedProperties.Add(category1Localization1);
+            //context.SaveChanges();
+
+            #endregion
+
+            #region Manufacturers
+
+            var manufacturer1 = new Manufacturer()
+            {
+                Name = "Manufacturer 1",
+                Description = "Some description 1",
+                TemplateId = 0, //TODO: set TemplateId
+                MetaKeywords = string.Empty,
+                MetaDescription = string.Empty,
+                MetaTitle = string.Empty,
+                SeName = string.Empty,
+                PageSize = 3,
+                PriceRanges = string.Empty,
+                Published = true,
+                DisplayOrder = 7,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
             };
-            context.LocalizedProperties.Add(category1Localization1);
+            context.Manufacturers.Add(manufacturer1);
             context.SaveChanges();
 
             #endregion

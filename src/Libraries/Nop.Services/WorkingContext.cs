@@ -39,6 +39,8 @@ namespace Nop.Services
         {
             get
             {
+                //UNDONE implement;
+                return false;
                 throw new NotImplementedException();
             }
             set

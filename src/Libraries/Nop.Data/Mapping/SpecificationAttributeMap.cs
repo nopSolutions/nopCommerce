@@ -25,8 +25,6 @@ namespace Nop.Data.Mapping
             this.ToTable("SpecificationAttribute");
             this.HasKey(sa => sa.Id);
             this.Property(sa => sa.Name).IsRequired().HasMaxLength(400);
-
-            this.Ignore(sa => sa.Localized);
         }
     }
 }

@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using Nop.Core.Domain;
-using Nop.Core.Localization;
 using Nop.Core;
 
 namespace Nop.Services
@@ -57,15 +56,5 @@ namespace Nop.Services
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
         void UpdateLocalizedProperty(LocalizedProperty localizedProperty);
-        
-        /// <summary>
-        /// Save localized entity
-        /// </summary>
-        /// <typeparam name="From">From type</typeparam>
-        /// <typeparam name="To">To type</typeparam>
-        /// <param name="localizedEntity">Localized entity</param>
-        void SaveLocalizedEntity<From, To>(LocalizedBaseEntity<From> localizedEntity)
-            where From : BaseEntity
-            where To : LocalizedBaseEntity<From>;
     }
 }

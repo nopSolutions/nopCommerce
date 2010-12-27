@@ -25,9 +25,7 @@ namespace Nop.Data.Mapping
             this.ToTable("SpecificationAttributeOption");
             this.HasKey(sao => sao.Id);
             this.Property(sao => sao.Name).IsRequired().HasMaxLength(400);
-
-            this.Ignore(sao => sao.Localized);
-
+            
             this.HasRequired(sao => sao.SpecificationAttribute)
                 .WithMany(sa => sa.SpecificationAttributeOptions)
                 .HasForeignKey(sao => sao.SpecificationAttributeId);

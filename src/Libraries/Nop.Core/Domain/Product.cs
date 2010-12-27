@@ -15,32 +15,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Localization;
 
 namespace Nop.Core.Domain
 {
     /// <summary>
     /// Represents a product
     /// </summary>
-    [LocalizableEntity("Product")]
-    public partial class Product : BaseEntity
+    public partial class Product : LocalizedEntity
     {
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        [LocalizableProperty("Name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the short description
         /// </summary>
-        [LocalizableProperty("ShortDescription")]
         public string ShortDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the full description
         /// </summary>
-        [LocalizableProperty("FullDescription")]
         public string FullDescription { get; set; }
 
         /// <summary>
@@ -61,25 +56,21 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
-        [LocalizableProperty("MetaKeywords")]
         public string MetaKeywords { get; set; }
 
         /// <summary>
         /// Gets or sets the meta description
         /// </summary>
-        [LocalizableProperty("MetaDescription")]
         public string MetaDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the meta title
         /// </summary>
-        [LocalizableProperty("MetaTitle")]
         public string MetaTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the search-engine name
         /// </summary>
-        [LocalizableProperty("SeName")]
         public string SeName { get; set; }
 
         /// <summary>
@@ -146,12 +137,6 @@ namespace Nop.Core.Domain
         /// Gets or sets the product specification attribute
         /// </summary>
         public virtual ICollection<ProductSpecificationAttribute> ProductSpecificationAttributes { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the localized entity
-        /// </summary>
-        [LocalizedEntityResult]
-        public virtual LocalizedProduct Localized { get; set; }
 
     }
 }

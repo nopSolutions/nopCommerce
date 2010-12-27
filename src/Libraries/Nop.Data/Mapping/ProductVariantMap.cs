@@ -37,8 +37,6 @@ namespace Nop.Data.Mapping
             this.Ignore(pv => pv.ManageInventoryMethod);
             this.Ignore(pv => pv.RecurringProductCyclePeriod);
             
-            this.Ignore(pv => pv.Localized);
-
             this.HasRequired(pv => pv.Product)
                 .WithMany(p => p.ProductVariants)
                 .HasForeignKey(pv => pv.ProductId);

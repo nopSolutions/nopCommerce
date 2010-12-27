@@ -32,8 +32,6 @@ namespace Nop.Data.Mapping
             this.Property(p => p.MetaDescription).IsRequired();
             this.Property(p => p.MetaTitle).IsRequired().HasMaxLength(400);
             this.Property(p => p.SeName).IsRequired().HasMaxLength(100);
-
-            this.Ignore(p => p.Localized);
         }
     }
 }

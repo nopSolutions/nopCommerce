@@ -88,7 +88,6 @@ namespace Nop.Services
             return _cacheManager.Get(key, () =>
             {
                 var sa = _specificationAttributeRespository.GetById(specificationAttributeId);
-                new DefaultPropertyLocalizer<SpecificationAttribute, LocalizedSpecificationAttribute>(_leService, sa).Localize();
                 return sa;
             });
         }
@@ -103,7 +102,6 @@ namespace Nop.Services
                         orderby sa.DisplayOrder
                         select sa;
             var specificationAttributes = query.ToList();
-            specificationAttributes.ForEach(sa => new DefaultPropertyLocalizer<SpecificationAttribute, LocalizedSpecificationAttribute>(_leService, sa).Localize());
             return specificationAttributes;
         }
 
@@ -173,7 +171,6 @@ namespace Nop.Services
             return _cacheManager.Get(key, () =>
             {
                 var sao = _specificationAttributeOptionRespository.GetById(specificationAttributeOptionId);
-                new DefaultPropertyLocalizer<SpecificationAttributeOption, LocalizedSpecificationAttributeOption>(_leService, sao).Localize();
                 return sao;
             });
         }
@@ -190,7 +187,6 @@ namespace Nop.Services
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
             var specificationAttributeOptions = query.ToList();
-            specificationAttributeOptions.ForEach(sao => new DefaultPropertyLocalizer<SpecificationAttributeOption, LocalizedSpecificationAttributeOption>(_leService, sao).Localize());
             return specificationAttributeOptions;
         }
 

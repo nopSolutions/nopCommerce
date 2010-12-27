@@ -26,8 +26,6 @@ namespace Nop.Data.Mapping
             this.HasKey(pa => pa.Id);
             this.Property(pa => pa.Name).IsRequired().HasMaxLength(100);
             this.Property(pa => pa.Description).IsRequired().IsMaxLength();
-
-            this.Ignore(pa => pa.Localized);
         }
     }
 }

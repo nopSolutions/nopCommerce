@@ -19,7 +19,6 @@ using Nop.Core.Domain;
 using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core;
-using Nop.Core.Localization;
 using System.Web;
 
 namespace Nop.Services
@@ -42,7 +41,6 @@ namespace Nop.Services
         #region Fields
 
         private readonly IWorkingContext _context;
-        private readonly ILocalizedEntityService _leService;
         private readonly IRepository<Category> _categoryRespository;
         private readonly IRepository<ProductCategory> _productCategoryRespository;
         private readonly IRepository<Product> _productRespository;
@@ -57,20 +55,17 @@ namespace Nop.Services
         /// </summary>
         /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="leService">Localized entity service</param>
         /// <param name="categoryRespository">Category repository</param>
         /// <param name="productCategoryRespository">ProductCategory repository</param>
         /// <param name="productRespository">Product repository</param>
         public CategoryService(IWorkingContext context,
             ICacheManager cacheManager,
-            ILocalizedEntityService leService,
             IRepository<Category> categoryRespository,
             IRepository<ProductCategory> productCategoryRespository,
             IRepository<Product> productRespository)
         {
             this._context = context;
             this._cacheManager = cacheManager;
-            this._leService = leService;
             this._categoryRespository = categoryRespository;
             this._productCategoryRespository = productCategoryRespository;
             this._productRespository = productRespository;
@@ -126,9 +121,6 @@ namespace Nop.Services
             //sort categories
             //TODO sort categories on database layer
             var sortedCategories = unsortedCategories.SortCategoriesForTree(0);
-
-            sortedCategories.ForEach(c => 
-                new DefaultPropertyLocalizer<Category, LocalizedCategory>(_leService, c).Localize());
             return sortedCategories;
         }
         
@@ -167,7 +159,6 @@ namespace Nop.Services
             //}
 
             var categories = query.ToList();
-            categories.ForEach(c => new DefaultPropertyLocalizer<Category, LocalizedCategory>(_leService, c).Localize());
             return categories;
         }
         
@@ -191,7 +182,6 @@ namespace Nop.Services
             //}
 
             var categories = query.ToList();
-            categories.ForEach(c => new DefaultPropertyLocalizer<Category, LocalizedCategory>(_leService, c).Localize());
             return categories;
         }
                 
@@ -214,7 +204,6 @@ namespace Nop.Services
                 //{
                 //    category = null;
                 //}
-                new DefaultPropertyLocalizer<Category, LocalizedCategory>(_leService, category).Localize();
                 return category;
             });
         }

@@ -12,17 +12,22 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using Nop.Core.Localization;
-namespace Nop.Core.Domain
+using System.Data.Entity.ModelConfiguration;
+using Nop.Core.Domain;
+
+
+namespace Nop.Data.Mapping
 {
-    /// <summary>
-    /// Represents a localized specification attribute option
-    /// </summary>
-    public partial class LocalizedSpecificationAttributeOption : LocalizedBaseEntity<SpecificationAttributeOption>
+    public partial class LocalizedEntityMap : EntityTypeConfiguration<LocalizedEntity>
     {
-        /// <summary>
-        /// Gets or sets the name
-        /// </summary>
-        public string Name { get; set; }
+        public LocalizedEntityMap()
+        {
+            this.ToTable("LocalizedEntity");
+            this.HasKey(le => le.Id);
+
+            this.HasMany(le => le.LocalizedProperties)
+            .WithRequired(lp => lp.LocalizedEntity)
+            .HasForeignKey(lp => lp.EntityId);
+        }
     }
 }

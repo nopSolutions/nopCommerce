@@ -115,7 +115,6 @@ namespace Nop.Services
                             !m.Deleted
                             select m;
                 var manufacturers = query.ToList();
-                manufacturers.ForEach(m => new DefaultPropertyLocalizer<Manufacturer, LocalizedManufacturer>(_leService, m).Localize());
                 return manufacturers;
             });
         }
@@ -134,7 +133,6 @@ namespace Nop.Services
             return _cacheManager.Get(key, () =>
             {
                 var manufacturer = _manufacturerRespository.GetById(manufacturerId);
-                new DefaultPropertyLocalizer<Manufacturer, LocalizedManufacturer>(_leService, manufacturer).Localize();
                 return manufacturer;
             });
         }

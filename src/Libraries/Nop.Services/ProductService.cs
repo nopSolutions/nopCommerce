@@ -137,8 +137,6 @@ namespace Nop.Services
                         !p.Deleted
                         select p;
             var products = query.ToList();
-            products.ForEach(p =>
-                new DefaultPropertyLocalizer<Product, LocalizedProduct>(_leService, p).Localize());
             return products;
         }
 
@@ -157,8 +155,6 @@ namespace Nop.Services
                         p.ShowOnHomePage
                         select p;
             var products = query.ToList();
-            products.ForEach(p =>
-                new DefaultPropertyLocalizer<Product, LocalizedProduct>(_leService, p).Localize());
             return products;
         }
         
@@ -176,7 +172,6 @@ namespace Nop.Services
             return _cacheManager.Get(key, () =>
             {
                 var product = _productRespository.GetById(productId);
-                new DefaultPropertyLocalizer<Product, LocalizedProduct>(_leService, product).Localize();
                 return product;
             });
         }
@@ -324,7 +319,6 @@ namespace Nop.Services
                         pv.MinStockQuantity >= pv.StockQuantity
                         select pv;
             var productVariants = query.ToList();
-            productVariants.ForEach(pv => new DefaultPropertyLocalizer<ProductVariant, LocalizedProductVariant>(_leService, pv).Localize());
             return productVariants;
         }
         
@@ -342,7 +336,6 @@ namespace Nop.Services
             return _cacheManager.Get(key, () =>
             {
                 var pv = _productVariantRespository.GetById(productVariantId);
-                new DefaultPropertyLocalizer<ProductVariant, LocalizedProductVariant>(_leService, pv).Localize();
                 return pv;
             });
         }
@@ -365,7 +358,6 @@ namespace Nop.Services
                         pv.Sku == sku
                         select pv;
             var productVariant = query.FirstOrDefault();
-            new DefaultPropertyLocalizer<ProductVariant, LocalizedProductVariant>(_leService, productVariant).Localize();
             return productVariant;
         }
         
@@ -446,7 +438,6 @@ namespace Nop.Services
                                                   query = query.OrderBy(pv => pv.DisplayOrder);
 
                                                   var productVariants = query.ToList();
-                                                  productVariants.ForEach(pv => new DefaultPropertyLocalizer<ProductVariant, LocalizedProductVariant>(_leService, pv).Localize());
                                                   return productVariants;
                                               });
         }

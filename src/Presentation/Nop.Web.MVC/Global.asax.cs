@@ -5,9 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Nop.Data;
-using Nop.Services.Logging;
+using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Data;
+using Nop.Services;
+using Nop.Services.Logging;
 
 namespace Nop.Web.MVC
 {

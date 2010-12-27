@@ -12,11 +12,14 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-namespace Nop.Core.Localization
+using System.Collections.Generic;
+namespace Nop.Core.Domain
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public partial class LocalizedEntityResultAttribute: Attribute
+    /// <summary>
+    /// Represents a localized entity
+    /// </summary>
+    public abstract partial class LocalizedEntity : BaseEntity
     {
+        public virtual ICollection<LocalizedProperty> LocalizedProperties { get; set; }
     }
 }

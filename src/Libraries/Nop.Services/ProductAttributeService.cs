@@ -113,8 +113,6 @@ namespace Nop.Services
                             orderby pa.Name
                             select pa;
                 var productAttributes = query.ToList();
-                productAttributes.ForEach(pa =>
-                    new DefaultPropertyLocalizer<ProductAttribute, LocalizedProductAttribute>(_leService, pa).Localize());
                 return productAttributes;
             });
         }
@@ -133,7 +131,6 @@ namespace Nop.Services
             return _cacheManager.Get(key, () =>
             {
                 var pa = _productAttributeRespository.GetById(productAttributeId);
-                new DefaultPropertyLocalizer<ProductAttribute, LocalizedProductAttribute>(_leService, pa).Localize();
                 return pa;
             });
         }
@@ -294,8 +291,6 @@ namespace Nop.Services
                             where pvav.ProductVariantAttributeId == productVariantAttributeId
                             select pvav;
                 var productVariantAttributeValues = query.ToList();
-                productVariantAttributeValues.ForEach(pvav =>
-                new DefaultPropertyLocalizer<ProductVariantAttributeValue, LocalizedProductVariantAttributeValue>(_leService, pvav).Localize());
                 return productVariantAttributeValues;
             });
         }
@@ -314,7 +309,6 @@ namespace Nop.Services
             return _cacheManager.Get(key, () =>
             {
                 var pvav = _productVariantAttributeValueRespository.GetById(productVariantAttributeValueId);
-                new DefaultPropertyLocalizer<ProductVariantAttributeValue, LocalizedProductVariantAttributeValue>(_leService, pvav).Localize();
                 return pvav;
             });
         }
