@@ -39,8 +39,11 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly IWorkingContext _context;
         private readonly ILocalizedEntityService _leService;
         private readonly IRepository<Product> _productRespository;
+        private readonly IRepository<ProductCategory> _productCategoryRespository;
+        private readonly IRepository<ProductManufacturer> _productManufacturerRespository;
         private readonly IRepository<ProductVariant> _productVariantRespository;
         private readonly IRepository<RelatedProduct> _relatedProductRespository;
         private readonly IRepository<CrossSellProduct> _crossSellProductRespository;
@@ -54,24 +57,33 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="leService">Localized entity service</param>
         /// <param name="productRespository">Product repository</param>
+        /// <param name="productCategoryRespository">Product category repository</param>
+        /// <param name="productManufacturerRespository">Product manufacturer repository</param>
         /// <param name="productVariantRespository">Product variant repository</param>
         /// <param name="relatedProductRespository">Related product repository</param>
         /// <param name="crossSellProductRespository">Cross-sell product repository</param>
         /// <param name="tierPriceRespository">Tier price repository</param>
-        public ProductService(ICacheManager cacheManager,
+        public ProductService(IWorkingContext context, 
+            ICacheManager cacheManager,
             ILocalizedEntityService leService,
             IRepository<Product> productRespository,
+            IRepository<ProductCategory> productCategoryRespository,
+            IRepository<ProductManufacturer> productManufacturerRespository,
             IRepository<ProductVariant> productVariantRespository,
             IRepository<RelatedProduct> relatedProductRespository,
             IRepository<CrossSellProduct> crossSellProductRespository,
             IRepository<TierPrice> tierPriceRespository)
         {
+            this._context = context;
             this._cacheManager = cacheManager;
             this._leService = leService;
             this._productRespository = productRespository;
+            this._productCategoryRespository = productCategoryRespository;
+            this._productManufacturerRespository = productManufacturerRespository;
             this._productVariantRespository = productVariantRespository;
             this._relatedProductRespository = relatedProductRespository;
             this._crossSellProductRespository = crossSellProductRespository;
@@ -108,8 +120,7 @@ namespace Nop.Services
         /// <returns>Product collection</returns>
         public List<Product> GetAllProducts()
         {
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
             return GetAllProducts(showHidden);
         }
 
@@ -137,8 +148,7 @@ namespace Nop.Services
         /// <returns>Product collection</returns>
         public List<Product> GetAllProductsDisplayedOnHomePage()
         {
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
 
             var query = from p in _productRespository.Table
                         orderby p.Name
@@ -202,7 +212,102 @@ namespace Nop.Services
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
+         
+        /// <summary>
+        /// Search products
+        /// </summary>
+        /// <param name="categoryId">Category identifier; 0 to load all recordss</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
+        /// <param name="priceMin">Minimum price; null to load all records</param>
+        /// <param name="priceMax">Maximum price; null to load all records</param>
+        /// <param name="relatedToProductId">Filter by related product; 0 to load all records</param>
+        /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
+        /// <param name="keywords">Keywords</param>
+        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="filteredSpecs">Filtered product specification identifiers</param>
+        /// <param name="orderBy">Order by</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Product collection</returns>
+        public PagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
+            decimal? priceMin, decimal? priceMax,
+            int relatedToProductId, int productTagId,
+            string keywords, bool searchDescriptions, int languageId,
+            List<int> filteredSpecs, ProductSortingEnum orderBy,
+            int pageIndex, int pageSize)
+        {
+            bool showHidden = _context.IsAdmin;
 
+            //UNDONE: filter by product specs
+            //string commaSeparatedSpecIds = string.Empty;
+            //if (filteredSpecs != null)
+            //{
+            //    filteredSpecs.Sort();
+            //    for (int i = 0; i < filteredSpecs.Count; i++)
+            //    {
+            //        commaSeparatedSpecIds += filteredSpecs[i].ToString();
+            //        if (i != filteredSpecs.Count - 1)
+            //        {
+            //            commaSeparatedSpecIds += ",";
+            //        }
+            //    }
+            //}
+
+            bool searchKeywords = String.IsNullOrWhiteSpace(keywords);
+
+            var query1 = from p in _productRespository.Table
+                         from pcm in _productCategoryRespository.Table
+                         .Where(pcm => p.Id == pcm.ProductId).DefaultIfEmpty()
+                         from pmm in _productManufacturerRespository.Table
+                         .Where(pmm => p.Id == pmm.ProductId).DefaultIfEmpty()
+                         from rp in _relatedProductRespository.Table
+                         .Where(rp => p.Id == rp.ProductId2).DefaultIfEmpty()
+                         from pv in _productVariantRespository.Table
+                         .Where(pv => p.Id == pv.ProductId).DefaultIfEmpty()
+                         //UNDONE: search in localized properties
+                         //from pvl in _context.ProductVariantLocalized
+                         //.Where(pvl => pv.ProductVariantId == pvl.ProductVariantId && pvl.LanguageId == languageId).DefaultIfEmpty()
+                         //from pl in _context.ProductLocalized
+                         //.Where(pl => p.ProductId == pl.ProductId && pl.LanguageId == languageId).DefaultIfEmpty()
+                         //UNDONE search product tags
+                         where
+                         (categoryId == 0 || (pcm.CategoryId == categoryId && (!featuredProducts.HasValue || pcm.IsFeaturedProduct == featuredProducts.Value))) &&
+                         (manufacturerId == 0 || (pmm.ManufacturerId == manufacturerId && (!featuredProducts.HasValue || pmm.IsFeaturedProduct == featuredProducts.Value))) &&
+                         (relatedToProductId == 0 || rp.ProductId1 == relatedToProductId) &&
+                         (showHidden || p.Published) &&
+                         (!p.Deleted) &&
+                         (showHidden || pv.Published) &&
+                         (showHidden || !pv.Deleted) &&
+                         (!priceMin.HasValue || priceMin.Value == 0 || pv.Price > priceMin.Value) &&
+                         (!priceMax.HasValue || priceMax.Value == int.MaxValue || pv.Price < priceMax.Value) &&
+                         (!searchKeywords ||
+                         //search standard content
+                         (p.Name.Contains(keywords)
+                         || pv.Name.Contains(keywords)
+                         || pv.Sku.Contains(keywords)
+                         || (searchDescriptions && p.ShortDescription.Contains(keywords))
+                         || (searchDescriptions && p.FullDescription.Contains(keywords))
+                         || (searchDescriptions && pv.Description.Contains(keywords))
+                         //search language content
+                         //|| pl.Name.Contains(keywords)
+                         //|| pvl.Name.Contains(keywords)
+                         //|| (searchDescriptions && pl.ShortDescription.Contains(keywords))
+                         //|| (searchDescriptions && pl.FullDescription.Contains(keywords))
+                         //|| (searchDescriptions && pvl.Description.Contains(keywords))
+                         )
+                         )
+                         select p.Id;
+            //UNDONE sort by ProductSortingEnum orderBy
+            var query = from p in _productRespository.Table
+                        where query1.Contains(p.Id)
+                        orderby p.CreatedOnUtc descending
+                        select p;
+
+            var products = new PagedList<Product>(query, pageIndex, pageSize);
+            return products;
+        }
         #endregion
 
         #region Product variants
@@ -303,8 +408,7 @@ namespace Nop.Services
         /// <returns>Product variant collection</returns>
         public List<ProductVariant> GetProductVariantsByProductId(int productId)
         {
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
             return GetProductVariantsByProductId(productId, showHidden);
         }
         
@@ -383,8 +487,7 @@ namespace Nop.Services
         /// <returns>Related product collection</returns>
         public List<RelatedProduct> GetRelatedProductsByProductId1(int productId1)
         {
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
 
             var query = from rp in _relatedProductRespository.Table
                         join p in _productRespository.Table on rp.ProductId2 equals p.Id
@@ -459,8 +562,7 @@ namespace Nop.Services
         /// <returns>Cross-sell product collection</returns>
         public List<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1)
         {
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
 
             var query = from csp in _crossSellProductRespository.Table
                         join p in _productRespository.Table on csp.ProductId2 equals p.Id

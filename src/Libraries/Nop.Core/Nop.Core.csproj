@@ -52,7 +52,9 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="IWorkingContext.cs" />
     <Compile Include="Domain\LocalizedProperty.cs" />
+    <Compile Include="Domain\ProductSortingEnum.cs" />
     <Compile Include="Localization\LocalizedBaseEntity.cs" />
     <Compile Include="Localization\LocalizableEntityAttribute.cs" />
     <Compile Include="Localization\LocalizedEntityResultAttribute.cs" />

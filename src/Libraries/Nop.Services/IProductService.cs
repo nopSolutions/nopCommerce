@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain;
 
 namespace Nop.Services
@@ -68,7 +69,31 @@ namespace Nop.Services
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateProduct(Product product);
-
+        
+        /// <summary>
+        /// Search products
+        /// </summary>
+        /// <param name="categoryId">Category identifier; 0 to load all recordss</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
+        /// <param name="priceMin">Minimum price; null to load all records</param>
+        /// <param name="priceMax">Maximum price; null to load all records</param>
+        /// <param name="relatedToProductId">Filter by related product; 0 to load all records</param>
+        /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
+        /// <param name="keywords">Keywords</param>
+        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="filteredSpecs">Filtered product specification identifiers</param>
+        /// <param name="orderBy">Order by</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Product collection</returns>
+        PagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
+            decimal? priceMin, decimal? priceMax,
+            int relatedToProductId, int productTagId,
+            string keywords, bool searchDescriptions, int languageId,
+            List<int> filteredSpecs, ProductSortingEnum orderBy,
+            int pageIndex, int pageSize);
         #endregion
 
         #region Product variants

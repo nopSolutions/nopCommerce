@@ -41,6 +41,7 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly IWorkingContext _context;
         private readonly ILocalizedEntityService _leService;
         private readonly IRepository<Category> _categoryRespository;
         private readonly IRepository<ProductCategory> _productCategoryRespository;
@@ -54,17 +55,20 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="leService">Localized entity service</param>
         /// <param name="categoryRespository">Category repository</param>
         /// <param name="productCategoryRespository">ProductCategory repository</param>
         /// <param name="productRespository">Product repository</param>
-        public CategoryService(ICacheManager cacheManager,
+        public CategoryService(IWorkingContext context,
+            ICacheManager cacheManager,
             ILocalizedEntityService leService,
             IRepository<Category> categoryRespository,
             IRepository<ProductCategory> productCategoryRespository,
             IRepository<Product> productRespository)
         {
+            this._context = context;
             this._cacheManager = cacheManager;
             this._leService = leService;
             this._categoryRespository = categoryRespository;
@@ -95,8 +99,7 @@ namespace Nop.Services
         /// <returns>Categories</returns>
         public List<Category> GetAllCategories()
         {
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
             return GetAllCategories(showHidden);
         }
         
@@ -136,8 +139,7 @@ namespace Nop.Services
         /// <returns>Category collection</returns>
         public List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId)
         {
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
             return GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
         }
         
@@ -175,8 +177,7 @@ namespace Nop.Services
         /// <returns>Category collection</returns>
         public List<Category> GetAllCategoriesDisplayedOnHomePage()
         {
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
             
             var query = from c in _categoryRespository.Table
                         orderby c.DisplayOrder
@@ -288,8 +289,7 @@ namespace Nop.Services
             if (categoryId == 0)
                 return new List<ProductCategory>();
 
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId);
             return _cacheManager.Get(key, () =>
@@ -316,8 +316,7 @@ namespace Nop.Services
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            //TODO: use bool showHidden = NopContext.Current.IsAdmin;
-            bool showHidden = true;
+            bool showHidden = _context.IsAdmin;
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>

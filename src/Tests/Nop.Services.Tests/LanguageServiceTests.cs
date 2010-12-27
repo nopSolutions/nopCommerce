@@ -7,6 +7,7 @@ using Nop.Core.Domain;
 using Nop.Data;
 using Nop.Tests;
 using NUnit.Framework;
+using Nop.Core;
 
 namespace Nop.Services.Tests
 {
@@ -20,7 +21,8 @@ namespace Nop.Services.Tests
         {
             var repo1 = new EfRepository<Language>(context);
             var cacheManager = new NopNullCache();
-            this._languageService = new LanguageService(cacheManager, repo1);
+            IWorkingContext workingContext = null;
+            this._languageService = new LanguageService(workingContext, cacheManager, repo1);
         }
 
         protected void RegisterTestData()
@@ -42,7 +44,7 @@ namespace Nop.Services.Tests
         {
             RegisterTestData();
 
-            var languages = _languageService.GetAllLanguages();
+            var languages = _languageService.GetAllLanguages(true);
             languages.ShouldNotBeNull();
             (languages.Count > 0).ShouldBeTrue();
         }
