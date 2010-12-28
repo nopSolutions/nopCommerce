@@ -19,7 +19,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a product variant attribute mapping
     /// </summary>
-    public partial class ProductVariantAttribute : LocalizedEntity
+    public partial class ProductVariantAttribute : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the product variant identifier

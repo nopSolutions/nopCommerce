@@ -21,7 +21,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a specification attribute option
     /// </summary>
-    public partial class SpecificationAttributeOption : LocalizedEntity
+    public partial class SpecificationAttributeOption : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the specification attribute identifier

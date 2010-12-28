@@ -40,7 +40,6 @@ namespace Nop.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LocaleStringResource> LocaleStringResources { get; set; }
-        public DbSet<LocalizedEntity> LocalizedEntities { get; set; }
         public DbSet<LocalizedProperty> LocalizedProperties { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
@@ -76,10 +75,6 @@ namespace Nop.Data
             //...or do it manually below. For example,
             //modelBuilder.Configurations.Add(new LanguageMap());
 
-
-            //TODO: remove it because we should support cascase deletes
-            //we're using it now because EF could not create a databas without it (avoiding circular references)
-            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
 
             base.OnModelCreating(modelBuilder);

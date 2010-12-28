@@ -18,20 +18,22 @@ using System.Linq;
 using System.Linq.Expressions;
 using System;
 using System.Reflection;
+using Nop.Core;
 
-namespace Nop.Core
+namespace Nop.Services
 {
-    public static class Extentions
+    public static class LocalizationExtentions
     {
         public static string GetLocalized<T>(this T entity,
-            Expression<Func<T, string>> keySelector) where T : LocalizedEntity
+            Expression<Func<T, string>> keySelector)
+            where T : BaseEntity, ILocalizedEntity
         {
             return GetLocalized(entity, keySelector, true);
         }
 
         public static string GetLocalized<T>(this T entity,
             Expression<Func<T, string>> keySelector,
-            bool returnDefaultValue) where T : LocalizedEntity
+            bool returnDefaultValue) where T : BaseEntity, ILocalizedEntity
         {
             //TODO: set language id (IWorkingContext)
             int languageId = 1;
@@ -41,7 +43,7 @@ namespace Nop.Core
         public static string GetLocalized<T>(this T entity,
             Expression<Func<T, string>> keySelector,
             bool returnDefaultValue, 
-            int languageId) where T : LocalizedEntity
+            int languageId) where T : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -64,20 +66,19 @@ namespace Nop.Core
 
             string result = string.Empty;
 
-            //LocalizedProperties collection could be null in case entity was just created
-            if (entity.LocalizedProperties == null)
-                return result;
-
             //load localized value
             //TODO: localeKeyGroup can be removed because we have unique ID
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 
-            var prop = entity.LocalizedProperties.FirstOrDefault(lp => lp.LanguageId == languageId &&
-                lp.LocaleKeyGroup == localeKeyGroup &&
-                lp.LocaleKey == localeKey);
-            if (prop != null)
-                result = prop.LocaleValue;
+            //TODO use DependencyResolver to load service
+            //var leService = new LocalizedEntityService();
+            //var props = leService.GetLocalizedProperties(entity.Id);
+            //var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
+            //    lp.LocaleKeyGroup == localeKeyGroup &&
+            //    lp.LocaleKey == localeKey);
+            //if (prop != null)
+            //    result = prop.LocaleValue;
 
             //set default value if required
             if (String.IsNullOrEmpty(result) && returnDefaultValue)

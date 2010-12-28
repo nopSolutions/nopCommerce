@@ -18,8 +18,8 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a localized entity
     /// </summary>
-    public abstract partial class LocalizedEntity : BaseEntity
+    public interface ILocalizedEntity
     {
-        public virtual ICollection<LocalizedProperty> LocalizedProperties { get; set; }
+
     }
 }

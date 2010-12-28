@@ -52,6 +52,6 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets the language
         /// </summary>
-        public virtual LocalizedEntity LocalizedEntity { get; set; }
+        public virtual ILocalizedEntity LocalizedEntity { get; set; }
     }
 }

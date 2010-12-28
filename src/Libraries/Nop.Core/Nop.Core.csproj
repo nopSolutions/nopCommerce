@@ -52,11 +52,10 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ISettings.cs" />
-    <Compile Include="Domain\LocalizedEntity.cs" />
+    <Compile Include="Domain\ILocalizedEntity.cs" />
     <Compile Include="IWorkingContext.cs" />
     <Compile Include="Domain\LocalizedProperty.cs" />
     <Compile Include="Domain\ProductSortingEnum.cs" />
-    <Compile Include="LocalizationExtentions.cs" />
     <Compile Include="Domain\AttributeControlTypeEnum.cs" />
     <Compile Include="Domain\BackorderMode.cs" />
     <Compile Include="Domain\Category.cs" />

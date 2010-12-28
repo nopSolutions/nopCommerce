@@ -40,10 +40,8 @@ namespace Nop.Services
         /// Gets localized properties
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="localeKeyGroup">Locale key group</param>
         /// <returns>Localized properties</returns>
-        Dictionary<string, LocalizedProperty> GetLocalizedProperties(int entityId, int languageId, string localeKeyGroup);
+        List<LocalizedProperty> GetLocalizedProperties(int entityId);
 
         /// <summary>
         /// Inserts a localized property

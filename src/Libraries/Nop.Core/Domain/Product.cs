@@ -21,7 +21,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a product
     /// </summary>
-    public partial class Product : LocalizedEntity
+    public partial class Product : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the name

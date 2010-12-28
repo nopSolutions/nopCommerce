@@ -20,7 +20,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a manufacturer
     /// </summary>
-    public partial class Manufacturer : LocalizedEntity
+    public partial class Manufacturer : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the name

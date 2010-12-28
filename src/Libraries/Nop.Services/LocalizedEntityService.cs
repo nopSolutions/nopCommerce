@@ -27,6 +27,13 @@ namespace Nop.Services
     /// </summary>
     public partial class LocalizedEntityService : ILocalizedEntityService
     {
+        #region Constants
+
+        private const string LOCALIZEDPROPERTY_ALLBYENTITYID_KEY = "Nop.localizedproperty.allbyentityid-{0}";
+        private const string LOCALIZEDPROPERTY_PATTERN_KEY = "Nop.localizedproperty.";
+
+        #endregion
+
         #region Fields
 
         private readonly IRepository<LocalizedProperty> _localizedPropertyRespository;
@@ -62,6 +69,9 @@ namespace Nop.Services
                 throw new ArgumentNullException("localizedProperty");
 
             _localizedPropertyRespository.Delete(localizedProperty);
+
+            //cache
+            _cacheManager.RemoveByPattern(LOCALIZEDPROPERTY_PATTERN_KEY);
         }
 
         /// <summary>
@@ -82,22 +92,22 @@ namespace Nop.Services
         /// Gets localized properties
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="localeKeyGroup">Locale key group</param>
         /// <returns>Localized properties</returns>
-        public Dictionary<string, LocalizedProperty> GetLocalizedProperties(int entityId, int languageId, string localeKeyGroup)
+        public List<LocalizedProperty> GetLocalizedProperties(int entityId)
         {
-            if (entityId == 0 || languageId == 0)
-                return new Dictionary<string, LocalizedProperty>();
+            if (entityId == 0 )
+                return new List<LocalizedProperty>();
 
-            var query = from lp in _localizedPropertyRespository.Table
-                        orderby lp.LocaleKey
-                        where lp.LanguageId == languageId &&
-                        lp.EntityId == entityId &&
-                        lp.LocaleKeyGroup == localeKeyGroup
-                        select lp;
-            var lpDictionary = query.ToDictionary(s => s.LocaleKey);
-            return lpDictionary;
+            string key = string.Format(LOCALIZEDPROPERTY_ALLBYENTITYID_KEY, entityId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from lp in _localizedPropertyRespository.Table
+                            orderby lp.Id
+                            where lp.EntityId == entityId
+                            select lp;
+                var props = query.ToList();
+                return props;
+            });
         }
 
         /// <summary>
@@ -110,6 +120,9 @@ namespace Nop.Services
                 throw new ArgumentNullException("localizedProperty");
 
             _localizedPropertyRespository.Insert(localizedProperty);
+
+            //cache
+            _cacheManager.RemoveByPattern(LOCALIZEDPROPERTY_PATTERN_KEY);
         }
 
         /// <summary>
@@ -122,6 +135,9 @@ namespace Nop.Services
                 throw new ArgumentNullException("localizedProperty");
 
             _localizedPropertyRespository.Update(localizedProperty);
+
+            //cache
+            _cacheManager.RemoveByPattern(LOCALIZEDPROPERTY_PATTERN_KEY);
         }
 
 

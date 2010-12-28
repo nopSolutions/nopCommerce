@@ -21,7 +21,7 @@ namespace Nop.Core.Domain
     /// <summary>
     /// Represents a category
     /// </summary>
-    public partial class Category : LocalizedEntity
+    public partial class Category : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the name
@@ -37,7 +37,6 @@ namespace Nop.Core.Domain
         /// Gets or sets the template identifier
         /// </summary>
         public int TemplateId { get; set; }
-        public int TemplateId34 { get; set; }
 
         /// <summary>
         /// Gets or sets the meta keywords
