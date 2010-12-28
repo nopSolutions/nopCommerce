@@ -40,8 +40,9 @@ namespace Nop.Services
         /// Gets localized properties
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
+        /// <param name="localeKeyGroup">Locale key group</param>
         /// <returns>Localized properties</returns>
-        List<LocalizedProperty> GetLocalizedProperties(int entityId);
+        List<LocalizedProperty> GetLocalizedProperties(int entityId, string localeKeyGroup);
 
         /// <summary>
         /// Inserts a localized property

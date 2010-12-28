@@ -73,7 +73,7 @@ namespace Nop.Services
 
             //TODO use DependencyResolver to load service
             //var leService = new LocalizedEntityService();
-            //var props = leService.GetLocalizedProperties(entity.Id);
+            //var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
             //var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
             //    lp.LocaleKeyGroup == localeKeyGroup &&
             //    lp.LocaleKey == localeKey);

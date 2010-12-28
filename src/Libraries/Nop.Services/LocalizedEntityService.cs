@@ -29,7 +29,7 @@ namespace Nop.Services
     {
         #region Constants
 
-        private const string LOCALIZEDPROPERTY_ALLBYENTITYID_KEY = "Nop.localizedproperty.allbyentityid-{0}";
+        private const string LOCALIZEDPROPERTY_ALL_KEY = "Nop.localizedproperty.allbyentityid-{0}-{1}";
         private const string LOCALIZEDPROPERTY_PATTERN_KEY = "Nop.localizedproperty.";
 
         #endregion
@@ -92,18 +92,20 @@ namespace Nop.Services
         /// Gets localized properties
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
+        /// <param name="localeKeyGroup">Locale key group</param>
         /// <returns>Localized properties</returns>
-        public List<LocalizedProperty> GetLocalizedProperties(int entityId)
+        public List<LocalizedProperty> GetLocalizedProperties(int entityId, string localeKeyGroup)
         {
-            if (entityId == 0 )
+            if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
                 return new List<LocalizedProperty>();
 
-            string key = string.Format(LOCALIZEDPROPERTY_ALLBYENTITYID_KEY, entityId);
+            string key = string.Format(LOCALIZEDPROPERTY_ALL_KEY, entityId, localeKeyGroup);
             return _cacheManager.Get(key, () =>
             {
                 var query = from lp in _localizedPropertyRespository.Table
                             orderby lp.Id
-                            where lp.EntityId == entityId
+                            where lp.EntityId ==  entityId &&
+                            lp.LocaleKeyGroup == localeKeyGroup
                             select lp;
                 var props = query.ToList();
                 return props;
