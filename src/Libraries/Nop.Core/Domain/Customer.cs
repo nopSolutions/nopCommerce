@@ -66,5 +66,10 @@ namespace Nop.Core.Domain
         /// Gets or sets the date and time of customer registration
         /// </summary>
         public DateTime RegistrationDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets customer generated content
+        /// </summary>
+        public virtual ICollection<CustomerContent> CustomerContent { get; set; }
     }
 }

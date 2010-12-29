@@ -45,6 +45,8 @@
     <Compile Include="CategoryService.cs" />
     <Compile Include="CategoryExtensions.cs" />
     <Compile Include="ConfigurationProvider.cs" />
+    <Compile Include="CustomerContentService.cs" />
+    <Compile Include="ICustomerContentService.cs" />
     <Compile Include="LocalizationExtentions.cs" />
     <Compile Include="WorkingContext.cs" />
     <Compile Include="LocalizedEntityService.cs" />

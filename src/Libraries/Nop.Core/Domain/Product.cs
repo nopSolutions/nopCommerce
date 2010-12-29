@@ -134,6 +134,16 @@ namespace Nop.Core.Domain
         public virtual ICollection<ProductPicture> ProductPictures { get; set; }
 
         /// <summary>
+        /// Gets or sets the collection of product ratings
+        /// </summary>
+        public virtual ICollection<ProductRating> ProductRatings { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of product reviews
+        /// </summary>
+        public virtual ICollection<ProductReview> ProductReviews { get; set; }
+
+        /// <summary>
         /// Gets or sets the product specification attribute
         /// </summary>
         public virtual ICollection<ProductSpecificationAttribute> ProductSpecificationAttributes { get; set; }
