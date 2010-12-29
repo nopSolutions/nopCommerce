@@ -15,10 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Data;
-using Nop.Core;
 
 namespace Nop.Services
 {
@@ -142,6 +144,75 @@ namespace Nop.Services
             _cacheManager.RemoveByPattern(LOCALIZEDPROPERTY_PATTERN_KEY);
         }
 
+        /// <summary>
+        /// Save localized value
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <param name="keySelector">Ley selector</param>
+        /// <param name="localeValue">Locale value</param>
+        /// <param name="languageId">Language ID</param>
+        public void SaveLocalizedValue<T>(T entity,
+            Expression<Func<T, string>> keySelector,
+            string localeValue,
+            int languageId) where T : BaseEntity, ILocalizedEntity
+        {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            if (languageId == 0)
+                throw new ArgumentOutOfRangeException("languageId", "Language ID should not be 0");
+
+            var member = keySelector.Body as MemberExpression;
+            if (member == null)
+            {
+                throw new ArgumentException(string.Format(
+                    "Expression '{0}' refers to a method, not a property.",
+                    keySelector));
+            }
+
+            var propInfo = member.Member as PropertyInfo;
+            if (propInfo == null)
+            {
+                throw new ArgumentException(string.Format(
+                       "Expression '{0}' refers to a field, not a property.",
+                       keySelector));
+            }
+
+            string localeKeyGroup = typeof(T).Name;
+            string localeKey = propInfo.Name;
+
+            var props = GetLocalizedProperties(entity.Id, localeKeyGroup);
+            var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
+                lp.LocaleKey == localeKey);
+            if (prop != null)
+            {
+                if (string.IsNullOrWhiteSpace(localeValue))
+                {
+                    //delete
+                    DeleteLocalizedProperty(prop);
+                }
+                else
+                {
+                    //update
+                    prop.LocaleValue = localeValue;
+                    UpdateLocalizedProperty(prop);
+                }
+            }
+            else
+            {
+                //insert
+                prop = new LocalizedProperty()
+                { 
+                    EntityId = entity.Id,
+                    LanguageId = languageId,
+                    LocaleKey = localeKey,
+                    LocaleKeyGroup = localeKeyGroup,
+                    LocaleValue = localeValue
+                };
+                InsertLocalizedProperty(prop);
+            }
+        }
 
         #endregion
     }

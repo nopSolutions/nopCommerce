@@ -67,7 +67,6 @@ namespace Nop.Services
             string result = string.Empty;
 
             //load localized value
-            //TODO: localeKeyGroup can be removed because we have unique ID
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 

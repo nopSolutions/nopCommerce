@@ -12,9 +12,11 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using Nop.Core.Domain;
+using System.Linq.Expressions;
 using Nop.Core;
+using Nop.Core.Domain;
 
 namespace Nop.Services
 {
@@ -55,5 +57,18 @@ namespace Nop.Services
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
         void UpdateLocalizedProperty(LocalizedProperty localizedProperty);
+
+        /// <summary>
+        /// Save localized value
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <param name="keySelector">Ley selector</param>
+        /// <param name="localeValue">Locale value</param>
+        /// <param name="languageId">Language ID</param>
+        void SaveLocalizedValue<T>(T entity,
+            Expression<Func<T, string>> keySelector,
+            string localeValue,
+            int languageId) where T : BaseEntity, ILocalizedEntity;
     }
 }
