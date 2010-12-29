@@ -5,11 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Nop.Core;
-using Nop.Core.Domain;
-using Nop.Data;
-using Nop.Services;
-using Nop.Services.Logging;
+using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
 {
@@ -30,20 +26,19 @@ namespace Nop.Web.MVC
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+                new { controller = "Catalog", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
 
         }
 
         protected void Application_Start()
         {
+            DIBootstrapper.Boot();
+            
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-
-            DbDatabase.SetInitializer<NopObjectContext>(new DatabaseInitializer());
-
         }
     }
 }

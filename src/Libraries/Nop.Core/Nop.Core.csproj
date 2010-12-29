@@ -86,6 +86,7 @@
     <Compile Include="IO\IStorageFile.cs" />
     <Compile Include="IO\IStorageFolder.cs" />
     <Compile Include="IO\IStorageProvider.cs" />
+    <Compile Include="Tasks\IStartupTask.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="SecurityHelper.cs" />
     <Compile Include="Domain\Customer.cs" />
