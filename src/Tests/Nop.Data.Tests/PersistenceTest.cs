@@ -23,12 +23,11 @@ namespace Nop.Data.Tests
             context.Database.Create();
         }
 
-        private string GetTestDbName()
+        protected string GetTestDbName()
         {
             string testDbName = "Data Source=" + (System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)) + @"\\Nop.Data.Tests.Db.sdf;Persist Security Info=False";
             return testDbName;
-        }
-        
+        }        
         
         /// <summary>
         /// Persistance test helper
