@@ -34,7 +34,7 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IRepository<LocaleStringResource> _lsrRespository;
+        private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -45,12 +45,12 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="lsrRespository">Locale string resource repository</param>
+        /// <param name="lsrRepository">Locale string resource repository</param>
         public LocalizationService(ICacheManager cacheManager,
-            IRepository<LocaleStringResource> lsrRespository)
+            IRepository<LocaleStringResource> lsrRepository)
         {
             this._cacheManager = cacheManager;
-            this._lsrRespository = lsrRespository;
+            this._lsrRepository = lsrRepository;
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace Nop.Services
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
 
-            _lsrRespository.Delete(localeStringResource);
+            _lsrRepository.Delete(localeStringResource);
 
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
@@ -82,7 +82,7 @@ namespace Nop.Services
             if (localeStringResourceId == 0)
                 return null;
 
-            var localeStringResource = _lsrRespository.GetById(localeStringResourceId);
+            var localeStringResource = _lsrRepository.GetById(localeStringResourceId);
 
             return localeStringResource;
         }
@@ -97,7 +97,7 @@ namespace Nop.Services
             string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
             return _cacheManager.Get(key, () =>
                                               {
-                                                  var query = from l in _lsrRespository.Table
+                                                  var query = from l in _lsrRepository.Table
                                                               orderby l.ResourceName
                                                               where l.LanguageId == languageId
                                                               select l;
@@ -116,7 +116,7 @@ namespace Nop.Services
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
             
-            _lsrRespository.Insert(localeStringResource);
+            _lsrRepository.Insert(localeStringResource);
 
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
@@ -131,7 +131,7 @@ namespace Nop.Services
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
 
-            _lsrRespository.Update(localeStringResource);
+            _lsrRepository.Update(localeStringResource);
 
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);

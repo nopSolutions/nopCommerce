@@ -34,7 +34,7 @@ namespace Nop.Services
 
         #region Fields
         
-        private readonly IRepository<Setting> _settingRespository;
+        private readonly IRepository<Setting> _settingRepository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -45,12 +45,12 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="settingRespository">Setting repository</param>
+        /// <param name="settingRepository">Setting repository</param>
         public SettingService(ICacheManager cacheManager,
-            IRepository<Setting> settingRespository)
+            IRepository<Setting> settingRepository)
         {
             this._cacheManager = cacheManager;
-            this._settingRespository = settingRespository;
+            this._settingRepository = settingRepository;
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace Nop.Services
             if (setting == null)
                 throw new ArgumentNullException("setting");
 
-            _settingRespository.Insert(setting);
+            _settingRepository.Insert(setting);
 
             //cache
             _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
@@ -81,7 +81,7 @@ namespace Nop.Services
             if (setting == null)
                 throw new ArgumentNullException("setting");
 
-            _settingRespository.Insert(setting);
+            _settingRepository.Insert(setting);
 
             //cache
             _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
@@ -101,7 +101,7 @@ namespace Nop.Services
             if (settingId == 0)
                 return null;
 
-            var setting = _settingRespository.GetById(settingId);
+            var setting = _settingRepository.GetById(settingId);
             return setting;
         }
 
@@ -167,7 +167,7 @@ namespace Nop.Services
             if (setting == null)
                 return;
 
-            _settingRespository.Delete(setting);
+            _settingRepository.Delete(setting);
 
             //cache
             _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
@@ -183,7 +183,7 @@ namespace Nop.Services
             string key = string.Format(SETTINGS_ALL_KEY);
             return _cacheManager.Get(key, () =>
                                               {
-                                                  var query = from s in _settingRespository.Table
+                                                  var query = from s in _settingRepository.Table
                                                               orderby s.Name
                                                               select s;
                                                   var settings = query.ToDictionary(s => s.Name.ToLowerInvariant());

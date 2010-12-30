@@ -38,7 +38,7 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IRepository<LocalizedProperty> _localizedPropertyRespository;
+        private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -49,12 +49,12 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="localizedPropertyRespository">Localized property repository</param>
+        /// <param name="localizedPropertyRepository">Localized property repository</param>
         public LocalizedEntityService(ICacheManager cacheManager,
-            IRepository<LocalizedProperty> localizedPropertyRespository)
+            IRepository<LocalizedProperty> localizedPropertyRepository)
         {
             this._cacheManager = cacheManager;
-            this._localizedPropertyRespository = localizedPropertyRespository;
+            this._localizedPropertyRepository = localizedPropertyRepository;
         }
 
         #endregion
@@ -70,7 +70,7 @@ namespace Nop.Services
             if (localizedProperty == null)
                 throw new ArgumentNullException("localizedProperty");
 
-            _localizedPropertyRespository.Delete(localizedProperty);
+            _localizedPropertyRepository.Delete(localizedProperty);
 
             //cache
             _cacheManager.RemoveByPattern(LOCALIZEDPROPERTY_PATTERN_KEY);
@@ -86,7 +86,7 @@ namespace Nop.Services
             if (localizedPropertyId == 0)
                 return null;
 
-            var localizedProperty = _localizedPropertyRespository.GetById(localizedPropertyId);
+            var localizedProperty = _localizedPropertyRepository.GetById(localizedPropertyId);
             return localizedProperty;
         }
 
@@ -104,7 +104,7 @@ namespace Nop.Services
             string key = string.Format(LOCALIZEDPROPERTY_ALL_KEY, entityId, localeKeyGroup);
             return _cacheManager.Get(key, () =>
             {
-                var query = from lp in _localizedPropertyRespository.Table
+                var query = from lp in _localizedPropertyRepository.Table
                             orderby lp.Id
                             where lp.EntityId ==  entityId &&
                             lp.LocaleKeyGroup == localeKeyGroup
@@ -123,7 +123,7 @@ namespace Nop.Services
             if (localizedProperty == null)
                 throw new ArgumentNullException("localizedProperty");
 
-            _localizedPropertyRespository.Insert(localizedProperty);
+            _localizedPropertyRepository.Insert(localizedProperty);
 
             //cache
             _cacheManager.RemoveByPattern(LOCALIZEDPROPERTY_PATTERN_KEY);
@@ -138,7 +138,7 @@ namespace Nop.Services
             if (localizedProperty == null)
                 throw new ArgumentNullException("localizedProperty");
 
-            _localizedPropertyRespository.Update(localizedProperty);
+            _localizedPropertyRepository.Update(localizedProperty);
 
             //cache
             _cacheManager.RemoveByPattern(LOCALIZEDPROPERTY_PATTERN_KEY);

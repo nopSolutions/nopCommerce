@@ -28,7 +28,7 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly IRepository<Log> _logRespository;
+        private readonly IRepository<Log> _logRepository;
         
         #endregion
         
@@ -37,10 +37,10 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="logRespository">Log repository</param>
-        public DefaultLogger(IRepository<Log> logRespository)
+        /// <param name="logRepository">Log repository</param>
+        public DefaultLogger(IRepository<Log> logRepository)
         {
-            this._logRespository = logRespository;
+            this._logRepository = logRepository;
         }
 
         #endregion
@@ -73,7 +73,7 @@ namespace Nop.Services.Logging
             if (log == null)
                 return;
 
-            _logRespository.Delete(log);
+            _logRepository.Delete(log);
         }
 
         /// <summary>
@@ -81,9 +81,9 @@ namespace Nop.Services.Logging
         /// </summary>
         public void ClearLog()
         {
-            var log = _logRespository.Table.ToList();
+            var log = _logRepository.Table.ToList();
             foreach (var logItem in log)
-                _logRespository.Delete(logItem);
+                _logRepository.Delete(logItem);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Nop.Services.Logging
             if (logLevel.HasValue)
                 logLevelId = (int)logLevel.Value;
 
-            var query = from l in _logRespository.Table
+            var query = from l in _logRepository.Table
                         where (!fromUtc.HasValue || fromUtc.Value <= l.CreatedOnUtc) &&
                         (!toUtc.HasValue || toUtc.Value >= l.CreatedOnUtc) &&
                         (!logLevelId.HasValue || logLevelId.Value == l.LogLevelId) &&
@@ -124,7 +124,7 @@ namespace Nop.Services.Logging
             if (logId == 0)
                 return null;
 
-            var log = _logRespository.GetById(logId);
+            var log = _logRepository.GetById(logId);
             return log;
         }
         
@@ -180,7 +180,7 @@ namespace Nop.Services.Logging
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            _logRespository.Insert(log);
+            _logRepository.Insert(log);
 
             return log;
         }

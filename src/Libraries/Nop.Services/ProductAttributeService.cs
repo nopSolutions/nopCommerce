@@ -40,11 +40,10 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly ILocalizedEntityService _leService;
-        private readonly IRepository<ProductAttribute> _productAttributeRespository;
-        private readonly IRepository<ProductVariantAttribute> _productVariantAttributeRespository;
-        private readonly IRepository<ProductVariantAttributeCombination> _productVariantAttributeCombinationRespository;
-        private readonly IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRespository;
+        private readonly IRepository<ProductAttribute> _productAttributeRepository;
+        private readonly IRepository<ProductVariantAttribute> _productVariantAttributeRepository;
+        private readonly IRepository<ProductVariantAttributeCombination> _productVariantAttributeCombinationRepository;
+        private readonly IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRepository;
         private readonly ICacheManager _cacheManager;
 
 
@@ -56,22 +55,22 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="productAttributeRespository">Product attribute repository</param>
-        /// <param name="productVariantAttributeRespository">Product variant attribute mapping repository</param>
-        /// <param name="productVariantAttributeCombinationRespository">Product variant attribute combination repository</param>
-        /// <param name="productVariantAttributeValueRespository">Product variant attribute value repository</param>
+        /// <param name="productAttributeRepository">Product attribute repository</param>
+        /// <param name="productVariantAttributeRepository">Product variant attribute mapping repository</param>
+        /// <param name="productVariantAttributeCombinationRepository">Product variant attribute combination repository</param>
+        /// <param name="productVariantAttributeValueRepository">Product variant attribute value repository</param>
         public ProductAttributeService(ICacheManager cacheManager,
-            IRepository<ProductAttribute> productAttributeRespository,
-            IRepository<ProductVariantAttribute> productVariantAttributeRespository,
-            IRepository<ProductVariantAttributeCombination> productVariantAttributeCombinationRespository,
-            IRepository<ProductVariantAttributeValue> productVariantAttributeValueRespository
+            IRepository<ProductAttribute> productAttributeRepository,
+            IRepository<ProductVariantAttribute> productVariantAttributeRepository,
+            IRepository<ProductVariantAttributeCombination> productVariantAttributeCombinationRepository,
+            IRepository<ProductVariantAttributeValue> productVariantAttributeValueRepository
             )
         {
             this._cacheManager = cacheManager;
-            this._productAttributeRespository = productAttributeRespository;
-            this._productVariantAttributeRespository = productVariantAttributeRespository;
-            this._productVariantAttributeCombinationRespository = productVariantAttributeCombinationRespository;
-            this._productVariantAttributeValueRespository = productVariantAttributeValueRespository;
+            this._productAttributeRepository = productAttributeRepository;
+            this._productVariantAttributeRepository = productVariantAttributeRepository;
+            this._productVariantAttributeCombinationRepository = productVariantAttributeCombinationRepository;
+            this._productVariantAttributeValueRepository = productVariantAttributeValueRepository;
         }
 
         #endregion
@@ -89,7 +88,7 @@ namespace Nop.Services
             if (productAttribute == null)
                 return;
 
-            _productAttributeRespository.Delete(productAttribute);
+            _productAttributeRepository.Delete(productAttribute);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
@@ -106,7 +105,7 @@ namespace Nop.Services
             string key = PRODUCTATTRIBUTES_ALL_KEY;
             return _cacheManager.Get(key, () =>
             {
-                var query = from pa in _productAttributeRespository.Table
+                var query = from pa in _productAttributeRepository.Table
                             orderby pa.Name
                             select pa;
                 var productAttributes = query.ToList();
@@ -127,7 +126,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                var pa = _productAttributeRespository.GetById(productAttributeId);
+                var pa = _productAttributeRepository.GetById(productAttributeId);
                 return pa;
             });
         }
@@ -141,7 +140,7 @@ namespace Nop.Services
             if (productAttribute == null)
                 throw new ArgumentNullException("productAttribute");
 
-            _productAttributeRespository.Insert(productAttribute);
+            _productAttributeRepository.Insert(productAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -157,7 +156,7 @@ namespace Nop.Services
             if (productAttribute == null)
                 throw new ArgumentNullException("productAttribute");
 
-            _productAttributeRespository.Update(productAttribute);
+            _productAttributeRepository.Update(productAttribute);
             
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -177,7 +176,7 @@ namespace Nop.Services
             if (productVariantAttribute == null)
                 return;
 
-            _productVariantAttributeRespository.Delete(productVariantAttribute);
+            _productVariantAttributeRepository.Delete(productVariantAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -195,7 +194,7 @@ namespace Nop.Services
 
             return _cacheManager.Get(key, () =>
             {
-                var query = from pva in _productVariantAttributeRespository.Table
+                var query = from pva in _productVariantAttributeRepository.Table
                             orderby pva.DisplayOrder
                             where pva.ProductVariantId == productVariantId
                             select pva;
@@ -217,7 +216,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTVARIANTATTRIBUTES_BY_ID_KEY, productVariantAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                return _productVariantAttributeRespository.GetById(productVariantAttributeId);
+                return _productVariantAttributeRepository.GetById(productVariantAttributeId);
             });
         }
 
@@ -230,7 +229,7 @@ namespace Nop.Services
             if (productVariantAttribute == null)
                 throw new ArgumentNullException("productVariantAttribute");
 
-            _productVariantAttributeRespository.Insert(productVariantAttribute);
+            _productVariantAttributeRepository.Insert(productVariantAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -246,7 +245,7 @@ namespace Nop.Services
             if (productVariantAttribute == null)
                 throw new ArgumentNullException("productVariantAttribute");
 
-            _productVariantAttributeRespository.Update(productVariantAttribute);
+            _productVariantAttributeRepository.Update(productVariantAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -266,7 +265,7 @@ namespace Nop.Services
             if (productVariantAttributeValue == null)
                 return;
 
-            _productVariantAttributeValueRespository.Delete(productVariantAttributeValue);
+            _productVariantAttributeValueRepository.Delete(productVariantAttributeValue);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -283,7 +282,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_ALL_KEY, productVariantAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from pvav in _productVariantAttributeValueRespository.Table
+                var query = from pvav in _productVariantAttributeValueRepository.Table
                             orderby pvav.DisplayOrder
                             where pvav.ProductVariantAttributeId == productVariantAttributeId
                             select pvav;
@@ -305,7 +304,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_BY_ID_KEY, productVariantAttributeValueId);
             return _cacheManager.Get(key, () =>
             {
-                var pvav = _productVariantAttributeValueRespository.GetById(productVariantAttributeValueId);
+                var pvav = _productVariantAttributeValueRepository.GetById(productVariantAttributeValueId);
                 return pvav;
             });
         }
@@ -319,7 +318,7 @@ namespace Nop.Services
             if (productVariantAttributeValue == null)
                 throw new ArgumentNullException("productVariantAttributeValue");
 
-            _productVariantAttributeValueRespository.Insert(productVariantAttributeValue);
+            _productVariantAttributeValueRepository.Insert(productVariantAttributeValue);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -335,7 +334,7 @@ namespace Nop.Services
             if (productVariantAttributeValue == null)
                 throw new ArgumentNullException("productVariantAttributeValue");
 
-            _productVariantAttributeValueRespository.Update(productVariantAttributeValue);
+            _productVariantAttributeValueRepository.Update(productVariantAttributeValue);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -355,7 +354,7 @@ namespace Nop.Services
             if (combination == null)
                 return;
 
-            _productVariantAttributeCombinationRespository.Delete(combination);
+            _productVariantAttributeCombinationRepository.Delete(combination);
         }
 
         /// <summary>
@@ -368,7 +367,7 @@ namespace Nop.Services
             if (productVariantId == 0)
                 return new List<ProductVariantAttributeCombination>();
 
-            var query = from pvac in _productVariantAttributeCombinationRespository.Table
+            var query = from pvac in _productVariantAttributeCombinationRepository.Table
                         orderby pvac.Id
                         where pvac.ProductVariantId == productVariantId
                         select pvac;
@@ -386,7 +385,7 @@ namespace Nop.Services
             if (productVariantAttributeCombinationId == 0)
                 return null;
             
-            var combination = _productVariantAttributeCombinationRespository.GetById(productVariantAttributeCombinationId);
+            var combination = _productVariantAttributeCombinationRepository.GetById(productVariantAttributeCombinationId);
             return combination;
         }
 
@@ -399,7 +398,7 @@ namespace Nop.Services
             if (combination == null)
                 throw new ArgumentNullException("combination");
 
-            _productVariantAttributeCombinationRespository.Insert(combination);
+            _productVariantAttributeCombinationRepository.Insert(combination);
         }
 
         /// <summary>
@@ -411,7 +410,7 @@ namespace Nop.Services
             if (combination == null)
                 throw new ArgumentNullException("combination");
 
-            _productVariantAttributeCombinationRespository.Update(combination);
+            _productVariantAttributeCombinationRepository.Update(combination);
         }
 
         #endregion

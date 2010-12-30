@@ -40,13 +40,13 @@ namespace Nop.Services
         #region Fields
 
         private readonly IWorkingContext _context;
-        private readonly IRepository<Product> _productRespository;
-        private readonly IRepository<ProductCategory> _productCategoryRespository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRespository;
-        private readonly IRepository<ProductVariant> _productVariantRespository;
-        private readonly IRepository<RelatedProduct> _relatedProductRespository;
-        private readonly IRepository<CrossSellProduct> _crossSellProductRespository;
-        private readonly IRepository<TierPrice> _tierPriceRespository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
+        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        private readonly IRepository<ProductVariant> _productVariantRepository;
+        private readonly IRepository<RelatedProduct> _relatedProductRepository;
+        private readonly IRepository<CrossSellProduct> _crossSellProductRepository;
+        private readonly IRepository<TierPrice> _tierPriceRepository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -58,32 +58,32 @@ namespace Nop.Services
         /// </summary>
         /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="productRespository">Product repository</param>
-        /// <param name="productCategoryRespository">Product category repository</param>
-        /// <param name="productManufacturerRespository">Product manufacturer repository</param>
-        /// <param name="productVariantRespository">Product variant repository</param>
-        /// <param name="relatedProductRespository">Related product repository</param>
-        /// <param name="crossSellProductRespository">Cross-sell product repository</param>
-        /// <param name="tierPriceRespository">Tier price repository</param>
+        /// <param name="productRepository">Product repository</param>
+        /// <param name="productCategoryRepository">Product category repository</param>
+        /// <param name="productManufacturerRepository">Product manufacturer repository</param>
+        /// <param name="productVariantRepository">Product variant repository</param>
+        /// <param name="relatedProductRepository">Related product repository</param>
+        /// <param name="crossSellProductRepository">Cross-sell product repository</param>
+        /// <param name="tierPriceRepository">Tier price repository</param>
         public ProductService(IWorkingContext context, 
             ICacheManager cacheManager,
-            IRepository<Product> productRespository,
-            IRepository<ProductCategory> productCategoryRespository,
-            IRepository<ProductManufacturer> productManufacturerRespository,
-            IRepository<ProductVariant> productVariantRespository,
-            IRepository<RelatedProduct> relatedProductRespository,
-            IRepository<CrossSellProduct> crossSellProductRespository,
-            IRepository<TierPrice> tierPriceRespository)
+            IRepository<Product> productRepository,
+            IRepository<ProductCategory> productCategoryRepository,
+            IRepository<ProductManufacturer> productManufacturerRepository,
+            IRepository<ProductVariant> productVariantRepository,
+            IRepository<RelatedProduct> relatedProductRepository,
+            IRepository<CrossSellProduct> crossSellProductRepository,
+            IRepository<TierPrice> tierPriceRepository)
         {
             this._context = context;
             this._cacheManager = cacheManager;
-            this._productRespository = productRespository;
-            this._productCategoryRespository = productCategoryRespository;
-            this._productManufacturerRespository = productManufacturerRespository;
-            this._productVariantRespository = productVariantRespository;
-            this._relatedProductRespository = relatedProductRespository;
-            this._crossSellProductRespository = crossSellProductRespository;
-            this._tierPriceRespository = tierPriceRespository;
+            this._productRepository = productRepository;
+            this._productCategoryRepository = productCategoryRepository;
+            this._productManufacturerRepository = productManufacturerRepository;
+            this._productVariantRepository = productVariantRepository;
+            this._relatedProductRepository = relatedProductRepository;
+            this._crossSellProductRepository = crossSellProductRepository;
+            this._tierPriceRepository = tierPriceRepository;
         }
 
         #endregion
@@ -127,7 +127,7 @@ namespace Nop.Services
         /// <returns>Product collection</returns>
         public List<Product> GetAllProducts(bool showHidden)
         {
-            var query = from p in _productRespository.Table
+            var query = from p in _productRepository.Table
                         orderby p.Name
                         where (showHidden || p.Published) &&
                         !p.Deleted
@@ -144,7 +144,7 @@ namespace Nop.Services
         {
             bool showHidden = _context.IsAdmin;
 
-            var query = from p in _productRespository.Table
+            var query = from p in _productRepository.Table
                         orderby p.Name
                         where (showHidden || p.Published) &&
                         !p.Deleted &&
@@ -167,7 +167,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
             return _cacheManager.Get(key, () =>
             {
-                var product = _productRespository.GetById(productId);
+                var product = _productRepository.GetById(productId);
                 return product;
             });
         }
@@ -181,7 +181,7 @@ namespace Nop.Services
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            _productRespository.Insert(product);
+            _productRepository.Insert(product);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -197,7 +197,7 @@ namespace Nop.Services
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            _productRespository.Update(product);
+            _productRepository.Update(product);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -248,14 +248,14 @@ namespace Nop.Services
 
             bool searchKeywords = String.IsNullOrWhiteSpace(keywords);
 
-            var query1 = from p in _productRespository.Table
-                         from pcm in _productCategoryRespository.Table
+            var query1 = from p in _productRepository.Table
+                         from pcm in _productCategoryRepository.Table
                          .Where(pcm => p.Id == pcm.ProductId).DefaultIfEmpty()
-                         from pmm in _productManufacturerRespository.Table
+                         from pmm in _productManufacturerRepository.Table
                          .Where(pmm => p.Id == pmm.ProductId).DefaultIfEmpty()
-                         from rp in _relatedProductRespository.Table
+                         from rp in _relatedProductRepository.Table
                          .Where(rp => p.Id == rp.ProductId2).DefaultIfEmpty()
-                         from pv in _productVariantRespository.Table
+                         from pv in _productVariantRepository.Table
                          .Where(pv => p.Id == pv.ProductId).DefaultIfEmpty()
                          //UNDONE: search in localized properties
                          //from pvl in _context.ProductVariantLocalized
@@ -290,7 +290,7 @@ namespace Nop.Services
                          )
                          )
                          select p.Id;
-            var query = from p in _productRespository.Table
+            var query = from p in _productRepository.Table
                         where query1.Contains(p.Id)
                         orderby p.CreatedOnUtc descending
                         select p;
@@ -309,7 +309,7 @@ namespace Nop.Services
         /// <returns>Result</returns>
         public List<ProductVariant> GetLowStockProductVariants()
         {
-            var query = from pv in _productVariantRespository.Table
+            var query = from pv in _productVariantRepository.Table
                         orderby pv.MinStockQuantity
                         where !pv.Deleted &&
                         pv.MinStockQuantity >= pv.StockQuantity
@@ -331,7 +331,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTVARIANTS_BY_ID_KEY, productVariantId);
             return _cacheManager.Get(key, () =>
             {
-                var pv = _productVariantRespository.GetById(productVariantId);
+                var pv = _productVariantRepository.GetById(productVariantId);
                 return pv;
             });
         }
@@ -348,7 +348,7 @@ namespace Nop.Services
 
             sku = sku.Trim();
 
-            var query = from pv in _productVariantRespository.Table
+            var query = from pv in _productVariantRepository.Table
                         orderby pv.DisplayOrder, pv.Id
                         where !pv.Deleted &&
                         pv.Sku == sku
@@ -366,7 +366,7 @@ namespace Nop.Services
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
 
-            _productVariantRespository.Insert(productVariant);
+            _productVariantRepository.Insert(productVariant);
             
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -382,7 +382,7 @@ namespace Nop.Services
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
 
-            _productVariantRespository.Update(productVariant);
+            _productVariantRepository.Update(productVariant);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -411,7 +411,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTVARIANTS_ALL_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>
                                               {
-                                                  var query = (IQueryable<ProductVariant>) _productVariantRespository.Table;
+                                                  var query = (IQueryable<ProductVariant>) _productVariantRepository.Table;
                                                   if (!showHidden)
                                                   {
                                                       query = query.Where(pv => pv.Published);
@@ -464,7 +464,7 @@ namespace Nop.Services
             if (relatedProduct == null)
                 return;
 
-            _relatedProductRespository.Delete(relatedProduct);
+            _relatedProductRepository.Delete(relatedProduct);
         }
 
         /// <summary>
@@ -476,8 +476,8 @@ namespace Nop.Services
         {
             bool showHidden = _context.IsAdmin;
 
-            var query = from rp in _relatedProductRespository.Table
-                        join p in _productRespository.Table on rp.ProductId2 equals p.Id
+            var query = from rp in _relatedProductRepository.Table
+                        join p in _productRepository.Table on rp.ProductId2 equals p.Id
                         where rp.ProductId1 == productId1 &&
                         !p.Deleted &&
                         (showHidden || p.Published)
@@ -498,7 +498,7 @@ namespace Nop.Services
             if (relatedProductId == 0)
                 return null;
             
-            var relatedProduct = _relatedProductRespository.GetById(relatedProductId);
+            var relatedProduct = _relatedProductRepository.GetById(relatedProductId);
             return relatedProduct;
         }
 
@@ -511,7 +511,7 @@ namespace Nop.Services
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
 
-            _relatedProductRespository.Insert(relatedProduct);
+            _relatedProductRepository.Insert(relatedProduct);
         }
 
         /// <summary>
@@ -523,7 +523,7 @@ namespace Nop.Services
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
 
-            _relatedProductRespository.Update(relatedProduct);
+            _relatedProductRepository.Update(relatedProduct);
         }
 
         #endregion
@@ -539,7 +539,7 @@ namespace Nop.Services
             if (crossSellProduct == null)
                 return;
 
-            _crossSellProductRespository.Delete(crossSellProduct);
+            _crossSellProductRepository.Delete(crossSellProduct);
         }
 
         /// <summary>
@@ -551,8 +551,8 @@ namespace Nop.Services
         {
             bool showHidden = _context.IsAdmin;
 
-            var query = from csp in _crossSellProductRespository.Table
-                        join p in _productRespository.Table on csp.ProductId2 equals p.Id
+            var query = from csp in _crossSellProductRepository.Table
+                        join p in _productRepository.Table on csp.ProductId2 equals p.Id
                         where csp.ProductId1 == productId1 &&
                         !p.Deleted &&
                         (showHidden || p.Published)
@@ -572,7 +572,7 @@ namespace Nop.Services
             if (crossSellProductId == 0)
                 return null;
 
-            var crossSellProduct = _crossSellProductRespository.GetById(crossSellProductId);
+            var crossSellProduct = _crossSellProductRepository.GetById(crossSellProductId);
             return crossSellProduct;
         }
 
@@ -585,7 +585,7 @@ namespace Nop.Services
             if (crossSellProduct == null)
                 throw new ArgumentNullException("crossSellProduct");
 
-            _crossSellProductRespository.Insert(crossSellProduct);
+            _crossSellProductRepository.Insert(crossSellProduct);
         }
 
         /// <summary>
@@ -597,7 +597,7 @@ namespace Nop.Services
             if (crossSellProduct == null)
                 throw new ArgumentNullException("crossSellProduct");
 
-            _crossSellProductRespository.Update(crossSellProduct);
+            _crossSellProductRepository.Update(crossSellProduct);
         }
 
         #endregion
@@ -613,7 +613,7 @@ namespace Nop.Services
             if (tierPrice == null)
                 return;
 
-            _tierPriceRespository.Delete(tierPrice);
+            _tierPriceRepository.Delete(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -630,7 +630,7 @@ namespace Nop.Services
             if (tierPriceId == 0)
                 return null;
             
-            var tierPrice = _tierPriceRespository.GetById(tierPriceId);
+            var tierPrice = _tierPriceRepository.GetById(tierPriceId);
             return tierPrice;
         }
 
@@ -647,7 +647,7 @@ namespace Nop.Services
             string key = string.Format(TIERPRICES_ALLBYPRODUCTVARIANTID_KEY, productVariantId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from tp in _tierPriceRespository.Table
+                var query = from tp in _tierPriceRepository.Table
                             orderby tp.Quantity
                             where tp.ProductVariantId == productVariantId
                             select tp;
@@ -665,7 +665,7 @@ namespace Nop.Services
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
 
-            _tierPriceRespository.Insert(tierPrice);
+            _tierPriceRepository.Insert(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -681,7 +681,7 @@ namespace Nop.Services
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
 
-            _tierPriceRespository.Update(tierPrice);
+            _tierPriceRepository.Update(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);

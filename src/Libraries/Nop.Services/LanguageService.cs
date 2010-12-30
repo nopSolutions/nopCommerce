@@ -36,7 +36,7 @@ namespace Nop.Services
         #region Fields
 
         private readonly IWorkingContext _context;
-        private readonly IRepository<Language> _languageRespository;
+        private readonly IRepository<Language> _languageRepository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -48,14 +48,14 @@ namespace Nop.Services
         /// </summary>
         /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="languageRespository">Language repository</param>
+        /// <param name="languageRepository">Language repository</param>
         public LanguageService(IWorkingContext context, 
             ICacheManager cacheManager,
-            IRepository<Language> languageRespository)
+            IRepository<Language> languageRepository)
         {
             this._context = context;
             this._cacheManager = cacheManager;
-            this._languageRespository = languageRespository;
+            this._languageRepository = languageRepository;
         }
 
         #endregion
@@ -71,7 +71,7 @@ namespace Nop.Services
             if (language == null)
                 return;
 
-            _languageRespository.Delete(language);
+            _languageRepository.Delete(language);
 
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
@@ -97,7 +97,7 @@ namespace Nop.Services
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from l in _languageRespository.Table
+                var query = from l in _languageRepository.Table
                             orderby l.DisplayOrder
                             where showHidden || l.Published
                             select l;
@@ -119,7 +119,7 @@ namespace Nop.Services
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
             return _cacheManager.Get(key, () =>
                                               {
-                                                  return _languageRespository.GetById(languageId);
+                                                  return _languageRepository.GetById(languageId);
                                               });
         }
 
@@ -132,7 +132,7 @@ namespace Nop.Services
             if (language == null)
                 throw new ArgumentNullException("language");
 
-            _languageRespository.Insert(language);
+            _languageRepository.Insert(language);
 
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
@@ -147,7 +147,7 @@ namespace Nop.Services
             if (language == null)
                 throw new ArgumentNullException("language");
 
-            _languageRespository.Update(language);
+            _languageRepository.Update(language);
 
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);

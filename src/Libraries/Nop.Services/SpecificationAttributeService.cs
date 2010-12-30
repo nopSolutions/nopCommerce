@@ -37,10 +37,9 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly ILocalizedEntityService _leService;
-        private readonly IRepository<SpecificationAttribute> _specificationAttributeRespository;
-        private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRespository;
-        private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRespository;
+        private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
+        private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
+        private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -51,18 +50,18 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="specificationAttributeRespository">Specification attribute repository</param>
-        /// <param name="specificationAttributeOptionRespository">Specification attribute option repository</param>
-        /// <param name="productSpecificationAttributeRespository">Product specification attribute repository</param>
+        /// <param name="specificationAttributeRepository">Specification attribute repository</param>
+        /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
+        /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
-            IRepository<SpecificationAttribute> specificationAttributeRespository,
-            IRepository<SpecificationAttributeOption> specificationAttributeOptionRespository,
-            IRepository<ProductSpecificationAttribute> productSpecificationAttributeRespository)
+            IRepository<SpecificationAttribute> specificationAttributeRepository,
+            IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
+            IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository)
         {
             this._cacheManager = cacheManager;
-            this._specificationAttributeRespository = specificationAttributeRespository;
-            this._specificationAttributeOptionRespository = specificationAttributeOptionRespository;
-            this._productSpecificationAttributeRespository = productSpecificationAttributeRespository;
+            this._specificationAttributeRepository = specificationAttributeRepository;
+            this._specificationAttributeOptionRepository = specificationAttributeOptionRepository;
+            this._productSpecificationAttributeRepository = productSpecificationAttributeRepository;
         }
 
         #endregion
@@ -84,7 +83,7 @@ namespace Nop.Services
             string key = string.Format(SPECIFICATIONATTRIBUTE_BY_ID_KEY, specificationAttributeId);
             return _cacheManager.Get(key, () =>
             {
-                var sa = _specificationAttributeRespository.GetById(specificationAttributeId);
+                var sa = _specificationAttributeRepository.GetById(specificationAttributeId);
                 return sa;
             });
         }
@@ -95,7 +94,7 @@ namespace Nop.Services
         /// <returns>Specification attributes</returns>
         public List<SpecificationAttribute> GetSpecificationAttributes()
         {
-            var query = from sa in _specificationAttributeRespository.Table
+            var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder
                         select sa;
             var specificationAttributes = query.ToList();
@@ -111,7 +110,7 @@ namespace Nop.Services
             if (specificationAttribute == null)
                 return;
 
-            _specificationAttributeRespository.Delete(specificationAttribute);
+            _specificationAttributeRepository.Delete(specificationAttribute);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -127,7 +126,7 @@ namespace Nop.Services
             if (specificationAttribute == null)
                 throw new ArgumentNullException("specificationAttribute");
 
-            _specificationAttributeRespository.Insert(specificationAttribute);
+            _specificationAttributeRepository.Insert(specificationAttribute);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -143,7 +142,7 @@ namespace Nop.Services
             if (specificationAttribute == null)
                 throw new ArgumentNullException("specificationAttribute");
 
-            _specificationAttributeRespository.Update(specificationAttribute);
+            _specificationAttributeRepository.Update(specificationAttribute);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -167,7 +166,7 @@ namespace Nop.Services
             string key = string.Format(SPECIFICATIONATTRIBUTEOPTION_BY_ID_KEY, specificationAttributeOptionId);
             return _cacheManager.Get(key, () =>
             {
-                var sao = _specificationAttributeOptionRespository.GetById(specificationAttributeOptionId);
+                var sao = _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId);
                 return sao;
             });
         }
@@ -179,7 +178,7 @@ namespace Nop.Services
         /// <returns>Specification attribute option</returns>
         public List<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
         {
-            var query = from sao in _specificationAttributeOptionRespository.Table
+            var query = from sao in _specificationAttributeOptionRepository.Table
                         orderby sao.DisplayOrder
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
@@ -196,7 +195,7 @@ namespace Nop.Services
             if (specificationAttributeOption == null)
                 return;
 
-            _specificationAttributeOptionRespository.Delete(specificationAttributeOption);
+            _specificationAttributeOptionRepository.Delete(specificationAttributeOption);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -212,7 +211,7 @@ namespace Nop.Services
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
 
-            _specificationAttributeOptionRespository.Insert(specificationAttributeOption);
+            _specificationAttributeOptionRepository.Insert(specificationAttributeOption);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -228,7 +227,7 @@ namespace Nop.Services
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
 
-            _specificationAttributeOptionRespository.Update(specificationAttributeOption);
+            _specificationAttributeOptionRepository.Update(specificationAttributeOption);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -248,7 +247,7 @@ namespace Nop.Services
             if (productSpecificationAttribute == null)
                 return;
 
-            _productSpecificationAttributeRespository.Delete(productSpecificationAttribute);
+            _productSpecificationAttributeRepository.Delete(productSpecificationAttribute);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -285,7 +284,7 @@ namespace Nop.Services
             
             return _cacheManager.Get(key, () =>
             {
-                var query = (IQueryable<ProductSpecificationAttribute>)_productSpecificationAttributeRespository.Table;
+                var query = (IQueryable<ProductSpecificationAttribute>)_productSpecificationAttributeRepository.Table;
                 query = query.Where(psa => psa.ProductId == productId);
                 if (allowFiltering.HasValue)
                     query = query.Where(psa => psa.AllowFiltering == allowFiltering.Value);
@@ -308,7 +307,7 @@ namespace Nop.Services
             if (productSpecificationAttributeId == 0)
                 return null;
             
-            var productSpecificationAttribute = _productSpecificationAttributeRespository.GetById(productSpecificationAttributeId);
+            var productSpecificationAttribute = _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId);
             return productSpecificationAttribute;
         }
 
@@ -321,7 +320,7 @@ namespace Nop.Services
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
 
-            _productSpecificationAttributeRespository.Insert(productSpecificationAttribute);
+            _productSpecificationAttributeRepository.Insert(productSpecificationAttribute);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -337,7 +336,7 @@ namespace Nop.Services
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
 
-            _productSpecificationAttributeRespository.Update(productSpecificationAttribute);
+            _productSpecificationAttributeRepository.Update(productSpecificationAttribute);
 
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);

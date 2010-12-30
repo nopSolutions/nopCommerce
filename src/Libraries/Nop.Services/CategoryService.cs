@@ -41,9 +41,9 @@ namespace Nop.Services
         #region Fields
 
         private readonly IWorkingContext _context;
-        private readonly IRepository<Category> _categoryRespository;
-        private readonly IRepository<ProductCategory> _productCategoryRespository;
-        private readonly IRepository<Product> _productRespository;
+        private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -55,20 +55,20 @@ namespace Nop.Services
         /// </summary>
         /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="categoryRespository">Category repository</param>
-        /// <param name="productCategoryRespository">ProductCategory repository</param>
-        /// <param name="productRespository">Product repository</param>
+        /// <param name="categoryRepository">Category repository</param>
+        /// <param name="productCategoryRepository">ProductCategory repository</param>
+        /// <param name="productRepository">Product repository</param>
         public CategoryService(IWorkingContext context,
             ICacheManager cacheManager,
-            IRepository<Category> categoryRespository,
-            IRepository<ProductCategory> productCategoryRespository,
-            IRepository<Product> productRespository)
+            IRepository<Category> categoryRepository,
+            IRepository<ProductCategory> productCategoryRepository,
+            IRepository<Product> productRepository)
         {
             this._context = context;
             this._cacheManager = cacheManager;
-            this._categoryRespository = categoryRespository;
-            this._productCategoryRespository = productCategoryRespository;
-            this._productRespository = productRespository;
+            this._categoryRepository = categoryRepository;
+            this._productCategoryRepository = productCategoryRepository;
+            this._productRepository = productRepository;
         }
 
         #endregion
@@ -105,7 +105,7 @@ namespace Nop.Services
         /// <returns>Categories</returns>
         public List<Category> GetAllCategories(bool showHidden)
         {
-            var query = from c in _categoryRespository.Table
+            var query = from c in _categoryRepository.Table
                         orderby c.ParentCategoryId, c.DisplayOrder
                         where (showHidden || c.Published) &&
                         !c.Deleted
@@ -114,7 +114,7 @@ namespace Nop.Services
             //filter by access control list (public store)
             //if (!showHidden)
             //{
-            //    query = query.WhereAclPerObjectNotDenied(_categoryRespository);
+            //    query = query.WhereAclPerObjectNotDenied(_categoryRepository);
             //}
             var unsortedCategories = query.ToList();
 
@@ -145,7 +145,7 @@ namespace Nop.Services
             bool showHidden)
         {
             
-            var query = from c in _categoryRespository.Table
+            var query = from c in _categoryRepository.Table
                         orderby c.DisplayOrder
                         where (showHidden || c.Published) && 
                         !c.Deleted && 
@@ -155,7 +155,7 @@ namespace Nop.Services
             //filter by access control list (public store)
             //if (!showHidden)
             //{
-            //    query = query.WhereAclPerObjectNotDenied(_categoryRespository);
+            //    query = query.WhereAclPerObjectNotDenied(_categoryRepository);
             //}
 
             var categories = query.ToList();
@@ -170,7 +170,7 @@ namespace Nop.Services
         {
             bool showHidden = _context.IsAdmin;
             
-            var query = from c in _categoryRespository.Table
+            var query = from c in _categoryRepository.Table
                         orderby c.DisplayOrder
                         where (showHidden || c.Published) && !c.Deleted && c.ShowOnHomePage
                         select c;
@@ -198,7 +198,7 @@ namespace Nop.Services
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
             return _cacheManager.Get(key, () =>
             {
-                var category = _categoryRespository.GetById(categoryId);
+                var category = _categoryRepository.GetById(categoryId);
                 //filter by access control list (public store)
                 //if (category != null && !showHidden && IsCategoryAccessDenied(category))
                 //{
@@ -217,7 +217,7 @@ namespace Nop.Services
             if (category == null)
                 throw new ArgumentNullException("category");
 
-            _categoryRespository.Insert(category);
+            _categoryRepository.Insert(category);
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -245,7 +245,7 @@ namespace Nop.Services
                 parentCategory = GetCategoryById(parentCategory.ParentCategoryId);
             }
 
-            _categoryRespository.Update(category);
+            _categoryRepository.Update(category);
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -261,7 +261,7 @@ namespace Nop.Services
             if (productCategory == null)
                 return;
 
-            _productCategoryRespository.Delete(productCategory);
+            _productCategoryRepository.Delete(productCategory);
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -283,8 +283,8 @@ namespace Nop.Services
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from pc in _productCategoryRespository.Table
-                            join p in _productRespository.Table on pc.ProductId equals p.Id
+                var query = from pc in _productCategoryRepository.Table
+                            join p in _productRepository.Table on pc.ProductId equals p.Id
                             where pc.CategoryId == categoryId &&
                                   !p.Deleted &&
                                   (showHidden || p.Published)
@@ -310,8 +310,8 @@ namespace Nop.Services
             string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from pc in _productCategoryRespository.Table
-                            join c in _categoryRespository.Table on pc.CategoryId equals c.Id
+                var query = from pc in _productCategoryRepository.Table
+                            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                             where pc.ProductId == productId &&
                                   !c.Deleted &&
                                   (showHidden || c.Published)
@@ -335,7 +335,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTCATEGORIES_BY_ID_KEY, productCategoryId);
             return _cacheManager.Get(key, () =>
             {
-                return _productCategoryRespository.GetById(productCategoryId);
+                return _productCategoryRepository.GetById(productCategoryId);
             });
         }
 
@@ -348,7 +348,7 @@ namespace Nop.Services
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
             
-            _productCategoryRespository.Insert(productCategory);
+            _productCategoryRepository.Insert(productCategory);
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -364,7 +364,7 @@ namespace Nop.Services
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
 
-            _productCategoryRespository.Update(productCategory);
+            _productCategoryRepository.Update(productCategory);
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);

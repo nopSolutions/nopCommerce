@@ -40,9 +40,9 @@ namespace Nop.Services
         #region Fields
 
         private readonly IWorkingContext _context;
-        private readonly IRepository<Manufacturer> _manufacturerRespository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRespository;
-        private readonly IRepository<Product> _productRespository;
+        private readonly IRepository<Manufacturer> _manufacturerRepository;
+        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly ICacheManager _cacheManager;
         #endregion
 
@@ -53,20 +53,20 @@ namespace Nop.Services
         /// </summary>
         /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="manufacturerRespository">Category repository</param>
-        /// <param name="productManufacturerRespository">ProductCategory repository</param>
-        /// <param name="productRespository">Product repository</param>
+        /// <param name="manufacturerRepository">Category repository</param>
+        /// <param name="productManufacturerRepository">ProductCategory repository</param>
+        /// <param name="productRepository">Product repository</param>
         public ManufacturerService(IWorkingContext context, 
             ICacheManager cacheManager,
-            IRepository<Manufacturer> manufacturerRespository,
-            IRepository<ProductManufacturer> productManufacturerRespository,
-            IRepository<Product> productRespository)
+            IRepository<Manufacturer> manufacturerRepository,
+            IRepository<ProductManufacturer> productManufacturerRepository,
+            IRepository<Product> productRepository)
         {
             this._context = context;
             this._cacheManager = cacheManager;
-            this._manufacturerRespository = manufacturerRespository;
-            this._productManufacturerRespository = productManufacturerRespository;
-            this._productRespository = productRespository;
+            this._manufacturerRepository = manufacturerRepository;
+            this._productManufacturerRepository = productManufacturerRepository;
+            this._productRepository = productRepository;
         }
         #endregion
 
@@ -105,7 +105,7 @@ namespace Nop.Services
             string key = string.Format(MANUFACTURERS_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from m in _manufacturerRespository.Table
+                var query = from m in _manufacturerRepository.Table
                             orderby m.DisplayOrder
                             where (showHidden || m.Published) &&
                             !m.Deleted
@@ -128,7 +128,7 @@ namespace Nop.Services
             string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
             return _cacheManager.Get(key, () =>
             {
-                var manufacturer = _manufacturerRespository.GetById(manufacturerId);
+                var manufacturer = _manufacturerRepository.GetById(manufacturerId);
                 return manufacturer;
             });
         }
@@ -142,7 +142,7 @@ namespace Nop.Services
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
 
-            _manufacturerRespository.Insert(manufacturer);
+            _manufacturerRepository.Insert(manufacturer);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -158,7 +158,7 @@ namespace Nop.Services
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
 
-            _manufacturerRespository.Update(manufacturer);
+            _manufacturerRepository.Update(manufacturer);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -174,7 +174,7 @@ namespace Nop.Services
             if (productManufacturer == null)
                 return;
 
-            _productManufacturerRespository.Delete(productManufacturer);
+            _productManufacturerRepository.Delete(productManufacturer);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -196,8 +196,8 @@ namespace Nop.Services
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from pm in _productManufacturerRespository.Table
-                            join p in _productRespository.Table on pm.ProductId equals p.Id
+                var query = from pm in _productManufacturerRepository.Table
+                            join p in _productRepository.Table on pm.ProductId equals p.Id
                             where pm.ManufacturerId == manufacturerId &&
                                   !p.Deleted &&
                                   (showHidden || p.Published)
@@ -223,8 +223,8 @@ namespace Nop.Services
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>
                                               {
-                                                  var query = from pm in _productManufacturerRespository.Table
-                                                              join m in _manufacturerRespository.Table on
+                                                  var query = from pm in _productManufacturerRepository.Table
+                                                              join m in _manufacturerRepository.Table on
                                                                   pm.ManufacturerId equals m.Id
                                                               where pm.ProductId == productId &&
                                                                     !m.Deleted &&
@@ -249,7 +249,7 @@ namespace Nop.Services
             string key = string.Format(PRODUCTMANUFACTURERS_BY_ID_KEY, productManufacturerId);
             return _cacheManager.Get(key, () =>
             {
-                return _productManufacturerRespository.GetById(productManufacturerId);
+                return _productManufacturerRepository.GetById(productManufacturerId);
             });
         }
 
@@ -262,7 +262,7 @@ namespace Nop.Services
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
 
-            _productManufacturerRespository.Insert(productManufacturer);
+            _productManufacturerRepository.Insert(productManufacturer);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -278,7 +278,7 @@ namespace Nop.Services
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
 
-            _productManufacturerRespository.Update(productManufacturer);
+            _productManufacturerRepository.Update(productManufacturer);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);

@@ -29,7 +29,7 @@ namespace Nop.Services
     {
         #region Fields
 
-        private readonly IRepository<CustomerContent> _contentRespository;
+        private readonly IRepository<CustomerContent> _contentRepository;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -40,12 +40,12 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="contentRespository">Customer content repository</param>
+        /// <param name="contentRepository">Customer content repository</param>
         public CustomerContentService(ICacheManager cacheManager,
-            IRepository<CustomerContent> contentRespository)
+            IRepository<CustomerContent> contentRepository)
         {
             this._cacheManager = cacheManager;
-            this._contentRespository = contentRespository;
+            this._contentRepository = contentRepository;
         }
 
         #endregion
@@ -61,7 +61,7 @@ namespace Nop.Services
             if (content == null)
                 return;
 
-            _contentRespository.Delete(content);
+            _contentRepository.Delete(content);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Nop.Services
         /// <returns>Customer content</returns>
         public List<CustomerContent> GetAllCustomerContent(int customerId, bool? approved)
         {
-            var query = from c in _contentRespository.Table
+            var query = from c in _contentRepository.Table
                         orderby c.CreatedOnUtc
                         where !approved.HasValue || c.IsApproved == approved &&
                         (customerId == 0 || c.CustomerId == customerId)
@@ -90,7 +90,7 @@ namespace Nop.Services
         /// <returns>Customer content</returns>
         public List<T> GetAllCustomerContent<T>(int customerId, bool? approved) where T: CustomerContent
         {
-            var query = from c in _contentRespository.Table
+            var query = from c in _contentRepository.Table
                         orderby c.CreatedOnUtc
                         where !approved.HasValue || c.IsApproved == approved &&
                         (customerId == 0 || c.CustomerId == customerId)
@@ -109,7 +109,7 @@ namespace Nop.Services
             if (contentId == 0)
                 return null;
 
-            return _contentRespository.GetById(contentId);
+            return _contentRepository.GetById(contentId);
                                           
         }
 
@@ -122,7 +122,7 @@ namespace Nop.Services
             if (content == null)
                 throw new ArgumentNullException("content");
 
-            _contentRespository.Insert(content);
+            _contentRepository.Insert(content);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Nop.Services
             if (content == null)
                 throw new ArgumentNullException("content");
 
-            _contentRespository.Update(content);
+            _contentRepository.Update(content);
         }
 
         #endregion
