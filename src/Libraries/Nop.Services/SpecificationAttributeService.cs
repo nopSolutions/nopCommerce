@@ -51,18 +51,15 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="leService">Localized entity service</param>
         /// <param name="specificationAttributeRespository">Specification attribute repository</param>
         /// <param name="specificationAttributeOptionRespository">Specification attribute option repository</param>
         /// <param name="productSpecificationAttributeRespository">Product specification attribute repository</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
-            ILocalizedEntityService leService,
             IRepository<SpecificationAttribute> specificationAttributeRespository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRespository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRespository)
         {
             this._cacheManager = cacheManager;
-            this._leService = leService;
             this._specificationAttributeRespository = specificationAttributeRespository;
             this._specificationAttributeOptionRespository = specificationAttributeOptionRespository;
             this._productSpecificationAttributeRespository = productSpecificationAttributeRespository;

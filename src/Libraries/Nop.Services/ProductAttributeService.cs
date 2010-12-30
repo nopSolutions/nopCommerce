@@ -56,13 +56,11 @@ namespace Nop.Services
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="leService">Localized entity service</param>
         /// <param name="productAttributeRespository">Product attribute repository</param>
         /// <param name="productVariantAttributeRespository">Product variant attribute mapping repository</param>
         /// <param name="productVariantAttributeCombinationRespository">Product variant attribute combination repository</param>
         /// <param name="productVariantAttributeValueRespository">Product variant attribute value repository</param>
         public ProductAttributeService(ICacheManager cacheManager,
-            ILocalizedEntityService leService,
             IRepository<ProductAttribute> productAttributeRespository,
             IRepository<ProductVariantAttribute> productVariantAttributeRespository,
             IRepository<ProductVariantAttributeCombination> productVariantAttributeCombinationRespository,
@@ -70,7 +68,6 @@ namespace Nop.Services
             )
         {
             this._cacheManager = cacheManager;
-            this._leService = leService;
             this._productAttributeRespository = productAttributeRespository;
             this._productVariantAttributeRespository = productVariantAttributeRespository;
             this._productVariantAttributeCombinationRespository = productVariantAttributeCombinationRespository;

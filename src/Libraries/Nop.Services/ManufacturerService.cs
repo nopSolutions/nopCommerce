@@ -40,7 +40,6 @@ namespace Nop.Services
         #region Fields
 
         private readonly IWorkingContext _context;
-        private readonly ILocalizedEntityService _leService;
         private readonly IRepository<Manufacturer> _manufacturerRespository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRespository;
         private readonly IRepository<Product> _productRespository;
@@ -54,20 +53,17 @@ namespace Nop.Services
         /// </summary>
         /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="leService">Localized entity service</param>
         /// <param name="manufacturerRespository">Category repository</param>
         /// <param name="productManufacturerRespository">ProductCategory repository</param>
         /// <param name="productRespository">Product repository</param>
         public ManufacturerService(IWorkingContext context, 
             ICacheManager cacheManager,
-            ILocalizedEntityService leService,
             IRepository<Manufacturer> manufacturerRespository,
             IRepository<ProductManufacturer> productManufacturerRespository,
             IRepository<Product> productRespository)
         {
             this._context = context;
             this._cacheManager = cacheManager;
-            this._leService = leService;
             this._manufacturerRespository = manufacturerRespository;
             this._productManufacturerRespository = productManufacturerRespository;
             this._productRespository = productRespository;

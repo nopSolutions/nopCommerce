@@ -40,7 +40,6 @@ namespace Nop.Services
         #region Fields
 
         private readonly IWorkingContext _context;
-        private readonly ILocalizedEntityService _leService;
         private readonly IRepository<Product> _productRespository;
         private readonly IRepository<ProductCategory> _productCategoryRespository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRespository;
@@ -59,7 +58,6 @@ namespace Nop.Services
         /// </summary>
         /// <param name="context">Working context</param>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="leService">Localized entity service</param>
         /// <param name="productRespository">Product repository</param>
         /// <param name="productCategoryRespository">Product category repository</param>
         /// <param name="productManufacturerRespository">Product manufacturer repository</param>
@@ -69,7 +67,6 @@ namespace Nop.Services
         /// <param name="tierPriceRespository">Tier price repository</param>
         public ProductService(IWorkingContext context, 
             ICacheManager cacheManager,
-            ILocalizedEntityService leService,
             IRepository<Product> productRespository,
             IRepository<ProductCategory> productCategoryRespository,
             IRepository<ProductManufacturer> productManufacturerRespository,
@@ -80,7 +77,6 @@ namespace Nop.Services
         {
             this._context = context;
             this._cacheManager = cacheManager;
-            this._leService = leService;
             this._productRespository = productRespository;
             this._productCategoryRespository = productCategoryRespository;
             this._productManufacturerRespository = productManufacturerRespository;
@@ -294,11 +290,11 @@ namespace Nop.Services
                          )
                          )
                          select p.Id;
-            //UNDONE sort by ProductSortingEnum orderBy
             var query = from p in _productRespository.Table
                         where query1.Contains(p.Id)
                         orderby p.CreatedOnUtc descending
                         select p;
+            //UNDONE sort by ProductSortingEnum orderBy
 
             var products = new PagedList<Product>(query, pageIndex, pageSize);
             return products;
