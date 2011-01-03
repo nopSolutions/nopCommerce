@@ -114,7 +114,7 @@ namespace Nop.Services
         /// Gets all products
         /// </summary>
         /// <returns>Product collection</returns>
-        public List<Product> GetAllProducts()
+        public IList<Product> GetAllProducts()
         {
             bool showHidden = _context.IsAdmin;
             return GetAllProducts(showHidden);
@@ -125,7 +125,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
-        public List<Product> GetAllProducts(bool showHidden)
+        public IList<Product> GetAllProducts(bool showHidden)
         {
             var query = from p in _productRepository.Table
                         orderby p.Name
@@ -140,7 +140,7 @@ namespace Nop.Services
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Product collection</returns>
-        public List<Product> GetAllProductsDisplayedOnHomePage()
+        public IList<Product> GetAllProductsDisplayedOnHomePage()
         {
             bool showHidden = _context.IsAdmin;
 
@@ -222,11 +222,11 @@ namespace Nop.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Product collection</returns>
-        public PagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
+        public IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax,
             int relatedToProductId, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
-            List<int> filteredSpecs, ProductSortingEnum orderBy,
+            IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize)
         {
             bool showHidden = _context.IsAdmin;
@@ -307,7 +307,7 @@ namespace Nop.Services
         /// Get low stock product variants
         /// </summary>
         /// <returns>Result</returns>
-        public List<ProductVariant> GetLowStockProductVariants()
+        public IList<ProductVariant> GetLowStockProductVariants()
         {
             var query = from pv in _productVariantRepository.Table
                         orderby pv.MinStockQuantity
@@ -394,7 +394,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId">The product identifier</param>
         /// <returns>Product variant collection</returns>
-        public List<ProductVariant> GetProductVariantsByProductId(int productId)
+        public IList<ProductVariant> GetProductVariantsByProductId(int productId)
         {
             bool showHidden = _context.IsAdmin;
             return GetProductVariantsByProductId(productId, showHidden);
@@ -406,7 +406,7 @@ namespace Nop.Services
         /// <param name="productId">The product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variant collection</returns>
-        public List<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden)
+        public IList<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden)
         {
             string key = string.Format(PRODUCTVARIANTS_ALL_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>
@@ -472,7 +472,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <returns>Related product collection</returns>
-        public List<RelatedProduct> GetRelatedProductsByProductId1(int productId1)
+        public IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1)
         {
             bool showHidden = _context.IsAdmin;
 
@@ -547,7 +547,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <returns>Cross-sell product collection</returns>
-        public List<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1)
+        public IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1)
         {
             bool showHidden = _context.IsAdmin;
 
@@ -639,7 +639,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Tier price collection</returns>
-        public List<TierPrice> GetTierPricesByProductVariantId(int productVariantId)
+        public IList<TierPrice> GetTierPricesByProductVariantId(int productVariantId)
         {
             if (productVariantId == 0)
                 return new List<TierPrice>();

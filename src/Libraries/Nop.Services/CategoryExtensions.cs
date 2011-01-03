@@ -30,11 +30,11 @@ namespace Nop.Services
         /// <param name="source">Source</param>
         /// <param name="parentId">Parent category identifier</param>
         /// <returns>Sorted categories</returns>
-        public static List<Category> SortCategoriesForTree(this List<Category> source, int parentId)
+        public static IList<Category> SortCategoriesForTree(this IList<Category> source, int parentId)
         {
             var result = new List<Category>();
 
-            var temp = source.FindAll(c => c.ParentCategoryId == parentId);
+            var temp = source.ToList().FindAll(c => c.ParentCategoryId == parentId);
             foreach (var cat in temp)
             {
                 result.Add(cat);

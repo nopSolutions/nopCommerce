@@ -36,20 +36,20 @@ namespace Nop.Services
         /// Gets all products
         /// </summary>
         /// <returns>Product collection</returns>
-        List<Product> GetAllProducts();
+        IList<Product> GetAllProducts();
 
         /// <summary>
         /// Gets all products
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
-        List<Product> GetAllProducts(bool showHidden);
+        IList<Product> GetAllProducts(bool showHidden);
 
         /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Product collection</returns>
-        List<Product> GetAllProductsDisplayedOnHomePage();
+        IList<Product> GetAllProductsDisplayedOnHomePage();
         
         /// <summary>
         /// Gets product
@@ -88,11 +88,11 @@ namespace Nop.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Product collection</returns>
-        PagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
+        IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax,
             int relatedToProductId, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
-            List<int> filteredSpecs, ProductSortingEnum orderBy,
+            IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize);
         #endregion
 
@@ -102,7 +102,7 @@ namespace Nop.Services
         /// Get low stock product variants
         /// </summary>
         /// <returns>Result</returns>
-        List<ProductVariant> GetLowStockProductVariants();
+        IList<ProductVariant> GetLowStockProductVariants();
 
         /// <summary>
         /// Gets a product variant
@@ -135,7 +135,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId">The product identifier</param>
         /// <returns>Product variant collection</returns>
-        List<ProductVariant> GetProductVariantsByProductId(int productId);
+        IList<ProductVariant> GetProductVariantsByProductId(int productId);
         
         /// <summary>
         /// Gets product variants by product identifier
@@ -143,7 +143,7 @@ namespace Nop.Services
         /// <param name="productId">The product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variant collection</returns>
-        List<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden);
+        IList<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden);
 
         /// <summary>
         /// Delete a product variant
@@ -166,7 +166,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <returns>Related product collection</returns>
-        List<RelatedProduct> GetRelatedProductsByProductId1(int productId1);
+        IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1);
 
         /// <summary>
         /// Gets a related product
@@ -202,7 +202,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <returns>Cross-sell product collection</returns>
-        List<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1);
+        IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1);
 
         /// <summary>
         /// Gets a cross-sell product
@@ -245,7 +245,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Tier price collection</returns>
-        List<TierPrice> GetTierPricesByProductVariantId(int productVariantId);
+        IList<TierPrice> GetTierPricesByProductVariantId(int productVariantId);
         
         /// <summary>
         /// Inserts a tier price

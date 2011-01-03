@@ -70,7 +70,7 @@ namespace Nop.Services
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param>
         /// <returns>Customer content</returns>
-        public List<CustomerContent> GetAllCustomerContent(int customerId, bool? approved)
+        public IList<CustomerContent> GetAllCustomerContent(int customerId, bool? approved)
         {
             var query = from c in _contentRepository.Table
                         orderby c.CreatedOnUtc
@@ -88,7 +88,7 @@ namespace Nop.Services
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param>
         /// <returns>Customer content</returns>
-        public List<T> GetAllCustomerContent<T>(int customerId, bool? approved) where T: CustomerContent
+        public IList<T> GetAllCustomerContent<T>(int customerId, bool? approved) where T: CustomerContent
         {
             var query = from c in _contentRepository.Table
                         orderby c.CreatedOnUtc

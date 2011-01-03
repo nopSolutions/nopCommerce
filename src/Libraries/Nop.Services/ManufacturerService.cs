@@ -89,7 +89,7 @@ namespace Nop.Services
         /// Gets all manufacturers
         /// </summary>
         /// <returns>Manufacturer collection</returns>
-        public List<Manufacturer> GetAllManufacturers()
+        public IList<Manufacturer> GetAllManufacturers()
         {
             bool showHidden = _context.IsAdmin;
             return GetAllManufacturers(showHidden);
@@ -100,7 +100,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturer collection</returns>
-        public List<Manufacturer> GetAllManufacturers(bool showHidden)
+        public IList<Manufacturer> GetAllManufacturers(bool showHidden)
         {
             string key = string.Format(MANUFACTURERS_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
@@ -186,7 +186,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Product manufacturer collection</returns>
-        public List<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId)
+        public IList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId)
         {
             if (manufacturerId == 0)
                 return new List<ProductManufacturer>();
@@ -213,7 +213,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        public List<ProductManufacturer> GetProductManufacturersByProductId(int productId)
+        public IList<ProductManufacturer> GetProductManufacturersByProductId(int productId)
         {
             if (productId == 0)
                 return new List<ProductManufacturer>();

@@ -32,14 +32,14 @@ namespace Nop.Services
         /// Gets all languages
         /// </summary>
         /// <returns>Language collection</returns>
-        List<Language> GetAllLanguages();
+        IList<Language> GetAllLanguages();
 
         /// <summary>
         /// Gets all languages
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Language collection</returns>
-        List<Language> GetAllLanguages(bool showHidden);
+        IList<Language> GetAllLanguages(bool showHidden);
 
         /// <summary>
         /// Gets a language

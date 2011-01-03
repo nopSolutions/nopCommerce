@@ -51,7 +51,7 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item collection</returns>
-        PagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc, 
+        IPagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc, 
             string message, LogLevel? logLevel, int pageIndex, int pageSize);
 
         /// <summary>

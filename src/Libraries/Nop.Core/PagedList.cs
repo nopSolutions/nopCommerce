@@ -21,7 +21,7 @@ namespace Nop.Core
     /// Paged list
     /// </summary>
     /// <typeparam name="T">T</typeparam>
-    public class PagedList<T> : List<T>, IPagedList
+    public class PagedList<T> : List<T>, IPagedList<T> 
     {
         /// <summary>
         /// Ctor

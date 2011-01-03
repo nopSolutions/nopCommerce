@@ -31,14 +31,14 @@ namespace Nop.Services
         /// Gets all manufacturers
         /// </summary>
         /// <returns>Manufacturer collection</returns>
-        List<Manufacturer> GetAllManufacturers();
+        IList<Manufacturer> GetAllManufacturers();
 
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturer collection</returns>
-        List<Manufacturer> GetAllManufacturers(bool showHidden);
+        IList<Manufacturer> GetAllManufacturers(bool showHidden);
 
         /// <summary>
         /// Gets a manufacturer
@@ -70,14 +70,14 @@ namespace Nop.Services
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Product manufacturer collection</returns>
-        List<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId);
+        IList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId);
 
         /// <summary>
         /// Gets a product manufacturer mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        List<ProductManufacturer> GetProductManufacturersByProductId(int productId);
+        IList<ProductManufacturer> GetProductManufacturersByProductId(int productId);
 
         /// <summary>
         /// Gets a product manufacturer mapping 

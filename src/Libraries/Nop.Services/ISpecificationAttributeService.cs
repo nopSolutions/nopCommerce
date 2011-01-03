@@ -35,7 +35,7 @@ namespace Nop.Services
         /// Gets specification attributes
         /// </summary>
         /// <returns>Specification attributes</returns>
-        List<SpecificationAttribute> GetSpecificationAttributes();
+        IList<SpecificationAttribute> GetSpecificationAttributes();
 
         /// <summary>
         /// Deletes a specification attribute
@@ -71,7 +71,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute option</returns>
-        List<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId);
+        IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId);
 
         /// <summary>
         /// Deletes a specification attribute option
@@ -106,7 +106,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        List<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId);
+        IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId);
 
         /// <summary>
         /// Gets a product specification attribute mapping collection
@@ -115,7 +115,7 @@ namespace Nop.Services
         /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 0 to load attributes with AllowFiltering set to true, null to load all attributes</param>
         /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 0 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        List<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId,
+        IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId,
             bool? allowFiltering, bool? showOnProductPage);
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace Nop.Services
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param>
         /// <returns>Customer content</returns>
-        List<CustomerContent> GetAllCustomerContent(int customerId, bool? approved);
+        IList<CustomerContent> GetAllCustomerContent(int customerId, bool? approved);
         
         /// <summary>
         /// Gets all customer content
@@ -43,7 +43,7 @@ namespace Nop.Services
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param>
         /// <returns>Customer content</returns>
-        List<T> GetAllCustomerContent<T>(int customerId, bool? approved) where T : CustomerContent;
+        IList<T> GetAllCustomerContent<T>(int customerId, bool? approved) where T : CustomerContent;
 
         /// <summary>
         /// Gets a customer content

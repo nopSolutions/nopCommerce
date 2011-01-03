@@ -34,7 +34,7 @@ namespace Nop.Services
         /// Gets all product attributes
         /// </summary>
         /// <returns>Product attribute collection</returns>
-        List<ProductAttribute> GetAllProductAttributes();
+        IList<ProductAttribute> GetAllProductAttributes();
 
         /// <summary>
         /// Gets a product attribute 
@@ -70,7 +70,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantId">The product variant identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        List<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId);
+        IList<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId);
 
         /// <summary>
         /// Gets a product variant attribute mapping
@@ -106,7 +106,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantAttributeId">The product variant attribute mapping identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        List<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId);
+        IList<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId);
 
         /// <summary>
         /// Gets a product variant attribute value
@@ -142,7 +142,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Product variant attribute combination collection</returns>
-        List<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId);
+        IList<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId);
 
         /// <summary>
         /// Gets a product variant attribute combination

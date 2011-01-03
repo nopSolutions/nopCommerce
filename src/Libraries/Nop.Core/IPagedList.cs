@@ -18,7 +18,7 @@ namespace Nop.Core
     /// <summary>
     /// Paged list interface
     /// </summary>
-    public interface IPagedList
+    public interface IPagedList<T>
     {
         int PageIndex { get; }
         int PageSize { get; }

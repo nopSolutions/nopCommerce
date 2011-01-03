@@ -100,7 +100,7 @@ namespace Nop.Services
         /// Gets all product attributes
         /// </summary>
         /// <returns>Product attribute collection</returns>
-        public List<ProductAttribute> GetAllProductAttributes()
+        public IList<ProductAttribute> GetAllProductAttributes()
         {
             string key = PRODUCTATTRIBUTES_ALL_KEY;
             return _cacheManager.Get(key, () =>
@@ -188,7 +188,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantId">The product variant identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        public List<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId)
+        public IList<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId)
         {
             string key = string.Format(PRODUCTVARIANTATTRIBUTES_ALL_KEY, productVariantId);
 
@@ -277,7 +277,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantAttributeId">The product variant attribute mapping identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        public List<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId)
+        public IList<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId)
         {
             string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_ALL_KEY, productVariantAttributeId);
             return _cacheManager.Get(key, () =>
@@ -362,7 +362,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Product variant attribute combination collection</returns>
-        public List<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId)
+        public IList<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId)
         {
             if (productVariantId == 0)
                 return new List<ProductVariantAttributeCombination>();

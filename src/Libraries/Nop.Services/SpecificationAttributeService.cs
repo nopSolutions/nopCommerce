@@ -92,7 +92,7 @@ namespace Nop.Services
         /// Gets specification attributes
         /// </summary>
         /// <returns>Specification attributes</returns>
-        public List<SpecificationAttribute> GetSpecificationAttributes()
+        public IList<SpecificationAttribute> GetSpecificationAttributes()
         {
             var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder
@@ -176,7 +176,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute option</returns>
-        public List<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
+        public IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
         {
             var query = from sao in _specificationAttributeOptionRepository.Table
                         orderby sao.DisplayOrder
@@ -259,7 +259,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public List<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId)
+        public IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId)
         {
             return GetProductSpecificationAttributesByProductId(productId, null, null);
         }
@@ -271,7 +271,7 @@ namespace Nop.Services
         /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 0 to load attributes with AllowFiltering set to true, null to load all attributes</param>
         /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 0 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public List<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId, 
+        public IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId, 
             bool? allowFiltering, bool? showOnProductPage)
         {
             string allowFilteringCacheStr = "null";

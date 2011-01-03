@@ -32,21 +32,21 @@ namespace Nop.Services
         /// Gets all categories
         /// </summary>
         /// <returns>Categories</returns>
-        List<Category> GetAllCategories();
+        IList<Category> GetAllCategories();
         
         /// <summary>
         /// Gets all categories
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        List<Category> GetAllCategories(bool showHidden);
+        IList<Category> GetAllCategories(bool showHidden);
         
         /// <summary>
         /// Gets all categories by parent category identifier
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <returns>Category collection</returns>
-        List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId);
+        IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId);
         
         /// <summary>
         /// Gets all categories filtered by parent category identifier
@@ -54,14 +54,14 @@ namespace Nop.Services
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category collection</returns>
-        List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
+        IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden);
         
         /// <summary>
         /// Gets all categories displayed on the home page
         /// </summary>
         /// <returns>Categories</returns>
-        List<Category> GetAllCategoriesDisplayedOnHomePage();
+        IList<Category> GetAllCategoriesDisplayedOnHomePage();
                 
         /// <summary>
         /// Gets a category
@@ -93,14 +93,14 @@ namespace Nop.Services
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Product a category mapping collection</returns>
-        List<ProductCategory> GetProductCategoriesByCategoryId(int categoryId);
+        IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId);
 
         /// <summary>
         /// Gets a product category mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product category mapping collection</returns>
-        List<ProductCategory> GetProductCategoriesByProductId(int productId);
+        IList<ProductCategory> GetProductCategoriesByProductId(int productId);
 
         /// <summary>
         /// Gets a product category mapping 

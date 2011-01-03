@@ -96,7 +96,7 @@ namespace Nop.Services
         /// <param name="entityId">Entity identifier</param>
         /// <param name="localeKeyGroup">Locale key group</param>
         /// <returns>Localized properties</returns>
-        public List<LocalizedProperty> GetLocalizedProperties(int entityId, string localeKeyGroup)
+        public IList<LocalizedProperty> GetLocalizedProperties(int entityId, string localeKeyGroup)
         {
             if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
                 return new List<LocalizedProperty>();

@@ -92,7 +92,7 @@ namespace Nop.Services
         /// Gets all categories
         /// </summary>
         /// <returns>Categories</returns>
-        public List<Category> GetAllCategories()
+        public IList<Category> GetAllCategories()
         {
             bool showHidden = _context.IsAdmin;
             return GetAllCategories(showHidden);
@@ -103,7 +103,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public List<Category> GetAllCategories(bool showHidden)
+        public IList<Category> GetAllCategories(bool showHidden)
         {
             var query = from c in _categoryRepository.Table
                         orderby c.ParentCategoryId, c.DisplayOrder
@@ -123,13 +123,13 @@ namespace Nop.Services
             var sortedCategories = unsortedCategories.SortCategoriesForTree(0);
             return sortedCategories;
         }
-        
+
         /// <summary>
         /// Gets all categories by parent category identifier
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <returns>Category collection</returns>
-        public List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId)
+        public IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId)
         {
             bool showHidden = _context.IsAdmin;
             return GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
@@ -141,7 +141,7 @@ namespace Nop.Services
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category collection</returns>
-        public List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
+        public IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden)
         {
             
@@ -166,7 +166,7 @@ namespace Nop.Services
         /// Gets all categories displayed on the home page
         /// </summary>
         /// <returns>Category collection</returns>
-        public List<Category> GetAllCategoriesDisplayedOnHomePage()
+        public IList<Category> GetAllCategoriesDisplayedOnHomePage()
         {
             bool showHidden = _context.IsAdmin;
             
@@ -273,7 +273,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Product a category mapping collection</returns>
-        public List<ProductCategory> GetProductCategoriesByCategoryId(int categoryId)
+        public IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId)
         {
             if (categoryId == 0)
                 return new List<ProductCategory>();
@@ -300,7 +300,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product category mapping collection</returns>
-        public List<ProductCategory> GetProductCategoriesByProductId(int productId)
+        public IList<ProductCategory> GetProductCategoriesByProductId(int productId)
         {
             if (productId == 0)
                 return new List<ProductCategory>();

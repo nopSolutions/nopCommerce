@@ -81,7 +81,7 @@ namespace Nop.Services
         /// Gets all languages
         /// </summary>
         /// <returns>Language collection</returns>
-        public List<Language> GetAllLanguages()
+        public IList<Language> GetAllLanguages()
         {
             bool showHidden = _context.IsAdmin;
             return GetAllLanguages(showHidden);
@@ -92,7 +92,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Language collection</returns>
-        public List<Language> GetAllLanguages(bool showHidden)
+        public IList<Language> GetAllLanguages(bool showHidden)
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
