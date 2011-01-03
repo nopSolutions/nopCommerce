@@ -46,7 +46,7 @@ namespace Nop.Services
 
         #region Ctor
 
-       /// <summary>
+        /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="context">Working context</param>
@@ -83,7 +83,7 @@ namespace Nop.Services
         /// Gets all countries
         /// </summary>
         /// <returns>Country collection</returns>
-        public List<Country> GetAllCountries()
+        public IList<Country> GetAllCountries()
         {
             bool showHidden = _context.IsAdmin;
             string key = string.Format(COUNTRIES_ALL_KEY, showHidden);
@@ -102,7 +102,7 @@ namespace Nop.Services
         /// Gets all countries that allow registration
         /// </summary>
         /// <returns>Country collection</returns>
-        public List<Country> GetAllCountriesForRegistration()
+        public IList<Country> GetAllCountriesForRegistration()
         {
             bool showHidden = _context.IsAdmin;
             string key = string.Format(COUNTRIES_REGISTRATION_KEY, showHidden);
@@ -121,7 +121,7 @@ namespace Nop.Services
         /// Gets all countries that allow billing
         /// </summary>
         /// <returns>Country collection</returns>
-        public List<Country> GetAllCountriesForBilling()
+        public IList<Country> GetAllCountriesForBilling()
         {
             bool showHidden = _context.IsAdmin;
             string key = string.Format(COUNTRIES_BILLING_KEY, showHidden);
@@ -140,7 +140,7 @@ namespace Nop.Services
         /// Gets all countries that allow shipping
         /// </summary>
         /// <returns>Country collection</returns>
-        public List<Country> GetAllCountriesForShipping()
+        public IList<Country> GetAllCountriesForShipping()
         {
             bool showHidden = _context.IsAdmin;
             string key = string.Format(COUNTRIES_SHIPPING_KEY, showHidden);

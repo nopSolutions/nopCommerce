@@ -52,7 +52,12 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Domain\MeasureSettings.cs" />
     <Compile Include="Domain\Country.cs" />
+    <Compile Include="Domain\Currency.cs" />
+    <Compile Include="Domain\CurrencySettings.cs" />
+    <Compile Include="Domain\MeasureDimension.cs" />
+    <Compile Include="Domain\MeasureWeight.cs" />
     <Compile Include="Domain\ProductRating.cs" />
     <Compile Include="Domain\ProductReview.cs" />
     <Compile Include="Domain\CustomerContent.cs" />

@@ -32,25 +32,25 @@ namespace Nop.Services
         /// Gets all countries
         /// </summary>
         /// <returns>Country collection</returns>
-        List<Country> GetAllCountries();
+        IList<Country> GetAllCountries();
 
         /// <summary>
         /// Gets all countries that allow registration
         /// </summary>
         /// <returns>Country collection</returns>
-        List<Country> GetAllCountriesForRegistration();
+        IList<Country> GetAllCountriesForRegistration();
 
         /// <summary>
         /// Gets all countries that allow billing
         /// </summary>
         /// <returns>Country collection</returns>
-        List<Country> GetAllCountriesForBilling();
+        IList<Country> GetAllCountriesForBilling();
 
         /// <summary>
         /// Gets all countries that allow shipping
         /// </summary>
         /// <returns>Country collection</returns>
-        List<Country> GetAllCountriesForShipping();
+        IList<Country> GetAllCountriesForShipping();
 
         /// <summary>
         /// Gets a country 

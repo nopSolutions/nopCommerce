@@ -66,6 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryPersistenceTests.cs" />
+    <Compile Include="MeasureWeightPersistenceTests.cs" />
+    <Compile Include="MeasureDimensionPersistenceTests.cs" />
+    <Compile Include="CurrencyPersistenceTests.cs" />
     <Compile Include="CountryPersistenceTests.cs" />
     <Compile Include="StateProvincePersistenceTests.cs" />
     <Compile Include="CustomerContentTests.cs" />

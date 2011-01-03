@@ -109,7 +109,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>State/province collection</returns>
-        public List<StateProvince> GetStateProvincesByCountryId(int countryId)
+        public IList<StateProvince> GetStateProvincesByCountryId(int countryId)
         {
             string key = string.Format(STATEPROVINCES_ALL_KEY, countryId);
             return _cacheManager.Get(key, () =>

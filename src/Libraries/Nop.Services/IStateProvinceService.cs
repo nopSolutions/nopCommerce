@@ -47,7 +47,7 @@ namespace Nop.Services
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>State/province collection</returns>
-        List<StateProvince> GetStateProvincesByCountryId(int countryId);
+        IList<StateProvince> GetStateProvincesByCountryId(int countryId);
 
         /// <summary>
         /// Inserts a state/province
