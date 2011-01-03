@@ -26,7 +26,7 @@ namespace Nop.Core.Domain
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address
