@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="Mapping\CountryMap.cs" />
+    <Compile Include="Mapping\StateProvinceMap.cs" />
     <Compile Include="Mapping\ProductRatingMap.cs" />
     <Compile Include="Mapping\ProductReviewMap.cs" />
     <Compile Include="Mapping\CustomerContentMap.cs" />

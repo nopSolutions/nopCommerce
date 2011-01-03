@@ -36,6 +36,7 @@ namespace Nop.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Country> Countries { get; set; }
         public DbSet<CrossSellProduct> CrossSellProducts { get; set; }
         public DbSet<CustomerContent> CustomerContent { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -61,6 +62,7 @@ namespace Nop.Data
         public DbSet<Setting> Settings { get; set; }
         public DbSet<SpecificationAttribute> SpecificationAttributes { get; set; }
         public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
+        public DbSet<StateProvince> StateProvinces { get; set; }
         public DbSet<TierPrice> TierPrices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

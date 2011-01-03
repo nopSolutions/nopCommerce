@@ -52,10 +52,12 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Domain\Country.cs" />
     <Compile Include="Domain\ProductRating.cs" />
     <Compile Include="Domain\ProductReview.cs" />
     <Compile Include="Domain\CustomerContent.cs" />
     <Compile Include="Domain\ILocalizedEntity.cs" />
+    <Compile Include="Domain\StateProvince.cs" />
     <Compile Include="IWorkingContext.cs" />
     <Compile Include="Domain\LocalizedProperty.cs" />
     <Compile Include="Domain\ProductSortingEnum.cs" />
