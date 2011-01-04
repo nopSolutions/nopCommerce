@@ -48,9 +48,11 @@
     <Compile Include="CountryService.cs" />
     <Compile Include="CurrencyService.cs" />
     <Compile Include="CustomerContentService.cs" />
+    <Compile Include="CustomerService.cs" />
     <Compile Include="ICountryService.cs" />
     <Compile Include="ICurrencyService.cs" />
     <Compile Include="ICustomerContentService.cs" />
+    <Compile Include="ICustomerService.cs" />
     <Compile Include="IMeasureService.cs" />
     <Compile Include="IStateProvinceService.cs" />
     <Compile Include="LocalizationExtentions.cs" />
