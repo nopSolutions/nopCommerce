@@ -87,6 +87,29 @@ namespace Nop.Services
         /// <param name="customer">Customer</param>
         void UpdateCustomer(Customer customer);
 
+        /// <summary>
+        /// Modifies password
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="oldPassword">Old password</param>
+        /// <param name="newPassword">New password</param>
+        void ModifyPassword(int customerId, string oldPassword, string newPassword);
+
+        /// <summary>
+        /// Modifies password
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="newPassword">New password</param>
+        void ModifyPassword(int customerId, string newPassword);
+        
+        /// <summary>
+        /// Login a customer
+        /// </summary>
+        /// <param name="emailOrUsername">Email or username</param>
+        /// <param name="password">Password</param>
+        /// <returns>Validated customer; otherwise, null</returns>
+        Customer ValidateUser(string emailOrUsername, string password);
+
         #endregion
 
         #region Customer roles

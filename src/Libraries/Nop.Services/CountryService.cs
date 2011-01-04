@@ -38,7 +38,7 @@ namespace Nop.Services
         
         #region Fields
         
-        private readonly IWorkingContext _context;
+        private readonly IWorkContext _workContext;
         private readonly IRepository<Country> _countryRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -49,14 +49,14 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="context">Working context</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="countryRepository">Country repository</param>
-        public CountryService(IWorkingContext context,
+        public CountryService(IWorkContext workContext,
             ICacheManager cacheManager,
             IRepository<Country> countryRepository)
         {
-            this._context = context;
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._countryRepository = countryRepository;
         }
@@ -85,7 +85,7 @@ namespace Nop.Services
         /// <returns>Country collection</returns>
         public IList<Country> GetAllCountries()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             string key = string.Format(COUNTRIES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -104,7 +104,7 @@ namespace Nop.Services
         /// <returns>Country collection</returns>
         public IList<Country> GetAllCountriesForRegistration()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             string key = string.Format(COUNTRIES_REGISTRATION_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -123,7 +123,7 @@ namespace Nop.Services
         /// <returns>Country collection</returns>
         public IList<Country> GetAllCountriesForBilling()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             string key = string.Format(COUNTRIES_BILLING_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -142,7 +142,7 @@ namespace Nop.Services
         /// <returns>Country collection</returns>
         public IList<Country> GetAllCountriesForShipping()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             string key = string.Format(COUNTRIES_SHIPPING_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {

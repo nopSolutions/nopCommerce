@@ -15,11 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Services;
 using Nop.Core.Domain;
 using System.Web;
 
-namespace Nop.Web.Framework
+namespace Nop.Services
 {
     /// <summary>
     /// Compare products service
@@ -34,7 +33,7 @@ namespace Nop.Web.Framework
         
         #region Fields
 
-        private readonly HttpContextBase _context;
+        private readonly HttpContextBase _httpContext;
         private readonly IProductService _productService;
 
         #endregion
@@ -44,11 +43,11 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="context">HttpContextBase</param>
+        /// <param name="httpContext">HTTP context</param>
         /// <param name="productService">Product service</param>
-        public CompareProductsService(HttpContextBase context, IProductService productService)
+        public CompareProductsService(HttpContextBase httpContext, IProductService productService)
         {
-            this._context = context;
+            this._httpContext = httpContext;
             this._productService = productService;
         }
 
@@ -63,7 +62,7 @@ namespace Nop.Web.Framework
         protected List<int> GetComparedProductIds()
         {
             var productIds = new List<int>();
-            HttpCookie compareCookie = _context.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
+            HttpCookie compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
             if ((compareCookie == null) || (compareCookie.Values == null))
                 return productIds;
             string[] values = compareCookie.Values.GetValues("CompareProductIds");
@@ -88,12 +87,12 @@ namespace Nop.Web.Framework
         /// </summary>
         public void ClearCompareProducts()
         {
-            var compareCookie = _context.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
+            var compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
             if (compareCookie != null)
             {
                 compareCookie.Values.Clear();
                 compareCookie.Expires = DateTime.Now.AddYears(-1);
-                _context.Response.Cookies.Set(compareCookie);
+                _httpContext.Response.Cookies.Set(compareCookie);
             }
         }
 
@@ -126,14 +125,14 @@ namespace Nop.Web.Framework
             newProductIds.AddRange(oldProductIds);
             newProductIds.Remove(productId);
 
-            var compareCookie = _context.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
+            var compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
             if ((compareCookie == null) || (compareCookie.Values == null))
                 return;
             compareCookie.Values.Clear();
             foreach (int newProductId in newProductIds)
                 compareCookie.Values.Add("CompareProductIds", newProductId.ToString());
             compareCookie.Expires = DateTime.Now.AddDays(10.0);
-            _context.Response.Cookies.Set(compareCookie);
+            _httpContext.Response.Cookies.Set(compareCookie);
         }
 
         /// <summary>
@@ -149,7 +148,7 @@ namespace Nop.Web.Framework
                 if (oldProductId != productId)
                     newProductIds.Add(oldProductId);
 
-            var compareCookie = _context.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
+            var compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
             if (compareCookie == null)
                 compareCookie = new HttpCookie(COMPARE_PRODUCTS_COOKIE_NAME);
             compareCookie.Values.Clear();
@@ -163,7 +162,7 @@ namespace Nop.Web.Framework
                 i++;
             }
             compareCookie.Expires = DateTime.Now.AddDays(10.0);
-            _context.Response.Cookies.Set(compareCookie);
+            _httpContext.Response.Cookies.Set(compareCookie);
         }
 
         #endregion

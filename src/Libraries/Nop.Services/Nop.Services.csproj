@@ -44,11 +44,15 @@
   <ItemGroup>
     <Compile Include="CategoryService.cs" />
     <Compile Include="CategoryExtensions.cs" />
+    <Compile Include="CompareProductsService.cs" />
     <Compile Include="ConfigurationProvider.cs" />
+    <Compile Include="FormsAuthenticationService.cs" />
+    <Compile Include="IAuthenticationService.cs" />
     <Compile Include="CountryService.cs" />
     <Compile Include="CurrencyService.cs" />
     <Compile Include="CustomerContentService.cs" />
     <Compile Include="CustomerService.cs" />
+    <Compile Include="ICompareProductsService.cs" />
     <Compile Include="ICountryService.cs" />
     <Compile Include="ICurrencyService.cs" />
     <Compile Include="ICustomerContentService.cs" />
@@ -58,7 +62,7 @@
     <Compile Include="LocalizationExtentions.cs" />
     <Compile Include="MeasureService.cs" />
     <Compile Include="StateProvinceService.cs" />
-    <Compile Include="WorkingContext.cs" />
+    <Compile Include="WorkContext.cs" />
     <Compile Include="LocalizedEntityService.cs" />
     <Compile Include="ILocalizedEntityService.cs" />
     <Compile Include="IProductAttributeService.cs" />

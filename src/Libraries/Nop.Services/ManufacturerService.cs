@@ -39,7 +39,7 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IWorkingContext _context;
+        private readonly IWorkContext _workContext;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<Product> _productRepository;
@@ -51,18 +51,18 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="context">Working context</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="manufacturerRepository">Category repository</param>
         /// <param name="productManufacturerRepository">ProductCategory repository</param>
         /// <param name="productRepository">Product repository</param>
-        public ManufacturerService(IWorkingContext context, 
+        public ManufacturerService(IWorkContext workContext, 
             ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<Product> productRepository)
         {
-            this._context = context;
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._manufacturerRepository = manufacturerRepository;
             this._productManufacturerRepository = productManufacturerRepository;
@@ -91,7 +91,7 @@ namespace Nop.Services
         /// <returns>Manufacturer collection</returns>
         public IList<Manufacturer> GetAllManufacturers()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             return GetAllManufacturers(showHidden);
         }
 
@@ -191,7 +191,7 @@ namespace Nop.Services
             if (manufacturerId == 0)
                 return new List<ProductManufacturer>();
 
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
 
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId);
             return _cacheManager.Get(key, () =>
@@ -218,7 +218,7 @@ namespace Nop.Services
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
 
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>

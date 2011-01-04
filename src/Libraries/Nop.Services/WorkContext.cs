@@ -23,11 +23,11 @@ namespace Nop.Services
     /// <summary>
     /// Working context
     /// </summary>
-    public partial class WorkingContext : IWorkingContext
+    public partial class WorkContext : IWorkContext
     {
         HttpContextBase _contextBase;
 
-        public WorkingContext(HttpContextBase contextBase)
+        public WorkContext(HttpContextBase contextBase)
         {
             this._contextBase = contextBase;
         }

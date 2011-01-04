@@ -38,7 +38,7 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IWorkingContext _context;
+        private readonly IWorkContext _workContext;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
         private readonly ICacheManager _cacheManager;
@@ -51,18 +51,18 @@ namespace Nop.Services
        /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="context">Working context</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="measureDimensionRepository">Dimension repository</param>
         /// <param name="measureWeightRepository">Weight repository</param>
         /// <param name="measureSettings">Measure settings</param>
-        public MeasureService(IWorkingContext context,
+        public MeasureService(IWorkContext workContext,
             ICacheManager cacheManager,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
             MeasureSettings measureSettings)
         {
-            this._context = context;
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._measureDimensionRepository = measureDimensionRepository;
             this._measureWeightRepository = measureWeightRepository;

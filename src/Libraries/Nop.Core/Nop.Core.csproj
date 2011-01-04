@@ -66,7 +66,7 @@
     <Compile Include="Domain\CustomerContent.cs" />
     <Compile Include="Domain\ILocalizedEntity.cs" />
     <Compile Include="Domain\StateProvince.cs" />
-    <Compile Include="IWorkingContext.cs" />
+    <Compile Include="IWorkContext.cs" />
     <Compile Include="Domain\LocalizedProperty.cs" />
     <Compile Include="Domain\ProductSortingEnum.cs" />
     <Compile Include="Domain\AttributeControlTypeEnum.cs" />

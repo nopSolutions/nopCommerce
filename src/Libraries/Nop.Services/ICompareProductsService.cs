@@ -15,11 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Services;
 using Nop.Core.Domain;
 using System.Web;
 
-namespace Nop.Web.Framework
+namespace Nop.Services
 {
     /// <summary>
     /// Compare products service interface

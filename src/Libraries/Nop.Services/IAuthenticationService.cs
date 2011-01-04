@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -12,35 +12,24 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Data;
+using Nop.Core.Caching;
 
-namespace Nop.Core
+namespace Nop.Services
 {
     /// <summary>
-    /// Working context
+    /// Authentication service interface
     /// </summary>
-    public interface IWorkingContext
+    public partial interface IAuthenticationService 
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether the context is running in admin-mode
-        /// </summary>
-        bool IsAdmin {get;set;}
-
-        /// <summary>
-        /// Gets or sets the current user
-        /// </summary>
-        Customer User { get; set; }
-
-        /// <summary>
-        /// Get or set current user working language
-        /// </summary>
-        Language WorkingLanguage { get; set; }
-
-        /// <summary>
-        /// Get or set current theme (e.g. darkOrange)
-        /// </summary>
-        string WorkingTheme { get; set; }
+        void SignIn(Customer customer, bool createPersistentCookie);
+        void SignOut();
+        Customer GetAuthenticatedCustomer();
     }
 }

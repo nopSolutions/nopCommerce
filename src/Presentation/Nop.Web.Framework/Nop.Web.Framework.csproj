@@ -45,9 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ICompareProductsService.cs" />
     <Compile Include="IoC\StructureMapDependencyResolver.cs" />
-    <Compile Include="CompareProductsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

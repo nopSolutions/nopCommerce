@@ -35,7 +35,7 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IWorkingContext _context;
+        private readonly IWorkContext _workContext;
         private readonly IRepository<Language> _languageRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -46,14 +46,14 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="context">Working context</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
-        public LanguageService(IWorkingContext context, 
+        public LanguageService(IWorkContext workContext, 
             ICacheManager cacheManager,
             IRepository<Language> languageRepository)
         {
-            this._context = context;
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._languageRepository = languageRepository;
         }
@@ -83,7 +83,7 @@ namespace Nop.Services
         /// <returns>Language collection</returns>
         public IList<Language> GetAllLanguages()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             return GetAllLanguages(showHidden);
         }
 

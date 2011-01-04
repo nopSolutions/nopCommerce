@@ -52,6 +52,10 @@ namespace Nop.Core.Domain
         /// Gets or sets a value indicating whether to allow anonymous users to set product ratings.
         /// </summary>
         public bool AllowAnonymousUsersToSetProductRatings { get; set; }
-
+        
+        /// <summary>
+        /// Gets or sets a customer password format (SHA1, MD5)
+        /// </summary>
+        public string CustomerPasswordFormat { get; set; }
     }
 }

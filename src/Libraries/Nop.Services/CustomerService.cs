@@ -37,7 +37,7 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IWorkingContext _context;
+        private readonly IWorkContext _workContext;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerSession> _customerSessionRepository;
@@ -51,20 +51,20 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="context">Working context</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="customerSessionRepository">Customer session repository</param>
         /// <param name="customerSettings">Customer settings</param>
-        public CustomerService(IWorkingContext context,
+        public CustomerService(IWorkContext workContext,
             ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerSession> customerSessionRepository,
             CustomerSettings customerSettings)
         {
-            this._context = context;
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
@@ -147,7 +147,7 @@ namespace Nop.Services
         /// <returns>Customer collection</returns>
         public IList<Customer> GetCustomersByCustomerRoleId(int customerRoleId)
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             
             var query = from c in _customerRepository.Table
                         from cr in c.CustomerRoles
@@ -256,6 +256,7 @@ namespace Nop.Services
             var customer = query.FirstOrDefault();
             return customer;
         }
+
         /// <summary>
         /// Updates the customer
         /// </summary>
@@ -275,6 +276,137 @@ namespace Nop.Services
             //    subscriptionOld.Email = customer.Email;
             //    IoC.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscriptionOld);
             //}
+        }
+
+        /// <summary>
+        /// Modifies password
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="oldPassword">Old password</param>
+        /// <param name="newPassword">New password</param>
+        public void ModifyPassword(int customerId, string oldPassword, string newPassword)
+        {
+            var customer = GetCustomerById(customerId);
+            if (customer == null)
+                return;
+
+            string oldPasswordHash = SecurityHelper.CreatePasswordHash(oldPassword, customer.SaltKey, _customerSettings.CustomerPasswordFormat);
+            if (!customer.PasswordHash.Equals(oldPasswordHash))
+                throw new NopException("Current password doesn't match.");
+
+            ModifyPassword(customerId, newPassword);
+        }
+
+        /// <summary>
+        /// Modifies password
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="newPassword">New password</param>
+        public void ModifyPassword(int customerId, string newPassword)
+        {
+            var customer = GetCustomerById(customerId);
+            if (customer == null)
+                return;
+
+            if (String.IsNullOrWhiteSpace(newPassword))
+                throw new NopException("Password is required");
+
+            newPassword = newPassword.Trim();
+
+            string newPasswordSalt = SecurityHelper.CreateSalt(5);
+            string newPasswordHash = SecurityHelper.CreatePasswordHash(newPassword, newPasswordSalt, _customerSettings.CustomerPasswordFormat);
+
+            customer.PasswordHash = newPasswordHash;
+            customer.SaltKey = newPasswordSalt;
+            UpdateCustomer(customer);
+        }
+
+        /// <summary>
+        /// Login a customer
+        /// </summary>
+        /// <param name="emailOrUsername">Email or username</param>
+        /// <param name="password">Password</param>
+        /// <returns>Validated customer; otherwise, null</returns>
+        public Customer ValidateUser(string emailOrUsername, string password)
+        {
+            if (emailOrUsername == null)
+                emailOrUsername = string.Empty;
+            emailOrUsername = emailOrUsername.Trim();
+            
+            Customer customer = null;
+            if (_customerSettings.UsernamesEnabled)
+                customer = GetCustomerByUsername(emailOrUsername);
+            else
+                customer = GetCustomerByEmail(emailOrUsername);
+
+            if (customer == null)
+                return null;
+
+            if (!customer.Active)
+                return null;
+
+            if (customer.Deleted)
+                return null;
+
+            //UNDONE validate whether it's not a guest
+            //if (customer.IsGuest)
+            //    return null;
+
+            string passwordHash = SecurityHelper.CreatePasswordHash(password, customer.SaltKey, _customerSettings.CustomerPasswordFormat);
+            bool passOk = customer.PasswordHash.Equals(passwordHash);
+            if (!passOk)
+                return null;
+
+            var registeredCustomerSession = GetCustomerSessionByCustomerId(customer.Id);
+            if (registeredCustomerSession != null)
+            {
+                //UNDONE migrate guest shopping cart and set customer session
+                //registeredCustomerSession.IsExpired = false;
+                //var anonCustomerSession = NopContext.Current.Session;
+                //var cart1 = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                //var cart2 = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist);
+                //NopContext.Current.Session = registeredCustomerSession;
+
+                //if ((anonCustomerSession != null) && (anonCustomerSession.CustomerSessionGuid != registeredCustomerSession.CustomerSessionGuid))
+                //{
+                //    if (anonCustomerSession.Customer != null)
+                //    {
+                //        customer = ApplyDiscountCouponCode(customer.CustomerId, anonCustomerSession.Customer.LastAppliedCouponCode);
+                //        customer = ApplyGiftCardCouponCode(customer.CustomerId, anonCustomerSession.Customer.GiftCardCouponCodes);
+                //    }
+
+                //    foreach (ShoppingCartItem item in cart1)
+                //    {
+                //        IoC.Resolve<IShoppingCartService>().AddToCart(
+                //            item.ShoppingCartType,
+                //            item.ProductVariantId,
+                //            item.AttributesXml,
+                //            item.CustomerEnteredPrice,
+                //            item.Quantity);
+                //        IoC.Resolve<IShoppingCartService>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
+                //    }
+                //    foreach (ShoppingCartItem item in cart2)
+                //    {
+                //        IoC.Resolve<IShoppingCartService>().AddToCart(
+                //            item.ShoppingCartType,
+                //            item.ProductVariantId,
+                //            item.AttributesXml,
+                //            item.CustomerEnteredPrice,
+                //            item.Quantity);
+                //        IoC.Resolve<IShoppingCartService>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
+                //    }
+                //}
+            }
+
+            //UNDONE set customer session
+            //if (NopContext.Current.Session == null)
+            //    NopContext.Current.Session = NopContext.Current.GetSession(true);
+            //NopContext.Current.Session.IsExpired = false;
+            //NopContext.Current.Session.LastAccessed = DateTime.UtcNow;
+            //NopContext.Current.Session.CustomerId = customer.CustomerId;
+            //NopContext.Current.Session = SaveCustomerSession(NopContext.Current.Session.CustomerSessionGuid, NopContext.Current.Session.CustomerId, NopContext.Current.Session.LastAccessed, NopContext.Current.Session.IsExpired);
+
+            return customer;
         }
 
         #endregion
@@ -319,7 +451,7 @@ namespace Nop.Services
         /// <returns>Customer role collection</returns>
         public IList<CustomerRole> GetAllCustomerRoles()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -339,7 +471,7 @@ namespace Nop.Services
         /// <returns>Customer role collection</returns>
         public IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId)
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             return GetCustomerRolesByCustomerId(customerId, showHidden);
         }
 

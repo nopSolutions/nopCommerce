@@ -39,7 +39,7 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IWorkingContext _context;
+        private readonly IWorkContext _workContext;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
@@ -56,7 +56,7 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="context">Working context</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="productCategoryRepository">Product category repository</param>
@@ -65,7 +65,7 @@ namespace Nop.Services
         /// <param name="relatedProductRepository">Related product repository</param>
         /// <param name="crossSellProductRepository">Cross-sell product repository</param>
         /// <param name="tierPriceRepository">Tier price repository</param>
-        public ProductService(IWorkingContext context, 
+        public ProductService(IWorkContext workContext, 
             ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductCategory> productCategoryRepository,
@@ -75,7 +75,7 @@ namespace Nop.Services
             IRepository<CrossSellProduct> crossSellProductRepository,
             IRepository<TierPrice> tierPriceRepository)
         {
-            this._context = context;
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
             this._productCategoryRepository = productCategoryRepository;
@@ -116,7 +116,7 @@ namespace Nop.Services
         /// <returns>Product collection</returns>
         public IList<Product> GetAllProducts()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             return GetAllProducts(showHidden);
         }
 
@@ -142,7 +142,7 @@ namespace Nop.Services
         /// <returns>Product collection</returns>
         public IList<Product> GetAllProductsDisplayedOnHomePage()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
 
             var query = from p in _productRepository.Table
                         orderby p.Name
@@ -229,7 +229,7 @@ namespace Nop.Services
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize)
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
 
             //UNDONE: filter by product specs
             //string commaSeparatedSpecIds = string.Empty;
@@ -396,7 +396,7 @@ namespace Nop.Services
         /// <returns>Product variant collection</returns>
         public IList<ProductVariant> GetProductVariantsByProductId(int productId)
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             return GetProductVariantsByProductId(productId, showHidden);
         }
         
@@ -474,7 +474,7 @@ namespace Nop.Services
         /// <returns>Related product collection</returns>
         public IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1)
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
 
             var query = from rp in _relatedProductRepository.Table
                         join p in _productRepository.Table on rp.ProductId2 equals p.Id
@@ -549,7 +549,7 @@ namespace Nop.Services
         /// <returns>Cross-sell product collection</returns>
         public IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1)
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
 
             var query = from csp in _crossSellProductRepository.Table
                         join p in _productRepository.Table on csp.ProductId2 equals p.Id

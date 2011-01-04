@@ -21,8 +21,8 @@ namespace Nop.Services.Tests
         {
             var repo1 = new EfRepository<Language>(context);
             var cacheManager = new NopNullCache();
-            IWorkingContext workingContext = null;
-            this._languageService = new LanguageService(workingContext, cacheManager, repo1);
+            IWorkContext workContext = null;
+            this._languageService = new LanguageService(workContext, cacheManager, repo1);
         }
 
         protected void RegisterTestData()

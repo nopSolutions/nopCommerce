@@ -35,7 +35,7 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IWorkingContext _context;
+        private readonly IWorkContext _workContext;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly ICacheManager _cacheManager;
         private readonly CurrencySettings _currencySettings;
@@ -47,16 +47,16 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="context">Working context</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="currencyRepository">Currency repository</param>
         /// <param name="currencySettings">Currency settings</param>
-        public CurrencyService(IWorkingContext context,
+        public CurrencyService(IWorkContext workContext,
             ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             CurrencySettings currencySettings)
         {
-            this._context = context;
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
             this._currencySettings = currencySettings;
@@ -115,7 +115,7 @@ namespace Nop.Services
         /// <returns>Currency collection</returns>
         public IList<Currency> GetAllCurrencies()
         {
-            bool showHidden = _context.IsAdmin;
+            bool showHidden = _workContext.IsAdmin;
             return GetAllCurrencies(showHidden);
         }
 
