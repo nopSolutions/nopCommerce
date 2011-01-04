@@ -37,5 +37,42 @@ namespace Nop.Data.Tests
             fromDb.Deleted.ShouldEqual(false);
             fromDb.RegistrationDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
         }
+
+        [Test]
+        public void Can_save_and_load_customer_with_customerRoles()
+        {
+            var customer = new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = "admin@yourStore.com",
+                Username = "admin@yourStore.com",
+                PasswordHash = "hash1",
+                SaltKey = "SaltKey1",
+                AdminComment = "some comment here",
+                Active = true,
+                Deleted = false,
+                RegistrationDateUtc = new DateTime(2010, 01, 01),
+                CustomerRoles = new List<CustomerRole>()
+                {
+                     new CustomerRole()
+                     {
+                         Name = "Administrators",
+                         FreeShipping = true,
+                         TaxExempt = true,
+                         Active = true,
+                         IsSystemRole = true,
+                         SystemName = "Administrators"
+                     }
+                }
+            };
+
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.Email.ShouldEqual("admin@yourStore.com");
+
+            fromDb.CustomerRoles.ShouldNotBeNull();
+            (fromDb.CustomerRoles.Count == 1).ShouldBeTrue();
+            fromDb.CustomerRoles.First().Name.ShouldEqual("Administrators");
+        }
     }
 }

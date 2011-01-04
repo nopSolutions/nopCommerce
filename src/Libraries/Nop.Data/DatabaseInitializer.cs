@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity.Database;
 using Nop.Core.Domain;
@@ -82,11 +83,46 @@ namespace Nop.Data
                                             AdminComment = string.Empty,
                                             Active = true,
                                             Deleted = false,
-                                            RegistrationDateUtc = DateTime.UtcNow
+                                            RegistrationDateUtc = DateTime.UtcNow,
                                         }
                                 };
             customers.ForEach(c => context.Customers.Add(c));
             context.SaveChanges();
+
+            var customerRoles = new List<CustomerRole>
+                                {
+                                    new CustomerRole
+                                        {
+                                            Name = "Administrators",
+                                            Active = true,
+                                            IsSystemRole = true,
+                                            SystemName="Administrators",
+                                            Customers = new List<Customer>()
+                                            {
+                                                customers.FirstOrDefault()
+                                            }
+                                        },
+                                    new CustomerRole
+                                        {
+                                            Name = "Forum moderators",
+                                            Active = true,
+                                            IsSystemRole = true,
+                                            SystemName="ForumModerators",
+                                            Customers = new List<Customer>()
+                                            {
+                                                customers.FirstOrDefault()
+                                            }
+                                        },
+                                    new CustomerRole
+                                        {
+                                            Name = "Guests",
+                                            Active = true,
+                                            IsSystemRole = true,
+                                            SystemName="Guests",
+                                        }
+                                };
+            customerRoles.ForEach(cr => context.CustomerRoles.Add(cr));
+            context.SaveChanges(); 
 
             #endregion
 

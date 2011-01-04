@@ -38,5 +38,8 @@ namespace Nop.Core.Domain
         /// Gets or sets the product variant
         /// </summary>
         public virtual ProductVariant ProductVariant { get; set; }
+
+        //TODO: combine TierPrice and PriceByCustomerRole here in a single class
+        //add nullable CustomerRoleId property (optional)
     }
 }

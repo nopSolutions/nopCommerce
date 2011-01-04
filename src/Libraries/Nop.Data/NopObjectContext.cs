@@ -40,6 +40,7 @@ namespace Nop.Data
         public DbSet<CrossSellProduct> CrossSellProducts { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<CustomerContent> CustomerContent { get; set; }
+        public DbSet<CustomerRole> CustomerRoles { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LocaleStringResource> LocaleStringResources { get; set; }
