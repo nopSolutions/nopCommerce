@@ -29,7 +29,7 @@ namespace Nop.Data.Mapping
 
             this.HasOptional(cc => cc.Customer)
                 .WithMany(c => c.CustomerContent)
-                .HasForeignKey(cc => cc.CustomerId);
+                .HasForeignKey(cc => cc.CustomerId).WillCascadeOnDelete(true);
 
         }
     }

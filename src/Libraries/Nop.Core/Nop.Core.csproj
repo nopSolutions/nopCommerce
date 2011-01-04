@@ -53,6 +53,7 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Domain\CustomerRole.cs" />
+    <Compile Include="Domain\CustomerSession.cs" />
     <Compile Include="Domain\MeasureSettings.cs" />
     <Compile Include="Domain\Country.cs" />
     <Compile Include="Domain\Currency.cs" />
