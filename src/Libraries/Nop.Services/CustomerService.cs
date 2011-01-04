@@ -422,6 +422,9 @@ namespace Nop.Services
             if (customerRole == null)
                 return;
 
+            if (customerRole.IsSystemRole)
+                throw new NopException("System role could not be deleted");
+
             _customerRoleRepository.Delete(customerRole);
             
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
