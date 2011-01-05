@@ -85,7 +85,7 @@ namespace Nop.Services
         /// <returns>Country collection</returns>
         public IList<Country> GetAllCountries()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(COUNTRIES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -104,7 +104,7 @@ namespace Nop.Services
         /// <returns>Country collection</returns>
         public IList<Country> GetAllCountriesForRegistration()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(COUNTRIES_REGISTRATION_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -123,7 +123,7 @@ namespace Nop.Services
         /// <returns>Country collection</returns>
         public IList<Country> GetAllCountriesForBilling()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(COUNTRIES_BILLING_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -142,7 +142,7 @@ namespace Nop.Services
         /// <returns>Country collection</returns>
         public IList<Country> GetAllCountriesForShipping()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(COUNTRIES_SHIPPING_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {

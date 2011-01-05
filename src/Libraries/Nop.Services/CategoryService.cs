@@ -94,7 +94,7 @@ namespace Nop.Services
         /// <returns>Categories</returns>
         public IList<Category> GetAllCategories()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             return GetAllCategories(showHidden);
         }
         
@@ -131,7 +131,7 @@ namespace Nop.Services
         /// <returns>Category collection</returns>
         public IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId)
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             return GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
         }
         
@@ -168,7 +168,7 @@ namespace Nop.Services
         /// <returns>Category collection</returns>
         public IList<Category> GetAllCategoriesDisplayedOnHomePage()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             
             var query = from c in _categoryRepository.Table
                         orderby c.DisplayOrder
@@ -278,7 +278,7 @@ namespace Nop.Services
             if (categoryId == 0)
                 return new List<ProductCategory>();
 
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId);
             return _cacheManager.Get(key, () =>
@@ -305,7 +305,7 @@ namespace Nop.Services
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>

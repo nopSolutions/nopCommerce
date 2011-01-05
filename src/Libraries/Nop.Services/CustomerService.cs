@@ -147,7 +147,7 @@ namespace Nop.Services
         /// <returns>Customer collection</returns>
         public IList<Customer> GetCustomersByCustomerRoleId(int customerRoleId)
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             
             var query = from c in _customerRepository.Table
                         from cr in c.CustomerRoles
@@ -454,7 +454,7 @@ namespace Nop.Services
         /// <returns>Customer role collection</returns>
         public IList<CustomerRole> GetAllCustomerRoles()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -474,7 +474,7 @@ namespace Nop.Services
         /// <returns>Customer role collection</returns>
         public IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId)
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             return GetCustomerRolesByCustomerId(customerId, showHidden);
         }
 

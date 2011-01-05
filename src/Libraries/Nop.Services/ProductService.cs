@@ -116,7 +116,7 @@ namespace Nop.Services
         /// <returns>Product collection</returns>
         public IList<Product> GetAllProducts()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             return GetAllProducts(showHidden);
         }
 
@@ -142,7 +142,7 @@ namespace Nop.Services
         /// <returns>Product collection</returns>
         public IList<Product> GetAllProductsDisplayedOnHomePage()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
 
             var query = from p in _productRepository.Table
                         orderby p.Name
@@ -229,7 +229,7 @@ namespace Nop.Services
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize)
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
 
             //UNDONE: filter by product specs
             //string commaSeparatedSpecIds = string.Empty;
@@ -396,7 +396,7 @@ namespace Nop.Services
         /// <returns>Product variant collection</returns>
         public IList<ProductVariant> GetProductVariantsByProductId(int productId)
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             return GetProductVariantsByProductId(productId, showHidden);
         }
         
@@ -474,7 +474,7 @@ namespace Nop.Services
         /// <returns>Related product collection</returns>
         public IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1)
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
 
             var query = from rp in _relatedProductRepository.Table
                         join p in _productRepository.Table on rp.ProductId2 equals p.Id
@@ -549,7 +549,7 @@ namespace Nop.Services
         /// <returns>Cross-sell product collection</returns>
         public IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1)
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
 
             var query = from csp in _crossSellProductRepository.Table
                         join p in _productRepository.Table on csp.ProductId2 equals p.Id

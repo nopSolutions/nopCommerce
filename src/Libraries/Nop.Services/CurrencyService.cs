@@ -115,7 +115,7 @@ namespace Nop.Services
         /// <returns>Currency collection</returns>
         public IList<Currency> GetAllCurrencies()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             return GetAllCurrencies(showHidden);
         }
 

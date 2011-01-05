@@ -25,7 +25,13 @@ namespace Nop.Services
     /// </summary>
     public partial class WorkContext : IWorkContext
     {
-        HttpContextBase _contextBase;
+        private bool _isAdminMode;
+        private Customer _currentUser;
+        private CustomerSession _customerSession;
+        private Language _workingLanguage;
+        private Currency _workingCurrency;
+        private string _workingTheme;
+        private readonly HttpContextBase _contextBase;
 
         public WorkContext(HttpContextBase contextBase)
         {
@@ -35,32 +41,45 @@ namespace Nop.Services
         /// <summary>
         /// Gets or sets a value indicating whether the context is running in admin-mode
         /// </summary>
-        public bool IsAdmin
+        public bool IsAdminMode
         {
             get
             {
-                //UNDONE implement;
-                return false;
-                throw new NotImplementedException();
+                return _isAdminMode;
             }
             set
             {
-                throw new NotImplementedException();
+                _isAdminMode = value;
             }
         }
 
         /// <summary>
         /// Gets or sets the current user
         /// </summary>
-        public Customer User
+        public Customer CurrentUser
         {
             get
             {
-                throw new NotImplementedException();
+                return _currentUser;
             }
             set
             {
-                throw new NotImplementedException();
+                _currentUser = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the current customer session
+        /// </summary>
+        public CustomerSession CustomerSession
+        {
+            get
+            {
+                return _customerSession;
+            }
+            set
+            {
+                _customerSession = value;
             }
         }
 
@@ -71,11 +90,26 @@ namespace Nop.Services
         {
             get
             {
-                throw new NotImplementedException();
+                return _workingLanguage;
             }
             set
             {
-                throw new NotImplementedException();
+                _workingLanguage = value;
+            }
+        }
+
+        /// <summary>
+        /// Get or set current user working currency
+        /// </summary>
+        public Currency WorkingCurrency
+        {
+            get
+            {
+                return _workingCurrency;
+            }
+            set
+            {
+                _workingCurrency = value;
             }
         }
 
@@ -86,11 +120,11 @@ namespace Nop.Services
         {
             get
             {
-                throw new NotImplementedException();
+                return _workingTheme;
             }
             set
             {
-                throw new NotImplementedException();
+                _workingTheme = value;
             }
         }
     }

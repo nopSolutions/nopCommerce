@@ -83,7 +83,7 @@ namespace Nop.Services
         /// <returns>Language collection</returns>
         public IList<Language> GetAllLanguages()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             return GetAllLanguages(showHidden);
         }
 

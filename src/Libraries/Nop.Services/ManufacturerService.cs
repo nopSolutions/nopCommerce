@@ -91,7 +91,7 @@ namespace Nop.Services
         /// <returns>Manufacturer collection</returns>
         public IList<Manufacturer> GetAllManufacturers()
         {
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
             return GetAllManufacturers(showHidden);
         }
 
@@ -191,7 +191,7 @@ namespace Nop.Services
             if (manufacturerId == 0)
                 return new List<ProductManufacturer>();
 
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
 
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId);
             return _cacheManager.Get(key, () =>
@@ -218,7 +218,7 @@ namespace Nop.Services
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            bool showHidden = _workContext.IsAdmin;
+            bool showHidden = _workContext.IsAdminMode;
 
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>

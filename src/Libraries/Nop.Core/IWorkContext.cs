@@ -26,12 +26,17 @@ namespace Nop.Core
         /// <summary>
         /// Gets or sets a value indicating whether the context is running in admin-mode
         /// </summary>
-        bool IsAdmin {get;set;}
+        bool IsAdminMode {get;set;}
 
         /// <summary>
         /// Gets or sets the current user
         /// </summary>
-        Customer User { get; set; }
+        Customer CurrentUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current customer session
+        /// </summary>
+        CustomerSession CustomerSession { get; set; }
 
         /// <summary>
         /// Get or set current user working language
@@ -39,7 +44,12 @@ namespace Nop.Core
         Language WorkingLanguage { get; set; }
 
         /// <summary>
-        /// Get or set current theme (e.g. darkOrange)
+        /// Get or set current user working currency
+        /// </summary>
+        Currency WorkingCurrency { get; set; }
+
+        /// <summary>
+        /// Get or set current graphical theme (e.g. darkOrange)
         /// </summary>
         string WorkingTheme { get; set; }
     }
