@@ -81,11 +81,32 @@ namespace Nop.Services
         /// <returns>A customer</returns>
         Customer GetCustomerByGuid(Guid customerGuid);
 
+         /// <summary>
+        /// Insert a customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="isGuest">A value indicating whether it's a guest</param>
+        void InsertCustomer(Customer customer, bool isGuest);
+
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomer(Customer customer);
+
+        /// <summary>
+        /// Sets a customer email
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="newEmail">New email</param>
+        void SetEmail(Customer customer, string newEmail);
+
+        /// <summary>
+        /// Sets a customer username
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="newUsername">New Username</param>
+        void SetUsername(Customer customer, string newUsername);
 
         /// <summary>
         /// Modifies password

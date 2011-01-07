@@ -14,11 +14,12 @@
 
 using System;
 using System.Configuration;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
-using System.Globalization;
 
 namespace Nop.Core
 {
@@ -27,6 +28,21 @@ namespace Nop.Core
     /// </summary>
     public partial class CommonHelper
     {
+        /// <summary>
+        /// Verifies that a string is in valid e-mail format
+        /// </summary>
+        /// <param name="email">Email to verify</param>
+        /// <returns>true if the string is a valid e-mail address and false if it's not</returns>
+        public static bool IsValidEmail(string email)
+        {
+            bool result = false;
+            if (String.IsNullOrEmpty(email))
+                return result;
+            email = email.Trim();
+            result = Regex.IsMatch(email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
+            return result;
+        }
+
         /// <summary>
         /// Generate random digit code
         /// </summary>

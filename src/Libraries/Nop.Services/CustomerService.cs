@@ -258,6 +258,44 @@ namespace Nop.Services
         }
 
         /// <summary>
+        /// Insert a customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="isGuest">A value indicating whether it's a guest</param>
+        public void InsertCustomer(Customer customer, bool isGuest)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (!CommonHelper.IsValidEmail(customer.Email))
+                throw new NopException("Invalid email");
+
+            if (!isGuest)
+            {
+                //validate email
+                if (GetCustomerByEmail(customer.Email) != null)
+                    throw new NopException("Duplicate email");
+
+                //validate username
+                if (_customerSettings.UsernamesEnabled)
+                {
+                    if (GetCustomerByUsername(customer.Username) != null)
+                        throw new NopException("Duplicate username");
+
+                    if (customer.Username.Length > 100)
+                        throw new NopException("Username is too long.");
+                }
+            }
+
+            //UNDONE check CustomerRegistrationType (Disabled, EmailValidation, AdminApproval)
+            
+            _customerRepository.Insert(customer);
+
+            //UNDONE add reward points for registration (if enabled)
+            //UNDONE Send welcome message / email validation message
+        }
+
+        /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -276,6 +314,73 @@ namespace Nop.Services
             //    subscriptionOld.Email = customer.Email;
             //    IoC.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscriptionOld);
             //}
+        }
+
+        /// <summary>
+        /// Sets a customer email
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="newEmail">New email</param>
+        public void SetEmail(Customer customer, string newEmail)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            newEmail = newEmail.Trim();
+
+            if (!CommonHelper.IsValidEmail(newEmail))
+                throw new NopException("New email is not valid");
+
+            if (newEmail.Length > 100)
+                throw new NopException("E-mail address is too long.");
+            
+            //TODO validate whether it's not guest (uncomment below)
+            //if (customer.IsGuest)
+            //{
+            //    throw new NopException("You cannot change email for guest customer");
+            //}
+
+            var cust2 = GetCustomerByEmail(newEmail);
+            if (cust2 != null && customer.Id != cust2.Id)
+                throw new NopException("The e-mail address is already in use.");
+
+            customer.Email = newEmail;
+            UpdateCustomer(customer);
+        }
+
+        /// <summary>
+        /// Sets a customer username
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="newUsername">New Username</param>
+        public void SetUsername(Customer customer, string newUsername)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (!_customerSettings.UsernamesEnabled)
+                throw new NopException("Usernames are disabled");
+
+            if (!_customerSettings.AllowCustomersToChangeUsernames)
+                throw new NopException("Changing usernames is not allowed");
+
+            newUsername = newUsername.Trim();
+
+            if (newUsername.Length > 100)
+                throw new NopException("Username is too long.");
+
+            //TODO validate whether it's not guest (uncomment below)
+            //if (customer.IsGuest)
+            //{
+            //    throw new NopException("You cannot change username for guest customer");
+            //}
+
+            var cust2 = GetCustomerByUsername(newUsername);
+            if (cust2 != null && customer.Id != cust2.Id)
+                throw new NopException("This username is already in use.");
+
+            customer.Username = newUsername;
+            UpdateCustomer(customer);
         }
 
         /// <summary>
