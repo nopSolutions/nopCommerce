@@ -34,6 +34,7 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly IWorkContext _workContext;
         private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -44,11 +45,14 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
-        public LocalizationService(ICacheManager cacheManager,
+        public LocalizationService(IWorkContext workContext, 
+            ICacheManager cacheManager,
             IRepository<LocaleStringResource> lsrRepository)
         {
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._lsrRepository = lsrRepository;
         }

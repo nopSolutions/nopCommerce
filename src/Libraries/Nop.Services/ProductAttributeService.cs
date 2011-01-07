@@ -18,6 +18,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Data;
+using Nop.Core;
 
 namespace Nop.Services
 {
@@ -40,6 +41,7 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly IWorkContext _workContext;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<ProductVariantAttribute> _productVariantAttributeRepository;
         private readonly IRepository<ProductVariantAttributeCombination> _productVariantAttributeCombinationRepository;
@@ -54,18 +56,21 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="productAttributeRepository">Product attribute repository</param>
         /// <param name="productVariantAttributeRepository">Product variant attribute mapping repository</param>
         /// <param name="productVariantAttributeCombinationRepository">Product variant attribute combination repository</param>
         /// <param name="productVariantAttributeValueRepository">Product variant attribute value repository</param>
-        public ProductAttributeService(ICacheManager cacheManager,
+        public ProductAttributeService(IWorkContext workContext, 
+            ICacheManager cacheManager,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductVariantAttribute> productVariantAttributeRepository,
             IRepository<ProductVariantAttributeCombination> productVariantAttributeCombinationRepository,
             IRepository<ProductVariantAttributeValue> productVariantAttributeValueRepository
             )
         {
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._productAttributeRepository = productAttributeRepository;
             this._productVariantAttributeRepository = productVariantAttributeRepository;

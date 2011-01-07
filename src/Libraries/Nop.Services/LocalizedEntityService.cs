@@ -38,6 +38,7 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly IWorkContext _workContext;
         private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -48,11 +49,14 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="localizedPropertyRepository">Localized property repository</param>
-        public LocalizedEntityService(ICacheManager cacheManager,
+        public LocalizedEntityService(IWorkContext workContext, 
+            ICacheManager cacheManager,
             IRepository<LocalizedProperty> localizedPropertyRepository)
         {
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._localizedPropertyRepository = localizedPropertyRepository;
         }

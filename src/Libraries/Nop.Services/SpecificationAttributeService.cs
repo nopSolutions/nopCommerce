@@ -18,6 +18,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Data;
+using Nop.Core;
 
 namespace Nop.Services
 {
@@ -37,6 +38,7 @@ namespace Nop.Services
 
         #region Fields
 
+        private readonly IWorkContext _workContext;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
@@ -49,15 +51,18 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="specificationAttributeRepository">Specification attribute repository</param>
         /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
-        public SpecificationAttributeService(ICacheManager cacheManager,
+        public SpecificationAttributeService(IWorkContext workContext, 
+            ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository)
         {
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._specificationAttributeOptionRepository = specificationAttributeOptionRepository;

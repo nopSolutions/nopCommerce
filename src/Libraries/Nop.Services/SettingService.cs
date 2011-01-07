@@ -33,7 +33,8 @@ namespace Nop.Services
         #endregion
 
         #region Fields
-        
+
+        private readonly IWorkContext _workContext;
         private readonly IRepository<Setting> _settingRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -44,11 +45,14 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="settingRepository">Setting repository</param>
-        public SettingService(ICacheManager cacheManager,
+        public SettingService(IWorkContext workContext, 
+            ICacheManager cacheManager,
             IRepository<Setting> settingRepository)
         {
+            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._settingRepository = settingRepository;
         }
