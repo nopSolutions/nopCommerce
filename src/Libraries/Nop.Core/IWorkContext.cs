@@ -29,14 +29,9 @@ namespace Nop.Core
         bool IsAdminMode {get;set;}
 
         /// <summary>
-        /// Gets or sets the current user
+        /// Gets or sets the current customer
         /// </summary>
-        Customer CurrentUser { get; set; }
-
-        /// <summary>
-        /// Gets or sets the current customer session
-        /// </summary>
-        CustomerSession CustomerSession { get; set; }
+        Customer CurrentCustomer { get; set; }
 
         /// <summary>
         /// Get or set current user working language

@@ -38,16 +38,6 @@ namespace Nop.Core.Domain
         public string Username { get; set; }
 
         /// <summary>
-        /// Gets or sets the password hash
-        /// </summary>
-        public string PasswordHash { get; set; }
-
-        /// <summary>
-        /// Gets or sets the salt key
-        /// </summary>
-        public string SaltKey { get; set; }
-
-        /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
         public string AdminComment { get; set; }
@@ -63,9 +53,9 @@ namespace Nop.Core.Domain
         public bool Deleted { get; set; }
 
         /// <summary>
-        /// Gets or sets the date and time of customer registration
+        /// Gets or sets the date and time of entity creation
         /// </summary>
-        public DateTime RegistrationDateUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets customer generated content

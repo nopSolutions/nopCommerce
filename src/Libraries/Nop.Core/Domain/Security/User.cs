@@ -26,22 +26,22 @@ namespace Nop.Core.Domain.Security
         public virtual Guid UserGuid { get; set; }
         public virtual string ApplicationName { get; set; }
         
-        private string username;
+        private string _username;
         public virtual string Username {
-            get { return this.username; }
+            get { return this._username; }
             set {
-                this.username = value;
-                this.LoweredUsername = this.username.ToLower();
+                this._username = value;
+                this.LoweredUsername = this._username.ToLower();
             }
         }
 
-        private string email;
+        private string _email;
         public virtual string Email
         {
-            get { return this.email;}
+            get { return this._email; }
             set {
-                this.email = value;
-                this.LoweredEmail = this.email.ToLower();
+                this._email = value;
+                this.LoweredEmail = this._email.ToLower();
             }
         }
 
@@ -63,11 +63,11 @@ namespace Nop.Core.Domain.Security
         public virtual string Comments { get; set; }
         public virtual bool IsApproved { get; set; }
         public virtual bool IsLockedOut { get; set; }
-        public virtual DateTime CreatedOn { get; set; }
-        public virtual DateTime? LastActivityDate { get; set; }
-        public virtual DateTime? LastLoginDate { get; set; }
-        public virtual DateTime? LastLockedOutDate { get; set; }
-        public virtual DateTime? LastPasswordChangeDate { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime? LastActivityDateUtc { get; set; }
+        public virtual DateTime? LastLoginDateUtc { get; set; }
+        public virtual DateTime? LastLockedOutDateUtc { get; set; }
+        public virtual DateTime? LastPasswordChangeDateUtc { get; set; }
         public virtual int FailedPasswordAttemptCount { get; set; }
 
         public virtual string FullName {

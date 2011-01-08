@@ -35,7 +35,6 @@ namespace Nop.Services
 
         #region Fields
 
-        private readonly IWorkContext _workContext;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -46,14 +45,11 @@ namespace Nop.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="stateProvinceRepository">State/province repository</param>
-        public StateProvinceService(IWorkContext workContext, 
-            ICacheManager cacheManager,
+        public StateProvinceService(ICacheManager cacheManager,
             IRepository<StateProvince> stateProvinceRepository)
         {
-            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._stateProvinceRepository = stateProvinceRepository;
         }

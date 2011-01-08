@@ -68,9 +68,6 @@ namespace Nop.Data
 
             #region Customers
 
-            string password = "admin";
-            string saltKey = SecurityHelper.CreateSalt(5);
-            string passwordHash = SecurityHelper.CreatePasswordHash(password, saltKey, "SHA1");
             var customers = new List<Customer>
                                 {
                                     new Customer
@@ -78,12 +75,10 @@ namespace Nop.Data
                                             CustomerGuid = Guid.NewGuid(),
                                             Email = "admin@yourStore.com",
                                             Username = "admin@yourStore.com",
-                                            SaltKey = saltKey,
-                                            PasswordHash = passwordHash,
                                             AdminComment = string.Empty,
                                             Active = true,
                                             Deleted = false,
-                                            RegistrationDateUtc = DateTime.UtcNow,
+                                            CreatedOnUtc = DateTime.UtcNow,
                                         }
                                 };
             customers.ForEach(c => context.Customers.Add(c));

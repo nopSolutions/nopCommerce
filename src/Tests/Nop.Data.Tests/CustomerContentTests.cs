@@ -38,18 +38,7 @@ namespace Nop.Data.Tests
                 IsApproved = true,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
-                Customer = new Customer()
-                {
-                    CustomerGuid = Guid.NewGuid(),
-                    Email = "admin@yourStore.com",
-                    Username = "admin@yourStore.com",
-                    PasswordHash = "hash1",
-                    SaltKey = "SaltKey1",
-                    AdminComment = "some comment here",
-                    Active = true,
-                    Deleted = false,
-                    RegistrationDateUtc = new DateTime(2010, 01, 01)
-                }
+                Customer = GetTestCustomer()
             };
 
             var fromDb = SaveAndLoadEntity(customerContent);
@@ -115,12 +104,10 @@ namespace Nop.Data.Tests
                 CustomerGuid = Guid.NewGuid(),
                 Email = "admin@yourStore.com",
                 Username = "admin@yourStore.com",
-                PasswordHash = "hash1",
-                SaltKey = "SaltKey1",
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,
-                RegistrationDateUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01)
             };
         }
 

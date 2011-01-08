@@ -31,7 +31,6 @@ namespace Nop.Services
     {
         private readonly HttpContextBase _httpContext;
         private readonly CustomerService _customerService;
-        private readonly CustomerSettings _customerSettings;
 
         private Customer _signedInUser;
 
@@ -40,14 +39,11 @@ namespace Nop.Services
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <param name="customerService">Customer service</param>
-        /// <param name="customerSettings">Customer settings</param>
         public AuthenticationService(HttpContextBase httpContext,
-            CustomerService customerService,
-            CustomerSettings customerSettings)
+            CustomerService customerService)
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
-            this._customerSettings = customerSettings;
 
             //TODO set correct timespan
             ExpirationTimeSpan = TimeSpan.FromHours(6);

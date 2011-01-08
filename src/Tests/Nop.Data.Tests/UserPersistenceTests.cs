@@ -28,7 +28,7 @@ namespace Nop.Data.Tests
                 SecurityAnswer = "",
                 IsApproved = true,
                 IsLockedOut = false,
-                CreatedOn = DateTime.Today
+                CreatedOnUtc = DateTime.UtcNow
             };
 
             var fromDb = SaveAndLoadEntity(user);

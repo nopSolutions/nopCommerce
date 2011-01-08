@@ -77,6 +77,7 @@ namespace Nop.Services.Security
                     pwd = encryptionService.EncryptText(password, encryptionKey);
                     break;
                 case PasswordFormat.Hashed:
+                    //TODO pass ICustomerSettings.CustomerPasswordFormat
                     pwd = encryptionService.CreatePasswordHash(password, user.PasswordSalt);
                     break;
                 default:
@@ -87,7 +88,7 @@ namespace Nop.Services.Security
             bool isValid = pwd == user.Password;
 
             if (isValid)
-                user.LastLoginDate = DateTime.Now;
+                user.LastLoginDateUtc = DateTime.UtcNow;
             else
                 user.FailedPasswordAttemptCount++;
 
@@ -147,7 +148,7 @@ namespace Nop.Services.Security
             }
 
             user.IsApproved = request.IsApproved;
-            user.CreatedOn = DateTime.Now;
+            user.CreatedOnUtc = DateTime.UtcNow;
 
             InsertUser(user);
 

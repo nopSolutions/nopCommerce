@@ -26,8 +26,6 @@ namespace Nop.Data.Mapping
             this.HasKey(c => c.Id);
             this.Property(c => c.Email).IsRequired().HasMaxLength(255);
             this.Property(c => c.Username).IsRequired().HasMaxLength(255);
-            this.Property(c => c.PasswordHash).IsRequired().HasMaxLength(255);
-            this.Property(c => c.SaltKey).IsRequired().HasMaxLength(255);
             this.Property(c => c.AdminComment).IsMaxLength();
         
         }

@@ -51,11 +51,9 @@ namespace Nop.Data.Tests
                         CustomerGuid = Guid.NewGuid(),
                         Email = "admin@yourStore.com",
                         Username = "admin@yourStore.com",
-                        PasswordHash = "hash1",
-                        SaltKey = "SaltKey1",
                         AdminComment = "some comment here",
                         Active = true,
-                        RegistrationDateUtc = new DateTime(2010, 01, 01)
+                        CreatedOnUtc = new DateTime(2010, 01, 01)
                     }
                 }
             };

@@ -19,23 +19,19 @@ namespace Nop.Data.Tests
                 CustomerGuid = Guid.NewGuid(),
                 Email = "admin@yourStore.com",
                 Username = "admin@yourStore.com",
-                PasswordHash = "hash1",
-                SaltKey = "SaltKey1",
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted= false,
-                RegistrationDateUtc = new DateTime(2010,01,01)
+                CreatedOnUtc = new DateTime(2010,01,01)
             };
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.Email.ShouldEqual("admin@yourStore.com");
             fromDb.Username.ShouldEqual("admin@yourStore.com");
-            fromDb.PasswordHash.ShouldEqual("hash1");
-            fromDb.SaltKey.ShouldEqual("SaltKey1");
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
-            fromDb.RegistrationDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
         }
 
         [Test]
@@ -46,12 +42,10 @@ namespace Nop.Data.Tests
                 CustomerGuid = Guid.NewGuid(),
                 Email = "admin@yourStore.com",
                 Username = "admin@yourStore.com",
-                PasswordHash = "hash1",
-                SaltKey = "SaltKey1",
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,
-                RegistrationDateUtc = new DateTime(2010, 01, 01),
+                CreatedOnUtc = new DateTime(2010, 01, 01),
                 CustomerRoles = new List<CustomerRole>()
                 {
                      new CustomerRole()

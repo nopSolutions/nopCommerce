@@ -27,7 +27,6 @@ namespace Nop.Services
     {
         private bool _isAdminMode;
         private Customer _currentUser;
-        private CustomerSession _customerSession;
         private Language _workingLanguage;
         private Currency _workingCurrency;
         private string _workingTheme;
@@ -54,9 +53,9 @@ namespace Nop.Services
         }
 
         /// <summary>
-        /// Gets or sets the current user
+        /// Gets or sets the current customer
         /// </summary>
-        public Customer CurrentUser
+        public Customer CurrentCustomer
         {
             get
             {
@@ -65,21 +64,6 @@ namespace Nop.Services
             set
             {
                 _currentUser = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the current customer session
-        /// </summary>
-        public CustomerSession CustomerSession
-        {
-            get
-            {
-                return _customerSession;
-            }
-            set
-            {
-                _customerSession = value;
             }
         }
 
