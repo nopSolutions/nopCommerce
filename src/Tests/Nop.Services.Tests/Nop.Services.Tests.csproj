@@ -68,14 +68,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigFileSettingService.cs" />
-    <Compile Include="ConfigurationProviderTests.cs" />
-    <Compile Include="LanguageServiceTests.cs" />
+    <Compile Include="Configuration\ConfigFileSettingService.cs" />
+    <Compile Include="Configuration\ConfigurationProviderTests.cs" />
+    <Compile Include="Localization\LanguageServiceTests.cs" />
     <Compile Include="Security\EncryptionServiceTests.cs" />
     <Compile Include="Security\UserServiceTests.cs" />
     <Compile Include="ServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ConfigFileSettingServiceTests.cs" />
+    <Compile Include="Configuration\ConfigFileSettingServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

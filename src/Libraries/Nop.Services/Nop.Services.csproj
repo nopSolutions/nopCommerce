@@ -42,56 +42,56 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CategoryService.cs" />
-    <Compile Include="CategoryExtensions.cs" />
-    <Compile Include="CompareProductsService.cs" />
-    <Compile Include="ConfigurationProvider.cs" />
+    <Compile Include="Catalog\CategoryService.cs" />
+    <Compile Include="Catalog\CategoryExtensions.cs" />
+    <Compile Include="Catalog\CompareProductsService.cs" />
+    <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="FormsAuthenticationService.cs" />
     <Compile Include="IAuthenticationService.cs" />
-    <Compile Include="CountryService.cs" />
-    <Compile Include="CurrencyService.cs" />
-    <Compile Include="CustomerContentService.cs" />
-    <Compile Include="CustomerService.cs" />
-    <Compile Include="ICompareProductsService.cs" />
-    <Compile Include="ICountryService.cs" />
-    <Compile Include="ICurrencyService.cs" />
-    <Compile Include="ICustomerContentService.cs" />
-    <Compile Include="ICustomerService.cs" />
-    <Compile Include="IMeasureService.cs" />
-    <Compile Include="IStateProvinceService.cs" />
-    <Compile Include="LocalizationExtentions.cs" />
-    <Compile Include="MeasureService.cs" />
+    <Compile Include="Directory\CountryService.cs" />
+    <Compile Include="Directory\CurrencyService.cs" />
+    <Compile Include="Customers\CustomerContentService.cs" />
+    <Compile Include="Customers\CustomerService.cs" />
+    <Compile Include="Catalog\ICompareProductsService.cs" />
+    <Compile Include="Directory\ICountryService.cs" />
+    <Compile Include="Directory\ICurrencyService.cs" />
+    <Compile Include="Customers\ICustomerContentService.cs" />
+    <Compile Include="Customers\ICustomerService.cs" />
+    <Compile Include="Directory\IMeasureService.cs" />
+    <Compile Include="Directory\IStateProvinceService.cs" />
+    <Compile Include="Localization\LocalizationExtentions.cs" />
+    <Compile Include="Directory\MeasureService.cs" />
     <Compile Include="Security\EncryptionService.cs" />
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\IUserService.cs" />
     <Compile Include="Security\UserRegistrationRequest.cs" />
     <Compile Include="Security\UserRegistrationResult.cs" />
     <Compile Include="Security\UserService.cs" />
-    <Compile Include="StateProvinceService.cs" />
+    <Compile Include="Directory\StateProvinceService.cs" />
     <Compile Include="WorkContext.cs" />
-    <Compile Include="LocalizedEntityService.cs" />
-    <Compile Include="ILocalizedEntityService.cs" />
-    <Compile Include="IProductAttributeService.cs" />
-    <Compile Include="ISpecificationAttributeService.cs" />
-    <Compile Include="ProductAttributeExtensions.cs" />
-    <Compile Include="ICategoryService.cs" />
-    <Compile Include="ILanguageService.cs" />
-    <Compile Include="ILocalizationService.cs" />
-    <Compile Include="IManufacturerService.cs" />
-    <Compile Include="IProductService.cs" />
+    <Compile Include="Localization\LocalizedEntityService.cs" />
+    <Compile Include="Localization\ILocalizedEntityService.cs" />
+    <Compile Include="Catalog\IProductAttributeService.cs" />
+    <Compile Include="Catalog\ISpecificationAttributeService.cs" />
+    <Compile Include="Catalog\ProductAttributeExtensions.cs" />
+    <Compile Include="Catalog\ICategoryService.cs" />
+    <Compile Include="Localization\ILanguageService.cs" />
+    <Compile Include="Localization\ILocalizationService.cs" />
+    <Compile Include="Catalog\IManufacturerService.cs" />
+    <Compile Include="Catalog\IProductService.cs" />
     <Compile Include="Logging\LoggingExtensions.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="ISettingService.cs" />
-    <Compile Include="LanguageService.cs" />
-    <Compile Include="LocalizationService.cs" />
+    <Compile Include="Configuration\ISettingService.cs" />
+    <Compile Include="Localization\LanguageService.cs" />
+    <Compile Include="Localization\LocalizationService.cs" />
     <Compile Include="Logging\DefaultLogger.cs" />
-    <Compile Include="ManufacturerService.cs" />
-    <Compile Include="ProductAttributeService.cs" />
-    <Compile Include="ProductService.cs" />
+    <Compile Include="Catalog\ManufacturerService.cs" />
+    <Compile Include="Catalog\ProductAttributeService.cs" />
+    <Compile Include="Catalog\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingService.cs" />
-    <Compile Include="SpecificationAttributeService.cs" />
+    <Compile Include="Configuration\SettingService.cs" />
+    <Compile Include="Catalog\SpecificationAttributeService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nop.Core\Nop.Core.csproj">
@@ -102,6 +102,9 @@
       <Project>{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}</Project>
       <Name>Nop.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Media\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

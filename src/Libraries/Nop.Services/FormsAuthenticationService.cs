@@ -21,6 +21,8 @@ using Nop.Core.Domain;
 using Nop.Data;
 using Nop.Core.Caching;
 using System.Web.Security;
+using Nop.Core.Domain.Customers;
+using Nop.Services.Customers;
 
 namespace Nop.Services
 {

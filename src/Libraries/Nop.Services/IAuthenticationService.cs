@@ -20,6 +20,7 @@ using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Data;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Services
 {

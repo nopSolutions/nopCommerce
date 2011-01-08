@@ -23,6 +23,14 @@ using Nop.Data.Mapping;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions.Edm;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
+using Nop.Data.Mapping.Localization;
+using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Configuration;
 
 namespace Nop.Data
 {
@@ -43,7 +51,6 @@ namespace Nop.Data
         public DbSet<CustomerContent> CustomerContent { get; set; }
         public DbSet<CustomerRole> CustomerRoles { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<CustomerSession> CustomerSessions { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LocaleStringResource> LocaleStringResources { get; set; }
         public DbSet<LocalizedProperty> LocalizedProperties { get; set; }

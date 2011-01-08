@@ -5,6 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Tests
 {

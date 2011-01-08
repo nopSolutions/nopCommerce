@@ -18,6 +18,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Data;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Services.Logging
 {

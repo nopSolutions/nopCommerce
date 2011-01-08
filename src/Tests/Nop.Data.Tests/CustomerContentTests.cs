@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Nop.Tests;
-using Nop.Core.Domain;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Tests
 {

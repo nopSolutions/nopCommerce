@@ -18,6 +18,10 @@ using System.Collections.Generic;
 using System.Data.Entity.Database;
 using Nop.Core.Domain;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Configuration;
 
 
 namespace Nop.Data

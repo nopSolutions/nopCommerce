@@ -15,6 +15,7 @@
 using System;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Services.Logging
 {

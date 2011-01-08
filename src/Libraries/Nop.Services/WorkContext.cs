@@ -17,6 +17,9 @@ using System;
 using Nop.Core;
 using Nop.Core.Domain;
 using System.Web;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 
 namespace Nop.Services
 {
