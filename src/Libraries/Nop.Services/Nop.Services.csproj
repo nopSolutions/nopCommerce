@@ -61,6 +61,12 @@
     <Compile Include="IStateProvinceService.cs" />
     <Compile Include="LocalizationExtentions.cs" />
     <Compile Include="MeasureService.cs" />
+    <Compile Include="Security\EncryptionService.cs" />
+    <Compile Include="Security\IEncryptionService.cs" />
+    <Compile Include="Security\IUserService.cs" />
+    <Compile Include="Security\UserRegistrationRequest.cs" />
+    <Compile Include="Security\UserRegistrationResult.cs" />
+    <Compile Include="Security\UserService.cs" />
     <Compile Include="StateProvinceService.cs" />
     <Compile Include="WorkContext.cs" />
     <Compile Include="LocalizedEntityService.cs" />

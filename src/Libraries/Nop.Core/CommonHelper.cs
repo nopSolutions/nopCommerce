@@ -112,5 +112,18 @@ namespace Nop.Core
         public static T To<T>(string obj) {
             return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Indicates whether the specified strings are null or empty strings
+        /// </summary>
+        /// <param name="stringsToValidate">Array of strings to validate</param>
+        /// <returns>Boolean</returns>
+        public static bool AreNullOrEmpty(params string[] stringsToValidate) {
+            bool result = false;
+            Array.ForEach(stringsToValidate, str => {
+                if (string.IsNullOrEmpty(str)) result = true;
+            });
+            return result;
+        }
     }
 }

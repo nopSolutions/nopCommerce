@@ -97,6 +97,7 @@
     <Compile Include="PersistenceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaTests.cs" />
+    <Compile Include="UserPersistenceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

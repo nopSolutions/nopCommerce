@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="FileSystemStorageProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\UserTests.cs" />
     <Compile Include="SettingTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>

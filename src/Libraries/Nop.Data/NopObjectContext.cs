@@ -22,6 +22,7 @@ using Nop.Core;
 using Nop.Data.Mapping;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions.Edm;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Data
 {
@@ -69,6 +70,7 @@ namespace Nop.Data
         public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
         public DbSet<StateProvince> StateProvinces { get; set; }
         public DbSet<TierPrice> TierPrices { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

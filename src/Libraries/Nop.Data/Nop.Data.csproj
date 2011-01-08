@@ -53,6 +53,7 @@
     <Compile Include="Mapping\MeasureDimensionMap.cs" />
     <Compile Include="Mapping\CurrencyMap.cs" />
     <Compile Include="Mapping\CountryMap.cs" />
+    <Compile Include="Mapping\Security\UserMap.cs" />
     <Compile Include="Mapping\StateProvinceMap.cs" />
     <Compile Include="Mapping\ProductRatingMap.cs" />
     <Compile Include="Mapping\ProductReviewMap.cs" />
