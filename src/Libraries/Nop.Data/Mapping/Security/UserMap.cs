@@ -12,11 +12,14 @@ namespace Nop.Data.Mapping.Security
         public UserMap()
         {
             this.ToTable("Users");
-            this.Ignore(u => u.PasswordFormat);
-            this.HasRequired(u => u.Username);
-            this.HasRequired(u => u.Email);
-            this.HasRequired(u => u.Password);
+            this.Property(u => u.Username).IsRequired();
+            this.Property(u => u.Email).IsRequired();
+            this.Property(u => u.Password).IsRequired();
             this.Property(u => u.UserGuid).IsRequired();
+
+            this.Ignore(u => u.PasswordFormat);
+            this.Ignore(u => u.FullName);
+            
         }
     }
 }
