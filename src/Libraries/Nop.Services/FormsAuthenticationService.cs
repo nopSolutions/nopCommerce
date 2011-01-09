@@ -23,6 +23,8 @@ using Nop.Core.Caching;
 using System.Web.Security;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
+using Nop.Core.Domain.Security;
+using Nop.Services.Security;
 
 namespace Nop.Services
 {
@@ -31,21 +33,27 @@ namespace Nop.Services
     /// </summary>
     public partial class AuthenticationService : IAuthenticationService
     {
+        private const string CustomerCookieName = "Nop.customer";
         private readonly HttpContextBase _httpContext;
         private readonly CustomerService _customerService;
+        private readonly UserService _userService;
 
-        private Customer _signedInUser;
+        private User _cachedUser;
+        private Customer _cachedCustomer;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <param name="customerService">Customer service</param>
+        /// <param name="userService">User service</param>
         public AuthenticationService(HttpContextBase httpContext,
-            CustomerService customerService)
+            CustomerService customerService,
+            UserService userService)
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
+            this._userService = userService;
 
             //TODO set correct timespan
             ExpirationTimeSpan = TimeSpan.FromHours(6);
@@ -53,14 +61,14 @@ namespace Nop.Services
 
         public TimeSpan ExpirationTimeSpan { get; set; }
 
-        public void SignIn(Customer customer, bool createPersistentCookie)
+        public void SignIn(User user, bool createPersistentCookie)
         {
-            var now = DateTime.UtcNow.ToLocalTime();
-            var userData = Convert.ToString(customer.Id);
+            var now = DateTime.Now.ToLocalTime();
+            var userData = Convert.ToString(user.Username);
 
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,
-                customer.Email,
+                user.Username,
                 now,
                 now.Add(ExpirationTimeSpan),
                 createPersistentCookie,
@@ -79,31 +87,100 @@ namespace Nop.Services
             }
 
             _httpContext.Response.Cookies.Add(cookie);
-            _signedInUser = customer;
+            _cachedUser = user;
         }
 
         public void SignOut()
         {
-            _signedInUser = null;
+            _cachedUser = null;
             FormsAuthentication.SignOut();
         }
 
-        public Customer GetAuthenticatedCustomer()
+        public User GetAuthenticatedUser()
         {
-            if (_signedInUser != null)
-                return _signedInUser;
+            if (_cachedUser != null)
+                return _cachedUser;
 
-            if (!_httpContext.Request.IsAuthenticated || !(_httpContext.User.Identity is FormsIdentity))
+            if (_httpContext == null ||
+                _httpContext.Request == null ||
+                !_httpContext.Request.IsAuthenticated ||
+                !(_httpContext.User.Identity is FormsIdentity))
             {
                 return null;
             }
 
             var formsIdentity = (FormsIdentity)_httpContext.User.Identity;
             var userData = formsIdentity.Ticket.UserData;
-            int userId;
-            if (!int.TryParse(userData, out userId))
+
+            var username = userData;
+            if (String.IsNullOrWhiteSpace(username))
                 return null;
-            return _customerService.GetCustomerById(userId);
+            _cachedUser = _userService.GetUserByUsername(username);
+            return _cachedUser;
+        }
+
+        public Customer GetCurrentCustomer()
+        {
+            if (_cachedCustomer != null)
+                return _cachedCustomer;
+
+            Customer customer = null;
+            if (_httpContext != null)
+            {
+                var customerCookie = GetCustomerCookie();
+
+                if (_httpContext.User != null &&
+                    _httpContext.User.Identity != null &&
+                    _httpContext.User.Identity.IsAuthenticated)
+                {
+                    customer = _customerService.GetCustomerByUsername(_httpContext.User.Identity.Name);
+                }
+                else if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
+                {
+                    var customerGuid = Guid.Empty;
+                    if (Guid.TryParse(customerCookie.Value, out customerGuid))
+                        customer = _customerService.GetCustomerByGuid(customerGuid);
+                }
+
+
+                if (customer == null)
+                {
+                    customer = _customerService.InsertGuestCustomer(Guid.NewGuid().ToString());
+                }
+
+                SetCustomerCookie(customer.CustomerGuid);
+            }
+
+            _cachedCustomer = customer;
+            return _cachedCustomer;
+        }
+
+        protected HttpCookie GetCustomerCookie()
+        {
+            if (_httpContext == null ||_httpContext.Request == null)
+                return null;
+
+            return _httpContext.Request.Cookies[CustomerCookieName];
+        }
+
+        protected void SetCustomerCookie(Guid customerGuid)
+        {
+            var cookie = new HttpCookie(CustomerCookieName);
+            cookie.Value = customerGuid.ToString();
+            if (customerGuid == Guid.Empty)
+            {
+                cookie.Expires = DateTime.Now.AddMonths(-1);
+            }
+            else
+            {
+                int cookieExpires = 24 * 365; //TODO make confgiurable
+                cookie.Expires = DateTime.Now.AddHours(cookieExpires);
+            }
+            if (_httpContext != null && _httpContext.Response != null)
+            {
+                _httpContext.Response.Cookies.Remove(CustomerCookieName);
+                _httpContext.Response.Cookies.Add(cookie);
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Nop.Data.Tests
                                    IsApproved = true,
                                    CreatedOnUtc = new DateTime(2010, 01, 01),
                                    UpdatedOnUtc = new DateTime(2010, 01, 02),
+                                   Customer = GetTestCustomer()
                                };
 
             var fromDb = SaveAndLoadEntity(customerContent);

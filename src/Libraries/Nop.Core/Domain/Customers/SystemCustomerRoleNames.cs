@@ -12,25 +12,32 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Customers;
-
-
-namespace Nop.Data.Mapping.Customers
+namespace Nop.Core.Domain.Customers
 {
-    public partial class CustomerContentMap : EntityTypeConfiguration<CustomerContent>
+    public static class SystemCustomerRoleNames
     {
-        public CustomerContentMap()
+        public static string Administrators
         {
-            this.ToTable("CustomerContent");
+            get
+            {
+                return "Administrators";
+            }
+        }
 
-            this.HasKey(cc => cc.Id);
-            this.Property(cc => cc.IpAddress).IsRequired().HasMaxLength(200);
+        public static string Registered
+        {
+            get
+            {
+                return "Registered";
+            }
+        }
 
-            this.HasRequired(cc => cc.Customer)
-                .WithMany(c => c.CustomerContent)
-                .HasForeignKey(cc => cc.CustomerId);
-
+        public static string Guests
+        {
+            get
+            {
+                return "Guests";
+            }
         }
     }
 }

@@ -81,12 +81,19 @@ namespace Nop.Services.Customers
         /// <returns>A customer</returns>
         Customer GetCustomerByGuid(Guid customerGuid);
 
-         /// <summary>
-        /// Insert a customer
+        /// <summary>
+        /// Insert a guest customer
         /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="isGuest">A value indicating whether it's a guest</param>
-        void InsertCustomer(Customer customer, bool isGuest);
+        /// <param name="userName">Username</param>
+        /// <returns>Customer</returns>
+        Customer InsertGuestCustomer(string userName);
+
+        /// <summary>
+        /// Register customer
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Customer</returns>
+        Customer RegisterCustomer(int customerId);
 
         /// <summary>
         /// Updates the customer
@@ -124,6 +131,13 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>Customer role</returns>
         CustomerRole GetCustomerRoleById(int customerRoleId);
+
+        /// <summary>
+        /// Gets a customer role
+        /// </summary>
+        /// <param name="systemName">Customer role system name</param>
+        /// <returns>Customer role</returns>
+        CustomerRole GetCustomerRoleBySystemName(string systemName);
 
         /// <summary>
         /// Gets all customer roles

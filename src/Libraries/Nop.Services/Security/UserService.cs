@@ -140,6 +140,7 @@ namespace Nop.Services.Security
                 case PasswordFormat.Hashed:
                     string saltKey = encryptionService.CreateSaltKey(5);
                     user.PasswordSalt = saltKey;
+                    //TODO pass password format (customerSettings.CustomerPasswordFormat)
                     user.Password = encryptionService.CreatePasswordHash(request.Password, saltKey);
                     user.SecurityAnswer = encryptionService.CreatePasswordHash(request.SecurityAnswer, saltKey);
                     break;

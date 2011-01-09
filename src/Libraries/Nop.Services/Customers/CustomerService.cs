@@ -33,6 +33,7 @@ namespace Nop.Services.Customers
 
         private const string CUSTOMERROLES_ALL_KEY = "Nop.customerrole.all-{0}";
         private const string CUSTOMERROLES_BY_ID_KEY = "Nop.customerrole.id-{0}";
+        private const string CUSTOMERROLES_BY_SYSTEMNAME_KEY = "Nop.customerrole.systemname-{0}";
         private const string CUSTOMERROLES_PATTERN_KEY = "Nop.customerrole.";
         #endregion
 
@@ -227,41 +228,70 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Insert a customer
+        /// Insert a guest customer
         /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="isGuest">A value indicating whether it's a guest</param>
-        public void InsertCustomer(Customer customer, bool isGuest)
+        /// <param name="userName">Username</param>
+        /// <returns>Customer</returns>
+        public Customer InsertGuestCustomer(string userName)
         {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
+            //validate username
+            if (GetCustomerByUsername(userName) != null)
+                throw new NopException("Duplicate username");
 
-            if (!CommonHelper.IsValidEmail(customer.Email))
-                throw new NopException("Invalid email");
+            if (userName.Length > 100)
+                throw new NopException("Username is too long.");
 
-            if (!isGuest)
+            var customer = new Customer()
             {
-                //validate email
-                if (GetCustomerByEmail(customer.Email) != null)
-                    throw new NopException("Duplicate email");
+                CustomerGuid = Guid.NewGuid(),
+                Email = string.Empty,
+                Username = userName,
+                AdminComment = string.Empty,
+                Active = true,
+                CreatedOnUtc = DateTime.UtcNow,
+            };
 
-                //validate username
-                if (_customerSettings.UsernamesEnabled)
-                {
-                    if (GetCustomerByUsername(customer.Username) != null)
-                        throw new NopException("Duplicate username");
+            //add to 'Guests' role
+            var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
+            if (guestRole == null)
+                throw new NopException("'Guests' role could not be loaed");
+            customer.CustomerRoles = new List<CustomerRole> { guestRole };
 
-                    if (customer.Username.Length > 100)
-                        throw new NopException("Username is too long.");
-                }
-            }
-
-            //UNDONE check CustomerRegistrationType (Disabled, EmailValidation, AdminApproval)
-            
             _customerRepository.Insert(customer);
 
-            //UNDONE add reward points for registration (if enabled)
-            //UNDONE Send welcome message / email validation message
+            return customer;
+        }
+
+        /// <summary>
+        /// Register customer
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Customer</returns>
+        public Customer RegisterCustomer(int customerId)
+        {
+            var customer = GetCustomerById(customerId);
+
+            if (customer == null)
+                throw new NopException(string.Format("Customer {0} could not be loaded", customerId));
+
+            //TODO pass and save customer attributes as argument
+            //TODO check CustomerRegistrationType (Disabled, EmailValidation, AdminApproval)
+            
+            //add to 'Registered' role
+            var registeredRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            if (registeredRole == null)
+                throw new NopException("'Registered' role could not be loaed");
+            customer.CustomerRoles.Add(registeredRole);
+            //remove from 'Guests' role
+            var guestRole = customer.CustomerRoles.FirstOrDefault(cr=>cr.SystemName == SystemCustomerRoleNames.Guests);
+            if (guestRole != null)
+                customer.CustomerRoles.Remove(guestRole);
+
+            _customerRepository.Update(customer);
+
+            //TODO add reward points for registration (if enabled)
+            //TODO Send welcome message / email validation message
+            return customer;
         }
 
         /// <summary>
@@ -519,6 +549,28 @@ namespace Nop.Services.Customers
             return _cacheManager.Get(key, () =>
             {
                 var customerRole = _customerRoleRepository.GetById(customerRoleId);
+                return customerRole;
+            });
+        }
+
+        /// <summary>
+        /// Gets a customer role
+        /// </summary>
+        /// <param name="systemName">Customer role system name</param>
+        /// <returns>Customer role</returns>
+        public CustomerRole GetCustomerRoleBySystemName(string systemName)
+        {
+            if (String.IsNullOrWhiteSpace(systemName))
+                return null;
+
+            string key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from cr in _customerRoleRepository.Table
+                            orderby cr.Id
+                            where cr.SystemName == systemName
+                            select cr;
+                var customerRole = query.FirstOrDefault();
                 return customerRole;
             });
         }

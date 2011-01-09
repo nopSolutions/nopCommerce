@@ -54,6 +54,7 @@
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Domain\Customers\CustomerSettings.cs" />
     <Compile Include="Domain\Customers\CustomerRole.cs" />
+    <Compile Include="Domain\Customers\SystemCustomerRoleNames.cs" />
     <Compile Include="Domain\Directory\MeasureSettings.cs" />
     <Compile Include="Domain\Directory\Country.cs" />
     <Compile Include="Domain\Directory\Currency.cs" />

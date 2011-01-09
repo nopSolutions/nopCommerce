@@ -22,6 +22,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.Security;
 
 
 namespace Nop.Data
@@ -70,7 +71,7 @@ namespace Nop.Data
 
             #endregion
 
-            #region Customers
+            #region Customers & Users
 
             var customers = new List<Customer>
                                 {
@@ -95,7 +96,7 @@ namespace Nop.Data
                                             Name = "Administrators",
                                             Active = true,
                                             IsSystemRole = true,
-                                            SystemName="Administrators",
+                                            SystemName = SystemCustomerRoleNames.Administrators,
                                             Customers = new List<Customer>()
                                             {
                                                 customers.FirstOrDefault()
@@ -103,10 +104,10 @@ namespace Nop.Data
                                         },
                                     new CustomerRole
                                         {
-                                            Name = "Forum moderators",
+                                            Name = "Registered",
                                             Active = true,
                                             IsSystemRole = true,
-                                            SystemName="ForumModerators",
+                                            SystemName = SystemCustomerRoleNames.Registered,
                                             Customers = new List<Customer>()
                                             {
                                                 customers.FirstOrDefault()
@@ -117,11 +118,33 @@ namespace Nop.Data
                                             Name = "Guests",
                                             Active = true,
                                             IsSystemRole = true,
-                                            SystemName="Guests",
+                                            SystemName = SystemCustomerRoleNames.Guests,
                                         }
                                 };
             customerRoles.ForEach(cr => context.CustomerRoles.Add(cr));
-            context.SaveChanges(); 
+            context.SaveChanges();
+
+            var users = new List<User>
+                                {
+                                    new User
+                                        {
+                                            ApplicationName = "NopCommerce",
+                                            Username = "admin@yourStore.com",
+                                            Password = "admin",
+                                            PasswordFormat = PasswordFormat.Clear,
+                                            PasswordSalt = "",
+                                            FirstName = "John",
+                                            LastName = "Smith",
+                                            Email = "admin@yourStore.com",
+                                            SecurityQuestion = "",
+                                            SecurityAnswer = "",
+                                            IsApproved = true,
+                                            IsLockedOut = false,
+                                            CreatedOnUtc = DateTime.UtcNow
+                                        }
+                                };
+            users.ForEach(u => context.Users.Add(u));
+            context.SaveChanges();
 
             #endregion
 
