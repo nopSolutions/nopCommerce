@@ -46,6 +46,7 @@
     <Compile Include="Catalog\CategoryExtensions.cs" />
     <Compile Include="Catalog\CompareProductsService.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
+    <Compile Include="Customers\CustomerExtentions.cs" />
     <Compile Include="FormsAuthenticationService.cs" />
     <Compile Include="IAuthenticationService.cs" />
     <Compile Include="Directory\CountryService.cs" />

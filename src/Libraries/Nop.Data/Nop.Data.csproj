@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="DatabaseInitializer.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="Mapping\Customers\CustomerAttributeMap.cs" />
     <Compile Include="Mapping\Customers\CustomerRoleMap.cs" />
     <Compile Include="Mapping\Directory\MeasureWeightMap.cs" />
     <Compile Include="Mapping\Directory\MeasureDimensionMap.cs" />

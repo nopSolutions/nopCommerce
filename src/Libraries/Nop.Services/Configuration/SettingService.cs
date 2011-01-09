@@ -21,6 +21,7 @@ using Nop.Data;
 using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Configuration;
+using System.ComponentModel;
 
 namespace Nop.Services.Configuration
 {
@@ -82,7 +83,7 @@ namespace Nop.Services.Configuration
             if (setting == null)
                 throw new ArgumentNullException("setting");
 
-            _settingRepository.Insert(setting);
+            _settingRepository.Update(setting);
 
             //cache
             _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
@@ -139,11 +140,12 @@ namespace Nop.Services.Configuration
             var settings = GetAllSettings();
 
             Setting setting = null;
+            string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
             if (settings.ContainsKey(key))
             {
                 //update
                 setting = settings[key];
-                setting.Value = value.ToString();
+                setting.Value = valueStr;
                 UpdateSetting(setting);
             }
             else
@@ -152,7 +154,7 @@ namespace Nop.Services.Configuration
                 setting = new Setting()
                               {
                                   Name = key,
-                                  Value = value.ToString(),
+                                  Value = valueStr,
                                   Description = string.Empty
                               };
                 InsertSetting(setting);
@@ -183,14 +185,14 @@ namespace Nop.Services.Configuration
             //cache
             string key = string.Format(SETTINGS_ALL_KEY);
             return _cacheManager.Get(key, () =>
-                                              {
-                                                  var query = from s in _settingRepository.Table
-                                                              orderby s.Name
-                                                              select s;
-                                                  var settings = query.ToDictionary(s => s.Name.ToLowerInvariant());
+            {
+                var query = from s in _settingRepository.Table
+                            orderby s.Name
+                            select s;
+                var settings = query.ToDictionary(s => s.Name.ToLowerInvariant());
 
-                                                  return settings;
-                                              });
+                return settings;
+            });
         }
 
         #endregion

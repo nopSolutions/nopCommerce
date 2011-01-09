@@ -27,7 +27,7 @@ namespace Nop.Services.Configuration
                              let setting = settingService.GetSettingByKey<string>(typeof(TSettings).Name + "." + prop.Name)
                              where setting != null
                              where TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string))
-                             let value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromString(setting)
+                             let value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting)
                              select new { prop, value };
 
             // assign properties

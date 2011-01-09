@@ -21,6 +21,7 @@ using Nop.Core.Domain;
 using Nop.Data;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
+using System.ComponentModel;
 
 namespace Nop.Services.Customers
 {
@@ -42,6 +43,7 @@ namespace Nop.Services.Customers
         private readonly IWorkContext _workContext;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
+        private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly ICacheManager _cacheManager;
         private readonly CustomerSettings _customerSettings;
 
@@ -56,17 +58,20 @@ namespace Nop.Services.Customers
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
+        /// <param name="customerAttributeRepository">Customer attribute repository</param>
         /// <param name="customerSettings">Customer settings</param>
         public CustomerService(IWorkContext workContext,
             ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
+            IRepository<CustomerAttribute> customerAttributeRepository,
             CustomerSettings customerSettings)
         {
             this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerAttributeRepository = customerAttributeRepository;
             this._customerSettings = customerSettings;
         }
 
@@ -656,7 +661,104 @@ namespace Nop.Services.Customers
         }
 
         #endregion
-        
+
+        #region Customer attributes
+
+        /// <summary>
+        /// Deletes a customer attribute
+        /// </summary>
+        /// <param name="customerAttribute">Customer attribute</param>
+        public void DeleteCustomerAttribute(CustomerAttribute customerAttribute)
+        {
+            if (customerAttribute == null)
+                return;
+
+            _customerAttributeRepository.Delete(customerAttribute);
+        }
+
+        /// <summary>
+        /// Gets a customer attribute
+        /// </summary>
+        /// <param name="customerAttributeId">Customer attribute identifier</param>
+        /// <returns>A customer attribute</returns>
+        public CustomerAttribute GetCustomerAttributeById(int customerAttributeId)
+        {
+            if (customerAttributeId == 0)
+                return null;
+
+            var customerAttribute = _customerAttributeRepository.GetById(customerAttributeId);
+            return customerAttribute;
+        }
+
+        /// <summary>
+        /// Inserts a customer attribute
+        /// </summary>
+        /// <param name="customerAttribute">Customer attribute</param>
+        public void InsertCustomerAttribute(CustomerAttribute customerAttribute)
+        {
+            if (customerAttribute == null)
+                throw new ArgumentNullException("customerAttribute");
+
+            _customerAttributeRepository.Insert(customerAttribute);
+        }
+
+        /// <summary>
+        /// Updates the customer attribute
+        /// </summary>
+        /// <param name="customerAttribute">Customer attribute</param>
+        public void UpdateCustomerAttribute(CustomerAttribute customerAttribute)
+        {
+            if (customerAttribute == null)
+                throw new ArgumentNullException("customerAttribute");
+
+            _customerAttributeRepository.Update(customerAttribute);
+        }
+
+        /// <summary>
+        /// Save customer attribute
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="customer">Customer</param>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <returns>Customer attribute</returns>
+        public CustomerAttribute SaveCustomerAttribute<T>(Customer customer,
+            string key, T value)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (!TypeDescriptor.GetConverter(typeof(T)).CanConvertTo(typeof(string)))
+                throw new NopException("Not supported customer attribute type");
+            string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
+
+
+            if (customer.CustomerAttributes == null)
+                customer.CustomerAttributes = new List<CustomerAttribute>();
+            var customerAttribute = customer.CustomerAttributes.FirstOrDefault(ca => ca.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+            if (customerAttribute != null)
+            {
+                //update
+                customerAttribute.Value = valueStr;
+                UpdateCustomerAttribute(customerAttribute);
+            }
+            else
+            {
+                //insert
+                customerAttribute = new CustomerAttribute()
+                {
+                    Customer = customer,
+                    Key = key,
+                    Value = valueStr,
+                };
+                InsertCustomerAttribute(customerAttribute);
+            }
+
+            return customerAttribute;
+        }
+
+        #endregion
+
         #endregion
     }
 }

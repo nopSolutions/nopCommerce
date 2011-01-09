@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using System.Linq.Expressions;
 
 namespace Nop.Services.Customers
 {
@@ -172,6 +173,45 @@ namespace Nop.Services.Customers
         /// <param name="customerRole">Customer role</param>
         void UpdateCustomerRole(CustomerRole customerRole);
 
+        #endregion
+
+        #region Customer attributes
+
+        /// <summary>
+        /// Deletes a customer attribute
+        /// </summary>
+        /// <param name="customerAttribute">Customer attribute</param>
+        void DeleteCustomerAttribute(CustomerAttribute customerAttribute);
+
+        /// <summary>
+        /// Gets a customer attribute
+        /// </summary>
+        /// <param name="customerAttributeId">Customer attribute identifier</param>
+        /// <returns>A customer attribute</returns>
+        CustomerAttribute GetCustomerAttributeById(int customerAttributeId);
+
+        /// <summary>
+        /// Inserts a customer attribute
+        /// </summary>
+        /// <param name="customerAttribute">Customer attribute</param>
+        void InsertCustomerAttribute(CustomerAttribute customerAttribute);
+
+        /// <summary>
+        /// Updates the customer attribute
+        /// </summary>
+        /// <param name="customerAttribute">Customer attribute</param>
+        void UpdateCustomerAttribute(CustomerAttribute customerAttribute);
+
+        /// <summary>
+        /// Save customer attribute
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="customer">Customer</param>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <returns>Customer attribute</returns>
+        CustomerAttribute SaveCustomerAttribute<T>(Customer customer,
+            string key, T value);
         #endregion
     }
 }

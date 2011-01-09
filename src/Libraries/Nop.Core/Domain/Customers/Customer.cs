@@ -66,5 +66,10 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the customer roles
         /// </summary>
         public virtual ICollection<CustomerRole> CustomerRoles { get; set; }
+
+        /// <summary>
+        /// Gets or sets customer attributes
+        /// </summary>
+        public virtual ICollection<CustomerAttribute> CustomerAttributes { get; set; }
     }
 }

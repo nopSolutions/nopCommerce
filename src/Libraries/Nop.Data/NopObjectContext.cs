@@ -48,6 +48,7 @@ namespace Nop.Data
         public DbSet<Country> Countries { get; set; }
         public DbSet<CrossSellProduct> CrossSellProducts { get; set; }
         public DbSet<Currency> Currencies { get; set; }
+        public DbSet<CustomerAttribute> CustomerAttributes { get; set; }
         public DbSet<CustomerContent> CustomerContent { get; set; }
         public DbSet<CustomerRole> CustomerRoles { get; set; }
         public DbSet<Customer> Customers { get; set; }
