@@ -33,16 +33,8 @@ namespace Nop.Services.Security
             return Convert.ToBase64String(buff);
         }
 
-        public string CreatePasswordHash(string password, string saltkey) 
+        public string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1")
         {
-            return CreatePasswordHash(password, saltkey, "SHA1");
-        }
-
-        public string CreatePasswordHash(string password, string saltkey, string passwordFormat)
-        {
-            if (String.IsNullOrEmpty(passwordFormat))
-                passwordFormat = "SHA1";
-
             string saltAndPassword = String.Concat(password, saltkey);
             string hashedPassword =
                 FormsAuthentication.HashPasswordForStoringInConfigFile(
