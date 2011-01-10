@@ -13,9 +13,11 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -24,6 +26,10 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class Customer : BaseEntity
     {
+        public Customer() {
+            this.Addresses = new List<Address>();
+        }
+        
         /// <summary>
         /// Gets or sets the customer Guid
         /// </summary>
@@ -93,5 +99,50 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets customer attributes
         /// </summary>
         public virtual ICollection<CustomerAttribute> CustomerAttributes { get; set; }
+
+        /// <summary>
+        /// Default billing address
+        /// </summary>
+        public virtual Address BillingAddress { get; set; }
+
+        /// <summary>
+        /// Default shipping address
+        /// </summary>
+        public virtual Address ShippingAddress { get; set; }
+        
+        /// <summary>
+        /// Gets or sets customer addresses
+        /// </summary>
+        public virtual ICollection<Address> Addresses { get; set; }
+
+        #region Methods
+
+        public virtual void AddAddress(Address address) {
+            if (!this.Addresses.Contains(address))
+                this.Addresses.Add(address);
+        }
+
+        public virtual void RemoveAddress(Address address) {
+            var found = this.Addresses.FirstOrDefault(a => a.Id == address.Id);
+
+            if (found != null) {
+                if (this.BillingAddress == found) this.BillingAddress = null;
+                if (this.ShippingAddress == found) this.ShippingAddress = null;
+
+                this.Addresses.Remove(found);
+            }
+        }
+
+        public virtual void SetBillingAddress(Address address) {
+            if (this.Addresses.Contains(address))
+                this.BillingAddress = address;
+        }
+
+        public virtual void SetShippingAddress(Address address) {
+            if (this.Addresses.Contains(address))
+                this.ShippingAddress = address;
+        }
+
+        #endregion
     }
 }

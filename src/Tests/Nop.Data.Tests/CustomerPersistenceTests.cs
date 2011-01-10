@@ -8,6 +8,7 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Tests
 {
@@ -96,6 +97,69 @@ namespace Nop.Data.Tests
 
             fromDb.Currency.ShouldNotBeNull();
             fromDb.Currency.Name.ShouldEqual("US Dollar");
+        }
+
+        [Test]
+        public void Can_save_customer_with_address()
+        {
+            var customer = GetTestCustomer();
+
+            var address = new Address { FirstName = "Test" };
+
+            customer.AddAddress(address);
+
+            var fromDb = SaveAndLoadEntity(customer);
+
+            fromDb.Addresses.Count.ShouldEqual(1);
+            fromDb.Addresses.First().FirstName.ShouldEqual("Test");
+        }
+
+        [Test]
+        public void Can_set_default_billing_and_shipping_address()
+        {
+            var customer = GetTestCustomer();
+
+            var address = new Address { FirstName = "Billing" };
+            var address2 = new Address { FirstName = "Shipping" };
+
+            customer.AddAddress(address);
+            customer.AddAddress(address2);
+
+            customer.SetBillingAddress(address);
+            customer.SetShippingAddress(address2);
+
+            var fromDb = SaveAndLoadEntity(customer);
+
+            fromDb.Addresses.Count.ShouldEqual(2);
+
+            fromDb.BillingAddress.FirstName.ShouldEqual("Billing");
+            fromDb.ShippingAddress.FirstName.ShouldEqual("Shipping");
+
+            var addresses = fromDb.Addresses.ToList();
+
+            fromDb.BillingAddress.ShouldBeTheSameAs(addresses[0]);
+            fromDb.ShippingAddress.ShouldBeTheSameAs(addresses[1]);
+        }
+
+        [Test]
+        public void Can_remove_a_customer_address()
+        {
+            var customer = GetTestCustomer();
+            var address = new Address { FirstName = "Test" };
+            customer.AddAddress(address);
+            customer.SetBillingAddress(address);
+
+            var fromDb = SaveAndLoadEntity(customer);
+
+            fromDb.Addresses.Count.ShouldEqual(1);
+            fromDb.BillingAddress.ShouldNotBeNull();
+
+            fromDb.RemoveAddress(address);
+
+            context.SaveChanges();
+
+            fromDb.Addresses.Count.ShouldEqual(0);
+            fromDb.BillingAddress.ShouldBeNull();
         }
 
 

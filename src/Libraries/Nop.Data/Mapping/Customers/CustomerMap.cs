@@ -14,6 +14,7 @@
 
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Common;
 
 
 namespace Nop.Data.Mapping.Customers
@@ -35,6 +36,10 @@ namespace Nop.Data.Mapping.Customers
             this.HasOptional(c => c.Currency)
                 .WithMany(cur => cur.Customers)
                 .HasForeignKey(c => c.CurrencyId).WillCascadeOnDelete(false);
+
+            this.HasMany<Address>(c => c.Addresses).WithMany();
+            this.HasOptional<Address>(c => c.BillingAddress);
+            this.HasOptional<Address>(c => c.ShippingAddress);
         }
     }
 }

@@ -31,6 +31,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Data
 {
@@ -79,6 +80,7 @@ namespace Nop.Data
         public DbSet<StateProvince> StateProvinces { get; set; }
         public DbSet<TierPrice> TierPrices { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

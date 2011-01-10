@@ -52,6 +52,7 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Domain\Common\Address.cs" />
     <Compile Include="Domain\Customers\CustomerAttribute.cs" />
     <Compile Include="Domain\Customers\CustomerSettings.cs" />
     <Compile Include="Domain\Customers\CustomerRole.cs" />

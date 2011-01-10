@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddressPeristenceTests.cs" />
     <Compile Include="CategoryPersistenceTests.cs" />
     <Compile Include="CustomerAttributePersistenceTests.cs" />
     <Compile Include="CustomerRolePersistenceTests.cs" />
