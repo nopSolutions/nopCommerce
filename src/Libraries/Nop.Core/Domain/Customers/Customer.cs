@@ -123,13 +123,11 @@ namespace Nop.Core.Domain.Customers
         }
 
         public virtual void RemoveAddress(Address address) {
-            var found = this.Addresses.FirstOrDefault(a => a.Id == address.Id);
+            if (this.Addresses.Contains(address)) {
+                if (this.BillingAddress == address) this.BillingAddress = null;
+                if (this.ShippingAddress == address) this.ShippingAddress = null;
 
-            if (found != null) {
-                if (this.BillingAddress == found) this.BillingAddress = null;
-                if (this.ShippingAddress == found) this.ShippingAddress = null;
-
-                this.Addresses.Remove(found);
+                this.Addresses.Remove(address);
             }
         }
 
