@@ -45,8 +45,9 @@ namespace Nop.Services.Customers
         /// Gets all customers by customer role id
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer collection</returns>
-        IList<Customer> GetCustomersByCustomerRoleId(int customerRoleId);
+        IList<Customer> GetCustomersByCustomerRoleId(int customerRoleId, bool showHidden = false);
 
         /// <summary>
         /// Delete a customer
@@ -143,15 +144,9 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets all customer roles
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer role collection</returns>
-        IList<CustomerRole> GetAllCustomerRoles();
-
-        /// <summary>
-        /// Gets customer roles by customer identifier
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <returns>Customer role collection</returns>
-        IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId);
+        IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false);
 
         /// <summary>
         /// Gets customer roles by customer identifier
@@ -159,7 +154,7 @@ namespace Nop.Services.Customers
         /// <param name="customerId">Customer identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer role collection</returns>
-        IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId, bool showHidden);
+        IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId, bool showHidden = false);
 
         /// <summary>
         /// Inserts a customer role

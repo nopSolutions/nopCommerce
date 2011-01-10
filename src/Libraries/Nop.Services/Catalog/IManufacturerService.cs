@@ -31,15 +31,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
-        /// <returns>Manufacturer collection</returns>
-        IList<Manufacturer> GetAllManufacturers();
-
-        /// <summary>
-        /// Gets all manufacturers
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturer collection</returns>
-        IList<Manufacturer> GetAllManufacturers(bool showHidden);
+        IList<Manufacturer> GetAllManufacturers(bool showHidden = false);
 
         /// <summary>
         /// Gets a manufacturer
@@ -70,15 +64,17 @@ namespace Nop.Services.Catalog
         /// Gets product manufacturer collection
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        IList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId);
+        IList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId, bool showHidden = false);
 
         /// <summary>
         /// Gets a product manufacturer mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        IList<ProductManufacturer> GetProductManufacturersByProductId(int productId);
+        IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false);
 
         /// <summary>
         /// Gets a product manufacturer mapping 

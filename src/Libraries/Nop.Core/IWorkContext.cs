@@ -27,11 +27,6 @@ namespace Nop.Core
     public interface IWorkContext
     {
         /// <summary>
-        /// Gets or sets a value indicating whether the context is running in admin-mode
-        /// </summary>
-        bool IsAdminMode {get;set;}
-
-        /// <summary>
         /// Gets or sets the current customer
         /// </summary>
         Customer CurrentCustomer { get; set; }

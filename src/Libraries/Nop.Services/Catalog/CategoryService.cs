@@ -40,7 +40,6 @@ namespace Nop.Services.Catalog
 
         #region Fields
 
-        private readonly IWorkContext _workContext;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<Product> _productRepository;
@@ -53,18 +52,15 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="categoryRepository">Category repository</param>
         /// <param name="productCategoryRepository">ProductCategory repository</param>
         /// <param name="productRepository">Product repository</param>
-        public CategoryService(IWorkContext workContext,
-            ICacheManager cacheManager,
+        public CategoryService(ICacheManager cacheManager,
             IRepository<Category> categoryRepository,
             IRepository<ProductCategory> productCategoryRepository,
             IRepository<Product> productRepository)
         {
-            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._categoryRepository = categoryRepository;
             this._productCategoryRepository = productCategoryRepository;
@@ -91,19 +87,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all categories
         /// </summary>
-        /// <returns>Categories</returns>
-        public IList<Category> GetAllCategories()
-        {
-            bool showHidden = _workContext.IsAdminMode;
-            return GetAllCategories(showHidden);
-        }
-        
-        /// <summary>
-        /// Gets all categories
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public IList<Category> GetAllCategories(bool showHidden)
+        public IList<Category> GetAllCategories(bool showHidden = false)
         {
             var query = from c in _categoryRepository.Table
                         orderby c.ParentCategoryId, c.DisplayOrder
@@ -123,17 +109,6 @@ namespace Nop.Services.Catalog
             var sortedCategories = unsortedCategories.SortCategoriesForTree(0);
             return sortedCategories;
         }
-
-        /// <summary>
-        /// Gets all categories by parent category identifier
-        /// </summary>
-        /// <param name="parentCategoryId">Parent category identifier</param>
-        /// <returns>Category collection</returns>
-        public IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId)
-        {
-            bool showHidden = _workContext.IsAdminMode;
-            return GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
-        }
         
         /// <summary>
         /// Gets all categories filtered by parent category identifier
@@ -142,7 +117,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category collection</returns>
         public IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
-            bool showHidden)
+            bool showHidden = false)
         {
             
             var query = from c in _categoryRepository.Table
@@ -168,11 +143,11 @@ namespace Nop.Services.Catalog
         /// <returns>Category collection</returns>
         public IList<Category> GetAllCategoriesDisplayedOnHomePage()
         {
-            bool showHidden = _workContext.IsAdminMode;
-            
             var query = from c in _categoryRepository.Table
                         orderby c.DisplayOrder
-                        where (showHidden || c.Published) && !c.Deleted && c.ShowOnHomePage
+                        where c.Published &&
+                        !c.Deleted && 
+                        c.ShowOnHomePage
                         select c;
 
             //filter by access control list (public store)
@@ -272,13 +247,12 @@ namespace Nop.Services.Catalog
         /// Gets product category mapping collection
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product a category mapping collection</returns>
-        public IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId)
+        public IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId, bool showHidden = false)
         {
             if (categoryId == 0)
                 return new List<ProductCategory>();
-
-            bool showHidden = _workContext.IsAdminMode;
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId);
             return _cacheManager.Get(key, () =>
@@ -299,13 +273,12 @@ namespace Nop.Services.Catalog
         /// Gets a product category mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product category mapping collection</returns>
-        public IList<ProductCategory> GetProductCategoriesByProductId(int productId)
+        public IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false)
         {
             if (productId == 0)
                 return new List<ProductCategory>();
-
-            bool showHidden = _workContext.IsAdminMode;
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>

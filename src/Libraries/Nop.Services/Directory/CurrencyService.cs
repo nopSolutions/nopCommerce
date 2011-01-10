@@ -36,7 +36,6 @@ namespace Nop.Services.Directory
 
         #region Fields
 
-        private readonly IWorkContext _workContext;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly ICacheManager _cacheManager;
         private readonly CurrencySettings _currencySettings;
@@ -48,16 +47,13 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="currencyRepository">Currency repository</param>
         /// <param name="currencySettings">Currency settings</param>
-        public CurrencyService(IWorkContext workContext,
-            ICacheManager cacheManager,
+        public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             CurrencySettings currencySettings)
         {
-            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
             this._currencySettings = currencySettings;
@@ -113,19 +109,9 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all currencies
         /// </summary>
-        /// <returns>Currency collection</returns>
-        public IList<Currency> GetAllCurrencies()
-        {
-            bool showHidden = _workContext.IsAdminMode;
-            return GetAllCurrencies(showHidden);
-        }
-
-        /// <summary>
-        /// Gets all currencies
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Currency collection</returns>
-        public IList<Currency> GetAllCurrencies(bool showHidden)
+        public IList<Currency> GetAllCurrencies(bool showHidden = false)
         {
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>

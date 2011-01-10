@@ -39,7 +39,6 @@ namespace Nop.Services.Catalog
 
         #region Fields
 
-        private readonly IWorkContext _workContext;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<Product> _productRepository;
@@ -51,18 +50,15 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="manufacturerRepository">Category repository</param>
         /// <param name="productManufacturerRepository">ProductCategory repository</param>
         /// <param name="productRepository">Product repository</param>
-        public ManufacturerService(IWorkContext workContext, 
-            ICacheManager cacheManager,
+        public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<Product> productRepository)
         {
-            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._manufacturerRepository = manufacturerRepository;
             this._productManufacturerRepository = productManufacturerRepository;
@@ -88,19 +84,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
-        /// <returns>Manufacturer collection</returns>
-        public IList<Manufacturer> GetAllManufacturers()
-        {
-            bool showHidden = _workContext.IsAdminMode;
-            return GetAllManufacturers(showHidden);
-        }
-
-        /// <summary>
-        /// Gets all manufacturers
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturer collection</returns>
-        public IList<Manufacturer> GetAllManufacturers(bool showHidden)
+        public IList<Manufacturer> GetAllManufacturers(bool showHidden = false)
         {
             string key = string.Format(MANUFACTURERS_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
@@ -185,13 +171,12 @@ namespace Nop.Services.Catalog
         /// Gets product manufacturer collection
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        public IList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId)
+        public IList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId, bool showHidden = false)
         {
             if (manufacturerId == 0)
                 return new List<ProductManufacturer>();
-
-            bool showHidden = _workContext.IsAdminMode;
 
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId);
             return _cacheManager.Get(key, () =>
@@ -212,13 +197,12 @@ namespace Nop.Services.Catalog
         /// Gets a product manufacturer mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        public IList<ProductManufacturer> GetProductManufacturersByProductId(int productId)
+        public IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false)
         {
             if (productId == 0)
                 return new List<ProductManufacturer>();
-
-            bool showHidden = _workContext.IsAdminMode;
 
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>

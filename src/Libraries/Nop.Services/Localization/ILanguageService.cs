@@ -31,15 +31,9 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Gets all languages
         /// </summary>
-        /// <returns>Language collection</returns>
-        IList<Language> GetAllLanguages();
-
-        /// <summary>
-        /// Gets all languages
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Language collection</returns>
-        IList<Language> GetAllLanguages(bool showHidden);
+        IList<Language> GetAllLanguages(bool showHidden = false);
 
         /// <summary>
         /// Gets a language

@@ -31,22 +31,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all categories
         /// </summary>
-        /// <returns>Categories</returns>
-        IList<Category> GetAllCategories();
-        
-        /// <summary>
-        /// Gets all categories
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        IList<Category> GetAllCategories(bool showHidden);
-        
-        /// <summary>
-        /// Gets all categories by parent category identifier
-        /// </summary>
-        /// <param name="parentCategoryId">Parent category identifier</param>
-        /// <returns>Category collection</returns>
-        IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId);
+        IList<Category> GetAllCategories(bool showHidden = false);
         
         /// <summary>
         /// Gets all categories filtered by parent category identifier
@@ -55,7 +42,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category collection</returns>
         IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
-            bool showHidden);
+            bool showHidden = false);
         
         /// <summary>
         /// Gets all categories displayed on the home page
@@ -92,15 +79,17 @@ namespace Nop.Services.Catalog
         /// Gets product category mapping collection
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product a category mapping collection</returns>
-        IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId);
+        IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId, bool showHidden = false);
 
         /// <summary>
         /// Gets a product category mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product category mapping collection</returns>
-        IList<ProductCategory> GetProductCategoriesByProductId(int productId);
+        IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false);
 
         /// <summary>
         /// Gets a product category mapping 

@@ -35,7 +35,6 @@ namespace Nop.Services.Localization
 
         #region Fields
 
-        private readonly IWorkContext _workContext;
         private readonly IRepository<Language> _languageRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -46,14 +45,11 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
-        public LanguageService(IWorkContext workContext, 
-            ICacheManager cacheManager,
+        public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository)
         {
-            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._languageRepository = languageRepository;
         }
@@ -80,19 +76,9 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Gets all languages
         /// </summary>
-        /// <returns>Language collection</returns>
-        public IList<Language> GetAllLanguages()
-        {
-            bool showHidden = _workContext.IsAdminMode;
-            return GetAllLanguages(showHidden);
-        }
-
-        /// <summary>
-        /// Gets all languages
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Language collection</returns>
-        public IList<Language> GetAllLanguages(bool showHidden)
+        public IList<Language> GetAllLanguages(bool showHidden = false)
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>

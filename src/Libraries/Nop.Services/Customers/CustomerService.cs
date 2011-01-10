@@ -40,7 +40,6 @@ namespace Nop.Services.Customers
 
         #region Fields
 
-        private readonly IWorkContext _workContext;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
@@ -54,20 +53,17 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
         /// <param name="customerSettings">Customer settings</param>
-        public CustomerService(IWorkContext workContext,
-            ICacheManager cacheManager,
+        public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerAttribute> customerAttributeRepository,
             CustomerSettings customerSettings)
         {
-            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
@@ -119,11 +115,10 @@ namespace Nop.Services.Customers
         /// Gets all customers by customer role id
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer collection</returns>
-        public IList<Customer> GetCustomersByCustomerRoleId(int customerRoleId)
+        public IList<Customer> GetCustomersByCustomerRoleId(int customerRoleId, bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
-            
             var query = from c in _customerRepository.Table
                         from cr in c.CustomerRoles
                         where (showHidden || c.Active) &&
@@ -583,10 +578,10 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets all customer roles
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer role collection</returns>
-        public IList<CustomerRole> GetAllCustomerRoles()
+        public IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -598,25 +593,14 @@ namespace Nop.Services.Customers
                 return customerRoles;
             });
         }
-
-        /// <summary>
-        /// Gets customer roles by customer identifier
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <returns>Customer role collection</returns>
-        public IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId)
-        {
-            bool showHidden = _workContext.IsAdminMode;
-            return GetCustomerRolesByCustomerId(customerId, showHidden);
-        }
-
+        
         /// <summary>
         /// Gets customer roles by customer identifier
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer role collection</returns>
-        public IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId, bool showHidden)
+        public IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId, bool showHidden = false)
         {
             if (customerId == 0)
                 return new List<CustomerRole>();

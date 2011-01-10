@@ -35,15 +35,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all products
         /// </summary>
-        /// <returns>Product collection</returns>
-        IList<Product> GetAllProducts();
-
-        /// <summary>
-        /// Gets all products
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
-        IList<Product> GetAllProducts(bool showHidden);
+        IList<Product> GetAllProducts(bool showHidden = false);
 
         /// <summary>
         /// Gets all products displayed on the home page
@@ -87,13 +81,14 @@ namespace Nop.Services.Catalog
         /// <param name="orderBy">Order by</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
         IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax,
             int relatedToProductId, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
-            int pageIndex, int pageSize);
+            int pageIndex, int pageSize, bool showHidden = false);
         #endregion
 
         #region Product variants
@@ -134,16 +129,9 @@ namespace Nop.Services.Catalog
         /// Gets product variants by product identifier
         /// </summary>
         /// <param name="productId">The product identifier</param>
-        /// <returns>Product variant collection</returns>
-        IList<ProductVariant> GetProductVariantsByProductId(int productId);
-        
-        /// <summary>
-        /// Gets product variants by product identifier
-        /// </summary>
-        /// <param name="productId">The product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variant collection</returns>
-        IList<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden);
+        IList<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden = false);
 
         /// <summary>
         /// Delete a product variant
@@ -165,8 +153,9 @@ namespace Nop.Services.Catalog
         /// Gets a related product collection by product identifier
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Related product collection</returns>
-        IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1);
+        IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1, bool showHidden = false);
 
         /// <summary>
         /// Gets a related product
@@ -201,8 +190,9 @@ namespace Nop.Services.Catalog
         /// Gets a cross-sell product collection by product identifier
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Cross-sell product collection</returns>
-        IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1);
+        IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false);
 
         /// <summary>
         /// Gets a cross-sell product

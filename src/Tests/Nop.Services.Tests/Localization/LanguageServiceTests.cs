@@ -45,14 +45,13 @@ namespace Nop.Services.Tests.Localization
             _languageRepo.Expect(x => x.Table).Return(new List<Language>() { lang1, lang2 }.AsQueryable());
 
             var cacheManager = new NopNullCache();
-            IWorkContext workContext = null;
-            _languageService = new LanguageService(workContext, cacheManager, _languageRepo);
+            _languageService = new LanguageService(cacheManager, _languageRepo);
         }
 
         [Test]
         public void Can_get_all_languages()
         {
-            var languages = _languageService.GetAllLanguages(true);
+            var languages = _languageService.GetAllLanguages();
             languages.ShouldNotBeNull();
             (languages.Count > 0).ShouldBeTrue();
         }

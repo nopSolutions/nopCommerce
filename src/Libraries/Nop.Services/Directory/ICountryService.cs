@@ -32,26 +32,30 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all countries
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        IList<Country> GetAllCountries();
+        IList<Country> GetAllCountries(bool showHidden = false);
 
         /// <summary>
         /// Gets all countries that allow registration
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        IList<Country> GetAllCountriesForRegistration();
+        IList<Country> GetAllCountriesForRegistration(bool showHidden = false);
 
         /// <summary>
         /// Gets all countries that allow billing
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        IList<Country> GetAllCountriesForBilling();
+        IList<Country> GetAllCountriesForBilling(bool showHidden = false);
 
         /// <summary>
         /// Gets all countries that allow shipping
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        IList<Country> GetAllCountriesForShipping();
+        IList<Country> GetAllCountriesForShipping(bool showHidden = false);
 
         /// <summary>
         /// Gets a country 

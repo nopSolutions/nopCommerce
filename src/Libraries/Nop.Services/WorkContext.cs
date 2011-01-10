@@ -28,7 +28,6 @@ namespace Nop.Services
     /// </summary>
     public partial class WorkContext : IWorkContext
     {
-        private bool _isAdminMode;
         private Customer _currentUser;
         private Language _workingLanguage;
         private Currency _workingCurrency;
@@ -39,22 +38,7 @@ namespace Nop.Services
         {
             this._contextBase = contextBase;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the context is running in admin-mode
-        /// </summary>
-        public bool IsAdminMode
-        {
-            get
-            {
-                return _isAdminMode;
-            }
-            set
-            {
-                _isAdminMode = value;
-            }
-        }
-
+        
         /// <summary>
         /// Gets or sets the current customer
         /// </summary>

@@ -39,7 +39,6 @@ namespace Nop.Services.Catalog
 
         #region Fields
 
-        private readonly IWorkContext _workContext;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
@@ -56,7 +55,6 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="productCategoryRepository">Product category repository</param>
@@ -65,8 +63,7 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProductRepository">Related product repository</param>
         /// <param name="crossSellProductRepository">Cross-sell product repository</param>
         /// <param name="tierPriceRepository">Tier price repository</param>
-        public ProductService(IWorkContext workContext, 
-            ICacheManager cacheManager,
+        public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductCategory> productCategoryRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
@@ -75,7 +72,6 @@ namespace Nop.Services.Catalog
             IRepository<CrossSellProduct> crossSellProductRepository,
             IRepository<TierPrice> tierPriceRepository)
         {
-            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
             this._productCategoryRepository = productCategoryRepository;
@@ -113,19 +109,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all products
         /// </summary>
-        /// <returns>Product collection</returns>
-        public IList<Product> GetAllProducts()
-        {
-            bool showHidden = _workContext.IsAdminMode;
-            return GetAllProducts(showHidden);
-        }
-
-        /// <summary>
-        /// Gets all products
-        /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
-        public IList<Product> GetAllProducts(bool showHidden)
+        public IList<Product> GetAllProducts(bool showHidden = false)
         {
             var query = from p in _productRepository.Table
                         orderby p.Name
@@ -142,11 +128,9 @@ namespace Nop.Services.Catalog
         /// <returns>Product collection</returns>
         public IList<Product> GetAllProductsDisplayedOnHomePage()
         {
-            bool showHidden = _workContext.IsAdminMode;
-
             var query = from p in _productRepository.Table
                         orderby p.Name
-                        where (showHidden || p.Published) &&
+                        where p.Published &&
                         !p.Deleted &&
                         p.ShowOnHomePage
                         select p;
@@ -221,16 +205,15 @@ namespace Nop.Services.Catalog
         /// <param name="orderBy">Order by</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
         public IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax,
             int relatedToProductId, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
-            int pageIndex, int pageSize)
+            int pageIndex, int pageSize, bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
-
             //UNDONE: filter by product specs
             //string commaSeparatedSpecIds = string.Empty;
             //if (filteredSpecs != null)
@@ -388,17 +371,6 @@ namespace Nop.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
         }
-
-        /// <summary>
-        /// Gets product variants by product identifier
-        /// </summary>
-        /// <param name="productId">The product identifier</param>
-        /// <returns>Product variant collection</returns>
-        public IList<ProductVariant> GetProductVariantsByProductId(int productId)
-        {
-            bool showHidden = _workContext.IsAdminMode;
-            return GetProductVariantsByProductId(productId, showHidden);
-        }
         
         /// <summary>
         /// Gets product variants by product identifier
@@ -406,36 +378,34 @@ namespace Nop.Services.Catalog
         /// <param name="productId">The product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variant collection</returns>
-        public IList<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden)
+        public IList<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden = false)
         {
             string key = string.Format(PRODUCTVARIANTS_ALL_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>
-                                              {
-                                                  var query = (IQueryable<ProductVariant>) _productVariantRepository.Table;
-                                                  if (!showHidden)
-                                                  {
-                                                      query = query.Where(pv => pv.Published);
-                                                  }
-                                                  if (!showHidden)
-                                                  {
-                                                      query =
-                                                          query.Where(
-                                                              pv =>
-                                                              !pv.AvailableStartDateTimeUtc.HasValue ||
-                                                              pv.AvailableStartDateTimeUtc <= DateTime.UtcNow);
-                                                      query =
-                                                          query.Where(
-                                                              pv =>
-                                                              !pv.AvailableEndDateTimeUtc.HasValue ||
-                                                              pv.AvailableEndDateTimeUtc >= DateTime.UtcNow);
-                                                  }
-                                                  query = query.Where(pv => !pv.Deleted);
-                                                  query = query.Where(pv => pv.ProductId == productId);
-                                                  query = query.OrderBy(pv => pv.DisplayOrder);
+            {
+                var query = (IQueryable<ProductVariant>)_productVariantRepository.Table;
+                if (!showHidden)
+                {
+                    query = query.Where(pv => pv.Published);
+                }
+                if (!showHidden)
+                {
+                    query = query.Where(
+                            pv =>
+                            !pv.AvailableStartDateTimeUtc.HasValue ||
+                            pv.AvailableStartDateTimeUtc <= DateTime.UtcNow);
+                    query = query.Where(
+                            pv =>
+                            !pv.AvailableEndDateTimeUtc.HasValue ||
+                            pv.AvailableEndDateTimeUtc >= DateTime.UtcNow);
+                }
+                query = query.Where(pv => !pv.Deleted);
+                query = query.Where(pv => pv.ProductId == productId);
+                query = query.OrderBy(pv => pv.DisplayOrder);
 
-                                                  var productVariants = query.ToList();
-                                                  return productVariants;
-                                              });
+                var productVariants = query.ToList();
+                return productVariants;
+            });
         }
 
         /// <summary>
@@ -471,11 +441,10 @@ namespace Nop.Services.Catalog
         /// Gets a related product collection by product identifier
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Related product collection</returns>
-        public IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1)
+        public IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1, bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
-
             var query = from rp in _relatedProductRepository.Table
                         join p in _productRepository.Table on rp.ProductId2 equals p.Id
                         where rp.ProductId1 == productId1 &&
@@ -546,11 +515,10 @@ namespace Nop.Services.Catalog
         /// Gets a cross-sell product collection by product identifier
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Cross-sell product collection</returns>
-        public IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1)
+        public IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
-
             var query = from csp in _crossSellProductRepository.Table
                         join p in _productRepository.Table on csp.ProductId2 equals p.Id
                         where csp.ProductId1 == productId1 &&

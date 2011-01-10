@@ -39,7 +39,6 @@ namespace Nop.Services.Directory
         
         #region Fields
         
-        private readonly IWorkContext _workContext;
         private readonly IRepository<Country> _countryRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -50,14 +49,11 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="workContext">Work context</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="countryRepository">Country repository</param>
-        public CountryService(IWorkContext workContext,
-            ICacheManager cacheManager,
+        public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository)
         {
-            this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._countryRepository = countryRepository;
         }
@@ -83,10 +79,10 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all countries
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        public IList<Country> GetAllCountries()
+        public IList<Country> GetAllCountries(bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(COUNTRIES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -102,10 +98,10 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all countries that allow registration
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        public IList<Country> GetAllCountriesForRegistration()
+        public IList<Country> GetAllCountriesForRegistration(bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(COUNTRIES_REGISTRATION_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -121,10 +117,10 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all countries that allow billing
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        public IList<Country> GetAllCountriesForBilling()
+        public IList<Country> GetAllCountriesForBilling(bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(COUNTRIES_BILLING_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
@@ -140,10 +136,10 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all countries that allow shipping
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        public IList<Country> GetAllCountriesForShipping()
+        public IList<Country> GetAllCountriesForShipping(bool showHidden = false)
         {
-            bool showHidden = _workContext.IsAdminMode;
             string key = string.Format(COUNTRIES_SHIPPING_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
