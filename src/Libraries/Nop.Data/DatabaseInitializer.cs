@@ -13,15 +13,16 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Data.Entity.Database;
-using Nop.Core.Domain;
+using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 
 
@@ -67,6 +68,25 @@ namespace Nop.Data
                                            DisplayOrder= 1
                                };
             context.Languages.Add(language1);
+            context.SaveChanges();
+
+            #endregion
+
+            #region Currency
+
+            var currency1 = new Currency
+            {
+                Name = "US Dollar",
+                CurrencyCode = "USD",
+                Rate = 1,
+                DisplayLocale = "en-US",
+                CustomFormatting = "CustomFormatting 1",
+                Published = true,
+                DisplayOrder = 2,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                UpdatedOnUtc = new DateTime(2010, 01, 02),
+            };
+            context.Currencies.Add(currency1);
             context.SaveChanges();
 
             #endregion

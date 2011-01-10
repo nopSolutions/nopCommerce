@@ -67,6 +67,8 @@ namespace Nop.Services.Localization
             if (language == null)
                 return;
 
+            //TODO load all customers (language.Customers property) and set new language to them
+
             _languageRepository.Delete(language);
 
             //cache

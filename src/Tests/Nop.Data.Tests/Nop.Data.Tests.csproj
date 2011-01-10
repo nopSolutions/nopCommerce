@@ -66,14 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CategoryPersistenceTests.cs" />
-    <Compile Include="CustomerAttributeTests.cs" />
+    <Compile Include="CustomerAttributePersistenceTests.cs" />
     <Compile Include="CustomerRolePersistenceTests.cs" />
     <Compile Include="MeasureWeightPersistenceTests.cs" />
     <Compile Include="MeasureDimensionPersistenceTests.cs" />
     <Compile Include="CurrencyPersistenceTests.cs" />
     <Compile Include="CountryPersistenceTests.cs" />
     <Compile Include="StateProvincePersistenceTests.cs" />
-    <Compile Include="CustomerContentTests.cs" />
+    <Compile Include="CustomerContentPersistenceTests.cs" />
     <Compile Include="LocalizedPropertyPersistenceTests.cs" />
     <Compile Include="TierPricePersistenceTests.cs" />
     <Compile Include="ProductSpecificationAttributePersistenceTests.cs" />

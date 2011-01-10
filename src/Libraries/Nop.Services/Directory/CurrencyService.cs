@@ -72,6 +72,8 @@ namespace Nop.Services.Directory
             if (currency == null)
                 return;
 
+            //TODO load all customers (currency.Customers property) and set new currency to them
+
             _currencyRepository.Delete(currency);
 
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);

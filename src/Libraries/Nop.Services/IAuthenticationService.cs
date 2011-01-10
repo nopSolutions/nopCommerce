@@ -33,6 +33,5 @@ namespace Nop.Services
         void SignIn(User user, bool createPersistentCookie);
         void SignOut();
         User GetAuthenticatedUser();
-        Customer GetCurrentCustomer();
     }
 }

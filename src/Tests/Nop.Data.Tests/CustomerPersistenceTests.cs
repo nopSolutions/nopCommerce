@@ -6,6 +6,8 @@ using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Tests
 {
@@ -15,16 +17,7 @@ namespace Nop.Data.Tests
         [Test]
         public void Can_save_and_load_customer()
         {
-            var customer = new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
-                AdminComment = "some comment here",
-                Active = true,
-                Deleted= false,
-                CreatedOnUtc = new DateTime(2010,01,01)
-            };
+            var customer = GetTestCustomer();
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.Email.ShouldEqual("admin@yourStore.com");
@@ -38,26 +31,17 @@ namespace Nop.Data.Tests
         [Test]
         public void Can_save_and_load_customer_with_customerRoles()
         {
-            var customer = new Customer
+            var customer = GetTestCustomer();
+            customer.CustomerRoles = new List<CustomerRole>()
             {
-                CustomerGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
-                AdminComment = "some comment here",
-                Active = true,
-                Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                CustomerRoles = new List<CustomerRole>()
+                new CustomerRole()
                 {
-                     new CustomerRole()
-                     {
-                         Name = "Administrators",
-                         FreeShipping = true,
-                         TaxExempt = true,
-                         Active = true,
-                         IsSystemRole = true,
-                         SystemName = "Administrators"
-                     }
+                    Name = "Administrators",
+                    FreeShipping = true,
+                    TaxExempt = true,
+                    Active = true,
+                    IsSystemRole = true,
+                    SystemName = "Administrators"
                 }
             };
 
@@ -68,6 +52,65 @@ namespace Nop.Data.Tests
             fromDb.CustomerRoles.ShouldNotBeNull();
             (fromDb.CustomerRoles.Count == 1).ShouldBeTrue();
             fromDb.CustomerRoles.First().Name.ShouldEqual("Administrators");
+        }
+
+        [Test]
+        public void Can_save_and_load_customer_with_language()
+        {
+            var customer = GetTestCustomer();
+            customer.Language = new Language()
+            {
+                Name = "English",
+                LanguageCulture = "en-Us",
+                FlagImageFileName = "us.png",
+                Published = true,
+                DisplayOrder = 1
+            };
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.Email.ShouldEqual("admin@yourStore.com");
+
+            fromDb.Language.ShouldNotBeNull();
+            fromDb.Language.Name.ShouldEqual("English");
+        }
+
+        [Test]
+        public void Can_save_and_load_customer_with_currency()
+        {
+            var customer = GetTestCustomer();
+            customer.Currency = new Currency()
+            {
+                Name = "US Dollar",
+                CurrencyCode = "USD",
+                Rate = 1,
+                DisplayLocale = "en-US",
+                CustomFormatting = "CustomFormatting 1",
+                Published = true,
+                DisplayOrder = 2,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                UpdatedOnUtc = new DateTime(2010, 01, 02),
+            };
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.Email.ShouldEqual("admin@yourStore.com");
+
+            fromDb.Currency.ShouldNotBeNull();
+            fromDb.Currency.Name.ShouldEqual("US Dollar");
+        }
+
+
+        protected Customer GetTestCustomer()
+        {
+            return new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                Email = "admin@yourStore.com",
+                Username = "admin@yourStore.com",
+                AdminComment = "some comment here",
+                Active = true,
+                Deleted = false,
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
         }
     }
 }

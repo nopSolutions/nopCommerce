@@ -10,7 +10,7 @@ using Nop.Core.Domain.Customers;
 namespace Nop.Data.Tests
 {
     [TestFixture]
-    public class CustomerContentTests : PersistenceTest
+    public class CustomerContentPersistenceTests : PersistenceTest
     {
         [Test]
         public void Can_save_and_load_customerContent()

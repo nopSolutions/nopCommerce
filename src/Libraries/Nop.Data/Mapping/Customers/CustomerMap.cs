@@ -27,7 +27,14 @@ namespace Nop.Data.Mapping.Customers
             this.Property(c => c.Email).IsRequired().HasMaxLength(255);
             this.Property(c => c.Username).IsRequired().HasMaxLength(255);
             this.Property(c => c.AdminComment).IsMaxLength();
-        
+            
+            this.HasOptional(c => c.Language)
+                .WithMany(l => l.Customers)
+                .HasForeignKey(c => c.LanguageId).WillCascadeOnDelete(false);
+
+            this.HasOptional(c => c.Currency)
+                .WithMany(cur => cur.Customers)
+                .HasForeignKey(c => c.CurrencyId).WillCascadeOnDelete(false);
         }
     }
 }

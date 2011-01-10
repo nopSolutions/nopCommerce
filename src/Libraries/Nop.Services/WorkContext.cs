@@ -14,12 +14,16 @@
 
 
 using System;
+using System.Linq;
+using System.Web;
 using Nop.Core;
 using Nop.Core.Domain;
-using System.Web;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Localization;
+using Nop.Services.Customers;
+using Nop.Services.Directory;
+using Nop.Services.Localization;
 
 namespace Nop.Services
 {
@@ -28,17 +32,91 @@ namespace Nop.Services
     /// </summary>
     public partial class WorkContext : IWorkContext
     {
-        private Customer _currentUser;
-        private Language _workingLanguage;
-        private Currency _workingCurrency;
-        private string _workingTheme;
-        private readonly HttpContextBase _contextBase;
+        private const string CustomerCookieName = "Nop.customer";
 
-        public WorkContext(HttpContextBase contextBase)
+        private readonly HttpContextBase _httpContext;
+        private readonly ICustomerService _customerService;
+        private readonly ILanguageService _languageService;
+        private readonly ICurrencyService _currencyService;
+
+        private Customer _cachedCustomer;
+        private string _workingTheme = "";
+
+        public WorkContext(HttpContextBase httpContext,
+            ICustomerService customerService,
+            ILanguageService languageService,
+            ICurrencyService currencyService)
         {
-            this._contextBase = contextBase;
+            this._httpContext = httpContext;
+            this._customerService = customerService;
+            this._languageService = languageService;
+            this._currencyService = currencyService;
         }
-        
+
+        protected Customer GetCurrentCustomer()
+        {
+            if (_cachedCustomer != null)
+                return _cachedCustomer;
+
+            Customer customer = null;
+            if (_httpContext != null)
+            {
+                var customerCookie = GetCustomerCookie();
+
+                if (_httpContext.User != null &&
+                    _httpContext.User.Identity != null &&
+                    _httpContext.User.Identity.IsAuthenticated)
+                {
+                    customer = _customerService.GetCustomerByUsername(_httpContext.User.Identity.Name);
+                }
+                else if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
+                {
+                    var customerGuid = Guid.Empty;
+                    if (Guid.TryParse(customerCookie.Value, out customerGuid))
+                        customer = _customerService.GetCustomerByGuid(customerGuid);
+                }
+
+
+                if (customer == null)
+                {
+                    customer = _customerService.InsertGuestCustomer(Guid.NewGuid().ToString());
+                }
+
+                SetCustomerCookie(customer.CustomerGuid);
+            }
+
+            _cachedCustomer = customer;
+            return _cachedCustomer;
+        }
+
+        protected HttpCookie GetCustomerCookie()
+        {
+            if (_httpContext == null || _httpContext.Request == null)
+                return null;
+
+            return _httpContext.Request.Cookies[CustomerCookieName];
+        }
+
+        protected void SetCustomerCookie(Guid customerGuid)
+        {
+            var cookie = new HttpCookie(CustomerCookieName);
+            cookie.Value = customerGuid.ToString();
+            if (customerGuid == Guid.Empty)
+            {
+                cookie.Expires = DateTime.Now.AddMonths(-1);
+            }
+            else
+            {
+                int cookieExpires = 24 * 365; //TODO make confgiurable
+                cookie.Expires = DateTime.Now.AddHours(cookieExpires);
+            }
+            if (_httpContext != null && _httpContext.Response != null)
+            {
+                _httpContext.Response.Cookies.Remove(CustomerCookieName);
+                _httpContext.Response.Cookies.Add(cookie);
+            }
+        }
+
         /// <summary>
         /// Gets or sets the current customer
         /// </summary>
@@ -46,11 +124,11 @@ namespace Nop.Services
         {
             get
             {
-                return _currentUser;
+                return GetCurrentCustomer();
             }
             set
             {
-                _currentUser = value;
+                SetCustomerCookie(value.CustomerGuid);
             }
         }
 
@@ -61,11 +139,23 @@ namespace Nop.Services
         {
             get
             {
-                return _workingLanguage;
+                if (this.CurrentCustomer == null)
+                    return null;
+                
+                if (this.CurrentCustomer.Language != null &&
+                    this.CurrentCustomer.Language.Published)
+                    return this.CurrentCustomer.Language;
+
+                var lang = _languageService.GetAllLanguages().FirstOrDefault();
+                return lang;
             }
             set
             {
-                _workingLanguage = value;
+                if (this.CurrentCustomer == null)
+                    return;
+
+                this.CurrentCustomer.Language = value;
+                _customerService.UpdateCustomer(this.CurrentCustomer);
             }
         }
 
@@ -76,11 +166,23 @@ namespace Nop.Services
         {
             get
             {
-                return _workingCurrency;
+                if (this.CurrentCustomer == null)
+                    return null;
+
+                if (this.CurrentCustomer.Currency != null &&
+                    this.CurrentCustomer.Currency.Published)
+                    return this.CurrentCustomer.Currency;
+
+                var currency = _currencyService.GetAllCurrencies().FirstOrDefault();
+                return currency;
             }
             set
             {
-                _workingCurrency = value;
+                if (this.CurrentCustomer == null)
+                    return;
+
+                this.CurrentCustomer.Currency = value;
+                _customerService.UpdateCustomer(this.CurrentCustomer);
             }
         }
 

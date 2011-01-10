@@ -33,26 +33,20 @@ namespace Nop.Services
     /// </summary>
     public partial class AuthenticationService : IAuthenticationService
     {
-        private const string CustomerCookieName = "Nop.customer";
         private readonly HttpContextBase _httpContext;
-        private readonly CustomerService _customerService;
         private readonly UserService _userService;
 
         private User _cachedUser;
-        private Customer _cachedCustomer;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
-        /// <param name="customerService">Customer service</param>
         /// <param name="userService">User service</param>
         public AuthenticationService(HttpContextBase httpContext,
-            CustomerService customerService,
             UserService userService)
         {
             this._httpContext = httpContext;
-            this._customerService = customerService;
             this._userService = userService;
 
             //TODO set correct timespan
@@ -117,70 +111,6 @@ namespace Nop.Services
                 return null;
             _cachedUser = _userService.GetUserByUsername(username);
             return _cachedUser;
-        }
-
-        public Customer GetCurrentCustomer()
-        {
-            if (_cachedCustomer != null)
-                return _cachedCustomer;
-
-            Customer customer = null;
-            if (_httpContext != null)
-            {
-                var customerCookie = GetCustomerCookie();
-
-                if (_httpContext.User != null &&
-                    _httpContext.User.Identity != null &&
-                    _httpContext.User.Identity.IsAuthenticated)
-                {
-                    customer = _customerService.GetCustomerByUsername(_httpContext.User.Identity.Name);
-                }
-                else if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
-                {
-                    var customerGuid = Guid.Empty;
-                    if (Guid.TryParse(customerCookie.Value, out customerGuid))
-                        customer = _customerService.GetCustomerByGuid(customerGuid);
-                }
-
-
-                if (customer == null)
-                {
-                    customer = _customerService.InsertGuestCustomer(Guid.NewGuid().ToString());
-                }
-
-                SetCustomerCookie(customer.CustomerGuid);
-            }
-
-            _cachedCustomer = customer;
-            return _cachedCustomer;
-        }
-
-        protected HttpCookie GetCustomerCookie()
-        {
-            if (_httpContext == null ||_httpContext.Request == null)
-                return null;
-
-            return _httpContext.Request.Cookies[CustomerCookieName];
-        }
-
-        protected void SetCustomerCookie(Guid customerGuid)
-        {
-            var cookie = new HttpCookie(CustomerCookieName);
-            cookie.Value = customerGuid.ToString();
-            if (customerGuid == Guid.Empty)
-            {
-                cookie.Expires = DateTime.Now.AddMonths(-1);
-            }
-            else
-            {
-                int cookieExpires = 24 * 365; //TODO make confgiurable
-                cookie.Expires = DateTime.Now.AddHours(cookieExpires);
-            }
-            if (_httpContext != null && _httpContext.Response != null)
-            {
-                _httpContext.Response.Cookies.Remove(CustomerCookieName);
-                _httpContext.Response.Cookies.Add(cookie);
-            }
         }
     }
 }

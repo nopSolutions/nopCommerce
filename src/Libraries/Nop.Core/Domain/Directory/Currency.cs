@@ -13,6 +13,8 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Directory
 {
@@ -65,6 +67,11 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets customers
+        /// </summary>
+        public virtual ICollection<Customer> Customers { get; set; }
     }
 
 }

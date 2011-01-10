@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Localization
 {
@@ -45,6 +46,11 @@ namespace Nop.Core.Domain.Localization
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets customers
+        /// </summary>
+        public virtual ICollection<Customer> Customers { get; set; }
 
         /// <summary>
         /// Gets or sets locale string resources

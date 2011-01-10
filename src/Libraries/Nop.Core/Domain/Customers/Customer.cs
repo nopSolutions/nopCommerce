@@ -14,6 +14,8 @@
 
 using System;
 using System.Collections.Generic;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -43,6 +45,16 @@ namespace Nop.Core.Domain.Customers
         public string AdminComment { get; set; }
 
         /// <summary>
+        /// Gets or sets the language identifier
+        /// </summary>
+        public int? LanguageId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the currency identifier
+        /// </summary>
+        public int? CurrencyId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }
@@ -56,6 +68,16 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language
+        /// </summary>
+        public virtual Language Language { get; set; }
+
+        /// <summary>
+        /// Gets or sets the currency
+        /// </summary>
+        public virtual Currency Currency { get; set; }
 
         /// <summary>
         /// Gets or sets customer generated content
