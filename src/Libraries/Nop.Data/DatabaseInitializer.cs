@@ -148,7 +148,6 @@ namespace Nop.Data
                                 {
                                     new User
                                         {
-                                            ApplicationName = "NopCommerce",
                                             Username = "admin@yourStore.com",
                                             Password = "admin",
                                             PasswordFormat = PasswordFormat.Clear,

@@ -27,6 +27,7 @@ namespace Nop.Data.Tests
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.LastActivityDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
         }
 
         [Test]
@@ -173,7 +174,8 @@ namespace Nop.Data.Tests
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
         }
     }

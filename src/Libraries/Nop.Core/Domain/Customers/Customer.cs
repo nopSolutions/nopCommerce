@@ -76,6 +76,11 @@ namespace Nop.Core.Domain.Customers
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the date and time of last activity
+        /// </summary>
+        public DateTime? LastActivityDateUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets the language
         /// </summary>
         public virtual Language Language { get; set; }

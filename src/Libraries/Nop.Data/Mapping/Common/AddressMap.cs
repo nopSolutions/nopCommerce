@@ -11,7 +11,7 @@ namespace Nop.Data.Mapping.Common
     {
         public AddressMap()
         {
-            this.ToTable("Addresses");
+            this.ToTable("Address");
             this.HasKey(a => a.Id);
         }
     }

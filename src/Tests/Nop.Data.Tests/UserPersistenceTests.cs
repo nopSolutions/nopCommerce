@@ -16,7 +16,6 @@ namespace Nop.Data.Tests
         {
             var user = new User
             {
-                ApplicationName = "NopCommerce",
                 Username = "a@b.com",
                 Password = "password",
                 PasswordFormat = PasswordFormat.Clear,

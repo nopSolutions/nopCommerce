@@ -24,29 +24,8 @@ namespace Nop.Core.Domain.Security
         }
 
         public virtual Guid UserGuid { get; set; }
-        public virtual string ApplicationName { get; set; }
-        
-        private string _username;
-        public virtual string Username {
-            get { return this._username; }
-            set {
-                this._username = value;
-                this.LoweredUsername = this._username.ToLower();
-            }
-        }
-
-        private string _email;
-        public virtual string Email
-        {
-            get { return this._email; }
-            set {
-                this._email = value;
-                this.LoweredEmail = this._email.ToLower();
-            }
-        }
-
-        public virtual string LoweredUsername { get; set; }
-        public virtual string LoweredEmail { get; set; }
+        public virtual string Username { get; set; }
+        public virtual string Email { get; set; }
         public virtual string FirstName { get; set; }
         public virtual string LastName { get; set; }
         public virtual string Password { get; set; }
@@ -64,7 +43,6 @@ namespace Nop.Core.Domain.Security
         public virtual bool IsApproved { get; set; }
         public virtual bool IsLockedOut { get; set; }
         public virtual DateTime CreatedOnUtc { get; set; }
-        public virtual DateTime? LastActivityDateUtc { get; set; }
         public virtual DateTime? LastLoginDateUtc { get; set; }
         public virtual DateTime? LastLockedOutDateUtc { get; set; }
         public virtual DateTime? LastPasswordChangeDateUtc { get; set; }

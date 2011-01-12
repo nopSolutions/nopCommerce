@@ -11,7 +11,7 @@ namespace Nop.Data.Mapping.Security
     {
         public UserMap()
         {
-            this.ToTable("Users");
+            this.ToTable("User");
             this.Property(u => u.Username).IsRequired();
             this.Property(u => u.Email).IsRequired();
             this.Property(u => u.Password).IsRequired();
