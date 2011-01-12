@@ -30,6 +30,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(lst);
+            fromDb.ShouldNotBeNull();
             fromDb.ResourceName.ShouldEqual("ResourceName1");
             fromDb.ResourceValue.ShouldEqual("ResourceValue2");
 

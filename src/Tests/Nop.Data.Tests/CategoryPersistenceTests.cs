@@ -37,6 +37,7 @@ namespace Nop.Data.Tests
                                };
 
             var fromDb = SaveAndLoadEntity(category);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Books");
             fromDb.Description.ShouldEqual("Description 1");
             fromDb.TemplateId.ShouldEqual(1);
@@ -114,91 +115,12 @@ namespace Nop.Data.Tests
                                };
 
             var fromDb = SaveAndLoadEntity(category);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Books");
 
             fromDb.ProductCategories.ShouldNotBeNull();
             (fromDb.ProductCategories.Count == 1).ShouldBeTrue();
             fromDb.ProductCategories.First().IsFeaturedProduct.ShouldEqual(true);
         }
-
-        //[Test]
-        //public void Can_save_and_load_category_with_localizedCategories()
-        //{
-        //    var lang = new Language()
-        //                   {
-        //                       Name = "English",
-        //                       LanguageCulture = "en-Us",
-        //                       FlagImageFileName = "us.png",
-        //                       Published = true,
-        //                       DisplayOrder = 1
-        //                   };
-
-        //    var category = new Category
-        //                   {
-        //                       Name = "Books",
-        //                       Description = "Description 1",
-        //                       TemplateId = 1,
-        //                       MetaKeywords = "Meta keywords",
-        //                       MetaDescription = "Meta description",
-        //                       MetaTitle = "Meta title",
-        //                       SeName = "SE name",
-        //                       ParentCategoryId = 2,
-        //                       PictureId = 3,
-        //                       PageSize = 4,
-        //                       PriceRanges = "1-3;",
-        //                       ShowOnHomePage = false,
-        //                       Published = true,
-        //                       Deleted = false,
-        //                       DisplayOrder = 5,
-        //                       CreatedOnUtc = new DateTime(2010, 01, 01),
-        //                       UpdatedOnUtc = new DateTime(2010, 01, 02),
-        //                       LocalizedCategories = new List<LocalizedCategory>()
-        //                                             {
-        //                                                 new LocalizedCategory
-        //                                                 {
-        //                                                     Name = "Books localized 1",
-        //                                                     Description = "Description 1 localized",
-        //                                                     MetaKeywords = "Meta keywords localized",
-        //                                                     MetaDescription = "Meta description localized",
-        //                                                     MetaTitle = "Meta title localized",
-        //                                                     SeName = "SE name localized",
-        //                                                     Language = lang
-        //                                                 },
-        //                                                 new LocalizedCategory
-        //                                                 {
-        //                                                     Name = "Books localized 2",
-        //                                                     Description = "Description 2 localized",
-        //                                                     MetaKeywords = "Meta keywords localized",
-        //                                                     MetaDescription = "Meta description localized",
-        //                                                     MetaTitle = "Meta title localized",
-        //                                                     SeName = "SE name localized",
-        //                                                     Language = lang
-        //                                                 },
-        //                                                 new LocalizedCategory
-        //                                                 {
-        //                                                     Name = "Books localized 2",
-        //                                                     Description = "Description 2 localized",
-        //                                                     MetaKeywords = "Meta keywords localized",
-        //                                                     MetaDescription = "Meta description localized",
-        //                                                     MetaTitle = "Meta title localized",
-        //                                                     SeName = "SE name localized",
-        //                                                     Language = new Language()
-        //                                                                {
-        //                                                                    Name = "English 2",
-        //                                                                    LanguageCulture = "en-Us",
-        //                                                                    FlagImageFileName = "us.png",
-        //                                                                    Published = true,
-        //                                                                    DisplayOrder = 2
-        //                                                                }
-        //                                                 },
-        //                                             }
-        //                   };
-
-        //    var fromDb = SaveAndLoadEntity(category);
-        //    fromDb.Name.ShouldEqual("Books");
-
-        //    fromDb.LocalizedCategories.ShouldNotBeNull();
-        //    (fromDb.LocalizedCategories.Count == 3).ShouldBeTrue();
-        //}
     }
 }

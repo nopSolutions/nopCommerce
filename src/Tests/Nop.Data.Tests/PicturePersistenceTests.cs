@@ -23,6 +23,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(picture);
+            fromDb.ShouldNotBeNull();
             fromDb.PictureBinary.ShouldEqual(new byte[] { 1, 2, 3 });
             fromDb.MimeType.ShouldEqual("image/pjpeg");
             fromDb.IsNew.ShouldEqual(true);

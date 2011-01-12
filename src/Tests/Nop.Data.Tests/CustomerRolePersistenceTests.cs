@@ -26,6 +26,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(customerRole);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Administrators");
             fromDb.FreeShipping.ShouldEqual(true);
             fromDb.TaxExempt.ShouldEqual(true);
@@ -60,6 +61,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(customerRole);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Administrators");
 
             fromDb.Customers.ShouldNotBeNull();

@@ -12,6 +12,9 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Nop.Core.Domain.Common;
+
 namespace Nop.Core.Domain.Directory
 {
     /// <summary>
@@ -43,6 +46,11 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets the country
         /// </summary>
         public virtual Country Country { get; set; }
+
+        /// <summary>
+        /// Gets or sets the addresses
+        /// </summary>
+        public virtual ICollection<Address> Addresses { get; set; }
     }
 
 }

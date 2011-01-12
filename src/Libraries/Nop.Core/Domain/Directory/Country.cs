@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Core.Domain.Directory
 {
@@ -75,6 +76,11 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets the state/provinces
         /// </summary>
         public virtual ICollection<StateProvince> StateProvinces { get; set; }
+
+        /// <summary>
+        /// Gets or sets the addresses
+        /// </summary>
+        public virtual ICollection<Address> Addresses { get; set; }
     }
 
 }

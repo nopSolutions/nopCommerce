@@ -31,6 +31,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(user);
+            fromDb.ShouldNotBeNull();
         }
     }
 }

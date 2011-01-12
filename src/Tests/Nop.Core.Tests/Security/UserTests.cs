@@ -15,17 +15,5 @@ namespace Nop.Core.Tests.Security
             var user = new User();
             user.PasswordFormat.ShouldEqual(PasswordFormat.Clear);
         }
-
-        [Test]
-        public void Setting_username_sets_lowered_username() {
-            var user = new User { Username = "TestUser" };
-            user.LoweredUsername.ShouldEqual("testuser");
-        }
-
-        [Test]
-        public void Setting_email_sets_lowered_email() {
-            var user = new User { Email = "Test.User@SomeDomain.com" };
-            user.LoweredEmail.ShouldEqual("test.user@somedomain.com");
-        }
     }
 }

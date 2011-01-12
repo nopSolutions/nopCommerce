@@ -23,6 +23,7 @@ namespace Nop.Data.Tests
                                };
 
             var fromDb = SaveAndLoadEntity(customerAttribute);
+            fromDb.ShouldNotBeNull();
             fromDb.Key.ShouldEqual("Key 1");
             fromDb.Value.ShouldEqual("Value 1");
 

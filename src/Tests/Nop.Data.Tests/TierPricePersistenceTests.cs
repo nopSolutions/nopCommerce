@@ -103,6 +103,7 @@ namespace Nop.Data.Tests
                       };
 
             var fromDb = SaveAndLoadEntity(tierPrice);
+            fromDb.ShouldNotBeNull();
             fromDb.Quantity.ShouldEqual(1);
             fromDb.Price.ShouldEqual(2);
 

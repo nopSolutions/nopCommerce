@@ -36,6 +36,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(stateProvince);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("California");
             fromDb.Abbreviation.ShouldEqual("CA");
             fromDb.DisplayOrder.ShouldEqual(1);

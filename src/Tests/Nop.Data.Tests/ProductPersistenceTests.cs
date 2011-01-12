@@ -39,6 +39,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(product);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
             fromDb.ShortDescription.ShouldEqual("ShortDescription 1");
             fromDb.FullDescription.ShouldEqual("FullDescription 1");
@@ -147,6 +148,7 @@ namespace Nop.Data.Tests
                           };
 
             var fromDb = SaveAndLoadEntity(product);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
 
 
@@ -154,90 +156,6 @@ namespace Nop.Data.Tests
             (fromDb.ProductVariants.Count == 1).ShouldBeTrue();
             fromDb.ProductVariants.First().Name.ShouldEqual("Product variant name 1");
         }
-
-        //[Test]
-        //public void Can_save_and_load_product_with_localizedProducts()
-        //{
-        //    var lang = new Language()
-        //               {
-        //                   Name = "English",
-        //                   LanguageCulture = "en-Us",
-        //                   FlagImageFileName = "us.png",
-        //                   Published = true,
-        //                   DisplayOrder = 1
-        //               };
-
-        //    var product = new Product
-        //                  {
-        //                      Name = "Name 1",
-        //                      ShortDescription = "ShortDescription 1",
-        //                      FullDescription = "FullDescription 1",
-        //                      AdminComment = "AdminComment 1",
-        //                      TemplateId = 1,
-        //                      ShowOnHomePage = false,
-        //                      MetaKeywords = "Meta keywords",
-        //                      MetaDescription = "Meta description",
-        //                      MetaTitle = "Meta title",
-        //                      SeName = "SE name",
-        //                      AllowCustomerReviews = true,
-        //                      AllowCustomerRatings = true,
-        //                      RatingSum = 2,
-        //                      TotalRatingVotes = 3,
-        //                      Published = true,
-        //                      Deleted = false,
-        //                      CreatedOnUtc = new DateTime(2010, 01, 01),
-        //                      UpdatedOnUtc = new DateTime(2010, 01, 02),
-        //                      LocalizedProducts = new List<LocalizedProduct>()
-        //                                          {
-        //                                              new LocalizedProduct
-        //                                              {
-        //                                                  Name = "Name localized 1",
-        //                                                  ShortDescription = "ShortDescription 1 localized",
-        //                                                  FullDescription = "FullDescription 1 localized",
-        //                                                  MetaKeywords = "Meta keywords localized",
-        //                                                  MetaDescription = "Meta description localized",
-        //                                                  MetaTitle = "Meta title localized",
-        //                                                  SeName = "SE name localized",
-        //                                                  Language = lang
-        //                                              },
-        //                                              new LocalizedProduct
-        //                                              {
-        //                                                  Name = "Name localized 2",
-        //                                                  ShortDescription = "ShortDescription 2 localized",
-        //                                                  FullDescription = "FullDescription 2 localized",
-        //                                                  MetaKeywords = "Meta keywords localized",
-        //                                                  MetaDescription = "Meta description localized",
-        //                                                  MetaTitle = "Meta title localized",
-        //                                                  SeName = "SE name localized",
-        //                                                  Language = lang
-        //                                              },
-        //                                              new LocalizedProduct
-        //                                              {
-        //                                                  Name = "Name localized 2",
-        //                                                  ShortDescription = "ShortDescription 2 localized",
-        //                                                  FullDescription = "FullDescription 2 localized",
-        //                                                  MetaKeywords = "Meta keywords localized",
-        //                                                  MetaDescription = "Meta description localized",
-        //                                                  MetaTitle = "Meta title localized",
-        //                                                  SeName = "SE name localized",
-        //                                                  Language = new Language()
-        //                                                             {
-        //                                                                 Name = "English 2",
-        //                                                                 LanguageCulture = "en-Us",
-        //                                                                 FlagImageFileName = "us.png",
-        //                                                                 Published = true,
-        //                                                                 DisplayOrder = 2
-        //                                                             }
-        //                                              },
-        //                                          }
-        //                  };
-
-        //    var fromDb = SaveAndLoadEntity(product);
-        //    fromDb.Name.ShouldEqual("Name 1");
-
-        //    fromDb.LocalizedProducts.ShouldNotBeNull();
-        //    (fromDb.LocalizedProducts.Count == 3).ShouldBeTrue();
-        //}
 
         [Test]
         public void Can_save_and_load_product_with_productCategories()
@@ -293,6 +211,7 @@ namespace Nop.Data.Tests
                           };
 
             var fromDb = SaveAndLoadEntity(product);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
 
             fromDb.ProductCategories.ShouldNotBeNull();
@@ -357,6 +276,7 @@ namespace Nop.Data.Tests
                           };
 
             var fromDb = SaveAndLoadEntity(product);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
 
             fromDb.ProductManufacturers.ShouldNotBeNull();
@@ -406,6 +326,7 @@ namespace Nop.Data.Tests
                           };
 
             var fromDb = SaveAndLoadEntity(product);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
 
             fromDb.ProductPictures.ShouldNotBeNull();

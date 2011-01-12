@@ -37,13 +37,11 @@ namespace Nop.Services.Security
         }
 
         public User GetUserByUsername(string username) {
-            return userRepository.Table
-                .SingleOrDefault(u => u.LoweredUsername == username.ToLowerInvariant());
+            return userRepository.Table.Where(u => u.Username == username).SingleOrDefault();
         }
 
         public User GetUserByEmail(string email) {
-            return userRepository.Table
-                .SingleOrDefault(u => u.LoweredEmail == email.ToLowerInvariant());
+            return userRepository.Table.Where(u => u.Email == email).SingleOrDefault();
         }
 
         public IPagedList<User> GetUsers(int pageIndex, int pageSize) {
@@ -109,7 +107,8 @@ namespace Nop.Services.Security
             // validate unique user
 
             var existingUser = userRepository.Table
-                                    .SingleOrDefault(x => x.LoweredUsername == request.Username.ToLowerInvariant() || x.LoweredEmail == request.Email.ToLowerInvariant());
+                .Where(x => x.Username == request.Username || x.Email == request.Email)
+                .FirstOrDefault();
 
             if (existingUser != null) {
                 result.AddError("The specified username or email already exists");
@@ -119,7 +118,6 @@ namespace Nop.Services.Security
             // at this point request is valid
 
             var user = new User();
-            user.ApplicationName = request.ApplicationName;
             user.Username = request.Username;
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;

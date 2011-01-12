@@ -24,6 +24,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(measureWeight);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("ounce(s)");
             fromDb.SystemKeyword.ShouldEqual("ounce");
             fromDb.Ratio.ShouldEqual(1);

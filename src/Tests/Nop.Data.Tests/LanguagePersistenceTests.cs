@@ -25,6 +25,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(lang);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("English");
             fromDb.LanguageCulture.ShouldEqual("en-Us");
             fromDb.FlagImageFileName.ShouldEqual("us.png");
@@ -53,6 +54,7 @@ namespace Nop.Data.Tests
                            };
 
             var fromDb = SaveAndLoadEntity(lang);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("English");
 
             fromDb.LocaleStringResources.ShouldNotBeNull();

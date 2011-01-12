@@ -35,6 +35,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(manufacturer);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name");
             fromDb.Description.ShouldEqual("Description 1");
             fromDb.TemplateId.ShouldEqual(1);
@@ -103,91 +104,12 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(manufacturer);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name");
 
             fromDb.ProductManufacturers.ShouldNotBeNull();
             (fromDb.ProductManufacturers.Count == 1).ShouldBeTrue();
             fromDb.ProductManufacturers.First().IsFeaturedProduct.ShouldEqual(true);
         }
-
-        //[Test]
-        //public void Can_save_and_load_manufacturer_with_localizedManufacturers()
-        //{
-        //    var lang = new Language()
-        //    {
-        //        Name = "English",
-        //        LanguageCulture = "en-Us",
-        //        FlagImageFileName = "us.png",
-        //        Published = true,
-        //        DisplayOrder = 1
-        //    };
-
-        //    var manufacturer = new Manufacturer
-        //    {
-        //        Name = "Name",
-        //        Description = "Description 1",
-        //        TemplateId = 1,
-        //        MetaKeywords = "Meta keywords",
-        //        MetaDescription = "Meta description",
-        //        MetaTitle = "Meta title",
-        //        SeName = "SE name",
-        //        PictureId = 3,
-        //        PageSize = 4,
-        //        PriceRanges = "1-3;",
-        //        Published = true,
-        //        Deleted = false,
-        //        DisplayOrder = 5,
-        //        CreatedOnUtc = new DateTime(2010, 01, 01),
-        //        UpdatedOnUtc = new DateTime(2010, 01, 02),
-
-        //        LocalizedManufacturers = new List<LocalizedManufacturer>()
-        //                                                     {
-        //                                                         new LocalizedManufacturer
-        //                                                             {
-        //                                                                 Name = "Name localized 1",
-        //                                                                 Description = "Description 1 localized",
-        //                                                                 MetaKeywords = "Meta keywords localized",
-        //                                                                 MetaDescription = "Meta description localized",
-        //                                                                 MetaTitle = "Meta title localized",
-        //                                                                 SeName = "SE name localized",
-        //                                                                 Language = lang
-        //                                                             },
-        //                                                         new LocalizedManufacturer
-        //                                                             {
-        //                                                                 Name = "Name localized 2",
-        //                                                                 Description = "Description 2 localized",
-        //                                                                 MetaKeywords = "Meta keywords localized",
-        //                                                                 MetaDescription = "Meta description localized",
-        //                                                                 MetaTitle = "Meta title localized",
-        //                                                                 SeName = "SE name localized",
-        //                                                                 Language = lang
-        //                                                             },
-        //                                                         new LocalizedManufacturer
-        //                                                             {
-        //                                                                 Name = "Name localized 2",
-        //                                                                 Description = "Description 2 localized",
-        //                                                                 MetaKeywords = "Meta keywords localized",
-        //                                                                 MetaDescription = "Meta description localized",
-        //                                                                 MetaTitle = "Meta title localized",
-        //                                                                 SeName = "SE name localized",
-        //                                                                 Language = new Language()
-        //                                                                                {
-        //                                                                                    Name = "English 2",
-        //                                                                                    LanguageCulture = "en-Us",
-        //                                                                                    FlagImageFileName = "us.png",
-        //                                                                                    Published = true,
-        //                                                                                    DisplayOrder = 2
-        //                                                                                }
-        //                                                             },
-        //                                                     }
-        //    };
-
-        //    var fromDb = SaveAndLoadEntity(manufacturer);
-        //    fromDb.Name.ShouldEqual("Name");
-
-        //    fromDb.LocalizedManufacturers.ShouldNotBeNull();
-        //    (fromDb.LocalizedManufacturers.Count == 3).ShouldBeTrue();
-
-        //}
     }
 }

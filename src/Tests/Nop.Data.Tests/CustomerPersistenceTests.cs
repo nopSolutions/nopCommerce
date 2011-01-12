@@ -21,6 +21,7 @@ namespace Nop.Data.Tests
             var customer = GetTestCustomer();
 
             var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
             fromDb.Email.ShouldEqual("admin@yourStore.com");
             fromDb.Username.ShouldEqual("admin@yourStore.com");
             fromDb.AdminComment.ShouldEqual("some comment here");
@@ -49,6 +50,7 @@ namespace Nop.Data.Tests
 
 
             var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
             fromDb.Email.ShouldEqual("admin@yourStore.com");
 
             fromDb.CustomerRoles.ShouldNotBeNull();
@@ -70,6 +72,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
             fromDb.Email.ShouldEqual("admin@yourStore.com");
 
             fromDb.Language.ShouldNotBeNull();
@@ -94,6 +97,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
             fromDb.Email.ShouldEqual("admin@yourStore.com");
 
             fromDb.Currency.ShouldNotBeNull();
@@ -105,12 +109,16 @@ namespace Nop.Data.Tests
         {
             var customer = GetTestCustomer();
 
-            var address = new Address { FirstName = "Test" };
+            var address = new Address 
+            { 
+                FirstName = "Test",
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+            };
 
             customer.AddAddress(address);
 
             var fromDb = SaveAndLoadEntity(customer);
-
+            fromDb.ShouldNotBeNull();
             fromDb.Addresses.Count.ShouldEqual(1);
             fromDb.Addresses.First().FirstName.ShouldEqual("Test");
         }
@@ -120,8 +128,8 @@ namespace Nop.Data.Tests
         {
             var customer = GetTestCustomer();
 
-            var address = new Address { FirstName = "Billing" };
-            var address2 = new Address { FirstName = "Shipping" };
+            var address = new Address { FirstName = "Billing", CreatedOnUtc = new DateTime(2010, 01, 01) };
+            var address2 = new Address { FirstName = "Shipping", CreatedOnUtc = new DateTime(2010, 01, 01) };
 
             customer.AddAddress(address);
             customer.AddAddress(address2);
@@ -130,7 +138,7 @@ namespace Nop.Data.Tests
             customer.SetShippingAddress(address2);
 
             var fromDb = SaveAndLoadEntity(customer);
-
+            fromDb.ShouldNotBeNull();
             fromDb.Addresses.Count.ShouldEqual(2);
 
             fromDb.BillingAddress.FirstName.ShouldEqual("Billing");
@@ -146,12 +154,12 @@ namespace Nop.Data.Tests
         public void Can_remove_a_customer_address()
         {
             var customer = GetTestCustomer();
-            var address = new Address { FirstName = "Test" };
+            var address = new Address { FirstName = "Test", CreatedOnUtc = new DateTime(2010, 01, 01) };
             customer.AddAddress(address);
             customer.SetBillingAddress(address);
 
             var fromDb = SaveAndLoadEntity(customer);
-
+            fromDb.ShouldNotBeNull();
             fromDb.Addresses.Count.ShouldEqual(1);
             fromDb.BillingAddress.ShouldNotBeNull();
 
@@ -162,8 +170,7 @@ namespace Nop.Data.Tests
             fromDb.Addresses.Count.ShouldEqual(0);
             fromDb.BillingAddress.ShouldBeNull();
         }
-
-
+        
         protected Customer GetTestCustomer()
         {
             return new Customer

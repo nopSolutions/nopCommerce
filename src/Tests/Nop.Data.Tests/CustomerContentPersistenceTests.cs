@@ -25,6 +25,7 @@ namespace Nop.Data.Tests
                                };
 
             var fromDb = SaveAndLoadEntity(customerContent);
+            fromDb.ShouldNotBeNull();
             fromDb.IpAddress.ShouldEqual("192.168.1.1");
             fromDb.IsApproved.ShouldEqual(true);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));

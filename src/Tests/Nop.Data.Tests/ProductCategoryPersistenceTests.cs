@@ -63,6 +63,7 @@ namespace Nop.Data.Tests
                                      };
 
             var fromDb = SaveAndLoadEntity(productCategory);
+            fromDb.ShouldNotBeNull();
             fromDb.IsFeaturedProduct.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);
 

@@ -13,6 +13,14 @@ namespace Nop.Data.Mapping.Common
         {
             this.ToTable("Address");
             this.HasKey(a => a.Id);
+
+            this.HasOptional(a => a.Country)
+                .WithMany(c => c.Addresses)
+                .HasForeignKey(a => a.CountryId).WillCascadeOnDelete(false);
+
+            this.HasOptional(a => a.StateProvince)
+                .WithMany(sp => sp.Addresses)
+                .HasForeignKey(a => a.StateProvinceId).WillCascadeOnDelete(false);
         }
     }
 }

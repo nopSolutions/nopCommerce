@@ -30,6 +30,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(country);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("United States");
             fromDb.AllowsRegistration.ShouldEqual(true);
             fromDb.AllowsBilling.ShouldEqual(true);
@@ -69,6 +70,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(country);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("United States");
 
             fromDb.StateProvinces.ShouldNotBeNull();

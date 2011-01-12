@@ -49,6 +49,7 @@ namespace Nop.Data.Tests
                                      };
 
             var fromDb = SaveAndLoadEntity(productPicture);
+            fromDb.ShouldNotBeNull();
             fromDb.DisplayOrder.ShouldEqual(1);
 
             fromDb.Product.ShouldNotBeNull();

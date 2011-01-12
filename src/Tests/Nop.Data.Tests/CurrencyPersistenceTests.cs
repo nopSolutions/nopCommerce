@@ -29,6 +29,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(currency);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("US Dollar");
             fromDb.CurrencyCode.ShouldEqual("USD");
             fromDb.Rate.ShouldEqual(1);

@@ -110,6 +110,7 @@ namespace Nop.Data.Tests
                       };
 
             var fromDb = SaveAndLoadEntity(pva);
+            fromDb.ShouldNotBeNull();
             fromDb.TextPrompt.ShouldEqual("TextPrompt 1");
             fromDb.IsRequired.ShouldEqual(true);
             fromDb.AttributeControlType.ShouldEqual(AttributeControlTypeEnum.DropdownList);

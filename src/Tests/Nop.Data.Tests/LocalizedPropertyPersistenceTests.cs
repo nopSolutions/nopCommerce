@@ -32,6 +32,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(localizedProperty);
+            fromDb.ShouldNotBeNull();
             fromDb.EntityId.ShouldEqual(1);
             fromDb.LocaleKeyGroup.ShouldEqual("LocaleKeyGroup 1");
             fromDb.LocaleKey.ShouldEqual("LocaleKey 1");

@@ -24,6 +24,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(measureDimension);
+            fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("inch(es)");
             fromDb.SystemKeyword.ShouldEqual("inches");
             fromDb.Ratio.ShouldEqual(1);

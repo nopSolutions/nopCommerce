@@ -104,6 +104,7 @@ namespace Nop.Data.Tests
                        };
 
             var fromDb = SaveAndLoadEntity(pvac);
+            fromDb.ShouldNotBeNull();
             fromDb.AttributesXml.ShouldEqual("Some XML");
             fromDb.StockQuantity.ShouldEqual(2);
             fromDb.AllowOutOfStockOrders.ShouldEqual(true);

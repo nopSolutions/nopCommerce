@@ -54,6 +54,7 @@ namespace Nop.Data.Tests
             };
 
             var fromDb = SaveAndLoadEntity(productSpecificationAttribute);
+            fromDb.ShouldNotBeNull();
             fromDb.AllowFiltering.ShouldEqual(true);
             fromDb.ShowOnProductPage.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);
