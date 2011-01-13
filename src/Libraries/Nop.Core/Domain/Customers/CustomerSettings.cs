@@ -29,14 +29,14 @@ namespace Nop.Core.Domain.Customers
         public bool UsernamesEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to change their usernames
+        /// Gets or sets a value indicating whether users are allowed to change their usernames
         /// </summary>
-        public bool AllowCustomersToChangeUsernames { get; set; }
+        public bool AllowUsersToChangeUsernames { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to upload avatars.
+        /// Gets or sets a value indicating whether users are allowed to upload avatars.
         /// </summary>
-        public bool AllowCustomersToUploadAvatars { get; set; }
+        public bool AllowUsersToUploadAvatars { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users write product reviews.
@@ -44,15 +44,15 @@ namespace Nop.Core.Domain.Customers
         public bool AllowAnonymousUsersToReviewProduct { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to allow anonymous users to email a friend.
-        /// </summary>
-        public bool AllowAnonymousUsersToEmailAFriend { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users to set product ratings.
         /// </summary>
         public bool AllowAnonymousUsersToSetProductRatings { get; set; }
         
+        /// <summary>
+        /// Gets or sets a value indicating whether to allow anonymous users to email a friend.
+        /// </summary>
+        public bool AllowAnonymousUsersToEmailAFriend { get; set; }
+
         /// <summary>
         /// Gets or sets a customer password format (SHA1, MD5)
         /// </summary>

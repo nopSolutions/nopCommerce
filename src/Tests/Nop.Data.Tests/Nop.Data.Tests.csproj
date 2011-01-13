@@ -67,6 +67,8 @@
   <ItemGroup>
     <Compile Include="AddressPeristenceTests.cs" />
     <Compile Include="CategoryPersistenceTests.cs" />
+    <Compile Include="DiscountRequirementPersistenceTests.cs" />
+    <Compile Include="DiscountPersistenceTests.cs" />
     <Compile Include="CustomerAttributePersistenceTests.cs" />
     <Compile Include="CustomerRolePersistenceTests.cs" />
     <Compile Include="MeasureWeightPersistenceTests.cs" />

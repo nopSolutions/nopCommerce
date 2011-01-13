@@ -75,7 +75,7 @@ namespace Nop.Services.Security
                     pwd = encryptionService.EncryptText(password, encryptionKey);
                     break;
                 case PasswordFormat.Hashed:
-                    //TODO pass ICustomerSettings.CustomerPasswordFormat
+                    //TODO pass CustomerSettings.CustomerPasswordFormat
                     pwd = encryptionService.CreatePasswordHash(password, user.PasswordSalt);
                     break;
                 default:

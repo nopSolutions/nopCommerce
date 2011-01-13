@@ -71,6 +71,8 @@ namespace Nop.Services.Directory
             if (country == null)
                 return;
 
+            //TODO ensure that addresses with this country will not be deleted
+
             _countryRepository.Delete(country);
 
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);

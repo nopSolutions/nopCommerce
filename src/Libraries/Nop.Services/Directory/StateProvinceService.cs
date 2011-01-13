@@ -67,6 +67,8 @@ namespace Nop.Services.Directory
             if (stateProvince == null)
                 return;
 
+            //TODO ensure that addresses with this country will not be deleted
+
             _stateProvinceRepository.Delete(stateProvince);
 
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);

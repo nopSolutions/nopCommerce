@@ -273,6 +273,8 @@ namespace Nop.Services.Catalog
                          )
                          )
                          select p.Id;
+            //UNDONE issue with EF4 CTP5 here 
+            //http://social.msdn.microsoft.com/Forums/en-US/adodotnetentityframework/thread/382a580e-57e2-47e4-8663-e14766d943fb
             var query = from p in _productRepository.Table
                         where query1.Contains(p.Id)
                         orderby p.CreatedOnUtc descending

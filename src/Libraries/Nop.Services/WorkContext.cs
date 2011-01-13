@@ -99,6 +99,8 @@ namespace Nop.Services
 
         protected void SetCustomerCookie(Guid customerGuid)
         {
+            //TODO encrypt customer GUID
+
             var cookie = new HttpCookie(CustomerCookieName);
             cookie.Value = customerGuid.ToString();
             if (customerGuid == Guid.Empty)

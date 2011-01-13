@@ -54,6 +54,8 @@
     <Compile Include="Mapping\Directory\MeasureDimensionMap.cs" />
     <Compile Include="Mapping\Directory\CurrencyMap.cs" />
     <Compile Include="Mapping\Directory\CountryMap.cs" />
+    <Compile Include="Mapping\Discounts\DiscountMap.cs" />
+    <Compile Include="Mapping\Discounts\DiscountRequirementMap.cs" />
     <Compile Include="Mapping\Security\UserMap.cs" />
     <Compile Include="Mapping\Directory\StateProvinceMap.cs" />
     <Compile Include="Mapping\Catalog\ProductRatingMap.cs" />

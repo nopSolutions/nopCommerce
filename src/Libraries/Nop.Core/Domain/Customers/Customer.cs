@@ -61,6 +61,11 @@ namespace Nop.Core.Domain.Customers
         public int? CurrencyId { get; set; }
 
         /// <summary>
+        /// Gets or sets the applied discount coupon code
+        /// </summary>
+        public string DiscountCouponCode { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }

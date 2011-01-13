@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigFileSettingService.cs" />
     <Compile Include="Configuration\ConfigurationProviderTests.cs" />
+    <Compile Include="Discounts\DiscountServiceTests.cs" />
     <Compile Include="Localization\LanguageServiceTests.cs" />
     <Compile Include="Security\EncryptionServiceTests.cs" />
     <Compile Include="Security\UserServiceTests.cs" />

@@ -360,7 +360,7 @@ namespace Nop.Services.Customers
             if (!_customerSettings.UsernamesEnabled)
                 throw new NopException("Usernames are disabled");
 
-            if (!_customerSettings.AllowCustomersToChangeUsernames)
+            if (!_customerSettings.AllowUsersToChangeUsernames)
                 throw new NopException("Changing usernames is not allowed");
 
             newUsername = newUsername.Trim();

@@ -32,6 +32,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data
 {
@@ -53,6 +54,8 @@ namespace Nop.Data
         public DbSet<CustomerContent> CustomerContent { get; set; }
         public DbSet<CustomerRole> CustomerRoles { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
+        public DbSet<DiscountRequirement> DiscountRequirement { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LocaleStringResource> LocaleStringResources { get; set; }
         public DbSet<LocalizedProperty> LocalizedProperties { get; set; }
