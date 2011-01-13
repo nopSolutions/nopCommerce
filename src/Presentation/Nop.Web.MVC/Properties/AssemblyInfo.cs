@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nop Solutions, Ltd")]
 [assembly: AssemblyProduct("Nop.Web.MVC")]
-[assembly: AssemblyCopyright("Copyright © Nop Solutions, Ltd 2010")]
+[assembly: AssemblyCopyright("Copyright © Nop Solutions, Ltd 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("99816b09-8db9-40d7-9859-242e6386c372")]
+[assembly: Guid("397931c8-04ce-4318-b42e-5316bcfecb56")]
 
 // Version information for an assembly consists of the following four values:
 //

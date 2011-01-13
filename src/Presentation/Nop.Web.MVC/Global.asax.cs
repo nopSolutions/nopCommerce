@@ -32,7 +32,7 @@ namespace Nop.Web.MVC
         protected void Application_Start()
         {
             DIBootstrapper.Boot();
-            
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
