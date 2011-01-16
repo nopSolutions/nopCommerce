@@ -22,6 +22,11 @@ namespace Nop.Core.Domain.Directory
     /// </summary>
     public partial class StateProvince : BaseEntity
     {
+        public StateProvince() 
+        {
+            this.Addresses = new List<Address>();
+        }
+
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>

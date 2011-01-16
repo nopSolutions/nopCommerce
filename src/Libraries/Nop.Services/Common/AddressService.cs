@@ -23,7 +23,7 @@ namespace Nop.Services.Common
     /// <summary>
     /// Customer service
     /// </summary>
-    public partial class AddressService : ICustomerService
+    public partial class AddressService : IAddressService
     {
         #region Fields
 

@@ -17,20 +17,25 @@ using System.Linq;
 using System.Text;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Services.Security {
-    public class UserRegistrationResult {
+namespace Nop.Services.Security 
+{
+    public class UserRegistrationResult 
+    {
         public User User { get; set; }
         public IList<string> Errors { get; set; }
 
-        public UserRegistrationResult() {
+        public UserRegistrationResult() 
+        {
             this.Errors = new List<string>();
         }
 
-        public bool Success {
+        public bool Success 
+        {
             get { return (this.User != null) && (this.Errors.Count == 0); }
         }
 
-        public void AddError(string error) {
+        public void AddError(string error) 
+        {
             this.Errors.Add(error);
         }
     }

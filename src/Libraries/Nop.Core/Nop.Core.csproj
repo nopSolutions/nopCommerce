@@ -74,6 +74,12 @@
     <Compile Include="Domain\Discounts\DiscountType.cs" />
     <Compile Include="Domain\Localization\ILocalizedEntity.cs" />
     <Compile Include="Domain\Directory\StateProvince.cs" />
+    <Compile Include="Domain\Tax\TaxSettings.cs" />
+    <Compile Include="Domain\Tax\TaxBasedOn.cs" />
+    <Compile Include="Domain\Tax\TaxCategory.cs" />
+    <Compile Include="Domain\Tax\TaxDisplayType.cs" />
+    <Compile Include="Domain\Tax\TaxProvider.cs" />
+    <Compile Include="Domain\Tax\VatNumberStatus.cs" />
     <Compile Include="IWorkContext.cs" />
     <Compile Include="Domain\Localization\LocalizedProperty.cs" />
     <Compile Include="Domain\Catalog\ProductSortingEnum.cs" />

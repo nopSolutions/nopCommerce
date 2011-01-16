@@ -34,7 +34,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -69,6 +71,11 @@
     <Compile Include="Directory\IStateProvinceService.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Security\EncryptionService.cs" />
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\IUserService.cs" />
@@ -76,6 +83,20 @@
     <Compile Include="Security\UserRegistrationResult.cs" />
     <Compile Include="Security\UserService.cs" />
     <Compile Include="Directory\StateProvinceService.cs" />
+    <Compile Include="Tax\CalculateTaxRequest.cs" />
+    <Compile Include="Tax\CalculateTaxResult.cs" />
+    <Compile Include="Tax\ITaxCategoryService.cs" />
+    <Compile Include="Tax\ITaxProvider.cs" />
+    <Compile Include="Tax\ITaxProviderService.cs" />
+    <Compile Include="Tax\ITaxService.cs" />
+    <Compile Include="Tax\TaxCategoryService.cs" />
+    <Compile Include="Tax\TaxProviderService.cs" />
+    <Compile Include="Tax\TaxService.cs" />
+    <Compile Include="Web References\EuropaCheckVatService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="WorkContext.cs" />
     <Compile Include="Localization\LocalizedEntityService.cs" />
     <Compile Include="Localization\ILocalizedEntityService.cs" />
@@ -111,7 +132,40 @@
       <Name>Nop.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://ec.europa.eu/taxation_customs/vies/services/checkVatService.wsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\EuropaCheckVatService\</RelPath>
+      <UpdateFromURL>http://ec.europa.eu/taxation_customs/vies/services/checkVatService.wsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Nop_Services_EuropaCheckVatService_checkVatService</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\EuropaCheckVatService\checkVatService.wsdl" />
+    <None Include="Web References\EuropaCheckVatService\matchCode.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\EuropaCheckVatService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

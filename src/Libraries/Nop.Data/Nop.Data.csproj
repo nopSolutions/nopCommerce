@@ -85,6 +85,8 @@
     <Compile Include="Mapping\Localization\LanguageMap.cs" />
     <Compile Include="Mapping\Localization\LocaleStringResourceMap.cs" />
     <Compile Include="Mapping\Configuration\SettingMap.cs" />
+    <Compile Include="Mapping\Tax\TaxProviderMap.cs" />
+    <Compile Include="Mapping\Tax\TaxCategoryMap.cs" />
     <Compile Include="NopObjectContext.cs" />
     <Compile Include="EfRepository.cs" />
     <Compile Include="IRepository.cs" />
@@ -100,6 +102,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -142,6 +142,14 @@
       <Project>{210541AD-F659-47DA-8763-16F36C5CD2F4}</Project>
       <Name>Nop.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Tax\Nop.Tax.FixedRateTaxProvider\Nop.Tax.FixedRateTaxProvider.csproj">
+      <Project>{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}</Project>
+      <Name>Nop.Tax.FixedRateTaxProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tax\Nop.Tax.FreeTaxProvider\Nop.Tax.FreeTaxProvider.csproj">
+      <Project>{FE702128-53A5-462B-A62E-14786993DE96}</Project>
+      <Name>Nop.Tax.FreeTaxProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nop.Web.Framework\Nop.Web.Framework.csproj">
       <Project>{75FD4163-333C-4DD5-854D-2EF294E45D94}</Project>
       <Name>Nop.Web.Framework</Name>

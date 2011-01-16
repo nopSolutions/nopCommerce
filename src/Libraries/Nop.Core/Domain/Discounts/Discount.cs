@@ -30,6 +30,7 @@ namespace Nop.Core.Domain.Discounts
             AppliedToCategories = new List<Category>();
             AppliedToProductVariants = new List<ProductVariant>();
         }
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -148,7 +149,6 @@ namespace Nop.Core.Domain.Discounts
             if (result < decimal.Zero)
                 result = decimal.Zero;
 
-            result = Math.Round(result, 2);
             return result;
         }
 

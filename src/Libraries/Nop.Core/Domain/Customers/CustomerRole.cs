@@ -21,6 +21,11 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class CustomerRole : BaseEntity
     {
+        public CustomerRole() 
+        {
+            this.Customers = new List<Customer>();
+        }
+
         /// <summary>
         /// Gets or sets the customer role name
         /// </summary>

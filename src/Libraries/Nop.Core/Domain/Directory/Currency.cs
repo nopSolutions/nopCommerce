@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.Directory
     /// </summary>
     public partial class Currency : BaseEntity
     {
+        public Currency() 
+        {
+            this.Customers = new List<Customer>();
+        }
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -69,7 +74,7 @@ namespace Nop.Core.Domain.Directory
         public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets customers
+        /// Gets or sets the customers
         /// </summary>
         public virtual ICollection<Customer> Customers { get; set; }
     }

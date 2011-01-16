@@ -22,6 +22,11 @@ namespace Nop.Core.Domain.Media
     /// </summary>
     public partial class Picture : BaseEntity
     {
+        public Picture()
+        {
+            ProductPictures = new List<ProductPicture>();
+        }
+
         /// <summary>
         /// Gets or sets the picture binary
         /// </summary>

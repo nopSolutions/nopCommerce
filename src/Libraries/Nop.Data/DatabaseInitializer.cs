@@ -24,6 +24,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Tax;
 
 
 namespace Nop.Data
@@ -53,6 +54,28 @@ namespace Nop.Data
                                        }
                                };
             settings.ForEach(s => context.Settings.Add(s));
+            context.SaveChanges();
+
+            #endregion
+
+            #region Tax providers
+
+            var taxProviders = new List<TaxProvider>
+                               {
+                                   new TaxProvider
+                                       {
+                                           Name = "Fixed tax rate provider",
+                                           ClassName = "Nop.Tax.FixedRateTaxProvider.FixedRateTaxProvider, Nop.Tax.FixedRateTaxProvider",
+                                           DisplayOrder = 1
+                                       },
+                                   new TaxProvider
+                                       {
+                                           Name = "Free tax rate provider",
+                                           ClassName = "Nop.Tax.FreeTaxProvider.FreeTaxProvider, Nop.Tax.FreeTaxProvider",
+                                           DisplayOrder = 2
+                                       }
+                               };
+            taxProviders.ForEach(tp => context.TaxProviders.Add(tp));
             context.SaveChanges();
 
             #endregion

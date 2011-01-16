@@ -173,7 +173,6 @@ namespace Nop.Services.Directory
                 result = ConvertToPrimaryExchangeRateCurrency(result, sourceCurrencyCode);
                 result = ConvertFromPrimaryExchangeRateCurrency(result, targetCurrencyCode);
             }
-            result = Math.Round(result, 2);
             return result;
         }
 

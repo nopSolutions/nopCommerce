@@ -22,6 +22,13 @@ namespace Nop.Core.Domain.Localization
     /// </summary>
     public partial class Language : BaseEntity
     {
+        public Language()
+        {
+            Customers = new List<Customer>();
+            LocaleStringResources = new List<LocaleStringResource>();
+            LocalizedProperties = new List<LocalizedProperty>();
+        }
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>

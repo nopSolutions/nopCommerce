@@ -21,7 +21,7 @@ namespace Nop.Services.Common
     /// <summary>
     /// Customer service interface
     /// </summary>
-    public partial interface ICustomerService
+    public partial interface IAddressService
     {
         /// <summary>
         /// Deletes an address

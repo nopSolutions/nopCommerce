@@ -28,7 +28,10 @@ namespace Nop.Data.Mapping.Customers
             this.Property(c => c.Email).IsRequired().HasMaxLength(255);
             this.Property(c => c.Username).IsRequired().HasMaxLength(255);
             this.Property(c => c.AdminComment).IsMaxLength();
-            
+
+            this.Ignore(c => c.TaxDisplayType);
+            this.Ignore(c => c.VatNumberStatus);
+
             this.HasOptional(c => c.Language)
                 .WithMany(l => l.Customers)
                 .HasForeignKey(c => c.LanguageId).WillCascadeOnDelete(false);

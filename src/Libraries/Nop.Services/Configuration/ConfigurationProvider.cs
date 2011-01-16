@@ -11,17 +11,20 @@ namespace Nop.Services.Configuration
     {
         readonly ISettingService settingService;
 
-        public ConfigurationProvider(ISettingService settingService) {
+        public ConfigurationProvider(ISettingService settingService) 
+        {
             this.settingService = settingService;
             this.BuildConfiguration();
         }
         
         public TSettings Settings { get; private set; }
 
-        private void BuildConfiguration() {
+        private void BuildConfiguration() 
+        {
             Settings = new TSettings();
 
             // get properties we can write to
+            //TODO ensure that we can convert Enum (e.g., TaxSettings.TaxBasedOn)
             var properties = from prop in typeof(TSettings).GetProperties()
                              where prop.CanWrite && prop.CanRead
                              let setting = settingService.GetSettingByKey<string>(typeof(TSettings).Name + "." + prop.Name)

@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Data.Tests
 {
@@ -25,6 +26,11 @@ namespace Nop.Data.Tests
             fromDb.Email.ShouldEqual("admin@yourStore.com");
             fromDb.Username.ShouldEqual("admin@yourStore.com");
             fromDb.AdminComment.ShouldEqual("some comment here");
+            fromDb.TaxDisplayType.ShouldEqual(TaxDisplayType.IncludingTax);
+            fromDb.IsTaxExempt.ShouldEqual(true);
+            fromDb.VatNumber.ShouldEqual("123456");
+            fromDb.VatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
+            fromDb.DiscountCouponCode.ShouldEqual("coupon1");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
@@ -179,6 +185,11 @@ namespace Nop.Data.Tests
                 Email = "admin@yourStore.com",
                 Username = "admin@yourStore.com",
                 AdminComment = "some comment here",
+                TaxDisplayType = TaxDisplayType.IncludingTax,
+                IsTaxExempt = true,
+                VatNumber = "123456",
+                VatNumberStatus = VatNumberStatus.Valid,
+                DiscountCouponCode= "coupon1",
                 Active = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),

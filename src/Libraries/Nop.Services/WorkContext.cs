@@ -24,6 +24,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Services
 {
@@ -38,6 +39,7 @@ namespace Nop.Services
         private readonly ICustomerService _customerService;
         private readonly ILanguageService _languageService;
         private readonly ICurrencyService _currencyService;
+        private readonly TaxSettings _taxSettings;
 
         private Customer _cachedCustomer;
         private string _workingTheme = "";
@@ -45,12 +47,14 @@ namespace Nop.Services
         public WorkContext(HttpContextBase httpContext,
             ICustomerService customerService,
             ILanguageService languageService,
-            ICurrencyService currencyService)
+            ICurrencyService currencyService,
+            TaxSettings taxSettings)
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
             this._languageService = languageService;
             this._currencyService = currencyService;
+            this._taxSettings = taxSettings;
         }
 
         protected Customer GetCurrentCustomer()
@@ -184,6 +188,30 @@ namespace Nop.Services
                     return;
 
                 this.CurrentCustomer.Currency = value;
+                _customerService.UpdateCustomer(this.CurrentCustomer);
+            }
+        }
+
+        /// <summary>
+        /// Get or set current tax display type
+        /// </summary>
+        public TaxDisplayType TaxDisplayType
+        {
+            get
+            {
+                if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
+                {
+                    return this.CurrentCustomer.TaxDisplayType;
+                }
+
+                return _taxSettings.TaxDisplayType;
+            }
+            set
+            {
+                if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
+                    return;
+
+                this.CurrentCustomer.TaxDisplayType = value;
                 _customerService.UpdateCustomer(this.CurrentCustomer);
             }
         }

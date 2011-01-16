@@ -24,6 +24,11 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Category : BaseEntity, ILocalizedEntity
     {
+        public Category() 
+        {
+            this.ProductCategories = new List<ProductCategory>();
+        }
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>

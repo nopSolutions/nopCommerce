@@ -33,6 +33,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Data
 {
@@ -46,6 +47,7 @@ namespace Nop.Data
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
 
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<CrossSellProduct> CrossSellProducts { get; set; }
@@ -81,9 +83,10 @@ namespace Nop.Data
         public DbSet<SpecificationAttribute> SpecificationAttributes { get; set; }
         public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
         public DbSet<StateProvince> StateProvinces { get; set; }
+        public DbSet<TaxCategory> TaxCategories { get; set; }
+        public DbSet<TaxProvider> TaxProviders { get; set; }
         public DbSet<TierPrice> TierPrices { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

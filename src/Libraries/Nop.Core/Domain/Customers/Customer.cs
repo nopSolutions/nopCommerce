@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -26,7 +27,11 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class Customer : BaseEntity
     {
-        public Customer() {
+        public Customer() 
+        {
+            this.CustomerContent = new List<CustomerContent>();
+            this.CustomerRoles = new List<CustomerRole>();
+            this.CustomerAttributes = new List<CustomerAttribute>();
             this.Addresses = new List<Address>();
         }
         
@@ -61,6 +66,26 @@ namespace Nop.Core.Domain.Customers
         public int? CurrencyId { get; set; }
 
         /// <summary>
+        /// Gets or sets the tax display type identifier
+        /// </summary>
+        public int TaxDisplayTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the customer is tax exempt
+        /// </summary>
+        public bool IsTaxExempt { get; set; }
+
+        /// <summary>
+        /// Gets or sets a VAT number
+        /// </summary>
+        public string VatNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the VAT number status identifier
+        /// </summary>
+        public int VatNumberStatusId { get; set; }
+
+        /// <summary>
         /// Gets or sets the applied discount coupon code
         /// </summary>
         public string DiscountCouponCode { get; set; }
@@ -84,7 +109,38 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the date and time of last activity
         /// </summary>
         public DateTime? LastActivityDateUtc { get; set; }
+        
+        /// <summary>
+        /// Gets the tax display type
+        /// </summary>
+        public TaxDisplayType TaxDisplayType
+        {
+            get
+            {
+                return (TaxDisplayType)this.TaxDisplayTypeId;
+            }
+            set
+            {
+                this.TaxDisplayTypeId = (int)value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets the VAT number status
+        /// </summary>
+        public VatNumberStatus VatNumberStatus
+        {
+            get
+            {
+                return (VatNumberStatus)this.VatNumberStatusId;
+            }
+            set
+            {
+                this.VatNumberStatusId = (int)value;
+            }
+        }
 
+        
         /// <summary>
         /// Gets or sets the language
         /// </summary>

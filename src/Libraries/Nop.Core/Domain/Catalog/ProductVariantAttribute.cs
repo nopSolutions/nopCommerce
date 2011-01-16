@@ -22,6 +22,11 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductVariantAttribute : BaseEntity, ILocalizedEntity
     {
+        public ProductVariantAttribute() 
+        {
+            this.ProductVariantAttributeValues = new List<ProductVariantAttributeValue>();
+        }
+
         /// <summary>
         /// Gets or sets the product variant identifier
         /// </summary>

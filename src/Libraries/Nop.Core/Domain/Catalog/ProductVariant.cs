@@ -24,6 +24,13 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductVariant : BaseEntity, ILocalizedEntity
     {
+        public ProductVariant() 
+        {
+            this.ProductVariantAttributes = new List<ProductVariantAttribute>();
+            this.ProductVariantAttributeCombinations = new List<ProductVariantAttributeCombination>();
+            this.TierPrices = new List<TierPrice>();
+        }
+
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>

@@ -24,6 +24,17 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Product : BaseEntity, ILocalizedEntity
     {
+        public Product() 
+        {
+            this.ProductVariants = new List<ProductVariant>();
+            this.ProductCategories = new List<ProductCategory>();
+            this.ProductManufacturers = new List<ProductManufacturer>();
+            this.ProductPictures = new List<ProductPicture>();
+            this.ProductRatings = new List<ProductRating>();
+            this.ProductReviews = new List<ProductReview>();
+            this.ProductSpecificationAttributes = new List<ProductSpecificationAttribute>();
+        }
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>

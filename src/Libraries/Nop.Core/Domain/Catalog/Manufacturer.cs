@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Manufacturer : BaseEntity, ILocalizedEntity
     {
+        public Manufacturer() 
+        {
+            this.ProductManufacturers = new List<ProductManufacturer>();
+        }
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>

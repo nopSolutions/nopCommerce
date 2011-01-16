@@ -24,6 +24,11 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class SpecificationAttributeOption : BaseEntity, ILocalizedEntity
     {
+        public SpecificationAttributeOption() 
+        {
+            this.ProductSpecificationAttributes = new List<ProductSpecificationAttribute>();
+        }
+
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>

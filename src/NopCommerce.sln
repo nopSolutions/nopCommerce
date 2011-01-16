@@ -25,6 +25,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Tests", "Tests\Nop.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Web.MVC", "Presentation\Nop.Web.MVC\Nop.Web.MVC.csproj", "{4341F4DD-D603-45E6-8F48-F6394DA13696}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tax", "Tax", "{5A163323-210C-4453-910C-342B8EC265F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Tax.FreeTaxProvider", "Tax\Nop.Tax.FreeTaxProvider\Nop.Tax.FreeTaxProvider.csproj", "{FE702128-53A5-462B-A62E-14786993DE96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Tax.FixedRateTaxProvider", "Tax\Nop.Tax.FixedRateTaxProvider\Nop.Tax.FixedRateTaxProvider.csproj", "{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +131,26 @@ Global
 		{4341F4DD-D603-45E6-8F48-F6394DA13696}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4341F4DD-D603-45E6-8F48-F6394DA13696}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4341F4DD-D603-45E6-8F48-F6394DA13696}.Release|x86.ActiveCfg = Release|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FE702128-53A5-462B-A62E-14786993DE96}.Release|x86.ActiveCfg = Release|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,5 +165,7 @@ Global
 		{5DCBE5B1-1A02-48E7-9853-5FCEF2A36805} = {A340B280-C12B-47E7-90B7-89C650F8AAFC}
 		{7A9BDC6A-F880-43D5-9B2A-59C1674CE449} = {A340B280-C12B-47E7-90B7-89C650F8AAFC}
 		{1D9EB579-3630-468A-BE94-49E7DF4F6E1D} = {A340B280-C12B-47E7-90B7-89C650F8AAFC}
+		{FE702128-53A5-462B-A62E-14786993DE96} = {5A163323-210C-4453-910C-342B8EC265F5}
+		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F} = {5A163323-210C-4453-910C-342B8EC265F5}
 	EndGlobalSection
 EndGlobal
