@@ -26,7 +26,8 @@ namespace Nop.Data.Mapping.Discounts
             this.HasKey(dr => dr.Id);
             
             this.HasMany(dr => dr.RestrictedToCustomerRoles)
-                .WithMany().Map(m => m.ToTable("DiscountRequirement_RestrictedToCustomerRoles"));
+                .WithMany()
+                .Map(m => m.ToTable("DiscountRequirement_RestrictedToCustomerRoles"));
         }
     }
 }

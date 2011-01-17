@@ -27,15 +27,6 @@ namespace Nop.Data.Mapping.Customers
             this.Property(cr => cr.Name).IsRequired().HasMaxLength(255);
             this.Property(cr => cr.SystemName).IsRequired().HasMaxLength(255);
 
-            //this.HasMany(cr => cr.Customers)
-            //    .WithMany(c => c.CustomerRoles)
-            //    .Map(m =>
-            //    {
-            //        m.ToTable("Customer_CustomerRole_Mapping");
-            //        m.MapLeftKey(cr => cr.Id, "FkToCustomerRoleId");
-            //        m.MapRightKey(c => c.Id, "FkToCustomerId");
-            //    });
-
             this.HasMany(cr => cr.Customers)
                 .WithMany(c => c.CustomerRoles)
                 .Map(m => m.ToTable("Customer_CustomerRole_Mapping"));

@@ -41,7 +41,9 @@ namespace Nop.Data.Mapping.Customers
                 .WithMany(cur => cur.Customers)
                 .HasForeignKey(c => c.CurrencyId).WillCascadeOnDelete(false);
 
-            this.HasMany<Address>(c => c.Addresses).WithMany().Map(m => m.ToTable("CustomerAddresses"));
+            this.HasMany<Address>(c => c.Addresses)
+                .WithMany()
+                .Map(m => m.ToTable("CustomerAddresses"));
             this.HasOptional<Address>(c => c.BillingAddress);
             this.HasOptional<Address>(c => c.ShippingAddress);
         }
