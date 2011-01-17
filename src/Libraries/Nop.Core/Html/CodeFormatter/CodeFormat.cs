@@ -105,7 +105,7 @@ namespace Nop.Core.Html.CodeFormatter
 			}
 
 			//build a master regex with capturing groups
-			StringBuilder regAll = new StringBuilder();
+            var regAll = new StringBuilder();
 			regAll.Append("(");
 			regAll.Append(CommentRegex);
 			regAll.Append(")|(");
@@ -134,9 +134,9 @@ namespace Nop.Core.Html.CodeFormatter
 		{
 			if(match.Groups[1].Success) //comment
 			{
-				StringReader reader = new StringReader(match.ToString());
+                var reader = new StringReader(match.ToString());
 				string line;
-				StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
 				while ((line = reader.ReadLine()) != null)
 				{
 					if(sb.Length > 0)

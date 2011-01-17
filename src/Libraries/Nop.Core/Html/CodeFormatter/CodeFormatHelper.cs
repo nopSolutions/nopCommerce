@@ -26,8 +26,8 @@ namespace Nop.Core.Html.CodeFormatter
     {
         #region Fields
         //private static Regex regexCode1 = new Regex(@"(?<begin>\[code:(?<lang>.*?)(?:;ln=(?<linenumbers>(?:on|off)))?(?:;alt=(?<altlinenumbers>(?:on|off)))?(?:;(?<title>.*?))?\])(?<code>.*?)(?<end>\[/code\])", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private static Regex regexHtml = new Regex("<[^>]*>", RegexOptions.Compiled);
-        private static readonly Regex regexCode2 = new Regex(@"\[code\](?<inner>(.*?))\[/code\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly static Regex regexHtml = new Regex("<[^>]*>", RegexOptions.Compiled);
+        private readonly static Regex regexCode2 = new Regex(@"\[code\](?<inner>(.*?))\[/code\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         #endregion
 
         #region Utilities
@@ -42,7 +42,7 @@ namespace Nop.Core.Html.CodeFormatter
             if (!match.Success)
                 return match.Value;
 
-            HighlightOptions options = new HighlightOptions();
+            var options = new HighlightOptions();
 
             options.Language = match.Groups["lang"].Value;
             options.Code = match.Groups["code"].Value;
@@ -67,7 +67,7 @@ namespace Nop.Core.Html.CodeFormatter
             if (!match.Success)
                 return match.Value;
 
-            HighlightOptions options = new HighlightOptions();
+            var options = new HighlightOptions();
 
             options.Language = "c#";
             options.Code = match.Groups["inner"].Value;
@@ -105,25 +105,25 @@ namespace Nop.Core.Html.CodeFormatter
             switch (options.Language)
             {
                 case "c#":
-                    CSharpFormat csf = new CSharpFormat();
+                    var csf = new CSharpFormat();
                     csf.LineNumbers = options.DisplayLineNumbers;
                     csf.Alternate = options.AlternateLineNumbers;
                     return HttpUtility.HtmlDecode(csf.FormatCode(text));
 
                 case "vb":
-                    VisualBasicFormat vbf = new VisualBasicFormat();
+                    var vbf = new VisualBasicFormat();
                     vbf.LineNumbers = options.DisplayLineNumbers;
                     vbf.Alternate = options.AlternateLineNumbers;
                     return vbf.FormatCode(text);
 
                 case "js":
-                    JavaScriptFormat jsf = new JavaScriptFormat();
+                    var jsf = new JavaScriptFormat();
                     jsf.LineNumbers = options.DisplayLineNumbers;
                     jsf.Alternate = options.AlternateLineNumbers;
                     return HttpUtility.HtmlDecode(jsf.FormatCode(text));
 
                 case "html":
-                    HtmlFormat htmlf = new HtmlFormat();
+                    var htmlf = new HtmlFormat();
                     htmlf.LineNumbers = options.DisplayLineNumbers;
                     htmlf.Alternate = options.AlternateLineNumbers;
                     text = StripHtml(text).Trim();
@@ -131,7 +131,7 @@ namespace Nop.Core.Html.CodeFormatter
                     return code.Replace("\r\n", "<br />").Replace("\n", "<br />");
 
                 case "xml":
-                    HtmlFormat xmlf = new HtmlFormat();
+                    var xmlf = new HtmlFormat();
                     xmlf.LineNumbers = options.DisplayLineNumbers;
                     xmlf.Alternate = options.AlternateLineNumbers;
                     text = text.Replace("<br />", "\r\n");
@@ -140,13 +140,13 @@ namespace Nop.Core.Html.CodeFormatter
                     return xml.Replace("\r\n", "<br />").Replace("\n", "<br />");
 
                 case "tsql":
-                    TsqlFormat tsqlf = new TsqlFormat();
+                    var tsqlf = new TsqlFormat();
                     tsqlf.LineNumbers = options.DisplayLineNumbers;
                     tsqlf.Alternate = options.AlternateLineNumbers;
                     return HttpUtility.HtmlDecode(tsqlf.FormatCode(text));
 
                 case "msh":
-                    MshFormat mshf = new MshFormat();
+                    var mshf = new MshFormat();
                     mshf.LineNumbers = options.DisplayLineNumbers;
                     mshf.Alternate = options.AlternateLineNumbers;
                     return HttpUtility.HtmlDecode(mshf.FormatCode(text));

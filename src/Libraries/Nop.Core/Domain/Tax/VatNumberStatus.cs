@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Tax
     /// <summary>
     /// Represents the VAT number status enumeration
     /// </summary>
-    public enum VatNumberStatus : int
+    public enum VatNumberStatus
     {
         /// <summary>
         /// Unknown

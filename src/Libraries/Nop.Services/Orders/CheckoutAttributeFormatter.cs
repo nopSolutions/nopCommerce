@@ -29,7 +29,7 @@ namespace Nop.Services.Orders
     /// <summary>
     /// Checkout attribute helper
     /// </summary>
-    public class CheckoutAttributeFormatter
+    public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
     {
         private readonly IWorkContext _workContext;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
@@ -61,33 +61,7 @@ namespace Nop.Services.Orders
         public string FormatAttributes(string attributes)
         {
             var customer = _workContext.CurrentCustomer;
-            return FormatAttributes(attributes, customer, "<br />");
-        }
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="attributes">Attributes</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="serapator">Serapator</param>
-        /// <returns>Attributes</returns>
-        public string FormatAttributes(string attributes, Customer customer, string serapator)
-        {
-            return FormatAttributes(attributes, customer, serapator, true);
-        }
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="attributes">Attributes</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="serapator">Serapator</param>
-        /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
-        /// <returns>Attributes</returns>
-        public string FormatAttributes(string attributes,
-            Customer customer, string serapator, bool htmlEncode)
-        {
-            return FormatAttributes(attributes, customer, serapator, htmlEncode, true);
+            return FormatAttributes(attributes, customer);
         }
 
         /// <summary>
@@ -100,7 +74,10 @@ namespace Nop.Services.Orders
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <returns>Attributes</returns>
         public string FormatAttributes(string attributes,
-            Customer customer, string serapator, bool htmlEncode, bool renderPrices)
+            Customer customer, 
+            string serapator = "<br />", 
+            bool htmlEncode = true, 
+            bool renderPrices = true)
         {
             var result = new StringBuilder();
 

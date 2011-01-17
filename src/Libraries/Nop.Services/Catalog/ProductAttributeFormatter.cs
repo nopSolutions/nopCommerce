@@ -64,54 +64,9 @@ namespace Nop.Services.Catalog
         public string FormatAttributes(ProductVariant productVariant, string attributes)
         {
             var customer = _workContext.CurrentCustomer;
-            return FormatAttributes(productVariant, attributes, customer, "<br />");
+            return FormatAttributes(productVariant, attributes, customer);
         }
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="attributes">Attributes</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="serapator">Serapator</param>
-        /// <returns>Attributes</returns>
-        public string FormatAttributes(ProductVariant productVariant, string attributes,
-            Customer customer, string serapator)
-        {
-            return FormatAttributes(productVariant, attributes, customer, serapator, true);
-        }
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="attributes">Attributes</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="serapator">Serapator</param>
-        /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
-        /// <returns>Attributes</returns>
-        public string FormatAttributes(ProductVariant productVariant, string attributes,
-            Customer customer, string serapator, bool htmlEncode)
-        {
-            return FormatAttributes(productVariant, attributes, customer, serapator, htmlEncode, true);
-        }
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="attributes">Attributes</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="serapator">Serapator</param>
-        /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
-        /// <param name="renderPrices">A value indicating whether to render prices</param>
-        /// <returns>Attributes</returns>
-        public string FormatAttributes(ProductVariant productVariant, string attributes,
-            Customer customer, string serapator, bool htmlEncode, bool renderPrices)
-        {
-            return FormatAttributes(productVariant, attributes, customer, serapator, htmlEncode, renderPrices, true, true);
-        }
-
+        
         /// <summary>
         /// Formats attributes
         /// </summary>
@@ -125,8 +80,8 @@ namespace Nop.Services.Catalog
         /// <param name="renderGiftCardAttributes">A value indicating whether to render gift card attributes</param>
         /// <returns>Attributes</returns>
         public string FormatAttributes(ProductVariant productVariant, string attributes,
-            Customer customer, string serapator, bool htmlEncode, bool renderPrices,
-            bool renderProductAttributes, bool renderGiftCardAttributes)
+            Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
+            bool renderProductAttributes = true, bool renderGiftCardAttributes = true)
         {
             var result = new StringBuilder();
 

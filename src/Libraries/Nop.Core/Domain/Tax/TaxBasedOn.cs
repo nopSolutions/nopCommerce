@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Tax
     /// <summary>
     /// Represents the tax based on
     /// </summary>
-    public enum TaxBasedOn : int
+    public enum TaxBasedOn
     {
         /// <summary>
         /// Billing address

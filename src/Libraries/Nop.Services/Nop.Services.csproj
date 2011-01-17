@@ -82,6 +82,7 @@
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\CheckoutAttributeParser.cs" />
     <Compile Include="Orders\CheckoutAttributeService.cs" />
+    <Compile Include="Orders\ICheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\ICheckoutAttributeParser.cs" />
     <Compile Include="Orders\ICheckoutAttributeService.cs" />
     <Compile Include="Orders\CheckoutAttributeExtensions.cs" />

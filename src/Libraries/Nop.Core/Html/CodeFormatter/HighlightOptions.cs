@@ -20,48 +20,11 @@ namespace Nop.Core.Html.CodeFormatter
     /// </summary>
     public partial class HighlightOptions
     {
-        private string language, title, code;
-        private bool displayLineNumbers;
-        private bool alternateLineNumbers;
-
-        public HighlightOptions()
-        {
-        }
-
-        public HighlightOptions(string language, string title, bool linenumbers, string code, bool alternateLineNumbers)
-        {
-            this.language = language;
-            this.title = title;
-            this.alternateLineNumbers = alternateLineNumbers;
-            this.code = code;
-            this.displayLineNumbers = linenumbers;
-        }
-
-        public string Code
-        {
-            get { return code; }
-            set { code = value; }
-        }
-        public bool DisplayLineNumbers
-        {
-            get { return displayLineNumbers; }
-            set { displayLineNumbers = value; }
-        }
-        public string Language
-        {
-            get { return language; }
-            set { language = value; }
-        }
-        public string Title
-        {
-            get { return title; }
-            set { title = value; }
-        }
-        public bool AlternateLineNumbers
-        {
-            get { return alternateLineNumbers; }
-            set { alternateLineNumbers = value; }
-        }
+        public string Code { get; set; }
+        public bool DisplayLineNumbers { get; set; }
+        public string Language { get; set; }
+        public string Title { get; set; }
+        public bool AlternateLineNumbers { get; set; }
     }
 }
 

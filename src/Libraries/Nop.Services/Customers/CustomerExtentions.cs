@@ -38,7 +38,7 @@ namespace Nop.Services.Customers
             if (!TypeDescriptor.GetConverter(typeof(T)).CanConvertFrom(typeof(string)))
                 throw new NopException("Not supported customer attribute type");
 
-            T attributeValue = (T)(TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(customerAttribute.Value));
+            var attributeValue = (T)(TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(customerAttribute.Value));
             return attributeValue;
         }
     }

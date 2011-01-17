@@ -118,7 +118,7 @@ namespace Nop.Core.Html.CodeFormatter
 		/// <returns>A string containing the HTML formatted code.</returns>
 		public string FormatCode(Stream source)
 		{
-			StreamReader reader = new StreamReader(source);
+            var reader = new StreamReader(source);
 			string s = reader.ReadToEnd();
 			reader.Close();
 			return FormatCode(s, _lineNumbers, _alternate, _embedStyleSheet, false);
@@ -158,7 +158,7 @@ namespace Nop.Core.Html.CodeFormatter
 		/// <returns>A string containing the CSS definitions.</returns>
 		public static string GetCssString()
 		{
-			StreamReader reader = new StreamReader(GetCssStream());
+            var reader = new StreamReader(GetCssStream());
 			return reader.ReadToEnd();
 		}
 
@@ -187,7 +187,7 @@ namespace Nop.Core.Html.CodeFormatter
 			bool alternate, bool embedStyleSheet, bool subCode)
 		{
 			//replace special characters
-			StringBuilder sb = new StringBuilder(source);
+            var sb = new StringBuilder(source);
 
 			if(!subCode)
 			{
@@ -213,7 +213,7 @@ namespace Nop.Core.Html.CodeFormatter
 			{
 				if(!subCode)
 					sb.Append("<div class=\"csharpcode\">\n");
-				StringReader reader = new StringReader(source);
+                var reader = new StringReader(source);
 				int i = 0;
 				string spaces = "    ";
 				int order;

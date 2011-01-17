@@ -25,8 +25,8 @@ namespace Nop.Core.Html
     public partial class HtmlHelper
     {
         #region Fields
-        private static Regex paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
-        private static Regex paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);
+        private readonly static Regex paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
+        private readonly static Regex paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);
         //private static Regex ampRegex = new Regex("&(?!(?:#[0-9]{2,4};|[a-z0-9]+;))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #endregion
@@ -62,7 +62,7 @@ namespace Nop.Core.Html
             if (tag.IndexOf("vbscript") >= 0) return false;
             if (tag.IndexOf("onclick") >= 0) return false;
 
-            char[] endchars = new char[] { ' ', '>', '/', '\t' };
+            var endchars = new char[] { ' ', '>', '/', '\t' };
 
             int pos = tag.IndexOfAny(endchars, 1);
             if (pos > 0) tag = tag.Substring(0, pos);
@@ -175,24 +175,14 @@ namespace Nop.Core.Html
 
             return text;
         }
-
-        /// <summary>
-        /// Converts HTML to plain text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public static string ConvertHtmlToPlainText(string text)
-        {
-            return ConvertHtmlToPlainText(text, false);
-        }
-
+        
         /// <summary>
         /// Converts HTML to plain text
         /// </summary>
         /// <param name="text">Text</param>
         /// <param name="decode">A value indicating whether to decode text</param>
         /// <returns>Formatted text</returns>
-        public static string ConvertHtmlToPlainText(string text, bool decode)
+        public static string ConvertHtmlToPlainText(string text, bool decode = false)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;

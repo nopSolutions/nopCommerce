@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Discounts
     /// <summary>
     /// Represents a discount limitation
     /// </summary>
-    public enum DiscountLimitationType : int
+    public enum DiscountLimitationType
     {
         /// <summary>
         /// None

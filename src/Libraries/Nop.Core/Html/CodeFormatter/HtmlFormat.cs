@@ -38,9 +38,9 @@ namespace Nop.Core.Html.CodeFormatter
 	/// </remarks>
     public partial class HtmlFormat : SourceFormat
 	{
-		private CSharpFormat csf; //to format embedded C# code
-		private JavaScriptFormat jsf; //to format client-side JavaScript code
-		private Regex attribRegex;
+		private readonly CSharpFormat csf; //to format embedded C# code
+        private readonly JavaScriptFormat jsf; //to format client-side JavaScript code
+        private readonly Regex attribRegex;
 
 		/// <summary/>
 		public HtmlFormat()
@@ -102,9 +102,9 @@ namespace Nop.Core.Html.CodeFormatter
 			}
 			if(match.Groups[2].Success) //comment
 			{
-				StringReader reader = new StringReader(match.ToString());
+                var reader = new StringReader(match.ToString());
 				string line;
-				StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
 				while ((line = reader.ReadLine()) != null)
 				{
 					if(sb.Length > 0)

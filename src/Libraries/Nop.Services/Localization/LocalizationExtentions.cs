@@ -26,22 +26,15 @@ namespace Nop.Services.Localization
             Expression<Func<T, string>> keySelector)
             where T : BaseEntity, ILocalizedEntity
         {
-            return GetLocalized(entity, keySelector, true);
-        }
-
-        public static string GetLocalized<T>(this T entity,
-            Expression<Func<T, string>> keySelector,
-            bool returnDefaultValue) where T : BaseEntity, ILocalizedEntity
-        {
             //TODO: set language id (IWorkingContext)
             int languageId = 1;
-            return GetLocalized(entity, keySelector, returnDefaultValue, languageId);
+            return GetLocalized(entity, keySelector, languageId);
         }
 
         public static string GetLocalized<T>(this T entity,
             Expression<Func<T, string>> keySelector,
-            bool returnDefaultValue, 
-            int languageId) where T : BaseEntity, ILocalizedEntity
+            int languageId,
+            bool returnDefaultValue = true) where T : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");

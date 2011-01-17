@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Discounts
     /// <summary>
     /// Represents a discount type
     /// </summary>
-    public enum DiscountType : int
+    public enum DiscountType
     {
         /// <summary>
         /// Assigned to order total 

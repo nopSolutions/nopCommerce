@@ -90,36 +90,11 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Preferred discount</returns>
-        protected Discount GetPreferredDiscount(ProductVariant productVariant,
-            Customer customer)
-        {
-            return GetPreferredDiscount(productVariant, customer, decimal.Zero);
-        }
-
-        /// <summary>
-        /// Gets a preferred discount
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="additionalCharge">Additional charge</param>
-        /// <returns>Preferred discount</returns>
-        protected Discount GetPreferredDiscount(ProductVariant productVariant,
-            Customer customer, decimal additionalCharge)
-        {
-            return GetPreferredDiscount(productVariant, customer, additionalCharge, 1);
-        }
-
-        /// <summary>
-        /// Gets a preferred discount
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="customer">Customer</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="quantity">Product quantity</param>
         /// <returns>Preferred discount</returns>
         protected Discount GetPreferredDiscount(ProductVariant productVariant,
-            Customer customer, decimal additionalCharge, int quantity)
+            Customer customer, decimal additionalCharge = decimal.Zero, int quantity = 1)
         {
             var allowedDiscounts = GetAllowedDiscounts(productVariant, customer);
             decimal finalPriceWithoutDiscount = GetFinalPrice(productVariant, customer, additionalCharge, false, quantity);
