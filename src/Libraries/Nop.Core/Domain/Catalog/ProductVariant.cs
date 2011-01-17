@@ -14,8 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Discounts;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -29,6 +29,7 @@ namespace Nop.Core.Domain.Catalog
             this.ProductVariantAttributes = new List<ProductVariantAttribute>();
             this.ProductVariantAttributeCombinations = new List<ProductVariantAttributeCombination>();
             this.TierPrices = new List<TierPrice>();
+            this.AppliedDiscounts = new List<Discount>();
         }
 
         /// <summary>
@@ -430,5 +431,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the tier prices
         /// </summary>
         public virtual ICollection<TierPrice> TierPrices { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of applied discounts
+        /// </summary>
+        public virtual ICollection<Discount> AppliedDiscounts { get; set; }
     }
 }

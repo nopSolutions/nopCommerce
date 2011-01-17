@@ -12,8 +12,10 @@
 // Contributor(s): planetcloud (http://www.planetcloud.co.uk). 
 //------------------------------------------------------------------------------
 
-namespace Nop.Core.Domain.Security { 
-    public enum PasswordFormat {
+namespace Nop.Core.Domain.Security 
+{ 
+    public enum PasswordFormat 
+    {
         Clear = 0,
         Hashed = 1,
         Encrypted = 2

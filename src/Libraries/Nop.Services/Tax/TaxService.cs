@@ -13,15 +13,14 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Tax;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Common;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 
 namespace Nop.Services.Tax
@@ -126,7 +125,7 @@ namespace Nop.Services.Tax
                 // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
                 return address.CountryId != _taxSettings.EuVatShopCountryId &&
                     customer.VatNumberStatus == VatNumberStatus.Valid &&
-                    _taxSettings.EuVatAllowVATExemption;
+                    _taxSettings.EuVatAllowVatExemption;
             }
         }
 
@@ -329,6 +328,8 @@ namespace Nop.Services.Tax
                 return decimal.Zero;
         }
         
+
+
         /// <summary>
         /// Gets price
         /// </summary>
@@ -423,6 +424,210 @@ namespace Nop.Services.Tax
 
             return price;
         }
+
+
+
+
+        /// <summary>
+        /// Gets shipping price
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Price</returns>
+        public decimal GetShippingPrice(decimal price, Customer customer)
+        {
+            bool includingTax = false;
+            switch (_workContext.TaxDisplayType)
+            {
+                case TaxDisplayType.ExcludingTax:
+                    includingTax = false;
+                    break;
+                case TaxDisplayType.IncludingTax:
+                    includingTax = true;
+                    break;
+            }
+            return GetShippingPrice(price, includingTax, customer);
+        }
+
+        /// <summary>
+        /// Gets shipping price
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Price</returns>
+        public decimal GetShippingPrice(decimal price, bool includingTax, Customer customer)
+        {
+            decimal taxRate = decimal.Zero;
+            return GetShippingPrice(price, includingTax, customer, out taxRate);
+        }
+
+        /// <summary>
+        /// Gets shipping price
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
+        /// <returns>Price</returns>
+        public decimal GetShippingPrice(decimal price, bool includingTax,
+            Customer customer, out decimal taxRate)
+        {
+            taxRate = decimal.Zero;
+
+            if (!_taxSettings.ShippingIsTaxable)
+            {
+                return price;
+            }
+            int taxClassId = _taxSettings.ShippingTaxClassId;
+            bool priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
+            return GetProductPrice(null, taxClassId, price, includingTax, customer,
+                priceIncludesTax, out taxRate);
+        }
+
+
+
+
+
+        /// <summary>
+        /// Gets payment method additional handling fee
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Price</returns>
+        public decimal GetPaymentMethodAdditionalFee(decimal price, Customer customer)
+        {
+            bool includingTax = false;
+            switch (_workContext.TaxDisplayType)
+            {
+                case TaxDisplayType.ExcludingTax:
+                    includingTax = false;
+                    break;
+                case TaxDisplayType.IncludingTax:
+                    includingTax = true;
+                    break;
+            }
+            return GetPaymentMethodAdditionalFee(price, includingTax, customer);
+        }
+
+        /// <summary>
+        /// Gets payment method additional handling fee
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Price</returns>
+        public decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer)
+        {
+            decimal taxRate = decimal.Zero;
+            return GetPaymentMethodAdditionalFee(price, includingTax,
+                customer, out taxRate);
+        }
+
+        /// <summary>
+        /// Gets payment method additional handling fee
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
+        /// <returns>Price</returns>
+        public decimal GetPaymentMethodAdditionalFee(decimal price,
+            bool includingTax, Customer customer, out decimal taxRate)
+        {
+            taxRate = decimal.Zero;
+
+            if (!_taxSettings.PaymentMethodAdditionalFeeIsTaxable)
+            {
+                return price;
+            }
+            int taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
+            bool priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
+            return GetProductPrice(null, taxClassId, price, includingTax, customer,
+                priceIncludesTax, out taxRate);
+        }
+
+
+
+
+
+        /// <summary>
+        /// Gets checkout attribute value price
+        /// </summary>
+        /// <param name="cav">Checkout attribute value</param>
+        /// <returns>Price</returns>
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav)
+        {
+            var customer = _workContext.CurrentCustomer;
+            return GetCheckoutAttributePrice(cav, customer);
+        }
+
+        /// <summary>
+        /// Gets checkout attribute value price
+        /// </summary>
+        /// <param name="cav">Checkout attribute value</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Price</returns>
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer)
+        {
+            bool includingTax = false;
+            switch (_workContext.TaxDisplayType)
+            {
+                case TaxDisplayType.ExcludingTax:
+                    includingTax = false;
+                    break;
+                case TaxDisplayType.IncludingTax:
+                    includingTax = true;
+                    break;
+            }
+            return GetCheckoutAttributePrice(cav, includingTax, customer);
+        }
+
+        /// <summary>
+        /// Gets checkout attribute value price
+        /// </summary>
+        /// <param name="cav">Checkout attribute value</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Price</returns>
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+            bool includingTax, Customer customer)
+        {
+            decimal taxRate = decimal.Zero;
+            return GetCheckoutAttributePrice(cav, includingTax, customer, out taxRate);
+        }
+
+        /// <summary>
+        /// Gets checkout attribute value price
+        /// </summary>
+        /// <param name="cav">Checkout attribute value</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
+        /// <returns>Price</returns>
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+            bool includingTax, Customer customer, out decimal taxRate)
+        {
+            if (cav == null)
+                throw new ArgumentNullException("cav");
+
+            taxRate = decimal.Zero;
+
+            decimal price = cav.PriceAdjustment;
+            if (cav.CheckoutAttribute.IsTaxExempt)
+            {
+                return price;
+            }
+
+            bool priceIncludesTax = _taxSettings.PricesIncludeTax;
+            int taxClassId = cav.CheckoutAttribute.TaxCategoryId;
+            return GetProductPrice(null, taxClassId, price, includingTax, customer,
+                priceIncludesTax, out taxRate);
+        }
+
+
+
+
 
         /// <summary>
         /// Gets VAT Number status

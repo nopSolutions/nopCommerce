@@ -12,13 +12,11 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using Nop.Core.Domain.Localization;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.Localization
 {

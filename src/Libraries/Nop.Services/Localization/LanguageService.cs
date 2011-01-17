@@ -15,10 +15,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Data;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
-using Nop.Core;
+using Nop.Data;
 
 namespace Nop.Services.Localization
 {

@@ -12,12 +12,10 @@
 // Contributor(s): planetcloud (http://www.planetcloud.co.uk). 
 //------------------------------------------------------------------------------
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Nop.Data;
-using Nop.Core.Domain.Security;
 using Nop.Core;
+using Nop.Core.Domain.Security;
+using Nop.Data;
 
 namespace Nop.Services.Security
 {

@@ -12,6 +12,7 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using Nop.Core.Domain.Customers;
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
@@ -23,6 +24,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the product variant identifier
         /// </summary>
         public int ProductVariantId { get; set; }
+        /// <summary>
+        /// Gets or sets the customer role identifier
+        /// </summary>
+        public int? CustomerRoleId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
@@ -39,7 +44,9 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual ProductVariant ProductVariant { get; set; }
 
-        //TODO: combine TierPrice and PriceByCustomerRole here in a single class
-        //add nullable CustomerRoleId property (optional)
+        /// <summary>
+        /// Gets or sets the customer role
+        /// </summary>
+        public virtual CustomerRole CustomerRole { get; set; }
     }
 }

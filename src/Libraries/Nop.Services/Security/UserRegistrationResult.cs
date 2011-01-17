@@ -11,10 +11,7 @@
 // 
 // Contributor(s): planetcloud (http://www.planetcloud.co.uk). 
 //------------------------------------------------------------------------------
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security 

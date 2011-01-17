@@ -12,8 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Common

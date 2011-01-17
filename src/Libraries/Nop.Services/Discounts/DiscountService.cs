@@ -42,8 +42,6 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Ctor
-
-        #region Ctor
         
         /// <summary>
         /// Ctor
@@ -56,8 +54,6 @@ namespace Nop.Services.Discounts
             this._cacheManager = cacheManager;
             this._discountRepository = discountRepository;
         }
-
-        #endregion
 
         #endregion
 
@@ -297,6 +293,31 @@ namespace Nop.Services.Discounts
             }
             return true;
         }
+
+        /// <summary>
+        /// Gets a preferred discount
+        /// </summary>
+        /// <param name="discounts">Discounts to analyze</param>
+        /// <param name="amount">Amount</param>
+        /// <returns>Preferred discount</returns>
+        public Discount GetPreferredDiscount(IList<Discount> discounts,
+            decimal amount)
+        {
+            Discount preferredDiscount = null;
+            decimal maximumDiscountValue = decimal.Zero;
+            foreach (var discount in discounts)
+            {
+                decimal currentDiscountValue = discount.GetDiscountAmount(amount);
+                if (currentDiscountValue > maximumDiscountValue)
+                {
+                    maximumDiscountValue = currentDiscountValue;
+                    preferredDiscount = discount;
+                }
+            }
+
+            return preferredDiscount;
+        }
+
         #endregion
     }
 }

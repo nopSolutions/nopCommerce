@@ -34,10 +34,12 @@ namespace Nop.Data.Mapping.Discounts
                 .HasForeignKey(dr => dr.DiscountId);
 
             this.HasMany(dr => dr.AppliedToCategories)
-                .WithMany().Map(m=>m.ToTable("Discount_AppliedToCategories"));
+                .WithMany(c => c.AppliedDiscounts)
+                .Map(m => m.ToTable("Discount_AppliedToCategories"));
             
             this.HasMany(dr => dr.AppliedToProductVariants)
-                .WithMany().Map(m => m.ToTable("Discount_AppliedToProductVariants"));
+                .WithMany(pv => pv.AppliedDiscounts)
+                .Map(m => m.ToTable("Discount_AppliedToProductVariants"));
         }
     }
 }

@@ -12,9 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog

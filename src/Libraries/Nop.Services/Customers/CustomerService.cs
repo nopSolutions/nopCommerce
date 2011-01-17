@@ -14,14 +14,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Web;
 using Nop.Core;
-using Nop.Core.Domain;
-using Nop.Data;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
-using System.ComponentModel;
+using Nop.Data;
 
 namespace Nop.Services.Customers
 {

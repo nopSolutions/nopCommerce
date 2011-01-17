@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using Nop.Core.Configuration;
-using System.ComponentModel;
 
 namespace Nop.Services.Configuration
 {

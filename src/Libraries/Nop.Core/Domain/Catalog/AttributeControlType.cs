@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents an attribute control type
     /// </summary>
-    public enum AttributeControlTypeEnum
+    public enum AttributeControlType
     {
         /// <summary>
         /// Dropdown list

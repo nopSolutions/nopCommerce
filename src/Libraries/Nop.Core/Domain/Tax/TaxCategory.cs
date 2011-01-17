@@ -11,9 +11,6 @@
 // 
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
-
-using System;
-
 namespace Nop.Core.Domain.Tax
 {
     /// <summary>

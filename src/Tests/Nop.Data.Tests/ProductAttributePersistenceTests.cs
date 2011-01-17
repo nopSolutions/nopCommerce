@@ -40,7 +40,7 @@ namespace Nop.Data.Tests
                                                         {
                                                             TextPrompt = "TextPrompt 1",
                                                             IsRequired = true,
-                                                            AttributeControlType = AttributeControlTypeEnum.DropdownList,
+                                                            AttributeControlType = AttributeControlType.DropdownList,
                                                             DisplayOrder = 1,
                                                             ProductVariant = new ProductVariant()
                                                                              {

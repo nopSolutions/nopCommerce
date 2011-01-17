@@ -12,11 +12,7 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain;
 
 namespace Nop.Services.Catalog
 {
@@ -35,9 +31,9 @@ namespace Nop.Services.Catalog
             if (productVariantAttribute == null)
                 return false;
 
-            if (productVariantAttribute.AttributeControlType == AttributeControlTypeEnum.TextBox ||
-                productVariantAttribute.AttributeControlType == AttributeControlTypeEnum.MultilineTextbox ||
-                productVariantAttribute.AttributeControlType == AttributeControlTypeEnum.Datepicker)
+            if (productVariantAttribute.AttributeControlType == AttributeControlType.TextBox ||
+                productVariantAttribute.AttributeControlType == AttributeControlType.MultilineTextbox ||
+                productVariantAttribute.AttributeControlType == AttributeControlType.Datepicker)
             {
                 return false;
             }

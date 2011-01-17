@@ -13,10 +13,8 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Nop.Data;
 using Nop.Core.Domain.Common;
+using Nop.Data;
 
 namespace Nop.Services.Common
 {

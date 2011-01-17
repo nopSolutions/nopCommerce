@@ -13,11 +13,11 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
@@ -33,6 +33,7 @@ namespace Nop.Core.Domain.Customers
             this.CustomerRoles = new List<CustomerRole>();
             this.CustomerAttributes = new List<CustomerAttribute>();
             this.Addresses = new List<Address>();
+            this.ShoppingCartItems = new List<ShoppingCartItem>();
         }
         
         /// <summary>
@@ -84,6 +85,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the VAT number status identifier
         /// </summary>
         public int VatNumberStatusId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected checkout attributes
+        /// </summary>
+        public string CheckoutAttributes { get; set; }
 
         /// <summary>
         /// Gets or sets the applied discount coupon code
@@ -167,6 +173,11 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<CustomerAttribute> CustomerAttributes { get; set; }
 
         /// <summary>
+        /// Gets or sets shopping cart items
+        /// </summary>
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
+
+        /// <summary>
         /// Default billing address
         /// </summary>
         public virtual Address BillingAddress { get; set; }
@@ -183,13 +194,16 @@ namespace Nop.Core.Domain.Customers
 
         #region Methods
 
-        public virtual void AddAddress(Address address) {
+        public virtual void AddAddress(Address address) 
+        {
             if (!this.Addresses.Contains(address))
                 this.Addresses.Add(address);
         }
 
-        public virtual void RemoveAddress(Address address) {
-            if (this.Addresses.Contains(address)) {
+        public virtual void RemoveAddress(Address address) 
+        {
+            if (this.Addresses.Contains(address)) 
+            {
                 if (this.BillingAddress == address) this.BillingAddress = null;
                 if (this.ShippingAddress == address) this.ShippingAddress = null;
 
@@ -197,12 +211,14 @@ namespace Nop.Core.Domain.Customers
             }
         }
 
-        public virtual void SetBillingAddress(Address address) {
+        public virtual void SetBillingAddress(Address address) 
+        {
             if (this.Addresses.Contains(address))
                 this.BillingAddress = address;
         }
 
-        public virtual void SetShippingAddress(Address address) {
+        public virtual void SetShippingAddress(Address address) 
+        {
             if (this.Addresses.Contains(address))
                 this.ShippingAddress = address;
         }

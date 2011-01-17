@@ -10,6 +10,8 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Tests
 {
@@ -177,6 +179,35 @@ namespace Nop.Data.Tests
             fromDb.BillingAddress.ShouldBeNull();
         }
         
+        [Test]
+        public void Can_save_customer_with_shopping_cart()
+        {
+            var customer = GetTestCustomer();
+            var productVariant = GetTestProductVariant();
+
+            customer.ShoppingCartItems = new List<ShoppingCartItem>()
+            {
+                new ShoppingCartItem()
+                {
+                    ShoppingCartType = ShoppingCartType.ShoppingCart,
+                    AttributesXml = "AttributesXml 1",
+                    CustomerEnteredPrice = 1,
+                    Quantity = 2,
+                    CreatedOnUtc = new DateTime(2010, 01, 01),
+                    UpdatedOnUtc = new DateTime(2010, 01, 02),
+                    ProductVariant = GetTestProductVariant()
+                }
+            };
+
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
+
+            fromDb.ShoppingCartItems.ShouldNotBeNull();
+            (fromDb.ShoppingCartItems.Count == 1).ShouldBeTrue();
+            fromDb.ShoppingCartItems.First().AttributesXml.ShouldEqual("AttributesXml 1");
+        }
+
         protected Customer GetTestCustomer()
         {
             return new Customer
@@ -194,6 +225,91 @@ namespace Nop.Data.Tests
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
+            };
+        }
+
+        protected ProductVariant GetTestProductVariant()
+        {
+            return new ProductVariant
+            {
+                Name = "Product variant name 1",
+                Sku = "sku 1",
+                Description = "description",
+                AdminComment = "adminComment",
+                ManufacturerPartNumber = "manufacturerPartNumber",
+                IsGiftCard = true,
+                GiftCardTypeId = 1,
+                IsDownload = true,
+                DownloadId = 2,
+                UnlimitedDownloads = true,
+                MaxNumberOfDownloads = 3,
+                DownloadExpirationDays = 4,
+                DownloadActivationTypeId = 5,
+                HasSampleDownload = true,
+                SampleDownloadId = 6,
+                HasUserAgreement = true,
+                UserAgreementText = "userAgreementText",
+                IsRecurring = true,
+                RecurringCycleLength = 7,
+                RecurringCyclePeriodId = 8,
+                RecurringTotalCycles = 9,
+                IsShipEnabled = true,
+                IsFreeShipping = true,
+                AdditionalShippingCharge = 10,
+                IsTaxExempt = true,
+                TaxCategoryId = 11,
+                ManageInventoryMethodId = 12,
+                StockQuantity = 13,
+                DisplayStockAvailability = true,
+                DisplayStockQuantity = true,
+                MinStockQuantity = 14,
+                LowStockActivityId = 15,
+                NotifyAdminForQuantityBelow = 16,
+                BackorderModeId = 17,
+                OrderMinimumQuantity = 18,
+                OrderMaximumQuantity = 19,
+                WarehouseId = 20,
+                DisableBuyButton = true,
+                CallForPrice = true,
+                Price = 21,
+                OldPrice = 22,
+                ProductCost = 23,
+                CustomerEntersPrice = true,
+                MinimumCustomerEnteredPrice = 24,
+                MaximumCustomerEnteredPrice = 25,
+                Weight = 26,
+                Length = 27,
+                Width = 28,
+                Height = 29,
+                PictureId = 0,
+                AvailableStartDateTimeUtc = new DateTime(2010, 01, 01),
+                AvailableEndDateTimeUtc = new DateTime(2010, 01, 02),
+                Published = true,
+                Deleted = false,
+                DisplayOrder = 31,
+                CreatedOnUtc = new DateTime(2010, 01, 03),
+                UpdatedOnUtc = new DateTime(2010, 01, 04),
+                Product = new Product()
+                {
+                    Name = "Name 1",
+                    ShortDescription = "ShortDescription 1",
+                    FullDescription = "FullDescription 1",
+                    AdminComment = "AdminComment 1",
+                    TemplateId = 1,
+                    ShowOnHomePage = false,
+                    MetaKeywords = "Meta keywords",
+                    MetaDescription = "Meta description",
+                    MetaTitle = "Meta title",
+                    SeName = "SE name",
+                    AllowCustomerReviews = true,
+                    AllowCustomerRatings = true,
+                    RatingSum = 2,
+                    TotalRatingVotes = 3,
+                    Published = true,
+                    Deleted = false,
+                    CreatedOnUtc = new DateTime(2010, 01, 01),
+                    UpdatedOnUtc = new DateTime(2010, 01, 02)
+                }
             };
         }
     }

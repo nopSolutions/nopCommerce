@@ -9,7 +9,7 @@ namespace Nop.Tax.FixedRateTaxProvider
     /// <summary>
     /// Fixed rate tax provider
     /// </summary>
-    public class FixedRateTaxProvider : ITaxProvider
+    public class FixedRateTaxProvider: ITaxProvider
     {
         /// <summary>
         /// Gets tax rate

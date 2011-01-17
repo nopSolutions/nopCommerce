@@ -16,7 +16,6 @@ using System;
 using System.Collections;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.Caching;
 using System.Collections.Generic;
 
 namespace Nop.Core.Caching
@@ -26,7 +25,7 @@ namespace Nop.Core.Caching
     /// </summary>
     public partial class PerRequestCacheManager : ICacheManager
     {
-        private HttpContextBase _context;
+        private readonly HttpContextBase _context;
 
         /// <summary>
         /// Ctor

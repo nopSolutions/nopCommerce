@@ -47,6 +47,14 @@
     <Compile Include="Catalog\CategoryService.cs" />
     <Compile Include="Catalog\CategoryExtensions.cs" />
     <Compile Include="Catalog\CompareProductsService.cs" />
+    <Compile Include="Catalog\PriceFormatter.cs" />
+    <Compile Include="Catalog\IPriceCalculationService.cs" />
+    <Compile Include="Catalog\IProductAttributeFormatter.cs" />
+    <Compile Include="Catalog\IProductAttributeParser.cs" />
+    <Compile Include="Catalog\PriceCalculationService.cs" />
+    <Compile Include="Catalog\IPriceFormatter.cs" />
+    <Compile Include="Catalog\ProductAttributeFormatter.cs" />
+    <Compile Include="Catalog\ProductAttributeParser.cs" />
     <Compile Include="Common\AddressService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
@@ -71,6 +79,13 @@
     <Compile Include="Directory\IStateProvinceService.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
+    <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
+    <Compile Include="Orders\CheckoutAttributeParser.cs" />
+    <Compile Include="Orders\CheckoutAttributeService.cs" />
+    <Compile Include="Orders\ICheckoutAttributeParser.cs" />
+    <Compile Include="Orders\ICheckoutAttributeService.cs" />
+    <Compile Include="Orders\CheckoutAttributeExtensions.cs" />
+    <Compile Include="Orders\ShoppingCartExtensions.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -166,6 +181,7 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,4 +1,5 @@
-﻿//------------------------------------------------------------------------------
+﻿using Nop.Core;
+//------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -11,12 +12,7 @@
 // 
 // Contributor(s): planetcloud (http://www.planetcloud.co.uk). 
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Nop.Core.Domain.Security;
-using Nop.Core;
 
 namespace Nop.Services.Security
 {

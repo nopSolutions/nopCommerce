@@ -11,10 +11,6 @@
 // 
 // Contributor(s): planetcloud (http://www.planetcloud.co.uk). 
 //------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Nop.Services.Security {
     public interface IEncryptionService {

@@ -19,7 +19,7 @@ namespace Nop.Data.Tests
                       {
                           TextPrompt = "TextPrompt 1",
                           IsRequired = true,
-                          AttributeControlType = AttributeControlTypeEnum.DropdownList,
+                          AttributeControlType = AttributeControlType.DropdownList,
                           DisplayOrder = 1,
                           ProductVariant = new ProductVariant()
                                            {
@@ -113,7 +113,7 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.TextPrompt.ShouldEqual("TextPrompt 1");
             fromDb.IsRequired.ShouldEqual(true);
-            fromDb.AttributeControlType.ShouldEqual(AttributeControlTypeEnum.DropdownList);
+            fromDb.AttributeControlType.ShouldEqual(AttributeControlType.DropdownList);
             fromDb.DisplayOrder.ShouldEqual(1);
 
             fromDb.ProductVariant.ShouldNotBeNull();

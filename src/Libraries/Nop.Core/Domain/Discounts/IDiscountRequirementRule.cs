@@ -12,10 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Discounts
 {
@@ -25,7 +21,7 @@ namespace Nop.Core.Domain.Discounts
     public partial interface IDiscountRequirementRule
     {
         /// <summary>
-        /// Gets or sets the friednly name
+        /// Gets or sets the friendly name
         /// </summary>
         string FriendlyName { get; }
 

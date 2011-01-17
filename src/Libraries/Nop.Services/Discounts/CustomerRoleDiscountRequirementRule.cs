@@ -13,18 +13,15 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Nop.Core.Domain.Discounts;
 using Nop.Core;
+using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts
 {
     public partial class CustomerRoleDiscountRequirementRule : IDiscountRequirementRule
     {
         /// <summary>
-        /// Gets or sets the friednly name
+        /// Gets or sets the friendly name
         /// </summary>
         public string FriendlyName
         {

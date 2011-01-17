@@ -19,6 +19,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Core;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Localization
 {
@@ -35,6 +36,8 @@ namespace Nop.Services.Localization
         #region Fields
 
         private readonly IRepository<LocaleStringResource> _lsrRepository;
+        private readonly IWorkContext _workContext;
+        private readonly ILogger _logger;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -45,11 +48,17 @@ namespace Nop.Services.Localization
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="logger">Logger</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
         public LocalizationService(ICacheManager cacheManager,
+            ILogger logger,
+            IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository)
         {
             this._cacheManager = cacheManager;
+            this._logger = logger;
+            this._workContext = workContext;
             this._lsrRepository = lsrRepository;
         }
 
@@ -135,6 +144,55 @@ namespace Nop.Services.Localization
 
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+        }
+        
+        /// <summary>
+        /// Gets a resource string based on the specified ResourceKey property.
+        /// </summary>
+        /// <param name="resourceKey">A string representing a ResourceKey.</param>
+        /// <returns>A string representing the requested resource string.</returns>
+        public string GetLocaleResourceString(string resourceKey)
+        {
+            if (_workContext.WorkingLanguage != null)
+            {
+                var language = _workContext.WorkingLanguage;
+                return GetLocaleResourceString(resourceKey, language.Id);
+            }
+            
+            return "";
+        }
+        
+        /// <summary>
+        /// Gets a resource string based on the specified ResourceKey property.
+        /// </summary>
+        /// <param name="resourceKey">A string representing a ResourceKey.</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>A string representing the requested resource string.</returns>
+        public string GetLocaleResourceString(string resourceKey, int languageId,
+            bool logIfNotFound = true, string defaultValue = "")
+        {
+            string result = string.Empty;
+            if (resourceKey == null)
+                resourceKey = string.Empty;
+            resourceKey = resourceKey.Trim().ToLowerInvariant();
+            var resources = GetAllResourcesByLanguageId(languageId);
+
+            if (resources.ContainsKey(resourceKey))
+            {
+                var lsr = resources[resourceKey];
+                if (lsr != null)
+                    result = lsr.ResourceValue;
+            }
+            if (String.IsNullOrEmpty(result))
+            {
+                if (logIfNotFound)
+                    _logger.Debug(string.Format("Resource string ({0}) is not found. Language ID = {1}", resourceKey, languageId));
+                
+                result = !String.IsNullOrEmpty(defaultValue) ? defaultValue : resourceKey;
+            }
+            return result;
         }
 
         #endregion

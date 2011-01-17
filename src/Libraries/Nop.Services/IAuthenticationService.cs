@@ -12,15 +12,6 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Nop.Core;
-using Nop.Core.Domain;
-using Nop.Data;
-using Nop.Core.Caching;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Services

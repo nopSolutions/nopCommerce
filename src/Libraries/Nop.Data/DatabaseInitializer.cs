@@ -16,8 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Database;
 using System.Linq;
-using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
@@ -76,6 +74,41 @@ namespace Nop.Data
                                        }
                                };
             taxProviders.ForEach(tp => context.TaxProviders.Add(tp));
+            context.SaveChanges();
+
+            #endregion
+
+            #region Tax classes
+
+            var taxCategories = new List<TaxCategory>
+                               {
+                                   new TaxCategory
+                                       {
+                                           Name = "Books",
+                                           DisplayOrder = 1,
+                                       },
+                                   new TaxCategory
+                                       {
+                                           Name = "Electronics & Software",
+                                           DisplayOrder = 5,
+                                       },
+                                   new TaxCategory
+                                       {
+                                           Name = "Downloadable Products",
+                                           DisplayOrder = 10,
+                                       },
+                                   new TaxCategory
+                                       {
+                                           Name = "Jewelry",
+                                           DisplayOrder = 15,
+                                       },
+                                   new TaxCategory
+                                       {
+                                           Name = "Apparel & Shoes",
+                                           DisplayOrder = 20,
+                                       },
+                               };
+            taxCategories.ForEach(tc => context.TaxCategories.Add(tc));
             context.SaveChanges();
 
             #endregion

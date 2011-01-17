@@ -14,8 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Discounts;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -27,6 +27,7 @@ namespace Nop.Core.Domain.Catalog
         public Category() 
         {
             this.ProductCategories = new List<ProductCategory>();
+            this.AppliedDiscounts = new List<Discount>();
         }
 
         /// <summary>
@@ -118,5 +119,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the collection of ProductCategory
         /// </summary>
         public virtual ICollection<ProductCategory> ProductCategories { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of applied discounts
+        /// </summary>
+        public virtual ICollection<Discount> AppliedDiscounts { get; set; }
     }
 }

@@ -60,11 +60,11 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
-        public AttributeControlTypeEnum AttributeControlType
+        public AttributeControlType AttributeControlType
         {
             get
             {
-                return (AttributeControlTypeEnum)this.AttributeControlTypeId;
+                return (AttributeControlType)this.AttributeControlTypeId;
             }
             set
             {

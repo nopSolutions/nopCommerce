@@ -13,7 +13,6 @@
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Configuration;
 
 namespace Nop.Services.Configuration

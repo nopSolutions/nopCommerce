@@ -13,16 +13,8 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using Nop.Core;
-using Nop.Core.Domain;
-using Nop.Data;
-using Nop.Core.Caching;
 using System.Web.Security;
-using Nop.Core.Domain.Customers;
-using Nop.Services.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Services.Security;
 

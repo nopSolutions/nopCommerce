@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NUnit.Framework;
+using Nop.Tests;
+using Nop.Core.Domain;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
+
+namespace Nop.Data.Tests
+{
+    [TestFixture]
+    public class CheckoutAttributePersistenceTests : PersistenceTest
+    {
+        [Test]
+        public void Can_save_and_load_checkoutAttribute()
+        {
+            var ca = new CheckoutAttribute
+            {
+                Name = "Name 1",
+                TextPrompt = "TextPrompt 1",
+                IsRequired = true,
+                ShippableProductRequired  = true,
+                IsTaxExempt = true,
+                TaxCategoryId = 1,
+                AttributeControlType = AttributeControlType.Datepicker,
+                DisplayOrder = 2
+            };
+
+            var fromDb = SaveAndLoadEntity(ca);
+            fromDb.ShouldNotBeNull();
+            fromDb.Name.ShouldEqual("Name 1");
+            fromDb.TextPrompt.ShouldEqual("TextPrompt 1");
+            fromDb.IsRequired.ShouldEqual(true);
+            fromDb.ShippableProductRequired.ShouldEqual(true);
+            fromDb.IsTaxExempt.ShouldEqual(true);
+            fromDb.TaxCategoryId.ShouldEqual(1);
+            fromDb.AttributeControlType.ShouldEqual(AttributeControlType.Datepicker);
+            fromDb.DisplayOrder.ShouldEqual(2);
+        }
+
+        [Test]
+        public void Can_save_and_load_checkoutAttribute_with_values()
+        {
+            var ca = new CheckoutAttribute
+            {
+                Name = "Name 1",
+                TextPrompt = "TextPrompt 1",
+                IsRequired = true,
+                ShippableProductRequired = true,
+                IsTaxExempt = true,
+                TaxCategoryId = 1,
+                AttributeControlType = AttributeControlType.Datepicker,
+                DisplayOrder = 2,
+                CheckoutAttributeValues = new List<CheckoutAttributeValue>()
+                {
+                    new CheckoutAttributeValue()
+                    {
+                        Name = "Name 2",
+                        PriceAdjustment= 1, 
+                        WeightAdjustment = 2,
+                        IsPreSelected = true,
+                        DisplayOrder = 3,
+                    }
+                }
+            };
+
+            var fromDb = SaveAndLoadEntity(ca);
+            fromDb.ShouldNotBeNull();
+            fromDb.Name.ShouldEqual("Name 1");
+
+            fromDb.CheckoutAttributeValues.ShouldNotBeNull();
+            (fromDb.CheckoutAttributeValues.Count == 1).ShouldBeTrue();
+            fromDb.CheckoutAttributeValues.First().Name.ShouldEqual("Name 2");
+        }
+    }
+}

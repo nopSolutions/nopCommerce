@@ -28,6 +28,7 @@ namespace Nop.Data.Mapping.Customers
             this.Property(c => c.Email).IsRequired().HasMaxLength(255);
             this.Property(c => c.Username).IsRequired().HasMaxLength(255);
             this.Property(c => c.AdminComment).IsMaxLength();
+            this.Property(c => c.CheckoutAttributes).IsMaxLength();
 
             this.Ignore(c => c.TaxDisplayType);
             this.Ignore(c => c.VatNumberStatus);

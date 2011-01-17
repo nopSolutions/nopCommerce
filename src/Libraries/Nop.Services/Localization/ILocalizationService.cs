@@ -54,5 +54,23 @@ namespace Nop.Services.Localization
         /// <param name="localeStringResource">Locale string resource</param>
         void UpdateLocaleStringResource(LocaleStringResource localeStringResource);
 
+        /// <summary>
+        /// Gets a resource string based on the specified ResourceKey property.
+        /// </summary>
+        /// <param name="resourceKey">A string representing a ResourceKey.</param>
+        /// <returns>A string representing the requested resource string.</returns>
+        string GetLocaleResourceString(string resourceKey);
+
+        /// <summary>
+        /// Gets a resource string based on the specified ResourceKey property.
+        /// </summary>
+        /// <param name="resourceKey">A string representing a ResourceKey.</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>A string representing the requested resource string.</returns>
+        string GetLocaleResourceString(string resourceKey, int languageId,
+            bool logIfNotFound = true, string defaultValue = "");
+
     }
 }

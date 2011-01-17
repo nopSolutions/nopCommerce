@@ -13,12 +13,8 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Linq;
-using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Domain;
-using Nop.Data;
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Logging;
 
 namespace Nop.Services.Logging

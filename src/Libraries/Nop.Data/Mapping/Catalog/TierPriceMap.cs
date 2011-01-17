@@ -23,11 +23,15 @@ namespace Nop.Data.Mapping.Catalog
         public TierPriceMap()
         {
             this.ToTable("TierPrice");
-            this.HasKey(pva => pva.Id);
+            this.HasKey(tp => tp.Id);
 
-            this.HasRequired(pva => pva.ProductVariant)
+            this.HasRequired(tp => tp.ProductVariant)
                 .WithMany(pv => pv.TierPrices)
-                .HasForeignKey(pva => pva.ProductVariantId);
+                .HasForeignKey(tp => tp.ProductVariantId);
+
+            this.HasOptional(tp => tp.CustomerRole)
+                .WithMany()
+                .HasForeignKey(tp => tp.CustomerRoleId);
         }
     }
 }

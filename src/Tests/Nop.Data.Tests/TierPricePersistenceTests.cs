@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Tests
 {
@@ -19,9 +20,49 @@ namespace Nop.Data.Tests
                       {
                           Quantity = 1,
                           Price = 2,
-                          ProductVariant = new ProductVariant()
-                                           {
-                                               Name = "Product variant name 1",
+                          ProductVariant = GetTestProductVariant(),
+                      };
+
+            var fromDb = SaveAndLoadEntity(tierPrice);
+            fromDb.ShouldNotBeNull();
+            fromDb.Quantity.ShouldEqual(1);
+            fromDb.Price.ShouldEqual(2);
+
+            fromDb.ProductVariant.ShouldNotBeNull();
+            fromDb.ProductVariant.Name.ShouldEqual("Product variant name 1");
+        }
+
+        [Test]
+        public void Can_save_and_load_tierPriceWithCustomerRole()
+        {
+            var tierPrice = new TierPrice
+            {
+                Quantity = 1,
+                Price = 2,
+                ProductVariant = GetTestProductVariant(),
+                CustomerRole = new CustomerRole()
+                {
+                    Name = "Administrators",
+                    FreeShipping = true,
+                    TaxExempt = true,
+                    Active = true,
+                    IsSystemRole = true,
+                    SystemName = "Administrators"
+                }
+            };
+
+            var fromDb = SaveAndLoadEntity(tierPrice);
+            fromDb.ShouldNotBeNull();
+
+            fromDb.CustomerRole.ShouldNotBeNull();
+            fromDb.CustomerRole.Name.ShouldEqual("Administrators");
+        }
+
+        protected ProductVariant GetTestProductVariant()
+        {
+            return new ProductVariant()
+            {
+                Name = "Product variant name 1",
                                                Sku = "sku 1",
                                                Description = "description",
                                                AdminComment = "adminComment",
@@ -99,16 +140,7 @@ namespace Nop.Data.Tests
                                                              CreatedOnUtc = new DateTime(2010, 01, 01),
                                                              UpdatedOnUtc = new DateTime(2010, 01, 02),
                                                          }
-                                           },
-                      };
-
-            var fromDb = SaveAndLoadEntity(tierPrice);
-            fromDb.ShouldNotBeNull();
-            fromDb.Quantity.ShouldEqual(1);
-            fromDb.Price.ShouldEqual(2);
-
-            fromDb.ProductVariant.ShouldNotBeNull();
-            fromDb.ProductVariant.Name.ShouldEqual("Product variant name 1");
+                                           };
         }
     }
 }

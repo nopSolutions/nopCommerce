@@ -15,11 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
-using Nop.Core.Domain;
-using Nop.Data;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Directory;
+using Nop.Data;
 
 namespace Nop.Services.Directory
 {

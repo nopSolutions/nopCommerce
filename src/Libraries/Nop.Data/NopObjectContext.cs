@@ -14,26 +14,24 @@
 
 using System;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Reflection;
-using Nop.Core.Domain;
 using Nop.Core;
-using Nop.Data.Mapping;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.ModelConfiguration.Conventions.Edm;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Localization;
-using Nop.Data.Mapping.Localization;
-using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Media;
-using Nop.Core.Domain.Configuration;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
+using Nop.Data.Mapping.Localization;
 
 namespace Nop.Data
 {
@@ -49,6 +47,8 @@ namespace Nop.Data
 
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<CheckoutAttribute> CheckoutAttributes { get; set; }
+        public DbSet<CheckoutAttributeValue> CheckoutAttributeValues { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<CrossSellProduct> CrossSellProducts { get; set; }
         public DbSet<Currency> Currencies { get; set; }
@@ -65,6 +65,7 @@ namespace Nop.Data
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<MeasureDimension> MeasureDimensions { get; set; }
         public DbSet<MeasureWeight> MeasureWeights { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }

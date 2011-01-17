@@ -13,8 +13,6 @@
 //------------------------------------------------------------------------------
 
 
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using System.Collections.Generic;
 
 namespace Nop.Services.Tax

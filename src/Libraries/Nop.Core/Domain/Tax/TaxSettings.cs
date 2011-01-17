@@ -111,7 +111,7 @@ namespace Nop.Core.Domain.Tax
         /// <summary>
         /// Gets or sets a value indicating whether this store will exempt eligible VAT-registered customers from VAT
         /// </summary>
-        public bool EuVatAllowVATExemption { get; set; }
+        public bool EuVatAllowVatExemption { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether we should use the EU web service to validate VAT numbers

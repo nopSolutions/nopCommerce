@@ -56,6 +56,9 @@
     <Compile Include="Mapping\Directory\CountryMap.cs" />
     <Compile Include="Mapping\Discounts\DiscountMap.cs" />
     <Compile Include="Mapping\Discounts\DiscountRequirementMap.cs" />
+    <Compile Include="Mapping\Orders\CheckoutAttributeMap.cs" />
+    <Compile Include="Mapping\Orders\CheckoutAttributeValueMap.cs" />
+    <Compile Include="Mapping\Orders\ShoppingCartItemMap.cs" />
     <Compile Include="Mapping\Security\UserMap.cs" />
     <Compile Include="Mapping\Directory\StateProvinceMap.cs" />
     <Compile Include="Mapping\Catalog\ProductRatingMap.cs" />
