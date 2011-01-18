@@ -48,8 +48,17 @@ namespace Nop.Core.Domain.Security
         public virtual DateTime? LastPasswordChangeDateUtc { get; set; }
         public virtual int FailedPasswordAttemptCount { get; set; }
 
-        public virtual string FullName {
-            get { return FirstName + " " + LastName; }
+
+        public virtual string FullName 
+        {
+            get
+            {
+                //TODO Remove. Do we need this property?
+                if (String.IsNullOrEmpty(this.FirstName))
+                    return this.LastName;
+                else
+                    return string.Format("{0} {1}", this.FirstName, this.LastName);
+            }
         }
     }
 }

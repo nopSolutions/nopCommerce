@@ -233,6 +233,9 @@ namespace Nop.Services.Customers
         public Customer InsertGuestCustomer(string userName)
         {
             //validate username
+            if (String.IsNullOrEmpty(userName))
+                throw new NopException("Customer username could not be empty");
+
             if (GetCustomerByUsername(userName) != null)
                 throw new NopException("Duplicate username");
 
