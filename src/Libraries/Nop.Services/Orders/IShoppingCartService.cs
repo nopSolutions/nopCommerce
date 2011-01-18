@@ -57,7 +57,7 @@ namespace Nop.Services.Orders
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart, 
-            string checkoutAttributes, bool validateCheckoutAttributes);
+            string checkoutAttributes = "", bool validateCheckoutAttributes = false);
 
         /// <summary>
         /// Finds a shopping cart item in the cart

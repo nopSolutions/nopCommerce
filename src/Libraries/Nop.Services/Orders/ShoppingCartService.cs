@@ -383,7 +383,7 @@ namespace Nop.Services.Orders
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
         public IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart, 
-            string checkoutAttributes, bool validateCheckoutAttributes)
+            string checkoutAttributes = "", bool validateCheckoutAttributes = false)
         {
             var warnings = new List<string>();
 
