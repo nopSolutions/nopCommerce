@@ -71,7 +71,6 @@
     <Compile Include="CheckoutAttributeValuePersistenceTests.cs" />
     <Compile Include="ShoppingCartItemPeristenceTests.cs" />
     <Compile Include="TaxCategoryPersistenceTests.cs" />
-    <Compile Include="TaxProviderPersistenceTests.cs" />
     <Compile Include="DiscountRequirementPersistenceTests.cs" />
     <Compile Include="DiscountPersistenceTests.cs" />
     <Compile Include="CustomerAttributePersistenceTests.cs" />

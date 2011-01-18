@@ -29,9 +29,9 @@ namespace Nop.Core.Domain.Tax
         public TaxDisplayType TaxDisplayType { get; set; }
 
         /// <summary>
-        /// Gets or sets an identifier of active tax provider
+        /// Gets or sets an system name of active tax provider
         /// </summary>
-        public int ActiveTaxProviderId { get; set; }
+        public string ActiveTaxProviderSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets default address used for tax calculation

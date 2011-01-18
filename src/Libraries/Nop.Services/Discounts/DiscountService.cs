@@ -224,7 +224,8 @@ namespace Nop.Services.Discounts
         {
             var rules = new List<IDiscountRequirementRule>();
 
-            //TODO search in all assemblies
+            //TODO search in all assemblies (use StructureMap assembly scanning - http://structuremap.net/structuremap/ScanningAssemblies.htm)
+            //because now it could not locate all referenced assemblies until they are loaded into domain
             System.Type configType = typeof(BillingCountryDiscountRequirementRule);   //any of your IDiscountRequirementRule implementations here
             var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
                 .Where(type => type.GetInterfaces().Contains(typeof(IDiscountRequirementRule)));
@@ -233,7 +234,9 @@ namespace Nop.Services.Discounts
                 dynamic rule = Activator.CreateInstance(type);
                 rules.Add(rule);
             }
-            return rules;
+            
+            //sort and return
+            return rules.OrderBy(drr => drr.FriendlyName).ToList();
         }
 
         /// <summary>

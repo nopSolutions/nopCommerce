@@ -113,7 +113,7 @@ namespace Nop.Services
             }
             else
             {
-                int cookieExpires = 24 * 365; //TODO make confgiurable
+                int cookieExpires = 24 * 365; //TODO make configurable
                 cookie.Expires = DateTime.Now.AddHours(cookieExpires);
             }
             if (_httpContext != null && _httpContext.Response != null)

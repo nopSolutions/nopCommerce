@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nop.Services.Tax;
+using Nop.Services.Configuration;
 
 namespace Nop.Tax.FixedRateTaxProvider
 {
@@ -11,6 +12,34 @@ namespace Nop.Tax.FixedRateTaxProvider
     /// </summary>
     public class FixedRateTaxProvider: ITaxProvider
     {
+        /// <summary>
+        /// Gets or sets the friendly name
+        /// </summary>
+        public string FriendlyName
+        {
+            get
+            {
+                //TODO localize
+                return "Fixed tax rate provider";
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the system name
+        /// </summary>
+        public string SystemName
+        {
+            get
+            {
+                return "FixedTaxRate";
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the setting service
+        /// </summary>
+        public ISettingService SettingService { get; set; }
+
         /// <summary>
         /// Gets tax rate
         /// </summary>

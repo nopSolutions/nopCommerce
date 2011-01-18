@@ -17,6 +17,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
+using System.Collections.Generic;
 
 namespace Nop.Services.Tax
 {
@@ -25,6 +26,28 @@ namespace Nop.Services.Tax
     /// </summary>
     public partial interface ITaxService
     {
+        /// <summary>
+        /// Load active tax provider
+        /// </summary>
+        /// <returns>Active tax provider</returns>
+        ITaxProvider LoadActiveTaxProvider();
+
+        /// <summary>
+        /// Load tax provider by system name
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        /// <returns>Found tax provider</returns>
+        ITaxProvider LoadTaxProviderBySystemName(string systemName);
+
+        /// <summary>
+        /// Load all tax providers
+        /// </summary>
+        /// <returns>Tax providers</returns>
+        IList<ITaxProvider> LoadAllTaxProviders();
+        
+
+
+
         /// <summary>
         /// Gets tax rate
         /// </summary>

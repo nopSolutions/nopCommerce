@@ -85,7 +85,6 @@ namespace Nop.Data
         public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
         public DbSet<StateProvince> StateProvinces { get; set; }
         public DbSet<TaxCategory> TaxCategories { get; set; }
-        public DbSet<TaxProvider> TaxProviders { get; set; }
         public DbSet<TierPrice> TierPrices { get; set; }
         public DbSet<User> Users { get; set; }
 

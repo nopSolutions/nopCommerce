@@ -76,6 +76,7 @@
     <Compile Include="Security\UserServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\ConfigFileSettingServiceTests.cs" />
+    <Compile Include="Tax\TaxServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
@@ -89,6 +90,14 @@
     <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj">
       <Project>{210541AD-F659-47DA-8763-16F36C5CD2F4}</Project>
       <Name>Nop.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tax\Nop.Tax.FixedRateTaxProvider\Nop.Tax.FixedRateTaxProvider.csproj">
+      <Project>{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}</Project>
+      <Name>Nop.Tax.FixedRateTaxProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tax\Nop.Tax.FreeTaxProvider\Nop.Tax.FreeTaxProvider.csproj">
+      <Project>{FE702128-53A5-462B-A62E-14786993DE96}</Project>
+      <Name>Nop.Tax.FreeTaxProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nop.Tests\Nop.Tests.csproj">
       <Project>{1D9EB579-3630-468A-BE94-49E7DF4F6E1D}</Project>

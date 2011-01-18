@@ -82,7 +82,6 @@
     <Compile Include="Domain\Tax\TaxBasedOn.cs" />
     <Compile Include="Domain\Tax\TaxCategory.cs" />
     <Compile Include="Domain\Tax\TaxDisplayType.cs" />
-    <Compile Include="Domain\Tax\TaxProvider.cs" />
     <Compile Include="Domain\Tax\VatNumberStatus.cs" />
     <Compile Include="Html\BBCodeHelper.cs" />
     <Compile Include="Html\CodeFormatter\CLikeFormat.cs" />

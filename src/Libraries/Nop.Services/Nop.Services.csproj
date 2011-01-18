@@ -103,10 +103,8 @@
     <Compile Include="Tax\CalculateTaxResult.cs" />
     <Compile Include="Tax\ITaxCategoryService.cs" />
     <Compile Include="Tax\ITaxProvider.cs" />
-    <Compile Include="Tax\ITaxProviderService.cs" />
     <Compile Include="Tax\ITaxService.cs" />
     <Compile Include="Tax\TaxCategoryService.cs" />
-    <Compile Include="Tax\TaxProviderService.cs" />
     <Compile Include="Tax\TaxService.cs" />
     <Compile Include="Web References\EuropaCheckVatService\Reference.cs">
       <AutoGen>True</AutoGen>

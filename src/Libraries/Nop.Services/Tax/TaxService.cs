@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -22,6 +23,12 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Web;
+using System.IO;
+using System.Collections.ObjectModel;
+using System.Web.Compilation;
 
 namespace Nop.Services.Tax
 {
@@ -33,7 +40,6 @@ namespace Nop.Services.Tax
         #region Fields
 
         private readonly IAddressService _addressService;
-        private readonly ITaxProviderService _taxProviderService;
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
 
@@ -49,12 +55,10 @@ namespace Nop.Services.Tax
         /// <param name="workContext">Work context</param>
         /// <param name="taxSettings">Tax settings</param>
         public TaxService(IAddressService addressService,
-            ITaxProviderService taxProviderService,
             IWorkContext workContext,
             TaxSettings taxSettings)
         {
             this._addressService = addressService;
-            this._taxProviderService = taxProviderService;
             this._workContext = workContext;
             this._taxSettings = taxSettings;
         }
@@ -264,6 +268,56 @@ namespace Nop.Services.Tax
         #region Methods
 
         /// <summary>
+        /// Load active tax provider
+        /// </summary>
+        /// <returns>Active tax provider</returns>
+        public ITaxProvider LoadActiveTaxProvider()
+        {
+            var taxProvider = LoadTaxProviderBySystemName(_taxSettings.ActiveTaxProviderSystemName);
+            if (taxProvider == null)
+                taxProvider = LoadAllTaxProviders().FirstOrDefault();
+            return taxProvider;
+        }
+
+        /// <summary>
+        /// Load tax provider by system name
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        /// <returns>Found tax provider</returns>
+        public ITaxProvider LoadTaxProviderBySystemName(string systemName)
+        {
+            var rules = LoadAllTaxProviders();
+            var rule = rules.SingleOrDefault(r => r.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return rule;
+        }
+
+        /// <summary>
+        /// Load all tax providers
+        /// </summary>
+        /// <returns>Tax providers</returns>
+        public IList<ITaxProvider> LoadAllTaxProviders()
+        {
+            var taxProviders = new List<ITaxProvider>();
+
+            //TODO search in all assemblies (use StructureMap assembly scanning - http://structuremap.net/structuremap/ScanningAssemblies.htm)
+            //NOTE: currently it doesn't work until tax providers are saved into Nop.Services
+            System.Type configType = typeof(TaxService);   //any of your tax provider implementation implementations here
+            var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
+                .Where(type => type.GetInterfaces().Contains(typeof(ITaxProvider)));
+
+            foreach (var type in typesToRegister)
+            {
+                //TODO inject ISettingService into type.SettingService
+                dynamic taxProvider = Activator.CreateInstance(type);
+                taxProviders.Add(taxProvider);
+            }
+
+            //sort and return
+            return taxProviders.OrderBy(tp => tp.FriendlyName).ToList();
+        }
+
+
+        /// <summary>
         /// Gets tax rate
         /// </summary>
         /// <param name="productVariant">Product variant</param>
@@ -314,14 +368,11 @@ namespace Nop.Services.Tax
                 }
             }
 
-            //instantiate tax provider
-            var activeTaxProvider = _taxProviderService.GetTaxProviderById(_taxSettings.ActiveTaxProviderId);
-            if (activeTaxProvider == null)
-                throw new NopException("Active tax provider could not be loaded");
-            var iTaxProvider = Activator.CreateInstance(Type.GetType(activeTaxProvider.ClassName)) as ITaxProvider;
+            //active tax provider
+            var activeTaxProvider = LoadActiveTaxProvider();
 
             //get tax rate
-            var calculateTaxResult = iTaxProvider.GetTaxRate(calculateTaxRequest);
+            var calculateTaxResult = activeTaxProvider.GetTaxRate(calculateTaxRequest);
             if (calculateTaxResult.Success)
                 return calculateTaxResult.TaxRate;
             else

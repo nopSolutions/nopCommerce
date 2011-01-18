@@ -56,28 +56,6 @@ namespace Nop.Data
 
             #endregion
 
-            #region Tax providers
-
-            var taxProviders = new List<TaxProvider>
-                               {
-                                   new TaxProvider
-                                       {
-                                           Name = "Fixed tax rate provider",
-                                           ClassName = "Nop.Tax.FixedRateTaxProvider.FixedRateTaxProvider, Nop.Tax.FixedRateTaxProvider",
-                                           DisplayOrder = 1
-                                       },
-                                   new TaxProvider
-                                       {
-                                           Name = "Free tax rate provider",
-                                           ClassName = "Nop.Tax.FreeTaxProvider.FreeTaxProvider, Nop.Tax.FreeTaxProvider",
-                                           DisplayOrder = 2
-                                       }
-                               };
-            taxProviders.ForEach(tp => context.TaxProviders.Add(tp));
-            context.SaveChanges();
-
-            #endregion
-
             #region Tax classes
 
             var taxCategories = new List<TaxCategory>
