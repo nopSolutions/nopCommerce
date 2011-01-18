@@ -161,8 +161,7 @@ namespace Nop.Services.Directory
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode,
-            Currency targetCurrencyCode)
+        public decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
             decimal result = amount;
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
@@ -181,8 +180,7 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertToPrimaryExchangeRateCurrency(decimal amount,
-            Currency sourceCurrencyCode)
+        public decimal ConvertToPrimaryExchangeRateCurrency(decimal amount, Currency sourceCurrencyCode)
         {
             decimal result = amount;
             var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
@@ -202,8 +200,7 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount,
-            Currency targetCurrencyCode)
+        public decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount, Currency targetCurrencyCode)
         {
             decimal result = amount;
             var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
@@ -216,6 +213,21 @@ namespace Nop.Services.Directory
             }
             return result;
         }
+
+        /// <summary>
+        /// Converts from primary store currency
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="targetCurrencyCode">Target currency code</param>
+        /// <returns>Converted value</returns>
+        public decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode)
+        {
+            decimal result = amount;
+            var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            result = ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
+            return result;
+        }
+
         #endregion
     }
 }

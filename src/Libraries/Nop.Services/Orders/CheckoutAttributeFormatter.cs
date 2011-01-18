@@ -113,7 +113,7 @@ namespace Nop.Services.Orders
                                 if (renderPrices)
                                 {
                                     decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(caValue, customer);
-                                    decimal priceAdjustment = _currencyService.ConvertFromPrimaryExchangeRateCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                    decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {
                                         string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);

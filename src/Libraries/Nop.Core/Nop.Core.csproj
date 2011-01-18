@@ -76,6 +76,7 @@
     <Compile Include="Domain\Directory\StateProvince.cs" />
     <Compile Include="Domain\Orders\CheckoutAttribute.cs" />
     <Compile Include="Domain\Orders\CheckoutAttributeValue.cs" />
+    <Compile Include="Domain\Orders\ShoppingCartSettings.cs" />
     <Compile Include="Domain\Orders\ShoppingCartItem.cs" />
     <Compile Include="Domain\Orders\ShoppingCartType.cs" />
     <Compile Include="Domain\Tax\TaxSettings.cs" />

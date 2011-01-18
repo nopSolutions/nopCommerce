@@ -400,7 +400,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the cycle period for recurring products
         /// </summary>
-        public RecurringProductCyclePeriod RecurringProductCyclePeriod
+        public RecurringProductCyclePeriod RecurringCyclePeriod
         {
             get
             {

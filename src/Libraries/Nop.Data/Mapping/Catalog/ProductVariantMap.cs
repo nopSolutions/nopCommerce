@@ -35,7 +35,7 @@ namespace Nop.Data.Mapping.Catalog
             this.Ignore(pv => pv.GiftCardType);
             this.Ignore(pv => pv.LowStockActivity);
             this.Ignore(pv => pv.ManageInventoryMethod);
-            this.Ignore(pv => pv.RecurringProductCyclePeriod);
+            this.Ignore(pv => pv.RecurringCyclePeriod);
             
             this.HasRequired(pv => pv.Product)
                 .WithMany(p => p.ProductVariants)

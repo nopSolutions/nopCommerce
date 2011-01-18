@@ -121,7 +121,7 @@ namespace Nop.Services.Catalog
                                     {
                                         decimal taxRate = decimal.Zero;
                                         decimal priceAdjustmentBase = _taxService.GetProductPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
-                                        decimal priceAdjustment = _currencyService.ConvertFromPrimaryExchangeRateCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                        decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                         if (priceAdjustmentBase > 0)
                                         {
                                             string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
