@@ -482,7 +482,7 @@ namespace Nop.Services.Orders
             string selectedAttributes = "",
             decimal customerEnteredPrice = decimal.Zero)
         {
-            foreach (var sci in shoppingCart)
+            foreach (var sci in shoppingCart.Where(a => a.ShoppingCartType == shoppingCartType))
             {
                 if (sci.ProductVariantId == productVariantId)
                 {
