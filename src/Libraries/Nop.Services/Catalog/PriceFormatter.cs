@@ -238,34 +238,30 @@ namespace Nop.Services.Catalog
         public string FormatPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
+            //round before rendering
+            price = Math.Round(price, 2);
+            
             string currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
-
             if (showTax)
             {
-                string formatStr = string.Empty;
+                //show tax suffix
+                string formatStr;
                 if (priceIncludesTax)
                 {
                     formatStr = _localizationService.GetLocaleResourceString("Products.InclTaxSuffix", language.Id, false);
                     if (String.IsNullOrEmpty(formatStr))
-                    {
                         formatStr = "{0} incl tax";
-                    }
                 }
                 else
                 {
                     formatStr = _localizationService.GetLocaleResourceString("Products.ExclTaxSuffix", language.Id, false);
                     if (String.IsNullOrEmpty(formatStr))
-                    {
                         formatStr = "{0} excl tax";
-                    }
                 }
-                string taxString = string.Format(formatStr, currencyString);
-                return taxString;
+                return string.Format(formatStr, currencyString);
             }
             else
-            {
                 return currencyString;
-            }
         }
 
 
