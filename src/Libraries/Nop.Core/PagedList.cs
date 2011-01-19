@@ -52,7 +52,7 @@ namespace Nop.Core
         public PagedList(List<T> source, int pageIndex, int pageSize)
         {
             TotalCount = source.Count();
-            TotalPages = TotalCount / PageSize;
+            TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
                 TotalPages++;
