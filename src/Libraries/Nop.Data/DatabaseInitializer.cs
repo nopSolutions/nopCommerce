@@ -56,6 +56,71 @@ namespace Nop.Data
 
             #endregion
 
+            #region Measures
+
+            context.MeasureDimensions.Add(new MeasureDimension()
+                {
+                    Name = "inch(es)",
+                    SystemKeyword = "inches",
+                    Ratio = 1M,
+                    DisplayOrder = 1,
+                });
+            context.MeasureDimensions.Add(new MeasureDimension()
+            {
+                Name = "feet",
+                SystemKeyword = "feet",
+                Ratio = 0.0833M,
+                DisplayOrder = 2,
+            });
+            context.MeasureDimensions.Add(new MeasureDimension()
+            {
+                Name = "meter(s)",
+                SystemKeyword = "meters",
+                Ratio = 0.0254M,
+                DisplayOrder = 3,
+            });
+            context.MeasureDimensions.Add(new MeasureDimension()
+            {
+                Name = "millimetre(s)",
+                SystemKeyword = "millimetres",
+                Ratio = 25.4M,
+                DisplayOrder = 4,
+            });
+            context.SaveChanges();
+
+
+            context.MeasureWeights.Add(new MeasureWeight()
+            {
+                Name = "ounce(s)",
+                SystemKeyword = "ounce",
+                Ratio = 16M,
+                DisplayOrder = 1,
+            });
+            context.MeasureWeights.Add(new MeasureWeight()
+            {
+                Name = "lb(s)",
+                SystemKeyword = "lb",
+                Ratio = 1M,
+                DisplayOrder = 2,
+            });
+            context.MeasureWeights.Add(new MeasureWeight()
+            {
+                Name = "kg(s)",
+                SystemKeyword = "kg",
+                Ratio = 0.4536M,
+                DisplayOrder = 3,
+            });
+            context.MeasureWeights.Add(new MeasureWeight()
+            {
+                Name = "gram(s)",
+                SystemKeyword = "grams",
+                Ratio = 453.59M,
+                DisplayOrder = 4,
+            });
+            context.SaveChanges();
+
+            #endregion
+
             #region Tax classes
 
             var taxCategories = new List<TaxCategory>

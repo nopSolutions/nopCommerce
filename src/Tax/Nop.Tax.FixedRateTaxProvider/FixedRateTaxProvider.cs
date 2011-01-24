@@ -61,9 +61,7 @@ namespace Nop.Tax.FixedRateTaxProvider
         /// <returns>Tax rate</returns>
         protected decimal GetTaxRate(int taxCategoryId)
         {
-            //TODO resolve or pass ISettingService?
-            decimal rate = decimal.Zero;
-            //decimal rate = IoC.Resolve<ISettingService>().GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
+            decimal rate = this.SettingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
             return rate;
         }
     }

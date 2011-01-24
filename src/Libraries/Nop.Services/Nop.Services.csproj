@@ -101,6 +101,12 @@
     <Compile Include="Security\UserRegistrationResult.cs" />
     <Compile Include="Security\UserService.cs" />
     <Compile Include="Directory\StateProvinceService.cs" />
+    <Compile Include="Shipping\IShippingService.cs" />
+    <Compile Include="Shipping\GetShippingOptionRequest.cs" />
+    <Compile Include="Shipping\GetShippingOptionResponse.cs" />
+    <Compile Include="Shipping\IShippingRateComputationMethod.cs" />
+    <Compile Include="Shipping\ShippingRateComputationMethodType.cs" />
+    <Compile Include="Shipping\ShippingService.cs" />
     <Compile Include="Tax\CalculateTaxRequest.cs" />
     <Compile Include="Tax\CalculateTaxResult.cs" />
     <Compile Include="Tax\ITaxCategoryService.cs" />

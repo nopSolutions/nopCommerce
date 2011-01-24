@@ -18,6 +18,8 @@ using System.ComponentModel;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Nop.Services.Customers
 {
@@ -35,11 +37,27 @@ namespace Nop.Services.Customers
             if (customerAttribute == null)
                 return default(T);
 
-            if (!TypeDescriptor.GetConverter(typeof(T)).CanConvertFrom(typeof(string)))
-                throw new NopException("Not supported customer attribute type");
+            if (String.IsNullOrEmpty(customerAttribute.Value))
+            {
+                //empty attribute
+                return default(T);
+            }
+            else
+            {
+                if (!TypeDescriptor.GetConverter(typeof(T)).CanConvertFrom(typeof(string)))
+                    throw new NopException("Not supported customer attribute type");
+                var attributeValue = (T)(TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(customerAttribute.Value));
+                return attributeValue;
 
-            var attributeValue = (T)(TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(customerAttribute.Value));
-            return attributeValue;
+                //TODO use the code below in order to support all serializable types (for example, ShippingOption)
+                //using (var tr = new StringReader(customerAttribute.Value))
+                //{
+                //    var xmlS = new XmlSerializer(typeof(T));
+                //    var attributeValue = (T)xmlS.Deserialize(tr);
+                //    return attributeValue;
+                //}
+
+            }
         }
     }
 }

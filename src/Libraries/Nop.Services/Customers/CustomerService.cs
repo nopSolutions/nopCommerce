@@ -718,9 +718,17 @@ namespace Nop.Services.Customers
 
             if (!TypeDescriptor.GetConverter(typeof(T)).CanConvertTo(typeof(string)))
                 throw new NopException("Not supported customer attribute type");
+
+            //UNDONE compare value with default(T). In this case delete attribute (if exists)
+
             string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
-
-
+            //TODO use the code below in order to support all serializable types (for example, ShippingOption)
+            //using (var tr = new StringReader(customerAttribute.Value))
+            //{
+            //    var xmlS = new XmlSerializer(typeof(T));
+            //    valueStr = (T)xmlS.Deserialize(tr);
+            //}
+            
             if (customer.CustomerAttributes == null)
                 customer.CustomerAttributes = new List<CustomerAttribute>();
             var customerAttribute = customer.CustomerAttributes.FirstOrDefault(ca => ca.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));

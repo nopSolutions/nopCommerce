@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Tax.FreeTaxProvider", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Tax.FixedRateTaxProvider", "Tax\Nop.Tax.FixedRateTaxProvider\Nop.Tax.FixedRateTaxProvider.csproj", "{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shipping", "Shipping", "{03AE1193-8265-4F5D-BD1F-B30FE12CB52B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Shipping.AustraliaPost", "Shipping\Nop.Shipping.AustraliaPost\Nop.Shipping.AustraliaPost.csproj", "{C62337E5-F5D0-487C-B1BA-E434D28942AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +155,16 @@ Global
 		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F}.Release|x86.ActiveCfg = Release|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,5 +181,6 @@ Global
 		{1D9EB579-3630-468A-BE94-49E7DF4F6E1D} = {A340B280-C12B-47E7-90B7-89C650F8AAFC}
 		{FE702128-53A5-462B-A62E-14786993DE96} = {5A163323-210C-4453-910C-342B8EC265F5}
 		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F} = {5A163323-210C-4453-910C-342B8EC265F5}
+		{C62337E5-F5D0-487C-B1BA-E434D28942AF} = {03AE1193-8265-4F5D-BD1F-B30FE12CB52B}
 	EndGlobalSection
 EndGlobal

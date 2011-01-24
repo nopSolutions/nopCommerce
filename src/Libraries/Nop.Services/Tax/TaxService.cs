@@ -286,9 +286,9 @@ namespace Nop.Services.Tax
         /// <returns>Found tax provider</returns>
         public ITaxProvider LoadTaxProviderBySystemName(string systemName)
         {
-            var rules = LoadAllTaxProviders();
-            var rule = rules.SingleOrDefault(r => r.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return rule;
+            var providers = LoadAllTaxProviders();
+            var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return provider;
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace Nop.Services.Tax
 
             //TODO search in all assemblies (use StructureMap assembly scanning - http://structuremap.net/structuremap/ScanningAssemblies.htm)
             //NOTE: currently it doesn't work until tax providers are saved into Nop.Services
-            System.Type configType = typeof(TaxService);   //any of your tax provider implementation implementations here
+            System.Type configType = typeof(TaxService);
             var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
                 .Where(type => type.GetInterfaces().Contains(typeof(ITaxProvider)));
 
