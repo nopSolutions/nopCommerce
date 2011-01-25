@@ -29,6 +29,8 @@ using Nop.Services.Discounts;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
+using Nop.Data;
+using Nop.Core.Caching;
 
 namespace Nop.Services.Shipping
 {
@@ -37,9 +39,18 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class ShippingService : IShippingService
     {
+        #region Constants
+
+        private const string SHIPPINGMETHODS_BY_ID_KEY = "Nop.shippingMethod.id-{0}";
+        private const string SHIPPINGMETHODS_PATTERN_KEY = "Nop.shippingMethod.";
+
+        #endregion
+
         #region Fields
 
         private readonly IWorkContext _workContext;
+        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
+        private readonly ICacheManager _cacheManager;
         private readonly ILogger _logger;
         private readonly IDiscountService _discountService;
         private readonly ITaxService _taxService;
@@ -54,14 +65,18 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="shippingMethodRepository">Shipping method repository</param>
         /// <param name="logger">Logger</param>
         /// <param name="discountService">Discount service</param>
         /// <param name="taxService">Tax service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="shippingSettings">Shipping settings</param>
-        public ShippingService(IWorkContext workContext, 
+        public ShippingService(ICacheManager cacheManager, 
+            IWorkContext workContext,
+            IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
             IDiscountService discountService,
             ITaxService taxService,
@@ -69,7 +84,9 @@ namespace Nop.Services.Shipping
             ICheckoutAttributeParser checkoutAttributeParser,
             ShippingSettings shippingSettings)
         {
+            this._cacheManager = cacheManager;
             this._workContext = workContext;
+            this._shippingMethodRepository = shippingMethodRepository;
             this._logger = logger;
             this._discountService = discountService;
             this._taxService = taxService;
@@ -223,7 +240,86 @@ namespace Nop.Services.Shipping
         }
 
         #endregion
-        
+
+        #region Shipping methods
+
+
+        /// <summary>
+        /// Deletes a shipping method
+        /// </summary>
+        /// <param name="shippingMethod">The shipping method</param>
+        public void DeleteShippingMethod(ShippingMethod shippingMethod)
+        {
+            if (shippingMethod == null)
+                return;
+
+            _shippingMethodRepository.Delete(shippingMethod);
+            _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+        }
+
+        /// <summary>
+        /// Gets a shipping method
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <returns>Shipping method</returns>
+        public ShippingMethod GetShippingMethodById(int shippingMethodId)
+        {
+            if (shippingMethodId == 0)
+                return null;
+
+            string key = string.Format(SHIPPINGMETHODS_BY_ID_KEY, shippingMethodId);
+            return _cacheManager.Get(key, () =>
+            {
+                var shippingMethod = _shippingMethodRepository.GetById(shippingMethodId);
+                return shippingMethod;
+            });
+        }
+
+
+        /// <summary>
+        /// Gets all shipping methods
+        /// </summary>
+        /// <returns>Shipping method collection</returns>
+        public List<ShippingMethod> GetAllShippingMethods()
+        {
+            var query = from sm in _shippingMethodRepository.Table
+                        orderby sm.DisplayOrder
+                        select sm;
+
+            var shippingMethods = query.ToList();
+            return shippingMethods;
+        }
+
+        /// <summary>
+        /// Inserts a shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        public void InsertShippingMethod(ShippingMethod shippingMethod)
+        {
+            if (shippingMethod == null)
+                throw new ArgumentNullException("shippingMethod");
+
+            _shippingMethodRepository.Insert(shippingMethod);
+            
+            _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+        }
+
+        /// <summary>
+        /// Updates the shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        public void UpdateShippingMethod(ShippingMethod shippingMethod)
+        {
+            if (shippingMethod == null)
+                throw new ArgumentNullException("shippingMethod");
+
+            _shippingMethodRepository.Update(shippingMethod);
+
+            _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+        }
+
+        #endregion
+
         #region Workflow
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace Nop.Data.Mapping.Tax
         public TaxCategoryMap()
         {
             this.ToTable("TaxCategory");
-            this.HasKey(p => p.Id);
+            this.HasKey(tc => tc.Id);
         }
     }
 }

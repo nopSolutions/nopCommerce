@@ -32,6 +32,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Data.Mapping.Localization;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data
 {
@@ -81,6 +82,7 @@ namespace Nop.Data
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<RelatedProduct> RelatedProducts { get; set; }
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<ShippingMethod> ShippingMethods { get; set; }
         public DbSet<SpecificationAttribute> SpecificationAttributes { get; set; }
         public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
         public DbSet<StateProvince> StateProvinces { get; set; }

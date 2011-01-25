@@ -88,6 +88,7 @@
     <Compile Include="Mapping\Localization\LanguageMap.cs" />
     <Compile Include="Mapping\Localization\LocaleStringResourceMap.cs" />
     <Compile Include="Mapping\Configuration\SettingMap.cs" />
+    <Compile Include="Mapping\Shipping\ShippingMethodMap.cs" />
     <Compile Include="Mapping\Tax\TaxCategoryMap.cs" />
     <Compile Include="NopObjectContext.cs" />
     <Compile Include="EfRepository.cs" />

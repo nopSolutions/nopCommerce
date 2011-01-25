@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shipping", "Shipping", "{03
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Shipping.AustraliaPost", "Shipping\Nop.Shipping.AustraliaPost\Nop.Shipping.AustraliaPost.csproj", "{C62337E5-F5D0-487C-B1BA-E434D28942AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Shipping.FixedRateShipping", "Shipping\Nop.Shipping.FixedRateShipping\Nop.Shipping.FixedRateShipping.csproj", "{97130438-0008-4D7A-8DD1-EF89348AB016}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +167,16 @@ Global
 		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C62337E5-F5D0-487C-B1BA-E434D28942AF}.Release|x86.ActiveCfg = Release|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{97130438-0008-4D7A-8DD1-EF89348AB016}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -182,5 +194,6 @@ Global
 		{FE702128-53A5-462B-A62E-14786993DE96} = {5A163323-210C-4453-910C-342B8EC265F5}
 		{F18A3746-9B5E-4423-8EA3-D95D43B94E4F} = {5A163323-210C-4453-910C-342B8EC265F5}
 		{C62337E5-F5D0-487C-B1BA-E434D28942AF} = {03AE1193-8265-4F5D-BD1F-B30FE12CB52B}
+		{97130438-0008-4D7A-8DD1-EF89348AB016} = {03AE1193-8265-4F5D-BD1F-B30FE12CB52B}
 	EndGlobalSection
 EndGlobal

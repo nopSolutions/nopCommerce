@@ -79,6 +79,7 @@
     <Compile Include="Domain\Orders\ShoppingCartSettings.cs" />
     <Compile Include="Domain\Orders\ShoppingCartItem.cs" />
     <Compile Include="Domain\Orders\ShoppingCartType.cs" />
+    <Compile Include="Domain\Shipping\ShippingMethod.cs" />
     <Compile Include="Domain\Shipping\ShippingOption.cs" />
     <Compile Include="Domain\Shipping\ShippingSettings.cs" />
     <Compile Include="Domain\Tax\TaxSettings.cs" />

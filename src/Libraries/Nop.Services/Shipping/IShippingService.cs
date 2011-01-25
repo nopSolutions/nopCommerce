@@ -55,7 +55,42 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <returns>Tax providers</returns>
         IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods();
-        
+
+
+
+
+        /// <summary>
+        /// Deletes a shipping method
+        /// </summary>
+        /// <param name="shippingMethod">The shipping method</param>
+        void DeleteShippingMethod(ShippingMethod shippingMethod);
+
+        /// <summary>
+        /// Gets a shipping method
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <returns>Shipping method</returns>
+        ShippingMethod GetShippingMethodById(int shippingMethodId);
+
+
+        /// <summary>
+        /// Gets all shipping methods
+        /// </summary>
+        /// <returns>Shipping method collection</returns>
+        List<ShippingMethod> GetAllShippingMethods();
+
+        /// <summary>
+        /// Inserts a shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        void InsertShippingMethod(ShippingMethod shippingMethod);
+
+        /// <summary>
+        /// Updates the shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        void UpdateShippingMethod(ShippingMethod shippingMethod);
+
 
 
 
