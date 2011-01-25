@@ -77,7 +77,7 @@ namespace Nop.Services.Shipping
         /// Gets all shipping methods
         /// </summary>
         /// <returns>Shipping method collection</returns>
-        List<ShippingMethod> GetAllShippingMethods();
+        IList<ShippingMethod> GetAllShippingMethods();
 
         /// <summary>
         /// Inserts a shipping method
@@ -183,7 +183,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <returns>Shipping options</returns>
-        List<ShippingOption> GetShippingOptions(IList<ShoppingCartItem> cart,
+        IList<ShippingOption> GetShippingOptions(IList<ShoppingCartItem> cart,
             Customer customer, Address shippingAddress,
             string allowedShippingRateComputationMethodSystemName);
     }

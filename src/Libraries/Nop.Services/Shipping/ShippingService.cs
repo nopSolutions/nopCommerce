@@ -280,7 +280,7 @@ namespace Nop.Services.Shipping
         /// Gets all shipping methods
         /// </summary>
         /// <returns>Shipping method collection</returns>
-        public List<ShippingMethod> GetAllShippingMethods()
+        public IList<ShippingMethod> GetAllShippingMethods()
         {
             var query = from sm in _shippingMethodRepository.Table
                         orderby sm.DisplayOrder
@@ -582,7 +582,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <returns>Shipping options</returns>
-        public List<ShippingOption> GetShippingOptions(IList<ShoppingCartItem> cart,
+        public IList<ShippingOption> GetShippingOptions(IList<ShoppingCartItem> cart,
             Customer customer, Address shippingAddress,
             string allowedShippingRateComputationMethodSystemName)
         {
