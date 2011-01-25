@@ -250,16 +250,15 @@ namespace Nop.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
             //check coupon code
             if (discount.RequiresCouponCode)
             {
                 if (String.IsNullOrEmpty(discount.CouponCode))
                     return false;
 
-                string couponCodeToValidate = customer.DiscountCouponCode;
+                string couponCodeToValidate = string.Empty;
+                if (customer!=null)
+                    couponCodeToValidate = customer.DiscountCouponCode;
                 if (!discount.CouponCode.Equals(couponCodeToValidate, StringComparison.InvariantCultureIgnoreCase))
                     return false;
             }

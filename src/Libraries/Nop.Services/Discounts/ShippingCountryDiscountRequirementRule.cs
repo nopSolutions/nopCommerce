@@ -57,7 +57,7 @@ namespace Nop.Services.Discounts
                 throw new NopException("Discount requirement is not set");
 
             if (request.Customer == null)
-                throw new NopException("Customer is not set");
+                return false;
 
             if (request.Customer.ShippingAddress == null)
                 return false;

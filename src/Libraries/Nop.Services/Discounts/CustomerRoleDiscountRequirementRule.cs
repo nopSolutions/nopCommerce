@@ -57,7 +57,7 @@ namespace Nop.Services.Discounts
                 throw new NopException("Discount requirement is not set");
 
             if (request.Customer == null)
-                throw new NopException("Customer is not set");
+                return false;
             
             var customerRoles = request.Customer.CustomerRoles; //TODO use ICustomerService.GetCustomerRolesByCustomerId
             if (customerRoles == null ||
