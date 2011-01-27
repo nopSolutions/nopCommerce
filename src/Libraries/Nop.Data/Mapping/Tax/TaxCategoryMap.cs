@@ -9,6 +9,7 @@ namespace Nop.Data.Mapping.Tax
         {
             this.ToTable("TaxCategory");
             this.HasKey(tc => tc.Id);
+            this.Property(tc => tc.Name).IsRequired().HasMaxLength(400);
         }
     }
 }

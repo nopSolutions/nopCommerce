@@ -25,13 +25,13 @@ namespace Nop.Data.Mapping.Catalog
             this.ToTable("Product");
             this.HasKey(p => p.Id);
             this.Property(p => p.Name).IsRequired().HasMaxLength(400);
-            this.Property(p => p.ShortDescription).IsRequired().IsMaxLength();
-            this.Property(p => p.FullDescription).IsRequired().IsMaxLength();
-            this.Property(p => p.AdminComment).IsRequired().IsMaxLength();
-            this.Property(p => p.MetaKeywords).IsRequired().HasMaxLength(400);
-            this.Property(p => p.MetaDescription).IsRequired();
-            this.Property(p => p.MetaTitle).IsRequired().HasMaxLength(400);
-            this.Property(p => p.SeName).IsRequired().HasMaxLength(100);
+            this.Property(p => p.ShortDescription).IsMaxLength();
+            this.Property(p => p.FullDescription).IsMaxLength();
+            this.Property(p => p.AdminComment).IsMaxLength();
+            this.Property(p => p.MetaKeywords).HasMaxLength(400);
+            this.Property(p => p.MetaDescription);
+            this.Property(p => p.MetaTitle).HasMaxLength(400);
+            this.Property(p => p.SeName).HasMaxLength(100);
         }
     }
 }

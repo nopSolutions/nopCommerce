@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping.Customers
             this.ToTable("CustomerContent");
 
             this.HasKey(cc => cc.Id);
-            this.Property(cc => cc.IpAddress).IsRequired().HasMaxLength(200);
+            this.Property(cc => cc.IpAddress).HasMaxLength(200);
 
             this.HasRequired(cc => cc.Customer)
                 .WithMany(c => c.CustomerContent)

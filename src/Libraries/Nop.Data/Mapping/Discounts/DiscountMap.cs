@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping.Discounts
             this.ToTable("Discount");
             this.HasKey(d => d.Id);
             this.Property(d => d.Name).IsRequired().HasMaxLength(200);
-            this.Property(d => d.CouponCode).IsRequired().HasMaxLength(100);
+            this.Property(d => d.CouponCode).HasMaxLength(100);
             this.Property(d => d.DiscountPercentage).HasPrecision(18, 4);
             this.Property(d => d.DiscountAmount).HasPrecision(18, 4);
 

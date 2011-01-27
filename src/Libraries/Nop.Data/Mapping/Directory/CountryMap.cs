@@ -24,9 +24,9 @@ namespace Nop.Data.Mapping.Directory
         {
             this.ToTable("Country");
             this.HasKey(c =>c.Id);
-            this.Property(c =>c.Name).IsRequired().HasMaxLength(100);
-            this.Property(c =>c.TwoLetterIsoCode).IsRequired().HasMaxLength(2);
-            this.Property(c =>c.ThreeLetterIsoCode).IsRequired().HasMaxLength(3);
+            this.Property(c => c.Name).IsRequired().HasMaxLength(100);
+            this.Property(c =>c.TwoLetterIsoCode).HasMaxLength(2);
+            this.Property(c =>c.ThreeLetterIsoCode).HasMaxLength(3);
         }
     }
 }

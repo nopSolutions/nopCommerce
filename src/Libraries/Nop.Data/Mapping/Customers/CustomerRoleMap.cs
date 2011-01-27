@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping.Customers
             this.ToTable("CustomerRole");
             this.HasKey(cr => cr.Id);
             this.Property(cr => cr.Name).IsRequired().HasMaxLength(255);
-            this.Property(cr => cr.SystemName).IsRequired().HasMaxLength(255);
+            this.Property(cr => cr.SystemName).HasMaxLength(255);
 
             this.HasMany(cr => cr.Customers)
                 .WithMany(c => c.CustomerRoles)

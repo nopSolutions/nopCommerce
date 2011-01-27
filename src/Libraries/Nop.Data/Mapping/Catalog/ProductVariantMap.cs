@@ -25,11 +25,11 @@ namespace Nop.Data.Mapping.Catalog
             this.ToTable("ProductVariant");
             this.HasKey(pv => pv.Id);
             this.Property(pv => pv.Name).IsRequired().HasMaxLength(400);
-            this.Property(pv => pv.Sku).IsRequired().HasMaxLength(400);
-            this.Property(pv => pv.Description).IsRequired().IsMaxLength();
-            this.Property(pv => pv.AdminComment).IsRequired().IsMaxLength();
-            this.Property(pv => pv.ManufacturerPartNumber).IsRequired().HasMaxLength(400);
-            this.Property(pv => pv.UserAgreementText).IsRequired().IsMaxLength();
+            this.Property(pv => pv.Sku).HasMaxLength(400);
+            this.Property(pv => pv.Description).IsMaxLength();
+            this.Property(pv => pv.AdminComment).IsMaxLength();
+            this.Property(pv => pv.ManufacturerPartNumber).HasMaxLength(400);
+            this.Property(pv => pv.UserAgreementText).IsMaxLength();
 
             this.Property(pv => pv.AdditionalShippingCharge).HasPrecision(18, 4);
             this.Property(pv => pv.Price).HasPrecision(18, 4);

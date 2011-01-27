@@ -25,12 +25,12 @@ namespace Nop.Data.Mapping.Catalog
             this.ToTable("Category");
             this.HasKey(c => c.Id);
             this.Property(c => c.Name).IsRequired().HasMaxLength(400);
-            this.Property(c => c.Description).IsRequired().IsMaxLength();
-            this.Property(c => c.MetaKeywords).IsRequired().HasMaxLength(400);
-            this.Property(c => c.MetaDescription).IsRequired();
-            this.Property(c => c.MetaTitle).IsRequired().HasMaxLength(400);
-            this.Property(c => c.SeName).IsRequired().HasMaxLength(100);
-            this.Property(c => c.PriceRanges).IsRequired().HasMaxLength(400);
+            this.Property(c => c.Description).IsMaxLength();
+            this.Property(c => c.MetaKeywords).HasMaxLength(400);
+            this.Property(c => c.MetaDescription);
+            this.Property(c => c.MetaTitle).HasMaxLength(400);
+            this.Property(c => c.SeName).HasMaxLength(100);
+            this.Property(c => c.PriceRanges).HasMaxLength(400);
         }
     }
 }

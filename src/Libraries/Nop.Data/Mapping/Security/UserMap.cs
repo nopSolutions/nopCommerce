@@ -12,7 +12,7 @@ namespace Nop.Data.Mapping.Security
             this.Property(u => u.Username).IsRequired();
             this.Property(u => u.Email).IsRequired();
             this.Property(u => u.Password).IsRequired();
-            this.Property(u => u.UserGuid).IsRequired();
+            this.Property(u => u.UserGuid);
 
             this.Ignore(u => u.PasswordFormat);
             this.Ignore(u => u.FullName);

@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping.Configuration
             this.HasKey(s => s.Id);
             this.Property(s => s.Name).IsRequired().HasMaxLength(200);
             this.Property(s => s.Value).IsRequired().HasMaxLength(2000);
-            this.Property(s => s.Description).IsRequired();
+            this.Property(s => s.Description);
         }
     }
 }

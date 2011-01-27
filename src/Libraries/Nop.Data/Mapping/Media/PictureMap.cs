@@ -24,7 +24,7 @@ namespace Nop.Data.Mapping.Media
         {
             this.ToTable("Picture");
             this.HasKey(p => p.Id);
-            this.Property(p => p.PictureBinary).IsRequired();
+            this.Property(p => p.PictureBinary);
             this.Property(p => p.MimeType).IsRequired().HasMaxLength(20);
         }
     }
