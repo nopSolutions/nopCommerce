@@ -25,7 +25,6 @@ namespace Nop.Data.Tests
                                                            ShortDescription = "ShortDescription 1",
                                                            FullDescription = "FullDescription 1",
                                                            AdminComment = "AdminComment 1",
-                                                           TemplateId = 1,
                                                            ShowOnHomePage = false,
                                                            MetaKeywords = "Meta keywords",
                                                            MetaDescription = "Meta description",
@@ -44,7 +43,6 @@ namespace Nop.Data.Tests
                                                                       {
                                                                           Name = "Books",
                                                                           Description = "Description 1",
-                                                                          TemplateId = 1,
                                                                           MetaKeywords = "Meta keywords",
                                                                           MetaDescription = "Meta description",
                                                                           MetaTitle = "Meta title",

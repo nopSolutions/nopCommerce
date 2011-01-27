@@ -19,7 +19,6 @@ namespace Nop.Data.Tests
             {
                 Name = "Name",
                 Description = "Description 1",
-                TemplateId = 1,
                 MetaKeywords = "Meta keywords",
                 MetaDescription = "Meta description",
                 MetaTitle = "Meta title",
@@ -38,7 +37,6 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name");
             fromDb.Description.ShouldEqual("Description 1");
-            fromDb.TemplateId.ShouldEqual(1);
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
             fromDb.SeName.ShouldEqual("SE name");
@@ -59,7 +57,6 @@ namespace Nop.Data.Tests
             {
                 Name = "Name",
                 Description = "Description 1",
-                TemplateId = 1,
                 MetaKeywords = "Meta keywords",
                 MetaDescription = "Meta description",
                 MetaTitle = "Meta title",
@@ -84,7 +81,6 @@ namespace Nop.Data.Tests
                             ShortDescription = "ShortDescription 1",
                             FullDescription = "FullDescription 1",
                             AdminComment = "AdminComment 1",
-                            TemplateId = 1,
                             ShowOnHomePage = false,
                             MetaKeywords = "Meta keywords",
                             MetaDescription = "Meta description",

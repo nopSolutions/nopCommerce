@@ -336,7 +336,6 @@ namespace Nop.Data.Tests
                     ShortDescription = "ShortDescription 1",
                     FullDescription = "FullDescription 1",
                     AdminComment = "AdminComment 1",
-                    TemplateId = 1,
                     ShowOnHomePage = false,
                     MetaKeywords = "Meta keywords",
                     MetaDescription = "Meta description",

@@ -19,7 +19,6 @@ namespace Nop.Data.Tests
                                {
                                    Name = "Books",
                                    Description = "Description 1",
-                                   TemplateId = 1,
                                    MetaKeywords = "Meta keywords",
                                    MetaDescription = "Meta description",
                                    MetaTitle = "Meta title",
@@ -40,7 +39,6 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Books");
             fromDb.Description.ShouldEqual("Description 1");
-            fromDb.TemplateId.ShouldEqual(1);
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
             fromDb.SeName.ShouldEqual("SE name");
@@ -63,7 +61,6 @@ namespace Nop.Data.Tests
                                {
                                    Name = "Books",
                                    Description = "Description 1",
-                                   TemplateId = 1,
                                    MetaKeywords = "Meta keywords",
                                    MetaDescription = "Meta description",
                                    MetaTitle = "Meta title",
@@ -79,39 +76,33 @@ namespace Nop.Data.Tests
                                    CreatedOnUtc = new DateTime(2010, 01, 01),
                                    UpdatedOnUtc = new DateTime(2010, 01, 02),
                                    ProductCategories = new List<ProductCategory>()
-                                                           {
-                                                               new ProductCategory
-                                                                   {
-                                                                       IsFeaturedProduct = true,
-                                                                       DisplayOrder = 1,
-                                                                       Product = new Product()
-                                                                                     {
-                                                                                         Name = "Name 1",
-                                                                                         ShortDescription =
-                                                                                             "ShortDescription 1",
-                                                                                         FullDescription =
-                                                                                             "FullDescription 1",
-                                                                                         AdminComment = "AdminComment 1",
-                                                                                         TemplateId = 1,
-                                                                                         ShowOnHomePage = false,
-                                                                                         MetaKeywords = "Meta keywords",
-                                                                                         MetaDescription =
-                                                                                             "Meta description",
-                                                                                         MetaTitle = "Meta title",
-                                                                                         SeName = "SE name",
-                                                                                         AllowCustomerReviews = true,
-                                                                                         AllowCustomerRatings = true,
-                                                                                         RatingSum = 2,
-                                                                                         TotalRatingVotes = 3,
-                                                                                         Published = true,
-                                                                                         Deleted = false,
-                                                                                         CreatedOnUtc =
-                                                                                             new DateTime(2010, 01, 01),
-                                                                                         UpdatedOnUtc =
-                                                                                             new DateTime(2010, 01, 02)
-                                                                                     }
-                                                                   }
-                                                           }
+                                   {
+                                       new ProductCategory
+                                       {
+                                           IsFeaturedProduct = true,
+                                           DisplayOrder = 1,
+                                           Product = new Product()
+                                           {
+                                               Name = "Name 1",
+                                               ShortDescription = "ShortDescription 1",
+                                               FullDescription = "FullDescription 1",
+                                               AdminComment = "AdminComment 1",
+                                               ShowOnHomePage = false,
+                                               MetaKeywords = "Meta keywords",
+                                               MetaDescription = "Meta description",
+                                               MetaTitle = "Meta title",
+                                               SeName = "SE name",
+                                               AllowCustomerReviews = true,
+                                               AllowCustomerRatings = true,
+                                               RatingSum = 2,
+                                               TotalRatingVotes = 3,
+                                               Published = true,
+                                               Deleted = false,
+                                               CreatedOnUtc = new DateTime(2010, 01, 01),
+                                               UpdatedOnUtc = new DateTime(2010, 01, 02)
+                                           }
+                                       }
+                                   }
                                };
 
             var fromDb = SaveAndLoadEntity(category);

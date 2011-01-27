@@ -39,11 +39,6 @@ namespace Nop.Core.Domain.Catalog
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the template identifier
-        /// </summary>
-        public int TemplateId { get; set; }
-
-        /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
         public string MetaKeywords { get; set; }

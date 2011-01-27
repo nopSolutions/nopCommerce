@@ -272,7 +272,6 @@ namespace Nop.Data
             {
                 Name = "Jewelry",
                 Description = "Some description 1",
-                TemplateId = 0, //TODO: set TemplateId
                 MetaKeywords = string.Empty,
                 MetaDescription = string.Empty,
                 MetaTitle = string.Empty,
@@ -308,7 +307,6 @@ namespace Nop.Data
             {
                 Name = "Manufacturer 1",
                 Description = "Some description 1",
-                TemplateId = 0, //TODO: set TemplateId
                 MetaKeywords = string.Empty,
                 MetaDescription = string.Empty,
                 MetaTitle = string.Empty,
@@ -334,7 +332,6 @@ namespace Nop.Data
                                    FullDescription =
                                        "<p>Bold black diamonds alternate with sparkling white diamonds along a crisp sterling silver heart to create a look that is simple and beautiful. This sleek and stunning 1/4 carat (ctw) diamond heart pendant which includes an 18 inch silver chain, and a free box of godiva chocolates makes the perfect Valentine's Day gift.</p>",
                                    AdminComment = string.Empty,
-                                   TemplateId = 0, //TODO: set TemplateId
                                    ShowOnHomePage = false,
                                    MetaKeywords = string.Empty,
                                    MetaDescription = string.Empty,

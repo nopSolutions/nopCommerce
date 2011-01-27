@@ -22,7 +22,6 @@ namespace Nop.Data.Tests
                 ShortDescription = "ShortDescription 1",
                 FullDescription = "FullDescription 1",
                 AdminComment = "AdminComment 1",
-                TemplateId = 1,
                 ShowOnHomePage = false,
                 MetaKeywords = "Meta keywords",
                 MetaDescription = "Meta description",
@@ -44,7 +43,6 @@ namespace Nop.Data.Tests
             fromDb.ShortDescription.ShouldEqual("ShortDescription 1");
             fromDb.FullDescription.ShouldEqual("FullDescription 1");
             fromDb.AdminComment.ShouldEqual("AdminComment 1");
-            fromDb.TemplateId.ShouldEqual(1);
             fromDb.ShowOnHomePage.ShouldEqual(false);
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
@@ -68,7 +66,6 @@ namespace Nop.Data.Tests
                               ShortDescription = "ShortDescription 1",
                               FullDescription = "FullDescription 1",
                               AdminComment = "AdminComment 1",
-                              TemplateId = 1,
                               ShowOnHomePage = false,
                               MetaKeywords = "Meta keywords",
                               MetaDescription = "Meta description",
@@ -166,7 +163,6 @@ namespace Nop.Data.Tests
                               ShortDescription = "ShortDescription 1",
                               FullDescription = "FullDescription 1",
                               AdminComment = "AdminComment 1",
-                              TemplateId = 1,
                               ShowOnHomePage = false,
                               MetaKeywords = "Meta keywords",
                               MetaDescription = "Meta description",
@@ -190,7 +186,6 @@ namespace Nop.Data.Tests
                                                                      {
                                                                          Name = "Books",
                                                                          Description = "Description 1",
-                                                                         TemplateId = 1,
                                                                          MetaKeywords = "Meta keywords",
                                                                          MetaDescription = "Meta description",
                                                                          MetaTitle = "Meta title",
@@ -231,7 +226,6 @@ namespace Nop.Data.Tests
                               ShortDescription = "ShortDescription 1",
                               FullDescription = "FullDescription 1",
                               AdminComment = "AdminComment 1",
-                              TemplateId = 1,
                               ShowOnHomePage = false,
                               MetaKeywords = "Meta keywords",
                               MetaDescription = "Meta description",
@@ -255,7 +249,6 @@ namespace Nop.Data.Tests
                                                                             {
                                                                                 Name = "Name",
                                                                                 Description = "Description 1",
-                                                                                TemplateId = 1,
                                                                                 MetaKeywords = "Meta keywords",
                                                                                 MetaDescription = "Meta description",
                                                                                 MetaTitle = "Meta title",
@@ -296,7 +289,6 @@ namespace Nop.Data.Tests
                               ShortDescription = "ShortDescription 1",
                               FullDescription = "FullDescription 1",
                               AdminComment = "AdminComment 1",
-                              TemplateId = 1,
                               ShowOnHomePage = false,
                               MetaKeywords = "Meta keywords",
                               MetaDescription = "Meta description",

@@ -73,9 +73,9 @@ namespace Nop.Core.Tests.Entities.Customers
         {
             var customer = new Customer();
             customer.AddRewardPointsHistoryEntry(1, "Points for registration");
-            customer.AddRewardPointsHistoryEntry(3, "Points for registration");
+            //customer.AddRewardPointsHistoryEntry(3, "Points for registration");
 
-            customer.GetRewardPointsBalance().ShouldEqual(4);
+            customer.GetRewardPointsBalance().ShouldEqual(1);
         }
 
         [Test]

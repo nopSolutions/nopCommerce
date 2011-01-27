@@ -55,11 +55,6 @@ namespace Nop.Core.Domain.Catalog
         public string AdminComment { get; set; }
 
         /// <summary>
-        /// Gets or sets the template identifier
-        /// </summary>
-        public int TemplateId { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to show the product on home page
         /// </summary>
         public bool ShowOnHomePage { get; set; }
