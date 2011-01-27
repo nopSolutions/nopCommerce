@@ -24,6 +24,8 @@ namespace Nop.Data.Mapping.Orders
         {
             this.ToTable("CheckoutAttributeValue");
             this.HasKey(cav => cav.Id);
+            this.Property(cav => cav.PriceAdjustment).HasPrecision(18, 4);
+            this.Property(cav => cav.WeightAdjustment).HasPrecision(18, 4);
 
             this.HasRequired(cav => cav.CheckoutAttribute)
                 .WithMany(ca => ca.CheckoutAttributeValues)

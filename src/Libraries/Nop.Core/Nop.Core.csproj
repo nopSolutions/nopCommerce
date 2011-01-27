@@ -67,6 +67,7 @@
     <Compile Include="Domain\Catalog\ProductReview.cs" />
     <Compile Include="Domain\Customers\CustomerContent.cs" />
     <Compile Include="Domain\Discounts\CheckDiscountRequirementRequest.cs" />
+    <Compile Include="Domain\Discounts\DiscountUsageHistory.cs" />
     <Compile Include="Domain\Discounts\IDiscountRequirementRule.cs" />
     <Compile Include="Domain\Discounts\DiscountRequirement.cs" />
     <Compile Include="Domain\Discounts\Discount.cs" />
@@ -76,6 +77,10 @@
     <Compile Include="Domain\Directory\StateProvince.cs" />
     <Compile Include="Domain\Orders\CheckoutAttribute.cs" />
     <Compile Include="Domain\Orders\CheckoutAttributeValue.cs" />
+    <Compile Include="Domain\Orders\GiftCard.cs" />
+    <Compile Include="Domain\Orders\GiftCardUsageHistory.cs" />
+    <Compile Include="Domain\Orders\Order.cs" />
+    <Compile Include="Domain\Customers\RewardPointsHistory.cs" />
     <Compile Include="Domain\Orders\ShoppingCartSettings.cs" />
     <Compile Include="Domain\Orders\ShoppingCartItem.cs" />
     <Compile Include="Domain\Orders\ShoppingCartType.cs" />

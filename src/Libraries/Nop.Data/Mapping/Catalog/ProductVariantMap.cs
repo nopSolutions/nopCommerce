@@ -30,12 +30,26 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(pv => pv.AdminComment).IsRequired().IsMaxLength();
             this.Property(pv => pv.ManufacturerPartNumber).IsRequired().HasMaxLength(400);
             this.Property(pv => pv.UserAgreementText).IsRequired().IsMaxLength();
+
+            this.Property(pv => pv.AdditionalShippingCharge).HasPrecision(18, 4);
+            this.Property(pv => pv.Price).HasPrecision(18, 4);
+            this.Property(pv => pv.OldPrice).HasPrecision(18, 4);
+            this.Property(pv => pv.ProductCost).HasPrecision(18, 4);
+            this.Property(pv => pv.MinimumCustomerEnteredPrice).HasPrecision(18, 4);
+            this.Property(pv => pv.MaximumCustomerEnteredPrice).HasPrecision(18, 4);
+            this.Property(pv => pv.Weight).HasPrecision(18, 4);
+            this.Property(pv => pv.Length).HasPrecision(18, 4);
+            this.Property(pv => pv.Width).HasPrecision(18, 4);
+            this.Property(pv => pv.Height).HasPrecision(18, 4);
+
             this.Ignore(pv => pv.BackorderMode);
             this.Ignore(pv => pv.DownloadActivationType);
             this.Ignore(pv => pv.GiftCardType);
             this.Ignore(pv => pv.LowStockActivity);
             this.Ignore(pv => pv.ManageInventoryMethod);
             this.Ignore(pv => pv.RecurringCyclePeriod);
+
+
             
             this.HasRequired(pv => pv.Product)
                 .WithMany(p => p.ProductVariants)

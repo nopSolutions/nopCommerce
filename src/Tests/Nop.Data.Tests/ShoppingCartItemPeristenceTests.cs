@@ -23,7 +23,7 @@ namespace Nop.Data.Tests
             {
                 ShoppingCartType = ShoppingCartType.ShoppingCart,
                 AttributesXml = "AttributesXml 1",
-                CustomerEnteredPrice=1,
+                CustomerEnteredPrice = 1.1M,
                 Quantity= 2,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
@@ -36,7 +36,7 @@ namespace Nop.Data.Tests
 
             fromDb.ShoppingCartType.ShouldEqual(ShoppingCartType.ShoppingCart);
             fromDb.AttributesXml.ShouldEqual("AttributesXml 1");
-            fromDb.CustomerEnteredPrice.ShouldEqual(1);
+            fromDb.CustomerEnteredPrice.ShouldEqual(1.1M);
             fromDb.Quantity.ShouldEqual(2);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.UpdatedOnUtc.ShouldEqual(new DateTime(2010, 01, 02));

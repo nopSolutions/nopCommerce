@@ -57,5 +57,53 @@ namespace Nop.Core.Tests.Entities.Customers
             customer.Addresses.Count.ShouldEqual(0);
             customer.BillingAddress.ShouldBeNull();
         }
+
+        [Test]
+        public void Can_add_rewardPointsHistoryEntry()
+        {
+            var customer = new Customer();
+            customer.AddRewardPointsHistoryEntry(1, "Points for registration");
+
+            customer.RewardPointsHistory.Count.ShouldEqual(1);
+            customer.RewardPointsHistory.First().Points.ShouldEqual(1);
+        }
+
+        [Test]
+        public void Can_get_rewardPointsHistoryBalance()
+        {
+            var customer = new Customer();
+            customer.AddRewardPointsHistoryEntry(1, "Points for registration");
+            customer.AddRewardPointsHistoryEntry(3, "Points for registration");
+
+            customer.GetRewardPointsBalance().ShouldEqual(4);
+        }
+
+        [Test]
+        public void Can_get_add_remove_giftCardCouponCodes()
+        {
+            var customer = new Customer();
+            customer.ApplyGiftCardCouponCode("code1");
+            customer.ApplyGiftCardCouponCode("code2");
+            customer.RemoveGiftCardCouponCode("code2");
+            customer.ApplyGiftCardCouponCode("code3");
+
+            var codes = customer.ParseAppliedGiftCardCouponCodes();
+            codes.Length.ShouldEqual(2);
+            codes[0].ShouldEqual("code1");
+            codes[1].ShouldEqual("code3");
+        }
+        [Test]
+        public void Can_not_add_duplicate_giftCardCouponCodes()
+        {
+            var customer = new Customer();
+            customer.ApplyGiftCardCouponCode("code1");
+            customer.ApplyGiftCardCouponCode("code2");
+            customer.ApplyGiftCardCouponCode("code1");
+
+            var codes = customer.ParseAppliedGiftCardCouponCodes();
+            codes.Length.ShouldEqual(2);
+            codes[0].ShouldEqual("code1");
+            codes[1].ShouldEqual("code2");
+        }
     }
 }

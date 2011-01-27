@@ -25,9 +25,10 @@ namespace Nop.Core.Domain.Discounts
     {
         public Discount()
         {
-            DiscountRequirements = new List<DiscountRequirement>();
-            AppliedToCategories = new List<Category>();
-            AppliedToProductVariants = new List<ProductVariant>();
+            this.DiscountRequirements = new List<DiscountRequirement>();
+            this.AppliedToCategories = new List<Category>();
+            this.AppliedToProductVariants = new List<ProductVariant>();
+            this.DiscountUsageHistory = new List<DiscountUsageHistory>();
         }
 
         /// <summary>
@@ -129,6 +130,11 @@ namespace Nop.Core.Domain.Discounts
         /// Gets or sets the product variants 
         /// </summary>
         public virtual ICollection<ProductVariant> AppliedToProductVariants { get; set; }
+
+        /// <summary>
+        /// Gets or sets discount usage history
+        /// </summary>
+        public virtual ICollection<DiscountUsageHistory> DiscountUsageHistory { get; set; }
 
         #region Methods
 

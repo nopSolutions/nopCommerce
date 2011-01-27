@@ -19,7 +19,7 @@ namespace Nop.Data.Tests
             {
                 Name = "inch(es)",
                 SystemKeyword = "inches",
-                Ratio = 1,
+                Ratio = 1.1M,
                 DisplayOrder = 2,
             };
 
@@ -27,7 +27,7 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("inch(es)");
             fromDb.SystemKeyword.ShouldEqual("inches");
-            fromDb.Ratio.ShouldEqual(1);
+            fromDb.Ratio.ShouldEqual(1.1M);
             fromDb.DisplayOrder.ShouldEqual(2);
         }
     }

@@ -52,6 +52,7 @@
     <Compile Include="Entities\Customers\CustomerTests.cs" />
     <Compile Include="Entities\Discounts\DiscountTests.cs" />
     <Compile Include="Entities\EntityEqualityTests.cs" />
+    <Compile Include="Entities\Orders\GiftCardTests.cs" />
     <Compile Include="FileSystemStorageProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\UserTests.cs" />

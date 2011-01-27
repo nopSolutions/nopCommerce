@@ -13,20 +13,25 @@
 //------------------------------------------------------------------------------
 
 using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 
 
-namespace Nop.Data.Mapping.Directory
+namespace Nop.Data.Mapping.Discounts
 {
-    public partial class MeasureWeightMap : EntityTypeConfiguration<MeasureWeight>
+    public partial class DiscountUsageHistoryMap : EntityTypeConfiguration<DiscountUsageHistory>
     {
-        public MeasureWeightMap()
+        public DiscountUsageHistoryMap()
         {
-            this.ToTable("MeasureWeight");
-            this.HasKey(m => m.Id);
-            this.Property(m => m.Name).IsRequired().HasMaxLength(100);
-            this.Property(m => m.SystemKeyword).IsRequired().HasMaxLength(100);
-            this.Property(m => m.Ratio).HasPrecision(18, 4);
+            this.ToTable("DiscountUsageHistory");
+            this.HasKey(duh => duh.Id);
+            
+            this.HasRequired(duh => duh.Discount)
+                .WithMany(d => d.DiscountUsageHistory)
+                .HasForeignKey(duh => duh.DiscountId);
+
+            this.HasRequired(duh => duh.Order)
+                .WithMany(o => o.DiscountUsageHistory)
+                .HasForeignKey(duh => duh.OrderId);
         }
     }
 }

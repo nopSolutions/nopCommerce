@@ -32,7 +32,9 @@ namespace Nop.Data.Tests
             fromDb.IsTaxExempt.ShouldEqual(true);
             fromDb.VatNumber.ShouldEqual("123456");
             fromDb.VatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
+            fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
             fromDb.DiscountCouponCode.ShouldEqual("coupon1");
+            fromDb.GiftCardCouponCodes.ShouldEqual("GiftCardCouponCodes 1");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
@@ -110,6 +112,19 @@ namespace Nop.Data.Tests
 
             fromDb.Currency.ShouldNotBeNull();
             fromDb.Currency.Name.ShouldEqual("US Dollar");
+        }
+
+        [Test]
+        public void Can_save_customer_with_rewardPointsHistoryEntry()
+        {
+            var customer = GetTestCustomer();
+            
+            customer.AddRewardPointsHistoryEntry(1, "Points for registration");
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
+            fromDb.RewardPointsHistory.Count.ShouldEqual(1);
+            fromDb.RewardPointsHistory.First().Points.ShouldEqual(1);
         }
 
         [Test]
@@ -208,6 +223,30 @@ namespace Nop.Data.Tests
             fromDb.ShoppingCartItems.First().AttributesXml.ShouldEqual("AttributesXml 1");
         }
 
+        [Test]
+        public void Can_save_and_load_customer_with_orders()
+        {
+            var customer = GetTestCustomer();
+            customer.Orders = new List<Order>()
+            {
+                new Order()
+                {
+                    OrderGuid = Guid.NewGuid(),
+                    Deleted = true,
+                    CreatedOnUtc = new DateTime(2010, 01, 01)
+                }
+            };
+
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
+            fromDb.Email.ShouldEqual("admin@yourStore.com");
+
+            fromDb.Orders.ShouldNotBeNull();
+            (fromDb.Orders.Count == 1).ShouldBeTrue();
+            fromDb.Orders.First().Deleted.ShouldEqual(true);
+        }
+
         protected Customer GetTestCustomer()
         {
             return new Customer
@@ -220,7 +259,9 @@ namespace Nop.Data.Tests
                 IsTaxExempt = true,
                 VatNumber = "123456",
                 VatNumberStatus = VatNumberStatus.Valid,
+                CheckoutAttributes = "CheckoutAttributes 1",
                 DiscountCouponCode= "coupon1",
+                GiftCardCouponCodes = "GiftCardCouponCodes 1",
                 Active = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),

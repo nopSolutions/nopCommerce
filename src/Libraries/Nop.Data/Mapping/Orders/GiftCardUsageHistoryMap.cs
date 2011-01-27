@@ -13,20 +13,27 @@
 //------------------------------------------------------------------------------
 
 using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
 
 
-namespace Nop.Data.Mapping.Directory
+namespace Nop.Data.Mapping.Orders
 {
-    public partial class MeasureWeightMap : EntityTypeConfiguration<MeasureWeight>
+    public partial class GiftCardUsageHistoryMap : EntityTypeConfiguration<GiftCardUsageHistory>
     {
-        public MeasureWeightMap()
+        public GiftCardUsageHistoryMap()
         {
-            this.ToTable("MeasureWeight");
-            this.HasKey(m => m.Id);
-            this.Property(m => m.Name).IsRequired().HasMaxLength(100);
-            this.Property(m => m.SystemKeyword).IsRequired().HasMaxLength(100);
-            this.Property(m => m.Ratio).HasPrecision(18, 4);
+            this.ToTable("GiftCardUsageHistory");
+            this.HasKey(gcuh => gcuh.Id);
+            this.Property(gcuh => gcuh.UsedValue).HasPrecision(18, 4);
+            this.Property(gcuh => gcuh.UsedValueInCustomerCurrency).HasPrecision(18, 4);
+
+            this.HasRequired(gcuh => gcuh.GiftCard)
+                .WithMany(gc => gc.GiftCardUsageHistory)
+                .HasForeignKey(gcuh => gcuh.GiftCardId);
+
+            this.HasRequired(gcuh => gcuh.UsedWithOrder)
+                .WithMany(o => o.GiftCardUsageHistory)
+                .HasForeignKey(gcuh => gcuh.UsedWithOrderId);
         }
     }
 }

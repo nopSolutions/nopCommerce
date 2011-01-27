@@ -242,6 +242,7 @@ namespace Nop.Services.Customers
             if (userName.Length > 100)
                 throw new NopException("Username is too long.");
 
+            //TODO save current language, currency, tax display type, etc
             var customer = new Customer()
             {
                 CustomerGuid = Guid.NewGuid(),

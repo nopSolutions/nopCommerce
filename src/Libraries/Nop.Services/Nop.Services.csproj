@@ -82,11 +82,13 @@
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\CheckoutAttributeParser.cs" />
     <Compile Include="Orders\CheckoutAttributeService.cs" />
+    <Compile Include="Orders\IGiftCardService.cs" />
     <Compile Include="Orders\IShoppingCartService.cs" />
     <Compile Include="Orders\ICheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\ICheckoutAttributeParser.cs" />
     <Compile Include="Orders\ICheckoutAttributeService.cs" />
     <Compile Include="Orders\CheckoutAttributeExtensions.cs" />
+    <Compile Include="Orders\GiftCardService.cs" />
     <Compile Include="Orders\ShoppingCartExtensions.cs" />
     <Compile Include="Orders\ShoppingCartService.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

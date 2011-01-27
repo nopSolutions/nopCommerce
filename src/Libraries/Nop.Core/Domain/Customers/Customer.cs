@@ -13,12 +13,16 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Discounts;
+using System.Diagnostics;
+using System.Xml;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -27,15 +31,17 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class Customer : BaseEntity
     {
-        public Customer() 
+        public Customer()
         {
             this.CustomerContent = new List<CustomerContent>();
             this.CustomerRoles = new List<CustomerRole>();
             this.CustomerAttributes = new List<CustomerAttribute>();
             this.Addresses = new List<Address>();
             this.ShoppingCartItems = new List<ShoppingCartItem>();
+            this.Orders = new List<Order>();
+            this.RewardPointsHistory = new List<RewardPointsHistory>();
         }
-        
+
         /// <summary>
         /// Gets or sets the customer Guid
         /// </summary>
@@ -66,6 +72,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public int? CurrencyId { get; set; }
 
+        //TODO use customer attributes to save most of this values
+
         /// <summary>
         /// Gets or sets the tax display type identifier
         /// </summary>
@@ -87,7 +95,7 @@ namespace Nop.Core.Domain.Customers
         public int VatNumberStatusId { get; set; }
 
         /// <summary>
-        /// Gets or sets the selected checkout attributes
+        /// Gets or sets the selected checkout attributes (serialized)
         /// </summary>
         public string CheckoutAttributes { get; set; }
 
@@ -95,6 +103,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the applied discount coupon code
         /// </summary>
         public string DiscountCouponCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the applied gift card coupon codes (serialized)
+        /// </summary>
+        public string GiftCardCouponCodes { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active
@@ -115,7 +128,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the date and time of last activity
         /// </summary>
         public DateTime? LastActivityDateUtc { get; set; }
-        
+
         /// <summary>
         /// Gets the tax display type
         /// </summary>
@@ -130,7 +143,7 @@ namespace Nop.Core.Domain.Customers
                 this.TaxDisplayTypeId = (int)value;
             }
         }
-        
+
         /// <summary>
         /// Gets the VAT number status
         /// </summary>
@@ -146,7 +159,7 @@ namespace Nop.Core.Domain.Customers
             }
         }
 
-        
+
         /// <summary>
         /// Gets or sets the language
         /// </summary>
@@ -178,6 +191,16 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
 
         /// <summary>
+        /// Gets or sets orders
+        /// </summary>
+        public virtual ICollection<Order> Orders { get; set; }
+
+        /// <summary>
+        /// Gets or sets reward points history
+        /// </summary>
+        public virtual ICollection<RewardPointsHistory> RewardPointsHistory { get; set; }
+
+        /// <summary>
         /// Default billing address
         /// </summary>
         public virtual Address BillingAddress { get; set; }
@@ -186,23 +209,23 @@ namespace Nop.Core.Domain.Customers
         /// Default shipping address
         /// </summary>
         public virtual Address ShippingAddress { get; set; }
-        
+
         /// <summary>
         /// Gets or sets customer addresses
         /// </summary>
         public virtual ICollection<Address> Addresses { get; set; }
 
-        #region Methods
+        #region Addresses
 
-        public virtual void AddAddress(Address address) 
+        public virtual void AddAddress(Address address)
         {
             if (!this.Addresses.Contains(address))
                 this.Addresses.Add(address);
         }
 
-        public virtual void RemoveAddress(Address address) 
+        public virtual void RemoveAddress(Address address)
         {
-            if (this.Addresses.Contains(address)) 
+            if (this.Addresses.Contains(address))
             {
                 if (this.BillingAddress == address) this.BillingAddress = null;
                 if (this.ShippingAddress == address) this.ShippingAddress = null;
@@ -211,18 +234,173 @@ namespace Nop.Core.Domain.Customers
             }
         }
 
-        public virtual void SetBillingAddress(Address address) 
+        public virtual void SetBillingAddress(Address address)
         {
             if (this.Addresses.Contains(address))
                 this.BillingAddress = address;
         }
 
-        public virtual void SetShippingAddress(Address address) 
+        public virtual void SetShippingAddress(Address address)
         {
             if (this.Addresses.Contains(address))
                 this.ShippingAddress = address;
         }
 
+        #endregion
+
+        #region Reward points
+
+        public virtual void AddRewardPointsHistoryEntry(int points, string message = "",
+            Order usedWithOrder = null, decimal usedAmount = 0M,
+            decimal usedAmountInCustomerCurrency = 0M, string customerCurrencyCode = "")
+        {
+            int newPointsBalance = this.GetRewardPointsBalance() + points;
+
+            var rewardPointsHistory = new RewardPointsHistory()
+            {
+                Customer = this,
+                UsedWithOrder = usedWithOrder,
+                Points = points,
+                Message = message,
+                PointsBalance = newPointsBalance,
+                UsedAmount = usedAmount,
+                UsedAmountInCustomerCurrency = usedAmountInCustomerCurrency,
+                CustomerCurrencyCode = customerCurrencyCode,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+
+            this.RewardPointsHistory.Add(rewardPointsHistory);
+        }
+
+        /// <summary>
+        /// Gets reward points balance
+        /// </summary>
+        public virtual int GetRewardPointsBalance()
+        {
+            int result = 0;
+            if (this.RewardPointsHistory.Count > 0)
+                result = this.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).FirstOrDefault().PointsBalance;
+            return result;
+        }
+
+        #endregion
+
+        #region Gift cards
+
+        /// <summary>
+        /// Gets coupon codes
+        /// </summary>
+        /// <returns>Coupon codes</returns>
+        public string[] ParseAppliedGiftCardCouponCodes()
+        {
+            string serializedGiftCartCouponCodes = this.GiftCardCouponCodes;
+
+            var couponCodes = new List<string>();
+            if (String.IsNullOrEmpty(serializedGiftCartCouponCodes))
+                return couponCodes.ToArray();
+
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(serializedGiftCartCouponCodes);
+
+                var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
+                    {
+                        string code = node1.Attributes["Code"].InnerText.Trim();
+                        couponCodes.Add(code);
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
+            }
+            return couponCodes.ToArray();
+        }
+
+        /// <summary>
+        /// Adds a coupon code
+        /// </summary>
+        /// <param name="couponCode">Coupon code</param>
+        /// <returns>New coupon codes document</returns>
+        public void ApplyGiftCardCouponCode(string couponCode)
+        {
+            string result = string.Empty;
+            try
+            {
+                var serializedGiftCartCouponCodes = this.GiftCardCouponCodes;
+
+                couponCode = couponCode.Trim().ToLower();
+
+                var xmlDoc = new XmlDocument();
+                if (String.IsNullOrEmpty(serializedGiftCartCouponCodes))
+                {
+                    var element1 = xmlDoc.CreateElement("GiftCardCouponCodes");
+                    xmlDoc.AppendChild(element1);
+                }
+                else
+                {
+                    xmlDoc.LoadXml(serializedGiftCartCouponCodes);
+                }
+                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//GiftCardCouponCodes");
+
+                XmlElement gcElement = null;
+                //find existing
+                var nodeList1 = xmlDoc.SelectNodes(@"//GiftCardCouponCodes/CouponCode");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["Code"] != null)
+                    {
+                        string _couponCode = node1.Attributes["Code"].InnerText.Trim();
+                        if (_couponCode.ToLower() == couponCode.ToLower())
+                        {
+                            gcElement = (XmlElement)node1;
+                            break;
+                        }
+                    }
+                }
+
+                //create new one if not found
+                if (gcElement == null)
+                {
+                    gcElement = xmlDoc.CreateElement("CouponCode");
+                    gcElement.SetAttribute("Code", couponCode);
+                    rootElement.AppendChild(gcElement);
+                }
+
+                result = xmlDoc.OuterXml;
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
+            }
+
+            //apply new value
+            this.GiftCardCouponCodes = result;
+        }
+
+        /// <summary>
+        /// Removes a coupon code
+        /// </summary>
+        /// <param name="couponCode">Coupon code to remove</param>
+        /// <returns>New coupon codes document</returns>
+        public void RemoveGiftCardCouponCode(string couponCode)
+        {
+            //get applied coupon codes
+            var existingCouponCodes = ParseAppliedGiftCardCouponCodes();
+
+            //clear them
+            this.GiftCardCouponCodes = string.Empty;
+
+            //save again except removed one
+            foreach (string existingCouponCode in existingCouponCodes)
+                if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
+                    ApplyGiftCardCouponCode(existingCouponCode);
+        }
+        
         #endregion
     }
 }

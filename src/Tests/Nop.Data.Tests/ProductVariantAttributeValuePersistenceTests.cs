@@ -18,8 +18,8 @@ namespace Nop.Data.Tests
             var pvav = new ProductVariantAttributeValue
             {
                 Name = "Name 1",
-                PriceAdjustment = 1,
-                WeightAdjustment = 2,
+                PriceAdjustment = 1.1M,
+                WeightAdjustment = 2.1M,
                 IsPreSelected = true,
                 DisplayOrder = 3,
                 ProductVariantAttribute = new ProductVariantAttribute
@@ -120,8 +120,8 @@ namespace Nop.Data.Tests
             var fromDb = SaveAndLoadEntity(pvav);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
-            fromDb.PriceAdjustment.ShouldEqual(1);
-            fromDb.WeightAdjustment.ShouldEqual(2);
+            fromDb.PriceAdjustment.ShouldEqual(1.1M);
+            fromDb.WeightAdjustment.ShouldEqual(2.1M);
             fromDb.IsPreSelected.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(3);
 

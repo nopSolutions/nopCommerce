@@ -19,14 +19,14 @@ namespace Nop.Data.Tests
             var tierPrice = new TierPrice
                       {
                           Quantity = 1,
-                          Price = 2,
+                          Price = 2.1M,
                           ProductVariant = GetTestProductVariant(),
                       };
 
             var fromDb = SaveAndLoadEntity(tierPrice);
             fromDb.ShouldNotBeNull();
             fromDb.Quantity.ShouldEqual(1);
-            fromDb.Price.ShouldEqual(2);
+            fromDb.Price.ShouldEqual(2.1M);
 
             fromDb.ProductVariant.ShouldNotBeNull();
             fromDb.ProductVariant.Name.ShouldEqual("Product variant name 1");

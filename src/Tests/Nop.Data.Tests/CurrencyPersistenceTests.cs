@@ -19,7 +19,7 @@ namespace Nop.Data.Tests
             {
                 Name = "US Dollar",
                 CurrencyCode = "USD",
-                Rate = 1,
+                Rate = 1.1M,
                 DisplayLocale = "en-US",
                 CustomFormatting = "CustomFormatting 1",
                 Published = true,
@@ -32,7 +32,7 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("US Dollar");
             fromDb.CurrencyCode.ShouldEqual("USD");
-            fromDb.Rate.ShouldEqual(1);
+            fromDb.Rate.ShouldEqual(1.1M);
             fromDb.DisplayLocale.ShouldEqual("en-US");
             fromDb.CustomFormatting.ShouldEqual("CustomFormatting 1");
             fromDb.Published.ShouldEqual(true);

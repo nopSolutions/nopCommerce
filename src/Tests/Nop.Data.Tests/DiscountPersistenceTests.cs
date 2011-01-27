@@ -21,8 +21,8 @@ namespace Nop.Data.Tests
                                    DiscountType = DiscountType.AssignedToCategories,
                                    Name = "Discount 1",
                                    UsePercentage = true,
-                                   DiscountPercentage = 1,
-                                   DiscountAmount = 2,
+                                   DiscountPercentage = 1.1M,
+                                   DiscountAmount = 2.1M,
                                    StartDateUtc = new DateTime(2010, 01, 01),
                                    EndDateUtc = new DateTime(2010, 01, 02),
                                    RequiresCouponCode = true,
@@ -36,8 +36,8 @@ namespace Nop.Data.Tests
             fromDb.DiscountType.ShouldEqual(DiscountType.AssignedToCategories);
             fromDb.Name.ShouldEqual("Discount 1");
             fromDb.UsePercentage.ShouldEqual(true);
-            fromDb.DiscountPercentage.ShouldEqual(1);
-            fromDb.DiscountAmount.ShouldEqual(2);
+            fromDb.DiscountPercentage.ShouldEqual(1.1M);
+            fromDb.DiscountAmount.ShouldEqual(2.1M);
             fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
             fromDb.RequiresCouponCode.ShouldEqual(true);

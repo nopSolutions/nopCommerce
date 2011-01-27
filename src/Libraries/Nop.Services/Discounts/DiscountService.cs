@@ -67,6 +67,9 @@ namespace Nop.Services.Discounts
         /// <returns>Value indicating whether discount can be used</returns>
         public static bool CheckDiscountLimitations(Discount discount, Customer customer)
         {
+            if (discount == null)
+                throw new ArgumentNullException("discount");
+
             switch (discount.DiscountLimitation)
             {
                 case DiscountLimitationType.Unlimited:
@@ -75,10 +78,15 @@ namespace Nop.Services.Discounts
                     }
                 case DiscountLimitationType.NTimesOnly:
                     {
-                        //UNDONE implement
+                        //UNDONE implement (below)
                         throw new NotImplementedException();
-                        //var usageHistory = IoC.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
+                        //var usageHistory = GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
                         //return usageHistory.Count < discount.LimitationTimes;
+
+                        //TODO filter active/not deleted customers
+                        //TODO filter not deleted orders
+                        //or use GetAllDiscountUsageHistoryEntries() method (commented above)
+                        return discount.DiscountUsageHistory.Count < discount.LimitationTimes;
                     }
                 case DiscountLimitationType.NTimesPerCustomer:
                     {
@@ -87,7 +95,7 @@ namespace Nop.Services.Discounts
                         //if (customer != null && !customer.IsGuest) 
                         //{
                         //    //registered customer
-                        //    var usageHistory = IoC.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
+                        //    var usageHistory = GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
                         //    return usageHistory.Count < discount.LimitationTimes;
                         //}
                         //else

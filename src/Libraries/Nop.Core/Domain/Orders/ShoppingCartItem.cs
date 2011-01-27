@@ -126,9 +126,7 @@ namespace Nop.Core.Domain.Orders
                 decimal additionalShippingCharge = decimal.Zero;
                 var productVariant = this.ProductVariant;
                 if (productVariant != null)
-                {
                     additionalShippingCharge = productVariant.AdditionalShippingCharge * Quantity;
-                }
                 return additionalShippingCharge;
             }
         }

@@ -13,20 +13,29 @@
 //------------------------------------------------------------------------------
 
 using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 
 
-namespace Nop.Data.Mapping.Directory
+namespace Nop.Data.Mapping.Customers
 {
-    public partial class MeasureWeightMap : EntityTypeConfiguration<MeasureWeight>
+    public partial class RewardPointsHistoryMap : EntityTypeConfiguration<RewardPointsHistory>
     {
-        public MeasureWeightMap()
+        public RewardPointsHistoryMap()
         {
-            this.ToTable("MeasureWeight");
-            this.HasKey(m => m.Id);
-            this.Property(m => m.Name).IsRequired().HasMaxLength(100);
-            this.Property(m => m.SystemKeyword).IsRequired().HasMaxLength(100);
-            this.Property(m => m.Ratio).HasPrecision(18, 4);
+            this.ToTable("RewardPointsHistory");
+            this.HasKey(rph => rph.Id);
+
+            this.Property(rph => rph.UsedAmount).HasPrecision(18, 4);
+            this.Property(rph => rph.UsedAmountInCustomerCurrency).HasPrecision(18, 4);
+
+            this.HasRequired(rph => rph.Customer)
+                .WithMany(c => c.RewardPointsHistory)
+                .HasForeignKey(rph => rph.CustomerId);
+
+            this.HasOptional(rph => rph.UsedWithOrder)
+                .WithOptionalDependent(o => o.RedeemedRewardPointsEntry)
+                .WillCascadeOnDelete(false);
         }
     }
 }

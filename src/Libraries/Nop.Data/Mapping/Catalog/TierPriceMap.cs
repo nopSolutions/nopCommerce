@@ -24,6 +24,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             this.ToTable("TierPrice");
             this.HasKey(tp => tp.Id);
+            this.Property(tp => tp.Price).HasPrecision(18, 4);
 
             this.HasRequired(tp => tp.ProductVariant)
                 .WithMany(pv => pv.TierPrices)

@@ -59,6 +59,9 @@ namespace Nop.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<DiscountRequirement> DiscountRequirement { get; set; }
+        public DbSet<DiscountUsageHistory> DiscountUsageHistory { get; set; }
+        public DbSet<GiftCard> GiftCards { get; set; }
+        public DbSet<GiftCardUsageHistory> GiftCardUsageHistory { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<LocaleStringResource> LocaleStringResources { get; set; }
         public DbSet<LocalizedProperty> LocalizedProperties { get; set; }
@@ -66,7 +69,7 @@ namespace Nop.Data
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<MeasureDimension> MeasureDimensions { get; set; }
         public DbSet<MeasureWeight> MeasureWeights { get; set; }
-        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
@@ -81,8 +84,10 @@ namespace Nop.Data
         public DbSet<ProductVariantAttributeValue> ProductVariantAttributeValues { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<RelatedProduct> RelatedProducts { get; set; }
+        public DbSet<RewardPointsHistory> RewardPointsHistory { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<ShippingMethod> ShippingMethods { get; set; }
+        public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<SpecificationAttribute> SpecificationAttributes { get; set; }
         public DbSet<SpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
         public DbSet<StateProvince> StateProvinces { get; set; }

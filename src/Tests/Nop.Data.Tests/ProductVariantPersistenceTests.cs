@@ -40,7 +40,7 @@ namespace Nop.Data.Tests
                                          RecurringTotalCycles = 9,
                                          IsShipEnabled = true,
                                          IsFreeShipping = true,
-                                         AdditionalShippingCharge = 10,
+                                         AdditionalShippingCharge = 10.1M,
                                          IsTaxExempt = true,
                                          TaxCategoryId = 11,
                                          ManageInventoryMethodId = 12,
@@ -56,16 +56,16 @@ namespace Nop.Data.Tests
                                          WarehouseId = 20,
                                          DisableBuyButton = true,
                                          CallForPrice = true,
-                                         Price = 21,
-                                         OldPrice = 22,
-                                         ProductCost = 23,
+                                         Price = 21.1M,
+                                         OldPrice = 22.1M,
+                                         ProductCost = 23.1M,
                                          CustomerEntersPrice = true,
-                                         MinimumCustomerEnteredPrice = 24,
-                                         MaximumCustomerEnteredPrice = 25,
-                                         Weight = 26,
-                                         Length = 27,
-                                         Width = 28,
-                                         Height = 29,
+                                         MinimumCustomerEnteredPrice = 24.1M,
+                                         MaximumCustomerEnteredPrice = 25.1M,
+                                         Weight = 26.1M,
+                                         Length = 27.1M,
+                                         Width = 28.1M,
+                                         Height = 29.1M,
                                          PictureId = 0,
                                          AvailableStartDateTimeUtc = new DateTime(2010, 01, 01),
                                          AvailableEndDateTimeUtc = new DateTime(2010, 01, 02),
@@ -122,7 +122,7 @@ namespace Nop.Data.Tests
             fromDb.RecurringTotalCycles.ShouldEqual(9);
             fromDb.IsShipEnabled.ShouldEqual(true);
             fromDb.IsFreeShipping.ShouldEqual(true);
-            fromDb.AdditionalShippingCharge.ShouldEqual(10);
+            fromDb.AdditionalShippingCharge.ShouldEqual(10.1M);
             fromDb.IsTaxExempt.ShouldEqual(true);
             fromDb.TaxCategoryId.ShouldEqual(11);
             fromDb.ManageInventoryMethodId.ShouldEqual(12);
@@ -138,16 +138,16 @@ namespace Nop.Data.Tests
             fromDb.WarehouseId.ShouldEqual(20);
             fromDb.DisableBuyButton.ShouldEqual(true);
             fromDb.CallForPrice.ShouldEqual(true);
-            fromDb.Price.ShouldEqual(21);
-            fromDb.OldPrice.ShouldEqual(22);
-            fromDb.ProductCost.ShouldEqual(23);
+            fromDb.Price.ShouldEqual(21.1M);
+            fromDb.OldPrice.ShouldEqual(22.1M);
+            fromDb.ProductCost.ShouldEqual(23.1M);
             fromDb.CustomerEntersPrice.ShouldEqual(true);
-            fromDb.MinimumCustomerEnteredPrice.ShouldEqual(24);
-            fromDb.MaximumCustomerEnteredPrice.ShouldEqual(25);
-            fromDb.Weight.ShouldEqual(26);
-            fromDb.Length.ShouldEqual(27);
-            fromDb.Width.ShouldEqual(28);
-            fromDb.Height.ShouldEqual(29);
+            fromDb.MinimumCustomerEnteredPrice.ShouldEqual(24.1M);
+            fromDb.MaximumCustomerEnteredPrice.ShouldEqual(25.1M);
+            fromDb.Weight.ShouldEqual(26.1M);
+            fromDb.Length.ShouldEqual(27.1M);
+            fromDb.Width.ShouldEqual(28.1M);
+            fromDb.Height.ShouldEqual(29.1M);
             fromDb.PictureId.ShouldEqual(0);
             fromDb.AvailableStartDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.AvailableEndDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 02));
@@ -189,7 +189,7 @@ namespace Nop.Data.Tests
                 RecurringTotalCycles = 9,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
-                AdditionalShippingCharge = 10,
+                AdditionalShippingCharge = 10.1M,
                 IsTaxExempt = true,
                 TaxCategoryId = 11,
                 ManageInventoryMethodId = 12,
@@ -205,16 +205,16 @@ namespace Nop.Data.Tests
                 WarehouseId = 20,
                 DisableBuyButton = true,
                 CallForPrice = true,
-                Price = 21,
-                OldPrice = 22,
-                ProductCost = 23,
+                Price = 21.1M,
+                OldPrice = 22.1M,
+                ProductCost = 23.1M,
                 CustomerEntersPrice = true,
                 MinimumCustomerEnteredPrice = 24,
                 MaximumCustomerEnteredPrice = 25,
-                Weight = 26,
-                Length = 27,
-                Width = 28,
-                Height = 29,
+                Weight = 26.1M,
+                Length = 27.1M,
+                Width = 28.1M,
+                Height = 29.1M,
                 PictureId = 0,
                 AvailableStartDateTimeUtc = new DateTime(2010, 01, 01),
                 AvailableEndDateTimeUtc = new DateTime(2010, 01, 02),
@@ -245,13 +245,13 @@ namespace Nop.Data.Tests
                     UpdatedOnUtc = new DateTime(2010, 01, 02),
                 },
                 TierPrices = new List<TierPrice>()
-                                                                {
-                                                                    new TierPrice
-                                                                    {
-                                                                        Quantity= 1,
-                                                                        Price= 2,
-                                                                    },
-                                                                }
+                {
+                    new TierPrice
+                    {
+                        Quantity= 1,
+                        Price= 2,
+                    },
+                }
             };
 
             var fromDb = SaveAndLoadEntity(productVariant);

@@ -13,20 +13,21 @@
 //------------------------------------------------------------------------------
 
 using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
 
 
-namespace Nop.Data.Mapping.Directory
+namespace Nop.Data.Mapping.Orders
 {
-    public partial class MeasureWeightMap : EntityTypeConfiguration<MeasureWeight>
+    public partial class GiftCardMap : EntityTypeConfiguration<GiftCard>
     {
-        public MeasureWeightMap()
+        public GiftCardMap()
         {
-            this.ToTable("MeasureWeight");
-            this.HasKey(m => m.Id);
-            this.Property(m => m.Name).IsRequired().HasMaxLength(100);
-            this.Property(m => m.SystemKeyword).IsRequired().HasMaxLength(100);
-            this.Property(m => m.Ratio).HasPrecision(18, 4);
+            this.ToTable("GiftCard");
+            this.HasKey(gc => gc.Id);
+
+            this.Property(gc => gc.Amount).HasPrecision(18, 4);
+
+            this.Ignore(gc => gc.GiftCardType);
         }
     }
 }

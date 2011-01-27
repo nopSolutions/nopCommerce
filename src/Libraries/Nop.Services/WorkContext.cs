@@ -83,6 +83,8 @@ namespace Nop.Services
 
                 if (customer == null)
                 {
+                    //TODO perhaps, we should not create guest customer if request is made by search engine
+                    //or use some predefined account
                     customer = _customerService.InsertGuestCustomer(Guid.NewGuid().ToString());
                 }
 
