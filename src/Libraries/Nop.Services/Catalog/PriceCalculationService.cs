@@ -378,7 +378,7 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            finalPrice = Math.Round(finalPrice, 2);
+            //finalPrice = Math.Round(finalPrice, 2);
 
             return finalPrice;
         }
@@ -422,7 +422,7 @@ namespace Nop.Services.Catalog
                 discountAmount = productVariantDiscountAmount * shoppingCartItem.Quantity;
             }
 
-            discountAmount = Math.Round(discountAmount, 2);
+            //discountAmount = Math.Round(discountAmount, 2);
             return discountAmount;
         }
         

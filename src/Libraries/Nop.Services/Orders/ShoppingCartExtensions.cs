@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Catalog;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Orders
 {
@@ -152,6 +153,19 @@ namespace Nop.Services.Orders
             }
 
             return error;
+        }
+
+        /// <summary>
+        /// Get customer of shopping cart
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>Customer of shopping cart</returns>
+        public static Customer GetCustomer(this IList<ShoppingCartItem> shoppingCart)
+        {
+            if (shoppingCart.Count == 0)
+                return null;
+
+            return shoppingCart[0].Customer;
         }
 
     }

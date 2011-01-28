@@ -1,0 +1,223 @@
+//------------------------------------------------------------------------------
+// The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
+// 
+// Software distributed under the License is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. 
+// See the License for the specific language governing rights and limitations under the License.
+// 
+// The Original Code is nopCommerce.
+// The Initial Developer of the Original Code is NopSolutions.
+// All Rights Reserved.
+// 
+// Contributor(s): _______. 
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Orders;
+using Nop.Core;
+using Nop.Core.Domain.Tax;
+using Nop.Services.Catalog;
+using Nop.Services.Customers;
+using Nop.Services.Tax;
+using Nop.Services.Discounts;
+using Nop.Services.Shipping;
+using Nop.Services.Payments;
+using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Common;
+
+namespace Nop.Services.Orders
+{
+    /// <summary>
+    /// Order service interface
+    /// </summary>
+    public partial interface IOrderTotalCalculationService
+    {
+        /// <summary>
+        /// Gets shopping cart subtotal
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
+        /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
+        void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
+            out decimal discountAmount, out Discount appliedDiscount,
+            out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount);
+
+        /// <summary>
+        /// Gets shopping cart subtotal
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
+        /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
+        void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart, 
+            bool includingTax,
+            out decimal discountAmount, out Discount appliedDiscount,
+            out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount);
+
+        /// <summary>
+        /// Gets shopping cart subtotal
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
+        /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
+        /// <param name="taxRates">Tax rates (of order sub total)</param>
+        void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
+            bool includingTax,
+            out decimal discountAmount, out Discount appliedDiscount,
+            out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
+            out SortedDictionary<decimal, decimal> taxRates);
+
+        /// <summary>
+        /// Gets an order discount (applied to order subtotal)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="orderSubTotal">Order subtotal</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Order discount</returns>
+        decimal GetOrderSubtotalDiscount(Customer customer,
+            decimal orderSubTotal, out Discount appliedDiscount);
+
+
+
+
+
+        /// <summary>
+        /// Gets shopping cart shipping total
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>Shipping total</returns>
+        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Gets shopping cart shipping total
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <returns>Shipping total</returns>
+        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax);
+
+        /// <summary>
+        /// Gets shopping cart shipping total
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="taxRate">Applied tax rate</param>
+        /// <returns>Shipping total</returns>
+        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
+            out decimal taxRate);
+
+        /// <summary>
+        /// Gets shopping cart shipping total
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="taxRate">Applied tax rate</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Shipping total</returns>
+        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
+            out decimal taxRate, out Discount appliedDiscount);
+
+        /// <summary>
+        /// Gets a shipping discount
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="shippingTotal">Shipping total</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Shipping discount</returns>
+        decimal GetShippingDiscount(Customer customer, decimal shippingTotal, out Discount appliedDiscount);
+        
+
+
+
+
+
+        /// <summary>
+        /// Gets tax
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="paymentMethodSystemName">Payment method identifier</param>
+        /// <returns>Tax total</returns>
+        decimal GetTaxTotal(IList<ShoppingCartItem> cart, string paymentMethodSystemName = "");
+
+        /// <summary>
+        /// Gets tax
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="paymentMethodSystemName">Payment method identifier</param>
+        /// <param name="taxRates">Tax rates</param>
+        /// <returns>Tax total</returns>
+        decimal GetTaxTotal(IList<ShoppingCartItem> cart, string paymentMethodSystemName,
+            out SortedDictionary<decimal, decimal> taxRates);
+
+
+
+
+
+        /// <summary>
+        /// Gets shopping cart total
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="paymentMethodSystemName">Payment method identifier</param>
+        /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
+        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
+            string paymentMethodSystemName);
+
+        /// <summary>
+        /// Gets shopping cart total
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="paymentMethodSystemName">Payment method identifier</param>
+        /// <param name="appliedGiftCards">Applied gift cards</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="redeemedRewardPoints">Reward points to redeem</param>
+        /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
+        /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
+        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
+            string paymentMethodSystemName,
+            out decimal discountAmount, out Discount appliedDiscount,
+            out List<AppliedGiftCard> appliedGiftCards,
+            out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount);
+
+        /// <summary>
+        /// Gets an order discount (applied to order total)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="orderTotal">Order total</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Order discount</returns>
+        decimal GetOrderTotalDiscount(Customer customer, decimal orderTotal, out Discount appliedDiscount);
+
+
+
+
+
+        /// <summary>
+        /// Converts reward points to amount primary store currency
+        /// </summary>
+        /// <param name="rewardPoints">Reward points</param>
+        /// <returns>Converted value</returns>
+        decimal ConvertRewardPointsToAmount(int rewardPoints);
+
+        /// <summary>
+        /// Converts an amount in primary store currency to reward points
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <returns>Converted value</returns>
+        int ConvertAmountToRewardPoints(decimal amount);
+
+    }
+}

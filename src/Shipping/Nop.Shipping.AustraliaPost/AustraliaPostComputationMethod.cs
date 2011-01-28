@@ -69,7 +69,7 @@ namespace Nop.Shipping.AustraliaPost
 
         private int GetWeight(GetShippingOptionRequest getShippingOptionRequest)
         {
-            var totalWeigth = this.ShippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items, getShippingOptionRequest.Customer);
+            var totalWeigth = this.ShippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items);
 
             int value = Convert.ToInt32(Math.Ceiling(this.MeasureService.ConvertFromPrimaryMeasureWeight(totalWeigth, this.GatewayMeasureWeight)));
             return (value < MIN_WEIGHT ? MIN_WEIGHT : value);

@@ -48,12 +48,9 @@ namespace Nop.Services.Shipping
 
         #region Fields
 
-        private readonly IWorkContext _workContext;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger _logger;
-        private readonly IDiscountService _discountService;
-        private readonly ITaxService _taxService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ShippingSettings _shippingSettings;
@@ -66,122 +63,28 @@ namespace Nop.Services.Shipping
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="workContext">Work context</param>
         /// <param name="shippingMethodRepository">Shipping method repository</param>
         /// <param name="logger">Logger</param>
-        /// <param name="discountService">Discount service</param>
-        /// <param name="taxService">Tax service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="shippingSettings">Shipping settings</param>
         public ShippingService(ICacheManager cacheManager, 
-            IWorkContext workContext,
             IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
-            IDiscountService discountService,
-            ITaxService taxService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
             ShippingSettings shippingSettings)
         {
             this._cacheManager = cacheManager;
-            this._workContext = workContext;
             this._shippingMethodRepository = shippingMethodRepository;
             this._logger = logger;
-            this._discountService = discountService;
-            this._taxService = taxService;
             this._productAttributeParser = productAttributeParser;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._shippingSettings = shippingSettings;
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Gets a value indicating whether shipping is free
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>A value indicating whether shipping is free</returns>
-        protected bool IsFreeShipping(IList<ShoppingCartItem> cart, Customer customer)
-        {
-            if (customer != null)
-            {
-                //check whether customer is in a customer role with free shipping applied
-                var customerRoles = customer.CustomerRoles;  //TODO filter active roles
-                foreach (var customerRole in customerRoles)
-                    if (customerRole.FreeShipping)
-                        return true;
-            }
-
-            bool shoppingCartRequiresShipping = cart.RequiresShipping();
-            if (!shoppingCartRequiresShipping)
-                return true;
-
-            //TODO uncomment below (free shipping over $X)
-            //check whether we have subtotal enough to have free shipping
-            //decimal subTotalBase = decimal.Zero;
-            //decimal orderSubTotalDiscountAmount = decimal.Zero;
-            //Discount orderSubTotalAppliedDiscount = null;
-            //decimal subTotalWithoutDiscountBase = decimal.Zero; 
-            //decimal subTotalWithDiscountBase = decimal.Zero;
-            //string subTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
-            //    customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
-            //    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-            //subTotalBase = subTotalWithDiscountBase;
-            //if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled"))
-            //{
-            //    decimal freeShippingOverX = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
-            //    if (subTotalBase > freeShippingOverX)
-            //        return true;
-            //}
-
-            //check whether all shopping cart items are marked as free shipping
-            bool allItemsAreFreeShipping = true;
-            foreach (var sc in cart)
-            {
-                if (sc.IsShipEnabled && !sc.IsFreeShipping)
-                {
-                    allItemsAreFreeShipping = false;
-                    break;
-                }
-            }
-            if (allItemsAreFreeShipping)
-                return true;
-
-            //otherwise, return false
-            return false;
-        }
-
-        /// <summary>
-        /// Create shipment package from shopping cart
-        /// </summary>
-        /// <param name="cart">Shopping cart</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="shippingAddress">Shipping address</param>
-        /// <returns>Shipment package</returns>
-        protected GetShippingOptionRequest CreateShippingOptionRequest(IList<ShoppingCartItem> cart, 
-            Customer customer, Address shippingAddress)
-        {
-            var request = new GetShippingOptionRequest();
-            request.Customer = customer;
-            request.Items = new List<ShoppingCartItem>();
-            foreach (var sc in cart)
-                if (sc.IsShipEnabled)
-                    request.Items.Add(sc);
-            request.ShippingAddress = shippingAddress;
-            //TODO set values from warehouses or shipping origin
-            request.CountryFrom = null;
-            request.StateProvinceFrom = null;
-            request.ZipPostalCodeFrom = string.Empty;
-            return request;
-
-        }
-
-        #endregion
-
+        
         #region Methods
 
         #region Shipping rate computation methods
@@ -351,10 +254,11 @@ namespace Nop.Services.Shipping
         /// Gets shopping cart weight
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
         /// <returns>Shopping cart weight</returns>
-        public decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart, Customer customer)
+        public decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart)
         {
+            Customer customer = cart.GetCustomer();
+
             decimal totalWeight = decimal.Zero;
             //shopping cart items
             foreach (var shoppingCartItem in cart)
@@ -371,200 +275,15 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart)
-        {
-            Customer customer = _workContext.CurrentCustomer;
-            return GetShoppingCartShippingTotal(cart, customer);
-        }
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, Customer customer)
-        {
-            bool includingTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    includingTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    includingTax = true;
-                    break;
-            }
-            return GetShoppingCartShippingTotal(cart, customer, includingTax);
-        }
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, Customer customer,
-            bool includingTax)
-        {
-            decimal taxRate = decimal.Zero;
-            return GetShoppingCartShippingTotal(cart, customer,
-                includingTax, out taxRate);
-        }
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <param name="taxRate">Applied tax rate</param>
-        /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, Customer customer, 
-            bool includingTax, out decimal taxRate)
-        {
-            Discount appliedDiscount = null;
-            return GetShoppingCartShippingTotal(cart, customer, 
-                includingTax, out taxRate, out appliedDiscount);
-        }
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <param name="taxRate">Applied tax rate</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, Customer customer,
-            bool includingTax, out decimal taxRate, out Discount appliedDiscount)
-        {
-            decimal? shippingTotalWithoutDiscount = null;
-            decimal? shippingTotalWithDiscount = null;
-            decimal? shippingTotalWithDiscountTaxed = null;
-            appliedDiscount = null;
-            taxRate = decimal.Zero;
-
-            bool isFreeShipping = IsFreeShipping(cart, customer);
-            if (isFreeShipping)
-                return decimal.Zero;
-
-            ShippingOption lastShippingOption = null;
-            if (customer != null)
-                lastShippingOption = customer.GetAttribute<ShippingOption>("LastShippingOption");
-
-            if (lastShippingOption != null)
-            {
-                //use last shipping option (get from cache)
-                //we have already discounted cache value
-                shippingTotalWithoutDiscount = lastShippingOption.Rate;
-
-                //discount
-                decimal discountAmount = GetShippingDiscount(customer, 
-                    shippingTotalWithoutDiscount.Value, out appliedDiscount);
-                shippingTotalWithDiscount = shippingTotalWithoutDiscount - discountAmount;
-                if (shippingTotalWithDiscount < decimal.Zero)
-                    shippingTotalWithDiscount = decimal.Zero;
-                shippingTotalWithDiscount = Math.Round(shippingTotalWithDiscount.Value, 2);
-            }
-            else
-            {
-                //use fixed rate (if possible)
-                Address shippingAddress = null;
-                if (customer != null)
-                    shippingAddress = customer.ShippingAddress;
-
-                var getShippingOptionRequest = CreateShippingOptionRequest(cart, customer, shippingAddress);
-                var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods();
-                if (shippingRateComputationMethods.Count == 0)
-                    throw new NopException("Shipping rate computation method could not be loaded");
-
-                if (shippingRateComputationMethods.Count == 1)
-                {
-                    var shippingRateComputationMethod = shippingRateComputationMethods[0];
-
-                    decimal? fixedRate = shippingRateComputationMethod.GetFixedRate(getShippingOptionRequest);
-                    if (fixedRate.HasValue)
-                    {
-                        decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart, customer);
-                        shippingTotalWithoutDiscount = fixedRate.Value + additionalShippingCharge;
-                        shippingTotalWithoutDiscount = Math.Round(shippingTotalWithoutDiscount.Value, 2);
-                        decimal shippingTotalDiscount = GetShippingDiscount(customer, shippingTotalWithoutDiscount.Value, out appliedDiscount);
-                        shippingTotalWithDiscount = shippingTotalWithoutDiscount.Value - shippingTotalDiscount;
-                        if (shippingTotalWithDiscount.Value < decimal.Zero)
-                            shippingTotalWithDiscount = decimal.Zero;
-                    }
-                }
-            }
-
-            if (shippingTotalWithDiscount.HasValue)
-            {
-                shippingTotalWithDiscountTaxed = _taxService.GetShippingPrice(shippingTotalWithDiscount.Value,
-                    includingTax,
-                    customer,
-                    out taxRate);
-
-                shippingTotalWithDiscountTaxed = Math.Round(shippingTotalWithDiscountTaxed.Value, 2);
-            }
-
-            return shippingTotalWithDiscountTaxed;
-        }
-
-        /// <summary>
-        /// Gets a shipping discount
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="shippingTotal">Shipping total</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Shipping discount</returns>
-        public decimal GetShippingDiscount(Customer customer, 
-            decimal shippingTotal, out Discount appliedDiscount)
-        {
-            decimal shippingDiscountAmount = decimal.Zero;
-
-            var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToShipping);
-            var allowedDiscounts = new List<Discount>();
-            foreach (var discount in allDiscounts)
-            {
-                if (_discountService.IsDiscountValid(discount, customer) &&
-                           discount.DiscountType == DiscountType.AssignedToShipping &&
-                           !allowedDiscounts.Contains(discount))
-                {
-                    allowedDiscounts.Add(discount);
-                }
-            }
-
-            appliedDiscount = _discountService.GetPreferredDiscount(allowedDiscounts, shippingTotal);
-            if (appliedDiscount != null)
-            {
-                shippingDiscountAmount = appliedDiscount.GetDiscountAmount(shippingTotal);
-            }
-
-            if (shippingDiscountAmount < decimal.Zero)
-                shippingDiscountAmount = decimal.Zero;
-
-            shippingDiscountAmount = Math.Round(shippingDiscountAmount, 2);
-
-            return shippingDiscountAmount;
-        }
-        
-        /// <summary>
         /// Gets shopping cart additional shipping charge
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
         /// <returns>Additional shipping charge</returns>
-        public decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart, Customer customer)
+        public decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
         {
             decimal additionalShippingCharge = decimal.Zero;
-
-            bool isFreeShipping = IsFreeShipping(cart, customer);
+            
+            bool isFreeShipping = IsFreeShipping(cart);
             if (isFreeShipping)
                 return decimal.Zero;
 
@@ -575,26 +294,104 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
+        /// Gets a value indicating whether shipping is free
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>A value indicating whether shipping is free</returns>
+        public bool IsFreeShipping(IList<ShoppingCartItem> cart)
+        {
+            Customer customer = cart.GetCustomer();
+            if (customer != null)
+            {
+                //check whether customer is in a customer role with free shipping applied
+                var customerRoles = customer.CustomerRoles;  //TODO filter active roles
+                foreach (var customerRole in customerRoles)
+                    if (customerRole.FreeShipping)
+                        return true;
+            }
+
+            bool shoppingCartRequiresShipping = cart.RequiresShipping();
+            if (!shoppingCartRequiresShipping)
+                return true;
+
+            //TODO uncomment below (free shipping over $X)
+            //check whether we have subtotal enough to have free shipping
+            //decimal subTotalBase = decimal.Zero;
+            //decimal orderSubTotalDiscountAmount = decimal.Zero;
+            //Discount orderSubTotalAppliedDiscount = null;
+            //decimal subTotalWithoutDiscountBase = decimal.Zero; 
+            //decimal subTotalWithDiscountBase = decimal.Zero;
+            //string subTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
+            //    customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+            //    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+            //subTotalBase = subTotalWithDiscountBase;
+            //if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled"))
+            //{
+            //    decimal freeShippingOverX = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
+            //    if (subTotalBase > freeShippingOverX)
+            //        return true;
+            //}
+
+            //check whether all shopping cart items are marked as free shipping
+            bool allItemsAreFreeShipping = true;
+            foreach (var sc in cart)
+            {
+                if (sc.IsShipEnabled && !sc.IsFreeShipping)
+                {
+                    allItemsAreFreeShipping = false;
+                    break;
+                }
+            }
+            if (allItemsAreFreeShipping)
+                return true;
+
+            //otherwise, return false
+            return false;
+        }
+
+        /// <summary>
+        /// Create shipment package from shopping cart
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="shippingAddress">Shipping address</param>
+        /// <returns>Shipment package</returns>
+        public GetShippingOptionRequest CreateShippingOptionRequest(IList<ShoppingCartItem> cart,
+            Address shippingAddress)
+        {
+            var request = new GetShippingOptionRequest();
+            request.Customer = cart.GetCustomer();
+            request.Items = new List<ShoppingCartItem>();
+            foreach (var sc in cart)
+                if (sc.IsShipEnabled)
+                    request.Items.Add(sc);
+            request.ShippingAddress = shippingAddress;
+            //TODO set values from warehouses or shipping origin
+            request.CountryFrom = null;
+            request.StateProvinceFrom = null;
+            request.ZipPostalCodeFrom = string.Empty;
+            return request;
+
+        }
+
+        /// <summary>
         ///  Gets available shipping options
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <param name="customer">Customer</param>
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <returns>Shipping options</returns>
         public IList<ShippingOption> GetShippingOptions(IList<ShoppingCartItem> cart,
-            Customer customer, Address shippingAddress,
-            string allowedShippingRateComputationMethodSystemName)
+            Address shippingAddress, string allowedShippingRateComputationMethodSystemName)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
 
             var shippingOptions = new List<ShippingOption>();
 
-            bool isFreeShipping = IsFreeShipping(cart, customer);
+            bool isFreeShipping = IsFreeShipping(cart);
 
             //create a package
-            var getShippingOptionRequest = CreateShippingOptionRequest(cart, customer, shippingAddress);
+            var getShippingOptionRequest = CreateShippingOptionRequest(cart, shippingAddress);
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods();
             if (shippingRateComputationMethods.Count == 0)
                 throw new NopException("Shipping rate computation method could not be loaded");
@@ -622,7 +419,7 @@ namespace Nop.Services.Shipping
             }
             
             //additional shipping charges
-            decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart, customer);
+            decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
             shippingOptions.ForEach(so => so.Rate += additionalShippingCharge);
             
             //free shipping

@@ -105,86 +105,39 @@ namespace Nop.Services.Shipping
         /// Gets shopping cart weight
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
         /// <returns>Shopping cart weight</returns>
-        decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart, Customer customer);
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart);
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, Customer customer);
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, Customer customer,
-            bool includingTax);
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <param name="taxRate">Applied tax rate</param>
-        /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, Customer customer, 
-            bool includingTax, out decimal taxRate);
-
-        /// <summary>
-        /// Gets shopping cart shipping total
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <param name="taxRate">Applied tax rate</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, Customer customer,
-            bool includingTax, out decimal taxRate, out Discount appliedDiscount);
-
-        /// <summary>
-        /// Gets a shipping discount
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="shippingTotal">Shipping total</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Shipping discount</returns>
-        decimal GetShippingDiscount(Customer customer, 
-            decimal shippingTotal, out Discount appliedDiscount);
+        decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart);
         
         /// <summary>
         /// Gets shopping cart additional shipping charge
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="customer">Customer</param>
         /// <returns>Additional shipping charge</returns>
-        decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart, Customer customer);
+        decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Gets a value indicating whether shipping is free
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>A value indicating whether shipping is free</returns>
+        bool IsFreeShipping(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Create shipment package from shopping cart
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="shippingAddress">Shipping address</param>
+        /// <returns>Shipment package</returns>
+        GetShippingOptionRequest CreateShippingOptionRequest(IList<ShoppingCartItem> cart, Address shippingAddress);
 
         /// <summary>
         ///  Gets available shipping options
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <param name="customer">Customer</param>
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <returns>Shipping options</returns>
-        IList<ShippingOption> GetShippingOptions(IList<ShoppingCartItem> cart,
-            Customer customer, Address shippingAddress,
+        IList<ShippingOption> GetShippingOptions(IList<ShoppingCartItem> cart, Address shippingAddress,
             string allowedShippingRateComputationMethodSystemName);
     }
 }

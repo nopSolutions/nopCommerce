@@ -110,6 +110,11 @@ namespace Nop.Core.Domain.Customers
         public string GiftCardCouponCodes { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use reward points during checkout
+        /// </summary>
+        public bool UseRewardPointsDuringCheckout { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }

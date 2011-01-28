@@ -56,6 +56,7 @@
     <Compile Include="Domain\Customers\CustomerAttribute.cs" />
     <Compile Include="Domain\Customers\CustomerSettings.cs" />
     <Compile Include="Domain\Customers\CustomerRole.cs" />
+    <Compile Include="Domain\Customers\RewardPointsSettings.cs" />
     <Compile Include="Domain\Customers\SystemCustomerRoleNames.cs" />
     <Compile Include="Domain\Directory\MeasureSettings.cs" />
     <Compile Include="Domain\Directory\Country.cs" />
@@ -66,9 +67,7 @@
     <Compile Include="Domain\Catalog\ProductRating.cs" />
     <Compile Include="Domain\Catalog\ProductReview.cs" />
     <Compile Include="Domain\Customers\CustomerContent.cs" />
-    <Compile Include="Domain\Discounts\CheckDiscountRequirementRequest.cs" />
     <Compile Include="Domain\Discounts\DiscountUsageHistory.cs" />
-    <Compile Include="Domain\Discounts\IDiscountRequirementRule.cs" />
     <Compile Include="Domain\Discounts\DiscountRequirement.cs" />
     <Compile Include="Domain\Discounts\Discount.cs" />
     <Compile Include="Domain\Discounts\DiscountLimitationType.cs" />

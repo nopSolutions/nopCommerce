@@ -521,8 +521,7 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public decimal GetShippingPrice(decimal price, bool includingTax,
-            Customer customer, out decimal taxRate)
+        public decimal GetShippingPrice(decimal price, bool includingTax, Customer customer, out decimal taxRate)
         {
             taxRate = decimal.Zero;
 
@@ -583,8 +582,7 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public decimal GetPaymentMethodAdditionalFee(decimal price,
-            bool includingTax, Customer customer, out decimal taxRate)
+        public decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer, out decimal taxRate)
         {
             taxRate = decimal.Zero;
 

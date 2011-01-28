@@ -12,29 +12,37 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
+using Nop.Core.Configuration;
+using System.Collections.Generic;
 
-namespace Nop.Core.Domain.Discounts
+namespace Nop.Core.Domain.Customers
 {
-    /// <summary>
-    /// Represents a discount requirement rule
-    /// </summary>
-    public partial interface IDiscountRequirementRule
+    public class RewardPointsSettings : ISettings
     {
         /// <summary>
-        /// Gets or sets the friendly name
+        /// Gets or sets a value indicating whether Reward Points Program is enabled
         /// </summary>
-        string FriendlyName { get; }
+        public bool RewardPointsEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the system name
+        /// Gets or sets a value indicating whether Reward Points exchange rate
         /// </summary>
-        string SystemName { get; }
+        public decimal RewardPointsExchangeRate { get; set; }
 
         /// <summary>
-        /// Check discount requirement
+        /// Gets or sets a number of points awarded for registration
         /// </summary>
-        /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
-        /// <returns>true - requirement is met; otherwise, false</returns>
-        bool CheckRequirement(CheckDiscountRequirementRequest request);
+        public int RewardPointsForRegistration { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of points awarded for purchases (amount in primary store currency)
+        /// </summary>
+        public decimal RewardPointsForPurchases_Amount { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of points awarded for purchases
+        /// </summary>
+        public int RewardPointsForPurchases_Points { get; set; }
+
     }
 }
