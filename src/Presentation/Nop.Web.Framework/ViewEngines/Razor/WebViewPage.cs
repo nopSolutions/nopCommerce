@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -13,16 +13,30 @@
 //------------------------------------------------------------------------------
 
 using System;
-using Autofac;
-using Nop.Core.Infrastructure;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web.Mvc;
+using Nop.Services.Localization;
 
-namespace Nop.Data
+namespace Nop.Web.Framework.ViewEngines.Razor
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel>
     {
-        public virtual void Register(ContainerBuilder builder, TypeFinder typeFinder)
+        private ILocalizationService _localizationService;
+
+        public ILocalizationService T { get { return _localizationService; } }
+
+        public override void InitHelpers()
         {
-            //put your DI here
+            base.InitHelpers();
+
+            _localizationService = DependencyResolver.Current.GetService<ILocalizationService>();
         }
+    }
+
+    public abstract class WebViewPage : WebViewPage<dynamic>
+    {
+
     }
 }

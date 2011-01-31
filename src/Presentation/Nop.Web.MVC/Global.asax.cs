@@ -4,15 +4,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
+using Autofac.Integration.Mvc;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
-using Nop.Services.Logging;
-using Nop.Services.Orders;
-using Nop.Web.Framework.IoC;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Web.MVC
 {
@@ -38,13 +35,17 @@ namespace Nop.Web.MVC
 
         }
 
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+        }
+
         protected void Application_Start()
         {
             //nopCommerce starter
             var nopStarter = new NopStarter();
             var container = nopStarter.BuildContainer();
             nopStarter.ExecuteStartUpTasks();
-            
+
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 
             AreaRegistration.RegisterAllAreas();

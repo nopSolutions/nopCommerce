@@ -73,11 +73,15 @@ namespace Nop.Services
                 {
                     customer = _customerService.GetCustomerByUsername(_httpContext.User.Identity.Name);
                 }
-                else if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
+
+                if (customer == null)
                 {
-                    var customerGuid = Guid.Empty;
-                    if (Guid.TryParse(customerCookie.Value, out customerGuid))
-                        customer = _customerService.GetCustomerByGuid(customerGuid);
+                    if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
+                    {
+                        var customerGuid = Guid.Empty;
+                        if (Guid.TryParse(customerCookie.Value, out customerGuid))
+                            customer = _customerService.GetCustomerByGuid(customerGuid);
+                    }
                 }
 
 

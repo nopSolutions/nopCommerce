@@ -15,12 +15,12 @@
 using System;
 using System.Web;
 using Autofac;
-using Autofac.Configuration;
+using Autofac.Integration.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -45,24 +45,44 @@ namespace Nop.Web.MVC.Infrastructure
             //put your DI here
 
 
-            builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>();
-            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>();
+            //TODO don't hardcode connection string name
+            builder.Register<IDbContext>(c => new NopObjectContext("NopSqlConnection")).InstancePerHttpRequest();
+            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();
 
-            builder.RegisterType<WorkContext>().As<IWorkContext>();
+
+            //http context
+            builder.Register(c => new HttpContextWrapper(HttpContext.Current))
+                .As<HttpContextBase>()
+                .InstancePerHttpRequest();
+            builder.Register(c => c.Resolve<HttpContextBase>().Request)
+                .As<HttpRequestBase>()
+                .InstancePerHttpRequest();
+            builder.Register(c => c.Resolve<HttpContextBase>().Response)
+                .As<HttpResponseBase>()
+                .InstancePerHttpRequest();
+            builder.Register(c => c.Resolve<HttpContextBase>().Server)
+                .As<HttpServerUtilityBase>()
+                .InstancePerHttpRequest();
+            builder.Register(c => c.Resolve<HttpContextBase>().Session)
+                .As<HttpSessionStateBase>()
+                .InstancePerHttpRequest();
+
+            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerHttpRequest();
+            builder.RegisterType<WorkContext>().As<IWorkContext>().InstancePerHttpRequest();
 
             //services
-            builder.RegisterType<CategoryService>().As<ICategoryService>();
-            builder.RegisterType<CompareProductsService>().As<ICompareProductsService>();
-            builder.RegisterType<ManufacturerService>().As<IManufacturerService>();
-            builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>();
-            builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>();
-            builder.RegisterType<PriceFormatter>().As<IPriceFormatter>();
-            builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>();
-            builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>();
-            builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>();
-            builder.RegisterType<IProductService>().As<IProductService>();
+            builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
+            builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerHttpRequest();
+            builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerHttpRequest();
+            builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerHttpRequest();
+            builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerHttpRequest();
+            builder.RegisterType<PriceFormatter>().As<IPriceFormatter>().InstancePerHttpRequest();
+            builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerHttpRequest();
+            builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerHttpRequest();
+            builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerHttpRequest();
+            builder.RegisterType<IProductService>().As<IProductService>().InstancePerHttpRequest();
 
-            builder.RegisterType<AddressService>().As<IAddressService>();
+            builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfiguration<>));
 
@@ -71,43 +91,43 @@ namespace Nop.Web.MVC.Infrastructure
             foreach (var setting in typeFinder.FindClassesOfType<ISettings>())
             {
                 var settingType = setting.UnderlyingSystemType;
-                builder.RegisterType(settingType).As(settingType);
+                builder.RegisterType(settingType).As(settingType).InstancePerHttpRequest();
             }
-            builder.RegisterType<SettingService>().As<ISettingService>();
-            
-            builder.RegisterType<CustomerContentService>().As<ICustomerContentService>();
-            builder.RegisterType<CustomerService>().As<ICustomerService>();
-            
-            builder.RegisterType<CountryService>().As<ICountryService>();
-            builder.RegisterType<CurrencyService>().As<ICurrencyService>();
-            builder.RegisterType<MeasureService>().As<IMeasureService>();
-            builder.RegisterType<StateProvinceService>().As<IStateProvinceService>();
+            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
 
-            builder.RegisterType<DiscountService>().As<IDiscountService>();
-            
-            builder.RegisterType<LanguageService>().As<ILanguageService>();
-            builder.RegisterType<LocalizationService>().As<ILocalizationService>();
-            builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>();
-            
-            builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>();
-            builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>();
-            builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>();
-            builder.RegisterType<GiftCardService>().As<IGiftCardService>();
-            builder.RegisterType<OrderTotalCalculationService>().As<IOrderTotalCalculationService>();
-            builder.RegisterType<ShoppingCartService>().As<IShoppingCartService>();
+            builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
+            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
 
-            builder.RegisterType<PaymentService>().As<IPaymentService>();
-            
-            builder.RegisterType<EncryptionService>().As<IEncryptionService>();
-            builder.RegisterType<IUserService>().As<IUserService>();
-            
-            builder.RegisterType<ShippingService>().As<IShippingService>();
-                
-            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>();
-            builder.RegisterType<TaxService>().As<ITaxService>();
-            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>();
+            builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();
+            builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerHttpRequest();
+            builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerHttpRequest();
+            builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerHttpRequest();
 
-            builder.RegisterType<DefaultLogger>().As<ILogger>();
+            builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
+
+            builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerHttpRequest();
+            builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerHttpRequest();
+            builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>().InstancePerHttpRequest();
+
+            builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerHttpRequest();
+            builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerHttpRequest();
+            builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>().InstancePerHttpRequest();
+            builder.RegisterType<GiftCardService>().As<IGiftCardService>().InstancePerHttpRequest();
+            builder.RegisterType<OrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerHttpRequest();
+            builder.RegisterType<ShoppingCartService>().As<IShoppingCartService>().InstancePerHttpRequest();
+
+            builder.RegisterType<PaymentService>().As<IPaymentService>().InstancePerHttpRequest();
+
+            builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerHttpRequest();
+            builder.RegisterType<IUserService>().As<IUserService>().InstancePerHttpRequest();
+
+            builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerHttpRequest();
+
+            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
+            builder.RegisterType<TaxService>().As<ITaxService>().InstancePerHttpRequest();
+            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
+
+            builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
         }
     }
 }

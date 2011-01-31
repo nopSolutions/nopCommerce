@@ -154,10 +154,7 @@ namespace Nop.Services.Localization
         public string GetLocaleResourceString(string resourceKey)
         {
             if (_workContext.WorkingLanguage != null)
-            {
-                var language = _workContext.WorkingLanguage;
-                return GetLocaleResourceString(resourceKey, language.Id);
-            }
+                return GetLocaleResourceString(resourceKey, _workContext.WorkingLanguage.Id);
             
             return "";
         }

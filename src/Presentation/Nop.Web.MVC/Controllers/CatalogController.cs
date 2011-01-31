@@ -16,5 +16,10 @@ namespace Nop.Web.MVC.Controllers
             return Content("Catalog Index", "text/html");
         }
 
+        public ActionResult Test()
+        {
+            return View();
+        }
+
     }
 }
