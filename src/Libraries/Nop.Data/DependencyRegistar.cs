@@ -23,6 +23,8 @@ namespace Nop.Data
         public virtual void Register(ContainerBuilder builder, TypeFinder typeFinder)
         {
             //put your DI here
+
+            //TODO don't hardcode connection string name
             builder.Register<IDbContext>(c => new NopObjectContext("NopSqlConnection"));
             builder.RegisterGeneric(typeof(EfRepository<>))
                 .As(typeof(IRepository<>));

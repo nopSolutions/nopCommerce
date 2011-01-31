@@ -48,5 +48,10 @@ namespace Nop.Core.Domain.Configuration
         public T As<T>() {
             return CommonHelper.To<T>(this.Value);
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

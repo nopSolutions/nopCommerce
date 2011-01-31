@@ -3,10 +3,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Nop.Core.Infrastructure;
 using Autofac;
+using Nop.Core.Configuration;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
+using Nop.Services.Logging;
+using Nop.Services.Orders;
 using Nop.Web.Framework.IoC;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Web.MVC
 {
@@ -40,7 +46,7 @@ namespace Nop.Web.MVC
             nopStarter.ExecuteStartUpTasks();
             
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
-            
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
