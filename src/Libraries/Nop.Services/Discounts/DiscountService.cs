@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Core.Domain.Customers;
 
@@ -38,7 +39,7 @@ namespace Nop.Services.Discounts
 
         private readonly IRepository<Discount> _discountRepository;
         private readonly ICacheManager _cacheManager;
-        
+        private readonly TypeFinder _typeFinder;
         #endregion
 
         #region Ctor
@@ -48,11 +49,14 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="discountRepository">Discount repository</param>
+        /// <param name="typeFinder">Type finder</param>
         public DiscountService(ICacheManager cacheManager,
-            IRepository<Discount> discountRepository)
+            IRepository<Discount> discountRepository,
+            TypeFinder typeFinder)
         {
             this._cacheManager = cacheManager;
             this._discountRepository = discountRepository;
+            this._typeFinder = typeFinder;
         }
 
         #endregion
@@ -232,11 +236,7 @@ namespace Nop.Services.Discounts
         {
             var rules = new List<IDiscountRequirementRule>();
 
-            //TODO search in all assemblies (use StructureMap assembly scanning - http://structuremap.net/structuremap/ScanningAssemblies.htm)
-            //because now it could not locate all referenced assemblies until they are loaded into domain
-            System.Type configType = typeof(BillingCountryDiscountRequirementRule);   //any of your IDiscountRequirementRule implementations here
-            var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
-                .Where(type => type.GetInterfaces().Contains(typeof(IDiscountRequirementRule)));
+            var typesToRegister = _typeFinder.FindClassesOfType<IDiscountRequirementRule>();
             foreach (var type in typesToRegister)
             {
                 dynamic rule = Activator.CreateInstance(type);

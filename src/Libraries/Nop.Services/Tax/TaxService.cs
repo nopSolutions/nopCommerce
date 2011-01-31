@@ -29,6 +29,7 @@ using System.Web;
 using System.IO;
 using System.Collections.ObjectModel;
 using System.Web.Compilation;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Tax
 {
@@ -42,6 +43,7 @@ namespace Nop.Services.Tax
         private readonly IAddressService _addressService;
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
+        private readonly TypeFinder _typeFinder;
 
         #endregion
 
@@ -51,16 +53,18 @@ namespace Nop.Services.Tax
         /// Ctor
         /// </summary>
         /// <param name="addressService">Address service</param>
-        /// <param name="taxProviderService">Tax provider service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="taxSettings">Tax settings</param>
+        /// <param name="typeFinder">Type finder</param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            TypeFinder typeFinder)
         {
             this._addressService = addressService;
             this._workContext = workContext;
             this._taxSettings = taxSettings;
+            this._typeFinder = typeFinder;
         }
 
         #endregion
@@ -299,12 +303,7 @@ namespace Nop.Services.Tax
         {
             var taxProviders = new List<ITaxProvider>();
 
-            //TODO search in all assemblies (use StructureMap assembly scanning - http://structuremap.net/structuremap/ScanningAssemblies.htm)
-            //NOTE: currently it doesn't work until tax providers are saved into Nop.Services
-            System.Type configType = typeof(TaxService);
-            var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
-                .Where(type => type.GetInterfaces().Contains(typeof(ITaxProvider)));
-
+            var typesToRegister = _typeFinder.FindClassesOfType<ITaxProvider>();
             foreach (var type in typesToRegister)
             {
                 //TODO inject ISettingService into type.SettingService

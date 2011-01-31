@@ -3,7 +3,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Nop.Web.MVC.Infrastructure;
+using Nop.Core.Infrastructure;
+using Autofac;
+using Nop.Core.Tasks;
+using Nop.Web.Framework.IoC;
 
 namespace Nop.Web.MVC
 {
@@ -31,8 +34,13 @@ namespace Nop.Web.MVC
 
         protected void Application_Start()
         {
-            DIBootstrapper.Boot();
-
+            //nopCommerce starter
+            var nopStarter = new NopStarter();
+            var container = nopStarter.BuildContainer();
+            nopStarter.ExecuteStartUpTasks();
+            
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
