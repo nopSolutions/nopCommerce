@@ -38,28 +38,7 @@ namespace Nop.Core.Infrastructure
         {
             _typeResolver = new TypeResolver();
         }
-
-        /// <summary>
-        /// Searches all loaded assemblies for classes of the type passed in.
-        /// </summary>
-        /// <typeparam name="T">The type of object to search for</typeparam>
-        /// <returns>A list of found types</returns>
-        public IEnumerable<Type> FindClassesOfType<T>()
-        {
-            return FindClassesOfType<T>(true);
-        }
-
-        /// <summary>
-        /// Searches all assemblies specified for classes of the type passed in.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="assemblyFiles"></param>
-        /// <returns></returns>
-        public IEnumerable<Type> FindClassesOfType<T>(string[] assemblyFiles)
-        {
-            return FindClassesOfType<T>(assemblyFiles, true);
-        }
-
+        
         /// <summary>
         /// Searches all assemblies specified for classes of the type passed in.
         /// </summary>
@@ -67,7 +46,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="assemblyFiles"></param>
         /// <param name="onlyConcreteClasses">Only resolve concrete classes that can be instantiated</param>
         /// <returns></returns>
-        public IEnumerable<Type> FindClassesOfType<T>(string[] assemblyFiles, bool onlyConcreteClasses)
+        public IEnumerable<Type> FindClassesOfType<T>(string[] assemblyFiles, bool onlyConcreteClasses = true)
         {
             Contract.Requires<NullReferenceException>(assemblyFiles != null);
 
@@ -81,7 +60,7 @@ namespace Nop.Core.Infrastructure
         /// <typeparam name="T">The type of object to search for</typeparam>
         /// <param name="onlyConcreteClasses">True to only return classes that can be constructed</param>
         /// <returns>A list of found types</returns>
-        public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses)
+        public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
         {
             //UNDONE doesn't work when implementing class resides in the same assembly
             //because some executing assemblies are loaded into temp ASP.NET directories (distinct assembly fully qualified name)

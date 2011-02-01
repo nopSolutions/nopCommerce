@@ -18,19 +18,19 @@ namespace Nop.Data.Tests
         public void Can_save_and_load_giftCard()
         {
             var giftCard = new GiftCard()
-                               {
-                                   GiftCardType = GiftCardType.Physical,
-                                   Amount = 1.1M,
-                                   IsGiftCardActivated = true,
-                                   GiftCardCouponCode = "Secret",
-                                   RecipientName = "RecipientName 1",
-                                   RecipientEmail = "a@b.c",
-                                   SenderName = "SenderName 1",
-                                   SenderEmail = "d@e.f",
-                                   Message = "Message 1",
-                                   IsRecipientNotified = true,
-                                   CreatedOnUtc = new DateTime(2010, 01, 01),
-                               };
+            {
+                GiftCardType = GiftCardType.Physical,
+                Amount = 1.1M,
+                IsGiftCardActivated = true,
+                GiftCardCouponCode = "Secret",
+                RecipientName = "RecipientName 1",
+                RecipientEmail = "a@b.c",
+                SenderName = "SenderName 1",
+                SenderEmail = "d@e.f",
+                Message = "Message 1",
+                IsRecipientNotified = true,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+            };
 
             var fromDb = SaveAndLoadEntity(giftCard);
             fromDb.ShouldNotBeNull();
