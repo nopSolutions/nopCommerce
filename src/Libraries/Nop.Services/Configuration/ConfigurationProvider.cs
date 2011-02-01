@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using Nop.Core.Configuration;
 
@@ -18,7 +19,7 @@ namespace Nop.Services.Configuration
 
         private void BuildConfiguration() 
         {
-            Settings = new TSettings();
+            Settings = Activator.CreateInstance<TSettings>();
 
             // get properties we can write to
             //TODO ensure that we can convert Enum (e.g., TaxSettings.TaxBasedOn)

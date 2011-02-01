@@ -15,6 +15,7 @@
 using System;
 using System.Web;
 using Autofac;
+using Autofac.Builder;
 using Autofac.Integration.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -35,6 +36,9 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Autofac.Core;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace Nop.Web.MVC.Infrastructure
 {
@@ -77,7 +81,7 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerHttpRequest();
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerHttpRequest();
             builder.RegisterType<PriceFormatter>().As<IPriceFormatter>().InstancePerHttpRequest();
-            builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerHttpRequest();
+            builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerHttpRequest();
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<IProductService>().As<IProductService>().InstancePerHttpRequest();
@@ -85,14 +89,16 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfiguration<>));
+            //old way of registering ISetting classes (could be configured to use 'InstancePerHttpRequest')
+            //foreach (var setting in typeFinder.FindClassesOfType<ISettings>())
+            //{
+            //    var settingType = setting.UnderlyingSystemType;
+            //    builder.RegisterType(settingType).As(settingType).InstancePerHttpRequest();
+            //}
+            //TODO we should use 'InstancePerHttpRequest' (or uncomment source code above)
+            builder.RegisterSource(new SettingsSource());
 
 
-            //TODO use more generic way to register ISettings implementations
-            foreach (var setting in typeFinder.FindClassesOfType<ISettings>())
-            {
-                var settingType = setting.UnderlyingSystemType;
-                builder.RegisterType(settingType).As(settingType).InstancePerHttpRequest();
-            }
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
 
             builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
@@ -130,4 +136,32 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
         }
     }
+
+
+    public class SettingsSource : IRegistrationSource
+    {
+        static readonly MethodInfo BuildMethod = typeof(SettingsSource).GetMethod(
+            "BuildRegistration",
+            BindingFlags.Static | BindingFlags.NonPublic);
+
+        public IEnumerable<IComponentRegistration> RegistrationsFor(
+                Service service,
+                Func<Service, IEnumerable<IComponentRegistration>> registrations)
+        {
+            var ts = service as TypedService;
+            if (ts != null && typeof(ISettings).IsAssignableFrom(ts.ServiceType))
+            {
+                var buildMethod = BuildMethod.MakeGenericMethod(ts.ServiceType);
+                yield return (IComponentRegistration)buildMethod.Invoke(null, null);
+            }
+        }
+
+        static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
+        {
+            return RegistrationBuilder.ForDelegate((c, p) => c.Resolve<IConfiguration<TSettings>>().Settings).CreateRegistration();
+        }
+
+        public bool IsAdapterForIndividualComponents { get { return false; } }
+    }
+
 }

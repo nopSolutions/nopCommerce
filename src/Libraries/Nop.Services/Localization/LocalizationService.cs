@@ -151,10 +151,10 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="resourceKey">A string representing a ResourceKey.</param>
         /// <returns>A string representing the requested resource string.</returns>
-        public string GetLocaleResourceString(string resourceKey)
+        public string GetResource(string resourceKey)
         {
             if (_workContext.WorkingLanguage != null)
-                return GetLocaleResourceString(resourceKey, _workContext.WorkingLanguage.Id);
+                return GetResource(resourceKey, _workContext.WorkingLanguage.Id);
             
             return "";
         }
@@ -167,7 +167,7 @@ namespace Nop.Services.Localization
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>A string representing the requested resource string.</returns>
-        public string GetLocaleResourceString(string resourceKey, int languageId,
+        public string GetResource(string resourceKey, int languageId,
             bool logIfNotFound = true, string defaultValue = "")
         {
             string result = string.Empty;

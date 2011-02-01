@@ -59,7 +59,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="resourceKey">A string representing a ResourceKey.</param>
         /// <returns>A string representing the requested resource string.</returns>
-        string GetLocaleResourceString(string resourceKey);
+        string GetResource(string resourceKey);
 
         /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
@@ -69,7 +69,7 @@ namespace Nop.Services.Localization
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>A string representing the requested resource string.</returns>
-        string GetLocaleResourceString(string resourceKey, int languageId,
+        string GetResource(string resourceKey, int languageId,
             bool logIfNotFound = true, string defaultValue = "");
 
     }

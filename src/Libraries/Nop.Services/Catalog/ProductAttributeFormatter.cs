@@ -179,15 +179,15 @@ namespace Nop.Services.Catalog
 
                     if (htmlEncode)
                     {
-                        result.Append(HttpUtility.HtmlEncode(string.Format(_localizationService.GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName)));
+                        result.Append(HttpUtility.HtmlEncode(string.Format(_localizationService.GetResource("GiftCardAttribute.For"), giftCardRecipientName)));
                         result.Append(serapator);
-                        result.Append(HttpUtility.HtmlEncode(string.Format(_localizationService.GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName)));
+                        result.Append(HttpUtility.HtmlEncode(string.Format(_localizationService.GetResource("GiftCardAttribute.From"), giftCardSenderName)));
                     }
                     else
                     {
-                        result.Append(string.Format(_localizationService.GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName));
+                        result.Append(string.Format(_localizationService.GetResource("GiftCardAttribute.For"), giftCardRecipientName));
                         result.Append(serapator);
-                        result.Append(string.Format(_localizationService.GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName));
+                        result.Append(string.Format(_localizationService.GetResource("GiftCardAttribute.From"), giftCardSenderName));
                     }
                 }
             }

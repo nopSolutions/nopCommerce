@@ -147,7 +147,7 @@ namespace Nop.Services.Orders
                         }
                         else
                         {
-                            warnings.Add(string.Format(_localizationService.GetLocaleResourceString("ShoppingCart.SelectAttribute"), pva2.ProductAttribute.GetLocalized(a => a.Name)));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), pva2.ProductAttribute.GetLocalized(a => a.Name)));
                         }
                     }
                 }
@@ -184,23 +184,23 @@ namespace Nop.Services.Orders
                     out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
                 if (String.IsNullOrEmpty(giftCardRecipientName))
-                    warnings.Add(_localizationService.GetLocaleResourceString("ShoppingCartWarning.RecipientNameError"));
+                    warnings.Add(_localizationService.GetResource("ShoppingCartWarning.RecipientNameError"));
 
                 if ((GiftCardType)productVariant.GiftCardType == GiftCardType.Virtual)
                 {
                     //validate for virtual gift cards only
                     if (String.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
-                        warnings.Add(_localizationService.GetLocaleResourceString("ShoppingCartWarning.RecipientEmailError"));
+                        warnings.Add(_localizationService.GetResource("ShoppingCartWarning.RecipientEmailError"));
                 }
 
                 if (String.IsNullOrEmpty(giftCardSenderName))
-                    warnings.Add(_localizationService.GetLocaleResourceString("ShoppingCartWarning.SenderNameError"));
+                    warnings.Add(_localizationService.GetResource("ShoppingCartWarning.SenderNameError"));
 
                 if ((GiftCardType)productVariant.GiftCardType == GiftCardType.Virtual)
                 {
                     //validate for virtual gift cards only
                     if (String.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
-                        warnings.Add(_localizationService.GetLocaleResourceString("ShoppingCartWarning.SenderEmailError"));
+                        warnings.Add(_localizationService.GetResource("ShoppingCartWarning.SenderEmailError"));
                 }
             }
 
@@ -270,7 +270,7 @@ namespace Nop.Services.Orders
             if (shoppingCartType == ShoppingCartType.ShoppingCart &&
                 productVariant.CallForPrice)
             {
-                warnings.Add(_localizationService.GetLocaleResourceString("Products.CallForPrice"));
+                warnings.Add(_localizationService.GetResource("Products.CallForPrice"));
             }
 
             if (productVariant.CustomerEntersPrice)
@@ -280,7 +280,7 @@ namespace Nop.Services.Orders
                 {
                     decimal minimumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(productVariant.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
                     decimal maximumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(productVariant.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
-                    warnings.Add(string.Format(_localizationService.GetLocaleResourceString("ShoppingCart.CustomerEnteredPrice.RangeError"),
+                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.CustomerEnteredPrice.RangeError"),
                         _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
                         _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false)));
                 }
@@ -288,12 +288,12 @@ namespace Nop.Services.Orders
 
             if (quantity < productVariant.OrderMinimumQuantity)
             {
-                warnings.Add(string.Format(_localizationService.GetLocaleResourceString("ShoppingCart.MinimumQuantity"), productVariant.OrderMinimumQuantity));
+                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MinimumQuantity"), productVariant.OrderMinimumQuantity));
             }
 
             if (quantity > productVariant.OrderMaximumQuantity)
             {
-                warnings.Add(string.Format(_localizationService.GetLocaleResourceString("ShoppingCart.MaximumQuantity"), productVariant.OrderMaximumQuantity));
+                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumQuantity"), productVariant.OrderMaximumQuantity));
             }
 
             switch (productVariant.ManageInventoryMethod)
@@ -310,9 +310,9 @@ namespace Nop.Services.Orders
                             {
                                 int maximumQuantityCanBeAdded = productVariant.StockQuantity;
                                 if (maximumQuantityCanBeAdded <= 0)
-                                    warnings.Add(_localizationService.GetLocaleResourceString("ShoppingCart.OutOfStock"));
+                                    warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
                                 else
-                                    warnings.Add(string.Format(_localizationService.GetLocaleResourceString("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                             }
                         }
                     }
@@ -332,9 +332,9 @@ namespace Nop.Services.Orders
                                 {
                                     int maximumQuantityCanBeAdded = combination.StockQuantity;
                                     if (maximumQuantityCanBeAdded <= 0)
-                                        warnings.Add(_localizationService.GetLocaleResourceString("ShoppingCart.OutOfStock"));
+                                        warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
                                     else
-                                        warnings.Add(string.Format(_localizationService.GetLocaleResourceString("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                                 }
                             }
                         }
@@ -407,7 +407,7 @@ namespace Nop.Services.Orders
 
             //don't mix standard and recurring products
             if (hasStandartProducts && hasRecurringProducts)
-                warnings.Add(_localizationService.GetLocaleResourceString("ShoppingCart.CannotMixStandardAndAutoshipProducts"));
+                warnings.Add(_localizationService.GetResource("ShoppingCart.CannotMixStandardAndAutoshipProducts"));
 
             //recurring cart validation
             if (hasRecurringProducts)
@@ -458,7 +458,7 @@ namespace Nop.Services.Orders
                             if (!string.IsNullOrEmpty(ca2.GetLocalized(a => a.TextPrompt)))
                                 warnings.Add(ca2.GetLocalized(a => a.TextPrompt));
                             else
-                                warnings.Add(string.Format(_localizationService.GetLocaleResourceString("ShoppingCart.SelectAttribute"), ca2.GetLocalized(a => a.Name)));
+                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), ca2.GetLocalized(a => a.Name)));
                         }
                     }
                 }

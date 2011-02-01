@@ -248,13 +248,13 @@ namespace Nop.Services.Catalog
                 string formatStr;
                 if (priceIncludesTax)
                 {
-                    formatStr = _localizationService.GetLocaleResourceString("Products.InclTaxSuffix", language.Id, false);
+                    formatStr = _localizationService.GetResource("Products.InclTaxSuffix", language.Id, false);
                     if (String.IsNullOrEmpty(formatStr))
                         formatStr = "{0} incl tax";
                 }
                 else
                 {
-                    formatStr = _localizationService.GetLocaleResourceString("Products.ExclTaxSuffix", language.Id, false);
+                    formatStr = _localizationService.GetResource("Products.ExclTaxSuffix", language.Id, false);
                     if (String.IsNullOrEmpty(formatStr))
                         formatStr = "{0} excl tax";
                 }
