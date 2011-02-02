@@ -18,6 +18,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Core;
 
 namespace Nop.Services.Catalog
 {
@@ -107,7 +108,7 @@ namespace Nop.Services.Catalog
             var sortedCategories = unsortedCategories.SortCategoriesForTree(0);
             return sortedCategories;
         }
-        
+
         /// <summary>
         /// Gets all categories filtered by parent category identifier
         /// </summary>

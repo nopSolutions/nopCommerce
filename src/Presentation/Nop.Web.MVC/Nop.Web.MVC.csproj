@@ -71,6 +71,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Categories\CategoriesAreaRegistration.cs" />
+    <Compile Include="Areas\Categories\Controllers\CategoryAdminController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -79,6 +81,63 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\themes\admin\images\ico-blacklist.png" />
+    <Content Include="Content\themes\admin\images\ico-catalog.png" />
+    <Content Include="Content\themes\admin\images\ico-configuration.png" />
+    <Content Include="Content\themes\admin\images\ico-content.png" />
+    <Content Include="Content\themes\admin\images\ico-customers.png" />
+    <Content Include="Content\themes\admin\images\ico-dashboard.png" />
+    <Content Include="Content\themes\admin\images\ico-help.gif" />
+    <Content Include="Content\themes\admin\images\ico-help.png" />
+    <Content Include="Content\themes\admin\images\ico-news.gif" />
+    <Content Include="Content\themes\admin\images\ico-promotions.png" />
+    <Content Include="Content\themes\admin\images\ico-sales.png" />
+    <Content Include="Content\themes\admin\images\ico-stat1.gif" />
+    <Content Include="Content\themes\admin\images\ico-system.png" />
+    <Content Include="Content\themes\admin\images\ico-warnings.gif" />
+    <Content Include="Content\themes\admin\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\admin\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="Content\themes\admin\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="Content\themes\admin\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="Content\themes\admin\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\admin\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="Content\themes\admin\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="Content\themes\admin\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Content\themes\admin\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="Content\themes\admin\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\admin\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="Content\themes\admin\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="Content\themes\admin\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\admin\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Content\themes\admin\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="Content\themes\admin\jquery-ui-1.8.9.custom.css" />
+    <Content Include="Content\themes\admin\ui.jqgrid.css" />
+    <Content Include="Content\themes\admin\images\1pix.gif" />
+    <Content Include="Content\themes\admin\images\admin-gvw-bg.gif" />
+    <Content Include="Content\themes\admin\images\admin-header-bg.gif" />
+    <Content Include="Content\themes\admin\images\admin-menu-bg.gif" />
+    <Content Include="Content\themes\admin\images\background.gif" />
+    <Content Include="Content\themes\admin\images\blue_button_bg.gif" />
+    <Content Include="Content\themes\admin\images\EmptyStar.png" />
+    <Content Include="Content\themes\admin\images\ErrorMessage.gif" />
+    <Content Include="Content\themes\admin\images\FilledStar.png" />
+    <Content Include="Content\themes\admin\images\grey_button_bg.gif" />
+    <Content Include="Content\themes\admin\images\grid_header_back.png" />
+    <Content Include="Content\themes\admin\images\logo-bg.png" />
+    <Content Include="Content\themes\admin\images\logo.gif" />
+    <Content Include="Content\themes\admin\images\menu-item-left.png" />
+    <Content Include="Content\themes\admin\images\menu-item-right.png" />
+    <Content Include="Content\themes\admin\images\menu_bg.jpg" />
+    <Content Include="Content\themes\admin\images\SavedStar.png" />
+    <Content Include="Content\themes\admin\images\spinner.gif" />
+    <Content Include="Content\themes\admin\images\SuccessMessage.gif" />
+    <Content Include="Content\themes\admin\images\tab-line.png" />
+    <Content Include="Content\themes\admin\images\tab.png" />
+    <Content Include="Content\themes\admin\images\warnings-ajax-loader.gif" />
+    <Content Include="Content\themes\admin\images\warnings-cross.png" />
+    <Content Include="Content\themes\admin\images\warnings-tick.png" />
+    <Content Include="Content\themes\admin\images\warnings-warning.png" />
+    <Content Include="Content\themes\admin\styles.css" />
     <Content Include="Documents\LocaleStringResources.sql" />
     <Content Include="Documents\Upgrade.sql" />
     <Content Include="Global.asax" />
@@ -97,6 +156,10 @@
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Scripts\admin.js" />
+    <Content Include="Scripts\grid.locale-en.js" />
+    <Content Include="Scripts\jquery.jqGrid.min.js" />
+    <Content Include="Scripts\jquery.superfishmenu.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -122,14 +185,19 @@
     <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_PublicLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Categories\Models\" />
+    <Folder Include="Areas\Categories\Views\Shared\" />
     <Folder Include="Models\" />
     <Folder Include="Plugins\" />
+    <Folder Include="Views\Catalog\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -156,7 +224,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Catalog\Test.cshtml" />
+    <Content Include="Areas\Categories\Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Categories\Views\CategoryAdmin\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

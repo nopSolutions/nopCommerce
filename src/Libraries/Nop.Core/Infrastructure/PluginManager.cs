@@ -12,6 +12,7 @@
 // Contributor(s): Umbraco (http://umbraco.org/)_______. 
 //------------------------------------------------------------------------------
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.IO;
@@ -23,22 +24,22 @@ using Nop.Core.Infrastructure;
 // SEE THIS POST for full details of what this does
 //http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
-[assembly: PreApplicationStartMethod(typeof(PluginInitializer), "Initialize")]
+[assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
 
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// Sets the application up for the plugin referencing
+    /// Plugin manager
     /// </summary>
-    public class PluginInitializer
+    public class PluginManager
     {
 
         internal const string PluginsPath = "~/Plugins";
         internal const string ShadowCopyPath = "~/Plugins/bin";
 
-        private static readonly object Locker = new object();
+        private static readonly object _locker = new object();
 
-        static PluginInitializer()
+        static PluginManager()
         {
             //UNDONE HostingEnvironment doesn't support mocking (required for unit testing)
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
@@ -58,13 +59,23 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         private static readonly DirectoryInfo ShadowCopyFolder;
 
+        /// <summary>
+        /// Returns a collection of all referenced plugin assemblies that have been shadow copied
+        /// </summary>
+        public static IEnumerable<Assembly> ReferencedPlugins { get; private set; }
+
         public static void Initialize()
         {
-            lock (Locker)
+            lock (_locker)
             {
+                var referencedAssemblies = new List<Assembly>();
+
                 Directory.CreateDirectory(ShadowCopyFolder.FullName);
 
-                //clear out plugins)
+                //UNDONE how do we prevent assemblies from locking?
+                //see here http://stackoverflow.com/questions/1646049/how-to-load-an-assembly-without-using-assembly-load
+                
+                //clear out plugins
                 foreach (var f in ShadowCopyFolder.GetFiles("*.dll", SearchOption.AllDirectories))
                 {
                     File.Delete(f.FullName);
@@ -82,7 +93,10 @@ namespace Nop.Core.Infrastructure
                     var an = AssemblyName.GetAssemblyName(file.FullName);
                     var a = Assembly.Load(an.FullName);
                     BuildManager.AddReferencedAssembly(a);
+                    referencedAssemblies.Add(a);
                 }
+
+                ReferencedPlugins = referencedAssemblies;
             }
         }
     }

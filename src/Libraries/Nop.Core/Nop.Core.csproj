@@ -116,7 +116,7 @@
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
-    <Compile Include="Infrastructure\PluginInitializer.cs" />
+    <Compile Include="Infrastructure\PluginManager.cs" />
     <Compile Include="Infrastructure\TypeFinder.cs" />
     <Compile Include="Infrastructure\NopEnvironment.cs" />
     <Compile Include="IWorkContext.cs" />

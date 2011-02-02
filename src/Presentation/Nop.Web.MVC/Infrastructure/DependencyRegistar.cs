@@ -89,13 +89,12 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfiguration<>));
-            //old way of registering ISetting classes (could be configured to use 'InstancePerHttpRequest')
+            //old way of registering ISetting classes
             //foreach (var setting in typeFinder.FindClassesOfType<ISettings>())
             //{
             //    var settingType = setting.UnderlyingSystemType;
             //    builder.RegisterType(settingType).As(settingType).InstancePerHttpRequest();
             //}
-            //TODO we should use 'InstancePerHttpRequest' (or uncomment source code above)
             builder.RegisterSource(new SettingsSource());
 
 
@@ -158,7 +157,10 @@ namespace Nop.Web.MVC.Infrastructure
 
         static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
         {
-            return RegistrationBuilder.ForDelegate((c, p) => c.Resolve<IConfiguration<TSettings>>().Settings).CreateRegistration();
+            return RegistrationBuilder
+                .ForDelegate((c, p) => c.Resolve<IConfiguration<TSettings>>().Settings)
+                .InstancePerHttpRequest()
+                .CreateRegistration();
         }
 
         public bool IsAdapterForIndividualComponents { get { return false; } }

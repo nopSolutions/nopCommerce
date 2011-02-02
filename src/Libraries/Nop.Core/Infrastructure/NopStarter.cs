@@ -37,22 +37,21 @@ namespace Nop.Core.Infrastructure
 
                 var builder = new ContainerBuilder();
 
-                //event
-                OnContainerBuilding(new ContainerBuilderEventArgs(builder));
-
                 //type finder
                 var typeFinder = new TypeFinder();
                 builder.Register(c => typeFinder);
                 
                 //find IDependencyRegistar implementations
-                var drTypes = typeFinder.FindClassesOfType<IDependencyRegistar>(true);
+                var drTypes = typeFinder.FindClassesOfType<IDependencyRegistar>();
                 foreach (var t in drTypes)
                 {
                     dynamic dependencyRegistar = Activator.CreateInstance(t);
                     dependencyRegistar.Register(builder, typeFinder);
                 }
+
+                //event
+                OnContainerBuilding(new ContainerBuilderEventArgs(builder));
                 _container = builder.Build();
-                
                 //event
                 OnContainerBuildingComplete(new ContainerBuilderEventArgs(builder));
 

@@ -8,18 +8,10 @@ namespace Nop.Web.MVC.Controllers
 {
     public class CatalogController : Controller
     {
-        //
-        // GET: /Catalog/
-
         public ActionResult Index()
         {
-            return Content("Catalog Index", "text/html");
+            return RedirectToAction("List", "CategoryAdmin", new { area = "Categories" });
+            //return Content("Catalog Index", "text/html");
         }
-
-        public ActionResult Test()
-        {
-            return View();
-        }
-
     }
 }
