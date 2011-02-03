@@ -33,6 +33,22 @@ namespace Nop.Web.MVC.Areas.Categories
 
             context.Routes.Add(
                 new Route(
+                    "Admin/Categories/Add",
+                    new RouteValueDictionary 
+                    {
+                        {"area", "Categories"},
+                        {"controller", "CategoryAdmin"},
+                        {"action", "Add"}
+                    },
+                    new RouteValueDictionary(),
+                    new RouteValueDictionary 
+                    {
+                        {"area", "Categories"}
+                    },
+                    new MvcRouteHandler()));
+
+            context.Routes.Add(
+                new Route(
                     "Admin/Categories/TestListGridData",
                     new RouteValueDictionary 
                     {

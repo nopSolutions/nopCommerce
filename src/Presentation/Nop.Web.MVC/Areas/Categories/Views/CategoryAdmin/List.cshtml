@@ -3,17 +3,20 @@
     ViewBag.Title = "Manage Categories";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Content/themes/admin/images/ico-catalog.png")" alt="Manage categories" />
-        @T("Manage categories")
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Content/themes/admin/images/ico-catalog.png")" alt="Manage categories" />
+            @T("Manage categories")
+        </div>
+        <div class="options">
+            <input type="button" onclick="location.href='@Url.Action("Add")'" value="Add new" class="adminButtonBlue" />
+            <input type="submit" name="submit.ExportXml" value="Export to XML" title="Export category list to an xml file"
+                class="adminButtonBlue" />
+        </div>
     </div>
-    <div class="options">
-        <input type="button" onclick="location.href='CategoryAdd.aspx'" value="Add new" class="adminButtonBlue" />
-        <input type="button" onclick="location.href='CategoryAdd.aspx'" value="Export to XML"
-            class="adminButtonBlue" title="Export category list to an xml file" />
-    </div>
-</div>
+}
 <table class="adminContent">
     <tr>
         <td>

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Services.Catalog;
 using Nop.Core.Domain.Catalog;
+using Nop.Web.Framework.Controllers;
 
 namespace Nop.Web.MVC.Areas.Categories.Controllers
 {
+    [AdminAuthorizeAttribute]
     public class CategoryAdminController : Controller
     {
         private ICategoryService _categoryService;
@@ -19,11 +22,32 @@ namespace Nop.Web.MVC.Areas.Categories.Controllers
 
         public ActionResult List()
         {
-            //var categories = _categoryService.GetAllCategories(true);
-            //return View(categories);
             return View();
         }
 
+        public ActionResult Add()
+        {
+            //UNDONE
+            throw new NotImplementedException();
+            return View();
+        }
+
+        public ActionResult ExportXml()
+        {
+            //UNDONE return real Xml file
+            string fileName = "categories";
+            return File( Encoding.UTF8.GetBytes("some text here"),
+                "text/plain",
+                string.Format("{0}.txt", fileName));
+        }
+        
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("submit.ExportXml")]
+        public ActionResult NavigationButtonsPOST()
+        {
+            return ExportXml();
+        }
+        
         //TODO remove (testing)
         [HttpPost]
         public JsonResult TestListGridData(string sidx, string sord, int? page, int? rows)
