@@ -14,6 +14,7 @@
 
 using System;
 using System.Web;
+using System.Web.Hosting;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Mvc;
@@ -39,6 +40,8 @@ using Nop.Services.Tax;
 using Autofac.Core;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Data.Entity.Database;
+using System.Configuration;
 
 namespace Nop.Web.MVC.Infrastructure
 {
@@ -49,8 +52,14 @@ namespace Nop.Web.MVC.Infrastructure
             //put your DI here
 
 
-            //TODO don't hardcode connection string name
-            builder.Register<IDbContext>(c => new NopObjectContext("NopSqlConnection")).InstancePerHttpRequest();
+            //data layer
+            //TODO make configurable
+            //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
+            DbDatabase.DefaultConnectionFactory = new SqlCeConnectionFactory(
+                "System.Data.SqlServerCe.4.0", HostingEnvironment.MapPath("~/App_Data/"), "");
+            string connectionString = "Data Source=" + HostingEnvironment.MapPath("~/App_Data/") + @"\\Nop.Db.sdf;Persist Security Info=False";
+            builder.Register<IDbContext>(c => new NopObjectContext(connectionString)).InstancePerHttpRequest();
+
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();
 
 

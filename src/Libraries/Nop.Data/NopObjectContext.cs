@@ -41,7 +41,8 @@ namespace Nop.Data
     /// </summary>
     public class NopObjectContext : DbContext, IDbContext
     {
-        public NopObjectContext(string connectionStringName) : base(connectionStringName)
+        public NopObjectContext(string nameOrConnectionString)
+            : base(nameOrConnectionString)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
