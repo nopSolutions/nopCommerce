@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -34,7 +35,16 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
         IList<Category> GetAllCategories(bool showHidden = false);
-        
+
+        /// <summary>
+        /// Gets all categories
+        /// </summary>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Categories</returns>
+        IPagedList<Category> GetAllCategories(int pageIndex, int pageSize, bool showHidden = false);
+
         /// <summary>
         /// Gets all categories filtered by parent category identifier
         /// </summary>

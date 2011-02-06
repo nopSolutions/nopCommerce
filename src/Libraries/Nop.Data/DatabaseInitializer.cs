@@ -268,25 +268,28 @@ namespace Nop.Data
 
             #region Categories
 
-            var category1 = new Category()
+            for (int i = 0; i < 100; i++)
             {
-                Name = "Jewelry",
-                Description = "Some description 1",
-                MetaKeywords = string.Empty,
-                MetaDescription = string.Empty,
-                MetaTitle = string.Empty,
-                SeName = string.Empty,
-                ParentCategoryId = 0,
-                PageSize = 3,
-                PriceRanges = string.Empty,
-                Published = true,
-                DisplayOrder = 7,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            context.Categories.Add(category1);
-            context.SaveChanges();
-
+                var cat = new Category()
+                {
+                    Name = "sample category" + i,
+                    Description = "Some description 1",
+                    MetaKeywords = string.Empty,
+                    MetaDescription = string.Empty,
+                    MetaTitle = string.Empty,
+                    SeName = string.Empty,
+                    ParentCategoryId = 0,
+                    PageSize = 3,
+                    PriceRanges = string.Empty,
+                    Published = true,
+                    DisplayOrder = i,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow
+                };
+                context.Categories.Add(cat);
+                context.SaveChanges();
+            }
+            Category category1 = context.Categories.FirstOrDefault();
 
             //var category1Localization1 = new LocalizedProperty()
             //{ 

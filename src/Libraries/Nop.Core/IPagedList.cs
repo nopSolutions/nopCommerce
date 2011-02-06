@@ -13,12 +13,14 @@
 //------------------------------------------------------------------------------
 
 
+using System.Collections.Generic;
+
 namespace Nop.Core
 {
     /// <summary>
     /// Paged list interface
     /// </summary>
-    public interface IPagedList<T>
+    public interface IPagedList<T> : IList<T>
     {
         int PageIndex { get; }
         int PageSize { get; }

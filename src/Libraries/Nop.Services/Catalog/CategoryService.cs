@@ -110,6 +110,19 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Gets all categories
+        /// </summary>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Categories</returns>
+        public IPagedList<Category> GetAllCategories(int pageIndex, int pageSize, bool showHidden = false)
+        {
+            var categories = GetAllCategories(showHidden);
+            return new PagedList<Category>(categories, pageIndex, pageSize);
+        }
+
+        /// <summary>
         /// Gets all categories filtered by parent category identifier
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>

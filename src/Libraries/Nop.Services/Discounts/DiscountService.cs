@@ -286,7 +286,6 @@ namespace Nop.Services.Discounts
                     return false;
             }
 
-            //UNDONE Check discount limitations
             if (!CheckDiscountLimitations(discount, customer))
                 return false;
             

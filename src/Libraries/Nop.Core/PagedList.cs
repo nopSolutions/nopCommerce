@@ -49,7 +49,7 @@ namespace Nop.Core
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public PagedList(List<T> source, int pageIndex, int pageSize)
+        public PagedList(IList<T> source, int pageIndex, int pageSize)
         {
             TotalCount = source.Count();
             TotalPages = TotalCount / pageSize;

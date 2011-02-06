@@ -38,8 +38,6 @@ namespace Nop.Data
         }
         
         public T GetById(object id) {
-            //TODO: use this._entities.Where(e => e.Id == id);
-            //this._entities.Find(id) returns cached entity
             return this._entities.Find(id);
         }
 

@@ -28,6 +28,7 @@ namespace Nop.Services.Logging
         #region Fields
 
         private readonly IRepository<Log> _logRepository;
+        private readonly IWorkContext _workContext;
         
         #endregion
         
@@ -37,9 +38,11 @@ namespace Nop.Services.Logging
         /// Ctor
         /// </summary>
         /// <param name="logRepository">Log repository</param>
-        public DefaultLogger(IRepository<Log> logRepository)
+        public DefaultLogger(IRepository<Log> logRepository,
+            IWorkContext workContext)
         {
             this._logRepository = logRepository;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -156,9 +159,8 @@ namespace Nop.Services.Logging
 
 
             int customerId = 0;
-            //TODO: uncomment when customers are implemented
-            //if (NopContext.Current.User != null)
-            //    customerId = NopContext.Current.User.Id;
+            if (_workContext != null && _workContext.CurrentCustomer != null)
+                customerId = _workContext.CurrentCustomer.Id;
             string ipAddress = WebHelper.GetCurrentIpAddress();
             string pageUrl = WebHelper.GetThisPageUrl(true);
             string referrerUrl = WebHelper.GetUrlReferrer();

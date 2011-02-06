@@ -61,7 +61,7 @@ namespace Nop.Services.Localization
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 
-            //TODO use DependencyResolver to load service
+            //TODO use IoC to load service
             //var leService = new LocalizedEntityService();
             //var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
             //var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&

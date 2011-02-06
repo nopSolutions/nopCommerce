@@ -718,9 +718,7 @@ namespace Nop.Services.Tax
 
             if (!_taxSettings.EuVatUseWebService)
                 return VatNumberStatus.Unknown;
-
-
-            //UNDONE
+            
             try
             {
                 Exception exception = null;

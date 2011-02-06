@@ -335,12 +335,6 @@ namespace Nop.Services.Customers
             if (newEmail.Length > 100)
                 throw new NopException("E-mail address is too long.");
             
-            //TODO validate whether it's not guest (uncomment below)
-            //if (customer.IsGuest)
-            //{
-            //    throw new NopException("You cannot change email for guest customer");
-            //}
-
             var cust2 = GetCustomerByEmail(newEmail);
             if (cust2 != null && customer.Id != cust2.Id)
                 throw new NopException("The e-mail address is already in use.");
@@ -370,12 +364,6 @@ namespace Nop.Services.Customers
             if (newUsername.Length > 100)
                 throw new NopException("Username is too long.");
 
-            //TODO validate whether it's not guest (uncomment below)
-            //if (customer.IsGuest)
-            //{
-            //    throw new NopException("You cannot change username for guest customer");
-            //}
-
             var cust2 = GetCustomerByUsername(newUsername);
             if (cust2 != null && customer.Id != cust2.Id)
                 throw new NopException("This username is already in use.");
@@ -383,138 +371,6 @@ namespace Nop.Services.Customers
             customer.Username = newUsername;
             UpdateCustomer(customer);
         }
-
-        //TODO remove commented methods
-        ///// <summary>
-        ///// Modifies password
-        ///// </summary>
-        ///// <param name="customerId">Customer identifier</param>
-        ///// <param name="oldPassword">Old password</param>
-        ///// <param name="newPassword">New password</param>
-        //public void ModifyPassword(int customerId, string oldPassword, string newPassword)
-        //{
-        //    var customer = GetCustomerById(customerId);
-        //    if (customer == null)
-        //        return;
-
-        //    string oldPasswordHash = SecurityHelper.CreatePasswordHash(oldPassword, customer.SaltKey, _customerSettings.CustomerPasswordFormat);
-        //    if (!customer.PasswordHash.Equals(oldPasswordHash))
-        //        throw new NopException("Current password doesn't match.");
-
-        //    ModifyPassword(customerId, newPassword);
-        //}
-
-        ///// <summary>
-        ///// Modifies password
-        ///// </summary>
-        ///// <param name="customerId">Customer identifier</param>
-        ///// <param name="newPassword">New password</param>
-        //public void ModifyPassword(int customerId, string newPassword)
-        //{
-        //    var customer = GetCustomerById(customerId);
-        //    if (customer == null)
-        //        return;
-
-        //    if (String.IsNullOrWhiteSpace(newPassword))
-        //        throw new NopException("Password is required");
-
-        //    newPassword = newPassword.Trim();
-
-        //    string newPasswordSalt = SecurityHelper.CreateSalt(5);
-        //    string newPasswordHash = SecurityHelper.CreatePasswordHash(newPassword, newPasswordSalt, _customerSettings.CustomerPasswordFormat);
-
-        //    customer.PasswordHash = newPasswordHash;
-        //    customer.SaltKey = newPasswordSalt;
-        //    UpdateCustomer(customer);
-        //}
-
-        ///// <summary>
-        ///// Login a customer
-        ///// </summary>
-        ///// <param name="emailOrUsername">Email or username</param>
-        ///// <param name="password">Password</param>
-        ///// <returns>Validated customer; otherwise, null</returns>
-        //public Customer ValidateUser(string emailOrUsername, string password)
-        //{
-        //    if (emailOrUsername == null)
-        //        emailOrUsername = string.Empty;
-        //    emailOrUsername = emailOrUsername.Trim();
-            
-        //    Customer customer = null;
-        //    if (_customerSettings.UsernamesEnabled)
-        //        customer = GetCustomerByUsername(emailOrUsername);
-        //    else
-        //        customer = GetCustomerByEmail(emailOrUsername);
-
-        //    if (customer == null)
-        //        return null;
-
-        //    if (!customer.Active)
-        //        return null;
-
-        //    if (customer.Deleted)
-        //        return null;
-
-        //    //UNDONE validate whether it's not a guest
-        //    //if (customer.IsGuest)
-        //    //    return null;
-
-        //    string passwordHash = SecurityHelper.CreatePasswordHash(password, customer.SaltKey, _customerSettings.CustomerPasswordFormat);
-        //    bool passOk = customer.PasswordHash.Equals(passwordHash);
-        //    if (!passOk)
-        //        return null;
-
-        //    var registeredCustomerSession = GetCustomerSessionByCustomerId(customer.Id);
-        //    if (registeredCustomerSession != null)
-        //    {
-        //        //UNDONE migrate guest shopping cart and set customer session
-        //        //registeredCustomerSession.IsExpired = false;
-        //        //var anonCustomerSession = NopContext.Current.Session;
-        //        //var cart1 = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-        //        //var cart2 = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist);
-        //        //NopContext.Current.Session = registeredCustomerSession;
-
-        //        //if ((anonCustomerSession != null) && (anonCustomerSession.CustomerSessionGuid != registeredCustomerSession.CustomerSessionGuid))
-        //        //{
-        //        //    if (anonCustomerSession.Customer != null)
-        //        //    {
-        //        //        customer = ApplyDiscountCouponCode(customer.CustomerId, anonCustomerSession.Customer.LastAppliedCouponCode);
-        //        //        customer = ApplyGiftCardCouponCode(customer.CustomerId, anonCustomerSession.Customer.GiftCardCouponCodes);
-        //        //    }
-
-        //        //    foreach (ShoppingCartItem item in cart1)
-        //        //    {
-        //        //        IoC.Resolve<IShoppingCartService>().AddToCart(
-        //        //            item.ShoppingCartType,
-        //        //            item.ProductVariantId,
-        //        //            item.AttributesXml,
-        //        //            item.CustomerEnteredPrice,
-        //        //            item.Quantity);
-        //        //        IoC.Resolve<IShoppingCartService>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
-        //        //    }
-        //        //    foreach (ShoppingCartItem item in cart2)
-        //        //    {
-        //        //        IoC.Resolve<IShoppingCartService>().AddToCart(
-        //        //            item.ShoppingCartType,
-        //        //            item.ProductVariantId,
-        //        //            item.AttributesXml,
-        //        //            item.CustomerEnteredPrice,
-        //        //            item.Quantity);
-        //        //        IoC.Resolve<IShoppingCartService>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
-        //        //    }
-        //        //}
-        //    }
-
-        //    //UNDONE set customer session
-        //    //if (NopContext.Current.Session == null)
-        //    //    NopContext.Current.Session = NopContext.Current.GetSession(true);
-        //    //NopContext.Current.Session.IsExpired = false;
-        //    //NopContext.Current.Session.LastAccessed = DateTime.UtcNow;
-        //    //NopContext.Current.Session.CustomerId = customer.CustomerId;
-        //    //NopContext.Current.Session = SaveCustomerSession(NopContext.Current.Session.CustomerSessionGuid, NopContext.Current.Session.CustomerId, NopContext.Current.Session.LastAccessed, NopContext.Current.Session.IsExpired);
-
-        //    return customer;
-        //}
 
         #endregion
         

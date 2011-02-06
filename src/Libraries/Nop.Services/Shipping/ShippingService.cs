@@ -125,8 +125,6 @@ namespace Nop.Services.Shipping
         {
             var providers = new List<IShippingRateComputationMethod>();
 
-            //TODO search in all assemblies (use StructureMap assembly scanning - http://structuremap.net/structuremap/ScanningAssemblies.htm)
-            //NOTE: currently it doesn't work until tax providers are saved into Nop.Services
             System.Type configType = typeof(ShippingService);
             var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
                 .Where(type => type.GetInterfaces().Contains(typeof(IShippingRateComputationMethod)));
