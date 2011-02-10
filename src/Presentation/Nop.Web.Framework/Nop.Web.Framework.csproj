@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
+    <Compile Include="HtmlExtensions.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

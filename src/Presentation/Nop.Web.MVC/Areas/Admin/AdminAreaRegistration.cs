@@ -1,15 +1,15 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Nop.Web.MVC.Areas.Categories
+namespace Nop.Web.MVC.Areas.Admin
 {
-    public class CategoriesAreaRegistration : AreaRegistration
+    public class AdminAreaRegistration : AreaRegistration
     {
         public override string AreaName
         {
             get
             {
-                return "Categories";
+                return "Admin";
             }
         }
 
@@ -20,14 +20,14 @@ namespace Nop.Web.MVC.Areas.Categories
                     "Admin/Categories",
                     new RouteValueDictionary 
                     {
-                        {"area", "Categories"},
-                        {"controller", "CategoryAdmin"},
+                        {"area", "Admin"},
+                        {"controller", "Category"},
                         {"action", "List"}
                     },
                     new RouteValueDictionary(),
                     new RouteValueDictionary 
                     {
-                        {"area", "Categories"}
+                        {"area", "Admin"}
                     },
                     new MvcRouteHandler()));
 
@@ -36,14 +36,14 @@ namespace Nop.Web.MVC.Areas.Categories
                     "Admin/Categories/Add",
                     new RouteValueDictionary 
                     {
-                        {"area", "Categories"},
-                        {"controller", "CategoryAdmin"},
+                        {"area", "Admin"},
+                        {"controller", "Category"},
                         {"action", "Add"}
                     },
                     new RouteValueDictionary(),
                     new RouteValueDictionary 
                     {
-                        {"area", "Categories"}
+                        {"area", "Admin"}
                     },
                     new MvcRouteHandler()));
 
@@ -52,14 +52,14 @@ namespace Nop.Web.MVC.Areas.Categories
                     "Admin/Categories/TestListGridData",
                     new RouteValueDictionary 
                     {
-                        {"area", "Categories"},
-                        {"controller", "CategoryAdmin"},
+                        {"area", "Admin"},
+                        {"controller", "Category"},
                         {"action", "TestListGridData"}
                     },
                     new RouteValueDictionary(),
                     new RouteValueDictionary 
                     {
-                        {"area", "Categories"}
+                        {"area", "Admin"}
                     },
                     new MvcRouteHandler()));
         }

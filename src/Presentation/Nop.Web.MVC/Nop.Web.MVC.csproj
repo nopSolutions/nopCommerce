@@ -79,8 +79,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas\Categories\CategoriesAreaRegistration.cs" />
-    <Compile Include="Areas\Categories\Controllers\CategoryAdminController.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
+    <Compile Include="Areas\Admin\Models\CategoryModel.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -89,63 +90,63 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\themes\admin\images\ico-blacklist.png" />
-    <Content Include="Content\themes\admin\images\ico-catalog.png" />
-    <Content Include="Content\themes\admin\images\ico-configuration.png" />
-    <Content Include="Content\themes\admin\images\ico-content.png" />
-    <Content Include="Content\themes\admin\images\ico-customers.png" />
-    <Content Include="Content\themes\admin\images\ico-dashboard.png" />
-    <Content Include="Content\themes\admin\images\ico-help.gif" />
-    <Content Include="Content\themes\admin\images\ico-help.png" />
-    <Content Include="Content\themes\admin\images\ico-news.gif" />
-    <Content Include="Content\themes\admin\images\ico-promotions.png" />
-    <Content Include="Content\themes\admin\images\ico-sales.png" />
-    <Content Include="Content\themes\admin\images\ico-stat1.gif" />
-    <Content Include="Content\themes\admin\images\ico-system.png" />
-    <Content Include="Content\themes\admin\images\ico-warnings.gif" />
-    <Content Include="Content\themes\admin\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\admin\images\ui-bg_flat_55_fbec88_40x100.png" />
-    <Content Include="Content\themes\admin\images\ui-bg_glass_75_d0e5f5_1x400.png" />
-    <Content Include="Content\themes\admin\images\ui-bg_glass_85_dfeffc_1x400.png" />
-    <Content Include="Content\themes\admin\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\admin\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
-    <Content Include="Content\themes\admin\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
-    <Content Include="Content\themes\admin\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
-    <Content Include="Content\themes\admin\images\ui-icons_217bc0_256x240.png" />
-    <Content Include="Content\themes\admin\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\admin\images\ui-icons_469bdd_256x240.png" />
-    <Content Include="Content\themes\admin\images\ui-icons_6da8d5_256x240.png" />
-    <Content Include="Content\themes\admin\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\admin\images\ui-icons_d8e7f3_256x240.png" />
-    <Content Include="Content\themes\admin\images\ui-icons_f9bd01_256x240.png" />
-    <Content Include="Content\themes\admin\jquery-ui-1.8.9.custom.css" />
-    <Content Include="Content\themes\admin\ui.jqgrid.css" />
-    <Content Include="Content\themes\admin\images\1pix.gif" />
-    <Content Include="Content\themes\admin\images\admin-gvw-bg.gif" />
-    <Content Include="Content\themes\admin\images\admin-header-bg.gif" />
-    <Content Include="Content\themes\admin\images\admin-menu-bg.gif" />
-    <Content Include="Content\themes\admin\images\background.gif" />
-    <Content Include="Content\themes\admin\images\blue_button_bg.gif" />
-    <Content Include="Content\themes\admin\images\EmptyStar.png" />
-    <Content Include="Content\themes\admin\images\ErrorMessage.gif" />
-    <Content Include="Content\themes\admin\images\FilledStar.png" />
-    <Content Include="Content\themes\admin\images\grey_button_bg.gif" />
-    <Content Include="Content\themes\admin\images\grid_header_back.png" />
-    <Content Include="Content\themes\admin\images\logo-bg.png" />
-    <Content Include="Content\themes\admin\images\logo.gif" />
-    <Content Include="Content\themes\admin\images\menu-item-left.png" />
-    <Content Include="Content\themes\admin\images\menu-item-right.png" />
-    <Content Include="Content\themes\admin\images\menu_bg.jpg" />
-    <Content Include="Content\themes\admin\images\SavedStar.png" />
-    <Content Include="Content\themes\admin\images\spinner.gif" />
-    <Content Include="Content\themes\admin\images\SuccessMessage.gif" />
-    <Content Include="Content\themes\admin\images\tab-line.png" />
-    <Content Include="Content\themes\admin\images\tab.png" />
-    <Content Include="Content\themes\admin\images\warnings-ajax-loader.gif" />
-    <Content Include="Content\themes\admin\images\warnings-cross.png" />
-    <Content Include="Content\themes\admin\images\warnings-tick.png" />
-    <Content Include="Content\themes\admin\images\warnings-warning.png" />
-    <Content Include="Content\themes\admin\styles.css" />
+    <Content Include="Areas\Admin\Content\images\ico-blacklist.png" />
+    <Content Include="Areas\Admin\Content\images\ico-catalog.png" />
+    <Content Include="Areas\Admin\Content\images\ico-configuration.png" />
+    <Content Include="Areas\Admin\Content\images\ico-content.png" />
+    <Content Include="Areas\Admin\Content\images\ico-customers.png" />
+    <Content Include="Areas\Admin\Content\images\ico-dashboard.png" />
+    <Content Include="Areas\Admin\Content\images\ico-help.gif" />
+    <Content Include="Areas\Admin\Content\images\ico-help.png" />
+    <Content Include="Areas\Admin\Content\images\ico-news.gif" />
+    <Content Include="Areas\Admin\Content\images\ico-promotions.png" />
+    <Content Include="Areas\Admin\Content\images\ico-sales.png" />
+    <Content Include="Areas\Admin\Content\images\ico-stat1.gif" />
+    <Content Include="Areas\Admin\Content\images\ico-system.png" />
+    <Content Include="Areas\Admin\Content\images\ico-warnings.gif" />
+    <Content Include="Areas\Admin\Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Areas\Admin\Content\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="Areas\Admin\Content\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="Areas\Admin\Content\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="Areas\Admin\Content\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Areas\Admin\Content\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="Areas\Admin\Content\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="Areas\Admin\Content\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Areas\Admin\Content\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="Areas\Admin\Content\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Areas\Admin\Content\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="Areas\Admin\Content\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="Areas\Admin\Content\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Areas\Admin\Content\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Areas\Admin\Content\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="Areas\Admin\Content\jquery-ui-1.8.9.custom.css" />
+    <Content Include="Areas\Admin\Content\ui.jqgrid.css" />
+    <Content Include="Areas\Admin\Content\images\1pix.gif" />
+    <Content Include="Areas\Admin\Content\images\admin-gvw-bg.gif" />
+    <Content Include="Areas\Admin\Content\images\admin-header-bg.gif" />
+    <Content Include="Areas\Admin\Content\images\admin-menu-bg.gif" />
+    <Content Include="Areas\Admin\Content\images\background.gif" />
+    <Content Include="Areas\Admin\Content\images\blue_button_bg.gif" />
+    <Content Include="Areas\Admin\Content\images\EmptyStar.png" />
+    <Content Include="Areas\Admin\Content\images\ErrorMessage.gif" />
+    <Content Include="Areas\Admin\Content\images\FilledStar.png" />
+    <Content Include="Areas\Admin\Content\images\grey_button_bg.gif" />
+    <Content Include="Areas\Admin\Content\images\grid_header_back.png" />
+    <Content Include="Areas\Admin\Content\images\logo-bg.png" />
+    <Content Include="Areas\Admin\Content\images\logo.gif" />
+    <Content Include="Areas\Admin\Content\images\menu-item-left.png" />
+    <Content Include="Areas\Admin\Content\images\menu-item-right.png" />
+    <Content Include="Areas\Admin\Content\images\menu_bg.jpg" />
+    <Content Include="Areas\Admin\Content\images\SavedStar.png" />
+    <Content Include="Areas\Admin\Content\images\spinner.gif" />
+    <Content Include="Areas\Admin\Content\images\SuccessMessage.gif" />
+    <Content Include="Areas\Admin\Content\images\tab-line.png" />
+    <Content Include="Areas\Admin\Content\images\tab.png" />
+    <Content Include="Areas\Admin\Content\images\warnings-ajax-loader.gif" />
+    <Content Include="Areas\Admin\Content\images\warnings-cross.png" />
+    <Content Include="Areas\Admin\Content\images\warnings-tick.png" />
+    <Content Include="Areas\Admin\Content\images\warnings-warning.png" />
+    <Content Include="Areas\Admin\Content\styles.css" />
     <Content Include="Documents\LocaleStringResources.sql" />
     <Content Include="Documents\Upgrade.sql" />
     <Content Include="Global.asax" />
@@ -202,8 +203,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Categories\Models\" />
-    <Folder Include="Areas\Categories\Views\Shared\" />
+    <Folder Include="Areas\Admin\Views\Category\EditorTemplates\" />
+    <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Models\" />
     <Folder Include="Plugins\" />
     <Folder Include="Views\Catalog\" />
@@ -233,7 +234,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Categories\Views\Web.config">
+    <Content Include="Areas\Admin\Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
@@ -241,7 +242,10 @@
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Categories\Views\CategoryAdmin\List.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\Category\Add.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

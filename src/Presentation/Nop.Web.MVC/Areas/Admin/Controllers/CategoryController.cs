@@ -7,15 +7,16 @@ using System.Web.Mvc;
 using Nop.Services.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.MVC.Areas.Admin.Models;
 
-namespace Nop.Web.MVC.Areas.Categories.Controllers
+namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
     [AdminAuthorizeAttribute]
-    public class CategoryAdminController : Controller
+    public class CategoryController : Controller
     {
         private ICategoryService _categoryService;
 
-        public CategoryAdminController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
@@ -27,8 +28,12 @@ namespace Nop.Web.MVC.Areas.Categories.Controllers
 
         public ActionResult Add()
         {
-            //UNDONE
-            throw new NotImplementedException();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Add(CategoryModel model)
+        {
             return View();
         }
 
@@ -47,44 +52,6 @@ namespace Nop.Web.MVC.Areas.Categories.Controllers
         {
             return ExportXml();
         }
-        
-        //TODO remove (testing)
-        //[HttpPost]
-        //public JsonResult TestListGridData(string sidx, string sord, int? page, int? rows)
-        //{
-        //    var categories = _categoryService.GetAllCategories(true);
-        //    for (int i = 30; i < 80; i++)
-        //    {
-        //        var cat = new Category()
-        //            {
-        //                Id = i,
-        //                Name = "Some name test" + i,
-        //                DisplayOrder = i - 10
-        //            };
-        //        categories.Add(cat);
-        //    }
-        //    int pageIndex = Convert.ToInt32(page) - 1;
-        //    int pageSize = rows.HasValue ? rows.Value : 10;
-        //    int totalRecords = categories.Count();
-        //    int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-
-        //    var pagedCategories = categories.Skip(pageIndex * pageSize).Take(pageSize);
-        //    var jsonData = new
-        //    {
-        //        total = totalPages,
-        //        page,
-        //        records = totalRecords,
-        //        rows = (
-        //            from category in pagedCategories
-        //            select new
-        //            {
-        //                i = category.Id,
-        //                cell = new string[] { category.Id.ToString(), GetCategoryBreadCrumb(category), category.DisplayOrder.ToString() }
-        //            }).ToArray()
-        //    };
-
-        //    return Json(jsonData);
-        //}
 
         [HttpPost]
         public JsonResult TestListGridData(string sidx, string sord, int? page, int? rows)

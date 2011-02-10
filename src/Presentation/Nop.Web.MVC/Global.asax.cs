@@ -39,15 +39,14 @@ namespace Nop.Web.MVC
         {
             //build container
             var nopStarter = new NopStarter();
-            nopStarter.ContainerBuilding += new EventHandler<ContainerBuilderEventArgs>(nopStarter_ContainerBuilding);
-            nopStarter.ContainerBuildingComplete += new EventHandler<ContainerBuilderEventArgs>(nopStarter_ContainerBuildingComplete);
+            nopStarter.ContainerBuilding += nopStarter_ContainerBuilding;
+            nopStarter.ContainerBuildingComplete += nopStarter_ContainerBuildingComplete;
             var container = nopStarter.BuildContainer();
             
             //execute startup tasks
             nopStarter.ExecuteStartUpTasks();
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
-
 
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
