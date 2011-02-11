@@ -14,17 +14,17 @@ namespace Nop.Web.Framework
             var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
             return urlHelper.Content(url);
         }
-        public static string Hint(this HtmlHelper helper, string resourceName)
+        public static MvcHtmlString Hint(this HtmlHelper helper, string resourceName)
         {
             // Create tag builder
             var builder = new TagBuilder("img");
 
             // Add attributes
-            builder.MergeAttribute("src", ResolveUrl(helper, "/Content/themes/admin/images/Common/ico-help.gif"));
+            builder.MergeAttribute("src", ResolveUrl(helper, "/Areas/Admin/Content/images/ico-help.gif"));
             builder.MergeAttribute("alt", DependencyResolver.Current.GetService<Services.Localization.ILocalizationService>().GetResource(resourceName));
 
             // Render tag
-            return builder.ToString();
+            return MvcHtmlString.Create(builder.ToString());
         }
     }
 }

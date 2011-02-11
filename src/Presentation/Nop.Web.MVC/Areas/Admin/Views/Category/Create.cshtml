@@ -1,0 +1,32 @@
+﻿@using Nop.Web.Framework;
+@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img alt="Add a new category" src="@Html.ResolveUrl("~/Areas/Admin/Content/images/ico-catalog.png")">
+            Add a new category @Html.ActionLink("(back to category list)", "List")
+        </div>
+        <div class="options">
+
+        </div>
+    </div>
+    <table class="adminContent">
+        <tbody>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("fgh") Name:
+                </td>
+                <td class="adminData">
+                    @*@Html.EditorFor(x => x.Name)*@
+                    @Html.DisplayForModel()
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

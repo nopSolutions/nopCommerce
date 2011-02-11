@@ -1,0 +1,30 @@
+﻿@using Nop.Web.Framework;
+@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
+@{
+    ViewBag.Title = "234";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+
+        </div>
+        <div class="options">
+
+        </div>
+    </div>
+    <table class="adminContent">
+        <tbody>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("fgh")
+                </td>
+                <td class="adminData">
+                    @*@Html.EditorFor(x => x.Name)*@
+                    @Html.DisplayForModel()
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

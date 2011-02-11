@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -6,6 +7,9 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Nop.Core.Infrastructure;
+using Telerik.Web.Mvc;
+using Telerik.Web.Mvc.Infrastructure;
+using Telerik.Web.Mvc.UI;
 
 namespace Nop.Web.MVC
 {
@@ -29,10 +33,6 @@ namespace Nop.Web.MVC
                 new { controller = "Catalog", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
 
-        }
-
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
         }
 
         protected void Application_Start()

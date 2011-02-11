@@ -1,13 +1,13 @@
-﻿@model IList<Nop.Core.Domain.Catalog.Category>
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Core.Domain.Catalog.Category>
 @{
-    ViewBag.Title = "Manage Categories";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+@using Telerik.Web.Mvc.UI
 @using (Html.BeginForm())
 {
     <div class="section-header">
         <div class="title">
-            <img src="@Url.Content("~/Content/themes/admin/images/ico-catalog.png")" alt="Manage categories" />
+            <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" alt="Manage categories" />
             @T("Manage categories")
         </div>
         <div class="options">
@@ -20,39 +20,20 @@
 <table class="adminContent">
     <tr>
         <td>
-            <script type="text/javascript">
-                jQuery(document).ready(function () {
+        
 
-                    jQuery("#listCategories").jqGrid({
-                        url: '/Admin/Categories/TestListGridData/',
-                        datatype: 'json',
-                        mtype: 'POST',
-                        colNames: ['Id', 'Name', 'Display order'],
-                        colModel: [
-                        { "sortable": false, name: 'Id', index: 'Id', width: 60, align: 'left' },
-                        { "sortable": false, name: 'Name', index: 'Name', width: 500, align: 'left' },
-                        { "sortable": false, name: 'DisplayOrder', index: 'DisplayOrder', width: 100, align: 'center' },
-                        ],
-                        pager: jQuery('#pager'),
-                        rowNum: 10,
-                        rowList: [5, 10, 20, 50],
-                        sortname: 'Id',
-                        sortorder: "asc",
-                        viewrecords: true,
-                        scrollrows: true,
-                        imgpath: '',
-                        height: '100%',
-                        loadError: jqGrid_loadErrorHandler
-                    });
+                @(Html.Telerik().Grid<Nop.Core.Domain.Catalog.Category>()
+		            .Name("Grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Template(x => Html.ActionLink("Edit", "Edit", new { id = x.Id })).Width(50).HtmlAttributes(new {align="center"});
+                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.DisplayOrder);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+		            .EnableCustomBinding(true))
 
-
-                    function jqGrid_loadErrorHandler(xht, st, handler) { jQuery(document.body).css('font-size', '100%'); jQuery(document.body).html(xht.responseText); }
-                }); 
-            </script>
-            <table id="listCategories" class="scroll" cellpadding="0" cellspacing="0">
-            </table>
-            <div id="pager" class="scroll" style="text-align: center;">
-            </div>
         </td>
     </tr>
 </table>

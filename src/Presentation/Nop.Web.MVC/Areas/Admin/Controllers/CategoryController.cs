@@ -8,6 +8,9 @@ using Nop.Services.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
+using Telerik.Web.Mvc;
+using Telerik.Web.Mvc.Infrastructure;
+using Telerik.Web.Mvc.UI;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
@@ -21,64 +24,35 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             _categoryService = categoryService;
         }
 
-        public ActionResult List()
-        {
-            return View();
-        }
-
-        public ActionResult Add()
+        public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Add(CategoryModel model)
+        public ActionResult Create(CategoryModel model)
         {
             return View();
         }
 
-        public ActionResult ExportXml()
+        public ActionResult Edit(int id)
         {
-            //UNDONE return real Xml file
-            string fileName = "categories";
-            return File( Encoding.UTF8.GetBytes("some text here"),
-                "text/plain",
-                string.Format("{0}.txt", fileName));
-        }
-        
-        [HttpPost, ActionName("List")]
-        [FormValueRequired("submit.ExportXml")]
-        public ActionResult NavigationButtonsPOST()
-        {
-            return ExportXml();
+            return View();
         }
 
         [HttpPost]
-        public JsonResult TestListGridData(string sidx, string sord, int? page, int? rows)
+        public ActionResult Edit(CategoryModel categoryModel)
         {
-            int pageIndex = Convert.ToInt32(page) - 1;
-            int pageSize = rows.HasValue ? rows.Value : 10;
-            
-            var categories = _categoryService.GetAllCategories(pageIndex, pageSize, true);
+            return View();
+        }
 
-            int totalRecords = categories.TotalCount;
-            int totalPages = categories.TotalPages;
-
-            var jsonData = new
-            {
-                total = totalPages,
-                page,
-                records = totalRecords,
-                rows = (
-                    from category in categories
-                    select new
-                    {
-                        i = category.Id,
-                        cell = new string[] { category.Id.ToString(), GetCategoryBreadCrumb(category), category.DisplayOrder.ToString() }
-                    }).ToArray()
-            };
-
-            return Json(jsonData);
+        public ActionResult List(Nop.Web.Framework.TelerikGridContext gridContext)
+        {
+            var gridModel = new GridModel<Category>();
+            var categories = _categoryService.GetAllCategories(gridContext.PageNumber - 1, gridContext.PageSize, true);
+            gridModel.Data = categories;
+            gridModel.Total = categories.TotalCount;
+            return View(gridModel);
         }
 
         [NonAction]
