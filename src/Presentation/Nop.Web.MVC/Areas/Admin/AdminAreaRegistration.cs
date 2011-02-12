@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
+using Nop.Web.Framework;
 
 namespace Nop.Web.MVC.Areas.Admin
 {
@@ -15,19 +16,37 @@ namespace Nop.Web.MVC.Areas.Admin
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
-            ModelBinders.Binders.Add(typeof (Nop.Web.Framework.TelerikGridContext),
-                                     new Nop.Web.Framework.TelerikGridModelBinder());
-            context.MapRoute(
-                "admin_categories_list",
-                "Admin/Categories/List",
-                new { controller = "Category", action = "List" }
-            );
+            ModelBinders.Binders.DefaultBinder = new NopModelBinder();
 
             context.MapRoute(
-                "admin_categories_edit",
-                "Admin/Categories/Edit/{id}",
-                new { controller = "Category", action = "Edit" }
+                "Admin_default",
+                "Admin/{controller}/{action}/{id}",
+                new { action = "Index", id = "" }
             );
+
+            //context.MapRoute(
+            //    "admin_categories_list",
+            //    "Admin/Categories/List",
+            //    new { controller = "Category", action = "List" }
+            //);
+
+            //context.MapRoute(
+            //    "admin_categories_edit",
+            //    "Admin/Categories/Edit/{id}",
+            //    new { controller = "Category", action = "Edit" }
+            //);
+
+            //context.MapRoute(
+            //    "admin_categories_json_allCategories",
+            //    "Admin/Categories/AllCategories",
+            //    new { controller = "Category", action = "AllCategories" });
+
+            //context.MapRoute(
+            //    "admin_default",
+            //    "Admin/{controller}/{action}",
+            //    new { controller = "Category", action = "List" });
+
+
 
             //context.Routes.Add(
             //    new Route(

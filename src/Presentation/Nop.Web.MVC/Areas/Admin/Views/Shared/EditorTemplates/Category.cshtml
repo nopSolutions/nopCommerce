@@ -1,0 +1,177 @@
+﻿@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
+           
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<div id="categoryTabs">
+    <ul>
+        <li><a href="#tab-category-info">@T("Category Info")</a></li>
+        <li><a href="#tab-category-seo">@T("SEO")</a></li>
+        @*<li>@Html.ActionLink(T("Products").ToString(), "EditCategoryProducts", new {id=Model.Id})</li>*@
+        @*<li><a href="#tab-category-products">Products</a></li>*@
+    </ul>
+    <div id="tab-category-info">
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("The category's name.")
+                    @Html.LabelFor(model => model.Name):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("A description of the category.")
+                    @Html.LabelFor(model => model.Description):
+                </td>
+                <td class="adminData">
+                    @Html.Telerik().EditorFor(x => x.Description)
+                    @Html.ValidationMessageFor(model => model.Description)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("The category image.")
+                    @Html.LabelFor(model => model.PictureId)
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.PictureId)
+                    @Html.ValidationMessageFor(model => model.PictureId)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Select a parent category for this category. Leave as [ --- ] to make this the root level category.")
+                    @Html.LabelFor(model => model.ParentCategoryId):
+                </td>
+                <td class="adminData">
+                    @(Html.Telerik().ComboBoxFor(x => x.ParentCategoryId).BindTo(Model.ParentCategories).Encode(true)
+                            .DataBinding(x => x.Ajax().Enabled(true).Select("AllCategories", "Category", new { selectedId = Model.ParentCategoryId })))
+                    @Html.ValidationMessageFor(model => model.ParentCategoryId)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Define the price ranges for the store price range filter. Separate ranges with a semicolon e.g. '0-199;200-300;301-;' (301- means 301 and over)")
+                    @Html.LabelFor(model => model.PriceRanges):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(x => x.PriceRanges)
+                    @Html.ValidationMessageFor(model => model.PriceRanges)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Check if you want to show a category on home page.")
+                    @Html.LabelFor(model => model.ShowOnHomePage):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(x => x.ShowOnHomePage)
+                    @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Check to publish this category (visible in store). Uncheck to unpublish (category not available in store).")
+                    @Html.LabelFor(model => model.Published):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(x => x.Published)
+                    @Html.ValidationMessageFor(model => model.Published)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Set the category's display order. 1 represents the top of the list.")
+                    @Html.LabelFor(model => model.DisplayOrder):
+                </td>
+                <td class="adminData">
+                    @Html.Telerik().NumericTextBoxFor(x => x.DisplayOrder).DecimalDigits(0).MinValue(0)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="tab-category-seo">
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Meta keywords to be added to category page header.")
+                    @Html.LabelFor(model => model.MetaKeywords):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(x => x.MetaKeywords)
+                    @Html.ValidationMessageFor(model => model.MetaKeywords)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Meta description to be added to category page header.")
+                    @Html.LabelFor(model => model.MetaDescription):
+                </td>
+                <td class="adminData">
+                    @Html.TextAreaFor(x => x.MetaDescription)
+                    @Html.ValidationMessageFor(model => model.MetaDescription)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Override the page title. The default is the name of the category.")
+                    @Html.LabelFor(model => model.MetaTitle):
+                </td>
+                <td class="adminData">
+                    @Html.TextAreaFor(x => x.MetaTitle)
+                    @Html.ValidationMessageFor(model => model.MetaTitle)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the category ID). The default is the name of category.")
+                    @Html.LabelFor(model => model.SeName):
+                </td>
+                <td class="adminData">
+                    @Html.TextAreaFor(x => x.SeName)
+                    @Html.ValidationMessageFor(model => model.SeName)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.Hint("Set the page size for products in this category e.g. '4' products per page.")
+                    @Html.LabelFor(model => model.PageSize):
+                </td>
+                <td class="adminData">
+                    @Html.Telerik().NumericTextBoxFor(x => x.PageSize).DecimalDigits(0).MinValue(1)
+                    @Html.ValidationMessageFor(model => model.PageSize)
+                </td>
+            </tr>
+        </table>
+    </div>
+@*    <div id="tab-category-products">
+        @Html.Action("EditCategoryProducts", new { id = Model.Id });
+    </div>*@
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#categoryTabs").tabs({
+            load: function (event, ui) {
+//                $(".t-button").click(function (e) {
+//                    e.preventDefault();
+//                    var parentPanel = $(this).parents(".ui-tabs-panel");
+//                    parentPanel.load($(this).attr("href"), function () {
+//                        $(".t-button").click(function (e) {
+//                            parentPanel.load($(this).attr("href"));
+//                            var o = new Object();
+//                        });
+//                    });
+//                });
+            }
+        });
+    });
+</script>

@@ -7,13 +7,11 @@
 {
     <div class="section-header">
         <div class="title">
-            <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" alt="Manage categories" />
+            <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" />
             @T("Manage categories")
         </div>
         <div class="options">
-            <input type="button" onclick="location.href='@Url.Action("Add")'" value="Add new" class="adminButtonBlue" />
-            <input type="submit" name="submit.ExportXml" value="Export to XML" title="Export category list to an xml file"
-                class="adminButtonBlue" />
+            <input type="button" onclick="location.href='@Url.Action("Create")'" value="Add new" class="adminButtonBlue" />
         </div>
     </div>
 }

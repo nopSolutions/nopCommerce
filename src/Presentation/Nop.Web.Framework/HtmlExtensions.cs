@@ -20,8 +20,12 @@ namespace Nop.Web.Framework
             var builder = new TagBuilder("img");
 
             // Add attributes
+            var resource =
+                DependencyResolver.Current.GetService<Services.Localization.ILocalizationService>().GetResource(
+                    resourceName);
             builder.MergeAttribute("src", ResolveUrl(helper, "/Areas/Admin/Content/images/ico-help.gif"));
-            builder.MergeAttribute("alt", DependencyResolver.Current.GetService<Services.Localization.ILocalizationService>().GetResource(resourceName));
+            builder.MergeAttribute("alt", resource);
+            builder.MergeAttribute("title", resource);
 
             // Render tag
             return MvcHtmlString.Create(builder.ToString());

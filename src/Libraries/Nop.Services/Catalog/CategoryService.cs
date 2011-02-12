@@ -204,6 +204,12 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException("category");
 
+            //TODO:Check and make sure other services are settings this value on insert.
+            category.CreatedOnUtc = DateTime.UtcNow;
+
+            //TODO:Also check and make sure the updated on property is being set in the services
+            category.UpdatedOnUtc = DateTime.UtcNow;
+
             _categoryRepository.Insert(category);
 
             //cache

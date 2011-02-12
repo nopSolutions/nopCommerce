@@ -93,7 +93,7 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerHttpRequest();
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerHttpRequest();
-            builder.RegisterType<IProductService>().As<IProductService>().InstancePerHttpRequest();
+            builder.RegisterType<ProductService>().As<IProductService>().InstancePerHttpRequest();
 
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
 

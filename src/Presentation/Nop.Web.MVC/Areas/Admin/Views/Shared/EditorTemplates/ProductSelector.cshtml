@@ -1,0 +1,14 @@
+﻿     
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+
+@{
+    var product = DependencyResolver.Current.GetService<Nop.Services.Catalog.IProductService>().GetProductById(Model);    
+}
+@ViewData.TemplateInfo.FormattedModelValue
+
+@if(product != null){
+    <div>exists</div>   
+}else{
+    <div>doesnt</div> 
+}

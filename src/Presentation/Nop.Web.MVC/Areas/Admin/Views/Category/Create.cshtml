@@ -3,30 +3,16 @@
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-
-
 @using (Html.BeginForm())
 {
     <div class="section-header">
         <div class="title">
-            <img alt="Add a new category" src="@Html.ResolveUrl("~/Areas/Admin/Content/images/ico-catalog.png")">
-            Add a new category @Html.ActionLink("(back to category list)", "List")
+            <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" />
+            @T("Add a new category") - @Html.ActionLink("(" + T("back to category list") + ")", "List")
         </div>
         <div class="options">
-
+            <input type="submit" value="Save" class="adminButtonBlue" />
         </div>
     </div>
-    <table class="adminContent">
-        <tbody>
-            <tr>
-                <td class="adminTitle">
-                    @Html.Hint("fgh") Name:
-                </td>
-                <td class="adminData">
-                    @*@Html.EditorFor(x => x.Name)*@
-                    @Html.DisplayForModel()
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    @Html.EditorForModel("Category")
 }
