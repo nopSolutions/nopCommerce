@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Activation;
-using System.Text;
 using System.Threading;
-using System.Web;
 using System.Web.Mvc;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Telerik.Web.Mvc;
-using Telerik.Web.Mvc.Infrastructure;
 using Telerik.Web.Mvc.UI;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
@@ -19,14 +15,15 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
     [AdminAuthorizeAttribute]
     public class CategoryController : Controller
     {
-        private ICategoryService _categoryService;
+        private readonly ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IRepository<Category> categoryRepository)
         {
             _categoryService = categoryService;
         }
 
-        #region CRUD
+       
+        #region Create
 
         public ActionResult Create()
         {
@@ -39,8 +36,12 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var category = new Category();
             model.Update(category);
             _categoryService.InsertCategory(category);
-            return RedirectToAction("Edit", new {id = category.Id});
+            return RedirectToAction("Edit", new { id = category.Id });
         }
+
+        #endregion
+
+        #region Edit
 
         public ActionResult Edit(int id)
         {
@@ -59,14 +60,85 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             return Edit(category.Id);
         }
 
-        public ActionResult List(TelerikGridContextModel gridContext)
+        #endregion
+
+        #region List
+
+        public ActionResult List()
         {
-            var gridModel = new GridModel<Category>();
-            var categories = _categoryService.GetAllCategories(gridContext.PageNumber - 1, gridContext.PageSize, true);
-            gridModel.Data = categories;
-            gridModel.Total = categories.TotalCount;
+            var categories = _categoryService.GetAllCategories(0, 10, true);
+            var gridModel = new GridModel<Category> {Data = categories, Total = categories.TotalCount};
             return View(gridModel);
         }
+
+        [HttpPost, GridAction(EnableCustomBinding=true)]
+        public ActionResult List(GridCommand command)
+        {
+            var model = new GridModel();
+            var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize);
+            model.Data = categories.Select(x =>
+                new { Id = Url.Action("Edit", new {x.Id }), x.Name, x.DisplayOrder });
+            model.Total = categories.TotalCount;
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        #endregion
+
+        #region Tree
+
+        public ActionResult Tree()
+        {
+            var rootCategories = _categoryService.GetAllCategoriesByParentCategoryId(0, true);
+            return View(rootCategories);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult TreeLoadChildren(TreeViewItem node)
+        {
+            var parentId = !string.IsNullOrEmpty(node.Value) ? Convert.ToInt32(node.Value) : 0;
+
+            var children = _categoryService.GetAllCategoriesByParentCategoryId(parentId).Select(x =>
+                new TreeViewItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString(),
+                    LoadOnDemand = _categoryService.GetAllCategoriesByParentCategoryId(x.Id).Count > 0,
+                    Enabled = true,
+                    ImageUrl = Url.Content("~/Areas/Admin/Content/images/ico-content.png")
+                });
+
+            return new JsonResult { Data = children };
+        }
+
+        public ActionResult TreeDrop(int item, int destinationitem, string position)
+        {
+            var categoryItem = _categoryService.GetCategoryById(item);
+            var categoryDestinationItem = _categoryService.GetCategoryById(destinationitem);
+
+            switch (position)
+            {
+                case "over":
+                    categoryItem.ParentCategoryId = categoryDestinationItem.Id;
+                    break;
+                case "before":
+                    categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
+                    categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder - 1;
+                    break;
+                case "after":
+                    categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
+                    categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder + 1;
+                    break;
+            }
+
+            _categoryService.UpdateCategory(categoryItem);
+
+            return Json(new { success = true });
+        }
+
+        #endregion
 
         public ActionResult Delete(int id)
         {
@@ -78,8 +150,6 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        #endregion
-
         public ActionResult EditCategoryProducts(int id)
         {
             var model = _categoryService.GetProductCategoriesByCategoryId(id, true).Select(x => new CategoryProductModel(x)).ToList();
@@ -89,9 +159,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             model.Add(new CategoryProductModel {Id = 234, ProductId = products[0].Id});
             return View(model);
         }
-
-        #region Json
-
+     
         public ActionResult AllCategories(string text, int selectedId)
         {
             Thread.Sleep(1000);
@@ -100,26 +168,5 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var selectList = new SelectList(categories, "Id", "Name", selectedId);
             return new JsonResult { Data = selectList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-
-        #endregion
-
-        [NonAction]
-        private string GetCategoryBreadCrumb(Category category)
-        {
-            string result = string.Empty;
-
-            while (category != null && !category.Deleted)
-            {
-                if (String.IsNullOrEmpty(result))
-                    result = category.Name;
-                else
-                    result = category.Name + " >> " + result;
-
-                category = _categoryService.GetCategoryById(category.ParentCategoryId);
-
-            }
-            return result;
-        }
-
     }
 }

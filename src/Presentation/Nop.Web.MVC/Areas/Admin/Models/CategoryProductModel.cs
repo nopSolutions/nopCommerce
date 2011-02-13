@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Web.MVC.Areas.Admin.Models

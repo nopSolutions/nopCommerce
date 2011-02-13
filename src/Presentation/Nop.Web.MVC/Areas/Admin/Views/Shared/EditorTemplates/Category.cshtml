@@ -92,7 +92,7 @@
                     @Html.LabelFor(model => model.DisplayOrder):
                 </td>
                 <td class="adminData">
-                    @Html.Telerik().NumericTextBoxFor(x => x.DisplayOrder).DecimalDigits(0).MinValue(0)
+                    @Html.Telerik().NumericTextBoxFor(x => x.DisplayOrder).DecimalDigits(0)
                     @Html.ValidationMessageFor(model => model.DisplayOrder)
                 </td>
             </tr>

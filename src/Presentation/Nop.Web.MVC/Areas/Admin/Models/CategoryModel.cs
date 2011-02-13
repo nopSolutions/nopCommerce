@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Web;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -83,17 +80,11 @@ namespace Nop.Web.MVC.Areas.Admin.Models
 
         #endregion
 
-        public override void BindModel(System.Web.Mvc.ControllerContext controllerContext, System.Web.Mvc.ModelBindingContext bindingContext)
-        {
-            base.BindModel(controllerContext, bindingContext);
-        }
-
         public IList<DropDownItem> ParentCategories
         {
             get
             {
-                var parentCategories = new List<DropDownItem>();
-                parentCategories.Add(new DropDownItem {Text = "[None]", Value = "0"});
+                var parentCategories = new List<DropDownItem> {new DropDownItem {Text = "[None]", Value = "0"}};
                 if (ParentCategory != null)
                 {
                     parentCategories.Add(new DropDownItem

@@ -41,7 +41,6 @@ using Autofac.Core;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Data.Entity.Database;
-using System.Configuration;
 
 namespace Nop.Web.MVC.Infrastructure
 {

@@ -1,37 +1,30 @@
 ﻿@model Telerik.Web.Mvc.GridModel<Nop.Core.Domain.Catalog.Category>
-@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-}
 @using Telerik.Web.Mvc.UI
-@using (Html.BeginForm())
-{
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" />
-            @T("Manage categories")
-        </div>
-        <div class="options">
-            <input type="button" onclick="location.href='@Url.Action("Create")'" value="Add new" class="adminButtonBlue" />
-        </div>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" />
+        @T("Manage categories") @Html.ActionLink("(switch to tree view)", "Tree")
     </div>
-}
+    <div class="options">
+        <input type="button" onclick="location.href='@Url.Action("Create")'" value="Add new" class="adminButtonBlue" />
+    </div>
+</div>
 <table class="adminContent">
     <tr>
         <td>
-        
-
-                @(Html.Telerik().Grid<Nop.Core.Domain.Catalog.Category>()
-		            .Name("Grid")
+            @(Html.Telerik().Grid<Nop.Core.Domain.Catalog.Category>()
+                    .Name("Grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
-                        columns.Template(x => Html.ActionLink("Edit", "Edit", new { id = x.Id })).Width(50).HtmlAttributes(new {align="center"});
+                        columns.Bound(x => x.Id).Template(x => Html.ActionLink("Edit", "Edit", new { id = x.Id })).ClientTemplate("<a href=\"<#= Id #>\">Edit</a>").Width(50).HtmlAttributes(new { align = "center" });
+                        //columns.Bound(x => x.Id).).Width(50);
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.DisplayOrder);
                     })
                     .Pageable(settings => settings.Total(Model.Total).PageSize(10))
-		            .EnableCustomBinding(true))
-
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Category"))
+                    .EnableCustomBinding(true).Filterable().Sortable())
         </td>
     </tr>
 </table>

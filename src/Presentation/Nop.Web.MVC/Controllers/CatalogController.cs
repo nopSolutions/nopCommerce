@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace Nop.Web.MVC.Controllers
 {
@@ -10,7 +6,7 @@ namespace Nop.Web.MVC.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("List", "CategoryAdmin", new { area = "Categories" });
+            return RedirectToAction("List", "Category", new { area = "Admin" });
             //return Content("Catalog Index", "text/html");
         }
     }

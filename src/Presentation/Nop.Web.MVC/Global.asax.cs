@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac;
 using Autofac.Integration.Mvc;
 using Nop.Core.Infrastructure;
-using Telerik.Web.Mvc;
-using Telerik.Web.Mvc.Infrastructure;
-using Telerik.Web.Mvc.UI;
 
 namespace Nop.Web.MVC
 {
