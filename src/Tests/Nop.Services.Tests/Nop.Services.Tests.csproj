@@ -76,6 +76,7 @@
     <Compile Include="Security\UserServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\ConfigFileSettingServiceTests.cs" />
+    <Compile Include="Tax\FixedRateTestTaxProvider.cs" />
     <Compile Include="Tax\TaxServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>

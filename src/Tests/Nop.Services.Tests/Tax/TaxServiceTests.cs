@@ -33,27 +33,26 @@ namespace Nop.Services.Tests.Tax
             _taxService = new TaxService(_addressService, _workContext, _taxSettings, new TypeFinder());
         }
 
-        //TODO uncomment when we'll be able to test plugins
-        //[Test]
-        //public void Can_load_taxProviders()
-        //{
-        //    var providers = _taxService.LoadAllTaxProviders();
-        //    providers.ShouldNotBeNull();
-        //    (providers.Count > 0).ShouldBeTrue();
-        //}
+        [Test]
+        public void Can_load_taxProviders()
+        {
+            var providers = _taxService.LoadAllTaxProviders();
+            providers.ShouldNotBeNull();
+            (providers.Count > 0).ShouldBeTrue();
+        }
 
-        //[Test]
-        //public void Can_load_taxProviderBySystemKeyword()
-        //{
-        //    var rule = _taxService.LoadTaxProviderBySystemName("FixedTaxRate");
-        //    rule.ShouldNotBeNull();
-        //}
+        [Test]
+        public void Can_load_taxProviderBySystemKeyword()
+        {
+            var rule = _taxService.LoadTaxProviderBySystemName("FixedTaxRateTest");
+            rule.ShouldNotBeNull();
+        }
 
-        //[Test]
-        //public void Can_load_activeTaxProvider()
-        //{
-        //    var provider = _taxService.LoadActiveTaxProvider();
-        //    provider.ShouldNotBeNull();
-        //}
+        [Test]
+        public void Can_load_activeTaxProvider()
+        {
+            var provider = _taxService.LoadActiveTaxProvider();
+            provider.ShouldNotBeNull();
+        }
     }
 }
