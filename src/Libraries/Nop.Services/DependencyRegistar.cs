@@ -15,6 +15,7 @@
 using System;
 using Autofac;
 using Nop.Core.Infrastructure;
+using Nop.Services.Infrastructure;
 
 namespace Nop.Services
 {

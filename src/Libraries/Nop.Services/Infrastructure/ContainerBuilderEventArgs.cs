@@ -1,7 +1,7 @@
 ﻿using System;
 using Autofac;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Services.Infrastructure
 {
     public class ContainerBuilderEventArgs : EventArgs
     {

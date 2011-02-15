@@ -30,6 +30,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Security.Permissions;
 using Nop.Core.Domain.Tax;
 using Nop.Data.Mapping.Localization;
 using Nop.Core.Domain.Shipping;
@@ -71,6 +72,7 @@ namespace Nop.Data
         public DbSet<MeasureDimension> MeasureDimensions { get; set; }
         public DbSet<MeasureWeight> MeasureWeights { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<PermissionRecord> PermissionRecords { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }

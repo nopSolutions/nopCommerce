@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Nop.Core.Domain.Security.Permissions;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -24,6 +25,7 @@ namespace Nop.Core.Domain.Customers
         public CustomerRole() 
         {
             this.Customers = new List<Customer>();
+            this.PermissionRecords = new List<PermissionRecord>();
         }
 
         /// <summary>
@@ -60,6 +62,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the customers
         /// </summary>
         public virtual ICollection<Customer> Customers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the permission records
+        /// </summary>
+        public virtual ICollection<PermissionRecord> PermissionRecords { get; set; }
     }
 
 }

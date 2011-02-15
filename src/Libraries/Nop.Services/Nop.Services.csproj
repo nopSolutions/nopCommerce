@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Catalog\CatalogPermissionProvider.cs" />
     <Compile Include="Catalog\CategoryService.cs" />
     <Compile Include="Catalog\CategoryExtensions.cs" />
     <Compile Include="Catalog\CompareProductsService.cs" />
@@ -83,6 +84,9 @@
     <Compile Include="Directory\IMeasureService.cs" />
     <Compile Include="Directory\IStateProvinceService.cs" />
     <Compile Include="DependencyRegistar.cs" />
+    <Compile Include="Infrastructure\ContainerBuilderEventArgs.cs" />
+    <Compile Include="Infrastructure\IDependencyRegistar.cs" />
+    <Compile Include="Infrastructure\NopStarter.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
@@ -110,6 +114,9 @@
     <Compile Include="Security\EncryptionService.cs" />
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\IUserService.cs" />
+    <Compile Include="Security\Permissions\PermissionService.cs" />
+    <Compile Include="Security\Permissions\IPermissionService.cs" />
+    <Compile Include="Security\Permissions\IPermissionProvider.cs" />
     <Compile Include="Security\UserRegistrationRequest.cs" />
     <Compile Include="Security\UserRegistrationResult.cs" />
     <Compile Include="Security\UserService.cs" />

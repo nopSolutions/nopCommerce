@@ -16,13 +16,10 @@ using System;
 using Autofac;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Data
+namespace Nop.Services.Infrastructure
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public interface IDependencyRegistar
     {
-        public virtual void Register(ContainerBuilder builder, TypeFinder typeFinder)
-        {
-            //put your DI here
-        }
+        void Register(ContainerBuilder builder, TypeFinder typeFinder);
     }
 }

@@ -59,10 +59,8 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\ISettings.cs" />
-    <Compile Include="DependencyRegistar.cs" />
-    <Compile Include="Infrastructure\ContainerBuilderEventArgs.cs" />
-    <Compile Include="Infrastructure\IDependencyRegistar.cs" />
-    <Compile Include="Infrastructure\NopStarter.cs" />
+    <Compile Include="Domain\Security\Permissions\DefaultPermissionRecord.cs" />
+    <Compile Include="Domain\Security\Permissions\PermissionRecord.cs" />
     <Compile Include="Domain\Common\Address.cs" />
     <Compile Include="Domain\Customers\CustomerAttribute.cs" />
     <Compile Include="Domain\Customers\CustomerSettings.cs" />
@@ -170,6 +168,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

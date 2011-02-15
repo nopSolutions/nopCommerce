@@ -1,7 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac.Integration.Mvc;
 using Nop.Core.Infrastructure;
+using Nop.Services.Infrastructure;
+using Nop.Services.Security.Permissions;
 
 namespace Nop.Web.MVC
 {
@@ -37,12 +40,24 @@ namespace Nop.Web.MVC
             
             //execute startup tasks
             nopStarter.ExecuteStartUpTasks();
-
+            
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            //register permissions
+            //TODO move to NopStarter after implementing Common Service Locator pattern
+            var permissionProviders = DependencyResolver.Current.GetService<TypeFinder>().FindClassesOfType<IPermissionProvider>();
+            foreach (var providerType in permissionProviders)
+            {
+                dynamic provider = Activator.CreateInstance(providerType);
+                DependencyResolver.Current.GetService<IPermissionService>().InstallPermissions(provider);
+            }
         }
 
         private void nopStarter_ContainerBuilding(object sender, ContainerBuilderEventArgs e)

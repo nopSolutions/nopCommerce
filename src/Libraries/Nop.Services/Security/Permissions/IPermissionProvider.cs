@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -12,13 +12,14 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using Autofac;
+using System.Collections.Generic;
+using Nop.Core.Domain.Security.Permissions;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Services.Security.Permissions
 {
-    public interface IDependencyRegistar
+    public interface IPermissionProvider
     {
-        void Register(ContainerBuilder builder, TypeFinder typeFinder);
+        IEnumerable<PermissionRecord> GetPermissions();
+        IEnumerable<DefaultPermissionRecord> GetDefaultPermissions();
     }
 }

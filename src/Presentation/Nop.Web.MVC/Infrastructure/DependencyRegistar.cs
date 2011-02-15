@@ -30,11 +30,13 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
+using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Autofac.Core;
@@ -109,7 +111,8 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
 
             builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
-            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
+            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest(); ;
+            builder.RegisterType<PermissionService>().As<IPermissionService>().InstancePerHttpRequest();
 
             builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();
             builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerHttpRequest();

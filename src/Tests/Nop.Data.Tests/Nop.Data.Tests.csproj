@@ -69,6 +69,7 @@
     <Compile Include="CategoryPersistenceTests.cs" />
     <Compile Include="CheckoutAttributePersistenceTests.cs" />
     <Compile Include="CheckoutAttributeValuePersistenceTests.cs" />
+    <Compile Include="PermissionRecordPersistenceTests.cs" />
     <Compile Include="GiftCardPersistenceTests.cs" />
     <Compile Include="GiftCardUsageHistoryPersistenceTests.cs" />
     <Compile Include="DiscountUsageHistoryPersistenceTests.cs" />

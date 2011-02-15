@@ -18,9 +18,10 @@ using System.Reflection;
 using Autofac;
 using System.IO;
 using System.Collections.Generic;
+using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Services.Infrastructure
 {
     public class NopStarter
     {

@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Security.Permissions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Telerik.Web.Mvc;
@@ -16,10 +17,13 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
+        private readonly IPermissionService _permissionService;
 
-        public CategoryController(ICategoryService categoryService, IRepository<Category> categoryRepository)
+        public CategoryController(ICategoryService categoryService,
+            IPermissionService permissionService)
         {
             _categoryService = categoryService;
+            _permissionService = permissionService;
         }
 
        
@@ -66,8 +70,13 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
+            {
+                //TODO redirect to access denied page
+            }
+
             var categories = _categoryService.GetAllCategories(0, 10, true);
-            var gridModel = new GridModel<Category> {Data = categories, Total = categories.TotalCount};
+            var gridModel = new GridModel<Category> { Data = categories, Total = categories.TotalCount };
             return View(gridModel);
         }
 

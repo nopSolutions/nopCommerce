@@ -12,17 +12,25 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using Autofac;
-using Nop.Core.Infrastructure;
+using System.Data.Entity.ModelConfiguration;
+using Nop.Core.Domain.Security.Permissions;
 
-namespace Nop.Core
+
+namespace Nop.Data.Mapping.Security.Permissions
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public partial class PermissionRecordMap : EntityTypeConfiguration<PermissionRecord>
     {
-        public virtual void Register(ContainerBuilder builder, TypeFinder typeFinder)
+        public PermissionRecordMap()
         {
-            //put your DI here
+            this.ToTable("PermissionRecord");
+            this.HasKey(pr => pr.Id);
+            this.Property(pr => pr.Name).IsRequired();
+            this.Property(pr => pr.SystemName).IsRequired().HasMaxLength(255);
+            this.Property(pr => pr.Category).IsRequired().HasMaxLength(255);
+
+            this.HasMany(pr => pr.CustomerRoles)
+                .WithMany(cr => cr.PermissionRecords)
+                .Map(m => m.ToTable("PermissionRecord_Role_Mapping"));
         }
     }
 }

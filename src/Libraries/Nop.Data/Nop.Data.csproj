@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseInitializer.cs" />
-    <Compile Include="DependencyRegistar.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="Mapping\Common\AddressMap.cs" />
     <Compile Include="Mapping\Customers\CustomerAttributeMap.cs" />
@@ -71,6 +70,7 @@
     <Compile Include="Mapping\Orders\GiftCardUsageHistoryMap.cs" />
     <Compile Include="Mapping\Orders\ShoppingCartItemMap.cs" />
     <Compile Include="Mapping\Orders\OrderMap.cs" />
+    <Compile Include="Mapping\Security\Permissions\PermissionRecordMap.cs" />
     <Compile Include="Mapping\Security\UserMap.cs" />
     <Compile Include="Mapping\Directory\StateProvinceMap.cs" />
     <Compile Include="Mapping\Catalog\ProductRatingMap.cs" />
