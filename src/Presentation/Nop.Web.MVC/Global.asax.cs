@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Nop.Core.Infrastructure;
+using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
 {
@@ -37,16 +38,15 @@ namespace Nop.Web.MVC
 
         protected void Application_Start()
         {
-            //build container
-            var nopStarter = new NopStarter();
-            nopStarter.ContainerBuilding += new EventHandler<ContainerBuilderEventArgs>(nopStarter_ContainerBuilding);
-            nopStarter.ContainerBuildingComplete += new EventHandler<ContainerBuilderEventArgs>(nopStarter_ContainerBuildingComplete);
-            var container = nopStarter.BuildContainer();
+            //Nop.Core.Infrastructure.AutoFac.AutoFacServiceContainerExtensions.
+            //nopStarter.ContainerBuilding += new EventHandler<ContainerBuilderEventArgs>(nopStarter_ContainerBuilding);
+            //nopStarter.ContainerBuildingComplete += new EventHandler<ContainerBuilderEventArgs>(nopStarter_ContainerBuildingComplete);
+            //var container = nopStarter.BuildContainer();
             
-            //execute startup tasks
-            nopStarter.ExecuteStartUpTasks();
+            ////execute startup tasks
+            //nopStarter.ExecuteStartUpTasks();
 
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            DependencyResolver.SetResolver(new NopDependencyResolver());
 
 
             AreaRegistration.RegisterAllAreas();
