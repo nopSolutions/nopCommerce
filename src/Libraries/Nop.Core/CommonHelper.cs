@@ -145,5 +145,7 @@ namespace Nop.Core
 
             return AspNetHostingPermissionLevel.None;
         }
+
+        public static Func<DateTime> CurrentTime = () => DateTime.Now;
     }
 }

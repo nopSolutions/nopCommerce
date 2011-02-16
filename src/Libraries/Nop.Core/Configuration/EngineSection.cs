@@ -33,6 +33,13 @@ namespace Nop.Core.Configuration
             set { base["assemblies"] = value; }
         }
 
+        /// <summary>Scheduler related configuration.</summary>
+        [ConfigurationProperty("scheduler")]
+        public SchedulerElement Scheduler
+        {
+            get { return (SchedulerElement)base["scheduler"]; }
+            set { base["scheduler"] = value; }
+        }
 
         /// <summary>A collection of services that are registered in the container before the default ones. This is a place through which core services can be replaced.</summary>
         [ConfigurationProperty("components")]
@@ -48,6 +55,14 @@ namespace Nop.Core.Configuration
         {
             get { return (PluginInitializerCollection)base["pluginInitializers"]; }
             set { base["pluginInitializers"] = value; }
+        }
+
+        /// <summary>Add or remove UI plugins. This is most commonly used to remove unwanted toolbar buttons.</summary>
+        [ConfigurationProperty("interfacePlugins")]
+        public InterfacePluginCollection InterfacePlugins
+        {
+            get { return (InterfacePluginCollection)base["interfacePlugins"]; }
+            set { base["interfacePlugins"] = value; }
         }
     }
 }
