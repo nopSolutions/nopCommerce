@@ -15,11 +15,12 @@
 using System;
 using Autofac;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.AutoFac;
 using Nop.Services.Infrastructure;
 
 namespace Nop.Services
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public class DependencyRegistar : IAutoFacDependencyRegistar
     {
         public virtual void Register(ContainerBuilder builder, TypeFinder typeFinder)
         {

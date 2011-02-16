@@ -91,6 +91,7 @@
     <Compile Include="Infrastructure\AsyncWorker.cs" />
     <Compile Include="Infrastructure\AttributeInfo.cs" />
     <Compile Include="Infrastructure\AutoFac\AutoFacServiceContainer.cs" />
+    <Compile Include="Infrastructure\AutoFac\IAutoFacDependencyRegistar.cs" />
     <Compile Include="Infrastructure\ComponentRegistrationException.cs" />
     <Compile Include="Infrastructure\ContainerConfigurer.cs" />
     <Compile Include="Infrastructure\EventBroker.cs" />

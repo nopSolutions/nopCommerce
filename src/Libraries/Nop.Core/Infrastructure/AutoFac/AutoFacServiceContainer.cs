@@ -45,7 +45,7 @@ namespace Nop.Core.Infrastructure.AutoFac
             builder.Register(c => typeFinder);
 
             //find IDependencyRegistar implementations
-            var drTypes = typeFinder.FindClassesOfType<IDependencyRegistar>();
+            var drTypes = typeFinder.FindClassesOfType<IAutoFacDependencyRegistar>();
             foreach (var t in drTypes)
             {
                 dynamic dependencyRegistar = Activator.CreateInstance(t);
@@ -53,7 +53,7 @@ namespace Nop.Core.Infrastructure.AutoFac
             }
 
             //event
-            OnContainerBuilding(new ContainerBuilderEventArgs(builder));
+            //OnContainerBuilding(new ContainerBuilderEventArgs(builder));
 
             if (_container == null)
             {
@@ -65,28 +65,28 @@ namespace Nop.Core.Infrastructure.AutoFac
             }
 
             //event
-            OnContainerBuildingComplete(new ContainerBuilderEventArgs(builder));
+            //OnContainerBuildingComplete(new ContainerBuilderEventArgs(builder));
         }
 
-        protected void OnContainerBuilding(ContainerBuilderEventArgs args)
-        {
-            if (ContainerBuilding != null)
-            {
-                ContainerBuilding(this, args);
-            }
-        }
+        //protected void OnContainerBuilding(ContainerBuilderEventArgs args)
+        //{
+        //    if (ContainerBuilding != null)
+        //    {
+        //        ContainerBuilding(this, args);
+        //    }
+        //}
 
-        protected void OnContainerBuildingComplete(ContainerBuilderEventArgs args)
-        {
-            if (ContainerBuildingComplete != null)
-            {
-                ContainerBuildingComplete(this, args);
-            }
-        }
+        //protected void OnContainerBuildingComplete(ContainerBuilderEventArgs args)
+        //{
+        //    if (ContainerBuildingComplete != null)
+        //    {
+        //        ContainerBuildingComplete(this, args);
+        //    }
+        //}
 
-        public event EventHandler<ContainerBuilderEventArgs> ContainerBuilding;
+        //public event EventHandler<ContainerBuilderEventArgs> ContainerBuilding;
 
-        public event EventHandler<ContainerBuilderEventArgs> ContainerBuildingComplete;
+        //public event EventHandler<ContainerBuilderEventArgs> ContainerBuildingComplete;
 
         #region IServiceContainer
 

@@ -22,6 +22,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.AutoFac;
 using Nop.Data;
 using Nop.Services;
 using Nop.Services.Catalog;
@@ -46,7 +47,7 @@ using System.Data.Entity.Database;
 
 namespace Nop.Web.MVC.Infrastructure
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public class DependencyRegistar : IAutoFacDependencyRegistar
     {
         public virtual void Register(ContainerBuilder builder, TypeFinder typeFinder)
         {

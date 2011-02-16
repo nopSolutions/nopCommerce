@@ -85,8 +85,6 @@
     <Compile Include="Directory\IStateProvinceService.cs" />
     <Compile Include="DependencyRegistar.cs" />
     <Compile Include="Infrastructure\ContainerBuilderEventArgs.cs" />
-    <Compile Include="Infrastructure\IDependencyRegistar.cs" />
-    <Compile Include="Infrastructure\NopStarter.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
