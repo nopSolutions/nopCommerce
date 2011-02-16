@@ -46,7 +46,7 @@ namespace Nop.Core.Plugins
             }
 
             // autoinitialize plugins
-            foreach (Type type in typeFinder.Find(typeof(IPluginInitializer)))
+            foreach (Type type in typeFinder.FindClassesOfType<IPluginInitializer>())
             {
                 foreach (AutoInitializeAttribute plugin in type.GetCustomAttributes(typeof(AutoInitializeAttribute), true))
                 {

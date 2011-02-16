@@ -7,7 +7,7 @@ using System.Text;
 namespace Nop.Core.Configuration
 {
     /// <summary>
-    /// A service definition to add to the N2 container. This can be used to replace core services.
+    /// A service definition to add to the Nop container. This can be used to replace core services.
     /// </summary>
     public class ComponentElement : ConfigurationElement
     {

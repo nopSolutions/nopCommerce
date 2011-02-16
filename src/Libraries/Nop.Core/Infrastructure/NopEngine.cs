@@ -5,6 +5,7 @@ using System.Text;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.AutoFac;
 using Nop.Core.Plugins;
+using Nop.Core.Tasks;
 using Nop.Core.Web;
 
 namespace Nop.Core.Infrastructure
@@ -17,7 +18,7 @@ namespace Nop.Core.Infrastructure
 		/// Creates an instance of the content engine using default settings and configuration.
 		/// </summary>
 		public NopEngine()
-			: this(new AutoFacServiceContainer(), EventBroker.Instance, new ContainerConfigurer())
+            : this(new AutoFacServiceContainer(), EventBroker.Instance, new ContainerConfigurer())
 		{
 		}
 
@@ -90,6 +91,13 @@ namespace Nop.Core.Infrastructure
 			}
 
 			container.StartComponents();
+
+		    var startUpTaskTypes = container.Resolve<ITypeFinder>().FindClassesOfType<IStartupTask>();
+            foreach (var startUpTaskType in startUpTaskTypes)
+            {
+                var startUpTask = ((IStartupTask)Activator.CreateInstance(startUpTaskType));
+                startUpTask.Execute();
+            }
 		}
 
 		#endregion

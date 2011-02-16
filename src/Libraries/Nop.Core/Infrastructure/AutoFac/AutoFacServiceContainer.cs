@@ -18,6 +18,11 @@ namespace Nop.Core.Infrastructure.AutoFac
     {
         private IContainer _container;
 
+        public IContainer Container
+        {
+            get { return _container; }
+        }
+
         public AutoFacServiceContainer()
         {
             InitializeContainer();
@@ -452,6 +457,11 @@ namespace Nop.Core.Infrastructure.AutoFac
         public override void StartComponents()
         {
             _container.Resolve<IStarter>().Start();
+        }
+
+        public override void Start()
+        {
+            UpdateContainer(x => x.RegisterControllers(Resolve<ITypeFinder>().GetAssemblies().ToArray()));
         }
     }
 

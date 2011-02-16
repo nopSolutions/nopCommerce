@@ -8,8 +8,8 @@ namespace Nop.Core.Infrastructure
 {
     /// <summary>
     /// Classes implementing this interface can serve as a portal for the 
-    /// various services composing the N2 engine. Edit functionality, modules
-    /// and implementations access most N2 functionality through this 
+    /// various services composing the Nop engine. Edit functionality, modules
+    /// and implementations access most Nop functionality through this 
     /// interface.
     /// </summary>
     public interface IEngine

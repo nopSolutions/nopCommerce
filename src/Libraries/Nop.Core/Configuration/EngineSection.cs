@@ -5,8 +5,7 @@ using Nop.Core.Infrastructure;
 namespace Nop.Core.Configuration
 {
     /// <summary>
-    /// Configuration related to inversion of control and the dynamic aspects 
-    /// of n2 definition.
+    /// Configuration related to inversion of control and the dynamic aspects
     /// </summary>
     public class EngineSection : ConfigurationSectionBase
     {

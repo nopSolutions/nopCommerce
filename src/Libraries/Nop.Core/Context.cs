@@ -13,12 +13,12 @@ using Nop.Core.Infrastructure;
 namespace Nop.Core
 {
     /// <summary>
-    /// Provides access to the singleton instance of the N2 CMS engine.
+    /// Provides access to the singleton instance of the Nop engine.
     /// </summary>
     public class Context
     {
         #region Initialization Methods
-        /// <summary>Initializes a static instance of the N2 factory.</summary>
+        /// <summary>Initializes a static instance of the Nop factory.</summary>
         /// <param name="forceRecreate">Creates a new factory instance even though the factory has been previously initialized.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static IEngine Initialize(bool forceRecreate)
@@ -89,7 +89,7 @@ namespace Nop.Core
 
         #endregion
 
-        /// <summary>Gets the singleton N2 engine used to access N2 services.</summary>
+        /// <summary>Gets the singleton Nop engine used to access Nop services.</summary>
         public static IEngine Current
         {
             get

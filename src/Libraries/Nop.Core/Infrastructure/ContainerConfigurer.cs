@@ -8,7 +8,7 @@ using Nop.Core.Web;
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// Configures the inversion of control container with services used by N2 CMS.
+    /// Configures the inversion of control container with services used by Nop.
     /// </summary>
     public class ContainerConfigurer
     {

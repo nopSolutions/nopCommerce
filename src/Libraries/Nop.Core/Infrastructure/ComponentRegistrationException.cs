@@ -10,7 +10,7 @@ namespace Nop.Core.Infrastructure
     public class ComponentRegistrationException : Exception
     {
         public ComponentRegistrationException(string serviceName)
-            : base(String.Format("Component {0} could not be found but is registered in the n2/engine/components section", serviceName))
+            : base(String.Format("Component {0} could not be found but is registered in the Nop/engine/components section", serviceName))
         {
         }
 

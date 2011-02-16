@@ -10,12 +10,26 @@ namespace Nop.Web.MVC.Infrastructure
     {
         public object GetService(Type serviceType)
         {
-            return Nop.Core.Context.Current.Resolve(serviceType);
+            try
+            {
+                return Nop.Core.Context.Current.Resolve(serviceType);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public IEnumerable<object> GetServices(Type serviceType)
         {
-            return (IEnumerable<object>)Nop.Core.Context.Current.ResolveAll(serviceType);
+            try
+            {
+                return (IEnumerable<object>)Nop.Core.Context.Current.ResolveAll(serviceType);
+            }
+            catch
+            {
+                return new List<Object>().AsEnumerable();
+            }
         }
     }
 }

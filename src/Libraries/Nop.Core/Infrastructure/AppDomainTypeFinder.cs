@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// A class that finds types needed by N2 by looping assemblies in the 
+    /// A class that finds types needed by Nop by looping assemblies in the 
     /// currently executing AppDomain. Only assemblies whose names matches
     /// certain patterns are investigated and an optional list of assemblies
     /// referenced by <see cref="AssemblyNames"/> are always investigated.
@@ -45,7 +45,7 @@ namespace Nop.Core.Infrastructure
             get { return AppDomain.CurrentDomain; }
         }
 
-        /// <summary>Gets or sets wether N2 should iterate assemblies in the app domain when loading N2 types. Loading patterns are applied when loading these assemblies.</summary>
+        /// <summary>Gets or sets wether Nop should iterate assemblies in the app domain when loading Nop types. Loading patterns are applied when loading these assemblies.</summary>
         public bool LoadAppDomainAssemblies
         {
             get { return loadAppDomainAssemblies; }
@@ -59,15 +59,15 @@ namespace Nop.Core.Infrastructure
             set { assemblyNames = value; }
         }
 
-        /// <summary>Gets the pattern for dlls that we know don't need to be investigated for content items.</summary>
+        /// <summary>Gets the pattern for dlls that we know don't need to be investigated.</summary>
         public string AssemblySkipLoadingPattern
         {
             get { return assemblySkipLoadingPattern; }
             set { assemblySkipLoadingPattern = value; }
         }
 
-        /// <summary>Gets or sets the pattern for dll that will be investigated. For ease of use this defaults to match all but to increase performance you might want to configure a pattern that includes N2 assemblies and your own.</summary>
-        /// <remarks>If you change this so that N2 assemblies arn't investigated (e.g. by not including something like "^N2|..." you may break core functionality.</remarks>
+        /// <summary>Gets or sets the pattern for dll that will be investigated. For ease of use this defaults to match all but to increase performance you might want to configure a pattern that includes assemblies and your own.</summary>
+        /// <remarks>If you change this so that Nop assemblies arn't investigated (e.g. by not including something like "^Nop|..." you may break core functionality.</remarks>
         public string AssemblyRestrictToLoadingPattern
         {
             get { return assemblyRestrictToLoadingPattern; }
@@ -76,44 +76,37 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        /// <summary>Finds types assignable from of a certain type in the app domain.</summary>
-        /// <param name="requestedType">The type to find.</param>
-        /// <returns>A list of types found in the app domain.</returns>
-        public virtual IList<Type> Find(Type requestedType)
+        #region ITypeFinder
+
+        public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
         {
-            List<Type> types = new List<Type>();
-            foreach (Assembly a in GetAssemblies())
-            {
-                try
-                {
-                    foreach (Type t in a.GetTypes())
-                    {
-                        if (requestedType.IsAssignableFrom(t))
-                            types.Add(t);
-                    }
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    string loaderErrors = string.Empty;
-                    foreach (Exception loaderEx in ex.LoaderExceptions)
-                    {
-                        Trace.TraceError(loaderEx.ToString());
-                        loaderErrors += ", " + loaderEx.Message;
-                    }
+            return FindClassesOfType(typeof(T), onlyConcreteClasses);
+        }
 
-                    throw new Exception("Error getting types from assembly " + a.FullName + loaderErrors, ex);
-                }
-            }
+        public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
+        {
+            return FindClassesOfType(assignTypeFrom, GetAssemblies(), onlyConcreteClasses);
+        }
 
-            return types;
+        public IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        {
+            return FindClassesOfType(typeof (T), assemblies, onlyConcreteClasses);
+        }
+
+        public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        {
+            return (from a in assemblies
+                    from t in a.GetTypes()
+                    where !t.IsInterface && assignTypeFrom.IsAssignableFrom(t) && (onlyConcreteClasses ? (t.IsClass && !t.IsAbstract) : true)
+                    select t).ToList();
         }
 
         /// <summary>Gets tne assemblies related to the current implementation.</summary>
-        /// <returns>A list of assemblies that should be loaded by the N2 factory.</returns>
+        /// <returns>A list of assemblies that should be loaded by the Nop factory.</returns>
         public virtual IList<Assembly> GetAssemblies()
         {
-            List<string> addedAssemblyNames = new List<string>();
-            List<Assembly> assemblies = new List<Assembly>();
+            var addedAssemblyNames = new List<string>();
+            var assemblies = new List<Assembly>();
 
             if (LoadAppDomainAssemblies)
                 AddAssembliesInAppDomain(addedAssemblyNames, assemblies);
@@ -121,6 +114,8 @@ namespace Nop.Core.Infrastructure
 
             return assemblies;
         }
+
+        #endregion
 
         /// <summary>Iterates all assemblies in the AppDomain and if it's name matches the configured patterns add it to our list.</summary>
         /// <param name="addedAssemblyNames"></param>
@@ -156,7 +151,7 @@ namespace Nop.Core.Infrastructure
 
         /// <summary>Check if a dll is one of the shipped dlls that we know don't need to be investigated.</summary>
         /// <param name="assemblyFullName">The name of the assembly to check.</param>
-        /// <returns>True if the assembly should be loaded into N2.</returns>
+        /// <returns>True if the assembly should be loaded into Nop.</returns>
         public virtual bool Matches(string assemblyFullName)
         {
             return !Matches(assemblyFullName, AssemblySkipLoadingPattern)
@@ -203,5 +198,14 @@ namespace Nop.Core.Infrastructure
                 }
             }
         }
+
+
+
+
+
+
+
+
+
     }
 }

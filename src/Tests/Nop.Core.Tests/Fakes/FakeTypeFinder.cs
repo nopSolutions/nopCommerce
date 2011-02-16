@@ -27,14 +27,32 @@ namespace Nop.Core.Tests.Fakes
             this.Assemblies = assemblies;
         }
 
-        public IList<Type> Find(Type requestedType)
-        {
-            return Types.Where(t => requestedType.IsAssignableFrom(requestedType)).ToList();
-        }
-
         public IList<Assembly> GetAssemblies()
         {
             return Assemblies.ToList();
+        }
+
+
+        public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
+        {
+            return (from t in Types
+                    where !t.IsInterface && assignTypeFrom.IsAssignableFrom(t) && (onlyConcreteClasses ? (t.IsClass && !t.IsAbstract) : true)
+                    select t).ToList();
+        }
+
+        public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
+        {
+            return FindClassesOfType(typeof (T), onlyConcreteClasses);
+        }
+
+        public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        {
+            return FindClassesOfType(assignTypeFrom, onlyConcreteClasses);
+        }
+
+        public IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
+        {
+            return FindClassesOfType(typeof(T), onlyConcreteClasses);
         }
     }
 }

@@ -70,7 +70,7 @@ namespace Nop.Core.Web
             items = null;
         }
 
-        /// <summary>The requested url, e.g. http://n2cms.com/path/to/a/page.aspx?some=query.</summary>
+        /// <summary>The requested url, e.g. http://web.com/path/to/a/page.aspx?some=query.</summary>
         public virtual Url Url
         {
             get { return url; }

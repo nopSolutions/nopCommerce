@@ -11,8 +11,9 @@ namespace Nop.Core.Configuration
     {
         public AssemblyCollection()
         {
-            AddDefault(new AssemblyElement("N2"));
-            AddDefault(new AssemblyElement("N2.Management"));
+            AddDefault(new AssemblyElement("Nop.Core"));
+            AddDefault(new AssemblyElement("Nop.Data"));
+            AddDefault(new AssemblyElement("Nop.Services"));
         }
 
         protected override void OnDeserializeRemoveElement(AssemblyElement element, System.Xml.XmlReader reader)

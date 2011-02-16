@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nop.Core.Plugins;
 
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// Wraps an inversion of control container. The default container used by N2 is Windsor.
+    /// Wraps an inversion of control container. The default container used by Nop is AutoFac.
     /// </summary>
-    public abstract class ServiceContainerBase : IServiceContainer
+    public abstract class ServiceContainerBase : IServiceContainer , IAutoStart
     {
         public abstract void AddComponent<TService>(string key = "", ComponentLifeStyle lifeStyle = ComponentLifeStyle.Singleton);
 
@@ -43,5 +44,13 @@ namespace Nop.Core.Infrastructure
         public abstract T[] ResolveAll<T>(string key = "");
 
         public abstract void StartComponents();
+
+        public virtual void Start()
+        {
+        }
+
+        public virtual void Stop()
+        {
+        }
     }
 }

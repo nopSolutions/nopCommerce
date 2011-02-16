@@ -22,6 +22,7 @@ using Nop.Core.Tasks;
 
 namespace Nop.Core.Infrastructure
 {
+    [Obsolete("This work is performed in NopEngine", true)]
     public class NopStarter
     {
         private readonly object _locker = new object();
@@ -65,7 +66,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         public void ExecuteStartUpTasks()
         {
-            var startUpTaskTypes = _container.Resolve<TypeFinder>().FindClassesOfType<IStartupTask>();
+            var startUpTaskTypes = _container.Resolve<ITypeFinder>().FindClassesOfType<IStartupTask>();
             foreach (var startUpTaskType in startUpTaskTypes)
             {
                 var startUpTask = ((IStartupTask)Activator.CreateInstance(startUpTaskType));

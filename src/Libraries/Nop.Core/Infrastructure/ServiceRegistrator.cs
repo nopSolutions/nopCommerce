@@ -6,7 +6,7 @@ using System.Text;
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// Registers service in the N2 inversion of container upon start.
+    /// Registers service in the Nop inversion of container upon start.
     /// </summary>
     public class ServiceRegistrator
     {
@@ -21,7 +21,7 @@ namespace Nop.Core.Infrastructure
 
         public virtual IEnumerable<AttributeInfo<ServiceAttribute>> FindServices()
         {
-            foreach (Type type in finder.Find(typeof(object)))
+            foreach (Type type in finder.FindClassesOfType<object>())
             {
                 var attributes = type.GetCustomAttributes(typeof(ServiceAttribute), false);
                 foreach (ServiceAttribute attribute in attributes)

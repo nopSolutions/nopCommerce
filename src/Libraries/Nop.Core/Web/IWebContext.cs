@@ -39,7 +39,7 @@ namespace Nop.Core.Web
         /// </summary>
         bool SkipAuthorization { get; }
 
-        /// <summary>The local part of the requested path, e.g. http://n2cms.com/path/to/a/page.aspx?some=query.</summary>
+        /// <summary>The local part of the requested path, e.g. http://web.com/path/to/a/page.aspx?some=query.</summary>
         Url Url { get; }
 
         /// <summary>Closes any endable resources at the end of the request.</summary>

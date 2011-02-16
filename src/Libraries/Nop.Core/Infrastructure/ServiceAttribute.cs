@@ -6,7 +6,7 @@ using System.Text;
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// Markes a service that is registered in automatically registered in N2's inversion of control container.
+    /// Markes a service that is registered in automatically registered in Nop's inversion of control container.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class ServiceAttribute : Attribute

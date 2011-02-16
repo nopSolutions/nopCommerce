@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.AutoFac;
 using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
@@ -38,32 +39,12 @@ namespace Nop.Web.MVC
 
         protected void Application_Start()
         {
-            //Nop.Core.Infrastructure.AutoFac.AutoFacServiceContainerExtensions.
-            //nopStarter.ContainerBuilding += new EventHandler<ContainerBuilderEventArgs>(nopStarter_ContainerBuilding);
-            //nopStarter.ContainerBuildingComplete += new EventHandler<ContainerBuilderEventArgs>(nopStarter_ContainerBuildingComplete);
-            //var container = nopStarter.BuildContainer();
-            
-            ////execute startup tasks
-            //nopStarter.ExecuteStartUpTasks();
-
-            DependencyResolver.SetResolver(new NopDependencyResolver());
-
+            DependencyResolver.SetResolver(
+                new AutofacDependencyResolver((Nop.Core.Context.Current.Container as AutoFacServiceContainer).Container));
 
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-        }
-
-        private void nopStarter_ContainerBuilding(object sender, ContainerBuilderEventArgs e)
-        {
-            //register controllers
-            e.Builder.RegisterControllers(typeof(MvcApplication).Assembly);
-            //register plugins controllers - TODO uncomment
-            //e.Builder.RegisterControllers(PluginManager.ReferencedPlugins.ToArray());
-        }
-
-        private void nopStarter_ContainerBuildingComplete(object sender, ContainerBuilderEventArgs e)
-        {
         }
     }
 }

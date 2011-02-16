@@ -72,7 +72,7 @@ namespace Nop.Core.Web
             get { return CurrentContext.PhysicalPath; }
         }
 
-        /// <summary>The host part of the requested url, e.g. http://n2cms.com/path/to/a/page.aspx?some=query.</summary>
+        /// <summary>The host part of the requested url, e.g. http://web.com/path/to/a/page.aspx?some=query.</summary>
         public Url Url
         {
             get { return CurrentContext.Url; }

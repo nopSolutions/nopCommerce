@@ -7,7 +7,7 @@ using System.Text;
 namespace Nop.Core.Configuration
 {
     /// <summary>
-    /// Services to register instead of/in addition to existing N2 services.
+    /// Services to register instead of/in addition to existing Nop services.
     /// </summary>
     [ConfigurationCollection(typeof(ComponentElement))]
     public class ComponentCollection : ConfigurationElementCollection

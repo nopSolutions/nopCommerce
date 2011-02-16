@@ -8,17 +8,18 @@ namespace Nop.Core.Infrastructure
 {
     /// <summary>
     /// Classes implementing this interface provide information about types 
-    /// to various services in the N2 engine.
+    /// to various services in the Nop engine.
     /// </summary>
     public interface ITypeFinder
     {
-        /// <summary>Finds types assignable from of a certain type in the app domain.</summary>
-        /// <param name="requestedType">The type to find.</param>
-        /// <returns>A list of types found in the app domain.</returns>
-        IList<Type> Find(Type requestedType);
-
-        /// <summary>Gets tne assemblies related to the current implementation.</summary>
-        /// <returns>A list of assemblies that should be loaded by the N2 factory.</returns>
         IList<Assembly> GetAssemblies();
+
+        IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true);
+
+        IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true);
+
+        IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true);
+
+        IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true);
     }
 }
