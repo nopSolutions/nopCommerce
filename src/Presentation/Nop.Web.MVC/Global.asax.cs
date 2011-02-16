@@ -5,6 +5,8 @@ using Autofac.Integration.Mvc;
 using Nop.Core.Infrastructure;
 using Nop.Services.Infrastructure;
 using Nop.Services.Security.Permissions;
+using Nop.Core.Infrastructure.AutoFac;
+using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
 {
@@ -32,16 +34,9 @@ namespace Nop.Web.MVC
 
         protected void Application_Start()
         {
-            //build container
-            var nopStarter = new NopStarter();
-            nopStarter.ContainerBuilding += nopStarter_ContainerBuilding;
-            nopStarter.ContainerBuildingComplete += nopStarter_ContainerBuildingComplete;
-            var container = nopStarter.BuildContainer();
-            
-            //execute startup tasks
-            nopStarter.ExecuteStartUpTasks();
-            
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            DependencyResolver.SetResolver(
+                new AutofacDependencyResolver((Nop.Core.Context.Current.Container as AutoFacServiceContainer).Container));
+
 
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -58,18 +53,6 @@ namespace Nop.Web.MVC
                 dynamic provider = Activator.CreateInstance(providerType);
                 DependencyResolver.Current.GetService<IPermissionService>().InstallPermissions(provider);
             }
-        }
-
-        private void nopStarter_ContainerBuilding(object sender, ContainerBuilderEventArgs e)
-        {
-            //register controllers
-            e.Builder.RegisterControllers(typeof(MvcApplication).Assembly);
-            //register plugins controllers - TODO uncomment
-            //e.Builder.RegisterControllers(PluginManager.ReferencedPlugins.ToArray());
-        }
-
-        private void nopStarter_ContainerBuildingComplete(object sender, ContainerBuilderEventArgs e)
-        {
         }
     }
 }

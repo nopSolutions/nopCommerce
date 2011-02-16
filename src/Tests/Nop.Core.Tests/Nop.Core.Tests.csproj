@@ -40,7 +40,11 @@
     <Reference Include="pnunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.7.10213\lib\pnunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\packages\RhinoMocks.3.6\lib\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,11 +57,29 @@
     <Compile Include="Entities\Discounts\DiscountTests.cs" />
     <Compile Include="Entities\EntityEqualityTests.cs" />
     <Compile Include="Entities\Orders\GiftCardTests.cs" />
+    <Compile Include="Fakes\FakeTypeFinder.cs" />
     <Compile Include="FileSystemStorageProviderTests.cs" />
+    <Compile Include="Infrastructure\ContainerSanityTests.cs" />
+    <Compile Include="Infrastructure\ServiceDiscovererTests.cs" />
+    <Compile Include="Infrastructure\Services\Services.cs" />
+    <Compile Include="Infrastructure\ServiceContainerTests.cs" />
+    <Compile Include="Infrastructure\SingletonTests.cs" />
     <Compile Include="Infrastructure\TypeFinderTests.cs" />
+    <Compile Include="Plugin\PlugIn1.cs" />
+    <Compile Include="Plugin\PlugIn2.cs" />
+    <Compile Include="Plugin\PlugIn3.cs" />
+    <Compile Include="Plugin\PluginFinderTests.cs" />
+    <Compile Include="Plugin\PlugInInitializerInvokerTests.cs" />
+    <Compile Include="Plugin\Scheduling\OnceAction.cs" />
+    <Compile Include="Plugin\Scheduling\RepeatAction.cs" />
+    <Compile Include="Plugin\Scheduling\SchedulingTests.cs" />
+    <Compile Include="Plugin\SomeException.cs" />
+    <Compile Include="Plugin\ThrowingPlugin1.cs" />
+    <Compile Include="Plugin\ThrowingPlugin2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\UserTests.cs" />
     <Compile Include="SettingTestFixture.cs" />
+    <Compile Include="TypeFindingBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
@@ -70,6 +92,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

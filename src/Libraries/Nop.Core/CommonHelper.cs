@@ -16,6 +16,7 @@ using System;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Nop.Core
 {
@@ -121,5 +122,30 @@ namespace Nop.Core
             });
             return result;
         }
+
+        /// <summary>
+        /// Finds the trust level of the running application (http://blogs.msdn.com/dmitryr/archive/2007/01/23/finding-out-the-current-trust-level-in-asp-net.aspx)
+        /// </summary>
+        /// <returns>The current trust level.</returns>
+        internal static AspNetHostingPermissionLevel GetTrustLevel()
+        {
+            foreach (AspNetHostingPermissionLevel trustLevel in new[] { AspNetHostingPermissionLevel.Unrestricted, AspNetHostingPermissionLevel.High, AspNetHostingPermissionLevel.Medium, AspNetHostingPermissionLevel.Low, AspNetHostingPermissionLevel.Minimal })
+            {
+                try
+                {
+                    new AspNetHostingPermission(trustLevel).Demand();
+                }
+                catch (System.Security.SecurityException)
+                {
+                    continue;
+                }
+
+                return trustLevel;
+            }
+
+            return AspNetHostingPermissionLevel.None;
+        }
+
+        public static Func<DateTime> CurrentTime = () => DateTime.Now;
     }
 }
