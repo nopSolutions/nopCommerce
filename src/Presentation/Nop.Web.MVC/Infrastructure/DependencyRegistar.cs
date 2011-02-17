@@ -13,11 +13,15 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Data.Entity.Database;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
 using Autofac;
 using Autofac.Builder;
+using Autofac.Core;
 using Autofac.Integration.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -32,7 +36,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
-using Nop.Services.Infrastructure;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -41,10 +45,6 @@ using Nop.Services.Security;
 using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
-using Autofac.Core;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Data.Entity.Database;
 
 namespace Nop.Web.MVC.Infrastructure
 {
@@ -141,6 +141,8 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
 
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
+
+            builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
         }
     }
 

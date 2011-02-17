@@ -115,6 +115,11 @@ namespace Nop.Core.Domain.Customers
         public bool UseRewardPointsDuringCheckout { get; set; }
 
         /// <summary>
+        /// Gets or sets the time zone identifier
+        /// </summary>
+        public string TimeZoneId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }

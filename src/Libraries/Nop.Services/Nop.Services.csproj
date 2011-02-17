@@ -71,6 +71,9 @@
     <Compile Include="Discounts\IDiscountRequirementRule.cs" />
     <Compile Include="Discounts\IDiscountService.cs" />
     <Compile Include="FormsAuthenticationService.cs" />
+    <Compile Include="Helpers\IDateTimeHelper.cs" />
+    <Compile Include="Helpers\DateTimeSettings.cs" />
+    <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="IAuthenticationService.cs" />
     <Compile Include="Directory\CountryService.cs" />
     <Compile Include="Directory\CurrencyService.cs" />
@@ -83,8 +86,6 @@
     <Compile Include="Customers\ICustomerService.cs" />
     <Compile Include="Directory\IMeasureService.cs" />
     <Compile Include="Directory\IStateProvinceService.cs" />
-    <Compile Include="DependencyRegistar.cs" />
-    <Compile Include="Infrastructure\ContainerBuilderEventArgs.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />

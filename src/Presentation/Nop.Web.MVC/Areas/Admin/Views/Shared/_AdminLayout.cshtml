@@ -210,9 +210,7 @@
             </div>
             <div class="status-bar">
                 <div class="help">
-                    <!-- TODO current datetime here-->
-                    <!-- <%=DateTimeHelper.ConvertToUserTime(DateTime.UtcNow).ToString("f")%>-->
-                    Tuesday, February 01, 2011 6:53 AM
+                    @(DependencyResolver.Current.GetService<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.UtcNow).ToString("f"))
                 </div>
                 <div class="breadcrumb">
                     <!-- TODO SiteMapPath here-->

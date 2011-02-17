@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -12,19 +12,20 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-using System;
-using Autofac;
-using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.AutoFac;
-using Nop.Services.Infrastructure;
+using Nop.Core.Configuration;
 
-namespace Nop.Services
+namespace Nop.Services.Helpers
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public class DateTimeSettings : ISettings
     {
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
-        {
-            //put your DI here
-        }
+        /// <summary>
+        /// Gets or sets a default store time zone identifier
+        /// </summary>
+        public string DefaultStoreTimeZoneId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to select theirs time zone
+        /// </summary>
+        public bool AllowCustomersToSetTimeZone { get; set; }
     }
 }
