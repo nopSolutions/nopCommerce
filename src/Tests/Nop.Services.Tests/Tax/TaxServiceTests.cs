@@ -30,7 +30,7 @@ namespace Nop.Services.Tests.Tax
         public void SetUp()
         {
             _taxSettings = new TaxSettings();
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, new TypeFinder());
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings, new AppDomainTypeFinder());
         }
 
         [Test]

@@ -32,6 +32,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Security.Permissions;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Data.Mapping.Localization;
 using Nop.Core.Domain.Shipping;
 

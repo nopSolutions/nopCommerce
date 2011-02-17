@@ -20,9 +20,9 @@ using Nop.Services.Infrastructure;
 
 namespace Nop.Services
 {
-    public class DependencyRegistar : IAutoFacDependencyRegistar
+    public class DependencyRegistar : IDependencyRegistar
     {
-        public virtual void Register(ContainerBuilder builder, TypeFinder typeFinder)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
             //put your DI here
         }

@@ -43,7 +43,7 @@ namespace Nop.Services.Tax
         private readonly IAddressService _addressService;
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
-        private readonly TypeFinder _typeFinder;
+        private readonly ITypeFinder _typeFinder;
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace Nop.Services.Tax
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
             TaxSettings taxSettings,
-            TypeFinder typeFinder)
+            ITypeFinder typeFinder)
         {
             this._addressService = addressService;
             this._workContext = workContext;

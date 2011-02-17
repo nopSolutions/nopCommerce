@@ -6,8 +6,8 @@ using Autofac;
 
 namespace Nop.Core.Infrastructure.AutoFac
 {
-    public interface IAutoFacDependencyRegistar
+    public interface IDependencyRegistar
     {
-        void Register(ContainerBuilder builder, TypeFinder typeFinder);
+        void Register(ContainerBuilder builder, ITypeFinder typeFinder);
     }
 }

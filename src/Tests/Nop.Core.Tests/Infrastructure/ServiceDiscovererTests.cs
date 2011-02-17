@@ -15,24 +15,24 @@ namespace Nop.Core.Tests.Infrastructure
         [SetUp]
         public void SetUp()
         {
-            container = new AutoFacServiceContainer();
+            engine = new NopEngine();
         }
     }
 
     public abstract class ServiceDiscovererTests
     {
-        protected IServiceContainer container;
+        protected IEngine engine;
 
         [Test]
         public void Services_AreAdded_ToTheContainer()
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService), typeof(NonAttributed));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            Assert.That(container.Resolve<SelfService>(), Is.InstanceOf<SelfService>());
-            Assert.That(new TestDelegate(() => container.Resolve<NonAttributed>()), Throws.Exception);
+            Assert.That(engine.Resolve<SelfService>(), Is.InstanceOf<SelfService>());
+            Assert.That(new TestDelegate(() => engine.Resolve<NonAttributed>()), Throws.Exception);
         }
 
         [Test]
@@ -40,10 +40,10 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService), typeof(DependingService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            var service = container.Resolve<DependingService>();
+            var service = engine.Resolve<DependingService>();
             Assert.That(service, Is.InstanceOf<DependingService>());
             Assert.That(service.service, Is.InstanceOf<SelfService>());
         }
@@ -53,11 +53,11 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            var one = container.Resolve<SelfService>();
-            var two = container.Resolve<SelfService>();
+            var one = engine.Resolve<SelfService>();
+            var two = engine.Resolve<SelfService>();
 
             Assert.That(object.ReferenceEquals(one, two));
         }
@@ -67,12 +67,12 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(InterfacedService), typeof(NonAttributed));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            Assert.That(container.Resolve<IService>(), Is.Not.Null);
-            Assert.That(container.Resolve<IService>(), Is.InstanceOf<InterfacedService>());
-            Assert.That(new TestDelegate(() => container.Resolve<NonAttributed>()), Throws.Exception);
+            Assert.That(engine.Resolve<IService>(), Is.Not.Null);
+            Assert.That(engine.Resolve<IService>(), Is.InstanceOf<InterfacedService>());
+            Assert.That(new TestDelegate(() => engine.Resolve<NonAttributed>()), Throws.Exception);
         }
 
         [Test]
@@ -80,11 +80,11 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(GenericSelfService<>));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            Assert.That(container.Resolve<GenericSelfService<int>>(), Is.InstanceOf<GenericSelfService<int>>());
-            Assert.That(container.Resolve<GenericSelfService<string>>(), Is.InstanceOf<GenericSelfService<string>>());
+            Assert.That(engine.Resolve<GenericSelfService<int>>(), Is.InstanceOf<GenericSelfService<int>>());
+            Assert.That(engine.Resolve<GenericSelfService<string>>(), Is.InstanceOf<GenericSelfService<string>>());
         }
 
         [Test]
@@ -92,11 +92,11 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(GenericInterfacedService<>));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            Assert.That(container.Resolve<IGenericService<int>>(), Is.InstanceOf<GenericInterfacedService<int>>());
-            Assert.That(container.Resolve<IGenericService<string>>(), Is.InstanceOf<GenericInterfacedService<string>>());
+            Assert.That(engine.Resolve<IGenericService<int>>(), Is.InstanceOf<GenericInterfacedService<int>>());
+            Assert.That(engine.Resolve<IGenericService<string>>(), Is.InstanceOf<GenericInterfacedService<string>>());
         }
 
         [Test]
@@ -104,10 +104,10 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(GenericSelfService<>), typeof(GenericDependingService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            var service = container.Resolve<GenericDependingService>();
+            var service = engine.Resolve<GenericDependingService>();
             Assert.That(service, Is.InstanceOf<GenericDependingService>());
             Assert.That(service.service, Is.InstanceOf<GenericSelfService<int>>());
         }
@@ -117,10 +117,10 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(GenericInterfaceDependingService), typeof(GenericInterfacedService<>));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            var service = container.Resolve<GenericInterfaceDependingService>();
+            var service = engine.Resolve<GenericInterfaceDependingService>();
             Assert.That(service, Is.InstanceOf<GenericInterfaceDependingService>());
             Assert.That(service.service, Is.InstanceOf<GenericInterfacedService<int>>());
         }
@@ -130,10 +130,10 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService), typeof(DependingGenericSelfService<>));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            var service = container.Resolve<DependingGenericSelfService<string>>();
+            var service = engine.Resolve<DependingGenericSelfService<string>>();
             Assert.That(service, Is.InstanceOf<DependingGenericSelfService<string>>());
             Assert.That(service.service, Is.InstanceOf<SelfService>());
         }
@@ -142,12 +142,12 @@ namespace Nop.Core.Tests.Infrastructure
         public void CanResolve_ServiceWithDependency_OnComponentInstance()
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(DependingServiceWithMissingDependency).Assembly.GetTypes());
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
-            container.AddComponentInstance<UnregisteredDependency>(new UnregisteredDependency(), "ud");
+            engine.ContainerManager.AddComponentInstance<UnregisteredDependency>(new UnregisteredDependency(), "ud");
 
-            var service = container.Resolve<DependingServiceWithMissingDependency>();
+            var service = engine.Resolve<DependingServiceWithMissingDependency>();
             Assert.That(service, Is.InstanceOf<DependingServiceWithMissingDependency>());
         }
 
@@ -156,12 +156,12 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(HighService), typeof(LowService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             var services = registrator.FilterServices(registrator.FindServices(), "High");
             registrator.RegisterServices(services);
 
-            Assert.That(container.Resolve<IBarometer>(), Is.InstanceOf<HighService>());
-            Assert.That(container.ResolveAll<IBarometer>().Count(), Is.EqualTo(1));
+            Assert.That(engine.Resolve<IBarometer>(), Is.InstanceOf<HighService>());
+            Assert.That(engine.ResolveAll<IBarometer>().Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -169,11 +169,11 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(HighService), typeof(LowService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             var services = registrator.FilterServices(registrator.FindServices(), "High", "Medium", "Low");
             registrator.RegisterServices(services);
 
-            Assert.That(container.ResolveAll<IBarometer>().Count(), Is.EqualTo(2));
+            Assert.That(engine.ResolveAll<IBarometer>().Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -181,11 +181,11 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(HighService), typeof(LowService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             var services = registrator.FilterServices(registrator.FindServices());
             registrator.RegisterServices(services);
 
-            Assert.That(container.ResolveAll<IBarometer>().Count(), Is.EqualTo(0));
+            Assert.That(engine.ResolveAll<IBarometer>().Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -193,12 +193,12 @@ namespace Nop.Core.Tests.Infrastructure
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService), typeof(HighService), typeof(LowService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, container);
+            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FilterServices(registrator.FindServices(), "High"));
 
-            Assert.That(container.Resolve<SelfService>(), Is.InstanceOf<SelfService>());
-            Assert.That(container.Resolve<IBarometer>(), Is.InstanceOf<HighService>());
-            Assert.That(container.ResolveAll<IBarometer>().Count(), Is.EqualTo(1));
+            Assert.That(engine.Resolve<SelfService>(), Is.InstanceOf<SelfService>());
+            Assert.That(engine.Resolve<IBarometer>(), Is.InstanceOf<HighService>());
+            Assert.That(engine.ResolveAll<IBarometer>().Count(), Is.EqualTo(1));
         }
     }
 }

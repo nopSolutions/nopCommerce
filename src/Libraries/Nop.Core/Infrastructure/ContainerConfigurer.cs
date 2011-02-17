@@ -23,29 +23,29 @@ namespace Nop.Core.Infrastructure
             public const string FullTrust = "FullTrust";
         }
 
-        public virtual void Configure(IEngine engine, EventBroker broker, ConfigurationManagerWrapper configuration)
+        public virtual void Configure(IEngine engine, ContainerManager container, EventBroker broker, ConfigurationManagerWrapper configuration)
         {
             configuration.Start();
-            
-            engine.Container.AddComponentInstance<ConfigurationManagerWrapper>(configuration, "nop.configuration");
-            engine.Container.AddComponentInstance<IEngine>(engine, "nop.engine");
-            engine.Container.AddComponentInstance<IServiceContainer>(engine.Container, "nop.container");
-            engine.Container.AddComponentInstance<ContainerConfigurer>(this, "nop.containerConfigurer");
 
-            AddComponentInstance(engine.Container, configuration.GetConnectionStringsSection());
-            AddComponentInstance(engine.Container, configuration.Sections.Engine);
+            container.AddComponentInstance<ConfigurationManagerWrapper>(configuration, "nop.configuration");
+            container.AddComponentInstance<IEngine>(engine, "nop.engine");
+            container.AddComponentInstance<ContainerConfigurer>(this, "nop.containerConfigurer");
+
+            container.AddComponentInstance(configuration.GetConnectionStringsSection());
+
+            container.AddComponentInstance(configuration.Sections.Engine);
            
             if (configuration.Sections.Engine != null)
-                RegisterConfiguredComponents(engine.Container, configuration.Sections.Engine);
-                InitializeEnvironment(engine.Container, configuration.Sections.Host);
+                RegisterConfiguredComponents(container, configuration.Sections.Engine);
+            InitializeEnvironment(container, configuration.Sections.Host);
 
-            AddComponentInstance(engine.Container, broker);
+            container.AddComponentInstance(broker);
 
-            engine.Container.AddComponent<ITypeFinder, WebAppTypeFinder>("nop.typeFinder");
-            engine.Container.AddComponent<IWebContext, AdaptiveContext>("nop.webContext");
-            engine.Container.AddComponent<ServiceRegistrator>("nop.typeFinder");
-           
-            var registrator = engine.Container.Resolve<ServiceRegistrator>();
+            container.AddComponent<ITypeFinder, WebAppTypeFinder>("nop.typeFinder");
+            container.AddComponent<IWebContext, AdaptiveContext>("nop.webContext");
+            container.AddComponent<ServiceRegistrator>("nop.typeFinder");
+
+            var registrator = container.Resolve<ServiceRegistrator>();
             var services = registrator.FindServices();
 
             var configurations = GetComponentConfigurations(configuration);
@@ -64,12 +64,12 @@ namespace Nop.Core.Infrastructure
             return configurations.ToArray();
         }
 
-        private void AddComponentInstance(IServiceContainer container, object instance)
+        private void AddComponentInstance(IEngine engine, object instance)
         {
-            container.AddComponentInstance(instance.GetType(), instance, instance.GetType().FullName);
+            engine.ContainerManager.AddComponentInstance(instance.GetType(), instance, instance.GetType().FullName);
         }
 
-        protected virtual void InitializeEnvironment(IServiceContainer container, HostSection hostConfig)
+        protected virtual void InitializeEnvironment(ContainerManager container, HostSection hostConfig)
         {
             if (hostConfig != null)
             {
@@ -78,7 +78,7 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        protected virtual void RegisterConfiguredComponents(IServiceContainer container, EngineSection engineConfig)
+        protected virtual void RegisterConfiguredComponents(ContainerManager container, EngineSection engineConfig)
         {
             foreach (ComponentElement component in engineConfig.Components)
             {

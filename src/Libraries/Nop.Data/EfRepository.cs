@@ -16,6 +16,7 @@ using System.Linq;
 using Nop.Core;
 using System;
 using System.Data.Entity;
+using Nop.Core.Infrastructure;
 
 
 namespace Nop.Data

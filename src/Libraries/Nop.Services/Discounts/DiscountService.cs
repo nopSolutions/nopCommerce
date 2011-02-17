@@ -39,7 +39,7 @@ namespace Nop.Services.Discounts
 
         private readonly IRepository<Discount> _discountRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly TypeFinder _typeFinder;
+        private readonly ITypeFinder _typeFinder;
         #endregion
 
         #region Ctor
@@ -52,7 +52,7 @@ namespace Nop.Services.Discounts
         /// <param name="typeFinder">Type finder</param>
         public DiscountService(ICacheManager cacheManager,
             IRepository<Discount> discountRepository,
-            TypeFinder typeFinder)
+            ITypeFinder typeFinder)
         {
             this._cacheManager = cacheManager;
             this._discountRepository = discountRepository;

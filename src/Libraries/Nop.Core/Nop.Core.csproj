@@ -90,13 +90,13 @@
     <Compile Include="Infrastructure\AppDomainTypeFinder.cs" />
     <Compile Include="Infrastructure\AsyncWorker.cs" />
     <Compile Include="Infrastructure\AttributeInfo.cs" />
-    <Compile Include="Infrastructure\AutoFac\AutoFacServiceContainer.cs" />
-    <Compile Include="Infrastructure\AutoFac\IAutoFacDependencyRegistar.cs" />
+    <Compile Include="Infrastructure\IDependencyRegistar.cs" />
     <Compile Include="Infrastructure\ComponentRegistrationException.cs" />
     <Compile Include="Infrastructure\ContainerConfigurer.cs" />
+    <Compile Include="Infrastructure\ContainerManager.cs" />
     <Compile Include="Infrastructure\EventBroker.cs" />
+    <Compile Include="Infrastructure\IContainerManager.cs" />
     <Compile Include="Infrastructure\IEngine.cs" />
-    <Compile Include="Infrastructure\IServiceContainer.cs" />
     <Compile Include="Infrastructure\ITypeFinder.cs" />
     <Compile Include="Infrastructure\IWorker.cs" />
     <Compile Include="Infrastructure\NopEngine.cs" />
@@ -175,7 +175,6 @@
     <Compile Include="Web\IClosable.cs" />
     <Compile Include="Web\IErrorHandler.cs" />
     <Compile Include="Web\ThreadContext.cs" />
-    <Compile Include="Infrastructure\TypeFinder.cs" />
     <Compile Include="Infrastructure\NopEnvironment.cs" />
     <Compile Include="Infrastructure\WebAppTypeFinder.cs" />
     <Compile Include="IWorkContext.cs" />

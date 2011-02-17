@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac.Integration.Mvc;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Infrastructure;
 using Nop.Services.Security.Permissions;
 using Nop.Core.Infrastructure.AutoFac;
@@ -35,7 +36,7 @@ namespace Nop.Web.MVC
         protected void Application_Start()
         {
             DependencyResolver.SetResolver(
-                new AutofacDependencyResolver((Nop.Core.Context.Current.Container as AutoFacServiceContainer).Container));
+                new AutofacDependencyResolver((Core.Context.Current.ContainerManager.Container)));
 
 
             AreaRegistration.RegisterAllAreas();
@@ -45,14 +46,15 @@ namespace Nop.Web.MVC
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            //register permissions
-            //TODO move to NopStarter after implementing Common Service Locator pattern
-            var permissionProviders = DependencyResolver.Current.GetService<TypeFinder>().FindClassesOfType<IPermissionProvider>();
-            foreach (var providerType in permissionProviders)
-            {
-                dynamic provider = Activator.CreateInstance(providerType);
-                DependencyResolver.Current.GetService<IPermissionService>().InstallPermissions(provider);
-            }
+            ////register permissions
+            ////TODO move to NopStarter after implementing Common Service Locator pattern
+            //var permissionProviders = DependencyResolver.Current.GetService<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+            //foreach (var providerType in permissionProviders)
+            //{
+            //    dynamic provider = Activator.CreateInstance(providerType);
+            //    var repo = Nop.Core.Context.Current.Resolve<IRepository<Nop.Core.Domain.Security.Permissions.PermissionRecord>>();
+            //    DependencyResolver.Current.GetService<IPermissionService>().InstallPermissions(provider);
+            //}
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Nop.Services.Tests.Discounts
             _discountRepo.Expect(x => x.Table).Return(new List<Discount>() { discount1, discount2 }.AsQueryable());
 
             var cacheManager = new NopNullCache();
-            _discountService = new DiscountService(cacheManager, _discountRepo, new TypeFinder());
+            _discountService = new DiscountService(cacheManager, _discountRepo, new AppDomainTypeFinder());
         }
 
         [Test]

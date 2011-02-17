@@ -29,7 +29,7 @@ namespace Nop.Core.Tests.Infrastructure
         [Test]
         public void TypeFinder_Benchmark_Findings()
         {
-            var finder = new TypeFinder();
+            var finder = new AppDomainTypeFinder();
 
             var type = finder.FindClassesOfType<ISomeInterface>();
             type.Count().ShouldEqual(1);

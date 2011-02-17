@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Core;
 
@@ -25,6 +26,7 @@ namespace Nop.Services.Catalog
     /// <summary>
     /// Category service
     /// </summary>
+    [Service(typeof(ICategoryService),ComponentLifeStyle.LifetimeScope)]
     public partial class CategoryService : ICategoryService
     {
         #region Constants

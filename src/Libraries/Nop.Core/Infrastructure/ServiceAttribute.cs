@@ -11,22 +11,33 @@ namespace Nop.Core.Infrastructure
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class ServiceAttribute : Attribute
     {
-        public ServiceAttribute()
+        public ServiceAttribute(ComponentLifeStyle lifeStyle = ComponentLifeStyle.Singleton)
         {
+            LifeStyle = lifeStyle;
         }
 
-        public ServiceAttribute(Type serviceType)
+        public ServiceAttribute(Type serviceType, ComponentLifeStyle lifeStyle = ComponentLifeStyle.Singleton)
         {
+            LifeStyle = lifeStyle;
             ServiceType = serviceType;
         }
 
         /// <summary>The type of service the attributed class represents.</summary>
         public Type ServiceType { get; protected set; }
 
+        public ComponentLifeStyle LifeStyle { get; protected set; }
+
         /// <summary>Optional key to associate with the service.</summary>
         public string Key { get; set; }
 
         /// <summary>Configurations for which this service is registered.</summary>
         public string Configuration { get; set; }
+
+        public virtual void RegisterService(AttributeInfo<ServiceAttribute> attributeInfo, ContainerManager container)
+        {
+            Type serviceType = attributeInfo.Attribute.ServiceType ?? attributeInfo.DecoratedType;
+            container.AddComponent(serviceType, attributeInfo.DecoratedType,
+                                       attributeInfo.Attribute.Key ?? attributeInfo.DecoratedType.FullName, attributeInfo.Attribute.LifeStyle);
+        }
     }
 }

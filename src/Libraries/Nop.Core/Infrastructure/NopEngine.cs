@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Autofac;
+using AutofacContrib.Startable;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.AutoFac;
 using Nop.Core.Plugins;
@@ -12,36 +14,27 @@ namespace Nop.Core.Infrastructure
 {
     public class NopEngine : IEngine
     {
-        private readonly IServiceContainer container;
+        private ContainerManager _container;
 
 		/// <summary>
 		/// Creates an instance of the content engine using default settings and configuration.
 		/// </summary>
 		public NopEngine()
-            : this(new AutoFacServiceContainer(), EventBroker.Instance, new ContainerConfigurer())
+            : this(EventBroker.Instance, new ContainerConfigurer())
 		{
 		}
 
-		/// <summary>Sets the current container to the given container.</summary>
-		/// <param name="container">An previously prepared service container.</param>
-		/// <param name="broker"></param>
-		public NopEngine(IServiceContainer container, EventBroker broker, ContainerConfigurer configurer)
+		public NopEngine(EventBroker broker, ContainerConfigurer configurer)
 		{
-			this.container = container;
-			configurer.Configure(this, broker, new ConfigurationManagerWrapper());
+            InitializeContainer(configurer, broker, new ConfigurationManagerWrapper());
 		}
 
-		/// <summary>Tries to determine runtime parameters from the given configuration.</summary>
-		/// <param name="config">The configuration to use.</param>
-		/// <param name="sectionGroup">The configuration section to retrieve configuration from</param>
-		/// <param name="broker">Web ap event provider</param>
-        public NopEngine(System.Configuration.Configuration config, string sectionGroup, IServiceContainer container, EventBroker broker, ContainerConfigurer configurer)
+        public NopEngine(System.Configuration.Configuration config, string sectionGroup, EventBroker broker, ContainerConfigurer configurer)
 		{
 			if (config == null) throw new ArgumentNullException("config");
 			if (string.IsNullOrEmpty(sectionGroup)) throw new ArgumentException("Must be non-empty and match a section group in the configuration file.", "sectionGroup");
 
-			this.container = container;
-			configurer.Configure(this, broker, new ConfigurationReadingWrapper(config, sectionGroup));
+            InitializeContainer(configurer, broker, new ConfigurationReadingWrapper(config, sectionGroup));
 		}
 
 		private class ConfigurationReadingWrapper : ConfigurationManagerWrapper
@@ -62,10 +55,15 @@ namespace Nop.Core.Infrastructure
 
 		#region Properties
 
-		public IServiceContainer Container
+		public IContainer Container
 		{
-			get { return container; }
+			get { return _container.Container; }
 		}
+
+        public ContainerManager ContainerManager
+        {
+            get { return _container; }
+        }
 
         public IWebContext RequestContext
         {
@@ -80,7 +78,7 @@ namespace Nop.Core.Infrastructure
 		{
 			try
 			{
-				var bootstrapper = container.Resolve<IPluginBootstrapper>();
+				var bootstrapper = _container.Resolve<IPluginBootstrapper>();
 				var plugins = bootstrapper.GetPluginDefinitions();
 				bootstrapper.InitializePlugins(this, plugins);
 			}
@@ -90,9 +88,24 @@ namespace Nop.Core.Infrastructure
 				//container.Resolve<IRequestLifeCycleHandler>().Initialize();
 			}
 
-			container.StartComponents();
+            var typeFinder = _container.Resolve<ITypeFinder>();
 
-		    var startUpTaskTypes = container.Resolve<ITypeFinder>().FindClassesOfType<IStartupTask>();
+		    ContainerManager.UpdateContainer(x =>
+		                                         {
+		                                             
+		                                             var drTypes =
+                                                         typeFinder.FindClassesOfType
+		                                                     <IDependencyRegistar>();
+		                                             foreach (var t in drTypes)
+		                                             {
+		                                                 dynamic dependencyRegistar = Activator.CreateInstance(t);
+		                                                 dependencyRegistar.Register(x, typeFinder);
+		                                             }
+		                                         });
+
+			ContainerManager.StartComponents();
+
+            var startUpTaskTypes = typeFinder.FindClassesOfType<IStartupTask>();
             foreach (var startUpTaskType in startUpTaskTypes)
             {
                 var startUpTask = ((IStartupTask)Activator.CreateInstance(startUpTaskType));
@@ -100,18 +113,28 @@ namespace Nop.Core.Infrastructure
             }
 		}
 
+        private void InitializeContainer(ContainerConfigurer configurer, EventBroker broker, ConfigurationManagerWrapper config)
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new StartableModule<IAutoStart>(s => s.Start()));
+
+            _container = new ContainerManager(builder.Build());
+
+            configurer.Configure(this, _container, broker, config);
+        }
+
 		#endregion
 
 		#region Container Methods
 
 		public T Resolve<T>()
 		{
-		    return Container.Resolve<T>();
+            return ContainerManager.Resolve<T>();
 		}
 
         public object Resolve(Type type)
         {
-            return Container.Resolve(type);
+            return ContainerManager.Resolve(type);
         }
 
         public Array ResolveAll(Type serviceType)
@@ -121,12 +144,10 @@ namespace Nop.Core.Infrastructure
 
         public T[] ResolveAll<T>()
         {
-            return Container.ResolveAll<T>();
+            return ContainerManager.ResolveAll<T>();
         }
 
 		#endregion
-
-
-
+        
     }
 }

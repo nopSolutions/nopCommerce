@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using Autofac;
@@ -47,11 +48,12 @@ using System.Data.Entity.Database;
 
 namespace Nop.Web.MVC.Infrastructure
 {
-    public class DependencyRegistar : IAutoFacDependencyRegistar
+    public class DependencyRegistar : IDependencyRegistar
     {
-        public virtual void Register(ContainerBuilder builder, TypeFinder typeFinder)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            //put your DI here
+            builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
+            ////put your DI here
 
 
             //data layer
@@ -86,7 +88,7 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<WorkContext>().As<IWorkContext>().InstancePerHttpRequest();
 
             //services
-            builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
+            //builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
             builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerHttpRequest();
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerHttpRequest();
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerHttpRequest();
@@ -100,12 +102,6 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfiguration<>));
-            //old way of registering ISetting classes
-            //foreach (var setting in typeFinder.FindClassesOfType<ISettings>())
-            //{
-            //    var settingType = setting.UnderlyingSystemType;
-            //    builder.RegisterType(settingType).As(settingType).InstancePerHttpRequest();
-            //}
             builder.RegisterSource(new SettingsSource());
 
 

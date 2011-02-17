@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Autofac;
 using Nop.Core.Web;
 
 namespace Nop.Core.Infrastructure
@@ -14,7 +15,7 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public interface IEngine
     {
-        IServiceContainer Container { get; }
+        ContainerManager ContainerManager { get; }
 
         /// <summary>Contextual data associated with the current request.</summary>
         IWebContext RequestContext { get; }

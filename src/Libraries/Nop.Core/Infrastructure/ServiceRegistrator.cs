@@ -11,12 +11,12 @@ namespace Nop.Core.Infrastructure
     public class ServiceRegistrator
     {
         ITypeFinder finder;
-        IServiceContainer container;
+        private IEngine engine;
 
-        public ServiceRegistrator(ITypeFinder finder, IServiceContainer container)
+        public ServiceRegistrator(ITypeFinder finder, IEngine engine)
         {
             this.finder = finder;
-            this.container = container;
+            this.engine = engine;
         }
 
         public virtual IEnumerable<AttributeInfo<ServiceAttribute>> FindServices()
@@ -35,10 +35,7 @@ namespace Nop.Core.Infrastructure
         {
             foreach (var info in services)
             {
-                Type serviceType = info.Attribute.ServiceType ?? info.DecoratedType;
-                container.AddComponent(serviceType, info.DecoratedType,
-                                       info.Attribute.Key ?? info.DecoratedType.FullName);
-                //container.AddComponent(info.Attribute.Key ?? info.DecoratedType.FullName, serviceType, info.DecoratedType);
+                info.Attribute.RegisterService(info, engine.ContainerManager);
             }
         }
 

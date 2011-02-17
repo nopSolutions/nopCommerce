@@ -15,7 +15,7 @@ namespace Nop.Core.Tests.Infrastructure
     {
         protected override IEngine CreateEngine()
         {
-            var engine = new NopEngine(new AutoFacServiceContainer(), EventBroker.Instance, new ContainerConfigurer());
+            var engine = new NopEngine();
 
             return engine;
         }
@@ -26,12 +26,12 @@ namespace Nop.Core.Tests.Infrastructure
     /// </summary>
     public abstract class ContainerSanityTests
     {
-        IServiceContainer container;
+        ContainerManager container;
 
         [SetUp]
         public void SetUp()
         {
-            container = CreateEngine().Container;
+            container = CreateEngine().ContainerManager;
         }
 
         protected abstract IEngine CreateEngine();
