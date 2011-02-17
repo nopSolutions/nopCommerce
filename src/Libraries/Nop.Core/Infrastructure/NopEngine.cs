@@ -127,7 +127,7 @@ namespace Nop.Core.Infrastructure
 
 		#region Container Methods
 
-		public T Resolve<T>()
+        public T Resolve<T>() where T : class
 		{
             return ContainerManager.Resolve<T>();
 		}

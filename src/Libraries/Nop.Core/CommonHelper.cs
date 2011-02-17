@@ -123,27 +123,42 @@ namespace Nop.Core
             return result;
         }
 
+
+        private static AspNetHostingPermissionLevel? _trustLevel = null;
         /// <summary>
         /// Finds the trust level of the running application (http://blogs.msdn.com/dmitryr/archive/2007/01/23/finding-out-the-current-trust-level-in-asp-net.aspx)
         /// </summary>
         /// <returns>The current trust level.</returns>
-        internal static AspNetHostingPermissionLevel GetTrustLevel()
+        public static AspNetHostingPermissionLevel GetTrustLevel()
         {
-            foreach (AspNetHostingPermissionLevel trustLevel in new[] { AspNetHostingPermissionLevel.Unrestricted, AspNetHostingPermissionLevel.High, AspNetHostingPermissionLevel.Medium, AspNetHostingPermissionLevel.Low, AspNetHostingPermissionLevel.Minimal })
+            if (!_trustLevel.HasValue)
             {
-                try
-                {
-                    new AspNetHostingPermission(trustLevel).Demand();
-                }
-                catch (System.Security.SecurityException)
-                {
-                    continue;
-                }
+                //set minimum
+                _trustLevel = AspNetHostingPermissionLevel.None;
 
-                return trustLevel;
+                //determine maximum
+                foreach (AspNetHostingPermissionLevel trustLevel in
+                        new AspNetHostingPermissionLevel[] {
+                                AspNetHostingPermissionLevel.Unrestricted,
+                                AspNetHostingPermissionLevel.High,
+                                AspNetHostingPermissionLevel.Medium,
+                                AspNetHostingPermissionLevel.Low,
+                                AspNetHostingPermissionLevel.Minimal 
+                            })
+                {
+                    try
+                    {
+                        new AspNetHostingPermission(trustLevel).Demand();
+                        _trustLevel = trustLevel;
+                        break; //we've set the highest permission we can
+                    }
+                    catch (System.Security.SecurityException)
+                    {
+                        continue;
+                    }
+                }
             }
-
-            return AspNetHostingPermissionLevel.None;
+            return _trustLevel.Value;
         }
 
         public static Func<DateTime> CurrentTime = () => DateTime.Now;

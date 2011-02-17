@@ -25,7 +25,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         void Initialize();
 
-        T Resolve<T>();
+        T Resolve<T>() where T : class;
 
         object Resolve(Type type);
 

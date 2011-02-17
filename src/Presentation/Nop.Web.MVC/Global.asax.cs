@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac.Integration.Mvc;
@@ -35,10 +36,12 @@ namespace Nop.Web.MVC
 
         protected void Application_Start()
         {
-            DependencyResolver.SetResolver(
-                new AutofacDependencyResolver((Core.Context.Current.ContainerManager.Container)));
+            //set dependency resolver
+            var dependencyResolver = new AutofacDependencyResolver(Core.Context.Current.ContainerManager.Container);
+            Core.Context.Current.ContainerManager.DependencyResolver = dependencyResolver;
+            DependencyResolver.SetResolver(dependencyResolver);
 
-
+            //other MVC stuff
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
@@ -46,15 +49,15 @@ namespace Nop.Web.MVC
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            ////register permissions
-            ////TODO move to NopStarter after implementing Common Service Locator pattern
-            //var permissionProviders = DependencyResolver.Current.GetService<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
-            //foreach (var providerType in permissionProviders)
-            //{
-            //    dynamic provider = Activator.CreateInstance(providerType);
-            //    var repo = Nop.Core.Context.Current.Resolve<IRepository<Nop.Core.Domain.Security.Permissions.PermissionRecord>>();
-            //    DependencyResolver.Current.GetService<IPermissionService>().InstallPermissions(provider);
-            //}
+            //register permissions
+            //UNDONE it should be run only once on application startup (but application instance is not available yet in AutofacDependencyResolver)
+            var permissionProviders = DependencyResolver.Current.GetService<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+            foreach (var providerType in permissionProviders)
+            {
+                dynamic provider = Activator.CreateInstance(providerType);
+                var repo = DependencyResolver.Current.GetService<IRepository<Nop.Core.Domain.Security.Permissions.PermissionRecord>>();
+                DependencyResolver.Current.GetService<IPermissionService>().InstallPermissions(provider);
+            }
         }
     }
 }

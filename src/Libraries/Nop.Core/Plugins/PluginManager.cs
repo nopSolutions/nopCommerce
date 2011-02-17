@@ -19,14 +19,14 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.Compilation;
 using System.Reflection;
-using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 
 // SEE THIS POST for full details of what this does
 //http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
 [assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Core.Plugins
 {
     /// <summary>
     /// Plugin manager

@@ -49,6 +49,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -153,7 +157,7 @@
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
-    <Compile Include="Infrastructure\PluginManager.cs" />
+    <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Infrastructure\ServiceAttribute.cs" />
     <Compile Include="Infrastructure\ServiceContainerBase.cs" />
     <Compile Include="Infrastructure\ServiceRegistrator.cs" />
@@ -175,7 +179,6 @@
     <Compile Include="Web\IClosable.cs" />
     <Compile Include="Web\IErrorHandler.cs" />
     <Compile Include="Web\ThreadContext.cs" />
-    <Compile Include="Infrastructure\NopEnvironment.cs" />
     <Compile Include="Infrastructure\WebAppTypeFinder.cs" />
     <Compile Include="IWorkContext.cs" />
     <Compile Include="Domain\Localization\LocalizedProperty.cs" />
