@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Threading;
 using System.Web.Mvc;
+using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Core.Domain.Catalog;
+using Nop.Services.Localization;
 using Nop.Services.Security.Permissions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;

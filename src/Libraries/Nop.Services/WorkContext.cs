@@ -151,13 +151,11 @@ namespace Nop.Services
         {
             get
             {
-                if (this.CurrentCustomer == null)
-                    return null;
-                
-                if (this.CurrentCustomer.Language != null &&
+                if (this.CurrentCustomer != null &&
+                    this.CurrentCustomer.Language != null &&
                     this.CurrentCustomer.Language.Published)
                     return this.CurrentCustomer.Language;
-
+                
                 var lang = _languageService.GetAllLanguages().FirstOrDefault();
                 return lang;
             }
@@ -178,10 +176,8 @@ namespace Nop.Services
         {
             get
             {
-                if (this.CurrentCustomer == null)
-                    return null;
-
-                if (this.CurrentCustomer.Currency != null &&
+                if (this.CurrentCustomer != null &&
+                    this.CurrentCustomer.Currency != null &&
                     this.CurrentCustomer.Currency.Published)
                     return this.CurrentCustomer.Currency;
 
@@ -207,7 +203,8 @@ namespace Nop.Services
             {
                 if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
                 {
-                    return this.CurrentCustomer.TaxDisplayType;
+                    if (this.CurrentCustomer != null)
+                        return this.CurrentCustomer.TaxDisplayType;
                 }
 
                 return _taxSettings.TaxDisplayType;

@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
@@ -26,8 +27,7 @@ namespace Nop.Services.Localization
             Expression<Func<T, string>> keySelector)
             where T : BaseEntity, ILocalizedEntity
         {
-            //TODO: set language id (IWorkingContext)
-            int languageId = 1;
+            int languageId = Nop.Core.Context.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
             return GetLocalized(entity, keySelector, languageId);
         }
 
@@ -61,14 +61,13 @@ namespace Nop.Services.Localization
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 
-            //TODO use IoC to load service
-            //var leService = new LocalizedEntityService();
-            //var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
-            //var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
-            //    lp.LocaleKeyGroup == localeKeyGroup &&
-            //    lp.LocaleKey == localeKey);
-            //if (prop != null)
-            //    result = prop.LocaleValue;
+            var leService = Nop.Core.Context.Current.Resolve<ILocalizedEntityService>();
+            var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
+            var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
+                lp.LocaleKeyGroup == localeKeyGroup &&
+                lp.LocaleKey == localeKey);
+            if (prop != null)
+                result = prop.LocaleValue;
 
             //set default value if required
             if (String.IsNullOrEmpty(result) && returnDefaultValue)
