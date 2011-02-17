@@ -101,7 +101,7 @@ namespace Nop.Web.MVC.Infrastructure
 
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
 
-            builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfiguration<>));
+            builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfigurationProvider<>));
             builder.RegisterSource(new SettingsSource());
 
 
@@ -168,7 +168,7 @@ namespace Nop.Web.MVC.Infrastructure
         static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
         {
             return RegistrationBuilder
-                .ForDelegate((c, p) => c.Resolve<IConfiguration<TSettings>>().Settings)
+                .ForDelegate((c, p) => c.Resolve<IConfigurationProvider<TSettings>>().Settings)
                 .InstancePerHttpRequest()
                 .CreateRegistration();
         }

@@ -50,6 +50,7 @@ namespace Nop.Services.Customers
                 return attributeValue;
 
                 //TODO use the code below in order to support all serializable types (for example, ShippingOption)
+                //or use custom TypeConverters like it's implemented for ISettings
                 //using (var tr = new StringReader(customerAttribute.Value))
                 //{
                 //    var xmlS = new XmlSerializer(typeof(T));

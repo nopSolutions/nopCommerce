@@ -1,17 +1,20 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using Nop.Core;
 using Nop.Core.Configuration;
 
 namespace Nop.Services.Configuration
 {
-    public class ConfigurationProvider<TSettings> : IConfiguration<TSettings> where TSettings : ISettings, new()
+    public class ConfigurationProvider<TSettings> : IConfigurationProvider<TSettings> where TSettings : ISettings, new()
     {
-        readonly ISettingService settingService;
+        readonly ISettingService _settingService;
 
         public ConfigurationProvider(ISettingService settingService) 
         {
-            this.settingService = settingService;
+            this._settingService = settingService;
             this.BuildConfiguration();
         }
         
@@ -26,7 +29,7 @@ namespace Nop.Services.Configuration
             //TODO support default values (set using attributes)
             var properties = from prop in typeof(TSettings).GetProperties()
                              where prop.CanWrite && prop.CanRead
-                             let setting = settingService.GetSettingByKey<string>(typeof(TSettings).Name + "." + prop.Name)
+                             let setting = _settingService.GetSettingByKey<string>(typeof(TSettings).Name + "." + prop.Name)
                              where setting != null
                              where TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string))
                              let value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting)
@@ -34,6 +37,27 @@ namespace Nop.Services.Configuration
 
             // assign properties
             properties.ToList().ForEach(p => p.prop.SetValue(Settings, p.value, null));
+        }
+
+        public void SaveSettings(TSettings settings)
+        {
+            var properties = from prop in typeof(TSettings).GetProperties()
+                             where prop.CanWrite && prop.CanRead
+                             where TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string))
+                             select prop;
+            foreach (var prop in properties)
+            {
+                string key = typeof(TSettings).Name + "." + prop.Name;
+                //Duck typing is not supported in C#. That's why we're using dynamic type
+                dynamic value = prop.GetValue(settings, null);
+                if (value != null)
+                    _settingService.SetSetting(key, value);
+                else
+                    _settingService.SetSetting(key, "");
+            }
+
+
+            this.Settings = settings;
         }
     }
 }

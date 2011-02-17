@@ -31,6 +31,11 @@ namespace Nop.Services.Tests.Configuration
             return defaultValue;
         }
 
+        public void SetSetting<T>(string key, T value)
+        {
+            throw new NotImplementedException();
+        }
+
         public IDictionary<string, Setting> GetAllSettings()
         {
             var settings = new Dictionary<string, Setting>();

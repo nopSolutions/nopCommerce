@@ -75,9 +75,10 @@
     <Compile Include="Configuration\ComponentParameterElement.cs" />
     <Compile Include="Configuration\ConfigurationManagerWrapper.cs" />
     <Compile Include="Configuration\ConfigurationSectionBase.cs" />
+    <Compile Include="ComponentModel\GenericListTypeConverter.cs" />
     <Compile Include="Configuration\EngineSection.cs" />
     <Compile Include="Configuration\HostSection.cs" />
-    <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Configuration\IConfigurationProvider.cs" />
     <Compile Include="Configuration\IIdentifiable.cs" />
     <Compile Include="Configuration\InterfacePluginCollection.cs" />
     <Compile Include="Configuration\InterfacePluginElement.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="Plugins\Scheduling\ScheduleExecutionAttribute.cs" />
     <Compile Include="Plugins\Scheduling\Scheduler.cs" />
     <Compile Include="Plugins\Scheduling\TimeUnit.cs" />
+    <Compile Include="StartupTasks.cs" />
     <Compile Include="Web\AdaptiveContext.cs" />
     <Compile Include="Web\ErrorHandler.cs" />
     <Compile Include="Web\IClosable.cs" />

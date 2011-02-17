@@ -136,6 +136,8 @@ namespace Nop.Services.Configuration
         {
             var settings = GetAllSettings();
 
+            key = key.Trim().ToLowerInvariant();
+
             Setting setting = null;
             string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
             if (settings.ContainsKey(key))

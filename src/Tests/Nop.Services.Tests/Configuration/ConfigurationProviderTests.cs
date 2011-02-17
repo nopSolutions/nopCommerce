@@ -12,7 +12,7 @@ namespace Nop.Services.Tests.Configuration
     [TestFixture]
     public class ConfigurationProviderTests
     {
-        IConfiguration<TestSettings> config;
+        IConfigurationProvider<TestSettings> config;
 
         [SetUp]
         public void SetUp()
