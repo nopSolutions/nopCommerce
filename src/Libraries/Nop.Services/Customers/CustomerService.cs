@@ -256,7 +256,7 @@ namespace Nop.Services.Customers
             //add to 'Guests' role
             var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)
-                throw new NopException("'Guests' role could not be loaed");
+                throw new NopException("'Guests' role could not be loaded");
             customer.CustomerRoles = new List<CustomerRole> { guestRole };
 
             _customerRepository.Insert(customer);
@@ -282,7 +282,7 @@ namespace Nop.Services.Customers
             //add to 'Registered' role
             var registeredRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
             if (registeredRole == null)
-                throw new NopException("'Registered' role could not be loaed");
+                throw new NopException("'Registered' role could not be loaded");
             customer.CustomerRoles.Add(registeredRole);
             //remove from 'Guests' role
             var guestRole = customer.CustomerRoles.FirstOrDefault(cr=>cr.SystemName == SystemCustomerRoleNames.Guests);

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Web;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac.Integration.Mvc;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Infrastructure;
 using Nop.Services.Security.Permissions;
-using Nop.Core.Infrastructure.AutoFac;
-using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
 {
@@ -47,10 +44,9 @@ namespace Nop.Web.MVC
             RegisterRoutes(RouteTable.Routes);
         }
 
-        protected void Application_BeginRequest(object sender, EventArgs e)
+        protected void RegisterDefaultPermissions()
         {
             //register permissions
-            //UNDONE it should be run only once on application startup (but application instance is not available yet in AutofacDependencyResolver)
             var permissionProviders = DependencyResolver.Current.GetService<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
             foreach (var providerType in permissionProviders)
             {
@@ -58,6 +54,13 @@ namespace Nop.Web.MVC
                 var repo = DependencyResolver.Current.GetService<IRepository<Nop.Core.Domain.Security.Permissions.PermissionRecord>>();
                 DependencyResolver.Current.GetService<IPermissionService>().InstallPermissions(provider);
             }
+        }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            //UNDONE it should be run only once on application startup (but application instance is not available yet in AutofacDependencyResolver)
+            RegisterDefaultPermissions();
+
         }
     }
 }

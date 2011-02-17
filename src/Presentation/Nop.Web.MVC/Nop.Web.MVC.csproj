@@ -185,6 +185,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\defaultResources.nopres.xml" />
     <Content Include="Content\2010.3.1318\Black\editor.png" />
     <Content Include="Content\2010.3.1318\Black\loading.gif" />
     <Content Include="Content\2010.3.1318\Black\sprite.png" />
@@ -421,7 +422,6 @@
     <Content Include="Views\Shared\_PublicLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Scripts\" />
     <Folder Include="Models\" />
     <Folder Include="Plugins\" />

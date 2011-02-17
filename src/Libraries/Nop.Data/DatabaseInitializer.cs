@@ -15,7 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Database;
+using System.IO;
 using System.Linq;
+using System.Web.Hosting;
+using System.Xml;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
@@ -156,7 +159,7 @@ namespace Nop.Data
 
             #endregion
 
-            #region Language
+            #region Language & locale resources
 
             var language1 = new Language
                                {
@@ -166,6 +169,31 @@ namespace Nop.Data
                                            Published= true,
                                            DisplayOrder= 1
                                };
+            //insert default sting resources (temporary solution). Requires some performance optimization
+            //TODO find better way to insert default locale string resources
+            foreach (var resFile in Directory.EnumerateFiles(HostingEnvironment.MapPath("~/App_Data/"), "*.nopres.xml"))
+            {
+                var resXml = new XmlDocument();
+                resXml.Load(resFile);
+                var resNodeList = resXml.SelectNodes(@"//Language/LocaleResource");
+                foreach (XmlNode resNode in resNodeList)
+                {
+                    if (resNode.Attributes != null && resNode.Attributes["Name"] != null)
+                    {
+                        string resName = resNode.Attributes["Name"].InnerText.Trim();
+                        string resValue = resNode.SelectSingleNode("Value").InnerText;
+                        if (!String.IsNullOrEmpty(resName))
+                        {
+                            var lsr = new LocaleStringResource
+                            {
+                                ResourceName = resName,
+                                ResourceValue = resValue
+                            };
+                            language1.LocaleStringResources.Add(lsr);
+                        }
+                    }
+                }
+            }
             context.Languages.Add(language1);
             context.SaveChanges();
 
