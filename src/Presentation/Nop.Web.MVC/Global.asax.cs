@@ -3,6 +3,8 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac.Integration.Mvc;
+using AutofacContrib.CommonServiceLocator;
+using Microsoft.Practices.ServiceLocation;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Security.Permissions;
@@ -37,11 +39,15 @@ namespace Nop.Web.MVC
             var dependencyResolver = new AutofacDependencyResolver(Core.Context.Current.ContainerManager.Container);
             Core.Context.Current.ContainerManager.DependencyResolver = dependencyResolver;
             DependencyResolver.SetResolver(dependencyResolver);
-
+            
             //other MVC stuff
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+
+            //UNDONE it should be run only once on application startup (but application instance is not available yet in AutofacDependencyResolver)
+            RegisterDefaultPermissions();
         }
 
         protected void RegisterDefaultPermissions()
@@ -56,11 +62,17 @@ namespace Nop.Web.MVC
             }
         }
 
+        protected void RegisterServiceLocator()
+        {
+            var serviceLocator = new AutofacServiceLocator(Core.Context.Current.ContainerManager.DependencyResolver.RequestLifetimeScope);
+            ServiceLocator.SetLocatorProvider(() => serviceLocator);
+        }
+
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            //UNDONE it should be run only once on application startup (but application instance is not available yet in AutofacDependencyResolver)
-            RegisterDefaultPermissions();
-
+            //Service locator. We register it per request because ILifetimeScope could be changed per request
+            //TODO uncomment to register ServiceLocator
+            //RegisterServiceLocator();
         }
     }
 }

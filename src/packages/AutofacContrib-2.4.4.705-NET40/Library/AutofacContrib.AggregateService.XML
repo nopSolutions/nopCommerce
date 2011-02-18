@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AutofacContrib.AggregateService</name>
+    </assembly>
+    <members>
+        <member name="T:AutofacContrib.AggregateService.ContainerBuilderExtensions">
+            <summary>
+            AggregateService extensions to <see cref="T:Autofac.ContainerBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.AggregateService.ContainerBuilderExtensions.RegisterAggregateService``1(Autofac.ContainerBuilder)">
+            <summary>
+             Register <typeparamref name="TInterface"/> as an aggregate service.
+            </summary>
+            <param name="builder">The container builder</param>
+            <typeparam name="TInterface">The interface type to register</typeparam>
+             <exception cref="T:System.ArgumentNullException">If <typeparamref name="TInterface"/> is null</exception>
+             <exception cref="T:System.ArgumentException">If <typeparamref name="TInterface"/> is not an interface</exception>
+        </member>
+        <member name="M:AutofacContrib.AggregateService.ContainerBuilderExtensions.RegisterAggregateService(Autofac.ContainerBuilder,System.Type)">
+            <summary>
+             Register <paramref name="interfaceType"/> as an aggregate service.
+            </summary>
+            <param name="builder">The container builder</param>
+            <param name="interfaceType">The interface type to register</param>
+             <exception cref="T:System.ArgumentNullException">If <paramref name="interfaceType"/> is null</exception>
+             <exception cref="T:System.ArgumentException">If <paramref name="interfaceType"/> is not an interface</exception>
+        </member>
+        <member name="T:AutofacContrib.AggregateService.AggregateServiceGenerator">
+            <summary>
+             Generate aggregate service instances from interface types.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.AggregateService.AggregateServiceGenerator.CreateInstance``1(Autofac.IComponentContext)">
+            <summary>
+             Generate an aggregate service instance that will resolve its types from <paramref name="context"/>.
+            </summary>
+            <param name="context">The component context from where types will be resolved</param>
+            <typeparam name="TAggregateServiceInterface">The interface type for the aggregate service</typeparam>
+            <returns>The aggregate service instance</returns>
+             <exception cref="T:System.ArgumentException">Thrown if <typeparamref name="TAggregateServiceInterface"/> is not an interface</exception>
+        </member>
+        <member name="M:AutofacContrib.AggregateService.AggregateServiceGenerator.CreateInstance(System.Type,Autofac.IComponentContext)">
+            <summary>
+             Generate an aggregate service instance that will resolve its types from <paramref name="context"/>.
+            </summary>
+            <param name="context">The component context from where types will be resolved</param>
+            <param name="interfaceType">The interface type for the aggregate service</param>
+            <returns>The aggregate service instance</returns>
+             <exception cref="T:System.ArgumentException">Thrown if <paramref name="interfaceType"/> is not an interface</exception>
+        </member>
+        <member name="T:AutofacContrib.AggregateService.ResolvingInterceptor">
+            <summary>
+            Interceptor that resolves types of properties and methods using a <see cref="T:Autofac.IComponentContext"/>.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.AggregateService.ResolvingInterceptor.#ctor(System.Type,Autofac.IComponentContext)">
+            <summary>
+             Initialize <see cref="T:AutofacContrib.AggregateService.ResolvingInterceptor"/> with an interface type and a component context.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.AggregateService.TypeExtensions.GetUniqueInterfaces(System.Type)">
+            <summary>
+            Return unique interfaces implemented or inherited by <paramref name="type"/>.
+            Will also include <paramref name="type"/> if it is an interface type.
+            </summary>
+        </member>
+    </members>
+</doc>

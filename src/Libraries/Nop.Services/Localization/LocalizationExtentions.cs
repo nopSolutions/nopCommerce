@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Nop.Services.Localization
 {
@@ -14,6 +15,7 @@ namespace Nop.Services.Localization
             Expression<Func<T, string>> keySelector)
             where T : BaseEntity, ILocalizedEntity
         {
+            //int languageId = ServiceLocator.Current.GetInstance<IWorkContext>().WorkingLanguage.Id;
             int languageId = Nop.Core.Context.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
             return GetLocalized(entity, keySelector, languageId);
         }
@@ -48,6 +50,8 @@ namespace Nop.Services.Localization
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 
+
+            //var leService = ServiceLocator.Current.GetInstance<ILocalizedEntityService>();
             var leService = Nop.Core.Context.Current.Resolve<ILocalizedEntityService>();
             var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
             var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
