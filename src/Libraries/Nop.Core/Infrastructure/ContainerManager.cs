@@ -116,60 +116,26 @@ namespace Nop.Core.Infrastructure
 
         public T Resolve<T>(string key = "") where T : class
         {
-            if (DependencyResolver == null)
+            if (string.IsNullOrEmpty(key))
             {
-                if (string.IsNullOrEmpty(key))
-                {
-                    return Container.Resolve<T>();
-                }
-                return Container.ResolveKeyed<T>(key);
+                return Scope().Resolve<T>();
             }
-            else
-            {
-                //copied from Autofac.Integration.Mvc\AutofacDependencyResolver.cs
-                //temporary solution
-                if (string.IsNullOrEmpty(key))
-                {
-                    return DependencyResolver.RequestLifetimeScope.ResolveOptional<T>();
-                }
-                return Container.ResolveKeyed<T>(key);
-            }
+            return Scope().ResolveKeyed<T>(key);
         }
 
         public object Resolve(Type type)
         {
-            if (DependencyResolver == null)
-            {
-                return Container.Resolve(type);
-            }
-            else
-            {
-                //copied from Autofac.Integration.Mvc\AutofacDependencyResolver.cs
-                //temporary solution
-                return DependencyResolver.RequestLifetimeScope.Resolve(type);
-            }
+            return Scope().Resolve(type);
+
         }
 
         public T[] ResolveAll<T>(string key = "")
         {
-            if (DependencyResolver == null)
+            if (string.IsNullOrEmpty(key))
             {
-                if (string.IsNullOrEmpty(key))
-                {
-                    return Container.Resolve<IEnumerable<T>>().ToArray();
-                }
-                return Container.ResolveKeyed<IEnumerable<T>>(key).ToArray();
+                return Scope().Resolve<IEnumerable<T>>().ToArray();
             }
-            else
-            {
-                //copied from Autofac.Integration.Mvc\AutofacDependencyResolver.cs
-                //temporary solution
-                if (string.IsNullOrEmpty(key))
-                {
-                    return DependencyResolver.RequestLifetimeScope.Resolve<IEnumerable<T>>().ToArray();
-                }
-                return DependencyResolver.RequestLifetimeScope.ResolveKeyed<IEnumerable<T>>(key).ToArray();
-            }
+            return Scope().ResolveKeyed<IEnumerable<T>>(key).ToArray();
         }
 
         public void StartComponents()
@@ -184,10 +150,17 @@ namespace Nop.Core.Infrastructure
             builder.Update(_container);
         }
 
-        /// <summary>
-        /// UNDONE temporary solution.
-        /// </summary>
-        public AutofacDependencyResolver DependencyResolver { get; set; }
+        public ILifetimeScope Scope()
+        {
+            try
+            {
+                return RequestLifetimeHttpModule.GetLifetimeScope(Container, null);
+            }
+            catch
+            {
+                return Container;
+            }
+        }
     }
     public static class ContainerManagerExtensions
     {

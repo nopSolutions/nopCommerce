@@ -176,6 +176,7 @@
     <Compile Include="Plugins\IPluginFinder.cs" />
     <Compile Include="Plugins\PluginFinder.cs" />
     <Compile Include="Plugins\PluginInitializationException.cs" />
+    <Compile Include="Infrastructure\RequestLifetimeHttpModule.cs" />
     <Compile Include="StartupTasks.cs" />
     <Compile Include="Web\AdaptiveContext.cs" />
     <Compile Include="Web\ErrorHandler.cs" />

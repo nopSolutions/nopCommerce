@@ -41,8 +41,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.2.4.4.705\lib\NET40\Autofac.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.Mvc, Version=0.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Autofac.Integration.Mvc, Version=2.4.4.705, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Autofac.Mvc3.2.4.4.705\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="AutofacContrib.CommonServiceLocator">

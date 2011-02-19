@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac.Integration.Mvc;
+using Autofac;
 using AutofacContrib.CommonServiceLocator;
 using Microsoft.Practices.ServiceLocation;
+using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Security.Permissions;
+using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
 {
@@ -36,10 +38,9 @@ namespace Nop.Web.MVC
         protected void Application_Start()
         {
             //set dependency resolver
-            var dependencyResolver = new AutofacDependencyResolver(Core.Context.Current.ContainerManager.Container);
-            Core.Context.Current.ContainerManager.DependencyResolver = dependencyResolver;
+            var dependencyResolver = new NopDependencyResolver();
             DependencyResolver.SetResolver(dependencyResolver);
-            
+
             //other MVC stuff
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -63,7 +64,7 @@ namespace Nop.Web.MVC
 
         protected void RegisterServiceLocator()
         {
-            var serviceLocator = new AutofacServiceLocator(Core.Context.Current.ContainerManager.DependencyResolver.RequestLifetimeScope);
+            var serviceLocator = new AutofacServiceLocator(Core.Context.Current.ContainerManager.Scope());
             ServiceLocator.SetLocatorProvider(() => serviceLocator);
         }
 
@@ -72,6 +73,17 @@ namespace Nop.Web.MVC
             //Service locator. We register it per request because ILifetimeScope could be changed per request
             //TODO uncomment to register ServiceLocator
             //RegisterServiceLocator();
+        }
+        public interface ITestService
+        {
+            
+        }
+        public class TestService : ITestService
+        {
+            public TestService()
+            {
+                
+            }
         }
     }
 }
