@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         {
             base.InitHelpers();
 
-            _localizationService = DependencyResolver.Current.GetService<ILocalizationService>();
+            _localizationService = Core.Context.Current.Resolve<ILocalizationService>();
         }
 
         public Localizer T

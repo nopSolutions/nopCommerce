@@ -53,12 +53,11 @@ namespace Nop.Web.MVC
         protected void RegisterDefaultPermissions()
         {
             //register permissions
-            var permissionProviders = DependencyResolver.Current.GetService<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+            var permissionProviders = Core.Context.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
             foreach (var providerType in permissionProviders)
             {
                 dynamic provider = Activator.CreateInstance(providerType);
-                var repo = DependencyResolver.Current.GetService<IRepository<Nop.Core.Domain.Security.Permissions.PermissionRecord>>();
-                DependencyResolver.Current.GetService<IPermissionService>().InstallPermissions(provider);
+                Core.Context.Current.Resolve<IPermissionService>().InstallPermissions(provider);
             }
         }
 

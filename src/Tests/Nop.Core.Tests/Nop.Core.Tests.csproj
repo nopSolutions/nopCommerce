@@ -75,9 +75,6 @@
     <Compile Include="Plugin\PlugIn3.cs" />
     <Compile Include="Plugin\PluginFinderTests.cs" />
     <Compile Include="Plugin\PlugInInitializerInvokerTests.cs" />
-    <Compile Include="Plugin\Scheduling\OnceAction.cs" />
-    <Compile Include="Plugin\Scheduling\RepeatAction.cs" />
-    <Compile Include="Plugin\Scheduling\SchedulingTests.cs" />
     <Compile Include="Plugin\SomeException.cs" />
     <Compile Include="Plugin\ThrowingPlugin1.cs" />
     <Compile Include="Plugin\ThrowingPlugin2.cs" />

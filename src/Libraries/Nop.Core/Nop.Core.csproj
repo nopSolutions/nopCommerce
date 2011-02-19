@@ -176,13 +176,6 @@
     <Compile Include="Plugins\IPluginFinder.cs" />
     <Compile Include="Plugins\PluginFinder.cs" />
     <Compile Include="Plugins\PluginInitializationException.cs" />
-    <Compile Include="Plugins\Scheduling\Heart.cs" />
-    <Compile Include="Plugins\Scheduling\IHeart.cs" />
-    <Compile Include="Plugins\Scheduling\Repeat.cs" />
-    <Compile Include="Plugins\Scheduling\ScheduledAction.cs" />
-    <Compile Include="Plugins\Scheduling\ScheduleExecutionAttribute.cs" />
-    <Compile Include="Plugins\Scheduling\Scheduler.cs" />
-    <Compile Include="Plugins\Scheduling\TimeUnit.cs" />
     <Compile Include="StartupTasks.cs" />
     <Compile Include="Web\AdaptiveContext.cs" />
     <Compile Include="Web\ErrorHandler.cs" />

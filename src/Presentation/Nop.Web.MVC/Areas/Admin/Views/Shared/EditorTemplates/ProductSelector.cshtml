@@ -3,7 +3,7 @@
 @using Telerik.Web.Mvc.UI;
 
 @{
-    var product = DependencyResolver.Current.GetService<Nop.Services.Catalog.IProductService>().GetProductById(Model);    
+    var product = Nop.Core.Context.Current.Resolve<Nop.Services.Catalog.IProductService>().GetProductById(Model);    
 }
 @ViewData.TemplateInfo.FormattedModelValue
 

@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.Controllers
         {
             bool isAdmin = false;
             //TODO inject IWorkContext
-            var workContext = DependencyResolver.Current.GetService<IWorkContext>();
+            var workContext = Nop.Core.Context.Current.Resolve<IWorkContext>();
             var user = workContext.CurrentCustomer;
             if (user != null)
             {

@@ -210,7 +210,7 @@
             </div>
             <div class="status-bar">
                 <div class="help">
-                    @(DependencyResolver.Current.GetService<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.UtcNow).ToString("f"))
+                    @(Nop.Core.Context.Current.Resolve < Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
                 </div>
                 <div class="breadcrumb">
                     <!-- TODO SiteMapPath here-->

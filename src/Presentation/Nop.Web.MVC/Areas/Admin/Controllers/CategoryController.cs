@@ -165,8 +165,9 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var model = _categoryService.GetProductCategoriesByCategoryId(id, true).Select(x => new CategoryProductModel(x)).ToList();
 
             //TODO:Take out test products
-            var products = DependencyResolver.Current.GetService<IProductService>().GetAllProducts(true);
+            var products = Core.Context.Current.Resolve<IProductService>().GetAllProducts(true);
             model.Add(new CategoryProductModel {Id = 234, ProductId = products[0].Id});
+
             return View(model);
         }
      

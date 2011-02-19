@@ -21,7 +21,7 @@ namespace Nop.Web.Framework
 
             // Add attributes
             var resource =
-                DependencyResolver.Current.GetService<Services.Localization.ILocalizationService>().GetResource(
+                Core.Context.Current.Resolve<Services.Localization.ILocalizationService>().GetResource(
                     resourceName);
             builder.MergeAttribute("src", ResolveUrl(helper, "/Areas/Admin/Content/images/ico-help.gif"));
             builder.MergeAttribute("alt", resource);
