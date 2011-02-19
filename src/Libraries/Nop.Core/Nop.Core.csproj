@@ -182,6 +182,7 @@
     <Compile Include="Web\ErrorHandler.cs" />
     <Compile Include="Web\IClosable.cs" />
     <Compile Include="Web\IErrorHandler.cs" />
+    <Compile Include="Web\InitializerModule.cs" />
     <Compile Include="Web\ThreadContext.cs" />
     <Compile Include="Infrastructure\WebAppTypeFinder.cs" />
     <Compile Include="IWorkContext.cs" />
