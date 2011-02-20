@@ -45,21 +45,6 @@ namespace Nop.Web.MVC
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-
-
-            //UNDONE it should be run only once on application startup (but application instance is not available yet in AutofacDependencyResolver)
-            RegisterDefaultPermissions();
-        }
-
-        protected void RegisterDefaultPermissions()
-        {
-            //register permissions
-            var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
-            foreach (var providerType in permissionProviders)
-            {
-                dynamic provider = Activator.CreateInstance(providerType);
-                EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
-            }
         }
 
         protected void RegisterServiceLocator()

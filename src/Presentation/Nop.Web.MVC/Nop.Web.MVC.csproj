@@ -189,6 +189,7 @@
     </Compile>
     <Compile Include="Infrastructure\DependencyRegistar.cs" />
     <Compile Include="Infrastructure\NopDependencyResolver.cs" />
+    <Compile Include="StartupTasks\RegisterDefaultPermissionsStartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
