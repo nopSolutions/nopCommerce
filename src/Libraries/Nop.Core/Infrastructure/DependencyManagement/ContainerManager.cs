@@ -152,7 +152,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         {
             try
             {
-                return RequestLifetimeHttpModule.GetLifetimeScope(Container, null);
+                return AutofacRequestLifetimeHttpModule.GetLifetimeScope(Container, null);
             }
             catch
             {

@@ -11,7 +11,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
     /// An <see cref="IHttpModule"/> and <see cref="ILifetimeScopeProvider"/> implementation 
     /// that creates a nested lifetime scope for each HTTP request.
     /// </summary>
-    public class RequestLifetimeHttpModule : IHttpModule
+    public class AutofacRequestLifetimeHttpModule : IHttpModule
     {
         /// <summary>
         /// Tag used to identify registrations that are scoped to the HTTP request level.

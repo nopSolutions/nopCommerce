@@ -74,16 +74,5 @@ namespace Nop.Web.MVC
             //TODO uncomment to register ServiceLocator
             //RegisterServiceLocator();
         }
-        public interface ITestService
-        {
-            
-        }
-        public class TestService : ITestService
-        {
-            public TestService()
-            {
-                
-            }
-        }
     }
 }

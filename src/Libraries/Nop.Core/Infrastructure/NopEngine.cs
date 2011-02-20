@@ -8,7 +8,6 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
 using Nop.Core.Tasks;
-using Nop.Core.Web;
 
 namespace Nop.Core.Infrastructure
 {
@@ -63,11 +62,6 @@ namespace Nop.Core.Infrastructure
         public ContainerManager ContainerManager
         {
             get { return _container; }
-        }
-
-        public IWebContext RequestContext
-        {
-            get { return Container.Resolve<IWebContext>(); }
         }
 
 		#endregion

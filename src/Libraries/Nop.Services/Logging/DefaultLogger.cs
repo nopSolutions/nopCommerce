@@ -16,6 +16,7 @@ namespace Nop.Services.Logging
 
         private readonly IRepository<Log> _logRepository;
         private readonly IWorkContext _workContext;
+        private readonly IWebHelper _webHelper;
         
         #endregion
         
@@ -25,11 +26,14 @@ namespace Nop.Services.Logging
         /// Ctor
         /// </summary>
         /// <param name="logRepository">Log repository</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="webHelper">Web helper</param>
         public DefaultLogger(IRepository<Log> logRepository,
-            IWorkContext workContext)
+            IWorkContext workContext, IWebHelper webHelper)
         {
             this._logRepository = logRepository;
             this._workContext = workContext;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -148,9 +152,9 @@ namespace Nop.Services.Logging
             int customerId = 0;
             if (_workContext != null && _workContext.CurrentCustomer != null)
                 customerId = _workContext.CurrentCustomer.Id;
-            string ipAddress = WebHelper.GetCurrentIpAddress();
-            string pageUrl = WebHelper.GetThisPageUrl(true);
-            string referrerUrl = WebHelper.GetUrlReferrer();
+            string ipAddress = _webHelper.GetCurrentIpAddress();
+            string pageUrl = _webHelper.GetThisPageUrl(true);
+            string referrerUrl = _webHelper.GetUrlReferrer();
 
             ipAddress = CommonHelper.EnsureNotNull(ipAddress);
             pageUrl = CommonHelper.EnsureNotNull(pageUrl);

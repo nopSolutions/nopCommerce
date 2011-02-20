@@ -15,7 +15,6 @@ namespace Nop.Services.Catalog
     /// <summary>
     /// Category service
     /// </summary>
-    [Service(typeof(ICategoryService),ComponentLifeStyle.LifetimeScope)]
     public partial class CategoryService : ICategoryService
     {
         #region Constants

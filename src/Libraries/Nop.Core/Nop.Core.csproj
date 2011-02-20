@@ -91,6 +91,7 @@
     <Compile Include="Configuration\InterfacePluginCollection.cs" />
     <Compile Include="Configuration\InterfacePluginElement.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\Permissions\DefaultPermissionRecord.cs" />
     <Compile Include="Domain\Security\Permissions\PermissionRecord.cs" />
     <Compile Include="Configuration\LazyRemovableCollection.cs" />
@@ -173,11 +174,8 @@
     <Compile Include="Plugins\IPluginFinder.cs" />
     <Compile Include="Plugins\PluginFinder.cs" />
     <Compile Include="Plugins\PluginInitializationException.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\RequestLifetimeHttpModule.cs" />
+    <Compile Include="Infrastructure\DependencyManagement\AutofacRequestLifetimeHttpModule.cs" />
     <Compile Include="StartupTasks.cs" />
-    <Compile Include="Web\AdaptiveContext.cs" />
-    <Compile Include="Web\IClosable.cs" />
-    <Compile Include="Web\ThreadContext.cs" />
     <Compile Include="Infrastructure\WebAppTypeFinder.cs" />
     <Compile Include="IWorkContext.cs" />
     <Compile Include="Domain\Localization\LocalizedProperty.cs" />
@@ -233,9 +231,6 @@
     <Compile Include="NopException.cs" />
     <Compile Include="PagedList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Web\IWebContext.cs" />
-    <Compile Include="Web\Url.cs" />
-    <Compile Include="Web\WebRequestContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

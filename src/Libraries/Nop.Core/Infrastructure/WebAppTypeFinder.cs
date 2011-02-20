@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Nop.Core.Configuration;
-using Nop.Core.Web;
 
 namespace Nop.Core.Infrastructure
 {
@@ -14,18 +13,18 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class WebAppTypeFinder : AppDomainTypeFinder
     {
-        private IWebContext webContext;
         private bool ensureBinFolderAssembliesLoaded = true;
         private bool binFolderAssembliesLoaded = false;
+        private IWebHelper _webHelper;
 
-        public WebAppTypeFinder(Web.IWebContext webContext)
+        public WebAppTypeFinder(IWebHelper webHelper)
         {
-            this.webContext = webContext;
+            this._webHelper = webHelper;
         }
 
-        public WebAppTypeFinder(Web.IWebContext webContext, EngineSection engineConfiguration)
+        public WebAppTypeFinder(IWebHelper webHelper, EngineSection engineConfiguration)
         {
-            this.webContext = webContext;
+            this._webHelper = webHelper;
             this.ensureBinFolderAssembliesLoaded = engineConfiguration.DynamicDiscovery;
             foreach (var assembly in engineConfiguration.Assemblies.AllElements)
                 AssemblyNames.Add(assembly.Assembly);
@@ -47,7 +46,7 @@ namespace Nop.Core.Infrastructure
             if (EnsureBinFolderAssembliesLoaded && !binFolderAssembliesLoaded)
             {
                 binFolderAssembliesLoaded = true;
-                LoadMatchingAssemblies(webContext.MapPath("~/bin"));
+                LoadMatchingAssemblies(_webHelper.MapPath("~/bin"));
             }
 
             return base.GetAssemblies();

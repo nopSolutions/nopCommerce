@@ -5,7 +5,6 @@ using System.Text;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
-using Nop.Core.Web;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Infrastructure.DependencyManagement
@@ -39,7 +38,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         [Test]
         public void CanRetrieve_ImportantServices()
         {
-            Assert.That(container.Resolve<IWebContext>(), Is.Not.Null);
+            Assert.That(container.Resolve<IWebHelper>(), Is.Not.Null);
             Assert.That(container.Resolve<IEngine>(), Is.Not.Null);
             Assert.That(container.Resolve<IPluginBootstrapper>(), Is.Not.Null);
         }

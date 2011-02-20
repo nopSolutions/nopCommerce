@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nop.Core.Configuration;
-using Nop.Core.Web;
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
@@ -37,12 +36,12 @@ namespace Nop.Core.Infrastructure.DependencyManagement
            
             if (configuration.Sections.Engine != null)
                 RegisterConfiguredComponents(container, configuration.Sections.Engine);
-            InitializeEnvironment(container, configuration.Sections.Host);
 
             container.AddComponentInstance(broker);
 
             container.AddComponent<ITypeFinder, WebAppTypeFinder>("nop.typeFinder");
-            container.AddComponent<IWebContext, AdaptiveContext>("nop.webContext");
+            container.AddComponent<IWebHelper, WebHelper>("nop.webHelper");
+            //container.AddComponent<IWebContext, AdaptiveContext>("nop.webContext");
             container.AddComponent<ServiceRegistrator>("nop.typeFinder");
 
             var registrator = container.Resolve<ServiceRegistrator>();
@@ -67,15 +66,6 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         private void AddComponentInstance(IEngine engine, object instance)
         {
             engine.ContainerManager.AddComponentInstance(instance.GetType(), instance, instance.GetType().FullName);
-        }
-
-        protected virtual void InitializeEnvironment(ContainerManager container, HostSection hostConfig)
-        {
-            if (hostConfig != null)
-            {
-                if (!hostConfig.IsWeb)
-                    container.AddComponentInstance<IWebContext>(new ThreadContext(), "nop.webContext.notWeb");
-            }
         }
 
         protected virtual void RegisterConfiguredComponents(ContainerManager container, EngineSection engineConfig)

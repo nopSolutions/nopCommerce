@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Autofac;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Core.Web;
 
 namespace Nop.Core.Infrastructure
 {
@@ -17,10 +16,7 @@ namespace Nop.Core.Infrastructure
     public interface IEngine
     {
         ContainerManager ContainerManager { get; }
-
-        /// <summary>Contextual data associated with the current request.</summary>
-        IWebContext RequestContext { get; }
-
+        
         /// <summary>
         /// Initialize components and plugins in the nop environment.
         /// </summary>

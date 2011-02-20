@@ -70,11 +70,14 @@ namespace Nop.Web.MVC.Infrastructure
                 .As<HttpSessionStateBase>()
                 .InstancePerHttpRequest();
 
+
+            //builder.RegisterType<WebHelper>().As<WebHelper>().InstancePerHttpRequest();
+
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerHttpRequest();
             builder.RegisterType<WorkContext>().As<IWorkContext>().InstancePerHttpRequest();
 
             //services
-            //builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
+            builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
             builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerHttpRequest();
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerHttpRequest();
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerHttpRequest();

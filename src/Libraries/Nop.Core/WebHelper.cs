@@ -1,20 +1,23 @@
 
 using System;
 using System.Configuration;
+using System.IO;
 using System.Web;
+using System.Web.Hosting;
+using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core
 {
     /// <summary>
     /// Represents a common helper
     /// </summary>
-    public partial class WebHelper
+    public partial class WebHelper : IWebHelper
     {
         /// <summary>
         /// Get URL referrer
         /// </summary>
         /// <returns>URL referrer</returns>
-        public static string GetUrlReferrer()
+        public virtual string GetUrlReferrer()
         {
             string referrerUrl = string.Empty;
 
@@ -30,7 +33,7 @@ namespace Nop.Core
         /// Get context IP address
         /// </summary>
         /// <returns>URL referrer</returns>
-        public static string GetCurrentIpAddress()
+        public virtual string GetCurrentIpAddress()
         {
             if (HttpContext.Current != null &&
                     HttpContext.Current.Request != null &&
@@ -44,7 +47,7 @@ namespace Nop.Core
         /// Gets this page name
         /// </summary>
         /// <returns></returns>
-        public static string GetThisPageUrl(bool includeQueryString)
+        public virtual string GetThisPageUrl(bool includeQueryString)
         {
             string url = string.Empty;
             if (HttpContext.Current == null)
@@ -70,7 +73,7 @@ namespace Nop.Core
         /// Gets a value indicating whether current connection is secured
         /// </summary>
         /// <returns>true - secured, false - not secured</returns>
-        public static bool IsCurrentConnectionSecured()
+        public virtual bool IsCurrentConnectionSecured()
         {
             bool useSsl = false;
             if (HttpContext.Current != null && HttpContext.Current.Request != null)
@@ -89,7 +92,7 @@ namespace Nop.Core
         /// </summary>
         /// <param name="name">Name</param>
         /// <returns>Server variable</returns>
-        public static string ServerVariables(string name)
+        public virtual string ServerVariables(string name)
         {
             string tmpS = string.Empty;
             try
@@ -111,7 +114,7 @@ namespace Nop.Core
         /// </summary>
         /// <param name="useSsl">Use SSL</param>
         /// <returns>Store host location</returns>
-        public static string GetStoreHost(bool useSsl)
+        public virtual string GetStoreHost(bool useSsl)
         {
             string result = "http://" + ServerVariables("HTTP_HOST");
             if (!result.EndsWith("/"))
@@ -173,7 +176,7 @@ namespace Nop.Core
         /// Gets store location
         /// </summary>
         /// <returns>Store location</returns>
-        public static string GetStoreLocation()
+        public virtual string GetStoreLocation()
         {
             bool useSsl = IsCurrentConnectionSecured();
             return GetStoreLocation(useSsl);
@@ -184,7 +187,7 @@ namespace Nop.Core
         /// </summary>
         /// <param name="useSsl">Use SSL</param>
         /// <returns>Store location</returns>
-        public static string GetStoreLocation(bool useSsl)
+        public virtual string GetStoreLocation(bool useSsl)
         {
             //return HostingEnvironment.ApplicationVirtualPath;
 
@@ -198,7 +201,9 @@ namespace Nop.Core
             return result.ToLowerInvariant();
         }
         
-        /// <summary>Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.</summary>
+        /// <summary>
+        /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
+        /// </summary>
         /// <param name="application">HTTP Application</param>
         /// <returns>True if the request targets a static resource file.</returns>
         /// <remarks>
@@ -212,7 +217,7 @@ namespace Nop.Core
         /// .axd
         /// .ashx
         /// </remarks>
-        public static bool IsStaticResource(HttpApplication application)
+        public virtual bool IsStaticResource(HttpApplication application)
         {
             if (application == null)
                 throw new ArgumentNullException("application");
@@ -236,6 +241,31 @@ namespace Nop.Core
             }
 
             return false;
+        }
+        
+        /// <summary>
+        /// Maps a virtual path to a physical disk path.
+        /// </summary>
+        /// <param name="path">The path to map. E.g. "~/bin"</param>
+        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
+        public virtual string MapPath(string path)
+        {
+            if (HttpContext.Current != null)
+            {
+                return HostingEnvironment.MapPath(path);
+            }
+            else
+            {
+                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                int binIndex = baseDirectory.IndexOf("\\bin\\");
+                if (binIndex >= 0)
+                    baseDirectory = baseDirectory.Substring(0, binIndex);
+                else if (baseDirectory.EndsWith("\\bin"))
+                    baseDirectory = baseDirectory.Substring(0, baseDirectory.Length - 4);
+
+                path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
+                return Path.Combine(baseDirectory, path);
+            }
         }
     }
 }
