@@ -13,9 +13,15 @@ namespace Nop.Core.Infrastructure
 {
     public class NopEngine : IEngine
     {
-        private ContainerManager _container;
+        #region Fields
 
-		/// <summary>
+        private ContainerManager _containerManager;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
 		/// Creates an instance of the content engine using default settings and configuration.
 		/// </summary>
 		public NopEngine()
@@ -36,7 +42,11 @@ namespace Nop.Core.Infrastructure
             InitializeContainer(configurer, broker, new ConfigurationReadingWrapper(config, sectionGroup));
 		}
 
-		private class ConfigurationReadingWrapper : ConfigurationManagerWrapper
+        #endregion
+
+        #region Classes
+
+        private class ConfigurationReadingWrapper : ConfigurationManagerWrapper
 		{
 			System.Configuration.Configuration config;
 
@@ -52,74 +62,53 @@ namespace Nop.Core.Infrastructure
 			}
 		}
 
-		#region Properties
+        #endregion
 
-		public IContainer Container
-		{
-			get { return _container.Container; }
-		}
+        #region Utilities
 
-        public ContainerManager ContainerManager
+        private void InitPlugins()
         {
-            get { return _container; }
+            var bootstrapper = _containerManager.Resolve<IPluginBootstrapper>();
+            var plugins = bootstrapper.GetPluginDefinitions();
+            bootstrapper.InitializePlugins(this, plugins);
         }
 
-		#endregion
-
-		#region Methods
-
-		public void Initialize()
-		{
-			try
-			{
-				var bootstrapper = _container.Resolve<IPluginBootstrapper>();
-				var plugins = bootstrapper.GetPluginDefinitions();
-				bootstrapper.InitializePlugins(this, plugins);
-			}
-			finally
-			{
-                //NOTE:Do we need a request life cycle handler?
-				//container.Resolve<IRequestLifeCycleHandler>().Initialize();
-			}
-
-            var typeFinder = _container.Resolve<ITypeFinder>();
-
-		    ContainerManager.UpdateContainer(x =>
-		                                         {
-		                                             
-		                                             var drTypes =
-                                                         typeFinder.FindClassesOfType
-		                                                     <IDependencyRegistar>();
-		                                             foreach (var t in drTypes)
-		                                             {
-		                                                 dynamic dependencyRegistar = Activator.CreateInstance(t);
-		                                                 dependencyRegistar.Register(x, typeFinder);
-		                                             }
-		                                         });
-
-			ContainerManager.StartComponents();
-
+        private void RunStartupTasks()
+        {
+            var typeFinder = _containerManager.Resolve<ITypeFinder>();
             var startUpTaskTypes = typeFinder.FindClassesOfType<IStartupTask>();
             foreach (var startUpTaskType in startUpTaskTypes)
             {
                 var startUpTask = ((IStartupTask)Activator.CreateInstance(startUpTaskType));
                 startUpTask.Execute();
             }
-		}
+        }
 
         private void InitializeContainer(ContainerConfigurer configurer, EventBroker broker, ConfigurationManagerWrapper config)
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new StartableModule<IAutoStart>(s => s.Start()));
 
-            _container = new ContainerManager(builder.Build());
+            _containerManager = new ContainerManager(builder.Build());
 
-            configurer.Configure(this, _container, broker, config);
+            configurer.Configure(this, _containerManager, broker, config);
         }
 
-		#endregion
+        #endregion
 
-		#region Container Methods
+        #region Methods
+
+        public void Initialize()
+        {
+            //plugins
+            InitPlugins();
+
+            //start components
+            ContainerManager.StartComponents();
+
+            //startup tasks
+            RunStartupTasks();
+        }
 
         public T Resolve<T>() where T : class
 		{
@@ -142,6 +131,20 @@ namespace Nop.Core.Infrastructure
         }
 
 		#endregion
-        
+
+        #region Properties
+
+        public IContainer Container
+        {
+            get { return _containerManager.Container; }
+        }
+
+        public ContainerManager ContainerManager
+        {
+            get { return _containerManager; }
+        }
+
+        #endregion
+
     }
 }

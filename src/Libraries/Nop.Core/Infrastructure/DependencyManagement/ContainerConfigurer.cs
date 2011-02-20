@@ -22,33 +22,41 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             public const string FullTrust = "FullTrust";
         }
 
-        public virtual void Configure(IEngine engine, ContainerManager container, EventBroker broker, ConfigurationManagerWrapper configuration)
+        public virtual void Configure(IEngine engine, ContainerManager containerManager, EventBroker broker, ConfigurationManagerWrapper configuration)
         {
+            //register dependencies provided by other asemblies
+            containerManager.AddComponent<IWebHelper, WebHelper>("nop.webHelper");
+            containerManager.AddComponent<ITypeFinder, WebAppTypeFinder>("nop.typeFinder");
+            var typeFinder = containerManager.Resolve<ITypeFinder>();
+            containerManager.UpdateContainer(x =>
+            {
+                var drTypes = typeFinder.FindClassesOfType<IDependencyRegistar>();
+                foreach (var t in drTypes)
+                {
+                    dynamic dependencyRegistar = Activator.CreateInstance(t);
+                    dependencyRegistar.Register(x, typeFinder);
+                }
+            });
+
+            //other dependencies
             configuration.Start();
+            containerManager.AddComponentInstance<ConfigurationManagerWrapper>(configuration, "nop.configuration");
+            containerManager.AddComponentInstance<IEngine>(engine, "nop.engine");
+            containerManager.AddComponentInstance<ContainerConfigurer>(this, "nop.containerConfigurer");
 
-            container.AddComponentInstance<ConfigurationManagerWrapper>(configuration, "nop.configuration");
-            container.AddComponentInstance<IEngine>(engine, "nop.engine");
-            container.AddComponentInstance<ContainerConfigurer>(this, "nop.containerConfigurer");
-
-            container.AddComponentInstance(configuration.GetConnectionStringsSection());
-
-            container.AddComponentInstance(configuration.Sections.Engine);
-           
+            containerManager.AddComponentInstance(configuration.GetConnectionStringsSection());
+            containerManager.AddComponentInstance(configuration.Sections.Engine);
             if (configuration.Sections.Engine != null)
-                RegisterConfiguredComponents(container, configuration.Sections.Engine);
+                RegisterConfiguredComponents(containerManager, configuration.Sections.Engine);
 
-            container.AddComponentInstance(broker);
+            //event broker
+            containerManager.AddComponentInstance(broker);
 
-            container.AddComponent<ITypeFinder, WebAppTypeFinder>("nop.typeFinder");
-            container.AddComponent<IWebHelper, WebHelper>("nop.webHelper");
-            //container.AddComponent<IWebContext, AdaptiveContext>("nop.webContext");
-            container.AddComponent<ServiceRegistrator>("nop.typeFinder");
-
-            var registrator = container.Resolve<ServiceRegistrator>();
+            //service registration
+            containerManager.AddComponent<ServiceRegistrator>("nop.serviceRegistrator");
+            var registrator = containerManager.Resolve<ServiceRegistrator>();
             var services = registrator.FindServices();
-
             var configurations = GetComponentConfigurations(configuration);
-
             services = registrator.FilterServices(services, configurations);
             registrator.RegisterServices(services);
         }

@@ -174,7 +174,6 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
      
         public ActionResult AllCategories(string text, int selectedId)
         {
-            Thread.Sleep(1000);
             var categories = _categoryService.GetAllCategories(true);
             categories.Insert(0, new Category {Name = "[None]", Id = 0});
             var selectList = new SelectList(categories, "Id", "Name", selectedId);

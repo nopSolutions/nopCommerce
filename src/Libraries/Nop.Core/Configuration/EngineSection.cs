@@ -1,6 +1,6 @@
 ﻿
 using System.Configuration;
-using Nop.Core.Infrastructure;
+using Nop.Core.Configuration;
 
 namespace Nop.Core.Configuration
 {
