@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nop.Core.Plugins
 {
-    public class PluginInitializationException : Exception
+    public class PluginInitializationException : NopException
     {
         public PluginInitializationException(string message, Exception[] innerExceptions)
             : base(message, innerExceptions[0])

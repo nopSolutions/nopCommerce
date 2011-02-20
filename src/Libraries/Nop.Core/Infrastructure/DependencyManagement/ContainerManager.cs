@@ -6,11 +6,9 @@ using System.Web;
 using Autofac;
 using Autofac.Integration.Mvc;
 using AutofacContrib.Startable;
-using Nop.Core.Infrastructure.AutoFac;
 using Nop.Core.Plugins;
-using System.Web.Mvc;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Core.Infrastructure.DependencyManagement
 {
     public class ContainerManager
     {

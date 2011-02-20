@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core.Plugins
 {

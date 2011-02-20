@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Core.Infrastructure.DependencyManagement
 {
     /// <summary>
     /// Markes a service that is registered in automatically registered in Nop's inversion of control container.

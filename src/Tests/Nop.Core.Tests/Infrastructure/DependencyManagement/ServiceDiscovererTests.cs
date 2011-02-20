@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.AutoFac;
-using Nop.Core.Tests.Infrastructure.Services;
+using Nop.Core.Infrastructure.DependencyManagement;
+using Nop.Core.Tests.Infrastructure.DependencyManagement.Services;
 using NUnit.Framework;
 
-namespace Nop.Core.Tests.Infrastructure
+namespace Nop.Core.Tests.Infrastructure.DependencyManagement
 {
     [TestFixture]
     public class AutoFacServiceDiscovererTests : ServiceDiscovererTests

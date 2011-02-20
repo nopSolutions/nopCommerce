@@ -115,43 +115,11 @@ namespace Nop.Core.Infrastructure
             Trace.WriteLine("EventBroker: Disposing " + sender);
         }
 
-        /// <summary>Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.</summary>
-        /// <param name="sender">The event sender, probably a http application.</param>
-        /// <returns>True if the request targets a static resource file.</returns>
-        /// <remarks>
-        /// These are the file extensions considered to be static resources:
-        /// .css
-        ///	.gif
-        /// .png 
-        /// .jpg
-        /// .jpeg
-        /// .js
-        /// .axd
-        /// .ashx
-        /// </remarks>
         protected static bool IsStaticResource(object sender)
         {
             HttpApplication application = sender as HttpApplication;
             if (application != null)
-            {
-                string path = application.Request.Path;
-                string extension = VirtualPathUtility.GetExtension(path);
-
-                if (extension == null) return false;
-
-                switch (extension.ToLower())
-                {
-                    case ".css":
-                    case ".gif":
-                    case ".png":
-                    case ".jpg":
-                    case ".jpeg":
-                    case ".js":
-                    case ".axd":
-                    case ".ashx":
-                        return true;
-                }
-            }
+                WebHelper.IsStaticResource(application);
             return false;
         }
     }

@@ -5,7 +5,7 @@ using System.Text;
 using Autofac;
 using AutofacContrib.Startable;
 using Nop.Core.Configuration;
-using Nop.Core.Infrastructure.AutoFac;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
 using Nop.Core.Tasks;
 using Nop.Core.Web;

@@ -64,10 +64,10 @@
     <Compile Include="Entities\Orders\GiftCardTests.cs" />
     <Compile Include="Fakes\FakeTypeFinder.cs" />
     <Compile Include="FileSystemStorageProviderTests.cs" />
-    <Compile Include="Infrastructure\ContainerSanityTests.cs" />
-    <Compile Include="Infrastructure\ServiceDiscovererTests.cs" />
-    <Compile Include="Infrastructure\Services\Services.cs" />
-    <Compile Include="Infrastructure\ServiceContainerTests.cs" />
+    <Compile Include="Infrastructure\DependencyManagement\ContainerSanityTests.cs" />
+    <Compile Include="Infrastructure\DependencyManagement\ServiceDiscovererTests.cs" />
+    <Compile Include="Infrastructure\DependencyManagement\Services\Services.cs" />
+    <Compile Include="Infrastructure\DependencyManagement\ServiceContainerTests.cs" />
     <Compile Include="Infrastructure\SingletonTests.cs" />
     <Compile Include="Infrastructure\TypeFinderTests.cs" />
     <Compile Include="Plugin\PlugIn1.cs" />

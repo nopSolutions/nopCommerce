@@ -1,7 +1,7 @@
 ﻿@model IList<Nop.Core.Domain.Catalog.Category>
 @using Telerik.Web.Mvc.UI;
 @{
-    var categoryService = Nop.Core.Context.Current.Resolve<Nop.Services.Catalog.ICategoryService>();
+    var categoryService = EngineContext.Current.Resolve<Nop.Services.Catalog.ICategoryService>();
 }
 <div class="section-header">
     <div class="title">

@@ -158,6 +158,7 @@ namespace Nop.Data
                                };
             //insert default sting resources (temporary solution). Requires some performance optimization
             //TODO find better way to insert default locale string resources
+            //TODO use IStorageProvider instead of HostingEnvironment.MapPath
             foreach (var resFile in Directory.EnumerateFiles(HostingEnvironment.MapPath("~/App_Data/"), "*.nopres.xml"))
             {
                 var resXml = new XmlDocument();

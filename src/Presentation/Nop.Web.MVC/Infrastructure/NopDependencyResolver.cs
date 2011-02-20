@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.MVC.Infrastructure
 {
@@ -13,7 +14,7 @@ namespace Nop.Web.MVC.Infrastructure
         {
             try
             {
-                return Core.Context.Current.Resolve(serviceType);
+                return EngineContext.Current.Resolve(serviceType);
             }
             catch
             {
@@ -26,7 +27,7 @@ namespace Nop.Web.MVC.Infrastructure
             try
             {
                 var type = typeof(IEnumerable<>).MakeGenericType(serviceType);
-                return (IEnumerable<object>)Core.Context.Current.Resolve(type);
+                return (IEnumerable<object>)EngineContext.Current.Resolve(type);
             }
             catch
             {

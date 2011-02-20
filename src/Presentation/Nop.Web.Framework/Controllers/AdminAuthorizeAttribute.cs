@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Controllers
 {
@@ -15,7 +16,7 @@ namespace Nop.Web.Framework.Controllers
         {
             bool isAdmin = false;
             //TODO inject IWorkContext
-            var workContext = Nop.Core.Context.Current.Resolve<IWorkContext>();
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var user = workContext.CurrentCustomer;
             if (user != null)
             {

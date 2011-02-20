@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Web.Mvc;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -165,7 +166,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var model = _categoryService.GetProductCategoriesByCategoryId(id, true).Select(x => new CategoryProductModel(x)).ToList();
 
             //TODO:Take out test products
-            var products = Core.Context.Current.Resolve<IProductService>().GetAllProducts(true);
+            var products = EngineContext.Current.Resolve<IProductService>().GetAllProducts(true);
             model.Add(new CategoryProductModel {Id = 234, ProductId = products[0].Id});
 
             return View(model);

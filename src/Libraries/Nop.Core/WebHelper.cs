@@ -197,5 +197,45 @@ namespace Nop.Core
 
             return result.ToLowerInvariant();
         }
+        
+        /// <summary>Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.</summary>
+        /// <param name="application">HTTP Application</param>
+        /// <returns>True if the request targets a static resource file.</returns>
+        /// <remarks>
+        /// These are the file extensions considered to be static resources:
+        /// .css
+        ///	.gif
+        /// .png 
+        /// .jpg
+        /// .jpeg
+        /// .js
+        /// .axd
+        /// .ashx
+        /// </remarks>
+        public static bool IsStaticResource(HttpApplication application)
+        {
+            if (application == null)
+                throw new ArgumentNullException("application");
+
+            string path = application.Request.Path;
+            string extension = VirtualPathUtility.GetExtension(path);
+
+            if (extension == null) return false;
+
+            switch (extension.ToLower())
+            {
+                case ".css":
+                case ".gif":
+                case ".png":
+                case ".jpg":
+                case ".jpeg":
+                case ".js":
+                case ".axd":
+                case ".ashx":
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

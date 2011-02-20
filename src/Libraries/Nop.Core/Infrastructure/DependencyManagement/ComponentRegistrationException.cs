@@ -4,10 +4,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Core.Infrastructure.DependencyManagement
 {
     [Serializable]
-    public class ComponentRegistrationException : Exception
+    public class ComponentRegistrationException : NopException
     {
         public ComponentRegistrationException(string serviceName)
             : base(String.Format("Component {0} could not be found but is registered in the Nop/engine/components section", serviceName))

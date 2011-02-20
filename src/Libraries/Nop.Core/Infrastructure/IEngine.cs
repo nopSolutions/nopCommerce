@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Autofac;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Web;
 
 namespace Nop.Core.Infrastructure
@@ -32,12 +33,5 @@ namespace Nop.Core.Infrastructure
         Array ResolveAll(Type serviceType);
 
         T[] ResolveAll<T>();
-    }
-
-    public enum ComponentLifeStyle
-    {
-        Singleton = 0,
-        Transient = 1,
-        LifetimeScope
     }
 }

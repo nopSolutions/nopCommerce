@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 
@@ -13,7 +14,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         {
             base.InitHelpers();
 
-            _localizationService = Core.Context.Current.Resolve<ILocalizationService>();
+            _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
         }
 
         public Localizer T

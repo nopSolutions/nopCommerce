@@ -13,7 +13,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.AutoFac;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Data;
 using Nop.Services;
 using Nop.Services.Catalog;

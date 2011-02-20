@@ -30,8 +30,12 @@ namespace Nop.Core.Plugins
         static PluginManager()
         {
             //UNDONE HostingEnvironment doesn't support mocking (required for unit testing)
-            PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
-            ShadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
+            //We should use IStorageProvider
+            if (HostingEnvironment.IsHosted)
+            {
+                PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
+                ShadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
+            }
         }
 
         /// <summary>

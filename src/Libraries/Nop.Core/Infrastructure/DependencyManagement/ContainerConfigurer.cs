@@ -5,7 +5,7 @@ using System.Text;
 using Nop.Core.Configuration;
 using Nop.Core.Web;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Core.Infrastructure.DependencyManagement
 {
     /// <summary>
     /// Configures the inversion of control container with services used by Nop.

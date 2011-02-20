@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework
 {
@@ -20,8 +21,7 @@ namespace Nop.Web.Framework
             var builder = new TagBuilder("img");
 
             // Add attributes
-            var resource =
-                Core.Context.Current.Resolve<Services.Localization.ILocalizationService>().GetResource(
+            var resource = EngineContext.Current.Resolve<Services.Localization.ILocalizationService>().GetResource(
                     resourceName);
             builder.MergeAttribute("src", ResolveUrl(helper, "/Areas/Admin/Content/images/ico-help.gif"));
             builder.MergeAttribute("alt", resource);

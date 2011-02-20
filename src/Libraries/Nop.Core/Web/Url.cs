@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Web
 {
@@ -635,7 +636,7 @@ namespace Nop.Core.Web
             get
             {
                 // we need get the server url of current request, it can't be cached in multiple-sites environment 
-                var webContext = Context.Current.RequestContext;
+                var webContext = EngineContext.Current.RequestContext;
                 if (webContext == null)
                     return null;
                 if (webContext.IsWeb)

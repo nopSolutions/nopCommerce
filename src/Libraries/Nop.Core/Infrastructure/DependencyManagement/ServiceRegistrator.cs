@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Core.Infrastructure.DependencyManagement
 {
     /// <summary>
     /// Registers service in the Nop inversion of container upon start.

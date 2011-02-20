@@ -54,17 +54,17 @@ namespace Nop.Web.MVC
         protected void RegisterDefaultPermissions()
         {
             //register permissions
-            var permissionProviders = Core.Context.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+            var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
             foreach (var providerType in permissionProviders)
             {
                 dynamic provider = Activator.CreateInstance(providerType);
-                Core.Context.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
             }
         }
 
         protected void RegisterServiceLocator()
         {
-            var serviceLocator = new AutofacServiceLocator(Core.Context.Current.ContainerManager.Scope());
+            var serviceLocator = new AutofacServiceLocator(EngineContext.Current.ContainerManager.Scope());
             ServiceLocator.SetLocatorProvider(() => serviceLocator);
         }
 

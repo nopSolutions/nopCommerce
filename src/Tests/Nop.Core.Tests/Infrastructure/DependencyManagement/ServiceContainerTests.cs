@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.AutoFac;
 using Nop.Core.Plugins;
-using Nop.Core.Tests.Infrastructure.Services;
 using NUnit.Framework;
 
-namespace Nop.Core.Tests.Infrastructure
+namespace Nop.Core.Tests.Infrastructure.DependencyManagement
 {
     //[TestFixture]
     //public class AutoFacServiceContainerTests : ServiceContainerTests

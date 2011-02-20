@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Autofac;
 
-namespace Nop.Core.Infrastructure.AutoFac
+namespace Nop.Core.Infrastructure.DependencyManagement
 {
     public interface IDependencyRegistar
     {

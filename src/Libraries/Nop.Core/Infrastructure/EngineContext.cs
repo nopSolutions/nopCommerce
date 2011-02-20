@@ -10,12 +10,12 @@ using System.Web.Configuration;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Core
+namespace Nop.Core.Infrastructure
 {
     /// <summary>
     /// Provides access to the singleton instance of the Nop engine.
     /// </summary>
-    public class Context
+    public class EngineContext
     {
         #region Initialization Methods
         /// <summary>Initializes a static instance of the Nop factory.</summary>

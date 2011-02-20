@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using Autofac;
 
-namespace Nop.Core.Infrastructure
+namespace Nop.Core.Infrastructure.DependencyManagement
 {
     /// <summary>
     /// An <see cref="IHttpModule"/> and <see cref="ILifetimeScopeProvider"/> implementation 
