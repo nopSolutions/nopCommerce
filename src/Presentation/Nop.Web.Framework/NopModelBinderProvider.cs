@@ -8,7 +8,7 @@ using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Web.Framework
 {
-    [Service(typeof(IModelBinderProvider))]
+    [Dependency(typeof(IModelBinderProvider))]
     public class NopModelBinderProvider : IModelBinderProvider
     {
         public IModelBinder GetBinder(Type modelType)

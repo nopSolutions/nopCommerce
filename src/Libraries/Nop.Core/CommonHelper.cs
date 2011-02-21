@@ -168,18 +168,28 @@ namespace Nop.Core
         /// <returns>The converted value.</returns>
         public static object To(object value, Type destinationType)
         {
+            return To(value, destinationType, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>Converts a value to a destination type.</summary>
+        /// <param name="value">The value to convert.</param>
+        /// <param name="destinationType">The type to convert the value to.</param>
+        /// <param name="culture">Culture</param>
+        /// <returns>The converted value.</returns>
+        public static object To(object value, Type destinationType, CultureInfo culture)
+        {
             if (value != null)
             {
                 TypeConverter destinationConverter = TypeDescriptor.GetConverter(destinationType);
                 TypeConverter sourceConverter = TypeDescriptor.GetConverter(value.GetType());
                 if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
-                    return destinationConverter.ConvertFrom(value);
+                    return destinationConverter.ConvertFrom(null, culture, value);
                 if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
-                    return sourceConverter.ConvertTo(value, destinationType);
+                    return sourceConverter.ConvertTo(null, culture, value, destinationType);
                 if (destinationType.IsEnum && value is int)
                     return Enum.ToObject(destinationType, (int)value);
                 if (!destinationType.IsAssignableFrom(value.GetType()))
-                    return System.Convert.ChangeType(value, destinationType);
+                    return Convert.ChangeType(value, destinationType, culture);
             }
             return value;
         }
@@ -190,6 +200,7 @@ namespace Nop.Core
         /// <returns>The converted value.</returns>
         public static T To<T>(object value)
         {
+            //return (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
             return (T)To(value, typeof(T));
         }
     }
