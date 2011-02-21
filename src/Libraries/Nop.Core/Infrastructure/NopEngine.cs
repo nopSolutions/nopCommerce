@@ -84,6 +84,13 @@ namespace Nop.Core.Infrastructure
             }
         }
 
+        private void StartScheduledTasks()
+        {
+            //initialize task manager
+            TaskManager.Instance.Initialize(NopConfig.ScheduleTasks);
+            TaskManager.Instance.Start();
+        }
+
         private void InitializeContainer(ContainerConfigurer configurer, EventBroker broker, ConfigurationManagerWrapper config)
         {
             var builder = new ContainerBuilder();
@@ -100,6 +107,9 @@ namespace Nop.Core.Infrastructure
 
         public void Initialize()
         {
+            //nop config
+            NopConfig.Init();
+
             //plugins
             InitPlugins();
 
@@ -108,6 +118,9 @@ namespace Nop.Core.Infrastructure
 
             //startup tasks
             RunStartupTasks();
+
+            //scheduled tasks
+            StartScheduledTasks();
         }
 
         public T Resolve<T>() where T : class

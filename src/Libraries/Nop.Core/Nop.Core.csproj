@@ -91,6 +91,7 @@
     <Compile Include="Configuration\InterfacePluginCollection.cs" />
     <Compile Include="Configuration\InterfacePluginElement.cs" />
     <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Configuration\NopConfig.cs" />
     <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\Permissions\DefaultPermissionRecord.cs" />
     <Compile Include="Domain\Security\Permissions\PermissionRecord.cs" />
@@ -220,6 +221,10 @@
     <Compile Include="Plugins\PluginAttribute.cs" />
     <Compile Include="Plugins\PluginBootstrapper.cs" />
     <Compile Include="Tasks\IStartupTask.cs" />
+    <Compile Include="Tasks\ITask.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\TaskManager.cs" />
+    <Compile Include="Tasks\TaskThread.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="Domain\Customers\Customer.cs" />
     <Compile Include="Domain\Localization\Language.cs" />

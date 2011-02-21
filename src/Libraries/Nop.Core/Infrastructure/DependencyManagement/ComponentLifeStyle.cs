@@ -9,6 +9,6 @@ namespace Nop.Core.Infrastructure.DependencyManagement
     {
         Singleton = 0,
         Transient = 1,
-        LifetimeScope
+        LifetimeScope = 2
     }
 }

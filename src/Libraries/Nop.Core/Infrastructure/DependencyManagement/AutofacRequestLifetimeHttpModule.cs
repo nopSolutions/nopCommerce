@@ -37,10 +37,16 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         /// <returns>A new or existing nested lifetime scope.</returns>
         public static ILifetimeScope GetLifetimeScope(ILifetimeScope container, Action<ContainerBuilder> configurationAction)
         {
-            if (HttpContext.Current == null)
-                throw new InvalidOperationException("HttpContextNotAvailable");
-
-            return LifetimeScope ?? (LifetimeScope = InitializeLifetimeScope(configurationAction, container));
+            //little hack here to get dependencies when HttpContext is not available
+            if (HttpContext.Current != null)
+            {
+                return LifetimeScope ?? (LifetimeScope = InitializeLifetimeScope(configurationAction, container));
+            }
+            else
+            {
+                //throw new InvalidOperationException("HttpContextNotAvailable");
+                return InitializeLifetimeScope(configurationAction, container);
+            }
         }
 
         /// <summary>
@@ -52,8 +58,14 @@ namespace Nop.Core.Infrastructure.DependencyManagement
 
         static ILifetimeScope LifetimeScope
         {
-            get { return (ILifetimeScope)HttpContext.Current.Items[typeof(ILifetimeScope)]; }
-            set { HttpContext.Current.Items[typeof(ILifetimeScope)] = value; }
+            get 
+            {
+                return (ILifetimeScope)HttpContext.Current.Items[typeof(ILifetimeScope)]; 
+            }
+            set 
+            { 
+                HttpContext.Current.Items[typeof(ILifetimeScope)] = value; 
+            }
         }
 
         static void ContextEndRequest(object sender, EventArgs e)

@@ -53,7 +53,8 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();
 
 
-            //http context
+            //Source code from AutofacWebTypesModule class.
+            //It can be replaced with the following code: builder.RegisterModule(new AutofacWebTypesModule());
             builder.Register(c => new HttpContextWrapper(HttpContext.Current))
                 .As<HttpContextBase>()
                 .InstancePerHttpRequest();

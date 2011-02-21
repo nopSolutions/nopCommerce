@@ -124,6 +124,7 @@
     <Compile Include="Shipping\IShippingRateComputationMethod.cs" />
     <Compile Include="Shipping\ShippingRateComputationMethodType.cs" />
     <Compile Include="Shipping\ShippingService.cs" />
+    <Compile Include="Tasks\TestTask1.cs" />
     <Compile Include="Tax\CalculateTaxRequest.cs" />
     <Compile Include="Tax\CalculateTaxResult.cs" />
     <Compile Include="Tax\ITaxCategoryService.cs" />
