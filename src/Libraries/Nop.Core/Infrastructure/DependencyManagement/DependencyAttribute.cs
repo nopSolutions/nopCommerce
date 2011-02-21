@@ -9,14 +9,14 @@ namespace Nop.Core.Infrastructure.DependencyManagement
     /// Markes a service that is registered in automatically registered in Nop's inversion of control container.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class ServiceAttribute : Attribute
+    public class DependencyAttribute : Attribute
     {
-        public ServiceAttribute(ComponentLifeStyle lifeStyle = ComponentLifeStyle.Singleton)
+        public DependencyAttribute(ComponentLifeStyle lifeStyle = ComponentLifeStyle.Singleton)
         {
             LifeStyle = lifeStyle;
         }
 
-        public ServiceAttribute(Type serviceType, ComponentLifeStyle lifeStyle = ComponentLifeStyle.Singleton)
+        public DependencyAttribute(Type serviceType, ComponentLifeStyle lifeStyle = ComponentLifeStyle.Singleton)
         {
             LifeStyle = lifeStyle;
             ServiceType = serviceType;
@@ -33,7 +33,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         /// <summary>Configurations for which this service is registered.</summary>
         public string Configuration { get; set; }
 
-        public virtual void RegisterService(AttributeInfo<ServiceAttribute> attributeInfo, ContainerManager container)
+        public virtual void RegisterService(AttributeInfo<DependencyAttribute> attributeInfo, ContainerManager container)
         {
             Type serviceType = attributeInfo.Attribute.ServiceType ?? attributeInfo.DecoratedType;
             container.AddComponent(serviceType, attributeInfo.DecoratedType,

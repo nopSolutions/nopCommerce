@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using Autofac;
@@ -24,44 +25,17 @@ namespace Nop.Core.Infrastructure
         /// <summary>
 		/// Creates an instance of the content engine using default settings and configuration.
 		/// </summary>
-		public NopEngine()
+		public NopEngine() 
             : this(EventBroker.Instance, new ContainerConfigurer())
 		{
 		}
 
 		public NopEngine(EventBroker broker, ContainerConfigurer configurer)
 		{
-            InitializeContainer(configurer, broker, new ConfigurationManagerWrapper());
+            var config = ConfigurationManager.GetSection("NopConfig") as NopConfig;
+            InitializeContainer(configurer, broker, config);
 		}
-
-        public NopEngine(System.Configuration.Configuration config, string sectionGroup, EventBroker broker, ContainerConfigurer configurer)
-		{
-			if (config == null) throw new ArgumentNullException("config");
-			if (string.IsNullOrEmpty(sectionGroup)) throw new ArgumentException("Must be non-empty and match a section group in the configuration file.", "sectionGroup");
-
-            InitializeContainer(configurer, broker, new ConfigurationReadingWrapper(config, sectionGroup));
-		}
-
-        #endregion
-
-        #region Classes
-
-        private class ConfigurationReadingWrapper : ConfigurationManagerWrapper
-		{
-			System.Configuration.Configuration config;
-
-			public ConfigurationReadingWrapper(System.Configuration.Configuration config, string sectionGroup)
-				: base(sectionGroup)
-			{
-				this.config = config;
-			}
-
-			public override T GetSection<T>(string sectionName)
-			{
-				return config.GetSection(sectionName) as T;
-			}
-		}
-
+        
         #endregion
 
         #region Utilities
@@ -84,7 +58,14 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        private void InitializeContainer(ContainerConfigurer configurer, EventBroker broker, ConfigurationManagerWrapper config)
+        private void StartScheduledTasks(NopConfig config)
+        {
+            //initialize task manager
+            TaskManager.Instance.Initialize(config.ScheduleTasks);
+            TaskManager.Instance.Start();
+        }
+
+        private void InitializeContainer(ContainerConfigurer configurer, EventBroker broker, NopConfig config)
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new StartableModule<IAutoStart>(s => s.Start()));
@@ -98,16 +79,19 @@ namespace Nop.Core.Infrastructure
 
         #region Methods
 
-        public void Initialize()
+        public void Initialize(NopConfig config)
         {
             //plugins
             InitPlugins();
 
             //start components
-            ContainerManager.StartComponents();
+            this.ContainerManager.StartComponents();
 
             //startup tasks
             RunStartupTasks();
+
+            //scheduled tasks
+            StartScheduledTasks(config);
         }
 
         public T Resolve<T>() where T : class

@@ -22,12 +22,12 @@ namespace Nop.Core.Infrastructure
             this._webHelper = webHelper;
         }
 
-        public WebAppTypeFinder(IWebHelper webHelper, EngineSection engineConfiguration)
+        public WebAppTypeFinder(IWebHelper webHelper, NopConfig config)
         {
             this._webHelper = webHelper;
-            this.ensureBinFolderAssembliesLoaded = engineConfiguration.DynamicDiscovery;
-            foreach (var assembly in engineConfiguration.Assemblies.AllElements)
-                AssemblyNames.Add(assembly.Assembly);
+            this.ensureBinFolderAssembliesLoaded = config.DynamicDiscovery;
+            //foreach (var assembly in config.Assemblies.AllElements)
+            //    AssemblyNames.Add(assembly.Assembly);
         }
 
         #region Properties

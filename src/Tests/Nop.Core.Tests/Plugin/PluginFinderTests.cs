@@ -113,16 +113,16 @@ namespace Nop.Core.Tests.Plugin
         //    Assert.That(plugins.Count(), Is.EqualTo(initialCount - 1), "Found unexpected items, e.g.:" + plugins.FirstOrDefault());
         //}
 
-        EngineSection CreateEngineSection(InterfacePluginElement[] removedElements)
-        {
-            return new EngineSection
-            {
-                InterfacePlugins = new InterfacePluginCollection
-                {
-                    RemovedElements = removedElements
-                }
-            };
-        }
+        //EngineSection CreateEngineSection(InterfacePluginElement[] removedElements)
+        //{
+        //    return new EngineSection
+        //    {
+        //        InterfacePlugins = new InterfacePluginCollection
+        //        {
+        //            RemovedElements = removedElements
+        //        }
+        //    };
+        //}
 
         
     }
