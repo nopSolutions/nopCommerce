@@ -1,40 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
+using Nop.Services.Localization;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Localization;
 using Telerik.Web.Mvc.UI;
+
 
 namespace Nop.Web.MVC.Areas.Admin.Models
 {
     public class CategoryModel : BaseNopModel
     {
-
         public CategoryModel()
         {
             if (PageSize < 1)
             {
                 PageSize = 5;
             }
-        }
-
-
-        public void Update(Category category)
-        {
-            category.Name = Name;
-            category.Description = HttpUtility.HtmlDecode(Description);
-            category.MetaKeywords = MetaKeywords;
-            category.MetaDescription = MetaDescription;
-            category.MetaTitle = MetaTitle;
-            category.SeName = SeName;
-            category.ParentCategoryId = ParentCategoryId;
-            //category.PictureId = PictureId;
-            category.PageSize = PageSize;
-            category.PriceRanges = PriceRanges;
-            category.ShowOnHomePage = ShowOnHomePage;
-            category.Published = Published;
-            //category.Deleted = Deleted;
-            category.DisplayOrder = DisplayOrder;
+            Localized = new LocalizedModels<CategoryLocalizedModel>();
         }
 
         #region Model
@@ -77,8 +63,16 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         public bool Published { get; set; }
         public bool Deleted { get; set; }
         public int DisplayOrder { get; set; }
+        public LocalizedModels<CategoryLocalizedModel> Localized { get; set; }
 
         #endregion
+
+        public override void BindModel(System.Web.Mvc.ControllerContext controllerContext, System.Web.Mvc.ModelBindingContext bindingContext)
+        {
+            foreach (var item in controllerContext.RequestContext.HttpContext.Request.Form.AllKeys)
+            {
+            }
+        }
 
         public IList<DropDownItem> ParentCategories
         {
@@ -93,5 +87,12 @@ namespace Nop.Web.MVC.Areas.Admin.Models
                 return parentCategories;
             }
         }
+    }
+
+    public class CategoryLocalizedModel : ILocalizedModel
+    {
+        public Core.Domain.Localization.Language Language { get; set; }
+        public string Name { get; set; }
+        public string Description {get;set;}
     }
 }

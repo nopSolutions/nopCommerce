@@ -56,15 +56,22 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Telerik.Web.Mvc">
+      <HintPath>..\..\packages\TelerikMvcExtensions.2010.3.1318\lib\net40\Telerik.Web.Mvc.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseNopModel.cs" />
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
     <Compile Include="HtmlExtensions.cs" />
+    <Compile Include="Localization\ILocalizedModel.cs" />
+    <Compile Include="Localization\LocalizedModels.cs" />
+    <Compile Include="Localization\LocalizedPropertyBinder.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="NopModelBinder.cs" />
+    <Compile Include="NopModelBinderProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
   </ItemGroup>

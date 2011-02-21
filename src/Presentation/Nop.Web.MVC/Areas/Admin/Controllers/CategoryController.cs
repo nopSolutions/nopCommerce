@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Catalog;
@@ -12,6 +14,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
+using Nop.Services.Localization;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
@@ -20,14 +23,17 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly IPermissionService _permissionService;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizedEntityService _localizedEntityService;
 
         public CategoryController(ICategoryService categoryService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
         {
             _categoryService = categoryService;
             _permissionService = permissionService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
         }
-
        
         #region Create
 
@@ -40,8 +46,9 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         public ActionResult Create(CategoryModel model)
         {
             var category = new Category();
-            model.Update(category);
+            UpdateInstance(category, model);
             _categoryService.InsertCategory(category);
+            UpdateLocales(category, model);
             return RedirectToAction("Edit", new { id = category.Id });
         }
 
@@ -54,6 +61,14 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var category = _categoryService.GetCategoryById(id);
             if (category == null) throw new ArgumentException("No category found with the specified id", "id");
             var model = new CategoryModel(category, _categoryService);
+            foreach (var language in _languageService.GetAllLanguages())
+            {
+                var localizedModel = new CategoryLocalizedModel();
+                localizedModel.Language = language;
+                localizedModel.Description = category.GetLocalized(x => x.Description, language.Id, false);
+                localizedModel.Name = category.GetLocalized(x => x.Name, language.Id, false);
+                model.Localized.Add(language.Id, localizedModel);
+            }
             return View(model);
         }
 
@@ -61,8 +76,9 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         public ActionResult Edit(CategoryModel categoryModel)
         {
             var category = _categoryService.GetCategoryById(categoryModel.Id);
-            categoryModel.Update(category);
+            UpdateInstance(category, categoryModel);
             _categoryService.UpdateCategory(category);
+            UpdateLocales(category, categoryModel);
             return Edit(category.Id);
         }
 
@@ -178,6 +194,45 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             categories.Insert(0, new Category {Name = "[None]", Id = 0});
             var selectList = new SelectList(categories, "Id", "Name", selectedId);
             return new JsonResult { Data = selectList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        public void UpdateInstance(Category category, CategoryModel model)
+        {
+            category.Name = model.Name;
+            category.Description = HttpUtility.HtmlDecode(model.Description);
+            category.MetaKeywords = model.MetaKeywords;
+            category.MetaDescription = model.MetaDescription;
+            category.MetaTitle = model.MetaTitle;
+            category.SeName = model.SeName;
+            category.ParentCategoryId = model.ParentCategoryId;
+            //category.PictureId = model.PictureId;
+            category.PageSize = model.PageSize;
+            category.PriceRanges = model.PriceRanges;
+            category.ShowOnHomePage = model.ShowOnHomePage;
+            category.Published = model.Published;
+            //category.Deleted = model.Deleted;
+            category.DisplayOrder = model.DisplayOrder;
+        }
+
+        public void UpdateLocales(Category category, CategoryModel model)
+        {
+            foreach (var localized in model.Localized)
+            {
+                if (!string.IsNullOrEmpty(localized.Value.Name))
+                {
+                    _localizedEntityService.SaveLocalizedValue(category,
+                                                               x => x.Name,
+                                                               localized.Value.Name,
+                                                               localized.Key);
+                }
+                if (!string.IsNullOrEmpty(localized.Value.Description))
+                {
+                    _localizedEntityService.SaveLocalizedValue(category,
+                                                               x => x.Description,
+                                                               HttpUtility.HtmlDecode(localized.Value.Description),
+                                                               localized.Key);
+                }
+            }
         }
     }
 }

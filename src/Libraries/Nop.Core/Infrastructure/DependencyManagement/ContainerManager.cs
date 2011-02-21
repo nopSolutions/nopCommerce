@@ -167,14 +167,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             switch (lifeStyle)
             {
                 case ComponentLifeStyle.LifetimeScope:
-                    if (HttpContext.Current != null)
-                    {
-                        return builder.InstancePerHttpRequest();
-                    }
-                    else
-                    {
-                        return builder.InstancePerLifetimeScope();
-                    }
+                    return HttpContext.Current != null ? builder.InstancePerHttpRequest() : builder.InstancePerLifetimeScope();
                 case ComponentLifeStyle.Transient:
                     return builder.InstancePerDependency();
                 case ComponentLifeStyle.Singleton:
