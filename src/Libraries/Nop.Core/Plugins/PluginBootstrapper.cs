@@ -16,18 +16,18 @@ namespace Nop.Core.Plugins
     public class PluginBootstrapper : IPluginBootstrapper
     {
         private readonly ITypeFinder typeFinder;
-        public IEnumerable<PluginInitializerElement> addedInitializers = new PluginInitializerElement[0];
-        public IEnumerable<PluginInitializerElement> removedInitializers = new PluginInitializerElement[0];
+        //public IEnumerable<PluginInitializerElement> addedInitializers = new PluginInitializerElement[0];
+        //public IEnumerable<PluginInitializerElement> removedInitializers = new PluginInitializerElement[0];
 
         public PluginBootstrapper(ITypeFinder typeFinder)
         {
             this.typeFinder = typeFinder;
         }
-        public PluginBootstrapper(ITypeFinder typeFinder, EngineSection config)
+        public PluginBootstrapper(ITypeFinder typeFinder, NopConfig config)
             : this(typeFinder)
         {
-            addedInitializers = config.PluginInitializers.AllElements;
-            removedInitializers = config.PluginInitializers.RemovedElements;
+            //addedInitializers = config.PluginInitializers.AllElements;
+            //removedInitializers = config.PluginInitializers.RemovedElements;
         }
 
         /// <summary>Gets plugins in the current app domain using the type finder.</summary>
@@ -59,20 +59,20 @@ namespace Nop.Core.Plugins
             }
 
             // configured plugins
-            foreach (PluginInitializerElement configElement in addedInitializers)
-            {
-                Type pluginType = Type.GetType(configElement.Type);
-                if (pluginType == null)
-                    throw new Exception(string.Format("Could not find the configured plugin initializer type '{0}'", configElement.Type));
-                if (typeof(IPluginDefinition).IsAssignableFrom(pluginType))
-                    throw new Exception(string.Format("The configured plugin initializer type '{0}' is not a valid plugin initializer since it doesn't implement the IPluginDefinition interface.", configElement.Type));
+            //foreach (PluginInitializerElement configElement in addedInitializers)
+            //{
+            //    Type pluginType = Type.GetType(configElement.Type);
+            //    if (pluginType == null)
+            //        throw new Exception(string.Format("Could not find the configured plugin initializer type '{0}'", configElement.Type));
+            //    if (typeof(IPluginDefinition).IsAssignableFrom(pluginType))
+            //        throw new Exception(string.Format("The configured plugin initializer type '{0}' is not a valid plugin initializer since it doesn't implement the IPluginDefinition interface.", configElement.Type));
 
-                PluginAttribute plugin = new PluginAttribute();
-                plugin.Name = configElement.Name;
-                plugin.InitializerType = pluginType;
-                plugin.Title = "Configured plugin " + configElement.Name;
-                pluginDefinitions.Add(plugin);
-            }
+            //    PluginAttribute plugin = new PluginAttribute();
+            //    plugin.Name = configElement.Name;
+            //    plugin.InitializerType = pluginType;
+            //    plugin.Title = "Configured plugin " + configElement.Name;
+            //    pluginDefinitions.Add(plugin);
+            //}
 
             return pluginDefinitions;
         }
@@ -109,13 +109,13 @@ namespace Nop.Core.Plugins
 
         private bool IsRemoved(Type pluginType)
         {
-            foreach (PluginInitializerElement configElement in removedInitializers)
-            {
-                if (configElement.Name == pluginType.Name)
-                    return true;
-                if (!string.IsNullOrEmpty(configElement.Type) && Type.GetType(configElement.Type) == pluginType)
-                    return true;
-            }
+            //foreach (PluginInitializerElement configElement in removedInitializers)
+            //{
+            //    if (configElement.Name == pluginType.Name)
+            //        return true;
+            //    if (!string.IsNullOrEmpty(configElement.Type) && Type.GetType(configElement.Type) == pluginType)
+            //        return true;
+            //}
             return false;
         }
     }

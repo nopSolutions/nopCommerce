@@ -18,13 +18,13 @@ namespace Nop.Core.Plugins
     {
         private IList<IPlugin> plugins = null;
         private readonly ITypeFinder typeFinder;
-        public IEnumerable<InterfacePluginElement> addedPlugins = new InterfacePluginElement[0];
-        public IEnumerable<InterfacePluginElement> removedPlugins = new InterfacePluginElement[0];
+        //public IEnumerable<InterfacePluginElement> addedPlugins = new InterfacePluginElement[0];
+        //public IEnumerable<InterfacePluginElement> removedPlugins = new InterfacePluginElement[0];
 
-        public PluginFinder(ITypeFinder typeFinder, EngineSection config)
+        public PluginFinder(ITypeFinder typeFinder, NopConfig config)
         {
-            addedPlugins = config.InterfacePlugins.AllElements;
-            removedPlugins = config.InterfacePlugins.RemovedElements;
+            //addedPlugins = config.InterfacePlugins.AllElements;
+            //removedPlugins = config.InterfacePlugins.RemovedElements;
             this.typeFinder = typeFinder;
             this.plugins = FindPlugins();
         }
@@ -77,11 +77,11 @@ namespace Nop.Core.Plugins
 
         private bool IsRemoved(IPlugin plugin)
         {
-            foreach (InterfacePluginElement configElement in removedPlugins)
-            {
-                if (plugin.Name == configElement.Name)
-                    return true;
-            }
+            //foreach (InterfacePluginElement configElement in removedPlugins)
+            //{
+            //    if (plugin.Name == configElement.Name)
+            //        return true;
+            //}
             return false;
         }
 

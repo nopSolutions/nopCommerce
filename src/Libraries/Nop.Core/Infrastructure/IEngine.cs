@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Autofac;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core.Infrastructure
@@ -20,7 +21,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Initialize components and plugins in the nop environment.
         /// </summary>
-        void Initialize();
+        void Initialize(NopConfig config);
 
         T Resolve<T>() where T : class;
 

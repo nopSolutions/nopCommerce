@@ -25,10 +25,11 @@ namespace Nop.Core.Infrastructure
         {
             if (Singleton<IEngine>.Instance == null || forceRecreate)
             {
+                var config = ConfigurationManager.GetSection("NopConfig") as NopConfig;
                 Debug.WriteLine("Constructing engine " + DateTime.Now);
-                Singleton<IEngine>.Instance = CreateEngineInstance();
+                Singleton<IEngine>.Instance = CreateEngineInstance(config);
                 Debug.WriteLine("Initializing engine " + DateTime.Now);
-                Singleton<IEngine>.Instance.Initialize();
+                Singleton<IEngine>.Instance.Initialize(config);
             }
             return Singleton<IEngine>.Instance;
         }
@@ -40,29 +41,15 @@ namespace Nop.Core.Infrastructure
         {
             Singleton<IEngine>.Instance = engine;
         }
-
-        private static System.Configuration.Configuration GetConfiguration()
+        
+        /// <summary>
+        /// Creates a factory instance and adds a http application injecting facility.
+        /// </summary>
+        /// <returns>A new factory</returns>
+        public static IEngine CreateEngineInstance(NopConfig config)
         {
             try
             {
-                return System.Web.Hosting.HostingEnvironment.IsHosted
-                    ? WebConfigurationManager.OpenWebConfiguration("~")
-                    : ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceWarning("Error reading configuration. This has happened when running a web site project in a virtual directory (reason unknown). " + ex);
-                return null;
-            }
-        }
-
-        /// <summary>Creates a factory instance and adds a http application injecting facility.</summary>
-        /// <returns>A new factory.</returns>
-        public static IEngine CreateEngineInstance()
-        {
-            try
-            {
-                var config = ConfigurationManager.GetSection("nop/engine") as EngineSection;
                 if (config != null && !string.IsNullOrEmpty(config.EngineType))
                 {
                     var engineType = Type.GetType(config.EngineType);

@@ -121,91 +121,91 @@ namespace Nop.Core.Tests.Plugin
             Assert.That(ex.Message.Contains("ThrowingPlugin2 is really mad."));
         }
 
-        [Test]
-        public void AssemblyDefined_PluginInitializers_CanBeRemoved_ByName()
-        {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn1) });
+        //[Test]
+        //public void AssemblyDefined_PluginInitializers_CanBeRemoved_ByName()
+        //{
+        //    ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn1) });
 
-            EngineSection config = CreateConfiguration(null, new[]
-			{
-				new PluginInitializerElement { Name = typeof(PlugIn1).Name }
-			});
-            PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
-            invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
+        //    EngineSection config = CreateConfiguration(null, new[]
+        //    {
+        //        new PluginInitializerElement { Name = typeof(PlugIn1).Name }
+        //    });
+        //    PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
+        //    invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
 
-            Assert.That(PlugIn1.WasInitialized, Is.False);
-        }
+        //    Assert.That(PlugIn1.WasInitialized, Is.False);
+        //}
 
-        [Test]
-        public void AssemblyDefined_PluginInitializers_CanBeRemoved_ByType()
-        {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn1) });
+        //[Test]
+        //public void AssemblyDefined_PluginInitializers_CanBeRemoved_ByType()
+        //{
+        //    ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn1) });
 
-            EngineSection config = CreateConfiguration(null, new[]
-			{
-				new PluginInitializerElement { Name = "ignored", Type = typeof(PlugIn1).AssemblyQualifiedName }
-			});
-            PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
-            invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
+        //    EngineSection config = CreateConfiguration(null, new[]
+        //    {
+        //        new PluginInitializerElement { Name = "ignored", Type = typeof(PlugIn1).AssemblyQualifiedName }
+        //    });
+        //    PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
+        //    invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
 
-            Assert.That(PlugIn1.WasInitialized, Is.False);
-        }
+        //    Assert.That(PlugIn1.WasInitialized, Is.False);
+        //}
 
-        [Test]
-        public void AutoInitialized_PluginInitializers_CanBeRemoved_UsingConfiguration_ByName()
-        {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn2) });
+        //[Test]
+        //public void AutoInitialized_PluginInitializers_CanBeRemoved_UsingConfiguration_ByName()
+        //{
+        //    ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn2) });
 
-            EngineSection config = CreateConfiguration(null, new[]
-			{
-				new PluginInitializerElement { Name = typeof(PlugIn2).Name }
-			});
-            PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
-            invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
+        //    EngineSection config = CreateConfiguration(null, new[]
+        //    {
+        //        new PluginInitializerElement { Name = typeof(PlugIn2).Name }
+        //    });
+        //    PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
+        //    invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
 
-            Assert.That(PlugIn2.WasInitialized, Is.False);
-        }
+        //    Assert.That(PlugIn2.WasInitialized, Is.False);
+        //}
 
-        [Test]
-        public void AutoInitialized_PluginInitializers_CanBeRemoved_UsingConfiguration_ByType()
-        {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn2) });
+        //[Test]
+        //public void AutoInitialized_PluginInitializers_CanBeRemoved_UsingConfiguration_ByType()
+        //{
+        //    ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn2) });
 
-            EngineSection config = CreateConfiguration(null, new[]
-			{
-				new PluginInitializerElement { Name = "ignored", Type = typeof(PlugIn2).AssemblyQualifiedName }
-			});
-            PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
-            invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
+        //    EngineSection config = CreateConfiguration(null, new[]
+        //    {
+        //        new PluginInitializerElement { Name = "ignored", Type = typeof(PlugIn2).AssemblyQualifiedName }
+        //    });
+        //    PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
+        //    invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
 
-            Assert.That(PlugIn2.WasInitialized, Is.False);
-        }
+        //    Assert.That(PlugIn2.WasInitialized, Is.False);
+        //}
 
-        [Test]
-        public void Plugins_CanBeInitialized_FromConfiguration()
-        {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn3) });
+        //[Test]
+        //public void Plugins_CanBeInitialized_FromConfiguration()
+        //{
+        //    ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn3) });
 
-            EngineSection config = CreateConfiguration(new[]
-			{
-				new PluginInitializerElement { Name = "ignored", Type = typeof(PlugIn3).AssemblyQualifiedName }
-			}, null);
-            PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
-            invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
+        //    EngineSection config = CreateConfiguration(new[]
+        //    {
+        //        new PluginInitializerElement { Name = "ignored", Type = typeof(PlugIn3).AssemblyQualifiedName }
+        //    }, null);
+        //    PluginBootstrapper invoker = new PluginBootstrapper(typeFinder, config);
+        //    invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
 
-            Assert.That(PlugIn3.WasInitialized, Is.True);
-        }
+        //    Assert.That(PlugIn3.WasInitialized, Is.True);
+        //}
 
-        EngineSection CreateConfiguration(PluginInitializerElement[] addedPlugins, PluginInitializerElement[] removedPlugins)
-        {
-            return new EngineSection
-            {
-                PluginInitializers = new PluginInitializerCollection
-                {
-                    AllElements = addedPlugins,
-                    RemovedElements = removedPlugins
-                }
-            };
-        }
+        //EngineSection CreateConfiguration(PluginInitializerElement[] addedPlugins, PluginInitializerElement[] removedPlugins)
+        //{
+        //    return new EngineSection
+        //    {
+        //        PluginInitializers = new PluginInitializerCollection
+        //        {
+        //            AllElements = addedPlugins,
+        //            RemovedElements = removedPlugins
+        //        }
+        //    };
+        //}
     }
 }
