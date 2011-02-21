@@ -37,7 +37,7 @@ namespace Nop.Services.Tasks
             var service1 = EngineContext.Current.Resolve<IWebHelper>();
 
             //TODO find a solution. We can't resolve IWorkContext because HttpContext parameter could not be resolved.
-            var service2 = EngineContext.Current.Resolve<IWorkContext>();
+            //var service2 = EngineContext.Current.Resolve<IWorkContext>();
         }
 
     }
