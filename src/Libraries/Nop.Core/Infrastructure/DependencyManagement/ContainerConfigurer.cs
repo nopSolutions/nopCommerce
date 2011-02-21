@@ -16,6 +16,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         /// </summary>
         public static class ConfigurationKeys
         {
+            //TODO do we need it?
             /// <summary>Key used to configure services intended for medium trust.</summary>
             public const string MediumTrust = "MediumTrust";
             /// <summary>Key used to configure services intended for full trust.</summary>
@@ -50,8 +51,8 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             containerManager.AddComponentInstance(broker);
 
             //service registration
-            containerManager.AddComponent<ServiceRegistrator>("nop.serviceRegistrator");
-            var registrator = containerManager.Resolve<ServiceRegistrator>();
+            containerManager.AddComponent<DependencyAttributeRegistrator>("nop.serviceRegistrator");
+            var registrator = containerManager.Resolve<DependencyAttributeRegistrator>();
             var services = registrator.FindServices();
             var configurations = GetComponentConfigurations(configuration);
             services = registrator.FilterServices(services, configurations);

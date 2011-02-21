@@ -12,7 +12,7 @@ namespace Nop.Core.Plugins
     /// <summary>
     /// Finds plugins and calls their initializer.
     /// </summary>
-    [Service(typeof(IPluginBootstrapper))]
+    [Dependency(typeof(IPluginBootstrapper))]
     public class PluginBootstrapper : IPluginBootstrapper
     {
         private readonly ITypeFinder typeFinder;

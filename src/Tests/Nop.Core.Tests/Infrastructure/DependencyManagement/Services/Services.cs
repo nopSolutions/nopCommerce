@@ -12,7 +12,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
         int GetPressure();
     }
 
-    [Service(typeof(IBarometer), Configuration = "Low")]
+    [Dependency(typeof(IBarometer), Configuration = "Low")]
     public class LowService : IBarometer
     {
         #region IBarometer Members
@@ -25,7 +25,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
         #endregion
     }
 
-    [Service(typeof(IBarometer), Configuration = "High")]
+    [Dependency(typeof(IBarometer), Configuration = "High")]
     public class HighService : IBarometer
     {
         #region IBarometer Members
@@ -38,12 +38,12 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
         #endregion
     }
 
-    [Service(Key = "Sesame")]
+    [Dependency(Key = "Sesame")]
     public class SelfService
     {
     }
 
-    [Service]
+    [Dependency]
     public class DependingService
     {
         public SelfService service;
@@ -57,7 +57,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
     {
     }
 
-    [Service]
+    [Dependency]
     public class DependingServiceWithMissingDependency
     {
         public UnregisteredDependency service;
@@ -67,12 +67,12 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
         }
     }
 
-    [Service]
+    [Dependency]
     public class GenericSelfService<T>
     {
     }
 
-    [Service]
+    [Dependency]
     public class DependingGenericSelfService<T>
     {
         public SelfService service;
@@ -82,7 +82,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
         }
     }
 
-    [Service]
+    [Dependency]
     public class GenericDependingService
     {
         public GenericSelfService<int> service;
@@ -96,7 +96,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
     {
     }
 
-    [Service(typeof(IService))]
+    [Dependency(typeof(IService))]
     public class InterfacedService : IService
     {
     }
@@ -109,7 +109,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
     {
     }
 
-    [Service(typeof(IService))]
+    [Dependency(typeof(IService))]
     public class DecoratingService : IService
     {
         public IService decorated;
@@ -124,12 +124,12 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement.Services
     {
     }
 
-    [Service(typeof(IGenericService<>))]
+    [Dependency(typeof(IGenericService<>))]
     public class GenericInterfacedService<T> : IGenericService<T>
     {
     }
 
-    [Service]
+    [Dependency]
     public class GenericInterfaceDependingService
     {
         public IGenericService<int> service;

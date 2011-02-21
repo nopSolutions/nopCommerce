@@ -28,7 +28,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService), typeof(NonAttributed));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             Assert.That(engine.Resolve<SelfService>(), Is.InstanceOf<SelfService>());
@@ -40,7 +40,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService), typeof(DependingService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             var service = engine.Resolve<DependingService>();
@@ -53,7 +53,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             var one = engine.Resolve<SelfService>();
@@ -67,7 +67,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(InterfacedService), typeof(NonAttributed));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             Assert.That(engine.Resolve<IService>(), Is.Not.Null);
@@ -80,7 +80,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(GenericSelfService<>));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             Assert.That(engine.Resolve<GenericSelfService<int>>(), Is.InstanceOf<GenericSelfService<int>>());
@@ -92,7 +92,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(GenericInterfacedService<>));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             Assert.That(engine.Resolve<IGenericService<int>>(), Is.InstanceOf<GenericInterfacedService<int>>());
@@ -104,7 +104,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(GenericSelfService<>), typeof(GenericDependingService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             var service = engine.Resolve<GenericDependingService>();
@@ -117,7 +117,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(GenericInterfaceDependingService), typeof(GenericInterfacedService<>));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             var service = engine.Resolve<GenericInterfaceDependingService>();
@@ -130,7 +130,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService), typeof(DependingGenericSelfService<>));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             var service = engine.Resolve<DependingGenericSelfService<string>>();
@@ -142,7 +142,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         public void CanResolve_ServiceWithDependency_OnComponentInstance()
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(DependingServiceWithMissingDependency).Assembly.GetTypes());
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FindServices());
 
             engine.ContainerManager.AddComponentInstance<UnregisteredDependency>(new UnregisteredDependency(), "ud");
@@ -156,7 +156,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(HighService), typeof(LowService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             var services = registrator.FilterServices(registrator.FindServices(), "High");
             registrator.RegisterServices(services);
 
@@ -169,7 +169,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(HighService), typeof(LowService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             var services = registrator.FilterServices(registrator.FindServices(), "High", "Medium", "Low");
             registrator.RegisterServices(services);
 
@@ -181,7 +181,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(HighService), typeof(LowService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             var services = registrator.FilterServices(registrator.FindServices());
             registrator.RegisterServices(services);
 
@@ -193,7 +193,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             ITypeFinder finder = new Fakes.FakeTypeFinder(typeof(SelfService), typeof(HighService), typeof(LowService));
 
-            ServiceRegistrator registrator = new ServiceRegistrator(finder, engine);
+            DependencyAttributeRegistrator registrator = new DependencyAttributeRegistrator(finder, engine);
             registrator.RegisterServices(registrator.FilterServices(registrator.FindServices(), "High"));
 
             Assert.That(engine.Resolve<SelfService>(), Is.InstanceOf<SelfService>());

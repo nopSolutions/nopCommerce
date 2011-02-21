@@ -148,8 +148,8 @@
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\ServiceAttribute.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\ServiceRegistrator.cs" />
+    <Compile Include="Infrastructure\DependencyManagement\DependencyAttribute.cs" />
+    <Compile Include="Infrastructure\DependencyManagement\DependencyAttributeRegistrator.cs" />
     <Compile Include="Infrastructure\Singleton.cs" />
     <Compile Include="Plugins\AutoInitializeAttribute.cs" />
     <Compile Include="Plugins\IPlugin.cs" />

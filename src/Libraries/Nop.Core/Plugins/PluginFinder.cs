@@ -13,7 +13,7 @@ namespace Nop.Core.Plugins
     /// <summary>
     /// Investigates the execution environment to find plugins.
     /// </summary>
-    [Service(typeof(IPluginFinder))]
+    [Dependency(typeof(IPluginFinder))]
     public class PluginFinder : IPluginFinder
     {
         private IList<IPlugin> plugins = null;
