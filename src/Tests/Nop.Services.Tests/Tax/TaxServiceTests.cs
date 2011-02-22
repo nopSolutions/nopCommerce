@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Common;
+using Nop.Services.Discounts;
 using Nop.Services.Security;
+using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
-using Nop.Core;
-using Nop.Services.Discounts;
-using Nop.Core.Domain.Tax;
 using Rhino.Mocks;
-using Nop.Services.Common;
-using Nop.Services.Tax;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Tests.Tax
 {
@@ -30,6 +34,13 @@ namespace Nop.Services.Tests.Tax
         public void SetUp()
         {
             _taxSettings = new TaxSettings();
+            _taxSettings.DefaultTaxAddressId = 10;
+
+
+            _addressService = MockRepository.GenerateMock<IAddressService>();
+            //default tax address
+            _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address() { Id = _taxSettings.DefaultTaxAddressId });
+
             _taxService = new TaxService(_addressService, _workContext, _taxSettings, new AppDomainTypeFinder());
         }
 
@@ -53,6 +64,76 @@ namespace Nop.Services.Tests.Tax
         {
             var provider = _taxService.LoadActiveTaxProvider();
             provider.ShouldNotBeNull();
+        }
+
+        [Test]
+        public void Can_check_taxExempt_productVariant()
+        {
+            var productVariant = new ProductVariant();
+            productVariant.IsTaxExempt = true;
+            _taxService.IsTaxExempt(productVariant, null).ShouldEqual(true);
+            productVariant.IsTaxExempt = false;
+            _taxService.IsTaxExempt(productVariant, null).ShouldEqual(false);
+        }
+
+        [Test]
+        public void Can_check_taxExempt_customer()
+        {
+            var customer = new Customer();
+            customer.IsTaxExempt = true;
+            _taxService.IsTaxExempt(null, customer).ShouldEqual(true);
+            customer.IsTaxExempt = false;
+            _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
+        }
+
+        [Test]
+        public void Can_check_taxExempt_customer_in_taxExemptCustomerRole()
+        {
+            var customer = new Customer();
+            customer.IsTaxExempt = false;
+            _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
+
+            var customerRole = new CustomerRole()
+            {
+                TaxExempt = true
+            };
+            customer.CustomerRoles.Add(customerRole);
+            _taxService.IsTaxExempt(null, customer).ShouldEqual(true);
+            customerRole.TaxExempt = false;
+            _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
+        }
+
+        protected decimal GetFixedTestTaxRate()
+        {
+            //10 is a fixed tax rate returned from FixedRateTestTaxProvider. Perhaps, it should be configured in some way 
+            return 10M;
+        }
+
+        [Test]
+        public void Can_get_tax_rate_for_productVariant()
+        {
+            _taxSettings.TaxBasedOn = TaxBasedOn.BillingAddress;
+
+            var customer = new Customer();
+            customer.BillingAddress = new Address();
+            var productVariant = new ProductVariant();
+
+            _taxService.GetTaxRate(productVariant, customer).ShouldEqual(GetFixedTestTaxRate());
+            productVariant.IsTaxExempt = true;
+            _taxService.GetTaxRate(productVariant, customer).ShouldEqual(0);
+        }
+
+        [Test]
+        public void Can_get_productPrice_priceIncludesTax_includingTax()
+        {
+            var customer = new Customer();
+            var productVariant = new ProductVariant();
+
+            decimal taxRate;
+            _taxService.GetProductPrice(productVariant, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(1000);
+            _taxService.GetProductPrice(productVariant, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1100);
+            _taxService.GetProductPrice(productVariant, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(productVariant, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -237,5 +238,25 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         VatNumberStatus GetVatNumberStatus(Country country,
             string vatNumber, out string name, out string address);
+
+
+
+
+
+        /// <summary>
+        /// Gets a value indicating whether tax exempt
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>A value indicating whether tax exempt</returns>
+        bool IsTaxExempt(ProductVariant productVariant, Customer customer);
+
+        /// <summary>
+        /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        bool IsVatExempt(Address address, Customer customer);
     }
 }

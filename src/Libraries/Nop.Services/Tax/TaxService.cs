@@ -53,72 +53,6 @@ namespace Nop.Services.Tax
         #region Utilities
 
         /// <summary>
-        /// Gets a value indicating whether tax exempt
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>A value indicating whether tax exempt</returns>
-        protected bool IsTaxExempt(ProductVariant productVariant, Customer customer)
-        {
-            if (customer != null)
-            {
-                if (customer.IsTaxExempt)
-                    return true;
-
-                var customerRoles = customer.CustomerRoles;
-                foreach (var customerRole in customerRoles)
-                    if (customerRole.TaxExempt)
-                        return true;
-            }
-            
-            if (productVariant == null)
-            {
-                return false;
-            }
-
-            if (productVariant.IsTaxExempt)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
-        /// </summary>
-        /// <param name="address">Address</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
-        protected bool IsVatExempt(Address address, Customer customer)
-        {
-            if (!_taxSettings.EuVatEnabled)
-            {
-                return false;
-            }
-
-            if (address == null || address.Country == null || customer == null)
-            {
-                return false;
-            }
-
-
-            if (!address.Country.SubjectToVat)
-            {
-                // VAT not chargeable if shipping outside VAT zone:
-                return true;
-            }
-            else
-            {
-                // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
-                // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
-                return address.CountryId != _taxSettings.EuVatShopCountryId &&
-                    customer.VatNumberStatus == VatNumberStatus.Valid &&
-                    _taxSettings.EuVatAllowVatExemption;
-            }
-        }
-
-        /// <summary>
         /// Performs a basic check of a VAT number for validity
         /// </summary>
         /// <remarks>Doesn't check the name and address</remarks>
@@ -709,6 +643,76 @@ namespace Nop.Services.Tax
             {
                 Debug.WriteLine(exc.ToString());
                 return VatNumberStatus.Unknown;
+            }
+        }
+
+
+
+
+
+        /// <summary>
+        /// Gets a value indicating whether tax exempt
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>A value indicating whether tax exempt</returns>
+        public bool IsTaxExempt(ProductVariant productVariant, Customer customer)
+        {
+            if (customer != null)
+            {
+                if (customer.IsTaxExempt)
+                    return true;
+
+                var customerRoles = customer.CustomerRoles;
+                foreach (var customerRole in customerRoles)
+                    if (customerRole.TaxExempt)
+                        return true;
+            }
+
+            if (productVariant == null)
+            {
+                return false;
+            }
+
+            if (productVariant.IsTaxExempt)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public bool IsVatExempt(Address address, Customer customer)
+        {
+            if (!_taxSettings.EuVatEnabled)
+            {
+                return false;
+            }
+
+            if (address == null || address.Country == null || customer == null)
+            {
+                return false;
+            }
+
+
+            if (!address.Country.SubjectToVat)
+            {
+                // VAT not chargeable if shipping outside VAT zone:
+                return true;
+            }
+            else
+            {
+                // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
+                // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
+                return address.CountryId != _taxSettings.EuVatShopCountryId &&
+                    customer.VatNumberStatus == VatNumberStatus.Valid &&
+                    _taxSettings.EuVatAllowVatExemption;
             }
         }
 
