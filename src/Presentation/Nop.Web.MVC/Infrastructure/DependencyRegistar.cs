@@ -113,6 +113,7 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerHttpRequest();
             builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>().InstancePerHttpRequest();
 
+            builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerHttpRequest();
             builder.RegisterType<PictureService>().As<IPictureService>().InstancePerHttpRequest();
 
             builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerHttpRequest();
