@@ -59,6 +59,7 @@
     <Compile Include="Mapping\Discounts\DiscountUsageHistoryMap.cs" />
     <Compile Include="Mapping\Discounts\DiscountMap.cs" />
     <Compile Include="Mapping\Discounts\DiscountRequirementMap.cs" />
+    <Compile Include="Mapping\Media\DownloadMap.cs" />
     <Compile Include="Mapping\Orders\CheckoutAttributeMap.cs" />
     <Compile Include="Mapping\Orders\CheckoutAttributeValueMap.cs" />
     <Compile Include="Mapping\Orders\GiftCardMap.cs" />

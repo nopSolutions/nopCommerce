@@ -51,6 +51,7 @@ namespace Nop.Data
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<DiscountRequirement> DiscountRequirement { get; set; }
         public DbSet<DiscountUsageHistory> DiscountUsageHistory { get; set; }
+        public DbSet<Download> Downloads { get; set; }
         public DbSet<GiftCard> GiftCards { get; set; }
         public DbSet<GiftCardUsageHistory> GiftCardUsageHistory { get; set; }
         public DbSet<Language> Languages { get; set; }

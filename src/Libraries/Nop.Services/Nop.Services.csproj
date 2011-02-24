@@ -86,6 +86,8 @@
     <Compile Include="Directory\IStateProvinceService.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
+    <Compile Include="Media\IDownloadService.cs" />
+    <Compile Include="Media\DownloadService.cs" />
     <Compile Include="Media\IPictureService.cs" />
     <Compile Include="Media\PictureService.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />

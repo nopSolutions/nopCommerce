@@ -1,0 +1,62 @@
+//------------------------------------------------------------------------------
+// The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
+// 
+// Software distributed under the License is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. 
+// See the License for the specific language governing rights and limitations under the License.
+// 
+// The Original Code is nopCommerce.
+// The Initial Developer of the Original Code is NopSolutions.
+// All Rights Reserved.
+// 
+// Contributor(s): _______. 
+//------------------------------------------------------------------------------
+
+using System;
+using System.Linq;
+using Nop.Core;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Media;
+using Nop.Data;
+using Nop.Services.Configuration;
+
+namespace Nop.Services.Media
+{
+    /// <summary>
+    /// Download service interface
+    /// </summary>
+    public partial interface IDownloadService
+    {
+        /// <summary>
+        /// Gets a sample download url for a product variant
+        /// </summary>
+        /// <param name="productVariant">Product variant instance</param>
+        /// <returns>Download url</returns>
+        string GetSampleDownloadUrl(ProductVariant productVariant);
+
+        /// <summary>
+        /// Gets a download
+        /// </summary>
+        /// <param name="downloadId">Download identifier</param>
+        /// <returns>Download</returns>
+        Download GetDownloadById(int downloadId);
+
+        /// <summary>
+        /// Deletes a download
+        /// </summary>
+        /// <param name="download">Download</param>
+        void DeleteDownload(Download download);
+
+        /// <summary>
+        /// Inserts a download
+        /// </summary>
+        /// <param name="download">Download</param>
+        void InsertDownload(Download download);
+
+        /// <summary>
+        /// Updates the download
+        /// </summary>
+        /// <param name="download">Download</param>
+        void UpdateDownload(Download download);
+    }
+}
