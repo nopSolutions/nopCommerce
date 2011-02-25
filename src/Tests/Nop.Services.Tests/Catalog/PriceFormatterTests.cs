@@ -1,48 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Tests.Catalog
 {
     [TestFixture]
     public class PriceFormatterTests
     {
+        IRepository<Currency> _currencyRepo;
         ICurrencyService _currencyService;
+        CurrencySettings _currencySettings;
         IWorkContext _workContext;
         ILocalizationService _localizationService;
         TaxSettings _taxSettings;
         IPriceFormatter _priceFormatter;
-
-        public PriceFormatterTests()
-        {
-        }
-
+        
         [SetUp]
         public void SetUp()
         {
-            _taxSettings = new TaxSettings();
+            var cacheManager = new NopNullCache();
             
-            _currencyService = MockRepository.GenerateMock<ICurrencyService>();
-            _currencyService.Expect(x => x.GetAllCurrencies()).Return(new List<Currency>() { new Currency(), new Currency() });
+            _currencySettings = new CurrencySettings();
+            var currency1 = new Currency
+            {
+                Id = 1,
+                Name = "Euro",
+                CurrencyCode = "EUR",
+                DisplayLocale =  "",
+                CustomFormatting = "€0.00",
+                DisplayOrder = 1,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc= DateTime.UtcNow
+            };
+            var currency2 = new Currency
+            {
+                Id = 1,
+                Name = "US Dollar",
+                CurrencyCode = "USD",
+                DisplayLocale = "en-US",
+                CustomFormatting = "",
+                DisplayOrder = 2,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc= DateTime.UtcNow
+            };            
+            _currencyRepo = MockRepository.GenerateMock<IRepository<Currency>>();
+            _currencyRepo.Expect(x => x.Table).Return(new List<Currency>() { currency1, currency2 }.AsQueryable());
+            _currencyService = new CurrencyService(cacheManager, _currencyRepo, _currencySettings);
+            
+
+            
+            _taxSettings = new TaxSettings();
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _localizationService.Expect(x => x.GetResource("Products.InclTaxSuffix", 1, false)).Return("{0} incl tax");
