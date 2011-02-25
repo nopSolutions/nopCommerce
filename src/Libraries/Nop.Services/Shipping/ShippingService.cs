@@ -162,8 +162,7 @@ namespace Nop.Services.Shipping
                 return shippingMethod;
             });
         }
-
-
+        
         /// <summary>
         /// Gets all shipping methods
         /// </summary>
