@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Catalog\ProductAttributeParserTests.cs" />
     <Compile Include="Catalog\PriceFormatterTests.cs" />
     <Compile Include="Configuration\ConfigFileSettingService.cs" />
     <Compile Include="Configuration\ConfigurationProviderTests.cs" />
