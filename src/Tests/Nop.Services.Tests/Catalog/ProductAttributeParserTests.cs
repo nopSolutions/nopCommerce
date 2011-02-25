@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Tax;
 using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Services.Directory;
-using Nop.Services.Localization;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -58,7 +52,6 @@ namespace Nop.Services.Tests.Catalog
             {
                 Id = 11,
                 Name = "Green",
-                IsPreSelected = true,
                 DisplayOrder = 1,
                 ProductVariantAttribute = pva1_1,
                 ProductVariantAttributeId = pva1_1.Id
@@ -96,7 +89,6 @@ namespace Nop.Services.Tests.Catalog
             {
                 Id = 21,
                 Name = "Option 1",
-                IsPreSelected = true,
                 DisplayOrder = 1,
                 ProductVariantAttribute = pva2_1,
                 ProductVariantAttributeId = pva2_1.Id
