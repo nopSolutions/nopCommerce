@@ -1,0 +1,95 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>NopCommerce public store. @ViewBag.Title</title>
+    <link href="@Url.Content("~/Areas/Public/Content/styles.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/public.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+</head>
+<body>
+    <div class="master-wrapper-page">
+        <div class="master-wrapper-content">
+            <div class="header">
+                <div class="header-logo">
+                    <a href="@(EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation())" class="logo">
+                        &nbsp; </a>
+                </div>
+                <div class="header-links-wrapper">
+                    <div class="header-links">
+                        <ul>
+                            <!--UNDONE login information -->
+                            <li><a href="register.aspx" class="ico-register">@T("Account.Register")</a></li>
+                            <li><a href="login.aspx" class="ico-login">@T("Account.Login")</a></li>
+                            <li><a href="shoppingcart.aspx" class="ico-cart">@T("Account.ShoppingCart")</a> <a
+                                href="shoppingcart.aspx">(0)</a></li>
+                            <!--UNDONE Check whether wishlist is enabled-->
+                            <li><a href="wishlist.aspx" class="ico-wishlist">@T("Wishlist.Wishlist")</a> <a href="wishlist.aspx">
+                                (0)</a></li>
+                            <!--UNDONE Check whether current user is admin-->
+                            <li><a href="admin" class="ico-admin">@T("Account.Administration")</a> </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="header-selectors-wrapper">
+                    <div class="header-taxDisplayTypeSelector">
+                        <!--UNDONE tax display selector -->
+                    </div>
+                    <div class="header-currencyselector">
+                        <!--UNDONE currency selector -->
+                    </div>
+                    <div class="header-languageselector">
+                        <!--UNDONE language selector -->
+                    </div>
+                </div>
+            </div>
+            <div class="headermenu">
+                <div class="searchbox">
+                    <!-- UNDONE add focus js (nopCommerce 1.90) -->
+                    <div class="searchbox">
+                        <ul>
+                            <li>
+                                <input type="text" onkeydown="if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('btnSearch').click();return false;}} else {return true}; "
+                                    onfocus="if(this.value=='Search store')this.value=''" class="searchboxtext" id="txtSearchTerms"
+                                    value="Search store" name="txtSearchTerms" />&nbsp; </li>
+                            <li>
+                                <input type="submit" class="searchboxbutton" id="btnSearch" value="Search" name="btnSearch" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <ul class="topmenu">
+                    <li><a href="@(EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation())">
+                        Home page</a></li>
+                    <li><a href="recentlyaddedproducts.aspx">New products</a> </li>
+                    <li><a href="search.aspx">Search</a> </li>
+                    <li><a href="account.aspx">My account</a></li>
+                    <li><a href="blog.aspx">Blog</a></li>
+                    <li><a href="/boards/">Forums</a></li>
+                    <li><a href="contactus.aspx">Contact us</a></li>
+                </ul>
+            </div>
+            @RenderBody()
+            <div class="clear">
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-poweredby">
+                Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
+                <!--Would you like
+                to remove the "Powered by nopCommerce" link in the bottom of the footer? Find more
+                info here http://www.nopcommerce.com/copyrightremoval.aspx -->
+            </div>
+            <div class="footer-disclaimer">
+                @T("Content.CopyrightNotice", DateTime.Now.Year.ToString() , "Store name here")
+            </div>
+            <div class="footer-storetheme">
+                <!--UNDONE store theme selector -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

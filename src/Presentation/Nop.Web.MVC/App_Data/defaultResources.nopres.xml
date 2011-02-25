@@ -47,4 +47,23 @@
   <LocaleResource Name="ShoppingCart.CannotMixStandardAndAutoshipProducts">
     <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
   </LocaleResource>
+  <LocaleResource Name="Content.CopyrightNotice">
+    <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register">
+    <Value>Register</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login">
+    <Value>Log in</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ShoppingCart">
+    <Value>Shopping Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.Wishlist">
+    <Value>Wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Administration">
+    <Value>Administration</Value>
+  </LocaleResource>
+
 </Language>
