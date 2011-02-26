@@ -7,7 +7,8 @@ using Nop.Core.Plugins;
 
 namespace Nop.Core.Tests.Plugin
 {
-    public class PlugIn3 : IPluginInitializer
+    [AutoInitialize]
+    public class PlugInInitializer2 : IPluginInitializer
     {
         public static bool WasInitialized { get; set; }
 

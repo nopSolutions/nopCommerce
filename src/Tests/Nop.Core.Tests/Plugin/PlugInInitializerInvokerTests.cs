@@ -18,55 +18,55 @@ namespace Nop.Core.Tests.Plugin
         {
             base.SetUp();
 
-            PlugIn1.WasInitialized = false;
-            PlugIn2.WasInitialized = false;
-            PlugIn3.WasInitialized = false;
+            PlugInInitializer1.WasInitialized = false;
+            PlugInInitializer2.WasInitialized = false;
+            PlugInInitializer3.WasInitialized = false;
             ThrowingPlugin1.WasInitialized = false;
             ThrowingPlugin2.WasInitialized = false;
         }
 
         [Test]
-        public void AssemblyDefinedPlugin_IsInvoked()
+        public void AssemblyDefinedPluginInitializer_IsInvoked()
         {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugIn1).Assembly, new[] { typeof(PlugIn1) });
+            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(typeof(PlugInInitializer1).Assembly, new[] { typeof(PlugInInitializer1) });
 
             var invoker = new PluginBootstrapper(typeFinder);
-            PlugIn1.WasInitialized = false;
+            PlugInInitializer1.WasInitialized = false;
             invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
 
-            Assert.That(PlugIn1.WasInitialized, Is.True);
+            Assert.That(PlugInInitializer1.WasInitialized, Is.True);
         }
 
         [Test]
-        public void AutoInitializePlugin_IsInvoked()
+        public void AutoInitializePluginInitializer_IsInvoked()
         {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(PlugIn2) });
+            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(PlugInInitializer2) });
 
             var invoker = new PluginBootstrapper(typeFinder);
-            PlugIn2.WasInitialized = false;
+            PlugInInitializer2.WasInitialized = false;
             invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
 
-            Assert.That(PlugIn2.WasInitialized, Is.True);
+            Assert.That(PlugInInitializer2.WasInitialized, Is.True);
         }
 
         [Test]
-        public void Plugin_WithoutInitializerDefinition_IsNotInvoked()
+        public void PluginInitializer_WithoutInitializerDefinition_IsNotInvoked()
         {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(PlugIn3) });
+            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(PlugInInitializer3) });
 
             var invoker = new PluginBootstrapper(typeFinder);
             invoker.InitializePlugins(null, invoker.GetPluginDefinitions());
 
-            Assert.That(PlugIn3.WasInitialized, Is.False);
+            Assert.That(PlugInInitializer3.WasInitialized, Is.False);
         }
 
         [Test]
         public void Initializers_AreExecuted_AfterException()
         {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(ThrowingPlugin1), typeof(PlugIn2) });
+            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(ThrowingPlugin1), typeof(PlugInInitializer2) });
 
             PluginBootstrapper invoker = new PluginBootstrapper(typeFinder);
-            PlugIn2.WasInitialized = false;
+            PlugInInitializer2.WasInitialized = false;
 
             ThrowingPlugin1.Throw = true;
             PluginInitializationException ex = ExceptionAssert.Throws<PluginInitializationException>(delegate
@@ -75,18 +75,18 @@ namespace Nop.Core.Tests.Plugin
             });
             ThrowingPlugin1.Throw = false;
 
-            Assert.That(PlugIn2.WasInitialized, Is.True);
+            Assert.That(PlugInInitializer2.WasInitialized, Is.True);
         }
 
         [Test]
         public void InnerException_IsInnerException_OfInitializationException()
         {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(ThrowingPlugin1), typeof(PlugIn2) });
+            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(ThrowingPlugin1), typeof(PlugInInitializer2) });
 
             mocks.ReplayAll();
 
             PluginBootstrapper invoker = new PluginBootstrapper(typeFinder);
-            PlugIn2.WasInitialized = false;
+            PlugInInitializer2.WasInitialized = false;
 
             ThrowingPlugin1.Throw = true;
             PluginInitializationException ex = ExceptionAssert.Throws<PluginInitializationException>(delegate
@@ -102,10 +102,10 @@ namespace Nop.Core.Tests.Plugin
         [Test]
         public void InnerExceptions_AreAdded_ToInitializationException()
         {
-            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(ThrowingPlugin1), typeof(PlugIn2), typeof(ThrowingPlugin2) });
+            ITypeFinder typeFinder = new Fakes.FakeTypeFinder(new[] { typeof(ThrowingPlugin1), typeof(PlugInInitializer2), typeof(ThrowingPlugin2) });
 
             PluginBootstrapper invoker = new PluginBootstrapper(typeFinder);
-            PlugIn2.WasInitialized = false;
+            PlugInInitializer2.WasInitialized = false;
 
             ThrowingPlugin1.Throw = true;
             ThrowingPlugin2.Throw = true;

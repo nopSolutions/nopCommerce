@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Nop.Core;
@@ -14,29 +11,24 @@ namespace Nop.Web.Framework.Localization
 {
     public class LocalizedPropertyBinder : IModelBinder
     {
-
         private ILanguageService _languageService;
 
         private ILanguageService LanguageService
         {
-            get
-            {
-                if (_languageService == null)
-                {
-                    _languageService = EngineContext.Current.Resolve<ILanguageService>();
-                }
-                return _languageService;
-            }
+            get { return _languageService ?? (_languageService = EngineContext.Current.Resolve<ILanguageService>()); }
         }
+
+        #region IModelBinder Members
 
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
-            var localizedModelType = bindingContext.ModelType.GetGenericArguments()[0];
-            var localized = Activator.CreateInstance(typeof(LocalizedModels<>).MakeGenericType(localizedModelType)) as IDictionary;
-            foreach (var key in controllerContext.RequestContext.HttpContext.Request.Form.Keys)
+            Type localizedModelType = bindingContext.ModelType.GetGenericArguments()[0];
+            var localized =
+                Activator.CreateInstance(typeof (LocalizedModels<>).MakeGenericType(localizedModelType)) as IDictionary;
+            foreach (object key in controllerContext.RequestContext.HttpContext.Request.Form.Keys)
             {
-                var match = Regex.Match(key.ToString(), @"Localized\[([0-9\-]+)\]\.([A-Za-z0-9\-]+)$",
-                    RegexOptions.IgnoreCase);
+                Match match = Regex.Match(key.ToString(), @"Localized\[([0-9\-]+)\]\.([A-Za-z0-9\-]+)$",
+                                          RegexOptions.IgnoreCase);
                 if (match.Success)
                 {
                     Language language = LanguageService.GetLanguageById(int.Parse(match.Groups[1].Value));
@@ -44,9 +36,10 @@ namespace Nop.Web.Framework.Localization
                     if (instance == null)
                     {
                         instance = Activator.CreateInstance(localizedModelType);
+                        CommonHelper.SetProperty(instance, "Language", language);
                         localized.Add(language.Id, instance);
                     }
-                    
+
                     string property = match.Groups[2].Value;
                     string propertyValue = controllerContext.RequestContext.HttpContext.Request.Form[key.ToString()];
                     CommonHelper.SetProperty(instance, property, propertyValue);
@@ -54,5 +47,7 @@ namespace Nop.Web.Framework.Localization
             }
             return localized;
         }
+
+        #endregion
     }
 }

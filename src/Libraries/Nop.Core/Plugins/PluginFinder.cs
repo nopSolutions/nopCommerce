@@ -16,10 +16,8 @@ namespace Nop.Core.Plugins
     [Dependency(typeof(IPluginFinder))]
     public class PluginFinder : IPluginFinder
     {
-        private IList<IPlugin> plugins = null;
+        private IList<PluginDescriptor> plugins;
         private readonly ITypeFinder typeFinder;
-        //public IEnumerable<InterfacePluginElement> addedPlugins = new InterfacePluginElement[0];
-        //public IEnumerable<InterfacePluginElement> removedPlugins = new InterfacePluginElement[0];
 
         public PluginFinder(ITypeFinder typeFinder, NopConfig config)
         {
@@ -48,24 +46,24 @@ namespace Nop.Core.Plugins
 
         public IEnumerable<T> GetPlugins<T>() where T : class, IPlugin
         {
-            foreach (IPlugin plugin in plugins)
-                if (plugin is T)
-                    yield return plugin as T;
+            foreach (var plugin in plugins)
+                if (typeof(T).IsAssignableFrom(plugin.PluginType))
+                    yield return plugin.Instance<T>();
         }
 
         /// <summary>Finds and sorts plugin defined in known assemblies.</summary>
         /// <returns>A sorted list of plugins.</returns>
-        protected virtual IList<IPlugin> FindPlugins()
+        protected virtual IList<PluginDescriptor> FindPlugins()
         {
-            List<IPlugin> foundPlugins = new List<IPlugin>();
+            var foundPlugins = new List<PluginDescriptor>();
             foreach (Assembly assembly in typeFinder.GetAssemblies())
             {
-                foreach (IPlugin plugin in FindPluginsIn(assembly))
+                foreach (PluginDescriptor plugin in FindPluginsIn(assembly))
                 {
-                    if (plugin.Name == null)
+                    if (plugin.Instance().Name == null)
                         throw new Exception(string.Format("A plugin in the assembly '{0}' has no name. The plugin is likely defined on the assembly ([assembly:...]). Try assigning the plugin a unique name and recompiling.", assembly.FullName));
                     if (foundPlugins.Contains(plugin))
-                        throw new Exception(string.Format("A plugin of the type '{0}' named '{1}' is already defined, assembly: {2}", plugin.GetType().FullName, plugin.Name, assembly.FullName));
+                        throw new Exception(string.Format("A plugin of the type '{0}' named '{1}' is already defined, assembly: {2}", plugin.PluginType.FullName, plugin.Instance().Name, assembly.FullName));
 
                     if (!IsRemoved(plugin))
                         foundPlugins.Add(plugin);
@@ -75,7 +73,7 @@ namespace Nop.Core.Plugins
             return foundPlugins;
         }
 
-        private bool IsRemoved(IPlugin plugin)
+        private bool IsRemoved(PluginDescriptor plugin)
         {
             //foreach (InterfacePluginElement configElement in removedPlugins)
             //{
@@ -85,23 +83,37 @@ namespace Nop.Core.Plugins
             return false;
         }
 
-        private IEnumerable<IPlugin> FindPluginsIn(Assembly a)
+        private IEnumerable<PluginDescriptor> FindPluginsIn(Assembly a)
         {
+            
+            #region Return plugin attributes
+
             foreach (IPlugin attribute in a.GetCustomAttributes(typeof(IPlugin), false))
             {
-                yield return attribute;
+                yield return new PluginAttributeDescriptor(attribute);
             }
             foreach (Type t in a.GetTypes())
             {
                 foreach (IPlugin attribute in t.GetCustomAttributes(typeof(IPlugin), false))
                 {
-                    if (attribute.Name == null)
-                        attribute.Name = t.Name;
-                    attribute.Decorates = t;
-
-                    yield return attribute;
+                    yield return new PluginAttributeDescriptor(attribute);
                 }
             }
+
+            #endregion
+
+            #region Return plugin implementations
+
+            foreach (var plugin in typeFinder.FindClassesOfType<IPlugin>(new List<Assembly> { a }))
+            {
+                //Make sure that the IPlugin found is not implemented on a attribute (not an actual implementation)
+                if (!typeof(System.Attribute).IsAssignableFrom(plugin))
+                {
+                    yield return new PluginImplementationDescriptor(plugin);
+                }
+            }
+
+            #endregion
         }
     }
 }

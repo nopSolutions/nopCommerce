@@ -95,10 +95,33 @@ namespace Nop.Core.Infrastructure
 
         public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
-            return (from a in assemblies
-                    from t in a.GetTypes()
-                    where !t.IsInterface && assignTypeFrom.IsAssignableFrom(t) && (onlyConcreteClasses ? (t.IsClass && !t.IsAbstract) : true)
-                    select t).ToList();
+            foreach(var a in assemblies)
+            {
+                foreach (var t in a.GetTypes())
+                {
+                    if (assignTypeFrom.IsAssignableFrom(t))
+                    {
+                        if (!t.IsInterface)
+                        {
+                            if (onlyConcreteClasses)
+                            {
+                                if (t.IsClass && !t.IsAbstract)
+                                {
+                                    yield return t;
+                                }
+                            }
+                            else
+                            {
+                                yield return t;
+                            }
+                        }
+                    }
+                }
+            }
+            //return (from a in assemblies
+            //        from t in a.GetTypes()
+            //        where !t.IsInterface && assignTypeFrom.IsAssignableFrom(t) && (onlyConcreteClasses ? (t.IsClass && !t.IsAbstract) : true)
+            //        select t).ToList();
         }
 
         /// <summary>Gets tne assemblies related to the current implementation.</summary>

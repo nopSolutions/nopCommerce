@@ -13,7 +13,6 @@ namespace Nop.Core.Plugins
     public interface IPlugin : IComparable<IPlugin>
     {
         string Name { get; set; }
-        Type Decorates { get; set; }
         int SortOrder { get; }
         bool IsAuthorized(IPrincipal user);
     }

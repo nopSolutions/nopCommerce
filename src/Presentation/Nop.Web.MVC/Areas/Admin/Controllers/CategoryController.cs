@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Security.Permissions;
@@ -14,17 +11,22 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
-using Nop.Services.Localization;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
     [AdminAuthorizeAttribute]
     public class CategoryController : Controller
     {
+        #region Fields (4)
+
         private readonly ICategoryService _categoryService;
-        private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly IPermissionService _permissionService;
+
+        #endregion Fields
+
+        #region Constructors (1)
 
         public CategoryController(ICategoryService categoryService,
             IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
@@ -34,7 +36,73 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             _languageService = languageService;
             _localizedEntityService = localizedEntityService;
         }
-       
+
+        #endregion Constructors
+
+        #region Methods (4)
+
+        // Public Methods (4) 
+
+        public ActionResult AllCategories(string text, int selectedId)
+        {
+            var categories = _categoryService.GetAllCategories(true);
+            categories.Insert(0, new Category { Name = "[None]", Id = 0 });
+            var selectList = new SelectList(categories, "Id", "Name", selectedId);
+            return new JsonResult { Data = selectList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        public ActionResult EditCategoryProducts(int id)
+        {
+            var model = _categoryService.GetProductCategoriesByCategoryId(id, true).Select(x => new CategoryProductModel(x)).ToList();
+
+            //TODO:Take out test products
+            var products = EngineContext.Current.Resolve<IProductService>().GetAllProducts(true);
+            model.Add(new CategoryProductModel { Id = 234, ProductId = products[0].Id });
+
+            return View(model);
+        }
+
+        public void UpdateInstance(Category category, CategoryModel model)
+        {
+            category.Name = model.Name;
+            category.Description = HttpUtility.HtmlDecode(model.Description);
+            category.MetaKeywords = model.MetaKeywords;
+            category.MetaDescription = model.MetaDescription;
+            category.MetaTitle = model.MetaTitle;
+            category.SeName = model.SeName;
+            category.ParentCategoryId = model.ParentCategoryId;
+            //category.PictureId = model.PictureId;
+            category.PageSize = model.PageSize;
+            category.PriceRanges = model.PriceRanges;
+            category.ShowOnHomePage = model.ShowOnHomePage;
+            category.Published = model.Published;
+            //category.Deleted = model.Deleted;
+            category.DisplayOrder = model.DisplayOrder;
+        }
+
+        public void UpdateLocales(Category category, CategoryModel model)
+        {
+            foreach (var localized in model.Localized)
+            {
+                if (!string.IsNullOrEmpty(localized.Value.Name))
+                {
+                    _localizedEntityService.SaveLocalizedValue(category,
+                                                               x => x.Name,
+                                                               localized.Value.Name,
+                                                               localized.Key);
+                }
+                if (!string.IsNullOrEmpty(localized.Value.Description))
+                {
+                    _localizedEntityService.SaveLocalizedValue(category,
+                                                               x => x.Description,
+                                                               HttpUtility.HtmlDecode(localized.Value.Description),
+                                                               localized.Key);
+                }
+            }
+        }
+
+        #endregion Methods
+
         #region Create
 
         public ActionResult Create()
@@ -84,6 +152,20 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 
         #endregion
 
+        #region Delete
+
+        public ActionResult Delete(int id)
+        {
+            var category = _categoryService.GetCategoryById(id);
+            if (category != null)
+            {
+                _categoryService.DeleteCategory(category);
+            }
+            return RedirectToAction("List");
+        }
+
+        #endregion
+
         #region List
 
         public ActionResult List()
@@ -98,13 +180,13 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             return View(gridModel);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding=true)]
+        [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
             var model = new GridModel();
             var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize);
             model.Data = categories.Select(x =>
-                new { Id = Url.Action("Edit", new {x.Id }), x.Name, x.DisplayOrder });
+                new { Id = Url.Action("Edit", new { x.Id }), x.Name, x.DisplayOrder });
             model.Total = categories.TotalCount;
             return new JsonResult
             {
@@ -166,73 +248,5 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         }
 
         #endregion
-
-        public ActionResult Delete(int id)
-        {
-            var category = _categoryService.GetCategoryById(id);
-            if (category != null)
-            {
-                _categoryService.DeleteCategory(category);
-            }
-            return RedirectToAction("List");
-        }
-
-        public ActionResult EditCategoryProducts(int id)
-        {
-            var model = _categoryService.GetProductCategoriesByCategoryId(id, true).Select(x => new CategoryProductModel(x)).ToList();
-
-            //TODO:Take out test products
-            var products = EngineContext.Current.Resolve<IProductService>().GetAllProducts(true);
-            model.Add(new CategoryProductModel {Id = 234, ProductId = products[0].Id});
-
-            return View(model);
-        }
-     
-        public ActionResult AllCategories(string text, int selectedId)
-        {
-            var categories = _categoryService.GetAllCategories(true);
-            categories.Insert(0, new Category {Name = "[None]", Id = 0});
-            var selectList = new SelectList(categories, "Id", "Name", selectedId);
-            return new JsonResult { Data = selectList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        }
-
-        public void UpdateInstance(Category category, CategoryModel model)
-        {
-            category.Name = model.Name;
-            category.Description = HttpUtility.HtmlDecode(model.Description);
-            category.MetaKeywords = model.MetaKeywords;
-            category.MetaDescription = model.MetaDescription;
-            category.MetaTitle = model.MetaTitle;
-            category.SeName = model.SeName;
-            category.ParentCategoryId = model.ParentCategoryId;
-            //category.PictureId = model.PictureId;
-            category.PageSize = model.PageSize;
-            category.PriceRanges = model.PriceRanges;
-            category.ShowOnHomePage = model.ShowOnHomePage;
-            category.Published = model.Published;
-            //category.Deleted = model.Deleted;
-            category.DisplayOrder = model.DisplayOrder;
-        }
-
-        public void UpdateLocales(Category category, CategoryModel model)
-        {
-            foreach (var localized in model.Localized)
-            {
-                if (!string.IsNullOrEmpty(localized.Value.Name))
-                {
-                    _localizedEntityService.SaveLocalizedValue(category,
-                                                               x => x.Name,
-                                                               localized.Value.Name,
-                                                               localized.Key);
-                }
-                if (!string.IsNullOrEmpty(localized.Value.Description))
-                {
-                    _localizedEntityService.SaveLocalizedValue(category,
-                                                               x => x.Description,
-                                                               HttpUtility.HtmlDecode(localized.Value.Description),
-                                                               localized.Key);
-                }
-            }
-        }
     }
 }

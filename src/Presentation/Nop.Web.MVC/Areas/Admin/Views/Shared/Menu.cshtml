@@ -1,0 +1,22 @@
+﻿@using Telerik.Web.Mvc.UI;
+@{
+    var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>().GetPlugins<Nop.Core.Web.IAdminMenuPlugin>();
+}
+@{Html.Telerik().Menu().Name("Admin").Items(x =>
+  {
+      if (adminMenuPlugins.Count() > 0)
+      {
+          x.Add().Text("Plugins").Items(y =>
+          {
+              foreach (var adminMenuPlugin in adminMenuPlugins)
+              {
+                  adminMenuPlugin.BuildMenuItem(y.Add());
+              }
+          });
+      }
+  }).OpenOnClick(true).Render();
+}
+@(Html.Telerik().ScriptRegistrar().DefaultGroup(group =>
+     {
+         
+     }))

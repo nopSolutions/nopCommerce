@@ -39,7 +39,7 @@ namespace Nop.Core.Plugins
             // assembly defined plugins
             foreach (ICustomAttributeProvider assembly in typeFinder.GetAssemblies())
             {
-                foreach (PluginAttribute plugin in assembly.GetCustomAttributes(typeof(PluginAttribute), false))
+                foreach (PluginInitializerAttribute plugin in assembly.GetCustomAttributes(typeof(PluginInitializerAttribute), false))
                 {
                     if (!IsRemoved(plugin.InitializerType))
                         pluginDefinitions.Add(plugin);

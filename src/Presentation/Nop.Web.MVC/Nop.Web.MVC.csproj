@@ -181,10 +181,13 @@
     </Compile>
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
+    <Compile Include="Areas\Admin\Controllers\LanguageController.cs" />
     <Compile Include="Areas\Admin\Models\CategoryModel.cs" />
     <Compile Include="Areas\Admin\Models\CategoryProductModel.cs" />
-    <Compile Include="Areas\Public\PublicAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Views\Shared\TestMenuPlugin1.cs" />
+    <Compile Include="Areas\Admin\Views\Shared\TestMenuPlugin2.cs" />
     <Compile Include="Areas\Public\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Public\PublicAreaRegistration.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -470,7 +473,6 @@
     <Content Include="Scripts\grid.locale-en.js" />
     <Content Include="Scripts\jquery.jqGrid.min.js" />
     <Content Include="Scripts\jquery.superfishmenu.js" />
-    <Content Include="Scripts\public.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -501,13 +503,13 @@
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_PublicLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Scripts\" />
-    <Folder Include="Areas\Public\Models\" />
-    <Folder Include="Areas\Public\Scripts\" />
     <Folder Include="Models\" />
     <Folder Include="Plugins\" />
+    <Folder Include="Views\Catalog\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -677,21 +679,16 @@
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Public\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Language\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\Shared\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Public\Views\Home\List.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Areas\Public\Views\Shared\_PublicRootLayout.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\Public\Views\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Catalog\Index.cshtml" />
+    <Content Include="Areas\Public\Views\Web.config" />
+    <Content Include="Areas\Public\Views\_ViewStart.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -66,6 +66,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Telerik.Web.Mvc">
+      <HintPath>..\..\packages\TelerikMvcExtensions.2010.3.1318\lib\net40\Telerik.Web.Mvc.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
@@ -149,6 +152,9 @@
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
+    <Compile Include="Plugins\BasePlugin.cs" />
+    <Compile Include="Plugins\BasePluginAttribute.cs" />
+    <Compile Include="Plugins\PluginDescriptor.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Infrastructure\DependencyManagement\DependencyAttribute.cs" />
     <Compile Include="Infrastructure\DependencyManagement\DependencyAttributeRegistrator.cs" />
@@ -219,6 +225,7 @@
     <Compile Include="NopException.cs" />
     <Compile Include="PagedList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Web\AdminMenuPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

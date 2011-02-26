@@ -23,15 +23,15 @@ namespace Nop.Core.Tests.Plugin
 
         protected override Type[] GetTypes()
         {
-            return new Type[0];
+            return new[]{typeof(TestPluginImplementation)};
         }
 
-        //[Test]
-        //public void CanGetNavigationPlugIns()
-        //{
-        //    IEnumerable<NavigationPluginAttribute> plugIns = finder.GetPlugins<NavigationPluginAttribute>();
-        //    EnumerableAssert.Count(2, plugIns);
-        //}
+        [Test]
+        public void CanGetNavigationPlugIns()
+        {
+            IEnumerable<ITestPlugin1> plugIns = finder.GetPlugins<ITestPlugin1>();
+            Assert.AreEqual(2, plugIns.Count());
+        }
 
         //[Test]
         //public void CanGet_SortNavigation_PlugIns()

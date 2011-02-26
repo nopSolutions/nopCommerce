@@ -1,12 +1,13 @@
-﻿using Nop.Core.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Core.Tests.Plugin;
-
-[assembly: Plugin("Testplugin", "testplugin", typeof(PlugIn1))]
 
 namespace Nop.Core.Tests.Plugin
 {
-    public class PlugIn1 : IPluginInitializer
+    public class PlugInInitializer3 : IPluginInitializer
     {
         public static bool WasInitialized { get; set; }
 

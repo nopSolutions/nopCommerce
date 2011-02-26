@@ -6,14 +6,14 @@ using System.Text;
 namespace Nop.Core.Plugins
 {
     /// <summary>
-    /// Use this attribute to denote plugins and reference a plugin initializer 
+    /// Use this attribute to reference a plugin initializer 
     /// that is invoked when the factory is started.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    public class PluginAttribute : InitializerCreatingAttribute
+    public class PluginInitializerAttribute : InitializerCreatingAttribute
     {
         /// <summary>Creates a new instance of the PlugInAttribute class.</summary>
-        public PluginAttribute()
+        public PluginInitializerAttribute()
         {
         }
 
@@ -21,7 +21,7 @@ namespace Nop.Core.Plugins
         /// <param name="title">The title of the plugin.</param>
         /// <param name="name">The name of the plugin.</param>
         /// <param name="initializerType">The name of the type responsible for initializing this plugin.</param>
-        public PluginAttribute(string title, string name, Type initializerType)
+        public PluginInitializerAttribute(string title, string name, Type initializerType)
         {
             Title = title;
             Name = name;

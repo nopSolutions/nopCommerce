@@ -61,8 +61,11 @@ namespace Nop.Core.Infrastructure
         private void StartScheduledTasks(NopConfig config)
         {
             //initialize task manager
-            TaskManager.Instance.Initialize(config.ScheduleTasks);
-            TaskManager.Instance.Start();
+            if (config.ScheduleTasks != null)
+            {
+                TaskManager.Instance.Initialize(config.ScheduleTasks);
+                TaskManager.Instance.Start();
+            }
         }
 
         private void InitializeContainer(ContainerConfigurer configurer, EventBroker broker, NopConfig config)
@@ -90,7 +93,6 @@ namespace Nop.Core.Infrastructure
             //startup tasks
             RunStartupTasks();
 
-            //scheduled tasks
             StartScheduledTasks(config);
         }
 

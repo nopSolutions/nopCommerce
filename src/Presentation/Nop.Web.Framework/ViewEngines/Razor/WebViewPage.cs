@@ -1,21 +1,23 @@
-﻿using System.Web.Mvc;
+﻿#region Using...
+
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
+
+#endregion
 
 namespace Nop.Web.Framework.ViewEngines.Razor
 {
     public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel>
     {
+        #region Fields (2) 
+
         private ILocalizationService _localizationService;
         private Localizer _localizer;
 
-        public override void InitHelpers()
-        {
-            base.InitHelpers();
+        #endregion Fields 
 
-            _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-        }
+        #region Properties (1) 
 
         public Localizer T
         {
@@ -28,18 +30,33 @@ namespace Nop.Web.Framework.ViewEngines.Razor
 
                     //default localizer
                     _localizer = (format, args) =>
-                    {
-                        var resFormat = _localizationService.GetResource(format);
-                        return new LocalizedString((args == null || args.Length == 0) ? resFormat : string.Format(resFormat, args));
-                    };
+                                     {
+                                         var resFormat = _localizationService.GetResource(format);
+                                         return
+                                             new LocalizedString((args == null || args.Length == 0)
+                                                                     ? resFormat
+                                                                     : string.Format(resFormat, args));
+                                     };
                 }
                 return _localizer;
             }
         }
+
+        #endregion Properties 
+
+        #region Methods (1) 
+
+        public override void InitHelpers()
+        {
+            base.InitHelpers();
+
+            _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+        }
+
+        #endregion Methods 
     }
 
     public abstract class WebViewPage : WebViewPage<dynamic>
     {
-
     }
 }
