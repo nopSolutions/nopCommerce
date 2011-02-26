@@ -22,7 +22,10 @@
     x.Add().Text("Standard").Content(StandardInfoTab().ToHtmlString()).Selected(true);
     foreach (var languageId in Model.Localized.Keys)
     {
-        x.Add().Text(Model.Localized[languageId].Language.Name).Content(LocalizedInfoTab(languageId).ToHtmlString());
+        var builder = x.Add()
+            .Text(Model.Localized[languageId].Language.Name)
+            .Content(LocalizedInfoTab(languageId).ToHtmlString())
+            .ImageUrl("~/Content/images/flags/" + EngineContext.Current.Resolve<Nop.Services.Localization.ILanguageService>().GetLanguageById(languageId).FlagImageFileName);
     }
 })
                 }
@@ -161,7 +164,9 @@
     x.Add().Text("Standard").Content(StandardSeoTab().ToHtmlString()).Selected(true);
     foreach (var languageId in Model.Localized.Keys)
     {
-        x.Add().Text(Model.Localized[languageId].Language.Name).Content(LocalizedSeoTab(languageId).ToHtmlString());
+        x.Add().Text(Model.Localized[languageId].Language.Name)
+            .Content(LocalizedSeoTab(languageId).ToHtmlString())
+            .ImageUrl("~/Content/images/flags/" + EngineContext.Current.Resolve<Nop.Services.Localization.ILanguageService>().GetLanguageById(languageId).FlagImageFileName);
     }
 })
                 }

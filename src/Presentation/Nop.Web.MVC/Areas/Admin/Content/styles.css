@@ -1154,5 +1154,6 @@ table.order-edit td
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-
+body .t-content{padding:10px !important;}
+body .t-tabstrip{margin-bottom:10px !important;}
 /*TODO:make teleriks tab strip and nested tab strip not-so-ugly

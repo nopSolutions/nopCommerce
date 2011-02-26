@@ -187,6 +187,10 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
                 localizedModel.Language = language;
                 localizedModel.Description = category.GetLocalized(x => x.Description, language.Id, false);
                 localizedModel.Name = category.GetLocalized(x => x.Name, language.Id, false);
+                localizedModel.MetaKeywords = category.GetLocalized(x => x.MetaKeywords, language.Id, false);
+                localizedModel.MetaDescription = category.GetLocalized(x => x.MetaDescription, language.Id, false);
+                localizedModel.MetaTitle = category.GetLocalized(x => x.MetaTitle, language.Id, false);
+                localizedModel.SeName = category.GetLocalized(x => x.SeName, language.Id, false);
                 model.Localized.Add(language.Id, localizedModel);
             }
             return View(model);

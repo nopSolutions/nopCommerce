@@ -28,13 +28,15 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             return View("List");
         }
 
+        #region Languages
+
         #region List
 
         public ActionResult List()
         {
             //if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
             //{
-                //TODO redirect to access denied page
+            //TODO redirect to access denied page
             //}
 
             var languages = _languageService.GetAllLanguages(true);
@@ -85,6 +87,44 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             _languageService.UpdateLanguage(language);
             return Edit(language.Id);
         }
+
+        #endregion
+
+        #region Delete
+
+        public ActionResult Delete(int id)
+        {
+            var language = _languageService.GetLanguageById(id);
+            if (language != null)
+            {
+                _languageService.DeleteLanguage(language);
+            }
+            return RedirectToAction("List");
+        }
+
+        #endregion
+
+        #region Create
+
+        public ActionResult Create()
+        {
+            return View(new LanguageModel());
+        }
+
+        [HttpPost]
+        public ActionResult Create(LanguageModel model)
+        {
+            var language = new Language();
+            UpdateInstance(language, model);
+            _languageService.InsertLanguage(language);
+            return RedirectToAction("Edit", new { id = language.Id });
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Resources
 
         #endregion
 

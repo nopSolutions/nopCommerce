@@ -1,0 +1,15 @@
+﻿@model Nop.Web.MVC.Areas.Admin.Models.LanguageModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Admin/Content/images/ico-configuration.png")" />
+            @T("Add A New Language") - @Html.ActionLink("(" + T("back to language list") + ")", "List")
+        </div>
+        <div class="options">
+            <input type="submit" value="Save" class="adminButtonBlue" />
+        </div>
+    </div>
+    @Html.EditorForModel("Language")
+}
