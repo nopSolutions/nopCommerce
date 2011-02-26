@@ -36,7 +36,10 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             MetaTitle = category.MetaTitle;
             SeName = category.SeName;
             ParentCategoryId = category.ParentCategoryId;
-            if(ParentCategoryId > 0) ParentCategory = categoryService.GetCategoryById(category.ParentCategoryId);
+            if (categoryService != null)
+            {
+                if (ParentCategoryId > 0) ParentCategory = categoryService.GetCategoryById(category.ParentCategoryId);
+            }
             PictureId = category.PictureId;
             PageSize = category.PageSize;
             PageSize = category.PageSize;
@@ -64,6 +67,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         public bool Deleted { get; set; }
         public int DisplayOrder { get; set; }
         public LocalizedModels<CategoryLocalizedModel> Localized { get; set; }
+        public string Breadcrumb { get; set; }
 
         #endregion
 
@@ -94,5 +98,9 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         public Core.Domain.Localization.Language Language { get; set; }
         public string Name { get; set; }
         public string Description {get;set;}
+        public string MetaKeywords { get; set; }
+        public string MetaDescription { get; set; }
+        public string MetaTitle { get; set; }
+        public string SeName { get; set; }
     }
 }

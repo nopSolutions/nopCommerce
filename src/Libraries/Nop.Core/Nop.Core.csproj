@@ -207,7 +207,7 @@
     <Compile Include="Plugins\IPluginBootstrapper.cs" />
     <Compile Include="Plugins\IPluginDefinition.cs" />
     <Compile Include="Plugins\IPluginInitializer.cs" />
-    <Compile Include="Plugins\PluginAttribute.cs" />
+    <Compile Include="Plugins\PluginInitializerAttribute.cs" />
     <Compile Include="Plugins\PluginBootstrapper.cs" />
     <Compile Include="Tasks\IStartupTask.cs" />
     <Compile Include="Tasks\ITask.cs" />

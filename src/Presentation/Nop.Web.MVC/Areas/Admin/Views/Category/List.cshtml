@@ -1,4 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Core.Domain.Catalog.Category>
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Web.MVC.Areas.Admin.Models.CategoryModel>
 @using Telerik.Web.Mvc.UI
 <div class="section-header">
     <div class="title">
@@ -12,19 +12,26 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Core.Domain.Catalog.Category>()
+            @(Html.Telerik().Grid<Nop.Web.MVC.Areas.Admin.Models.CategoryModel>()
                     .Name("Grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Id).Template(x => Html.ActionLink("Edit", "Edit", new { id = x.Id })).ClientTemplate("<a href=\"<#= Id #>\">Edit</a>").Width(50).HtmlAttributes(new { align = "center" });
-                        //columns.Bound(x => x.Id).).Width(50);
                         columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Breadcrumb);
+                        columns.Bound(x => x.Published).Template(x => x.Published.ToString().ToLower());
                         columns.Bound(x => x.DisplayOrder);
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink("Edit", "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"<#= Id #>\">Edit</a>")
+                            .Width(50)
+                            .HtmlAttributes(new { align = "center" })
+                            .HeaderTemplate("Edit")
+                            .HeaderHtmlAttributes(new { align = "center" }).Filterable(false);
                     })
                     .Pageable(settings => settings.Total(Model.Total).PageSize(10))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Category"))
-                    .EnableCustomBinding(true).Filterable().Sortable())
+                    .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

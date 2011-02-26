@@ -98,7 +98,59 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
                                                                HttpUtility.HtmlDecode(localized.Value.Description),
                                                                localized.Key);
                 }
+
+                if (!string.IsNullOrEmpty(localized.Value.MetaKeywords))
+                {
+                    _localizedEntityService.SaveLocalizedValue(category,
+                                                               x => x.MetaKeywords,
+                                                               localized.Value.MetaKeywords,
+                                                               localized.Key);
+                }
+                if (!string.IsNullOrEmpty(localized.Value.MetaDescription))
+                {
+                    _localizedEntityService.SaveLocalizedValue(category,
+                                                               x => x.MetaDescription,
+                                                               localized.Value.MetaDescription,
+                                                               localized.Key);
+                }
+                if (!string.IsNullOrEmpty(localized.Value.MetaTitle))
+                {
+                    _localizedEntityService.SaveLocalizedValue(category,
+                                                               x => x.MetaTitle,
+                                                               localized.Value.MetaTitle,
+                                                               localized.Key);
+                }
+                if (!string.IsNullOrEmpty(localized.Value.SeName))
+                {
+                    _localizedEntityService.SaveLocalizedValue(category,
+                                                               x => x.SeName,
+                                                               localized.Value.SeName,
+                                                               localized.Key);
+                }
             }
+        }
+
+        [NonAction]
+        private string GetCategoryBreadCrumb(Category category)
+        {
+            string result = string.Empty;
+
+            while (category != null && !category.Deleted)
+            {
+                if (String.IsNullOrEmpty(result))
+                    result = category.Name;
+                else
+                    result = category.Name + " >> " + result;
+
+                category = _categoryService.GetCategoryById(category.ParentCategoryId);
+
+            }
+            return result;
+        }
+
+        public ActionResult Index()
+        {
+            return RedirectToAction("List");
         }
 
         #endregion Methods
@@ -176,7 +228,12 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             }
 
             var categories = _categoryService.GetAllCategories(0, 10, true);
-            var gridModel = new GridModel<Category> { Data = categories, Total = categories.TotalCount };
+            var gridModel = new GridModel<CategoryModel>
+                            {
+                                Data = categories.Select(x => new CategoryModel(x,null) { Breadcrumb = GetCategoryBreadCrumb(x) }),
+                                Total = categories.TotalCount
+                            };
+            //var gridModel = new GridModel<Category> { Data = categories, Total = categories.TotalCount };
             return View(gridModel);
         }
 
@@ -186,7 +243,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var model = new GridModel();
             var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize);
             model.Data = categories.Select(x =>
-                new { Id = Url.Action("Edit", new { x.Id }), x.Name, x.DisplayOrder });
+                new { Id = Url.Action("Edit", new { x.Id }), x.Name, x.DisplayOrder, Breadcrumb = GetCategoryBreadCrumb(x), x.Published });
             model.Total = categories.TotalCount;
             return new JsonResult
             {

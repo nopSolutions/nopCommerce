@@ -32,6 +32,10 @@ namespace Nop.Web.Framework.ViewEngines.Razor
                     _localizer = (format, args) =>
                                      {
                                          var resFormat = _localizationService.GetResource(format);
+                                         if (string.IsNullOrEmpty(resFormat))
+                                         {
+                                             return new LocalizedString(format);
+                                         }
                                          return
                                              new LocalizedString((args == null || args.Length == 0)
                                                                      ? resFormat

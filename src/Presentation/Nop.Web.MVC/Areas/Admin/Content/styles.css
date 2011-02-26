@@ -235,6 +235,25 @@ td.adminData
 	vertical-align: middle;
 }
 
+td.adminData .text-box.single-line
+{
+    border:1px solid #ACACAC;
+    width:250px;
+    padding:2px;
+}
+
+td.adminData .t-combobox
+{
+    width:256px;
+}
+
+td.adminData .t-numerictextbox .t-input
+{
+    border:1px solid #ACACAC;
+    width:250px;
+    padding:2px;
+}
+
 tr.adminSeparator hr
 {
 	background-color:#D3D3D3;
@@ -737,9 +756,16 @@ a img
 .header-menu
 {
 	width: 100%;
-	line-height: 29px;
-	height:31px;
 	background: url('images/admin-menu-bg.gif') repeat-x;	
+	text-transform:capitalize;
+}
+
+.header-menu .t-menu .t-link{
+    padding:0.6em 0.97em;
+}
+
+.header-menu .t-menu .t-arrow-next {
+    top:7px;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*

@@ -1,0 +1,14 @@
+﻿@model Nop.Web.MVC.Areas.Admin.Models.LanguageModel
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Admin/Content/images/ico-configuration.png")" />
+            @T("Edit language details") - @Model.Name @Html.ActionLink("(" + T("back to language list") + ")", "List")
+        </div>
+        <div class="options">
+            <input type="submit" value="Save" class="adminButtonBlue" /> <input type="button" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'" value="Delete" class="adminButtonBlue" />
+        </div>
+    </div>
+    @Html.EditorForModel("Language")
+}
