@@ -60,6 +60,10 @@
     <Compile Include="Mapping\Discounts\DiscountMap.cs" />
     <Compile Include="Mapping\Discounts\DiscountRequirementMap.cs" />
     <Compile Include="Mapping\Media\DownloadMap.cs" />
+    <Compile Include="Mapping\Messages\EmailAccountMap.cs" />
+    <Compile Include="Mapping\Messages\MessageTemplateMap.cs" />
+    <Compile Include="Mapping\Messages\NewsLetterSubscriptionMap.cs" />
+    <Compile Include="Mapping\Messages\QueuedEmailMap.cs" />
     <Compile Include="Mapping\Orders\CheckoutAttributeMap.cs" />
     <Compile Include="Mapping\Orders\CheckoutAttributeValueMap.cs" />
     <Compile Include="Mapping\Orders\GiftCardMap.cs" />

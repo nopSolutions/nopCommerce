@@ -23,6 +23,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping.Localization;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Messages;
 
 namespace Nop.Data
 {
@@ -52,6 +53,7 @@ namespace Nop.Data
         public DbSet<DiscountRequirement> DiscountRequirement { get; set; }
         public DbSet<DiscountUsageHistory> DiscountUsageHistory { get; set; }
         public DbSet<Download> Downloads { get; set; }
+        public DbSet<EmailAccount> EmailAccounts { get; set; }
         public DbSet<GiftCard> GiftCards { get; set; }
         public DbSet<GiftCardUsageHistory> GiftCardUsageHistory { get; set; }
         public DbSet<Language> Languages { get; set; }
@@ -61,6 +63,8 @@ namespace Nop.Data
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<MeasureDimension> MeasureDimensions { get; set; }
         public DbSet<MeasureWeight> MeasureWeights { get; set; }
+        public DbSet<MessageTemplate> MessageTemplates { get; set; }
+        public DbSet<NewsLetterSubscription> NewsLetterSubscriptions { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<PermissionRecord> PermissionRecords { get; set; }
         public DbSet<Picture> Pictures { get; set; }
@@ -76,6 +80,7 @@ namespace Nop.Data
         public DbSet<ProductVariantAttributeCombination> ProductVariantAttributeCombinations { get; set; }
         public DbSet<ProductVariantAttributeValue> ProductVariantAttributeValues { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
+        public DbSet<QueuedEmail> QueuedEmails { get; set; }
         public DbSet<RelatedProduct> RelatedProducts { get; set; }
         public DbSet<RewardPointsHistory> RewardPointsHistory { get; set; }
         public DbSet<Setting> Settings { get; set; }
@@ -94,7 +99,7 @@ namespace Nop.Data
             System.Type configType = typeof(LanguageMap);   //any of your configuration classes here
             var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
             .Where(type => !String.IsNullOrEmpty(type.Namespace))
-            .Where(type => type.BaseType!=null && type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>));
+            .Where(type => type.BaseType != null && type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>));
             foreach (var type in typesToRegister)
             {
                 dynamic configurationInstance = Activator.CreateInstance(type);
@@ -108,11 +113,13 @@ namespace Nop.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public string CreateDatabaseScript() {
+        public string CreateDatabaseScript()
+        {
             return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
         }
 
-        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity  {
+        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        {
             return base.Set<TEntity>();
         }
     }

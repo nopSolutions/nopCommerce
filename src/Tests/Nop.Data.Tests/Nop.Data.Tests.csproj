@@ -70,11 +70,15 @@
     <Compile Include="CheckoutAttributePersistenceTests.cs" />
     <Compile Include="CheckoutAttributeValuePersistenceTests.cs" />
     <Compile Include="DownloadPersistenceTests.cs" />
+    <Compile Include="EmailAccountPersistenceTests.cs" />
+    <Compile Include="MessageTemplatePersistenceTests.cs" />
+    <Compile Include="NewsLetterSubscriptionPersistenceTests.cs" />
     <Compile Include="PermissionRecordPersistenceTests.cs" />
     <Compile Include="GiftCardPersistenceTests.cs" />
     <Compile Include="GiftCardUsageHistoryPersistenceTests.cs" />
     <Compile Include="DiscountUsageHistoryPersistenceTests.cs" />
     <Compile Include="OrderPersistenceTests.cs" />
+    <Compile Include="QueuedEmailPersistenceTests.cs" />
     <Compile Include="RewardPointsHistoryPersistenceTests.cs" />
     <Compile Include="ShippingMethodPersistenceTests.cs" />
     <Compile Include="ShoppingCartItemPeristenceTests.cs" />
