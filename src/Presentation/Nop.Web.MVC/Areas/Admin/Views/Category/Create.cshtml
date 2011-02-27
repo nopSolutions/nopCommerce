@@ -8,7 +8,7 @@
             @T("Add a new category") - @Html.ActionLink("(" + T("back to category list") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="Save" class="adminButtonBlue" />
+            <input type="submit" value="@T("Save")" class="t-button" />
         </div>
     </div>
     @Html.EditorForModel("Category")

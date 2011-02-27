@@ -7,7 +7,7 @@
             @T("Edit language details") - @Model.Name @Html.ActionLink("(" + T("back to language list") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="Save" class="adminButtonBlue" /> <input type="button" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'" value="Delete" class="adminButtonBlue" />
+            <input type="submit" value="Save" class="t-button" /> <input type="button" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'" value="Delete" class="t-button" />
         </div>
     </div>
     @Html.EditorForModel("Language")
