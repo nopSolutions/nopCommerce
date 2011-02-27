@@ -32,6 +32,7 @@ using Nop.Services.Security;
 using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Services.Messages;
 
 namespace Nop.Web.MVC.Infrastructure
 {
@@ -115,6 +116,9 @@ namespace Nop.Web.MVC.Infrastructure
 
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerHttpRequest();
             builder.RegisterType<PictureService>().As<IPictureService>().InstancePerHttpRequest();
+
+            builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerHttpRequest();
+            builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerHttpRequest();
 
             builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerHttpRequest();
             builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerHttpRequest();

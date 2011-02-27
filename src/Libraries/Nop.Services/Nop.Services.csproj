@@ -90,6 +90,10 @@
     <Compile Include="Media\DownloadService.cs" />
     <Compile Include="Media\IPictureService.cs" />
     <Compile Include="Media\PictureService.cs" />
+    <Compile Include="Messages\IMessageTemplateService.cs" />
+    <Compile Include="Messages\IQueuedEmailService.cs" />
+    <Compile Include="Messages\MessageTemplateService.cs" />
+    <Compile Include="Messages\QueuedEmailService.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\CheckoutAttributeParser.cs" />
