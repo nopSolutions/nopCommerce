@@ -199,6 +199,10 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Edit(CategoryModel categoryModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("Edit", categoryModel);
+            }
             var category = _categoryService.GetCategoryById(categoryModel.Id);
             UpdateInstance(category, categoryModel);
             _categoryService.UpdateCategory(category);

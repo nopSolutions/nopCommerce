@@ -2,7 +2,7 @@
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
 
-@Html.ValidationSummary(true)
+@Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
 @Html.Telerik().TabStrip().Name("CategoryEdit").Items(x =>

@@ -50,6 +50,12 @@
     <Reference Include="EntityFramework">
       <HintPath>..\..\packages\EFCodeFirst.0.8\lib\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\..\packages\FluentValidation.2.0.0.0\lib\NET35\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc">
+      <HintPath>..\..\packages\FluentValidation.MVC3.2.0.0.0\lib\NET4\FluentValidation.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\AutofacContrib-2.4.4.705-NET40\Library\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -185,6 +191,7 @@
     <Compile Include="Areas\Admin\Models\CategoryModel.cs" />
     <Compile Include="Areas\Admin\Models\CategoryProductModel.cs" />
     <Compile Include="Areas\Admin\Models\LanguageModel.cs" />
+    <Compile Include="Areas\Admin\Validators\CategoryValidator.cs" />
     <Compile Include="Areas\Admin\Views\Shared\TestMenuPlugin1.cs" />
     <Compile Include="Areas\Admin\Views\Shared\TestMenuPlugin2.cs" />
     <Compile Include="Areas\Public\Controllers\HomeController.cs" />
@@ -195,6 +202,7 @@
     </Compile>
     <Compile Include="Infrastructure\DependencyRegistar.cs" />
     <Compile Include="Infrastructure\NopDependencyResolver.cs" />
+    <Compile Include="Infrastructure\NopValidatorFactory.cs" />
     <Compile Include="StartupTasks\RegisterDefaultPermissionsStartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

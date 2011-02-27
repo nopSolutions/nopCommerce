@@ -29,7 +29,9 @@
             @(Html.Telerik().ComboBoxFor(x => x.LanguageCulture)
                 .BindTo(cultures.Select(x=> 
                     new DropDownItem{Value = x.IetfLanguageTag, Text =  string.Format("{0}. {1}", x.IetfLanguageTag, x.EnglishName)} ))
-                .Encode(true))
+                .Encode(true)
+                .AutoFill(false)
+                .Filterable(x => { x.Enabled(false);}))
             @Html.ValidationMessageFor(model => model.LanguageCulture)
         </td>
     </tr>

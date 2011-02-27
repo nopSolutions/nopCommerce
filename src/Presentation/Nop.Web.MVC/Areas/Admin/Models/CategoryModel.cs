@@ -2,16 +2,19 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using FluentValidation.Attributes;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
+using Nop.Web.MVC.Areas.Admin.Validators;
 using Telerik.Web.Mvc.UI;
 
 
 namespace Nop.Web.MVC.Areas.Admin.Models
 {
+    [Validator(typeof(CategoryValidator))]
     public class CategoryModel : BaseNopModel
     {
         public CategoryModel()

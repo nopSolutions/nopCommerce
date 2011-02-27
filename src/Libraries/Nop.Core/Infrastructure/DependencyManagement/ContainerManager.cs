@@ -136,6 +136,36 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             return Scope().ResolveKeyed<IEnumerable<T>>(key).ToArray();
         }
 
+        public T ResolveUnregistered<T>() where T:class
+        {
+            return ResolveUnregistered(typeof(T)) as T;
+        }
+
+        public object ResolveUnregistered(Type type)
+        {
+            var constructors = type.GetConstructors();
+            foreach (var constructor in constructors)
+            {
+                try
+                {
+                    var parameters = constructor.GetParameters();
+                    var parameterInstances = new List<object>();
+                    foreach (var parameter in parameters)
+                    {
+                        var service = Resolve(parameter.ParameterType);
+                        if (service == null) throw new NopException("Unkown dependency");
+                        parameterInstances.Add(service);
+                    }
+                    return Activator.CreateInstance(type, parameterInstances.ToArray());
+                }
+                catch (NopException)
+                {
+
+                }
+            }
+            throw new NopException("No contructor was found that had all the dependencies satisfied.");
+        }
+
         public void StartComponents()
         {
             _container.Resolve<IStarter>().Start();

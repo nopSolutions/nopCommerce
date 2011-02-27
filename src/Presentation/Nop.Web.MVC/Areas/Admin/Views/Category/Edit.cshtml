@@ -51,9 +51,8 @@
         var action = form.attr("action"); 
         var serializedForm = form.serialize();
         $.post(action, serializedForm, function(){
-            endLoading();
+            $('.category-form').unblock(); 
         });
-        $('.category-form').unblock(); 
     }
     function closeConfirmationWindow()
     {

@@ -4,6 +4,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using AutofacContrib.CommonServiceLocator;
+using FluentValidation.Attributes;
+using FluentValidation.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
@@ -45,6 +47,13 @@ namespace Nop.Web.MVC
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            DataAnnotationsModelValidatorProvider
+                .AddImplicitRequiredAttributeForValueTypes = false;
+
+            ModelValidatorProviders.Providers.Add(
+                new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
+
         }
 
         protected void RegisterServiceLocator()
