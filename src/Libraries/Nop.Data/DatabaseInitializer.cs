@@ -152,7 +152,7 @@ namespace Nop.Data
                                {
                                            Name = "English",
                                            LanguageCulture = "en-US",
-                                           FlagImageFileName = string.Empty,
+                                           FlagImageFileName = "us.png",
                                            Published= true,
                                            DisplayOrder= 1
                                };
