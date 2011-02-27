@@ -12,25 +12,25 @@ namespace Nop.Core.Plugins
         public string Name { get; protected set; }
         public int SortOrder { get; protected set; }
 
-		#region Properties (1) 
+        #region Properties (1)
 
         public abstract Type PluginType { get; }
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Methods (2) 
+        #region Methods (2)
 
-		// Public Methods (2) 
+        // Public Methods (2) 
 
-        public abstract T Instance<T>() where T:class, IPlugin;
+        public abstract T Instance<T>() where T : class, IPlugin;
 
         public IPlugin Instance()
         {
             return Instance<IPlugin>();
         }
 
-		#endregion Methods 
-    
+        #endregion Methods
+
         public int CompareTo(PluginDescriptor other)
         {
             return SortOrder - other.SortOrder;
@@ -39,14 +39,14 @@ namespace Nop.Core.Plugins
 
     public class PluginAttributeDescriptor : PluginDescriptor
     {
-		#region Fields (2) 
+        #region Fields (2)
 
         private IPlugin _pluginInstance = null;
         private Type _pluginType = null;
 
-		#endregion Fields 
+        #endregion Fields
 
-		#region Constructors (1) 
+        #region Constructors (1)
 
         public PluginAttributeDescriptor(IPlugin pluginInstance)
         {
@@ -57,38 +57,38 @@ namespace Nop.Core.Plugins
             SortOrder = instance.SortOrder;
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Properties (1) 
+        #region Properties (1)
 
         public override Type PluginType
         {
             get { return _pluginType; }
         }
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Methods (1) 
+        #region Methods (1)
 
-		// Public Methods (1) 
+        // Public Methods (1) 
 
         public override T Instance<T>()
         {
             return _pluginInstance as T;
         }
 
-		#endregion Methods 
+        #endregion Methods
     }
 
     public class PluginImplementationDescriptor : PluginDescriptor
     {
-		#region Fields (1) 
+        #region Fields (1)
 
         private Type _pluginType = null;
 
-		#endregion Fields 
+        #endregion Fields
 
-		#region Constructors (1) 
+        #region Constructors (1)
 
         public PluginImplementationDescriptor(Type pluginType)
         {
@@ -98,20 +98,20 @@ namespace Nop.Core.Plugins
             SortOrder = instance.SortOrder;
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Properties (1) 
+        #region Properties (1)
 
         public override Type PluginType
         {
             get { return _pluginType; }
         }
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Methods (1) 
+        #region Methods (1)
 
-		// Public Methods (1) 
+        // Public Methods (1) 
 
         public override T Instance<T>()
         {
@@ -120,10 +120,16 @@ namespace Nop.Core.Plugins
             {
                 return instance as T;
             }
-            //TODO:Provide support for IPlugin implementations that have dependencies that need to be injected
-            return Activator.CreateInstance(_pluginType) as T;
+            try
+            {
+                return Activator.CreateInstance(_pluginType) as T;
+            }
+            catch (MissingMethodException ex)
+            {
+                return EngineContext.Current.ContainerManager.ResolveUnregistered(_pluginType) as T;
+            }
         }
 
-		#endregion Methods 
+        #endregion Methods
     }
 }
