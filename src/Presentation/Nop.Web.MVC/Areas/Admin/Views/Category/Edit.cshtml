@@ -1,6 +1,7 @@
-﻿@using Nop.Web.Framework;
-@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
-@using (Html.BeginForm())
+﻿@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using (Html.BeginForm("Edit", "Category", FormMethod.Post, new { @class = "category-form" }))
 {
     <div class="section-header">
         <div class="title">
@@ -8,8 +9,58 @@
             @T("Edit category details") - @Model.Name @Html.ActionLink("(" + T("back to category list") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="Save" class="adminButtonBlue" /> <input type="button" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'" value="Delete" class="adminButtonBlue" />
+            <input type="submit" value="Save" class="t-button" />
+            <span class="t-button" onclick="saveCategory();">Save and Continue Edit</span> <span id="category-delete" class="t-button">
+                Delete</span>
         </div>
     </div>
     @Html.EditorForModel("Category")
 }
+@(Html.Telerik().Window()
+    .Name("category-delete-confirm")
+    .Title("Are you sure")
+    .Modal(true)
+    .Effects(x => { x.Toggle(); })
+    .Resizable(x => { x.Enabled(false); })
+    .Buttons(x => { x.Close(); })
+    .Visible(false)
+    .Content(
+    @<div>
+        <p>
+            Are you sure you want to delete category "@Model.Name"?<br />
+        </p>
+        <div class="form-actions">
+            <span class="t-button" onclick="closeConfirmationWindow();">Cancel</span><span class="t-button"
+                onclick="closeConfirmationWindow();">No</span><span class="t-button" onclick="deleteCategory();">Yes</span>
+        </div>
+    </div>
+    ))
+<script type="text/javascript">
+    $(function () {
+        $("#category-delete").click(function (e) {
+            e.preventDefault();
+            openConfirmationWindow();
+        });
+    });
+    function deleteCategory() {
+        location.href = "@(Url.Action("Delete", new { id = Model.Id }))";
+    }
+    function saveCategory(){
+        $(".category-form").nopBlock("Saving category...");
+        var form = $(".category-form");
+        var action = form.attr("action"); 
+        var serializedForm = form.serialize();
+        $.post(action, serializedForm, function(){
+            endLoading();
+        });
+        $('.category-form').unblock(); 
+    }
+    function closeConfirmationWindow()
+    {
+        $('#category-delete-confirm').data('tWindow').close();
+    }
+    function openConfirmationWindow()
+    {
+        $('#category-delete-confirm').data('tWindow').center().open();
+    }
+</script>

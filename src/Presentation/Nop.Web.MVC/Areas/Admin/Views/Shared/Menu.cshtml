@@ -1,6 +1,5 @@
 ﻿@using Telerik.Web.Mvc.UI;
 @{
-    Telerik.Web.Mvc.SiteMapManager.SiteMaps.Remove("admin");
     if (!Telerik.Web.Mvc.SiteMapManager.SiteMaps.ContainsKey("admin"))
     {
         Telerik.Web.Mvc.SiteMapManager.SiteMaps.Register<Telerik.Web.Mvc.XmlSiteMap>("admin", sitmap =>
@@ -12,13 +11,13 @@
     Html.Telerik().Menu().Name("Admin")
     .BindTo("admin", (item, siteMapNode) =>
     {
-        //item.Text = T(item.Text).Text;
+        item.Text = T(item.Text).ToHtmlString();
     })
     .Items(x =>
     {
         if (adminMenuPlugins.Count() > 0)
         {
-            x.Add().Text("Plugins").Items(y =>
+            x.Add().Text(T("Plugins").ToHtmlString()).Items(y =>
             {
                 foreach (var adminMenuPlugin in adminMenuPlugins)
                 {
@@ -28,6 +27,6 @@
         }
     })
     .OpenOnClick(true)
-    
+
     .Render();
 }

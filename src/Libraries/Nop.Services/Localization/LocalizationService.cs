@@ -158,14 +158,15 @@ namespace Nop.Services.Localization
             bool logIfNotFound = true, string defaultValue = "")
         {
             string result = string.Empty;
-            if (resourceKey == null)
-                resourceKey = string.Empty;
-            resourceKey = resourceKey.Trim().ToLowerInvariant();
+            var resourceKeyValue = resourceKey;
+            if (resourceKeyValue == null)
+                resourceKeyValue = string.Empty;
+            resourceKeyValue = resourceKeyValue.Trim().ToLowerInvariant();
             var resources = GetAllResourcesByLanguageId(languageId);
 
-            if (resources.ContainsKey(resourceKey))
+            if (resources.ContainsKey(resourceKeyValue))
             {
-                var lsr = resources[resourceKey];
+                var lsr = resources[resourceKeyValue];
                 if (lsr != null)
                     result = lsr.ResourceValue;
             }

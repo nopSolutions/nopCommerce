@@ -473,6 +473,7 @@
     <Content Include="Scripts\2010.3.1318\telerik.window.min.js" />
     <Content Include="Scripts\admin.js" />
     <Content Include="Scripts\grid.locale-en.js" />
+    <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.jqGrid.min.js" />
     <Content Include="Scripts\jquery.superfishmenu.js" />
     <Content Include="Web.config" />

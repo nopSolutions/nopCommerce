@@ -203,7 +203,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             UpdateInstance(category, categoryModel);
             _categoryService.UpdateCategory(category);
             UpdateLocales(category, categoryModel);
-            return Edit(category.Id);
+            return RedirectToAction("List");
         }
 
         #endregion
