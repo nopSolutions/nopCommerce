@@ -71,12 +71,12 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             category.MetaTitle = model.MetaTitle;
             category.SeName = model.SeName;
             category.ParentCategoryId = model.ParentCategoryId;
-            //category.PictureId = model.PictureId;
+            category.PictureId = model.PictureId;
             category.PageSize = model.PageSize;
             category.PriceRanges = model.PriceRanges;
             category.ShowOnHomePage = model.ShowOnHomePage;
             category.Published = model.Published;
-            //category.Deleted = model.Deleted;
+            category.Deleted = model.Deleted;
             category.DisplayOrder = model.DisplayOrder;
         }
 

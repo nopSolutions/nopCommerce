@@ -15,9 +15,6 @@ namespace Nop.Web.MVC.Areas.Admin
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
-            //TODO move "ModelBinders.Binders.DefaultBinder..." to another place
-            ModelBinders.Binders.DefaultBinder = new NopModelBinder();
-
             context.MapRoute(
                 "Admin_default",
                 "Admin/{controller}/{action}/{id}",

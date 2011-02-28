@@ -1,22 +1,34 @@
 ﻿@model int
-
 @{
     var clientId = "picture" + new Random().Next();
 }
-<input type="file" id="@clientId" name="PictureId" />
-
-<span class="t-button ajax-upload">Ajax upload</span>
-
+<div id="@(clientId + "value")">
+    @Html.HiddenFor(x => x)
+</div>
+<div id="@(clientId + "image")">
+    <img src="@(EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>().GetPictureUrl(Model, 100, true))" />
+</div>
+<input type="file" id="@clientId"/>
 <script type="text/javascript">
     $(function () {
-        $(".ajax-upload").click(function (x) {
-            $(".category-form").nopBlock("Saving category...");
-            var action = "@Url.Action("AsyncUpload", "Picture")";
-            var serializedForm = $("<form />").append($("#@clientId")); //form.serialize();
-            $.post(action, serializedForm, function () {
-                $('.category-form').unblock();
+        $(document).ready(function () {
+            $('#@clientId').uploadify({
+                'uploader': '/Content/Flash/uploadify.swf',
+                'script': '/Admin/Picture/AsyncUpload',
+                'folder': '/uploads',
+                'multi': 'false',
+                'auto': true,
+                'buttonText': 'Browse',
+                'cancelImg': 'http://www.uploadify.com/uploadify/cancel.png',
+                'onComplete': function (event, ID, fileObj, response, data) {
+                    var json = jQuery.parseJSON(response);
+                    $("#@(clientId + "image")").html("<img id='theImg' src='" + json.imageUrl + "'/>");
+                    $("#@(clientId + "value") input").val(json.pictureId);
+                }
             });
         });
-    });        
+    });
+    function test(event, ID, fileObj, response, data) {
+        var o = new Object();
+    }
 </script>
-

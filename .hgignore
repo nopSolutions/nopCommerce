@@ -37,3 +37,4 @@ _ReSharper*/
 *.[Pp]ublish.xml
 Thumbs.db
 Nop.Web.MVC/Plugins
+glob:src/Presentation/Nop.Web.MVC/Content/Images/Thumbs/

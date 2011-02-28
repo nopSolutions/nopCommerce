@@ -732,6 +732,8 @@
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.jqGrid.min.js" />
     <Content Include="Scripts\jquery.superfishmenu.js" />
+    <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
+    <Content Include="Scripts\swfobject.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -766,6 +768,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Scripts\" />
+    <Folder Include="Content\flash\" />
     <Folder Include="Models\" />
     <Folder Include="Plugins\" />
     <Folder Include="Views\Catalog\" />

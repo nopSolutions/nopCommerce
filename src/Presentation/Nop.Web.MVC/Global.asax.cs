@@ -11,6 +11,7 @@ using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Security.Permissions;
+using Nop.Web.Framework;
 using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
@@ -42,6 +43,8 @@ namespace Nop.Web.MVC
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
             DependencyResolver.SetResolver(dependencyResolver);
+
+            ModelBinders.Binders.Add(typeof(BaseNopModel),new NopModelBinder());
 
             //other MVC stuff
             AreaRegistration.RegisterAllAreas();

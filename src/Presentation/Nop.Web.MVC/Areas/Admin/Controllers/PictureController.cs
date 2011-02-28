@@ -32,7 +32,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         {
              byte[] pictureBinary = httpPostedFile.GetPictureBits();
              var picture = _pictureService.InsertPicture(pictureBinary, httpPostedFile.ContentType, true);
-            return Json(new {pictureId = picture.Id});
+             return Json(new { pictureId = picture.Id, imageUrl = _pictureService.GetPictureUrl(picture, 100)});
         }
 
         public ActionResult AsyncUpload()
