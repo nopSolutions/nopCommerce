@@ -188,6 +188,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\LanguageController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PictureController.cs" />
     <Compile Include="Areas\Admin\Models\CategoryModel.cs" />
     <Compile Include="Areas\Admin\Models\CategoryProductModel.cs" />
     <Compile Include="Areas\Admin\Models\LanguageModel.cs" />
@@ -684,6 +685,7 @@
     <Content Include="Content\Images\noDefaultImage8.gif" />
     <Content Include="Content\Images\noDefaultImage9.gif" />
     <Content Include="Content\Images\Thumbs\placeholder.txt" />
+    <Content Include="Content\resources\swfupload.swf" />
     <Content Include="Documents\LocaleStringResources.sql" />
     <Content Include="Documents\Upgrade.sql" />
     <Content Include="Global.asax" />
@@ -702,6 +704,7 @@
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Scripts\swfupload.js" />
     <Content Include="Scripts\2010.3.1318\jquery-1.4.4.min.js" />
     <Content Include="Scripts\2010.3.1318\jquery.validate.min.js" />
     <Content Include="Scripts\2010.3.1318\telerik.autocomplete.min.js" />
@@ -728,6 +731,7 @@
     <Content Include="Scripts\2010.3.1318\telerik.window.min.js" />
     <Content Include="Scripts\admin.js" />
     <Content Include="Scripts\grid.locale-en.js" />
+    <Content Include="Scripts\jquery-asyncUpload-0.1.js" />
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.jqGrid.min.js" />
     <Content Include="Scripts\jquery.superfishmenu.js" />
@@ -956,6 +960,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Language\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\Picture.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

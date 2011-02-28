@@ -1,0 +1,22 @@
+﻿@model int
+
+@{
+    var clientId = "picture" + new Random().Next();
+}
+<input type="file" id="@clientId" name="PictureId" />
+
+<span class="t-button ajax-upload">Ajax upload</span>
+
+<script type="text/javascript">
+    $(function () {
+        $(".ajax-upload").click(function (x) {
+            $(".category-form").nopBlock("Saving category...");
+            var action = "@Url.Action("AsyncUpload", "Picture")";
+            var serializedForm = $("<form />").append($("#@clientId")); //form.serialize();
+            $.post(action, serializedForm, function () {
+                $('.category-form').unblock();
+            });
+        });
+    });        
+</script>
+

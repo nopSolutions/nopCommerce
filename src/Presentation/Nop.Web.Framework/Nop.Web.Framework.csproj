@@ -65,6 +65,7 @@
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
     <Compile Include="HtmlExtensions.cs" />
+    <Compile Include="ImageResult.cs" />
     <Compile Include="Localization\ILocalizedModel.cs" />
     <Compile Include="Localization\LocalizedModels.cs" />
     <Compile Include="Localization\LocalizedPropertyBinder.cs" />

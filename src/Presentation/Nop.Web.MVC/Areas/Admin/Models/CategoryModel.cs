@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -62,6 +63,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         public string SeName { get; set; }
         public int ParentCategoryId { get; set; }
         public Category ParentCategory {get;set;}
+        [UIHint("Picture")]
         public int PictureId { get; set; }
         public int PageSize { get; set; }
         public string PriceRanges { get; set; }
