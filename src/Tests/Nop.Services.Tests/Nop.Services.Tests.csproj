@@ -73,6 +73,7 @@
     <Compile Include="Configuration\ConfigFileSettingService.cs" />
     <Compile Include="Configuration\ConfigurationProviderTests.cs" />
     <Compile Include="Discounts\DiscountServiceTests.cs" />
+    <Compile Include="Helpers\DateTimeHelperTests.cs" />
     <Compile Include="Localization\LanguageServiceTests.cs" />
     <Compile Include="Orders\CheckoutAttributeParserTests.cs" />
     <Compile Include="Security\EncryptionServiceTests.cs" />
