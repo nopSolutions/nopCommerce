@@ -11,13 +11,23 @@
     Html.Telerik().Menu().Name("Admin")
     .BindTo("admin", (item, siteMapNode) =>
     {
-        item.Text = T(item.Text).ToHtmlString();
+        var resourceName = ((Telerik.Web.Mvc.SiteMapNode)siteMapNode).Attributes["nopResource"];
+        if (resourceName != null && !string.IsNullOrEmpty(resourceName.ToString()))
+        {
+            item.Text = T(resourceName.ToString()).ToHtmlString();
+        }
+
+        if (ViewBag.SelectedMenuItem == item.Text)
+        {
+            item.Selected = true;
+        }
+        
     })
     .Items(x =>
     {
         if (adminMenuPlugins.Count() > 0)
         {
-            x.Add().Text(T("Plugins").ToHtmlString()).Items(y =>
+            x.Add().Text(T("Plugins.Title").ToHtmlString()).Items(y =>
             {
                 foreach (var adminMenuPlugin in adminMenuPlugins)
                 {

@@ -40,6 +40,7 @@ namespace Nop.Web.MVC
 
         protected void Application_Start()
         {
+            EngineContext.Initialize(false);
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
             DependencyResolver.SetResolver(dependencyResolver);

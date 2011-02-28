@@ -1,6 +1,10 @@
 ﻿@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
+@{
+    ViewBag.SelectedMenuItem = "Languages";
+}
+
 @using (Html.BeginForm("Edit", "Category", FormMethod.Post, new { @class = "category-form" }))
 {
     <div class="section-header">
@@ -10,12 +14,13 @@
         </div>
         <div class="options">
             <input type="submit" value="Save" class="t-button" />
-            <span class="t-button" onclick="saveCategory();">Save and Continue Edit</span> <span id="category-delete" class="t-button">
-                Delete</span>
+            <span class="t-button" onclick="saveCategory();">Save and Continue Edit</span> <span
+                id="category-delete" class="t-button">Delete</span>
         </div>
     </div>
     @Html.EditorForModel("Category")
 }
+
 @(Html.Telerik().Window()
     .Name("category-delete-confirm")
     .Title("Are you sure")

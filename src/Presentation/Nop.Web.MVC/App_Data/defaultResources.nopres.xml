@@ -65,7 +65,41 @@
     <LocaleResource Name="Account.Administration">
         <Value>Administration</Value>
     </LocaleResource>
-    <LocaleResource Name="Category.Name.Validation">
+
+    <LocaleResource Name="Plugins.Title">
+        <Value>Plugins</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="Catalog">
+        <Value>Catalog</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="Catalog.Categories">
+        <Value>Categories</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="General.List">
+        <Value>List</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="General.Treeview">
+        <Value>Tree view</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="Catalog.Category.Name.Validation">
         <Value>Name is invalid.</Value>
     </LocaleResource>
+
+    <LocaleResource Name="Configuration">
+        <Value>Configuration</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="Configuration.Location">
+        <Value>Location</Value>
+    </LocaleResource>
+    
+    <LocaleResource Name="Configuration.Location.Languages">
+        <Value>Languages</Value>
+    </LocaleResource>
+
 </Language>
