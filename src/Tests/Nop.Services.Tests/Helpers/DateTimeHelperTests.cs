@@ -35,7 +35,7 @@ namespace Nop.Services.Tests.Helpers
             //{
             //    //
             //};
-            //_workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
             //_workContext.Expect(x => x.CurrentCustomer).Return(customer);
 
             _dateTimeSettings = new DateTimeSettings()

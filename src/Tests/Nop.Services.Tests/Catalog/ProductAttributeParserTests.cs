@@ -158,8 +158,7 @@ namespace Nop.Services.Tests.Catalog
 
             _productAttributeParser = new ProductAttributeParser(_productAttributeService);
         }
-
-
+        
         [Test]
         public void Can_add_and_parse_productAttributes()
         {
@@ -183,6 +182,28 @@ namespace Nop.Services.Tests.Catalog
             parsedValues.Count.ShouldEqual(1);
             parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
             parsedValues.Contains("Some other custom text").ShouldEqual(false);
+        }
+
+        [Test]
+        public void Can_add_and_parse_giftCardAttributes()
+        {
+            string attributes = "";
+            attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
+                "recipientName 1", "recipientEmail@gmail.com", 
+                "senderName 1", "senderEmail@gmail.com", "custom message");
+
+            string recipientName, recipientEmail, senderName, senderEmail, giftCardMessage;
+            _productAttributeParser.GetGiftCardAttribute(attributes, 
+                out recipientName,
+                out recipientEmail,
+                out senderName,
+                out senderEmail,
+                out giftCardMessage);
+            recipientName.ShouldEqual("recipientName 1");
+            recipientEmail.ShouldEqual("recipientEmail@gmail.com");
+            senderName.ShouldEqual("senderName 1");
+            senderEmail.ShouldEqual("senderEmail@gmail.com");
+            giftCardMessage.ShouldEqual("custom message");
         }
     }
 }
