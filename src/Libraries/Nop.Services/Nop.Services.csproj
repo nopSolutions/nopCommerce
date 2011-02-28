@@ -91,9 +91,13 @@
     <Compile Include="Media\DownloadService.cs" />
     <Compile Include="Media\IPictureService.cs" />
     <Compile Include="Media\PictureService.cs" />
+    <Compile Include="Messages\EmailAccountService.cs" />
+    <Compile Include="Messages\IEmailAccountService.cs" />
     <Compile Include="Messages\IMessageTemplateService.cs" />
+    <Compile Include="Messages\INewsLetterSubscriptionService.cs" />
     <Compile Include="Messages\IQueuedEmailService.cs" />
     <Compile Include="Messages\MessageTemplateService.cs" />
+    <Compile Include="Messages\NewsLetterSubscriptionService.cs" />
     <Compile Include="Messages\QueuedEmailService.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
