@@ -4,22 +4,33 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Orders;
+using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.Tests.Orders
 {
     [TestFixture]
-    public class CheckoutAttributeParserTests
+    public class CheckoutAttributeParserAndFormatterTests
     {
         IRepository<CheckoutAttribute> _checkoutAttributeRepo;
         IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepo;
         ICheckoutAttributeService _checkoutAttributeService;
         ICheckoutAttributeParser _checkoutAttributeParser;
+
+        IWorkContext _workContext;
+        ICurrencyService _currencyService;
+        ITaxService _taxService;
+        IPriceFormatter _priceFormatter;
+        ICheckoutAttributeFormatter _checkoutAttributeFormatter;
 
         CheckoutAttribute ca1, ca2, ca3;
         CheckoutAttributeValue cav1_1, cav1_2, cav2_1, cav2_2;
@@ -121,6 +132,22 @@ namespace Nop.Services.Tests.Orders
                 _checkoutAttributeValueRepo);
 
             _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
+
+
+
+            var workingLanguage = new Language();
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workContext.Expect(x => x.WorkingLanguage).Return(workingLanguage);
+            _currencyService = MockRepository.GenerateMock<ICurrencyService>();
+            _taxService = MockRepository.GenerateMock<ITaxService>();
+            _priceFormatter = MockRepository.GenerateMock<IPriceFormatter>();
+
+            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_workContext,
+                _checkoutAttributeService,
+                _checkoutAttributeParser,
+                _currencyService,
+                _taxService,
+                _priceFormatter);
         }
         
         [Test]
@@ -146,6 +173,24 @@ namespace Nop.Services.Tests.Orders
             parsedValues.Count.ShouldEqual(1);
             parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
             parsedValues.Contains("Some other custom text").ShouldEqual(false);
+        }
+
+        [Test]
+        public void Can_add_render_attributes_withoutPrices()
+        {
+            string attributes = "";
+            //color: green
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
+            //custom option: option 1, option 2
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_1.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString());
+            //custom text
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
+
+
+            var customer = new Customer();
+            string formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
+            formattedAttributes.ShouldEqual("Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
         }
     }
 }

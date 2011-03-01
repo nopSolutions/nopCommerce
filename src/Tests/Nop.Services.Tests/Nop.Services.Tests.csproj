@@ -68,14 +68,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Catalog\ProductAttributeParserTests.cs" />
+    <Compile Include="Catalog\ProductAttributeParserAndFormatterTests.cs" />
     <Compile Include="Catalog\PriceFormatterTests.cs" />
     <Compile Include="Configuration\ConfigFileSettingService.cs" />
     <Compile Include="Configuration\ConfigurationProviderTests.cs" />
     <Compile Include="Discounts\DiscountServiceTests.cs" />
     <Compile Include="Helpers\DateTimeHelperTests.cs" />
     <Compile Include="Localization\LanguageServiceTests.cs" />
-    <Compile Include="Orders\CheckoutAttributeParserTests.cs" />
+    <Compile Include="Orders\CheckoutAttributeParserAndFormatterTests.cs" />
     <Compile Include="Security\EncryptionServiceTests.cs" />
     <Compile Include="Security\UserServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

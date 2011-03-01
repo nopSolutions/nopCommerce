@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
+using Nop.Services.Localization;
+using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -20,6 +26,13 @@ namespace Nop.Services.Tests.Catalog
         IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRepo;
         IProductAttributeService _productAttributeService;
         IProductAttributeParser _productAttributeParser;
+
+        IWorkContext _workContext;
+        ICurrencyService _currencyService;
+        ILocalizationService _localizationService;
+        ITaxService _taxService;
+        IPriceFormatter _priceFormatter;
+        IProductAttributeFormatter _productAttributeFormatter;
 
         ProductAttribute pa1, pa2, pa3;
         ProductVariantAttribute pva1_1, pva2_1, pva3_1;
@@ -157,6 +170,27 @@ namespace Nop.Services.Tests.Catalog
                 _productVariantAttributeValueRepo);
 
             _productAttributeParser = new ProductAttributeParser(_productAttributeService);
+
+
+
+
+            var workingLanguage = new Language();
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workContext.Expect(x => x.WorkingLanguage).Return(workingLanguage);
+            _currencyService = MockRepository.GenerateMock<ICurrencyService>();
+            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.For")).Return("For: {0}");
+            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.From")).Return("From: {0}");
+            _taxService = MockRepository.GenerateMock<ITaxService>();
+            _priceFormatter = MockRepository.GenerateMock<IPriceFormatter>();
+
+            _productAttributeFormatter = new ProductAttributeFormatter(_workContext,
+                _productAttributeService,
+                _productAttributeParser,
+                _currencyService,
+                _localizationService,
+                _taxService,
+                _priceFormatter);
         }
         
         [Test]
@@ -204,6 +238,33 @@ namespace Nop.Services.Tests.Catalog
             senderName.ShouldEqual("senderName 1");
             senderEmail.ShouldEqual("senderEmail@gmail.com");
             giftCardMessage.ShouldEqual("custom message");
+        }
+
+        [Test]
+        public void Can_add_render_attributes_withoutPrices()
+        {
+            string attributes = "";
+            //color: green
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pva1_1, pvav1_1.Id.ToString());
+            //custom option: option 1, option 2
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pva2_1, pvav2_1.Id.ToString());
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pva2_1, pvav2_2.Id.ToString());
+            //custom text
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pva3_1, "Some custom text goes here");
+
+            //gift card attributes
+            attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
+                "recipientName 1", "recipientEmail@gmail.com",
+                "senderName 1", "senderEmail@gmail.com", "custom message");
+
+            var productVariant = new ProductVariant()
+            {
+                IsGiftCard = true
+            };
+            var customer = new Customer();
+            string formattedAttributes = _productAttributeFormatter.FormatAttributes(productVariant,
+                attributes, customer, "<br />", false, false, true, true);
+            formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />For: recipientName 1<br />From: senderName 1");
         }
     }
 }

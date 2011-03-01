@@ -15,15 +15,20 @@ namespace Nop.Services.Localization
             Expression<Func<T, string>> keySelector)
             where T : BaseEntity, ILocalizedEntity
         {
-            //int languageId = ServiceLocator.Current.GetInstance<IWorkContext>().WorkingLanguage.Id;
-            int languageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-            return GetLocalized(entity, keySelector, languageId);
+            return GetLocalized(entity, keySelector, EngineContext.Current.Resolve<IWorkContext>());
         }
 
         public static string GetLocalized<T>(this T entity,
-            Expression<Func<T, string>> keySelector,
-            int languageId,
-            bool returnDefaultValue = true) where T : BaseEntity, ILocalizedEntity
+            Expression<Func<T, string>> keySelector, IWorkContext workContext)
+            where T : BaseEntity, ILocalizedEntity
+        {
+            int languageId = workContext.WorkingLanguage.Id;
+            return GetLocalized(entity, keySelector, languageId);
+        }
+
+        public static string GetLocalized<T>(this T entity, 
+            Expression<Func<T, string>> keySelector, int languageId, bool returnDefaultValue = true) 
+            where T : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -50,15 +55,18 @@ namespace Nop.Services.Localization
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 
+            if (languageId != 0)
+            {
+                //localized value
+                var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
+                var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
+                var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
+                    lp.LocaleKeyGroup == localeKeyGroup &&
+                    lp.LocaleKey == localeKey);
 
-            //var leService = ServiceLocator.Current.GetInstance<ILocalizedEntityService>();
-            var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
-            var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
-            var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
-                lp.LocaleKeyGroup == localeKeyGroup &&
-                lp.LocaleKey == localeKey);
-            if (prop != null)
-                result = prop.LocaleValue;
+                if (prop != null)
+                    result = prop.LocaleValue;
+            }
 
             //set default value if required
             if (String.IsNullOrEmpty(result) && returnDefaultValue)
