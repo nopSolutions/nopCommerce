@@ -53,9 +53,10 @@ namespace Nop.Services.Directory
         /// <param name="quantity">Quantity</param>
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
+        /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
         decimal ConvertDimension(decimal quantity,
-            MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension);
+            MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true);
 
         /// <summary>
         /// Converts to primary measure dimension
@@ -120,9 +121,10 @@ namespace Nop.Services.Directory
         /// <param name="quantity">Quantity</param>
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <param name="targetMeasureWeight">Target weight</param>
+        /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
         decimal ConvertWeight(decimal quantity,
-            MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight);
+            MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true);
 
         /// <summary>
         /// Converts to primary measure weight

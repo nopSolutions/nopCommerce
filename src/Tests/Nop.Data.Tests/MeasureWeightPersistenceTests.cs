@@ -19,7 +19,7 @@ namespace Nop.Data.Tests
             {
                 Name = "ounce(s)",
                 SystemKeyword = "ounce",
-                Ratio = 1.1M,
+                Ratio = 1.12345678M,
                 DisplayOrder = 2,
             };
 
@@ -27,7 +27,7 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("ounce(s)");
             fromDb.SystemKeyword.ShouldEqual("ounce");
-            fromDb.Ratio.ShouldEqual(1.1M);
+            fromDb.Ratio.ShouldEqual(1.12345678M);
             fromDb.DisplayOrder.ShouldEqual(2);
         }
     }

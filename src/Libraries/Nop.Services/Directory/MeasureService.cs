@@ -159,19 +159,19 @@ namespace Nop.Services.Directory
         /// <param name="quantity">Quantity</param>
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
+        /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertDimension(decimal quantity,
-            MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension)
+        public decimal ConvertDimension(decimal quantity, 
+            MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true)
         {
             decimal result = quantity;
-            if (sourceMeasureDimension.Id == targetMeasureDimension.Id)
-                return result;
             if (result != decimal.Zero && sourceMeasureDimension.Id != targetMeasureDimension.Id)
             {
                 result = ConvertToPrimaryMeasureDimension(result, sourceMeasureDimension);
                 result = ConvertFromPrimaryMeasureDimension(result, targetMeasureDimension);
             }
-            result = Math.Round(result, 2);
+            if (round)
+                result = Math.Round(result, 2);
             return result;
         }
 
@@ -320,19 +320,19 @@ namespace Nop.Services.Directory
         /// <param name="quantity">Quantity</param>
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <param name="targetMeasureWeight">Target weight</param>
+        /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
         public decimal ConvertWeight(decimal quantity,
-            MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight)
+            MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true)
         {
             decimal result = quantity;
-            if (sourceMeasureWeight.Id == targetMeasureWeight.Id)
-                return result;
             if (result != decimal.Zero && sourceMeasureWeight.Id != targetMeasureWeight.Id)
             {
                 result = ConvertToPrimaryMeasureWeight(result, sourceMeasureWeight);
                 result = ConvertFromPrimaryMeasureWeight(result, targetMeasureWeight);
             }
-            result = Math.Round(result, 2);
+            if (round)
+                result = Math.Round(result, 2);
             return result;
         }
 

@@ -59,7 +59,7 @@ namespace Nop.Data
             {
                 Name = "feet",
                 SystemKeyword = "feet",
-                Ratio = 0.0833M,
+                Ratio = 0.08333333M,
                 DisplayOrder = 2,
             });
             context.MeasureDimensions.Add(new MeasureDimension()
@@ -97,14 +97,14 @@ namespace Nop.Data
             {
                 Name = "kg(s)",
                 SystemKeyword = "kg",
-                Ratio = 0.4536M,
+                Ratio = 0.45359237M,
                 DisplayOrder = 3,
             });
             context.MeasureWeights.Add(new MeasureWeight()
             {
                 Name = "gram(s)",
                 SystemKeyword = "grams",
-                Ratio = 453.59M,
+                Ratio = 453.59237M,
                 DisplayOrder = 4,
             });
             context.SaveChanges();
