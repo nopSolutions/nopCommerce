@@ -10,6 +10,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -41,6 +42,7 @@ namespace Nop.Services.Shipping
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ShippingSettings _shippingSettings;
+        private readonly ITypeFinder _typeFinder;
         
         #endregion
 
@@ -55,12 +57,14 @@ namespace Nop.Services.Shipping
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="shippingSettings">Shipping settings</param>
+        /// <param name="typeFinder">Type finder</param>
         public ShippingService(ICacheManager cacheManager, 
             IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            ITypeFinder typeFinder)
         {
             this._cacheManager = cacheManager;
             this._shippingMethodRepository = shippingMethodRepository;
@@ -68,6 +72,7 @@ namespace Nop.Services.Shipping
             this._productAttributeParser = productAttributeParser;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._shippingSettings = shippingSettings;
+            this._typeFinder = typeFinder;
         }
 
         #endregion
@@ -111,10 +116,8 @@ namespace Nop.Services.Shipping
         public IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods()
         {
             var providers = new List<IShippingRateComputationMethod>();
-
-            System.Type configType = typeof(ShippingService);
-            var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
-                .Where(type => type.GetInterfaces().Contains(typeof(IShippingRateComputationMethod)));
+            
+            var typesToRegister = _typeFinder.FindClassesOfType<IShippingRateComputationMethod>();
 
             foreach (var type in typesToRegister)
             {
@@ -223,10 +226,11 @@ namespace Nop.Services.Shipping
             {
                 decimal attributesTotalWeight = decimal.Zero;
 
-                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
-                foreach (var pvaValue in pvaValues)
+                if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 {
-                    attributesTotalWeight += pvaValue.WeightAdjustment;
+                    var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
+                    foreach (var pvaValue in pvaValues)
+                        attributesTotalWeight += pvaValue.WeightAdjustment;
                 }
                 decimal unitWeight = shoppingCartItem.ProductVariant.Weight + attributesTotalWeight;
                 totalWeight = unitWeight * shoppingCartItem.Quantity;
@@ -251,9 +255,12 @@ namespace Nop.Services.Shipping
             //checkout attributes
             if (customer != null)
             {
-                var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(customer.CheckoutAttributes);
-                foreach (var caValue in caValues)
-                    totalWeight += caValue.WeightAdjustment;
+                if (!String.IsNullOrEmpty(customer.CheckoutAttributes))
+                {
+                    var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(customer.CheckoutAttributes);
+                    foreach (var caValue in caValues)
+                        totalWeight += caValue.WeightAdjustment;
+                }
             }
             return totalWeight;
         }
@@ -271,8 +278,9 @@ namespace Nop.Services.Shipping
             if (isFreeShipping)
                 return decimal.Zero;
 
-            foreach (var shoppingCartItem in cart)
-                additionalShippingCharge += shoppingCartItem.AdditionalShippingCharge;
+            foreach (var sci in cart)
+                if (sci.IsShipEnabled && !sci.IsFreeShipping)
+                    additionalShippingCharge += sci.AdditionalShippingCharge;
 
             return additionalShippingCharge;
         }

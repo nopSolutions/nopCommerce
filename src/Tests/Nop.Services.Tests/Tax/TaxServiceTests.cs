@@ -53,14 +53,14 @@ namespace Nop.Services.Tests.Tax
         }
 
         [Test]
-        public void Can_load_taxProviderBySystemKeyword()
+        public void Can_load_taxProvider_by_systemKeyword()
         {
-            var rule = _taxService.LoadTaxProviderBySystemName("FixedTaxRateTest");
-            rule.ShouldNotBeNull();
+            var provider = _taxService.LoadTaxProviderBySystemName("FixedTaxRateTest");
+            provider.ShouldNotBeNull();
         }
 
         [Test]
-        public void Can_load_activeTaxProvider()
+        public void Can_load_active_taxProvider()
         {
             var provider = _taxService.LoadActiveTaxProvider();
             provider.ShouldNotBeNull();
@@ -139,6 +139,8 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_do_VAT_check()
         {
+            //remove? this method requires Internet access
+
             string name, address;
             Exception exception;
 
