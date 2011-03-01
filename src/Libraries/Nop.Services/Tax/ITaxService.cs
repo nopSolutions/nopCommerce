@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -238,6 +239,14 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         VatNumberStatus GetVatNumberStatus(Country country,
             string vatNumber, out string name, out string address);
+
+        /// <summary>
+        /// Performs a basic check of a VAT number for validity
+        /// </summary>
+        /// <remarks>Doesn't check the name and address</remarks>
+        /// <returns>A value from the VatNumberStatusEnum enumeration</returns>
+        VatNumberStatus DoVatCheck(string countryCode, string vatNumber, 
+            out string name, out string address, out Exception exception);
 
 
 

@@ -53,47 +53,6 @@ namespace Nop.Services.Tax
         #region Utilities
 
         /// <summary>
-        /// Performs a basic check of a VAT number for validity
-        /// </summary>
-        /// <remarks>Doesn't check the name and address</remarks>
-        /// <returns>A value from the VatNumberStatusEnum enumeration</returns>
-        protected VatNumberStatus DoVatCheck(string countryCode, string vatNumber, out string name, out string address, out Exception exception)
-        {
-            name = string.Empty;
-            address = string.Empty;
-
-            EuropaCheckVatService.checkVatService s = null;
-
-            try
-            {
-                bool valid;
-                vatNumber = vatNumber.Trim().Replace(" ", "");
-
-                s = new EuropaCheckVatService.checkVatService();
-                s.checkVat(ref countryCode, ref vatNumber, out valid, out name, out address);
-                exception = null;
-                return valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid;
-            }
-            catch (Exception ex)
-            {
-                name = address = string.Empty;
-                exception = ex;
-                return VatNumberStatus.Unknown;
-            }
-            finally
-            {
-                if (name == null)
-                    name = string.Empty;
-
-                if (address == null)
-                    address = string.Empty;
-
-                if (s != null)
-                    s.Dispose();
-            }
-        }
-       
-        /// <summary>
         /// Create request for tax calculation
         /// </summary>
         /// <param name="productVariant">Product variant</param>
@@ -646,6 +605,48 @@ namespace Nop.Services.Tax
             }
         }
 
+        /// <summary>
+        /// Performs a basic check of a VAT number for validity
+        /// </summary>
+        /// <remarks>Doesn't check the name and address</remarks>
+        /// <returns>A value from the VatNumberStatusEnum enumeration</returns>
+        public VatNumberStatus DoVatCheck(string countryCode, string vatNumber,
+            out string name, out string address, out Exception exception)
+        {
+            name = string.Empty;
+            address = string.Empty;
+
+            EuropaCheckVatService.checkVatService s = null;
+
+            try
+            {
+                bool valid;
+                vatNumber = vatNumber.Trim().Replace(" ", "");
+
+                s = new EuropaCheckVatService.checkVatService();
+                s.checkVat(ref countryCode, ref vatNumber, out valid, out name, out address);
+                exception = null;
+                return valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid;
+            }
+            catch (Exception ex)
+            {
+                name = address = string.Empty;
+                exception = ex;
+                return VatNumberStatus.Unknown;
+            }
+            finally
+            {
+                if (name == null)
+                    name = string.Empty;
+
+                if (address == null)
+                    address = string.Empty;
+
+                if (s != null)
+                    s.Dispose();
+            }
+        }
+       
 
 
 
