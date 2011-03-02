@@ -104,6 +104,7 @@
     <Compile Include="Messages\NewsLetterSubscriptionService.cs" />
     <Compile Include="Messages\QueuedEmailService.cs" />
     <Compile Include="Messages\Tokenizer.cs" />
+    <Compile Include="Messages\Token.cs" />
     <Compile Include="Messages\WorkflowMessageService.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
