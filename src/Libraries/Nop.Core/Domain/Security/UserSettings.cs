@@ -18,6 +18,6 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets a customer password format (SHA1, MD5)
         /// </summary>
-        public string CustomerPasswordFormat { get; set; }
+        public string PasswordFormat { get; set; }
     }
 }

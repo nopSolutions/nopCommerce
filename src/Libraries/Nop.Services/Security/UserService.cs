@@ -35,8 +35,8 @@ namespace Nop.Services.Security
                         orderby c.Id
                         where c.Username == username
                         select c;
-            var customer = query.FirstOrDefault();
-            return customer;
+            var user = query.FirstOrDefault();
+            return user;
         }
 
         public User GetUserByEmail(string email)
@@ -48,8 +48,8 @@ namespace Nop.Services.Security
                         orderby c.Id
                         where c.Email == email
                         select c;
-            var customer = query.FirstOrDefault();
-            return customer;
+            var user = query.FirstOrDefault();
+            return user;
         }
 
         public IPagedList<User> GetUsers(int pageIndex, int pageSize) {
@@ -86,7 +86,7 @@ namespace Nop.Services.Security
                     pwd = _encryptionService.EncryptText(password, encryptionKey);
                     break;
                 case PasswordFormat.Hashed:
-                    pwd = _encryptionService.CreatePasswordHash(password, user.PasswordSalt, _userSettings.CustomerPasswordFormat);
+                    pwd = _encryptionService.CreatePasswordHash(password, user.PasswordSalt, _userSettings.PasswordFormat);
                     break;
                 default:
                     pwd = password;
@@ -147,7 +147,7 @@ namespace Nop.Services.Security
                 case PasswordFormat.Hashed:
                     string saltKey = _encryptionService.CreateSaltKey(5);
                     user.PasswordSalt = saltKey;
-                    user.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _userSettings.CustomerPasswordFormat);
+                    user.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _userSettings.PasswordFormat);
                     user.SecurityAnswer = _encryptionService.CreatePasswordHash(request.SecurityAnswer, saltKey);
                     break;
                 default:
@@ -210,8 +210,8 @@ namespace Nop.Services.Security
             if (newUsername.Length > 100)
                 throw new NopException("Username is too long.");
 
-            var cust2 = GetUserByUsername(newUsername);
-            if (cust2 != null && user.Id != cust2.Id)
+            var user2 = GetUserByUsername(newUsername);
+            if (user2 != null && user.Id != user2.Id)
                 throw new NopException("This username is already in use.");
 
             user.Username = newUsername;
