@@ -22,7 +22,8 @@ namespace Nop.Services.Security
             this._userSettings = userSettings;
         }
 
-        public User GetUserById(int id) {
+        public User GetUserById(int id) 
+        {
             return _userRepository.GetById(id);
         }
 
@@ -52,28 +53,30 @@ namespace Nop.Services.Security
             return user;
         }
 
-        public IPagedList<User> GetUsers(int pageIndex, int pageSize) {
+        public IPagedList<User> GetUsers(int pageIndex, int pageSize)
+        {
             return new PagedList<User>(_userRepository.Table, pageIndex, pageSize);
         }
 
-        public void InsertUser(User user) 
+        public void InsertUser(User user)
         {
             _userRepository.Insert(user);
         }
 
-        public void UpdateUser(User user) 
+        public void UpdateUser(User user)
         {
             _userRepository.Update(user);
         }
 
-        public void DeleteUser(int id) 
+        public void DeleteUser(int id)
         {
             var userToDelete = GetUserById(id);
             if (userToDelete != null)
                 _userRepository.Delete(userToDelete);
         }
 
-        public bool ValidateUser(string username, string password) {
+        public bool ValidateUser(string username, string password)
+        {
             var user = GetUserByUsername(username);
 
             if (user == null || user.IsLockedOut)
@@ -86,7 +89,7 @@ namespace Nop.Services.Security
                     pwd = _encryptionService.EncryptText(password, encryptionKey);
                     break;
                 case PasswordFormat.Hashed:
-                    pwd = _encryptionService.CreatePasswordHash(password, user.PasswordSalt, _userSettings.PasswordFormat);
+                    pwd = _encryptionService.CreatePasswordHash(password, user.PasswordSalt, _userSettings.HashedPasswordFormat);
                     break;
                 default:
                     pwd = password;
@@ -105,7 +108,8 @@ namespace Nop.Services.Security
             return isValid;
         }
         
-        public UserRegistrationResult RegisterUser(UserRegistrationRequest request) {
+        public UserRegistrationResult RegisterUser(UserRegistrationRequest request)
+        {
             var result = new UserRegistrationResult();
             if (request == null || !request.IsValid)
             {
@@ -113,19 +117,19 @@ namespace Nop.Services.Security
                 return result;
             }
 
-            // validate unique user
-
+            //validate unique user
+            //TODO check whether it's OK to compare both 'Username' and 'Email'
             var existingUser = _userRepository.Table
                 .Where(x => x.Username == request.Username || x.Email == request.Email)
                 .FirstOrDefault();
             
-            if (existingUser != null) {
+            if (existingUser != null) 
+            {
                 result.AddError("The specified username or email already exists");
                 return result;
             }
 
-            // at this point request is valid
-
+            //at this point request is valid
             var user = new User();
             user.Username = request.Username;
             user.FirstName = request.FirstName;
@@ -137,18 +141,24 @@ namespace Nop.Services.Security
             switch (request.PasswordFormat)
             {
                 case PasswordFormat.Clear:
-                    user.Password = request.Password;
-                    user.SecurityAnswer = request.SecurityAnswer;
+                    {
+                        user.Password = request.Password;
+                        user.SecurityAnswer = request.SecurityAnswer;
+                    }
                     break;
                 case PasswordFormat.Encrypted:
-                    user.Password = _encryptionService.EncryptText(request.Password, encryptionKey);
-                    user.SecurityAnswer = _encryptionService.EncryptText(request.SecurityAnswer, encryptionKey);
+                    {
+                        user.Password = _encryptionService.EncryptText(request.Password, encryptionKey);
+                        user.SecurityAnswer = _encryptionService.EncryptText(request.SecurityAnswer, encryptionKey);
+                    }
                     break;
                 case PasswordFormat.Hashed:
-                    string saltKey = _encryptionService.CreateSaltKey(5);
-                    user.PasswordSalt = saltKey;
-                    user.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _userSettings.PasswordFormat);
-                    user.SecurityAnswer = _encryptionService.CreatePasswordHash(request.SecurityAnswer, saltKey);
+                    {
+                        string saltKey = _encryptionService.CreateSaltKey(5);
+                        user.PasswordSalt = saltKey;
+                        user.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _userSettings.HashedPasswordFormat);
+                        user.SecurityAnswer = _encryptionService.CreatePasswordHash(request.SecurityAnswer, saltKey);
+                    }
                     break;
                 default:
                     break;
@@ -162,7 +172,95 @@ namespace Nop.Services.Security
             result.User = user;
             return result;
         }
-        
+
+        public PasswordChangeResult ChangePassword(ChangePasswordRequest request)
+        {
+            var result = new PasswordChangeResult();
+            if (request == null || !request.IsValid)
+            {
+                result.AddError("The registration request was not valid.");
+                return result;
+            }
+
+            //TODO check whether it's OK to compare both 'Username' and 'Email'
+            var user =  GetUserByUsername(request.Username);
+            if (user == null)
+            {
+                result.AddError("The specified username or email could not be found");
+                return result;
+            }
+
+            var requestIsValid = false;
+            if (request.ValidateRequest)
+            {
+                switch (user.PasswordFormat)
+                {
+                    case PasswordFormat.Clear:
+                        {
+                            //UNDONE validate password
+                            //result.AddError("Old password doesn't match");
+                            requestIsValid = true;
+                        }
+                        break;
+                    case PasswordFormat.Encrypted:
+                        {
+                            //UNDONE validate password
+                            //result.AddError("Old password doesn't match");
+                            requestIsValid = true;
+                        }
+                        break;
+                    case PasswordFormat.Hashed:
+                        {
+                            //UNDONE validate password
+                            //result.AddError("Old password doesn't match");
+                            requestIsValid = true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                //UNDONE validate security answer (if enabled)
+                //result.AddError("Wrong security answer");
+                requestIsValid = true;
+            }
+            else
+            {
+                requestIsValid = true;
+            }
+
+
+            //at this point request is valid
+            if (requestIsValid)
+            {
+                switch (user.PasswordFormat)
+                {
+                    case PasswordFormat.Clear:
+                        {
+                            user.Password = request.NewPassword;
+                        }
+                        break;
+                    case PasswordFormat.Encrypted:
+                        {
+                            user.Password = _encryptionService.EncryptText(request.NewPassword, encryptionKey);
+                        }
+                        break;
+                    case PasswordFormat.Hashed:
+                        {
+                            string saltKey = _encryptionService.CreateSaltKey(5);
+                            user.PasswordSalt = saltKey;
+                            user.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _userSettings.HashedPasswordFormat);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                UpdateUser(user);
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Sets a user email
         /// </summary>

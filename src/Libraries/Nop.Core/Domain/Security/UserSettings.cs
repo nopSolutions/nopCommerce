@@ -14,10 +14,10 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a value indicating whether users are allowed to change their usernames
         /// </summary>
         public bool AllowUsersToChangeUsernames { get; set; }
-
+        
         /// <summary>
         /// Gets or sets a customer password format (SHA1, MD5)
         /// </summary>
-        public string PasswordFormat { get; set; }
+        public string HashedPasswordFormat { get; set; }
     }
 }

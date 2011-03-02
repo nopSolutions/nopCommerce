@@ -15,8 +15,16 @@ namespace Nop.Services.Security
         public string SecurityAnswer { get; set; }
         public bool IsApproved { get; set; }
 
-        public UserRegistrationRequest(string username, string password, PasswordFormat passwordFormat, string firstName, string lastName,
-            string email, string securityQuestion, string securityAnswer, bool isApproved = true) {
+        public UserRegistrationRequest(string username,
+            string password, 
+            PasswordFormat passwordFormat,
+            string firstName, 
+            string lastName,
+            string email, 
+            string securityQuestion, 
+            string securityAnswer, 
+            bool isApproved = true) 
+        {
             this.Username = username;
             this.Password = password;
             this.PasswordFormat = passwordFormat;
@@ -28,12 +36,15 @@ namespace Nop.Services.Security
             this.IsApproved = isApproved;
         }
 
-        public bool IsValid  {
-            get { 
+        public bool IsValid  
+        {
+            get 
+            { 
                 return (!CommonHelper.AreNullOrEmpty(
                             this.Username,
                             this.Password,
                             this.Email,
+                            //TODO make configurable whether SecurityAnswer/SecurityQuestion are required
                             this.SecurityAnswer,
                             this.SecurityQuestion));
             }

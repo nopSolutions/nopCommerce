@@ -9,14 +9,14 @@ namespace Nop.Services.Security
         User GetUserByUsername(string username);
         User GetUserByEmail(string email);
         IPagedList<User> GetUsers(int pageIndex, int pageSize);
-        UserRegistrationResult RegisterUser(UserRegistrationRequest request);
         void InsertUser(User user);
         void UpdateUser(User user);
         void DeleteUser(int id);
+
         bool ValidateUser(string username, string password);
+        UserRegistrationResult RegisterUser(UserRegistrationRequest request);
+        PasswordChangeResult ChangePassword(ChangePasswordRequest request);
         void SetEmail(User user, string newEmail);
         void SetUsername(User user, string newUsername);
-
-        // TODO PasswordChangeResult ChangePassword(ChangePasswordRequest request)
     }
 }
