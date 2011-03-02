@@ -38,8 +38,6 @@ namespace Nop.Data.Tests
             return new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,

@@ -24,8 +24,7 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, string email, string username,
-           int pageIndex, int pageSize);
+            DateTime? registrationTo, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all customers by customer role id
@@ -42,20 +41,6 @@ namespace Nop.Services.Customers
         void DeleteCustomer(Customer customer);
 
         /// <summary>
-        /// Gets a customer by email
-        /// </summary>
-        /// <param name="email">Customer Email</param>
-        /// <returns>A customer</returns>
-        Customer GetCustomerByEmail(string email);
-
-        /// <summary>
-        /// Gets a customer by email
-        /// </summary>
-        /// <param name="username">Customer username</param>
-        /// <returns>A customer</returns>
-        Customer GetCustomerByUsername(string username);
-
-        /// <summary>
         /// Gets a customer
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
@@ -70,11 +55,18 @@ namespace Nop.Services.Customers
         Customer GetCustomerByGuid(Guid customerGuid);
 
         /// <summary>
+        /// Gets a customer
+        /// </summary>
+        /// <param name="associatedUserId">User identifier</param>
+        /// <returns>A customer</returns>
+        Customer GetCustomerByAssociatedUserId(int associatedUserId);
+
+        /// <summary>
         /// Insert a guest customer
         /// </summary>
         /// <param name="userName">Username</param>
         /// <returns>Customer</returns>
-        Customer InsertGuestCustomer(string userName);
+        Customer InsertGuestCustomer();
 
         /// <summary>
         /// Register customer
@@ -88,20 +80,6 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomer(Customer customer);
-
-        /// <summary>
-        /// Sets a customer email
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="newEmail">New email</param>
-        void SetEmail(Customer customer, string newEmail);
-
-        /// <summary>
-        /// Sets a customer username
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="newUsername">New Username</param>
-        void SetUsername(Customer customer, string newUsername);
 
         #endregion
 

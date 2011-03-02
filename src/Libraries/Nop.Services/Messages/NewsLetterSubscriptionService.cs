@@ -121,9 +121,7 @@ namespace Nop.Services.Messages
         public NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email)
         {
             if (!CommonHelper.IsValidEmail(email))
-            {
                 return null;
-            }
 
             email = email.Trim();
 
@@ -144,23 +142,35 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetterSubscription entity list</returns>
         public IList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden = false)
         {
-            var query1 = from nls in _newsLetterSubscriptionRepository.Table
-                         from c in _customersRepository.Table
-                         .Where(c => c.Email == nls.Email)
-                         .DefaultIfEmpty()
-                         where
-                         (showHidden || nls.Active) &&
-                         (c == null || c.Id == 0 || (c.Active && !c.Deleted)) &&
-                         (String.IsNullOrEmpty(email) || nls.Email.Contains(email))
-                         select nls.Id;
+            //var query1 = from nls in _newsLetterSubscriptionRepository.Table
+            //             from c in _customersRepository.Table
+            //             .Where(c => c.Email == nls.Email)
+            //             .DefaultIfEmpty()
+            //             where
+            //             (showHidden || nls.Active) &&
+            //             (c == null || c.Id == 0 || (c.Active && !c.Deleted)) &&
+            //             (String.IsNullOrEmpty(email) || nls.Email.Contains(email))
+            //             select nls.Id;
 
-            var query2 = from nls in _newsLetterSubscriptionRepository.Table
-                         where query1.Contains(nls.Id)
-                         orderby nls.Email
-                         select nls;
+            //var query2 = from nls in _newsLetterSubscriptionRepository.Table
+            //             where query1.Contains(nls.Id)
+            //             orderby nls.Email
+            //             select nls;
 
-            var newsletterSubscriptions = query2.ToList();
-            return newsletterSubscriptions;
+            //var newsletterSubscriptions = query2.ToList();
+            //return newsletterSubscriptions;
+
+            //TODO implement (customer entity doesn't have Email property anymore
+            var query = from nls in _newsLetterSubscriptionRepository.Table
+                        where (String.IsNullOrEmpty(email) || nls.Email.Contains(email)) &&
+                        (showHidden || nls.Active)
+                        orderby nls.Email
+                        select nls;
+
+            //var newsletterSubscriptions = query2.ToList();
+            //return newsletterSubscriptions;
+
+            throw new NotImplementedException();
         }
 
     }

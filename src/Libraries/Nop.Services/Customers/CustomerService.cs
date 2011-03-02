@@ -72,21 +72,12 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         public PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, string email, string username,
-           int pageIndex, int pageSize)
+            DateTime? registrationTo, int pageIndex, int pageSize)
         {
-            if (email == null)
-                email = string.Empty;
-
-            if (username == null)
-                username = string.Empty;
-
             var query = from c in _customerRepository.Table
                         where
                         (!registrationFrom.HasValue || registrationFrom.Value <= c.CreatedOnUtc) &&
                         (!registrationTo.HasValue || registrationTo.Value >= c.CreatedOnUtc) &&
-                        (String.IsNullOrEmpty(email) || c.Email.Contains(email)) &&
-                        (String.IsNullOrEmpty(username) || c.Username.Contains(username)) &&
                         (!c.Deleted)
                         orderby c.CreatedOnUtc descending
                         select c;
@@ -144,42 +135,6 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Gets a customer by email
-        /// </summary>
-        /// <param name="email">Customer Email</param>
-        /// <returns>A customer</returns>
-        public Customer GetCustomerByEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return null;
-            
-            var query = from c in _customerRepository.Table
-                        orderby c.Id
-                        where c.Email == email
-                        select c;
-            var customer = query.FirstOrDefault();
-            return customer;
-        }
-
-        /// <summary>
-        /// Gets a customer by email
-        /// </summary>
-        /// <param name="username">Customer username</param>
-        /// <returns>A customer</returns>
-        public Customer GetCustomerByUsername(string username)
-        {
-            if (string.IsNullOrWhiteSpace(username))
-                return null;
-
-            var query = from c in _customerRepository.Table
-                        orderby c.Id
-                        where c.Username == username
-                        select c;
-            var customer = query.FirstOrDefault();
-            return customer;
-        }
-
-        /// <summary>
         /// Gets a customer
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
@@ -212,28 +167,34 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Gets a customer
+        /// </summary>
+        /// <param name="associatedUserId">User identifier</param>
+        /// <returns>A customer</returns>
+        public Customer GetCustomerByAssociatedUserId(int associatedUserId)
+        {
+            if (associatedUserId == 0)
+                return null;
+
+            var query = from c in _customerRepository.Table
+                        where c.AssociatedUserId == associatedUserId
+                        orderby c.Id
+                        select c;
+            var customer = query.FirstOrDefault();
+            return customer;
+        }
+
+        /// <summary>
         /// Insert a guest customer
         /// </summary>
         /// <param name="userName">Username</param>
         /// <returns>Customer</returns>
-        public Customer InsertGuestCustomer(string userName)
+        public Customer InsertGuestCustomer()
         {
-            //validate username
-            if (String.IsNullOrEmpty(userName))
-                throw new NopException("Customer username could not be empty");
-
-            if (GetCustomerByUsername(userName) != null)
-                throw new NopException("Duplicate username");
-
-            if (userName.Length > 100)
-                throw new NopException("Username is too long.");
-
             //TODO save current language, currency, tax display type, etc
             var customer = new Customer()
             {
                 CustomerGuid = Guid.NewGuid(),
-                Email = string.Empty,
-                Username = userName,
                 AdminComment = string.Empty,
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -301,61 +262,6 @@ namespace Nop.Services.Customers
             //    subscriptionOld.Email = customer.Email;
             //    IoC.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscriptionOld);
             //}
-        }
-
-        /// <summary>
-        /// Sets a customer email
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="newEmail">New email</param>
-        public void SetEmail(Customer customer, string newEmail)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            newEmail = newEmail.Trim();
-
-            if (!CommonHelper.IsValidEmail(newEmail))
-                throw new NopException("New email is not valid");
-
-            if (newEmail.Length > 100)
-                throw new NopException("E-mail address is too long.");
-            
-            var cust2 = GetCustomerByEmail(newEmail);
-            if (cust2 != null && customer.Id != cust2.Id)
-                throw new NopException("The e-mail address is already in use.");
-
-            customer.Email = newEmail;
-            UpdateCustomer(customer);
-        }
-
-        /// <summary>
-        /// Sets a customer username
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="newUsername">New Username</param>
-        public void SetUsername(Customer customer, string newUsername)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            if (!_customerSettings.UsernamesEnabled)
-                throw new NopException("Usernames are disabled");
-
-            if (!_customerSettings.AllowUsersToChangeUsernames)
-                throw new NopException("Changing usernames is not allowed");
-
-            newUsername = newUsername.Trim();
-
-            if (newUsername.Length > 100)
-                throw new NopException("Username is too long.");
-
-            var cust2 = GetCustomerByUsername(newUsername);
-            if (cust2 != null && customer.Id != cust2.Id)
-                throw new NopException("This username is already in use.");
-
-            customer.Username = newUsername;
-            UpdateCustomer(customer);
         }
 
         #endregion

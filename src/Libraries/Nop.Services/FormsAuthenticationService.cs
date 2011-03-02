@@ -10,10 +10,10 @@ namespace Nop.Services
     /// <summary>
     /// Authentication service
     /// </summary>
-    public partial class AuthenticationService : IAuthenticationService
+    public partial class FormsAuthenticationService : IAuthenticationService
     {
         private readonly HttpContextBase _httpContext;
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
         private User _cachedUser;
 
@@ -22,8 +22,8 @@ namespace Nop.Services
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <param name="userService">User service</param>
-        public AuthenticationService(HttpContextBase httpContext,
-            UserService userService)
+        public FormsAuthenticationService(HttpContextBase httpContext,
+            IUserService userService)
         {
             this._httpContext = httpContext;
             this._userService = userService;

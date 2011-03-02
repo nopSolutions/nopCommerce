@@ -14,6 +14,8 @@ namespace Nop.Services.Security
         void UpdateUser(User user);
         void DeleteUser(int id);
         bool ValidateUser(string username, string password);
+        void SetEmail(User user, string newEmail);
+        void SetUsername(User user, string newUsername);
 
         // TODO PasswordChangeResult ChangePassword(ChangePasswordRequest request)
     }

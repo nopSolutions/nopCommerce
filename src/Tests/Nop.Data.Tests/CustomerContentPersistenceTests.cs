@@ -32,7 +32,6 @@ namespace Nop.Data.Tests
             fromDb.UpdatedOnUtc.ShouldEqual(new DateTime(2010, 01, 02));
             
             fromDb.Customer.ShouldNotBeNull();
-            fromDb.Customer.Email.ShouldEqual("admin@yourStore.com");
         }
 
         [Test]
@@ -89,8 +88,6 @@ namespace Nop.Data.Tests
             return new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,

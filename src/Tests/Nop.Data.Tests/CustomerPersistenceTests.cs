@@ -25,8 +25,7 @@ namespace Nop.Data.Tests
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
-            fromDb.Email.ShouldEqual("admin@yourStore.com");
-            fromDb.Username.ShouldEqual("admin@yourStore.com");
+            fromDb.AssociatedUserId.ShouldEqual(4);
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.TaxDisplayType.ShouldEqual(TaxDisplayType.IncludingTax);
             fromDb.IsTaxExempt.ShouldEqual(true);
@@ -61,7 +60,6 @@ namespace Nop.Data.Tests
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
-            fromDb.Email.ShouldEqual("admin@yourStore.com");
 
             fromDb.CustomerRoles.ShouldNotBeNull();
             (fromDb.CustomerRoles.Count == 1).ShouldBeTrue();
@@ -83,7 +81,6 @@ namespace Nop.Data.Tests
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
-            fromDb.Email.ShouldEqual("admin@yourStore.com");
 
             fromDb.Language.ShouldNotBeNull();
             fromDb.Language.Name.ShouldEqual("English");
@@ -108,7 +105,6 @@ namespace Nop.Data.Tests
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
-            fromDb.Email.ShouldEqual("admin@yourStore.com");
 
             fromDb.Currency.ShouldNotBeNull();
             fromDb.Currency.Name.ShouldEqual("US Dollar");
@@ -240,7 +236,6 @@ namespace Nop.Data.Tests
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
-            fromDb.Email.ShouldEqual("admin@yourStore.com");
 
             fromDb.Orders.ShouldNotBeNull();
             (fromDb.Orders.Count == 1).ShouldBeTrue();
@@ -252,8 +247,7 @@ namespace Nop.Data.Tests
             return new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
+                AssociatedUserId = 4,
                 AdminComment = "some comment here",
                 TaxDisplayType = TaxDisplayType.IncludingTax,
                 IsTaxExempt = true,

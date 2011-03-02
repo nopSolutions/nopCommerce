@@ -39,7 +39,6 @@ namespace Nop.Data.Tests
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 
             fromDb.Customer.ShouldNotBeNull();
-            fromDb.Customer.Email.ShouldEqual("admin@yourStore.com");
         }
         [Test]
         public void Can_save_and_load_rewardPointsHistory_with_order()
@@ -69,8 +68,6 @@ namespace Nop.Data.Tests
             return new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,

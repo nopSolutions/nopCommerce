@@ -16,10 +16,14 @@ namespace Nop.Services.Tests.Security
     {
         IRepository<User> userRepo;
         IEncryptionService encryptionService;
+        UserSettings userSettings;
         string encryptionKey;
 
         [SetUp]
-        public void SetUp() {
+        public void SetUp() 
+        {
+            userSettings = new UserSettings();
+
             encryptionService = new EncryptionService();
             userRepo = MockRepository.GenerateMock<IRepository<User>>();
             encryptionKey = "273ece6f97dd844d";
@@ -54,7 +58,7 @@ namespace Nop.Services.Tests.Security
         [Test]
         public void Can_register_a_user() {
             var registrationRequest = CreateUserRegistrationRequest();
-            var userService = new UserService(encryptionService, userRepo);
+            var userService = new UserService(encryptionService, userRepo, userSettings);
             var result = userService.RegisterUser(registrationRequest);
 
             result.Success.ShouldBeTrue();
@@ -67,7 +71,7 @@ namespace Nop.Services.Tests.Security
             registrationRequest.Username = "a@b.com";
             registrationRequest.Email = "a@b.com";
 
-            var userService = new UserService(encryptionService, userRepo);
+            var userService = new UserService(encryptionService, userRepo, userSettings);
             var result = userService.RegisterUser(registrationRequest);
 
             result.Success.ShouldBeFalse();
@@ -76,14 +80,14 @@ namespace Nop.Services.Tests.Security
 
         [Test]
         public void Can_validate_a_hashed_password() {
-            var userService = new UserService(encryptionService, userRepo);
+            var userService = new UserService(encryptionService, userRepo, userSettings);
             bool result = userService.ValidateUser("a@b.com", "password");
             result.ShouldBeTrue();
         }
 
         [Test]
         public void Can_validate_a_clear_password() {
-            var userService = new UserService(encryptionService, userRepo);
+            var userService = new UserService(encryptionService, userRepo, userSettings);
 
             bool result = userService.ValidateUser("test@test.com", "password");
             result.ShouldBeTrue();
@@ -91,7 +95,7 @@ namespace Nop.Services.Tests.Security
 
         [Test]
         public void Can_validate_an_encrypted_password() {
-            var userService = new UserService(encryptionService, userRepo);
+            var userService = new UserService(encryptionService, userRepo, userSettings);
 
             bool result = userService.ValidateUser("user@test.com", "password");
             result.ShouldBeTrue();

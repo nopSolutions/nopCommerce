@@ -37,8 +37,6 @@ namespace Nop.Data.Tests
                 new Customer()
                 {
                     CustomerGuid = Guid.NewGuid(),
-                    Email = "admin@yourStore.com",
-                    Username = "admin@yourStore.com",
                     AdminComment = "some comment here",
                     Active = true,
                     CreatedOnUtc = new DateTime(2010, 01, 01)
@@ -51,7 +49,6 @@ namespace Nop.Data.Tests
 
             fromDb.Customers.ShouldNotBeNull();
             (fromDb.Customers.Count == 1).ShouldBeTrue();
-            fromDb.Customers.First().Email.ShouldEqual("admin@yourStore.com");
         }
 
         [Test]

@@ -98,8 +98,6 @@ namespace Nop.Services.Tests.Discounts
             var customer = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
                 AdminComment = "",
                 DiscountCouponCode = "CouponCode 1",
                 Active = true,
@@ -135,8 +133,6 @@ namespace Nop.Services.Tests.Discounts
             var customer = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
                 AdminComment = "",
                 Active = true,
                 Deleted = false,

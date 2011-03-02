@@ -132,8 +132,9 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<PaymentService>().As<IPaymentService>().InstancePerHttpRequest();
 
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerHttpRequest();
-            builder.RegisterType<IUserService>().As<IUserService>().InstancePerHttpRequest();
-
+            builder.RegisterType<FormsAuthenticationService>().As<IAuthenticationService>().InstancePerHttpRequest();
+            builder.RegisterType<UserService>().As<IUserService>().InstancePerHttpRequest();
+            
             builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerHttpRequest();
 
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();

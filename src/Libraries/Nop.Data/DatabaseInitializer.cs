@@ -208,13 +208,31 @@ namespace Nop.Data
 
             #region Customers & Users
 
+            var user = new User()
+            {
+                UserGuid = Guid.NewGuid(),
+                Email = "admin@yourStore.com",
+                Username = "admin@yourStore.com",
+                Password = "admin",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                FirstName = "John",
+                LastName = "Smith",
+                SecurityQuestion = "",
+                SecurityAnswer = "",
+                IsApproved = true,
+                IsLockedOut = false,
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            context.Users.Add(user);
+            context.SaveChanges();
+
             var customers = new List<Customer>
                                 {
                                     new Customer
                                         {
                                             CustomerGuid = Guid.NewGuid(),
-                                            Email = "admin@yourStore.com",
-                                            Username = "admin@yourStore.com",
+                                            AssociatedUserId = user.Id,
                                             AdminComment = string.Empty,
                                             Active = true,
                                             Deleted = false,

@@ -88,6 +88,7 @@
     <Compile Include="Domain\Messages\MessageTemplate.cs" />
     <Compile Include="Domain\Messages\NewsLetterSubscription.cs" />
     <Compile Include="Domain\Messages\QueuedEmail.cs" />
+    <Compile Include="Domain\Security\UserSettings.cs" />
     <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\Permissions\DefaultPermissionRecord.cs" />
     <Compile Include="Domain\Security\Permissions\PermissionRecord.cs" />

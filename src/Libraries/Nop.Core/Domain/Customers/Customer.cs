@@ -35,14 +35,9 @@ namespace Nop.Core.Domain.Customers
         public Guid CustomerGuid { get; set; }
 
         /// <summary>
-        /// Gets or sets the email
+        /// Gets or sets the associated user identifier
         /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
-        /// Gets or sets the username
-        /// </summary>
-        public string Username { get; set; }
+        public int? AssociatedUserId { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment

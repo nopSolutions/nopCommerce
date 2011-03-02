@@ -12,8 +12,6 @@ namespace Nop.Data.Mapping.Customers
         {
             this.ToTable("Customer");
             this.HasKey(c => c.Id);
-            this.Property(c => c.Email).IsRequired().HasMaxLength(255);
-            this.Property(c => c.Username).IsRequired().HasMaxLength(255);
             this.Property(c => c.AdminComment).IsMaxLength();
             this.Property(c => c.CheckoutAttributes).IsMaxLength();
             this.Property(c => c.GiftCardCouponCodes).IsMaxLength();

@@ -8,43 +8,69 @@ namespace Nop.Services.Security
 {
     public class UserService : IUserService
     {
-        private readonly IEncryptionService encryptionService;
-        private readonly IRepository<User> userRepository;
+        private readonly IEncryptionService _encryptionService;
+        private readonly IRepository<User> _userRepository;
+        private readonly UserSettings _userSettings;
         string encryptionKey = "273ece6f97dd844d"; // TODO - inject
 
-        public UserService(IEncryptionService encryptionService, IRepository<User> userRepository) {
-            this.encryptionService = encryptionService;
-            this.userRepository = userRepository;
+        public UserService(IEncryptionService encryptionService, 
+            IRepository<User> userRepository,
+            UserSettings userSettings) 
+        {
+            this._encryptionService = encryptionService;
+            this._userRepository = userRepository;
+            this._userSettings = userSettings;
         }
 
         public User GetUserById(int id) {
-            return userRepository.GetById(id);
+            return _userRepository.GetById(id);
         }
 
-        public User GetUserByUsername(string username) {
-            return userRepository.Table.Where(u => u.Username == username).SingleOrDefault();
+        public User GetUserByUsername(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                return null;
+
+            var query = from c in _userRepository.Table
+                        orderby c.Id
+                        where c.Username == username
+                        select c;
+            var customer = query.FirstOrDefault();
+            return customer;
         }
 
-        public User GetUserByEmail(string email) {
-            return userRepository.Table.Where(u => u.Email == email).SingleOrDefault();
+        public User GetUserByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return null;
+
+            var query = from c in _userRepository.Table
+                        orderby c.Id
+                        where c.Email == email
+                        select c;
+            var customer = query.FirstOrDefault();
+            return customer;
         }
 
         public IPagedList<User> GetUsers(int pageIndex, int pageSize) {
-            return new PagedList<User>(userRepository.Table, pageIndex, pageSize);
+            return new PagedList<User>(_userRepository.Table, pageIndex, pageSize);
         }
 
-        public void InsertUser(User user) {
-            userRepository.Insert(user);
+        public void InsertUser(User user) 
+        {
+            _userRepository.Insert(user);
         }
 
-        public void UpdateUser(User user) {
-            userRepository.Update(user);
+        public void UpdateUser(User user) 
+        {
+            _userRepository.Update(user);
         }
 
-        public void DeleteUser(int id) {
+        public void DeleteUser(int id) 
+        {
             var userToDelete = GetUserById(id);
             if (userToDelete != null)
-                userRepository.Delete(userToDelete);
+                _userRepository.Delete(userToDelete);
         }
 
         public bool ValidateUser(string username, string password) {
@@ -57,11 +83,10 @@ namespace Nop.Services.Security
             switch (user.PasswordFormat)
             {
                 case PasswordFormat.Encrypted:
-                    pwd = encryptionService.EncryptText(password, encryptionKey);
+                    pwd = _encryptionService.EncryptText(password, encryptionKey);
                     break;
                 case PasswordFormat.Hashed:
-                    //TODO pass CustomerSettings.CustomerPasswordFormat
-                    pwd = encryptionService.CreatePasswordHash(password, user.PasswordSalt);
+                    pwd = _encryptionService.CreatePasswordHash(password, user.PasswordSalt, _userSettings.CustomerPasswordFormat);
                     break;
                 default:
                     pwd = password;
@@ -90,10 +115,10 @@ namespace Nop.Services.Security
 
             // validate unique user
 
-            var existingUser = userRepository.Table
+            var existingUser = _userRepository.Table
                 .Where(x => x.Username == request.Username || x.Email == request.Email)
                 .FirstOrDefault();
-
+            
             if (existingUser != null) {
                 result.AddError("The specified username or email already exists");
                 return result;
@@ -116,15 +141,14 @@ namespace Nop.Services.Security
                     user.SecurityAnswer = request.SecurityAnswer;
                     break;
                 case PasswordFormat.Encrypted:
-                    user.Password = encryptionService.EncryptText(request.Password, encryptionKey);
-                    user.SecurityAnswer = encryptionService.EncryptText(request.SecurityAnswer, encryptionKey);
+                    user.Password = _encryptionService.EncryptText(request.Password, encryptionKey);
+                    user.SecurityAnswer = _encryptionService.EncryptText(request.SecurityAnswer, encryptionKey);
                     break;
                 case PasswordFormat.Hashed:
-                    string saltKey = encryptionService.CreateSaltKey(5);
+                    string saltKey = _encryptionService.CreateSaltKey(5);
                     user.PasswordSalt = saltKey;
-                    //TODO pass password format (customerSettings.CustomerPasswordFormat)
-                    user.Password = encryptionService.CreatePasswordHash(request.Password, saltKey);
-                    user.SecurityAnswer = encryptionService.CreatePasswordHash(request.SecurityAnswer, saltKey);
+                    user.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _userSettings.CustomerPasswordFormat);
+                    user.SecurityAnswer = _encryptionService.CreatePasswordHash(request.SecurityAnswer, saltKey);
                     break;
                 default:
                     break;
@@ -138,5 +162,61 @@ namespace Nop.Services.Security
             result.User = user;
             return result;
         }
+        
+        /// <summary>
+        /// Sets a user email
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="newEmail">New email</param>
+        public void SetEmail(User user, string newEmail)
+        {
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            newEmail = newEmail.Trim();
+
+            if (!CommonHelper.IsValidEmail(newEmail))
+                throw new NopException("New email is not valid");
+
+            if (newEmail.Length > 100)
+                throw new NopException("E-mail address is too long.");
+
+            var user2 = GetUserByEmail(newEmail);
+            if (user2 != null && user.Id != user2.Id)
+                throw new NopException("The e-mail address is already in use.");
+
+            user.Email = newEmail;
+            UpdateUser(user);
+        }
+
+        /// <summary>
+        /// Sets a user username
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="newUsername">New Username</param>
+        public void SetUsername(User user, string newUsername)
+        {
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            if (!_userSettings.UsernamesEnabled)
+                throw new NopException("Usernames are disabled");
+
+            if (!_userSettings.AllowUsersToChangeUsernames)
+                throw new NopException("Changing usernames is not allowed");
+
+            newUsername = newUsername.Trim();
+
+            if (newUsername.Length > 100)
+                throw new NopException("Username is too long.");
+
+            var cust2 = GetUserByUsername(newUsername);
+            if (cust2 != null && user.Id != cust2.Id)
+                throw new NopException("This username is already in use.");
+
+            user.Username = newUsername;
+            UpdateUser(user);
+        }
+
     }
 }

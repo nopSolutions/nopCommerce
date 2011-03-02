@@ -70,6 +70,7 @@ namespace Nop.Core.Infrastructure
             }
             catch (Exception ex)
             {
+                //TODO remove try-catch.
                 return null;
             }
         }

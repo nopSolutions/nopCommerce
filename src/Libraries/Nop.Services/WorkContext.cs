@@ -22,6 +22,7 @@ namespace Nop.Services
 
         private readonly HttpContextBase _httpContext;
         private readonly ICustomerService _customerService;
+        private readonly IAuthenticationService _authenticationService;
         private readonly ILanguageService _languageService;
         private readonly ICurrencyService _currencyService;
         private readonly TaxSettings _taxSettings;
@@ -31,12 +32,14 @@ namespace Nop.Services
 
         public WorkContext(HttpContextBase httpContext,
             ICustomerService customerService,
+            IAuthenticationService authenticationService,
             ILanguageService languageService,
             ICurrencyService currencyService,
             TaxSettings taxSettings)
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
+            this._authenticationService = authenticationService;
             this._languageService = languageService;
             this._currencyService = currencyService;
             this._taxSettings = taxSettings;
@@ -50,17 +53,15 @@ namespace Nop.Services
             Customer customer = null;
             if (_httpContext != null)
             {
-                var customerCookie = GetCustomerCookie();
-
-                if (_httpContext.User != null &&
-                    _httpContext.User.Identity != null &&
-                    _httpContext.User.Identity.IsAuthenticated)
-                {
-                    customer = _customerService.GetCustomerByUsername(_httpContext.User.Identity.Name);
-                }
-
+                //registered user
+                var user = _authenticationService.GetAuthenticatedUser();
+                if (user != null)
+                    customer = _customerService.GetCustomerByAssociatedUserId(user.Id);
+                
+                //guest customer
                 if (customer == null)
                 {
+                    var customerCookie = GetCustomerCookie();
                     if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
                     {
                         var customerGuid = Guid.Empty;
@@ -69,12 +70,12 @@ namespace Nop.Services
                     }
                 }
 
-
+                //create guest if not exists
                 if (customer == null)
                 {
                     //TODO perhaps, we should not create guest customer if request is made by search engine
                     //or use some predefined account
-                    customer = _customerService.InsertGuestCustomer(Guid.NewGuid().ToString());
+                    customer = _customerService.InsertGuestCustomer();
                 }
 
                 SetCustomerCookie(customer.CustomerGuid);

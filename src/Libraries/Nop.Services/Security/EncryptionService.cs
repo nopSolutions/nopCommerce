@@ -21,6 +21,8 @@ namespace Nop.Services.Security
 
         public string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1")
         {
+            if (String.IsNullOrEmpty(passwordFormat))
+                passwordFormat = "SHA1";
             string saltAndPassword = String.Concat(password, saltkey);
             string hashedPassword =
                 FormsAuthentication.HashPasswordForStoringInConfigFile(
