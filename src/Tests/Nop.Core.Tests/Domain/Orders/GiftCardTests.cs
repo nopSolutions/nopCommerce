@@ -8,7 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 
-namespace Nop.Core.Tests.Entities.Orders
+namespace Nop.Core.Tests.Domain.Orders
 {
     [TestFixture]
     public class GiftCardTests

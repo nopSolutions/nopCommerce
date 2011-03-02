@@ -34,6 +34,7 @@ namespace Nop.Core.Tests.ComponentModel
             var converter = TypeDescriptor.GetConverter(typeof(List<string>));
             converter.GetType().ShouldEqual(typeof(GenericListTypeConverter<string>));
         }
+
         [Test]
         public void Can_get_int_list_from_string()
         {

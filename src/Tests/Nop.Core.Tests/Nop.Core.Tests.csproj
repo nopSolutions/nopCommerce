@@ -58,10 +58,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\GenericListTypeConverterTests.cs" />
-    <Compile Include="Entities\Customers\CustomerTests.cs" />
-    <Compile Include="Entities\Discounts\DiscountTests.cs" />
-    <Compile Include="Entities\EntityEqualityTests.cs" />
-    <Compile Include="Entities\Orders\GiftCardTests.cs" />
+    <Compile Include="Domain\Customers\CustomerTests.cs" />
+    <Compile Include="Domain\Discounts\DiscountTests.cs" />
+    <Compile Include="Domain\EntityEqualityTests.cs" />
+    <Compile Include="Domain\Orders\GiftCardTests.cs" />
+    <Compile Include="Domain\Shipping\ShippingOptionTypeConverterTests.cs" />
     <Compile Include="Fakes\FakeTypeFinder.cs" />
     <Compile Include="FileSystemStorageProviderTests.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ContainerSanityTests.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="Plugin\ThrowingPlugin1.cs" />
     <Compile Include="Plugin\ThrowingPlugin2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\UserTests.cs" />
+    <Compile Include="Domain\Security\UserTests.cs" />
     <Compile Include="SettingTestFixture.cs" />
     <Compile Include="TypeFindingBase.cs" />
   </ItemGroup>

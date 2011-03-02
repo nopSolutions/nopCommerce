@@ -7,7 +7,7 @@ using Nop.Tests;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Common;
 
-namespace Nop.Core.Tests.Entities.Customers
+namespace Nop.Core.Tests.Domain.Customers
 {
     [TestFixture]
     public class CustomerTests

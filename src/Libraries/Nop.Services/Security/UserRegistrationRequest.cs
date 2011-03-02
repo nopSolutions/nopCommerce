@@ -14,10 +14,9 @@ namespace Nop.Services.Security
         public string SecurityQuestion { get; set; }
         public string SecurityAnswer { get; set; }
         public bool IsApproved { get; set; }
-        public string ApplicationName { get; set; }
 
         public UserRegistrationRequest(string username, string password, PasswordFormat passwordFormat, string firstName, string lastName,
-            string email, string securityQuestion, string securityAnswer, string applicationName, bool isApproved = true) {
+            string email, string securityQuestion, string securityAnswer, bool isApproved = true) {
             this.Username = username;
             this.Password = password;
             this.PasswordFormat = passwordFormat;
@@ -27,7 +26,6 @@ namespace Nop.Services.Security
             this.SecurityAnswer = securityAnswer;
             this.SecurityQuestion = securityQuestion;
             this.IsApproved = isApproved;
-            this.ApplicationName = applicationName;
         }
 
         public bool IsValid  {
@@ -37,9 +35,7 @@ namespace Nop.Services.Security
                             this.Password,
                             this.Email,
                             this.SecurityAnswer,
-                            this.SecurityQuestion,
-                            this.ApplicationName
-                        ));
+                            this.SecurityQuestion));
             }
         }
     }

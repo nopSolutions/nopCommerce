@@ -19,7 +19,7 @@ namespace Nop.Core.Domain.Security
 
         public virtual int PasswordFormatId { get; set; }
         public virtual PasswordFormat PasswordFormat {
-            get { return (Security.PasswordFormat)PasswordFormatId; }
+            get { return (PasswordFormat)PasswordFormatId; }
             set { this.PasswordFormatId = (int)value; }
         }
         

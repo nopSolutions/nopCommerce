@@ -99,8 +99,7 @@ namespace Nop.Services.Tests.Security
 
         private UserRegistrationRequest CreateUserRegistrationRequest() {
             return new UserRegistrationRequest("test.user@domain.com",
-                "password", PasswordFormat.Encrypted, "", "", "test.user@domain.com", "Some question", "Some Answer",
-                "NopCommerce");
+                "password", PasswordFormat.Encrypted, "", "", "test.user@domain.com", "Some question", "Some Answer");
         }
     }
 }

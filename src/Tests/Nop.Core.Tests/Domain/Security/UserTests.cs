@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Core.Tests.Security
+namespace Nop.Core.Tests.Domain.Security
 {
     [TestFixture]
     public class UserTests {

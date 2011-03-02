@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain.Catalog;
 
-namespace Nop.Core.Tests.Entities
+namespace Nop.Core.Tests.Domain
 {
     [TestFixture]
     public class EntityEqualityTests

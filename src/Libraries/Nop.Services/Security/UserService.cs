@@ -79,8 +79,7 @@ namespace Nop.Services.Security
 
             return isValid;
         }
-
-
+        
         public UserRegistrationResult RegisterUser(UserRegistrationRequest request) {
             var result = new UserRegistrationResult();
             if (request == null || !request.IsValid)

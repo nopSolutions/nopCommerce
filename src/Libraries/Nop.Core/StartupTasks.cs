@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using Nop.Core.ComponentModel;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Tasks;
 
 namespace Nop.Core
@@ -9,13 +10,17 @@ namespace Nop.Core
     {
         public void Execute()
         {
-            //int
+            //List<int>
             TypeDescriptor.AddAttributes(typeof(List<int>), 
                 new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
 
-            //decimal
+            //List<decimal>
             TypeDescriptor.AddAttributes(typeof(List<decimal>),
                 new TypeConverterAttribute(typeof(GenericListTypeConverter<decimal>)));
+
+            //ShippingOption
+            TypeDescriptor.AddAttributes(typeof(ShippingOption),
+                new TypeConverterAttribute(typeof(ShippingOptionTypeConverter)));
         }
     }
 }

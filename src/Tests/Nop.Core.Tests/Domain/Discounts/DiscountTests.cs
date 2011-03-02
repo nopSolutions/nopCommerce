@@ -8,7 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 
-namespace Nop.Core.Tests.Entities.Discounts
+namespace Nop.Core.Tests.Domain.Discounts
 {
     [TestFixture]
     public class DiscountTests
