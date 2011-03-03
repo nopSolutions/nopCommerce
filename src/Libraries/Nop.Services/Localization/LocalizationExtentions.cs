@@ -1,5 +1,6 @@
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -30,6 +31,13 @@ namespace Nop.Services.Localization
             Expression<Func<T, string>> keySelector, int languageId, bool returnDefaultValue = true) 
             where T : BaseEntity, ILocalizedEntity
         {
+            return GetLocalized<T, string>(entity, keySelector, languageId, returnDefaultValue);
+        }
+
+        public static TPropType GetLocalized<T, TPropType>(this T entity,
+            Expression<Func<T, TPropType>> keySelector, int languageId, bool returnDefaultValue = true)
+            where T : BaseEntity, ILocalizedEntity
+        {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
@@ -49,7 +57,8 @@ namespace Nop.Services.Localization
                        keySelector));
             }
 
-            string result = string.Empty;
+            TPropType result = default(TPropType);
+            string resultStr = string.Empty;
 
             //load localized value
             string localeKeyGroup = typeof(T).Name;
@@ -65,16 +74,19 @@ namespace Nop.Services.Localization
                     lp.LocaleKey == localeKey);
 
                 if (prop != null)
-                    result = prop.LocaleValue;
+                {
+                    resultStr = prop.LocaleValue;
+                    result = CommonHelper.To<TPropType>(resultStr);
+                }
             }
 
             //set default value if required
-            if (String.IsNullOrEmpty(result) && returnDefaultValue)
+            if (String.IsNullOrEmpty(resultStr) && returnDefaultValue)
             {
                 var localizer = keySelector.Compile();
                 result = localizer(entity);
             }
-
+            
             return result;
         }
     }

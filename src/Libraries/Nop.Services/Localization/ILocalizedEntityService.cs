@@ -57,5 +57,10 @@ namespace Nop.Services.Localization
             Expression<Func<T, string>> keySelector,
             string localeValue,
             int languageId) where T : BaseEntity, ILocalizedEntity;
+
+        void SaveLocalizedValue<T, TPropType>(T entity,
+           Expression<Func<T, TPropType>> keySelector,
+           TPropType localeValue,
+           int languageId) where T : BaseEntity, ILocalizedEntity;
     }
 }

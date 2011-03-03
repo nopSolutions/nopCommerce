@@ -144,6 +144,14 @@ namespace Nop.Services.Localization
             string localeValue,
             int languageId) where T : BaseEntity, ILocalizedEntity
         {
+            SaveLocalizedValue<T, string>(entity, keySelector, localeValue, languageId);
+        }
+
+        public void SaveLocalizedValue<T, TPropType>(T entity,
+            Expression<Func<T, TPropType>> keySelector,
+            TPropType localeValue,
+            int languageId) where T : BaseEntity, ILocalizedEntity
+        {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
@@ -172,9 +180,12 @@ namespace Nop.Services.Localization
             var props = GetLocalizedProperties(entity.Id, localeKeyGroup);
             var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
                 lp.LocaleKey == localeKey);
+
+            string localeValueStr = CommonHelper.To<string>(localeValue);
+
             if (prop != null)
             {
-                if (string.IsNullOrWhiteSpace(localeValue))
+                if (string.IsNullOrWhiteSpace(localeValueStr))
                 {
                     //delete
                     DeleteLocalizedProperty(prop);
@@ -182,7 +193,7 @@ namespace Nop.Services.Localization
                 else
                 {
                     //update
-                    prop.LocaleValue = localeValue;
+                    prop.LocaleValue = localeValueStr;
                     UpdateLocalizedProperty(prop);
                 }
             }
@@ -190,12 +201,12 @@ namespace Nop.Services.Localization
             {
                 //insert
                 prop = new LocalizedProperty()
-                { 
+                {
                     EntityId = entity.Id,
                     LanguageId = languageId,
                     LocaleKey = localeKey,
                     LocaleKeyGroup = localeKeyGroup,
-                    LocaleValue = localeValue
+                    LocaleValue = localeValueStr
                 };
                 InsertLocalizedProperty(prop);
             }
