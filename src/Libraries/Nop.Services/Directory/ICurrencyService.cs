@@ -1,6 +1,8 @@
 
 using System.Collections.Generic;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
+using Nop.Services.Directory.ExchangeRates;
 
 namespace Nop.Services.Directory
 {
@@ -9,6 +11,13 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial interface ICurrencyService
     {
+        /// <summary>
+        /// Gets currency live rates
+        /// </summary>
+        /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
+        /// <returns>Exchange rates</returns>
+        List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode);
+
         /// <summary>
         /// Deletes currency
         /// </summary>
@@ -81,5 +90,15 @@ namespace Nop.Services.Directory
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
         decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode);
+
+        /// <summary>
+        /// Gets or sets a primary exchange rate currency
+        /// </summary>
+        Currency PrimaryExchangeRateCurrency { get; set; }
+
+        /// <summary>
+        /// Gets a current exchange rate provider
+        /// </summary>
+        IExchangeRateProvider CurrentExchangeRateProvider { get; }
     }
 }

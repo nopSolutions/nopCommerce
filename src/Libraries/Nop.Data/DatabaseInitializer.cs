@@ -39,6 +39,36 @@ namespace Nop.Data
                                            Name = "TestSetting2",
                                            Value = "Value2",
                                            Description = string.Empty
+                                       },
+                                   new Setting
+                                       {
+                                           Name = "Currency.PrimaryExchangeRateCurrency",
+                                           Value = "1",
+                                           Description = string.Empty
+                                       },
+                                   new Setting
+                                       {
+                                           Name = "Currency.PrimaryStoreCurrency",
+                                           Value = "1",
+                                           Description = string.Empty
+                                       },
+                                   new Setting
+                                       {
+                                           Name = "ExchangeRateProvider.Current",
+                                           Value = "1",
+                                           Description = string.Empty
+                                       },
+                                   new Setting
+                                       {
+                                           Name = "ExchangeRateProvider1.Classname",
+                                           Value = "Nop.Services.Directory.ExchangeRates.EcbExchangeRateProvider, Nop.Services",
+                                           Description = string.Empty
+                                       },
+                                   new Setting
+                                       {
+                                           Name = "ExchangeRateProvider2.Classname",
+                                           Value = "Nop.Services.Directory.ExchangeRates.McExchangeRateProvider, Nop.Services",
+                                           Description = string.Empty
                                        }
                                };
             settings.ForEach(s => context.Settings.Add(s));

@@ -4,8 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Configuration;
+using Nop.Services.Directory.ExchangeRates;
 
 namespace Nop.Services.Directory
 {
@@ -48,6 +52,17 @@ namespace Nop.Services.Directory
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Gets currency live rates
+        /// </summary>
+        /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
+        /// <returns>Exchange rates</returns>
+        public List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        {
+            var exchangeRateProvider = this.CurrentExchangeRateProvider;
+            return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
+        }
 
         /// <summary>
         /// Deletes currency
@@ -213,6 +228,54 @@ namespace Nop.Services.Directory
             var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             result = ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
             return result;
+        }
+
+        /// <summary>
+        /// Gets or sets a primary exchange rate currency
+        /// </summary>
+        public Currency PrimaryExchangeRateCurrency
+        {
+            get
+            {
+                int primaryExchangeRateCurrencyId = EngineContext.Current.Resolve<ISettingService>().GetSettingByKey<int>("Currency.PrimaryExchangeRateCurrency");
+                return GetCurrencyById(primaryExchangeRateCurrencyId);
+            }
+            set
+            {
+                if (value != null)
+                    EngineContext.Current.Resolve<ISettingService>().SetSetting<string>("Currency.PrimaryExchangeRateCurrency", value.Id.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets a current exchange rate provider
+        /// </summary>
+        public IExchangeRateProvider CurrentExchangeRateProvider
+        {
+            get
+            {
+                int i = EngineContext.Current.Resolve<ISettingService>().GetSettingByKey<int>("ExchangeRateProvider.Current");
+                string className = EngineContext.Current.Resolve<ISettingService>().GetSettingByKey<string>(String.Format("ExchangeRateProvider{0}.Classname", i));
+
+                if (String.IsNullOrEmpty(className))
+                {
+                    throw new NopException("Current exchange rate provider class name isn't valid");
+                }
+
+                Type type = Type.GetType(className);
+
+                if (type == null)
+                {
+                    throw new NopException("Current exchange rate provider type isn't valid");
+                }
+
+                IExchangeRateProvider instance = Activator.CreateInstance(type) as IExchangeRateProvider;
+                if (instance == null)
+                {
+                    throw new NopException("Current exchange rate provider isn't valid");
+                }
+                return instance;
+            }
         }
 
         #endregion

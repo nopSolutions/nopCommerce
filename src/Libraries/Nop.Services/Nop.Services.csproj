@@ -64,6 +64,10 @@
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Customers\CustomerExtentions.cs" />
+    <Compile Include="Directory\ExchangeRates\EcbExchangeRateProvider.cs" />
+    <Compile Include="Directory\ExchangeRates\IExchangeRateProvider.cs" />
+    <Compile Include="Directory\ExchangeRates\McExchangeRateProvider.cs" />
+    <Compile Include="Directory\ExchangeRates\UpdateExchangeRateTask.cs" />
     <Compile Include="Discounts\CheckDiscountRequirementRequest.cs" />
     <Compile Include="Discounts\DiscountService.cs" />
     <Compile Include="Discounts\IDiscountRequirementRule.cs" />
