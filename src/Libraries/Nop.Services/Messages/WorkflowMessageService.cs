@@ -13,6 +13,8 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Catalog;
+using Nop.Core.Html;
 
 namespace Nop.Services.Messages
 {
@@ -25,6 +27,8 @@ namespace Nop.Services.Messages
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ITokenizer _tokenizer;
         private readonly IEmailAccountService _emailAccountService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly INewsLetterSubscriptionService _newLetterSubscriptionService;
 
         private readonly StoreInformationSettings _storeSettings;
         private readonly MessageTemplatesSettings _templatesSettings;
@@ -38,6 +42,7 @@ namespace Nop.Services.Messages
             IQueuedEmailService queuedEmailService, ILanguageService languageService,
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             ITokenizer tokenizer, IEmailAccountService emailAccountService,
+            IPriceFormatter priceFormatter, INewsLetterSubscriptionService newsLetterSubscriptionService,
             StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings)
         {
             _messageTemplateService = messageTemplateService;
@@ -47,6 +52,8 @@ namespace Nop.Services.Messages
             _dateTimeHelper = dateTimeHelper;
             _tokenizer = tokenizer;
             _emailAccountService = emailAccountService;
+            _priceFormatter = priceFormatter;
+            _newLetterSubscriptionService = newsLetterSubscriptionService;
 
             _storeSettings = storeSettings;
             _templatesSettings = templatesSettings;
@@ -90,7 +97,7 @@ namespace Nop.Services.Messages
 
             var orderTokens = GenerateTokens(order, languageId);
 
-            return SendNotification(messageTemplate, languageId, orderTokens);
+            return SendNotification(messageTemplate, languageId, orderTokens, "Not implemented", "Not Implemented");
 
         }
 
@@ -111,11 +118,96 @@ namespace Nop.Services.Messages
 
             var orderTokens = GenerateTokens(order, languageId);
 
+            return SendNotification(messageTemplate, languageId, orderTokens, "Not implemented", "Not Implemented");
+        }
+
+        /// <summary>
+        /// Sends a gift card notification
+        /// </summary>
+        /// <param name="giftCard">Gift card</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendGiftCardNotification(GiftCard giftCard, int languageId)
+        {
+            if (giftCard == null)
+                throw new ArgumentNullException("giftCard");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate(29, languageId); //string templateName = "GiftCard.Notification";
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(giftCard);
+
+            return SendNotification(messageTemplate, languageId, orderTokens, giftCard.RecipientEmail, giftCard.RecipientName);
+        }
+
+        /// <summary>
+        /// Sends a newsletter subscription activation message
+        /// </summary>
+        /// <param name="subscription">Newsletter subscription</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
+            int languageId)
+        {
+            if (subscription == null)
+                throw new ArgumentNullException("subscription");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate(27, languageId); //string templateName = "NewsLetterSubscription.ActivationMessage";
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(subscription);
+
+            return SendNotification(messageTemplate, languageId, orderTokens, subscription.Email, String.Empty);
+        }
+
+        /// <summary>
+        /// Sends a newsletter subscription deactivation message
+        /// </summary>
+        /// <param name="subscription">Newsletter subscription</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
+            int languageId)
+        {
+            if (subscription == null)
+                throw new ArgumentNullException("subscription");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate(28, languageId); //string templateName = "NewsLetterSubscription.DeactivationMessage";
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(subscription);
+
+            return SendNotification(messageTemplate, languageId, orderTokens, subscription.Email, String.Empty);
+        }
+
+        /// <summary>
+        /// Sends a product review notification message to a store owner
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendProductReviewNotificationMessage(ProductReview productReview,
+            int languageId)
+        {
+            if (productReview == null)
+                throw new ArgumentNullException("productReview");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate(26, languageId); //string templateName = "Product.ProductReview";
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(productReview);
+
             return SendNotification(messageTemplate, languageId, orderTokens);
+
         }
 
 
-        private int SendNotification(MessageTemplate messageTemplate, int languageId, IEnumerable<Token> tokens)
+        private int SendNotification(MessageTemplate messageTemplate, int languageId, IEnumerable<Token> tokens,
+            string toEmailAddress = null, string toName = null)
         {
             //retrieve localized message template data
             var bcc = messageTemplate.GetLocalized((mt) => mt.BccEmailAddresses, languageId);
@@ -133,8 +225,8 @@ namespace Nop.Services.Messages
                 Priority = 5,
                 From = emailAccount.Email,
                 FromName = emailAccount.DisplayName,
-                //To = emailAccount.Email,
-                //ToName = emailAccount.DisplayName,
+                To = toEmailAddress ?? emailAccount.Email,
+                ToName = toName ?? emailAccount.DisplayName,
                 CC = string.Empty,
                 Bcc = bcc,
                 Subject = subjectReplaced,
@@ -149,16 +241,6 @@ namespace Nop.Services.Messages
         }
 
 
-        private IEnumerable<Token> GenerateTokens(Order order, int languageId)
-        {
-            var tokens = new List<Token>();
-            AddStoreTokens(tokens);
-
-            AddOrderTokens(order, tokens, languageId);
-
-            return tokens;
-        }
-        
         private void AddStoreTokens(IList<Token> tokens)
         {
             tokens.Add(new Token("Store.Name", _storeSettings.StoreName));
@@ -166,7 +248,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Store.Email", "Not implemented"));
         }
 
-        private void AddOrderTokens(Order order, IList<Token> tokens, int languageId)
+        private void AddOrderTokens(IList<Token> tokens, Order order, int languageId)
         {
             tokens.Add(new Token("Order.OrderNumber", order.Id.ToString()));
 
@@ -175,6 +257,96 @@ namespace Nop.Services.Messages
 
             tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails.aspx?orderid={1}", _storeSettings.StoreUrl, order.Id)));
 
+        }
+
+        private void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
+        {
+            tokens.Add(new Token("GiftCard.SenderName", giftCard.SenderName));
+            tokens.Add(new Token("GiftCard.SenderEmail", giftCard.SenderEmail));
+            tokens.Add(new Token("GiftCard.RecipientName", giftCard.RecipientName));
+            tokens.Add(new Token("GiftCard.RecipientEmail", giftCard.RecipientEmail));
+            tokens.Add(new Token("GiftCard.Amount", _priceFormatter.FormatPrice(giftCard.Amount, true, false)));
+            tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
+
+            var giftCardMesage = String.IsNullOrWhiteSpace(giftCard.Message) ? giftCard.Message
+                : HtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false);
+
+            tokens.Add(new Token("GiftCard.Message", giftCardMesage));
+        }
+
+        private void AddCustomerTokens(IList<Token> tokens, Customer customer)
+        {
+            tokens.Add(new Token("Customer.Email", "Not implemented"));
+            tokens.Add(new Token("Customer.Username", "Not implemented"));
+            tokens.Add(new Token("Customer.FullName", "Not implemented"));
+            tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
+            tokens.Add(new Token("Customer.VatNumberStatus", customer.VatNumberStatus.ToString()));
+            tokens.Add(new Token("Customer.PasswordRecoveryURL", "Not implemented"));
+            tokens.Add(new Token("Customer.AccountActivationURL", "Not implemented"));
+        }
+
+        private void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
+        {
+            tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
+
+            const string urlFormat = "{0}newslettersubscriptionactivation.aspx?t={1}&active={2}";
+
+            var activationUrl = String.Format(urlFormat, _storeSettings.StoreUrl, subscription.NewsLetterSubscriptionGuid, 1);
+            tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl));
+
+            var deActivationUrl = String.Format("urlFormat", _storeSettings.StoreUrl, subscription.NewsLetterSubscriptionGuid, 0);
+            tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deActivationUrl));
+        }
+
+        private void AddTokens(IList<Token> tokens, ProductReview productReview)
+        {
+            tokens.Add(new Token("ProductReview.ProductName", productReview.Product.Name));
+        }
+
+        private IEnumerable<Token> GenerateTokens(Order order, int languageId)
+        {
+            var tokens = new List<Token>();
+            AddStoreTokens(tokens);
+
+            AddOrderTokens(tokens, order, languageId);
+
+            return tokens;
+        }
+
+        private IEnumerable<Token> GenerateTokens(GiftCard giftCard)
+        {
+            var tokens = new List<Token>();
+
+            AddStoreTokens(tokens);
+            AddGiftCardTokens(tokens, giftCard);
+
+            return tokens;
+        }
+
+        private IEnumerable<Token> GenerateTokens(NewsLetterSubscription subscription)
+        {
+            var tokens = new List<Token>();
+
+            AddStoreTokens(tokens);
+            AddNewsLetterSubscriptionTokens(tokens, subscription);
+
+            var customer = _newLetterSubscriptionService.GetNewsLetterSubscriptionCustomer(subscription);
+            if (customer != null)
+            {
+                AddCustomerTokens(tokens, customer);
+            }
+
+            return tokens;
+        }
+
+        private IEnumerable<Token> GenerateTokens(ProductReview productReview)
+        {
+            var tokens = new List<Token>();
+
+            AddStoreTokens(tokens);
+            AddTokens(tokens, productReview);
+
+            return tokens;
         }
 
         /// <summary>
@@ -292,26 +464,6 @@ namespace Nop.Services.Messages
         }
 
         public int SendProductEmailAFriendMessage(Customer customer, int languageId, Product product, string friendsEmail, string personalMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendProductReviewNotificationMessage(ProductReview productReview, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendNewsLetterSubscriptionActivationMessage(int newsLetterSubscriptionId, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendNewsLetterSubscriptionDeactivationMessage(int newsLetterSubscriptionId, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendGiftCardNotification(GiftCard giftCard, int languageId)
         {
             throw new NotImplementedException();
         }

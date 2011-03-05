@@ -173,5 +173,17 @@ namespace Nop.Services.Messages
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets a customer subscribed to newsletter subscription
+        /// </summary>
+        /// <param name="newsLetterSubscription">The newsLetter subscription</param>
+        /// <returns>Customer</returns>
+        public Customer GetNewsLetterSubscriptionCustomer(NewsLetterSubscription newsLetterSubscription)
+        {
+            //TODO implement get customer by email functionality(customer entity doesn't have Email property anymore
+
+            throw new NotImplementedException();
+        }
+
     }
 }

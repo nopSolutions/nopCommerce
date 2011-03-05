@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Messages
 {
@@ -53,5 +54,12 @@ namespace Nop.Services.Messages
         /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
         /// <returns>NewsLetterSubscription entity list</returns>
         IList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden = false);
+
+        /// <summary>
+        /// Gets a customer subscribed to newsletter subscription
+        /// </summary>
+        /// <param name="newsLetterSubscription">The newsLetter subscription</param>
+        /// <returns>Customer</returns>
+        Customer GetNewsLetterSubscriptionCustomer(NewsLetterSubscription newsLetterSubscription);
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
@@ -34,6 +35,45 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendOrderCompletedCustomerNotification(Order order, int languageId);
 
+        /// <summary>
+        /// Sends a gift card notification
+        /// </summary>
+        /// <param name="giftCard">Gift card</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendGiftCardNotification(GiftCard giftCard, int languageId);
+
+        /// <summary>
+        /// Sends a newsletter subscription activation message
+        /// </summary>
+        /// <param name="subscription">Newsletter subscription</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
+            int languageId);
+
+        /// <summary>
+        /// Sends a newsletter subscription deactivation message
+        /// </summary>
+        /// <param name="subscription">Newsletter subscription</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
+            int languageId);
+
+        /// <summary>
+        /// Sends a product review notification message to a store owner
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendProductReviewNotificationMessage(ProductReview productReview,
+            int languageId);
+
+
+
+
+
 
         /// <summary>
         /// Sends a "quantity below" notification to a store owner
@@ -43,8 +83,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendQuantityBelowStoreOwnerNotification(ProductVariant productVariant, int languageId);
 
-
-
+        
         /// <summary>
         /// Sends an order shipped notification to a customer
         /// </summary>
@@ -125,39 +164,9 @@ namespace Nop.Services.Messages
             Product product, string friendsEmail, string personalMessage);
 
 
-        /// <summary>
-        /// Sends a product review notification message to a store owner
-        /// </summary>
-        /// <param name="productReview">Product review</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        int SendProductReviewNotificationMessage(ProductReview productReview,
-            int languageId);
 
-        /// <summary>
-        /// Sends a newsletter subscription activation message
-        /// </summary>
-        /// <param name="newsLetterSubscriptionId">Newsletter subscription identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        int SendNewsLetterSubscriptionActivationMessage(int newsLetterSubscriptionId,
-            int languageId);
 
-        /// <summary>
-        /// Sends a newsletter subscription deactivation message
-        /// </summary>
-        /// <param name="newsLetterSubscriptionId">Newsletter subscription identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        int SendNewsLetterSubscriptionDeactivationMessage(int newsLetterSubscriptionId,
-            int languageId);
 
-        /// <summary>
-        /// Sends a gift card notification
-        /// </summary>
-        /// <param name="giftCard">Gift card</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        int SendGiftCardNotification(GiftCard giftCard, int languageId);
+ 
     }
 }
