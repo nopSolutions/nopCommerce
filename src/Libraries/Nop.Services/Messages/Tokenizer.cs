@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 
 using Nop.Core.Domain.Messages;
 
@@ -7,7 +8,7 @@ namespace Nop.Services.Messages
 {
     public partial class Tokenizer:ITokenizer
     {
-        private StringComparison stringComparizon;
+        private readonly StringComparison stringComparizon;
 
         /// <summary>
         /// Ctor
@@ -26,7 +27,7 @@ namespace Nop.Services.Messages
         /// <returns>Text with all token keys replaces by token value</returns>
         public string Replace(string template, IEnumerable<Token> tokens)
         {
-            if (String.IsNullOrWhiteSpace(template))
+            if (string.IsNullOrWhiteSpace(template))
                 throw new ArgumentNullException("template");
 
             if (tokens == null)
@@ -34,7 +35,7 @@ namespace Nop.Services.Messages
 
             foreach (var token in tokens)
             {
-                template = Replace(template, String.Format(@"%{0}%", token.Key), token.Value);
+                template = Replace(template, String.Format(@"%{0}%", token.Key),  HttpUtility.HtmlEncode(token.Value));
             }
             return template;
 

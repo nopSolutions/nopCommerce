@@ -1,5 +1,4 @@
-﻿using System.Web;
-
+﻿
 namespace Nop.Services.Messages
 {
     public sealed class Token
@@ -10,7 +9,7 @@ namespace Nop.Services.Messages
         public Token(string key, string value)
         {
             this.key = key;
-            this.value = HttpUtility.HtmlEncode(value);
+            this.value = value;
         }
 
         public string Key { get { return key; } }

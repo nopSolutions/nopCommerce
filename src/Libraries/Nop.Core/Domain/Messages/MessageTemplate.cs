@@ -40,10 +40,5 @@ namespace Nop.Core.Domain.Messages
         /// Gets or sets the used email account identifier
         /// </summary>
         public int EmailAccountId { get; set; }
-
-        /// <summary>
-        /// Gets the email account
-        /// </summary>
-        public virtual EmailAccount EmailAccount { get; set; }
     }
 }

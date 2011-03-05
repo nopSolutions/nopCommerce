@@ -11,6 +11,22 @@ namespace Nop.Services.Messages
     public partial interface IWorkflowMessageService
     {
         /// <summary>
+        /// Sends an order placed notification to a store owner
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendOrderPlacedStoreOwnerNotification(Order order, int languageId);
+
+        /// <summary>
+        /// Sends an order placed notification to a customer
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendOrderPlacedCustomerNotification(Order order, int languageId);
+
+        /// <summary>
         /// Sends an order completed notification to a customer
         /// </summary>
         /// <param name="order">Order instance</param>
@@ -18,13 +34,6 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendOrderCompletedCustomerNotification(Order order, int languageId);
 
-        /// <summary>
-        /// Sends an order placed notification to a store owner
-        /// </summary>
-        /// <param name="order">Order instance</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedStoreOwnerNotification(Order order, int languageId);
 
         /// <summary>
         /// Sends a "quantity below" notification to a store owner
@@ -34,13 +43,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendQuantityBelowStoreOwnerNotification(ProductVariant productVariant, int languageId);
 
-        /// <summary>
-        /// Sends an order placed notification to a customer
-        /// </summary>
-        /// <param name="order">Order instance</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedCustomerNotification(Order order, int languageId);
+
 
         /// <summary>
         /// Sends an order shipped notification to a customer

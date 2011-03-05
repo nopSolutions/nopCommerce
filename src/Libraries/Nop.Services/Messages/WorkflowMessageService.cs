@@ -1,20 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Text;
-using Nop.Core.Domain.Orders;
+
+using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Localization;
-using System.Net.Mail;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
+using Nop.Services.Helpers;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Messages
 {
-    public partial class WorkflowMessageService:IWorkflowMessageService
+    public partial class WorkflowMessageService : IWorkflowMessageService
     {
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IQueuedEmailService _queuedEmailService;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ITokenizer _tokenizer;
+        private readonly IEmailAccountService _emailAccountService;
+
+        private readonly StoreInformationSettings _storeSettings;
+        private readonly MessageTemplatesSettings _templatesSettings;
 
         /// <summary>
         /// Ctor
@@ -22,10 +35,63 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplateService">MessageTemplateService</param>
         /// <param name="queuedEmailService">QueuedEmailService</param>
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
-            IQueuedEmailService queuedEmailService)
+            IQueuedEmailService queuedEmailService, ILanguageService languageService,
+            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
+            ITokenizer tokenizer, IEmailAccountService emailAccountService,
+            StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings)
         {
             _messageTemplateService = messageTemplateService;
             _queuedEmailService = queuedEmailService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _tokenizer = tokenizer;
+            _emailAccountService = emailAccountService;
+
+            _storeSettings = storeSettings;
+            _templatesSettings = templatesSettings;
+        }
+
+        /// <summary>
+        /// Sends an order placed notification to a store owner
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendOrderPlacedStoreOwnerNotification(Order order, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate(9, languageId); //string templateName = "OrderPlaced.StoreOwnerNotification";
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(order, languageId);
+
+            return SendNotification(messageTemplate, languageId, orderTokens);
+
+        }
+
+        /// <summary>
+        /// Sends an order placed notification to a customer
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendOrderPlacedCustomerNotification(Order order, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate(18, languageId); //string templateName = "OrderPlaced.CustomerNotification";
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(order, languageId);
+
+            return SendNotification(messageTemplate, languageId, orderTokens);
+
         }
 
         /// <summary>
@@ -36,46 +102,151 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         public int SendOrderCompletedCustomerNotification(Order order, int languageId)
         {
-            throw new NotImplementedException();
-            //if (order == null)
-            //    throw new ArgumentNullException("order");
+            if (order == null)
+                throw new ArgumentNullException("order");
 
-            //var messageTemplate = _messageTemplateService.GetMessageTemplateById(19); //string templateName = "OrderCompleted.CustomerNotification";
+            var messageTemplate = GetLocalizedActiveMessageTemplate(19, languageId); //string templateName = "OrderCompleted.CustomerNotification";
+            if (messageTemplate == null)
+                return 0;
 
-            ////var isActive = messageTemplate.GetLocalized((mt) => mt.IsActive);
-            ////LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
-            ////if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
-            ////    return 0;
+            var orderTokens = GenerateTokens(order, languageId);
 
-            //var emailAccount = messageTemplate.EmailAccount;
-
-            //string subject = ReplaceMessageTemplateTokens(order, messageTemplate.Subject, languageId);
-            //string body = ReplaceMessageTemplateTokens(order, messageTemplate.Body, languageId);
-            //string bcc = localizedMessageTemplate.BccEmailAddresses;
-
-            //var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
-            //var to = new MailAddress(order.BillingEmail, order.BillingFullName);
-            //var email = new QueuedEmail(){}
-            //var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
-            //    DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
-            //return queuedEmail.QueuedEmailId;
+            return SendNotification(messageTemplate, languageId, orderTokens);
         }
 
 
-        #region IWorkflowMessageService Members
-
-
-        public int SendOrderPlacedStoreOwnerNotification(Order order, int languageId)
+        private int SendNotification(MessageTemplate messageTemplate, int languageId, IEnumerable<Token> tokens)
         {
-            throw new NotImplementedException();
+            //retrieve localized message template data
+            var bcc = messageTemplate.GetLocalized((mt) => mt.BccEmailAddresses, languageId);
+            var subject = messageTemplate.GetLocalized((mt) => mt.Subject, languageId);
+            var body = messageTemplate.GetLocalized((mt) => mt.Body, languageId);
+
+            //Replace subject and body tokens 
+            var subjectReplaced = _tokenizer.Replace(subject, tokens);
+            var bodyReplaced = _tokenizer.Replace(body, tokens);
+
+            var emailAccount = GetEmalAccountOfMessageTemplate(messageTemplate, languageId);
+
+            var email = new QueuedEmail()
+            {
+                Priority = 5,
+                From = emailAccount.Email,
+                FromName = emailAccount.DisplayName,
+                //To = emailAccount.Email,
+                //ToName = emailAccount.DisplayName,
+                CC = string.Empty,
+                Bcc = bcc,
+                Subject = subjectReplaced,
+                Body = bodyReplaced,
+                CreatedOn = DateTime.UtcNow,
+                EmailAccountId = emailAccount.Id
+            };
+
+            _queuedEmailService.InsertQueuedEmail(email);
+            return email.Id;
+
         }
+
+
+        private IEnumerable<Token> GenerateTokens(Order order, int languageId)
+        {
+            var tokens = new List<Token>();
+            AddStoreTokens(tokens);
+
+            AddOrderTokens(order, tokens, languageId);
+
+            return tokens;
+        }
+        
+        private void AddStoreTokens(IList<Token> tokens)
+        {
+            tokens.Add(new Token("Store.Name", _storeSettings.StoreName));
+            tokens.Add(new Token("Store.URL", _storeSettings.StoreUrl));
+            tokens.Add(new Token("Store.Email", "Not implemented"));
+        }
+
+        private void AddOrderTokens(Order order, IList<Token> tokens, int languageId)
+        {
+            tokens.Add(new Token("Order.OrderNumber", order.Id.ToString()));
+
+            tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId)));
+            tokens.Add(new Token("Order.CreatedOn", FormatUTCDateTimeForCustomer(order.CreatedOnUtc, order.Customer, languageId)));
+
+            tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails.aspx?orderid={1}", _storeSettings.StoreUrl, order.Id)));
+
+        }
+
+        /// <summary>
+        /// Convert a collection to a HTML table
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>HTML table of products</returns>
+        private string ProductListToHtmlTable(Order order, int languageId)
+        {
+            var language = GetCustomOrContextLanguage(languageId);
+            languageId = language.Id;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
+
+            sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", _templatesSettings.Color1));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Order.ProductsGrid.Name", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Order.ProductsGrid.Price", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Order.ProductsGrid.Quantity", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Order.ProductsGrid.Total", languageId)));
+            sb.AppendLine("</tr>");
+
+            sb.AppendLine("</table>");
+            var result = sb.ToString();
+            return result;
+
+        }
+        
+
+        private string FormatUTCDateTimeForCustomer(DateTime dt, Customer customer, int languageId)
+        {
+            var language = _languageService.GetLanguageById(languageId);
+            if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
+            {
+                DateTime custTimeZoneDt = _dateTimeHelper.ConvertToUserTime(dt, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(customer));
+                return custTimeZoneDt.ToString("D", new CultureInfo(language.LanguageCulture));
+            }
+            else
+            {
+                return dt.ToString("D");
+            }
+
+        }
+
+        private MessageTemplate GetLocalizedActiveMessageTemplate(int messageTemplateId, int languageId)
+        {
+            var messageTemplate = _messageTemplateService.GetMessageTemplateById(messageTemplateId);
+            if (messageTemplate == null)
+                return null;
+
+            var isActive = messageTemplate.GetLocalized((mt) => mt.IsActive, languageId);
+            if (!isActive)
+                return null;
+
+            return messageTemplate;
+        }
+
+        private EmailAccount GetEmalAccountOfMessageTemplate(MessageTemplate messageTemplate, int languageId)
+        {
+            var emailAccounId = messageTemplate.GetLocalized(mt => mt.EmailAccountId, languageId);
+            return _emailAccountService.GetEmailAccountById(emailAccounId);
+
+        }
+
+        private Language GetCustomOrContextLanguage(int languageId)
+        {
+            return _languageService.GetLanguageById(languageId) ?? EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage;
+        }
+
 
         public int SendQuantityBelowStoreOwnerNotification(ProductVariant productVariant, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendOrderPlacedCustomerNotification(Order order, int languageId)
         {
             throw new NotImplementedException();
         }
@@ -144,7 +315,5 @@ namespace Nop.Services.Messages
         {
             throw new NotImplementedException();
         }
-
-        #endregion
     }
 }

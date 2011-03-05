@@ -16,10 +16,7 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(mt => mt.BccEmailAddresses).HasMaxLength(200);
             this.Property(mt => mt.Subject).HasMaxLength(200);
             this.Property(mt => mt.Body).IsMaxLength();
-
-            this.HasRequired(mt => mt.EmailAccount)
-                .WithMany(ea => ea.MessageTemplates)
-                .HasForeignKey(mt => mt.EmailAccountId);
+            this.Property(mt => mt.EmailAccountId).IsRequired();
         }
     }
 }

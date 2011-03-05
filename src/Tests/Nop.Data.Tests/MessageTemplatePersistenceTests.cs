@@ -18,17 +18,7 @@ namespace Nop.Data.Tests
                 Subject = "Subj",
                 Body = "Some text",
                 IsActive = true,
-                EmailAccount = new EmailAccount
-                                {
-                                    Email = "admin@yourstore.com",
-                                    DisplayName = "Administrator",
-                                    Host = "127.0.0.1",
-                                    Port = 125,
-                                    Username = "John",
-                                    Password = "111",
-                                    EnableSSL = true,
-                                    UseDefaultCredentials = true
-                                }
+                EmailAccountId = 1
             };
 
 
@@ -40,8 +30,7 @@ namespace Nop.Data.Tests
             fromDb.Body.ShouldEqual("Some text");
             fromDb.IsActive.ShouldBeTrue();
 
-            fromDb.EmailAccount.ShouldNotBeNull();
-            fromDb.EmailAccount.DisplayName.ShouldEqual("Administrator");
+            fromDb.EmailAccountId.ShouldEqual(1);
         }
     }
 }
