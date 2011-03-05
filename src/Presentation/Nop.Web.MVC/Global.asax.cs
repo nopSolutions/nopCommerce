@@ -10,6 +10,7 @@ using Microsoft.Practices.ServiceLocation;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Installation;
 using Nop.Services.Security.Permissions;
 using Nop.Web.Framework;
 using Nop.Web.MVC.Infrastructure;
@@ -40,11 +41,16 @@ namespace Nop.Web.MVC
 
         protected void Application_Start()
         {
+            //installer
+            EventBroker.Instance.InstallingDatabase += InstallDatabase;
+
+            //initialize engine context
             EngineContext.Initialize(false);
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
             DependencyResolver.SetResolver(dependencyResolver);
 
+            //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel),new NopModelBinder());
 
             //other MVC stuff
@@ -57,13 +63,17 @@ namespace Nop.Web.MVC
 
             ModelValidatorProviders.Providers.Add(
                 new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
-
         }
 
         protected void RegisterServiceLocator()
         {
             var serviceLocator = new AutofacServiceLocator(EngineContext.Current.ContainerManager.Scope());
             ServiceLocator.SetLocatorProvider(() => serviceLocator);
+        }
+
+        protected void InstallDatabase(object sender, EventArgs e)
+        {
+            EngineContext.Current.Resolve<IInstallationService>().InstallData();
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)

@@ -52,6 +52,8 @@ namespace Nop.Core.Infrastructure
         public EventHandler<EventArgs> Error;
         public EventHandler<EventArgs> EndRequest;
 
+        public EventHandler<EventArgs> InstallingDatabase;
+
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             if (BeginRequest != null && !IsStaticResource(sender))
@@ -107,6 +109,15 @@ namespace Nop.Core.Infrastructure
         {
             if (EndRequest != null && !IsStaticResource(sender))
                 EndRequest(sender, e);
+        }
+
+        public void OnInstallingDatabase(object sender, EventArgs e)
+        {
+            if (InstallingDatabase != null)
+            {
+                Debug.WriteLine("OnInstallingDatabase");
+                InstallingDatabase(sender, e);
+            }
         }
 
         /// <summary>Detaches events from the application instance.</summary>

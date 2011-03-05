@@ -23,16 +23,17 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Helpers;
+using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
-using Nop.Services.Messages;
 
 namespace Nop.Web.MVC.Infrastructure
 {
@@ -144,6 +145,8 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
 
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
+
+            builder.RegisterType<InstallationService>().As<IInstallationService>().InstancePerHttpRequest();
         }
     }
 

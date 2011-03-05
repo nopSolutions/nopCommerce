@@ -88,6 +88,8 @@
     <Compile Include="Customers\ICustomerService.cs" />
     <Compile Include="Directory\IMeasureService.cs" />
     <Compile Include="Directory\IStateProvinceService.cs" />
+    <Compile Include="Installation\IInstallationService.cs" />
+    <Compile Include="Installation\InstallationService.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
     <Compile Include="Media\Extensions.cs" />
