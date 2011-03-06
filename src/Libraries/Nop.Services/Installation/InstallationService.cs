@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Xml;
 using Nop.Core.Configuration;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
@@ -344,6 +345,13 @@ namespace Nop.Services.Installation
                     AllowAnonymousUsersToReviewProduct = false,
                     AllowAnonymousUsersToSetProductRatings = false,
                     AllowAnonymousUsersToEmailAFriend = false
+                });
+
+            EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()
+                .SaveSettings(new StoreInformationSettings()
+                {
+                    StoreName = "Your store name",
+                    StoreUrl = "http://www.yourStore.com",
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<RewardPointsSettings>>()
