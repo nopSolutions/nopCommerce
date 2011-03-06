@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core.Plugins
 {
     /// <summary>
     /// Finds plugins and calls their initializer.
     /// </summary>
-    [Dependency(typeof(IPluginBootstrapper))]
     public class PluginBootstrapper : IPluginBootstrapper
     {
         private readonly ITypeFinder typeFinder;

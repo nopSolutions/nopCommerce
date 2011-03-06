@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
@@ -14,6 +15,7 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services;
 using Nop.Services.Catalog;
@@ -34,6 +36,7 @@ using Nop.Services.Security;
 using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Web.Framework;
 
 namespace Nop.Web.MVC.Infrastructure
 {
@@ -42,8 +45,6 @@ namespace Nop.Web.MVC.Infrastructure
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
-            ////put your DI here
-
 
             //data layer
             //TODO make configurable
@@ -75,9 +76,14 @@ namespace Nop.Web.MVC.Infrastructure
                 .InstancePerHttpRequest();
 
 
-            //builder.RegisterType<WebHelper>().As<WebHelper>().InstancePerHttpRequest();
+            //plugins
+            builder.RegisterType<PluginBootstrapper>().As<IPluginBootstrapper>().InstancePerHttpRequest();
+            builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerHttpRequest();
 
+            //cache mamager
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerHttpRequest();
+
+            //work context
             builder.RegisterType<WorkContext>().As<IWorkContext>().InstancePerHttpRequest();
 
             //services
@@ -96,8 +102,7 @@ namespace Nop.Web.MVC.Infrastructure
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfigurationProvider<>));
             builder.RegisterSource(new SettingsSource());
-
-
+            
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
 
             builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
@@ -144,9 +149,11 @@ namespace Nop.Web.MVC.Infrastructure
 
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
 
+            builder.RegisterType<InstallationService>().As<IInstallationService>().InstancePerHttpRequest();
+
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
 
-            builder.RegisterType<InstallationService>().As<IInstallationService>().InstancePerHttpRequest();
+            builder.RegisterType<NopModelBinderProvider>().As<IModelBinderProvider>().InstancePerHttpRequest();
         }
     }
 
