@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
-using Nop.Services.Directory.ExchangeRates;
+using Nop.Services.Directory;
 
 namespace Nop.Services.Directory
 {
@@ -92,13 +92,22 @@ namespace Nop.Services.Directory
         decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode);
 
         /// <summary>
-        /// Gets or sets a primary exchange rate currency
+        /// Load active exchange rate provider
         /// </summary>
-        Currency PrimaryExchangeRateCurrency { get; set; }
+        /// <returns>Active exchange rate provider</returns>
+        IExchangeRateProvider LoadActiveExchangeRateProvider();
 
         /// <summary>
-        /// Gets a current exchange rate provider
+        /// Load exchange rate provider by system name
         /// </summary>
-        IExchangeRateProvider CurrentExchangeRateProvider { get; }
+        /// <param name="systemName">System name</param>
+        /// <returns>Found exchange rate provider</returns>
+        IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName);
+
+        /// <summary>
+        /// Load all exchange rate providers
+        /// </summary>
+        /// <returns>Exchange rate providers</returns>
+        IList<IExchangeRateProvider> LoadAllExchangeRateProviders();
     }
 }

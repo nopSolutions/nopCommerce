@@ -15,7 +15,7 @@
 using System;
 using Nop.Core;
 
-namespace Nop.Core.Domain
+namespace Nop.Core.Domain.Directory
 {
     /// <summary>
     /// Represents an exchange rate

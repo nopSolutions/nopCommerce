@@ -7,5 +7,6 @@ namespace Nop.Core.Domain.Directory
     {
         public int PrimaryStoreCurrencyId { get; set; }
         public int PrimaryExchangeRateCurrencyId { get; set; }
+        public string ActiveExchangeRateProviderSystemName { get; set; }
     }
 }
