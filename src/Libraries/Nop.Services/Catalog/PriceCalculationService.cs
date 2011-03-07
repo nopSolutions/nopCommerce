@@ -56,16 +56,19 @@ namespace Nop.Services.Catalog
             }
 
             var productCategories = _categoryService.GetProductCategoriesByProductId(productVariant.ProductId);
-            foreach (var productCategory in productCategories)
+            if (productCategories != null)
             {
-                var categoryDiscounts = productCategory.Category.AppliedDiscounts;
-                foreach (var discount in categoryDiscounts)
+                foreach (var productCategory in productCategories)
                 {
-                    if (_discountService.IsDiscountValid(discount, customer) &&
-                        discount.DiscountType == DiscountType.AssignedToCategories &&
-                        !allowedDiscounts.Contains(discount))
+                    var categoryDiscounts = productCategory.Category.AppliedDiscounts;
+                    foreach (var discount in categoryDiscounts)
                     {
-                        allowedDiscounts.Add(discount);
+                        if (_discountService.IsDiscountValid(discount, customer) &&
+                            discount.DiscountType == DiscountType.AssignedToCategories &&
+                            !allowedDiscounts.Contains(discount))
+                        {
+                            allowedDiscounts.Add(discount);
+                        }
                     }
                 }
             }
@@ -85,7 +88,7 @@ namespace Nop.Services.Catalog
         {
             var allowedDiscounts = GetAllowedDiscounts(productVariant, customer);
             decimal finalPriceWithoutDiscount = GetFinalPrice(productVariant, customer, additionalCharge, false, quantity);
-            var preferredDiscount = _discountService.GetPreferredDiscount(allowedDiscounts, finalPriceWithoutDiscount);
+            var preferredDiscount = allowedDiscounts.GetPreferredDiscount(finalPriceWithoutDiscount);
             return preferredDiscount;
         }
 

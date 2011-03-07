@@ -296,7 +296,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            appliedDiscount = _discountService.GetPreferredDiscount(allowedDiscounts, orderSubTotal);
+            appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderSubTotal);
             if (appliedDiscount != null)
                 discountAmount = appliedDiscount.GetDiscountAmount(orderSubTotal);
 
@@ -463,7 +463,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            appliedDiscount = _discountService.GetPreferredDiscount(allowedDiscounts, shippingTotal);
+            appliedDiscount = allowedDiscounts.GetPreferredDiscount(shippingTotal);
             if (appliedDiscount != null)
             {
                 shippingDiscountAmount = appliedDiscount.GetDiscountAmount(shippingTotal);
@@ -810,7 +810,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            appliedDiscount = _discountService.GetPreferredDiscount(allowedDiscounts, orderTotal);
+            appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderTotal);
             if (appliedDiscount != null)
                 discountAmount = appliedDiscount.GetDiscountAmount(orderTotal);
 

@@ -64,12 +64,5 @@ namespace Nop.Services.Discounts
         /// <returns>true - requirement is met; otherwise, false</returns>
         bool IsDiscountValid(Discount discount, Customer customer);
 
-        /// <summary>
-        /// Gets a preferred discount
-        /// </summary>
-        /// <param name="discounts">Discounts to analyze</param>
-        /// <param name="amount">Amount</param>
-        /// <returns>Preferred discount</returns>
-        Discount GetPreferredDiscount(IList<Discount> discounts, decimal amount);
     }
 }
