@@ -16,7 +16,7 @@ using Telerik.Web.Mvc.UI;
 namespace Nop.Web.MVC.Areas.Admin.Models
 {
     [Validator(typeof(CategoryValidator))]
-    public class CategoryModel : BaseNopModel
+    public class CategoryModel : BaseNopModel, ILocalizedModel<CategoryLocalizedModel>
     {
         public CategoryModel()
         {
@@ -24,7 +24,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             {
                 PageSize = 5;
             }
-            Localized = new List<CategoryLocalizedModel>();
+            Locales = new List<CategoryLocalizedModel>();
         }
 
         #region Model
@@ -71,7 +71,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         public bool Published { get; set; }
         public bool Deleted { get; set; }
         public int DisplayOrder { get; set; }
-        public IList<CategoryLocalizedModel> Localized { get; set; }
+        public IList<CategoryLocalizedModel> Locales { get; set; }
         public string Breadcrumb { get; set; }
 
         #endregion
@@ -91,7 +91,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         }
     }
 
-    public class CategoryLocalizedModel : ILocalizedModel
+    public class CategoryLocalizedModel : ILocalizedModelLocal
     {
         public Core.Domain.Localization.Language Language { get; set; }
         public string Name { get; set; }

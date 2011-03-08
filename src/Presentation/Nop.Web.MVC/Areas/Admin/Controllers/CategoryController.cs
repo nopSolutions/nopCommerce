@@ -82,7 +82,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 
         public void UpdateLocales(Category category, CategoryModel model)
         {
-            foreach (var localized in model.Localized)
+            foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(category,
                                                                x => x.Name,
@@ -177,7 +177,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
                 localizedModel.MetaDescription = category.GetLocalized(x => x.MetaDescription, language.Id, false);
                 localizedModel.MetaTitle = category.GetLocalized(x => x.MetaTitle, language.Id, false);
                 localizedModel.SeName = category.GetLocalized(x => x.SeName, language.Id, false);
-                model.Localized.Add(localizedModel);
+                model.Locales.Add(localizedModel);
             }
             return View(model);
         }

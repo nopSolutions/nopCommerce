@@ -67,6 +67,7 @@
     <Compile Include="HtmlExtensions.cs" />
     <Compile Include="ImageResult.cs" />
     <Compile Include="Localization\ILocalizedModel.cs" />
+    <Compile Include="Localization\ILocalizedModelLocal.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="NopModelBinder.cs" />

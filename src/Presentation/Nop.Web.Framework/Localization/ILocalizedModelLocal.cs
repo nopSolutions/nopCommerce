@@ -6,7 +6,7 @@ using Nop.Core.Domain.Localization;
 
 namespace Nop.Web.Framework.Localization
 {
-    public interface ILocalizedModel
+    public interface ILocalizedModelLocal
     {
         Language Language { get; set; }
     }

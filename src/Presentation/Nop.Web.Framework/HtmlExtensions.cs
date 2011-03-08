@@ -8,10 +8,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
+using System.Web.WebPages;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Localization;
 using Telerik.Web.Mvc.UI;
 using System.Web.Mvc.Html;
 namespace Nop.Web.Framework
@@ -39,38 +41,38 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(builder.ToString());
         }
 
-        public static MvcHtmlString EditorForLocalized<T>(this HtmlHelper<T> helper, T model, params Expression<Func<T, string>>[] expressions)
+        public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper, string name,
+             Func<int, HelperResult> localizedTemplate,
+             Func<T, HelperResult> standardTemplate)
+            where T : ILocalizedModel<TLocalizedModelLocal>
+            where TLocalizedModelLocal : ILocalizedModelLocal
         {
-            //var tabs = helper.Telerik().TabStrip().Name("Test").Items(x =>
-            //                                                                {
-            //                                                                    var languages = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages();
-
-            //                                                                    foreach (var language in languages)
-            //                                                                    {
-            //                                                                        var stringWriter = new StringWriter();
-            //                                                                        using (var writer = new HtmlTextWriter(stringWriter))
-            //                                                                        {
-            //                                                                            foreach (
-            //                                                                                var expression in expressions)
-            //                                                                            {
-            //                                                                                var template = helper.
-            //                                                                                    EditorFor(
-            //                                                                                        expression,
-            //                                                                                        "LocalizedField", new { LanguageId = language.Id, Expression = expression}).ToHtmlString();
-            //                                                                                writer.RenderBeginTag(
-            //                                                                                    HtmlTextWriterTag.Div);
-            //                                                                                writer.Write(template);
-            //                                                                                writer.RenderEndTag();
-            //                                                                            }
-            //                                                                        }
-            //                                                                        var content = stringWriter.ToString();
-            //                                                                        x.Add().Text(language.Name).
-            //                                                                                Content(content).
-            //                                                                                Selected(true);
-            //                                                                    }
-            //                                                                });
-            //return MvcHtmlString.Create(tabs.ToHtmlString());
-            return null;
+            return new HelperResult(writer =>
+            {
+                if (helper.ViewData.Model.Locales.Count > 1)
+                {
+                    var tabStrip = helper.Telerik().TabStrip().Name(name).Items(x =>
+                                                                                                  {
+                                                                                                      x.Add().Text("Standard").Content(standardTemplate(helper.ViewData.Model).ToHtmlString()).Selected(true);
+                                                                                                      for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
+                                                                                                      {
+                                                                                                          var locale = helper.ViewData.Model.Locales[i];
+                                                                                                          x.Add().Text(locale.Language.Name)
+                                                                                                             .Content(localizedTemplate
+                                                                                                                  (i).
+                                                                                                                  ToHtmlString
+                                                                                                                  ())
+                                                                                                             .ImageUrl("~/Content/images/flags/" + locale.Language.FlagImageFileName);
+                                                                                                      }
+                                                                                                  }).ToHtmlString();
+                    writer.Write(tabStrip);
+                }
+                else
+                {
+                    standardTemplate(helper.ViewData.Model).WriteTo(writer);
+                } 
+            });
         }
     }
 }
+
