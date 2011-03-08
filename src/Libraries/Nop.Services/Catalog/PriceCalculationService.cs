@@ -349,9 +349,12 @@ namespace Nop.Services.Catalog
                 decimal attributesTotalPrice = decimal.Zero;
 
                 var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
-                foreach (var pvaValue in pvaValues)
+                if (pvaValues != null)
                 {
-                    attributesTotalPrice += pvaValue.PriceAdjustment;
+                    foreach (var pvaValue in pvaValues)
+                    {
+                        attributesTotalPrice += pvaValue.PriceAdjustment;
+                    }
                 }
 
                 if (productVariant.CustomerEntersPrice)

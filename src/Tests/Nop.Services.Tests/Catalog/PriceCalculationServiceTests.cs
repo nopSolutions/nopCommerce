@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -38,7 +39,6 @@ namespace Nop.Services.Tests.Catalog
             _discountService = MockRepository.GenerateMock<IDiscountService>();
 
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
-            _categoryService.Expect(cs => cs.GetProductCategoriesByProductId(1)).Return(new List<ProductCategory>());
 
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
 
@@ -345,6 +345,80 @@ namespace Nop.Services.Tests.Catalog
             Discount appliedDiscount;
             _priceCalcService.GetDiscountAmount(productVariant, customer, 0, 1, out appliedDiscount).ShouldEqual(0);
             appliedDiscount.ShouldBeNull();
+        }
+        
+        [Test]
+        public void Can_get_shopping_cart_item_unitPrice()
+        {
+            //customer
+            Customer customer = new Customer()
+            {
+                Id = 10
+            };
+
+            //shopping cart
+            var productVariant1 = new ProductVariant
+            {
+                Id = 1,
+                Name = "Product variant name 1",
+                Price = 12.34M,
+                CustomerEntersPrice = false,
+                Published = true,
+                Product = new Product()
+                {
+                    Id = 1,
+                    Name = "Product name 1",
+                    Published = true
+                }
+            };
+            var sci1 = new ShoppingCartItem()
+            {
+                Customer = customer,
+                CustomerId = customer.Id,
+                ProductVariant = productVariant1,
+                ProductVariantId = productVariant1.Id,
+                Quantity = 2,
+            };
+
+            _priceCalcService.GetUnitPrice(sci1, false).ShouldEqual(12.34);
+
+        }
+
+        [Test]
+        public void Can_get_shopping_cart_item_subTotal()
+        {
+            //customer
+            Customer customer = new Customer()
+            {
+                Id = 10
+            };
+
+            //shopping cart
+            var productVariant1 = new ProductVariant
+            {
+                Id = 1,
+                Name = "Product variant name 1",
+                Price = 12.34M,
+                CustomerEntersPrice = false,
+                Published = true,
+                Product = new Product()
+                {
+                    Id = 1,
+                    Name = "Product name 1",
+                    Published = true
+                }
+            };
+            var sci1 = new ShoppingCartItem()
+            {
+                Customer = customer,
+                CustomerId = customer.Id,
+                ProductVariant = productVariant1,
+                ProductVariantId = productVariant1.Id,
+                Quantity = 2,
+            };
+
+            _priceCalcService.GetSubTotal(sci1, false).ShouldEqual(24.68);
+
         }
     }
 }

@@ -186,26 +186,29 @@ namespace Nop.Services.Orders
             if (customer != null)
             {
                 var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(customer.CheckoutAttributes);
-                foreach (var caValue in caValues)
+                if (caValues!=null)
                 {
-                    decimal taxRate = decimal.Zero;
-
-                    decimal caExclTax = _taxService.GetCheckoutAttributePrice(caValue, false, customer, out taxRate);
-                    decimal caInclTax = _taxService.GetCheckoutAttributePrice(caValue, true, customer, out taxRate);
-                    subTotalExclTaxWithoutDiscount += caExclTax;
-                    subTotalInclTaxWithoutDiscount += caInclTax;
-                    
-                    //tax rates
-                    decimal caTax = caInclTax - caExclTax;
-                    if (taxRate > decimal.Zero && caTax > decimal.Zero)
+                    foreach (var caValue in caValues)
                     {
-                        if (!taxRates.ContainsKey(taxRate))
+                        decimal taxRate = decimal.Zero;
+
+                        decimal caExclTax = _taxService.GetCheckoutAttributePrice(caValue, false, customer, out taxRate);
+                        decimal caInclTax = _taxService.GetCheckoutAttributePrice(caValue, true, customer, out taxRate);
+                        subTotalExclTaxWithoutDiscount += caExclTax;
+                        subTotalInclTaxWithoutDiscount += caInclTax;
+
+                        //tax rates
+                        decimal caTax = caInclTax - caExclTax;
+                        if (taxRate > decimal.Zero && caTax > decimal.Zero)
                         {
-                            taxRates.Add(taxRate, caTax);
-                        }
-                        else
-                        {
-                            taxRates[taxRate] = taxRates[taxRate] + caTax;
+                            if (!taxRates.ContainsKey(taxRate))
+                            {
+                                taxRates.Add(taxRate, caTax);
+                            }
+                            else
+                            {
+                                taxRates[taxRate] = taxRates[taxRate] + caTax;
+                            }
                         }
                     }
                 }
@@ -286,13 +289,16 @@ namespace Nop.Services.Orders
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal);
             var allowedDiscounts = new List<Discount>();
-            foreach (var discount in allDiscounts)
+            if (allDiscounts != null)
             {
-                if (_discountService.IsDiscountValid(discount, customer) &&
-                           discount.DiscountType == DiscountType.AssignedToOrderSubTotal &&
-                           !allowedDiscounts.Contains(discount))
+                foreach (var discount in allDiscounts)
                 {
-                    allowedDiscounts.Add(discount);
+                    if (_discountService.IsDiscountValid(discount, customer) &&
+                               discount.DiscountType == DiscountType.AssignedToOrderSubTotal &&
+                               !allowedDiscounts.Contains(discount))
+                    {
+                        allowedDiscounts.Add(discount);
+                    }
                 }
             }
 
