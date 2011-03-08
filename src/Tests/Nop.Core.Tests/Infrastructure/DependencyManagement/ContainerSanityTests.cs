@@ -40,7 +40,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         {
             Assert.That(container.Resolve<IWebHelper>(), Is.Not.Null);
             Assert.That(container.Resolve<IEngine>(), Is.Not.Null);
-            Assert.That(container.Resolve<IPluginBootstrapper>(), Is.Not.Null);
+            //Assert.That(container.Resolve<IPluginBootstrapper>(), Is.Not.Null);
         }
 
         [Test]
