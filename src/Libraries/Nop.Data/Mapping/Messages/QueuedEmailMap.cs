@@ -3,7 +3,7 @@ using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Messages;
 
 
-namespace Nop.Data.Mapping.Catalog
+namespace Nop.Data.Mapping.Messages
 {
     public partial class QueuedEmailMap : EntityTypeConfiguration<QueuedEmail>
     {
