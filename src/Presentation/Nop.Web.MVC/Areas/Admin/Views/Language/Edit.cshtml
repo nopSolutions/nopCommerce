@@ -10,5 +10,5 @@
             <input type="submit" value="Save" class="t-button" /> <input type="button" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'" value="Delete" class="t-button" />
         </div>
     </div>
-    @Html.EditorForModel("Language")
+    @Html.Partial("_CreateOrUpdate", Model)
 }

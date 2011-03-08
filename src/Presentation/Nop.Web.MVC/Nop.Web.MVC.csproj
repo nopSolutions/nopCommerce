@@ -922,9 +922,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\Category.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="EditorTemplates\Category.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -955,13 +952,16 @@
     <Content Include="Areas\Admin\Views\Language\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\Language.cshtml" />
+    <Content Include="Areas\Admin\Views\Language\_CreateOrUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Language\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\Picture.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\Category\_CreateOrUpdate.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

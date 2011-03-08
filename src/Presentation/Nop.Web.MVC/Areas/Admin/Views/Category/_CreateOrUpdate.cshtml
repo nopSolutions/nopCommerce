@@ -18,16 +18,16 @@
                 if (Model.Localized.Count > 1)
                 { 
             @Html.Telerik().TabStrip().Name("TabInfoLocalized").Items(x =>
-{
-    x.Add().Text("Standard").Content(StandardInfoTab().ToHtmlString()).Selected(true);
-    foreach (var languageId in Model.Localized.Keys)
-    {
-        var builder = x.Add()
-            .Text(Model.Localized[languageId].Language.Name)
-            .Content(LocalizedInfoTab(languageId).ToHtmlString())
-            .ImageUrl("~/Content/images/flags/" + EngineContext.Current.Resolve<Nop.Services.Localization.ILanguageService>().GetLanguageById(languageId).FlagImageFileName);
-    }
-})
+       {
+           x.Add().Text("Standard").Content(StandardInfoTab().ToHtmlString()).Selected(true);
+           foreach (var languageId in Model.Localized.Keys)
+           {
+               var builder = x.Add()
+                   .Text(Model.Localized[languageId].Language.Name)
+                   .Content(LocalizedInfoTab(languageId).ToHtmlString())
+                   .ImageUrl("~/Content/images/flags/" + EngineContext.Current.Resolve<Nop.Services.Localization.ILanguageService>().GetLanguageById(languageId).FlagImageFileName);
+           }
+       })
                 }
                 else
                 { 
@@ -160,15 +160,15 @@
                 if (Model.Localized.Count > 1)
                 { 
             @Html.Telerik().TabStrip().Name("TabSeoLocalized").Items(x =>
-{
-    x.Add().Text("Standard").Content(StandardSeoTab().ToHtmlString()).Selected(true);
-    foreach (var languageId in Model.Localized.Keys)
-    {
-        x.Add().Text(Model.Localized[languageId].Language.Name)
-            .Content(LocalizedSeoTab(languageId).ToHtmlString())
-            .ImageUrl("~/Content/images/flags/" + EngineContext.Current.Resolve<Nop.Services.Localization.ILanguageService>().GetLanguageById(languageId).FlagImageFileName);
-    }
-})
+       {
+           x.Add().Text("Standard").Content(StandardSeoTab().ToHtmlString()).Selected(true);
+           foreach (var languageId in Model.Localized.Keys)
+           {
+               x.Add().Text(Model.Localized[languageId].Language.Name)
+                   .Content(LocalizedSeoTab(languageId).ToHtmlString())
+                   .ImageUrl("~/Content/images/flags/" + EngineContext.Current.Resolve<Nop.Services.Localization.ILanguageService>().GetLanguageById(languageId).FlagImageFileName);
+           }
+       })
                 }
                 else
                 { 

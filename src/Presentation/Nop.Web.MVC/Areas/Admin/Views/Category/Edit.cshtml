@@ -4,7 +4,6 @@
 @{
     ViewBag.SelectedMenuItem = "Languages";
 }
-
 @using (Html.BeginForm("Edit", "Category", FormMethod.Post, new { @class = "category-form" }))
 {
     <div class="section-header">
@@ -18,9 +17,8 @@
                 id="category-delete" class="t-button">Delete</span>
         </div>
     </div>
-    @Html.EditorForModel("Category")
+    @Html.Partial("_CreateOrUpdate", Model)
 }
-
 @(Html.Telerik().Window()
     .Name("category-delete-confirm")
     .Title("Are you sure")
