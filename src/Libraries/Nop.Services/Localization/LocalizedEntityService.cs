@@ -182,6 +182,7 @@ namespace Nop.Services.Localization
                 lp.LocaleKey == localeKey);
 
             string localeValueStr = CommonHelper.To<string>(localeValue);
+            if (localeValueStr == null) localeValueStr = string.Empty;
 
             if (prop != null)
             {

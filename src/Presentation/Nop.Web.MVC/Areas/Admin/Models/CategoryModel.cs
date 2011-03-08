@@ -24,7 +24,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             {
                 PageSize = 5;
             }
-            Localized = new LocalizedModels<CategoryLocalizedModel>();
+            Localized = new List<CategoryLocalizedModel>();
         }
 
         #region Model
@@ -71,17 +71,10 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         public bool Published { get; set; }
         public bool Deleted { get; set; }
         public int DisplayOrder { get; set; }
-        public LocalizedModels<CategoryLocalizedModel> Localized { get; set; }
+        public IList<CategoryLocalizedModel> Localized { get; set; }
         public string Breadcrumb { get; set; }
 
         #endregion
-
-        public override void BindModel(System.Web.Mvc.ControllerContext controllerContext, System.Web.Mvc.ModelBindingContext bindingContext)
-        {
-            foreach (var item in controllerContext.RequestContext.HttpContext.Request.Form.AllKeys)
-            {
-            }
-        }
 
         public IList<DropDownItem> ParentCategories
         {

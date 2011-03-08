@@ -1,33 +1,33 @@
 ﻿@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
-
+@using Nop.Web.MVC.Areas.Admin.Models;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-
 @Html.Telerik().TabStrip().Name("CategoryEdit").Items(x =>
 {
     x.Add().Text(T("Category Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("SEO").Text).Content(TabSeo().ToHtmlString());
 })
-
 <div class="tab-info">
     <div class="tab-info-tab">
         @helper TabInfo()
             {
+               
                 if (Model.Localized.Count > 1)
                 { 
             @Html.Telerik().TabStrip().Name("TabInfoLocalized").Items(x =>
-       {
-           x.Add().Text("Standard").Content(StandardInfoTab().ToHtmlString()).Selected(true);
-           foreach (var languageId in Model.Localized.Keys)
-           {
-               var builder = x.Add()
-                   .Text(Model.Localized[languageId].Language.Name)
-                   .Content(LocalizedInfoTab(languageId).ToHtmlString())
-                   .ImageUrl("~/Content/images/flags/" + EngineContext.Current.Resolve<Nop.Services.Localization.ILanguageService>().GetLanguageById(languageId).FlagImageFileName);
-           }
-       })
+               {
+                   x.Add().Text("Standard").Content(StandardInfoTab().ToHtmlString()).Selected(true);
+                   for (int i = 0; i < Model.Localized.Count; i++)
+                   {
+                       var locale = Model.Localized[i];
+                       var builder = x.Add()
+                          .Text(locale.Language.Name)
+                          .Content(LocalizedInfoTab(i).ToHtmlString())
+                          .ImageUrl("~/Content/images/flags/" + locale.Language.FlagImageFileName);
+                   }
+               })
                 }
                 else
                 { 
@@ -126,27 +126,28 @@
         }
     </div>
     <div class="tab-info-localized">
-        @helper LocalizedInfoTab(int languageId)
+        @helper LocalizedInfoTab(int index)
             {
+            @Html.HiddenFor(model => model.Localized[index].Language.Id)
             <table class="adminContent">
                 <tr>
                     <td class="adminTitle">
                         @Html.Hint("The category's name.")
-                        @Html.LabelFor(model => model.Name)
+                        @Html.LabelFor(model => Model.Localized[index].Name)
                     </td>
                     <td class="adminData">
-                        @Html.EditorFor(model => model.Localized[languageId].Name)
-                        @Html.ValidationMessageFor(model => model.Localized[languageId].Name)
+                        @Html.EditorFor(model => Model.Localized[index].Name)
+                        @Html.ValidationMessageFor(model => Model.Localized[index].Name)
                     </td>
                 </tr>
                 <tr>
                     <td class="adminTitle">
                         @Html.Hint("A description of the category.")
-                        @Html.LabelFor(model => model.Description):
+                        @Html.LabelFor(model => Model.Localized[index].Description):
                     </td>
                     <td class="adminData">
-                        @Html.Telerik().EditorFor(model => model.Localized[languageId].Description)
-                        @Html.ValidationMessageFor(model => model.Localized[languageId].Description)
+                        @Html.Telerik().EditorFor(model => Model.Localized[index].Description)
+                        @Html.ValidationMessageFor(model => Model.Localized[index].Description)
                     </td>
                 </tr>
             </table>
@@ -162,11 +163,12 @@
             @Html.Telerik().TabStrip().Name("TabSeoLocalized").Items(x =>
        {
            x.Add().Text("Standard").Content(StandardSeoTab().ToHtmlString()).Selected(true);
-           foreach (var languageId in Model.Localized.Keys)
+           for (int i = 0; i < Model.Localized.Count; i++)
            {
-               x.Add().Text(Model.Localized[languageId].Language.Name)
-                   .Content(LocalizedSeoTab(languageId).ToHtmlString())
-                   .ImageUrl("~/Content/images/flags/" + EngineContext.Current.Resolve<Nop.Services.Localization.ILanguageService>().GetLanguageById(languageId).FlagImageFileName);
+               var locale = Model.Localized[i];
+               x.Add().Text(locale.Language.Name)
+                   .Content(LocalizedSeoTab(i).ToHtmlString())
+                   .ImageUrl("~/Content/images/flags/" + locale.Language.FlagImageFileName);
            }
        })
                 }
@@ -236,50 +238,51 @@
         }
     </div>
     <div class="tab-seo-localized">
-        @helper LocalizedSeoTab(int languageId)
+        @helper LocalizedSeoTab(int index)
             {
+            @Html.HiddenFor(model => model.Localized[index].Language.Id)
             <table class="adminContent">
                 <tr>
                     <td class="adminTitle">
                         @Html.Hint("Meta keywords to be added to category page header.")
-                        @Html.LabelFor(model => model.MetaKeywords):
+                        @Html.LabelFor(model => model.Localized[index].MetaKeywords):
                     </td>
                     <td class="adminData">
-                        @Html.EditorFor(model => model.Localized[languageId].MetaKeywords)
-                        @Html.ValidationMessageFor(model => model.MetaKeywords)
+                        @Html.EditorFor(model => model.Localized[index].MetaKeywords)
+                        @Html.ValidationMessageFor(model => model.Localized[index].MetaKeywords)
                     </td>
                 </tr>
                 <tr>
                     <td class="adminTitle">
                         @Html.Hint("Meta description to be added to category page header.")
-                        @Html.LabelFor(model => model.MetaDescription):
+                        @Html.LabelFor(model => model.Localized[index].MetaDescription):
                     </td>
                     <td class="adminData">
-                        @Html.TextAreaFor(model => model.Localized[languageId].MetaDescription)
-                        @Html.ValidationMessageFor(model => model.Localized[languageId].MetaDescription)
+                        @Html.TextAreaFor(model => model.Localized[index].MetaDescription)
+                        @Html.ValidationMessageFor(model => model.Localized[index].MetaDescription)
                     </td>
                 </tr>
                 <tr>
                     <td class="adminTitle">
                         @Html.Hint("Override the page title. The default is the name of the category.")
-                        @Html.LabelFor(model => model.MetaTitle):
+                        @Html.LabelFor(model => model.Localized[index].MetaTitle):
                     </td>
                     <td class="adminData">
-                        @Html.TextAreaFor(model => model.Localized[languageId].MetaTitle)
-                        @Html.ValidationMessageFor(model => model.Localized[languageId].MetaTitle)
+                        @Html.TextAreaFor(model => model.Localized[index].MetaTitle)
+                        @Html.ValidationMessageFor(model => model.Localized[index].MetaTitle)
                     </td>
                 </tr>
                 <tr>
                     <td class="adminTitle">
                         @Html.Hint("Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the category ID). The default is the name of category.")
-                        @Html.LabelFor(model => model.SeName):
+                        @Html.LabelFor(model => model.Localized[index].SeName):
                     </td>
                     <td class="adminData">
-                        @Html.TextAreaFor(model => model.Localized[languageId].SeName)
-                        @Html.ValidationMessageFor(model => model.Localized[languageId].SeName)
+                        @Html.TextAreaFor(model => model.Localized[index].SeName)
+                        @Html.ValidationMessageFor(model => model.Localized[index].SeName)
                     </td>
                 </tr>
             </table>
         }
     </div>
-</div>
+</div> 

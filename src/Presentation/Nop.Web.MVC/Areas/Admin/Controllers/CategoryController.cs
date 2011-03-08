@@ -84,49 +84,35 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         {
             foreach (var localized in model.Localized)
             {
-                if (!string.IsNullOrEmpty(localized.Value.Name))
-                {
-                    _localizedEntityService.SaveLocalizedValue(category,
+                _localizedEntityService.SaveLocalizedValue(category,
                                                                x => x.Name,
-                                                               localized.Value.Name,
-                                                               localized.Key);
-                }
-                if (!string.IsNullOrEmpty(localized.Value.Description))
-                {
-                    _localizedEntityService.SaveLocalizedValue(category,
-                                                               x => x.Description,
-                                                               HttpUtility.HtmlDecode(localized.Value.Description),
-                                                               localized.Key);
-                }
+                                                               localized.Name,
+                                                               localized.Language.Id);
 
-                if (!string.IsNullOrEmpty(localized.Value.MetaKeywords))
-                {
-                    _localizedEntityService.SaveLocalizedValue(category,
-                                                               x => x.MetaKeywords,
-                                                               localized.Value.MetaKeywords,
-                                                               localized.Key);
-                }
-                if (!string.IsNullOrEmpty(localized.Value.MetaDescription))
-                {
-                    _localizedEntityService.SaveLocalizedValue(category,
-                                                               x => x.MetaDescription,
-                                                               localized.Value.MetaDescription,
-                                                               localized.Key);
-                }
-                if (!string.IsNullOrEmpty(localized.Value.MetaTitle))
-                {
-                    _localizedEntityService.SaveLocalizedValue(category,
-                                                               x => x.MetaTitle,
-                                                               localized.Value.MetaTitle,
-                                                               localized.Key);
-                }
-                if (!string.IsNullOrEmpty(localized.Value.SeName))
-                {
-                    _localizedEntityService.SaveLocalizedValue(category,
-                                                               x => x.SeName,
-                                                               localized.Value.SeName,
-                                                               localized.Key);
-                }
+                _localizedEntityService.SaveLocalizedValue(category,
+                                                           x => x.Description,
+                                                           HttpUtility.HtmlDecode(localized.Description),
+                                                           localized.Language.Id);
+
+                _localizedEntityService.SaveLocalizedValue(category,
+                                                           x => x.MetaKeywords,
+                                                           localized.MetaKeywords,
+                                                           localized.Language.Id);
+
+                _localizedEntityService.SaveLocalizedValue(category,
+                                                           x => x.MetaDescription,
+                                                           localized.MetaDescription,
+                                                           localized.Language.Id);
+
+                _localizedEntityService.SaveLocalizedValue(category,
+                                                           x => x.MetaTitle,
+                                                           localized.MetaTitle,
+                                                           localized.Language.Id);
+
+                _localizedEntityService.SaveLocalizedValue(category,
+                                                           x => x.SeName,
+                                                           localized.SeName,
+                                                           localized.Language.Id);
             }
         }
 
@@ -191,7 +177,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
                 localizedModel.MetaDescription = category.GetLocalized(x => x.MetaDescription, language.Id, false);
                 localizedModel.MetaTitle = category.GetLocalized(x => x.MetaTitle, language.Id, false);
                 localizedModel.SeName = category.GetLocalized(x => x.SeName, language.Id, false);
-                model.Localized.Add(language.Id, localizedModel);
+                model.Localized.Add(localizedModel);
             }
             return View(model);
         }
@@ -238,7 +224,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var categories = _categoryService.GetAllCategories(0, 10, true);
             var gridModel = new GridModel<CategoryModel>
                             {
-                                Data = categories.Select(x => new CategoryModel(x,null) { Breadcrumb = GetCategoryBreadCrumb(x) }),
+                                Data = categories.Select(x => new CategoryModel(x, null) { Breadcrumb = GetCategoryBreadCrumb(x) }),
                                 Total = categories.TotalCount
                             };
             //var gridModel = new GridModel<Category> { Data = categories, Total = categories.TotalCount };

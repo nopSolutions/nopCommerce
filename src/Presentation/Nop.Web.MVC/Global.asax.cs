@@ -13,6 +13,7 @@ using Nop.Data;
 using Nop.Services.Installation;
 using Nop.Services.Security.Permissions;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Localization;
 using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
@@ -52,6 +53,7 @@ namespace Nop.Web.MVC
 
             //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel),new NopModelBinder());
+            //ModelBinders.Binders.Add(typeof (ILocalizedModels), new LocalizedPropertyBinder());
 
             //other MVC stuff
             AreaRegistration.RegisterAllAreas();
