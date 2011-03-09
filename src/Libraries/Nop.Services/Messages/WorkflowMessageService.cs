@@ -33,11 +33,7 @@ namespace Nop.Services.Messages
         private readonly StoreInformationSettings _storeSettings;
         private readonly MessageTemplatesSettings _templatesSettings;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="messageTemplateService">MessageTemplateService</param>
-        /// <param name="queuedEmailService">QueuedEmailService</param>
+
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService, ILanguageService languageService,
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
@@ -59,6 +55,92 @@ namespace Nop.Services.Messages
             _templatesSettings = templatesSettings;
         }
 
+        #region Customer workflow
+
+        /// <summary>
+        /// Sends 'New customer' notification message to a store owner
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendCustomerRegisteredNotificationMessage(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("NewCustomer.Notification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var customerTokens = GenerateTokens(customer);
+
+            return SendNotification(messageTemplate, languageId, customerTokens);
+        }
+
+        /// <summary>
+        /// Sends a welcome message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendCustomerWelcomeMessage(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.WelcomeMessage", languageId); 
+            if (messageTemplate == null)
+                return 0;
+
+            var customerTokens = GenerateTokens(customer);
+
+            return SendNotification(messageTemplate, languageId, customerTokens);
+        }
+
+        /// <summary>
+        /// Sends an email validation message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendCustomerEmailValidationMessage(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.EmailValidationMessage", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var customerTokens = GenerateTokens(customer);
+
+            return SendNotification(messageTemplate, languageId, customerTokens);
+        }
+
+        /// <summary>
+        /// Sends password recovery message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.PasswordRecovery", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var customerTokens = GenerateTokens(customer);
+
+            return SendNotification(messageTemplate, languageId, customerTokens);
+        }
+
+        #endregion
+
+        #region Order workflow
+
         /// <summary>
         /// Sends an order placed notification to a store owner
         /// </summary>
@@ -70,7 +152,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate(9, languageId); //string templateName = "OrderPlaced.StoreOwnerNotification";
+            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderPlaced.StoreOwnerNotification", languageId);
             if (messageTemplate == null)
                 return 0;
 
@@ -91,7 +173,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate(18, languageId); //string templateName = "OrderPlaced.CustomerNotification";
+            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderPlaced.CustomerNotification", languageId);
             if (messageTemplate == null)
                 return 0;
 
@@ -99,6 +181,46 @@ namespace Nop.Services.Messages
 
             return SendNotification(messageTemplate, languageId, orderTokens, "Not implemented", "Not Implemented");
 
+        }
+
+        /// <summary>
+        /// Sends an order shipped notification to a customer
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendOrderShippedCustomerNotification(Order order, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderShipped.CustomerNotification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(order, languageId);
+
+            return SendNotification(messageTemplate, languageId, orderTokens, "Not implemented", "Not Implemented");
+        }
+
+        /// <summary>
+        /// Sends an order delivered notification to a customer
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendOrderDeliveredCustomerNotification(Order order, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderDelivered.CustomerNotification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(order, languageId);
+
+            return SendNotification(messageTemplate, languageId, orderTokens, "Not implemented", "Not Implemented");
         }
 
         /// <summary>
@@ -112,7 +234,7 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate(19, languageId); //string templateName = "OrderCompleted.CustomerNotification";
+            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderCompleted.CustomerNotification", languageId);
             if (messageTemplate == null)
                 return 0;
 
@@ -122,24 +244,28 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Sends a gift card notification
+        /// Sends an order cancelled notification to a customer
         /// </summary>
-        /// <param name="giftCard">Gift card</param>
+        /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendGiftCardNotification(GiftCard giftCard, int languageId)
+        public int SendOrderCancelledCustomerNotification(Order order, int languageId)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException("giftCard");
+            if (order == null)
+                throw new ArgumentNullException("order");
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate(29, languageId); //string templateName = "GiftCard.Notification";
+            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderCancelled.CustomerNotification", languageId);
             if (messageTemplate == null)
                 return 0;
 
-            var orderTokens = GenerateTokens(giftCard);
+            var orderTokens = GenerateTokens(order, languageId);
 
-            return SendNotification(messageTemplate, languageId, orderTokens, giftCard.RecipientEmail, giftCard.RecipientName);
+            return SendNotification(messageTemplate, languageId, orderTokens, "Not implemented", "Not Implemented");
         }
+
+        #endregion
+
+        #region Newsletter workflow
 
         /// <summary>
         /// Sends a newsletter subscription activation message
@@ -153,7 +279,7 @@ namespace Nop.Services.Messages
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate(27, languageId); //string templateName = "NewsLetterSubscription.ActivationMessage";
+            var messageTemplate = GetLocalizedActiveMessageTemplate("NewsLetterSubscription.ActivationMessage", languageId);
             if (messageTemplate == null)
                 return 0;
 
@@ -174,7 +300,7 @@ namespace Nop.Services.Messages
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate(28, languageId); //string templateName = "NewsLetterSubscription.DeactivationMessage";
+            var messageTemplate = GetLocalizedActiveMessageTemplate("NewsLetterSubscription.DeactivationMessage", languageId);
             if (messageTemplate == null)
                 return 0;
 
@@ -182,6 +308,87 @@ namespace Nop.Services.Messages
 
             return SendNotification(messageTemplate, languageId, orderTokens, subscription.Email, String.Empty);
         }
+
+        #endregion
+
+
+        #region Send a message to a friend
+
+        /// <summary>
+        /// Sends "email a friend" message
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Product instance</param>
+        /// <param name="friendsEmail">Friend's email</param>
+        /// <param name="personalMessage">Personal message</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendProductEmailAFriendMessage(Customer customer, int languageId, Product product, string friendsEmail, string personalMessage)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Service.EmailAFriend", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var customerProductTokens = GenerateTokens(customer, product);
+            customerProductTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
+
+            return SendNotification(messageTemplate, languageId, customerProductTokens, friendsEmail, String.Empty);
+        }
+
+        /// <summary>
+        /// Sends wishlist "email a friend" message
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="friendsEmail">Friend's email</param>
+        /// <param name="personalMessage">Personal message</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendWishlistEmailAFriendMessage(Customer customer, int languageId,
+            string friendsEmail, string personalMessage)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Wishlist.EmailAFriend", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var customerProductTokens = GenerateCommonCustomerTokens(customer);
+            customerProductTokens.Add(new Token("Wishlist.URLForCustomer", "Not implemented"));
+            customerProductTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
+
+            return SendNotification(messageTemplate, languageId, customerProductTokens, friendsEmail, String.Empty);
+        }
+
+        #endregion
+
+
+        /// <summary>
+        /// Sends a gift card notification
+        /// </summary>
+        /// <param name="giftCard">Gift card</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendGiftCardNotification(GiftCard giftCard, int languageId)
+        {
+            if (giftCard == null)
+                throw new ArgumentNullException("giftCard");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("GiftCard.Notification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var giftCardTokens = GenerateTokens(giftCard);
+
+            return SendNotification(messageTemplate, languageId, giftCardTokens, giftCard.RecipientEmail, giftCard.RecipientName);
+        }
+
 
         /// <summary>
         /// Sends a product review notification message to a store owner
@@ -195,14 +402,58 @@ namespace Nop.Services.Messages
             if (productReview == null)
                 throw new ArgumentNullException("productReview");
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate(26, languageId); //string templateName = "Product.ProductReview";
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Product.ProductReview", languageId);
             if (messageTemplate == null)
                 return 0;
 
-            var orderTokens = GenerateTokens(productReview);
+            var productReviewTokens = GenerateTokens(productReview);
 
-            return SendNotification(messageTemplate, languageId, orderTokens);
+            return SendNotification(messageTemplate, languageId, productReviewTokens);
 
+        }
+
+        /// <summary>
+        /// Sends a "quantity below" notification to a store owner
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendQuantityBelowStoreOwnerNotification(ProductVariant productVariant, int languageId)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("QuantityBelow.StoreOwnerNotification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var productVariantTokens = GenerateTokens(productVariant);
+
+            return SendNotification(messageTemplate, languageId, productVariantTokens);
+        }
+
+        /// <summary>
+        /// Sends a "new VAT sumitted" notification to a store owner
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="vatName">Received VAT name</param>
+        /// <param name="vatAddress">Received VAT address</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendNewVATSubmittedStoreOwnerNotification(Customer customer, string vatName, string vatAddress, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("NewVATSubmitted.StoreOwnerNotification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var vatSubmittedTokens = GenerateCommonCustomerTokens(customer);
+            vatSubmittedTokens.Add(new Token("VatValidationResult.Name", vatName));
+            vatSubmittedTokens.Add(new Token("VatValidationResult.Address", vatAddress));
+
+            return SendNotification(messageTemplate, languageId, vatSubmittedTokens);
         }
 
 
@@ -245,7 +496,7 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Store.Name", _storeSettings.StoreName));
             tokens.Add(new Token("Store.URL", _storeSettings.StoreUrl));
-            tokens.Add(new Token("Store.Email", "Not implemented"));
+            tokens.Add(new Token("Store.Email", _emailAccountService.DefaultEmailAccount.Email));
         }
 
         private void AddOrderTokens(IList<Token> tokens, Order order, int languageId)
@@ -274,13 +525,19 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.Message", giftCardMesage));
         }
 
-        private void AddCustomerTokens(IList<Token> tokens, Customer customer)
+        private void AddCustomerCommonTokens(IList<Token> tokens, Customer customer)
         {
             tokens.Add(new Token("Customer.Email", "Not implemented"));
             tokens.Add(new Token("Customer.Username", "Not implemented"));
             tokens.Add(new Token("Customer.FullName", "Not implemented"));
             tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
             tokens.Add(new Token("Customer.VatNumberStatus", customer.VatNumberStatus.ToString()));
+        }
+
+        private void AddCustomerTokens(IList<Token> tokens, Customer customer)
+        {
+            AddCustomerCommonTokens(tokens, customer);
+
             tokens.Add(new Token("Customer.PasswordRecoveryURL", "Not implemented"));
             tokens.Add(new Token("Customer.AccountActivationURL", "Not implemented"));
         }
@@ -298,12 +555,56 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deActivationUrl));
         }
 
-        private void AddTokens(IList<Token> tokens, ProductReview productReview)
+        private void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
         {
             tokens.Add(new Token("ProductReview.ProductName", productReview.Product.Name));
         }
 
-        private IEnumerable<Token> GenerateTokens(Order order, int languageId)
+        private void AddProductTokens(IList<Token> tokens, Product product)
+        {
+            tokens.Add(new Token("Product.Name", product.Name));
+            tokens.Add(new Token("Product.ShortDescription", product.ShortDescription));
+            tokens.Add(new Token("Product.ProductURLForCustomer", "Not implemented"));
+
+        }
+
+        private void AddProductVariantTokens(IList<Token> tokens, ProductVariant productVariant)
+        {
+            tokens.Add(new Token("ProductVariant.ID", productVariant.Id.ToString()));
+            tokens.Add(new Token("ProductVariant.FullProductName", productVariant.FullProductName));
+            tokens.Add(new Token("ProductVariant.StockQuantity", productVariant.StockQuantity.ToString()));
+        }
+
+        private IList<Token> GenerateTokens(Customer customer)
+        {
+            var tokens = new List<Token>();
+            AddStoreTokens(tokens);
+            AddCustomerTokens(tokens, customer);
+            return tokens;
+        }
+
+        private IList<Token> GenerateTokens(Customer customer, Product product)
+        {
+            var tokens = new List<Token>();
+
+            AddStoreTokens(tokens);
+            AddCustomerCommonTokens(tokens, customer);
+            AddProductTokens(tokens, product);
+
+            return tokens;
+        }
+
+        private IList<Token> GenerateCommonCustomerTokens(Customer customer)
+        {
+            var tokens = new List<Token>();
+
+            AddStoreTokens(tokens);
+            AddCustomerCommonTokens(tokens, customer);
+
+            return tokens;
+        }
+
+        private IList<Token> GenerateTokens(Order order, int languageId)
         {
             var tokens = new List<Token>();
             AddStoreTokens(tokens);
@@ -313,7 +614,7 @@ namespace Nop.Services.Messages
             return tokens;
         }
 
-        private IEnumerable<Token> GenerateTokens(GiftCard giftCard)
+        private IList<Token> GenerateTokens(GiftCard giftCard)
         {
             var tokens = new List<Token>();
 
@@ -323,7 +624,7 @@ namespace Nop.Services.Messages
             return tokens;
         }
 
-        private IEnumerable<Token> GenerateTokens(NewsLetterSubscription subscription)
+        private IList<Token> GenerateTokens(NewsLetterSubscription subscription)
         {
             var tokens = new List<Token>();
 
@@ -339,13 +640,21 @@ namespace Nop.Services.Messages
             return tokens;
         }
 
-        private IEnumerable<Token> GenerateTokens(ProductReview productReview)
+        private IList<Token> GenerateTokens(ProductReview productReview)
         {
             var tokens = new List<Token>();
 
             AddStoreTokens(tokens);
-            AddTokens(tokens, productReview);
+            AddProductReviewTokens(tokens, productReview);
 
+            return tokens;
+        }
+
+        private IList<Token> GenerateTokens(ProductVariant productVariant)
+        {
+            var tokens = new List<Token>();
+            AddStoreTokens(tokens);
+            AddProductVariantTokens(tokens, productVariant);
             return tokens;
         }
 
@@ -392,9 +701,9 @@ namespace Nop.Services.Messages
 
         }
 
-        private MessageTemplate GetLocalizedActiveMessageTemplate(int messageTemplateId, int languageId)
+        private MessageTemplate GetLocalizedActiveMessageTemplate(string messageTemplateName, int languageId)
         {
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(messageTemplateId);
+            var messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName);
             if (messageTemplate == null)
                 return null;
 
@@ -415,57 +724,6 @@ namespace Nop.Services.Messages
         private Language GetCustomOrContextLanguage(int languageId)
         {
             return _languageService.GetLanguageById(languageId) ?? EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage;
-        }
-
-
-        public int SendQuantityBelowStoreOwnerNotification(ProductVariant productVariant, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendOrderShippedCustomerNotification(Order order, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendOrderDeliveredCustomerNotification(Order order, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendOrderCancelledCustomerNotification(Order order, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendCustomerWelcomeMessage(Customer customer, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendCustomerEmailValidationMessage(Customer customer, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendNewCustomerNotificationMessage(Customer customer, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendNewVATSubmittedStoreOwnerNotification(Customer customer, string vatName, string vatAddress, int languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int SendProductEmailAFriendMessage(Customer customer, int languageId, Product product, string friendsEmail, string personalMessage)
-        {
-            throw new NotImplementedException();
         }
     }
 }

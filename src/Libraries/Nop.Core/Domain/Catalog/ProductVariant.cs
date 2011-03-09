@@ -308,7 +308,25 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-        
+
+        /// <summary>
+        /// Gets the full product name
+        /// </summary>
+        public string FullProductName
+        {
+            get
+            {
+                Product product = this.Product;
+                if (product != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(this.Name))
+                        return product.Name + " (" + this.Name + ")";
+                    return product.Name;
+                }
+                return string.Empty;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the backorder mode
         /// </summary>

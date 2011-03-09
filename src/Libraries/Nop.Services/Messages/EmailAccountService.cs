@@ -11,14 +11,17 @@ namespace Nop.Services.Messages
     public partial class EmailAccountService:IEmailAccountService
     {
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-      
+        private readonly EmailAccountSettings _emailAccountSettings;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="emailAccountRepository">Email account repository</param>
-        public EmailAccountService(IRepository<EmailAccount> emailAccountRepository)
+        public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
+            EmailAccountSettings emailAccountSettings)
         {
             this._emailAccountRepository = emailAccountRepository;
+            this._emailAccountSettings = emailAccountSettings;
         }
 
         /// <summary>
@@ -121,6 +124,27 @@ namespace Nop.Services.Messages
                         select ea;
             var emailAccounts = query.ToList();
             return emailAccounts;
+        }
+
+        /// <summary>
+        /// Gets or sets a store default email account
+        /// </summary>
+        public EmailAccount DefaultEmailAccount
+        {
+            get
+            {
+                int defaultEmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
+                var emailAccount = GetEmailAccountById(defaultEmailAccountId);
+                if (emailAccount == null)
+                    emailAccount = GetAllEmailAccounts().FirstOrDefault();
+
+                return emailAccount;
+            }
+            set
+            {
+                if (value != null)
+                    _emailAccountSettings.DefaultEmailAccountId = value.Id;
+            }
         }
 
     }

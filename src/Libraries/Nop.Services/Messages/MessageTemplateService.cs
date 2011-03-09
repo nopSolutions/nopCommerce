@@ -14,6 +14,7 @@ namespace Nop.Services.Messages
 
         private const string MESSAGETEMPLATES_ALL_KEY = "Nop.messagetemplate.all";
         private const string MESSAGETEMPLATES_BY_ID_KEY = "Nop.messagetemplate.id-{0}";
+        private const string MESSAGETEMPLATES_BY_NAME_KEY = "Nop.messagetemplate.name-{0}";
         private const string MESSAGETEMPLATES_PATTERN_KEY = "Nop.messagetemplate.";
 
         #endregion
@@ -85,6 +86,27 @@ namespace Nop.Services.Messages
                 var manufacturer = _messageTemplateRepository.GetById(messageTemplateId);
                 return manufacturer;
             });
+        }
+
+        /// <summary>
+        /// Gets a message template
+        /// </summary>
+        /// <param name="messageTemplateName">Message template name</param>
+        /// <returns>Message template</returns>
+        public MessageTemplate GetMessageTemplateByName(string messageTemplateName)
+        {
+            if (string.IsNullOrWhiteSpace(messageTemplateName))
+                throw new ArgumentException("messageTemplateName");
+
+            string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from mt in _messageTemplateRepository.Table
+                                   where mt.Name == messageTemplateName
+                                   select mt;
+                return query.FirstOrDefault();
+            });
+
         }
 
         /// <summary>

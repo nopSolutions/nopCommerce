@@ -21,11 +21,18 @@ namespace Nop.Services.Messages
         void UpdateMessageTemplate(MessageTemplate messageTemplate);
 
         /// <summary>
-        /// Gets a message template
+        /// Gets a message template by identifier
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
         /// <returns>Message template</returns>
         MessageTemplate GetMessageTemplateById(int messageTemplateId);
+
+        /// <summary>
+        /// Gets a message template by name
+        /// </summary>
+        /// <param name="messageTemplateName">Message template name</param>
+        /// <returns>Message template</returns>
+        MessageTemplate GetMessageTemplateByName(string messageTemplateName);
 
         /// <summary>
         /// Gets all message templates
