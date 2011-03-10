@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Nop.Core.Domain.Localization;
+using Nop.Web.Framework;
 
 namespace Nop.Web.MVC.Areas.Admin.Models
 {
-    public class LanguageModel
+    public class LanguageModel : BaseNopEntityModel
     {
         public LanguageModel()
         {
@@ -23,7 +24,6 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             DisplayOrder = language.DisplayOrder;
         }
 
-        public int Id { get; set; }
         public string Name { get; set; }
         public string LanguageCulture { get; set; }
         public string FlagImageFileName { get; set; }

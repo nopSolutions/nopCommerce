@@ -16,7 +16,7 @@ using Telerik.Web.Mvc.UI;
 namespace Nop.Web.MVC.Areas.Admin.Models
 {
     [Validator(typeof(CategoryValidator))]
-    public class CategoryModel : BaseNopModel, ILocalizedModel<CategoryLocalizedModel>
+    public class CategoryModel : BaseNopEntityModel, ILocalizedModel<CategoryLocalizedModel>
     {
         public CategoryModel()
         {
@@ -54,7 +54,6 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             DisplayOrder = category.DisplayOrder;
         }
 
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string MetaKeywords { get; set; }

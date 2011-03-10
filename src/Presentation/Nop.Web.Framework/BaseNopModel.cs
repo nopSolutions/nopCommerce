@@ -12,4 +12,8 @@ namespace Nop.Web.Framework
         {
         }
     }
+    public class BaseNopEntityModel : BaseNopModel
+    {
+        public int Id { get; set; }
+    }
 }

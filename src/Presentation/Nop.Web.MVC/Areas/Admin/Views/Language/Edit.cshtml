@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.MVC.Areas.Admin.Models.LanguageModel
+@using Nop.Web.Framework;
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -7,8 +8,9 @@
             @T("Edit language details") - @Model.Name @Html.ActionLink("(" + T("back to language list") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="Save" class="t-button" /> <input type="button" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'" value="Delete" class="t-button" />
+            <input type="submit" value="Save" class="t-button" /> <span id="language-delete" class="t-button">Delete</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
+@Html.DeleteConfirmation("language-delete")

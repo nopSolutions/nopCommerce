@@ -1,10 +1,9 @@
 (function ($) {
-
     $.fn.nopBlock = function (message) {
         this.each(function () {
             $(this).block({ overlayCSS: {
                 backgroundColor: '#fff'
-                },
+            },
                 css: {
                     border: 'none',
                     padding: '15px',
@@ -19,6 +18,15 @@
         });
     };
 })(jQuery);
+
+var currentModelId = "";
+function closeModalWindow() {
+    $('#' + currentModelId).data('tWindow').close();
+}
+function openModalWindow(modalId) {
+    currentModelId = modalId;
+    $('#' + modalId).data('tWindow').center().open();
+}
 
 
 function getE(name) {

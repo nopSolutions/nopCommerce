@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -203,10 +204,24 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         public ActionResult Delete(int id)
         {
             var category = _categoryService.GetCategoryById(id);
-            if (category != null)
+            if (category == null)
             {
-                _categoryService.DeleteCategory(category);
+                return List();
             }
+            var modal = new CategoryModel(category, _categoryService);
+            return Delete(modal);
+        }
+
+        public ActionResult Delete(CategoryModel model)
+        {
+            return PartialView(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var category = _categoryService.GetCategoryById(id);
+            _categoryService.DeleteCategory(category);
             return RedirectToAction("List");
         }
 

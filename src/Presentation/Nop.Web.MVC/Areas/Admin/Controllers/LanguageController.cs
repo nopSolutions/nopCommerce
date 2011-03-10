@@ -95,10 +95,24 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         public ActionResult Delete(int id)
         {
             var language = _languageService.GetLanguageById(id);
-            if (language != null)
+            if (language == null)
             {
-                _languageService.DeleteLanguage(language);
+                return List();
             }
+            var modal = new LanguageModel(language);
+            return Delete(modal);
+        }
+
+        public ActionResult Delete(LanguageModel model)
+        {
+            return PartialView(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var language = _languageService.GetLanguageById(id);
+            _languageService.DeleteLanguage(language);
             return RedirectToAction("List");
         }
 

@@ -1,0 +1,13 @@
+﻿@model Nop.Web.MVC.Areas.Admin.Models.LanguageModel
+@using (Html.BeginForm("Delete", "Language", new { id = Model.Id }))
+{
+    <div>
+        <p>
+            Are you sure you want to delete language "@Model.Name"?<br />
+        </p>
+        <div class="form-actions">
+            <span class="t-button" onclick="closeModalWindow();">Cancel</span><span class="t-button"
+                onclick="closeModalWindow();">No</span><input type="submit" class="t-button" value="Delete" />
+        </div>
+    </div>
+}
