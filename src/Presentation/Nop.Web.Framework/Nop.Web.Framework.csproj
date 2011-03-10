@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptParameterAttribute .cs" />
     <Compile Include="BaseNopModel.cs" />
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="NopModelBinder.cs" />
+    <Compile Include="NopModelBinderProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
   </ItemGroup>

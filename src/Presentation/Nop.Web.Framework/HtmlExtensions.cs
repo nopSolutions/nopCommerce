@@ -74,9 +74,9 @@ namespace Nop.Web.Framework
             });
         }
 
-        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string buttonsSelector = null) where T : BaseNopEntityModel
+        public static MvcHtmlString DeleteConfirmation<TModel, TEntity>(this HtmlHelper<TModel> helper, string buttonsSelector = null) where TModel : BaseNopEntityModel<TEntity>
         {
-            var modalId = helper.DeleteConfirmationModelId().ToHtmlString();
+            var modalId = helper.DeleteConfirmationModelId<TModel,TEntity>().ToHtmlString();
 
             #region Write click events for button, if supplied
             
@@ -105,7 +105,7 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(window);
         }
 
-        public static MvcHtmlString DeleteConfirmationModelId<T>(this HtmlHelper<T> helper) where T : BaseNopEntityModel
+        public static MvcHtmlString DeleteConfirmationModelId<TModel, TEntity>(this HtmlHelper<TModel> helper) where TModel : BaseNopEntityModel<TEntity>
         {
             return MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation");
         }

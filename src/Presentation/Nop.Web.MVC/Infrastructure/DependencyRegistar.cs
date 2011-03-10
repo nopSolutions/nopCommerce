@@ -13,6 +13,7 @@ using Autofac.Integration.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
@@ -87,7 +88,7 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<WorkContext>().As<IWorkContext>().InstancePerHttpRequest();
 
             //services
-            builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
+            builder.RegisterType<CategoryService>().As<ICategoryService>().As<IEntityService<Category>>().InstancePerHttpRequest();
             builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerHttpRequest();
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerHttpRequest();
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerHttpRequest();

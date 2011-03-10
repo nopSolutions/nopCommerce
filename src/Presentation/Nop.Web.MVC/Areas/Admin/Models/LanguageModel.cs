@@ -7,7 +7,7 @@ using Nop.Web.Framework;
 
 namespace Nop.Web.MVC.Areas.Admin.Models
 {
-    public class LanguageModel : BaseNopEntityModel
+    public class LanguageModel : BaseNopEntityModel<Language>
     {
         public LanguageModel()
         {

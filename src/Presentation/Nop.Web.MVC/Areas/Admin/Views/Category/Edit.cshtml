@@ -1,5 +1,6 @@
 ﻿@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
 @using Nop.Web.Framework;
+@using Nop.Web.MVC.Areas.Admin.Models;
 @{
     ViewBag.SelectedMenuItem = "Languages";
 }
@@ -11,12 +12,13 @@
             @T("Edit category details") - @Model.Name @Html.ActionLink("(" + T("back to category list") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="Save" class="t-button" />
-            <span class="t-button" onclick="saveCategory();">Save and Continue Edit</span> <span
-                id="category-delete" class="t-button">Delete</span>
+            <button name="save" value="save" class="t-button">
+                Save</button>
+            <button name="save" value="save-continue" class="t-button">
+                Save and Continue Edit</button>
+            <span id="category-delete" class="t-button">Delete</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
-@Html.DeleteConfirmation("category-delete")
-
+@(Html.DeleteConfirmation<Nop.Web.MVC.Areas.Admin.Models.CategoryModel, Nop.Core.Domain.Catalog.Category>("category-delete"))

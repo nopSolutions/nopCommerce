@@ -86,6 +86,7 @@
     <Compile Include="Customers\ICustomerService.cs" />
     <Compile Include="Directory\IMeasureService.cs" />
     <Compile Include="Directory\IStateProvinceService.cs" />
+    <Compile Include="IEntityService.cs" />
     <Compile Include="Installation\IInstallationService.cs" />
     <Compile Include="Installation\InstallationService.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
