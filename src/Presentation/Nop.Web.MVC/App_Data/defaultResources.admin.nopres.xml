@@ -1,0 +1,43 @@
+<Language Name="English">
+  <LocaleResource Name="ExampleOfNestedResources">
+    <Value>Resouce name will be 'ExampleOfNestedResources'</Value>
+    <Children>
+      <LocaleResource Name="Childred1">
+        <Value>Resouce name will be 'ExampleOfNestedResources.Childred1'</Value>
+      </LocaleResource>
+      <LocaleResource Name="Childred2">
+        <Value>Resouce name will be 'ExampleOfNestedResources.Childred2'</Value>
+        <Children>
+          <LocaleResource Name="Childred3">
+            <Value>Resouce name will be 'ExampleOfNestedResources.Childred2.Childred3'</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  
+  <LocaleResource Name="Catalog">
+    <Value>Catalog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.Categories">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.Category.Name.Validation">
+    <Value>Name is invalid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Configuration">
+    <Value>Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Configuration.Location">
+    <Value>Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Configuration.Location.Languages">
+    <Value>Languages</Value>
+  </LocaleResource>
+  <LocaleResource Name="General.List">
+    <Value>List</Value>
+  </LocaleResource>
+  <LocaleResource Name="General.Treeview">
+    <Value>Tree view</Value>
+  </LocaleResource>
+</Language>

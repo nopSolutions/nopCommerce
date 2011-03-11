@@ -209,7 +209,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\defaultResources.nopres.xml" />
+    <Content Include="App_Data\defaultResources.admin.nopres.xml" />
+    <Content Include="App_Data\defaultResources.public.nopres.xml" />
     <Content Include="Areas\Admin\sitemap.xml" />
     <Content Include="Areas\Public\Content\images\bbeditor-button-bg.gif" />
     <Content Include="Areas\Public\Content\images\bgTextBox.gif" />
