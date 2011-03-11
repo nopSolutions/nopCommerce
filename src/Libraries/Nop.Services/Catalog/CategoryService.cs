@@ -64,13 +64,13 @@ namespace Nop.Services.Catalog
         /// Marks category as deleted
         /// </summary>
         /// <param name="category">Category</param>
-        public void Delete(Category category)
+        public void DeleteCategory(Category category)
         {
             if (category == null)
                 return;
 
             category.Deleted = true;
-            Update(category);
+            UpdateCategory(category);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Category</returns>
-        public Category GetById(int categoryId)
+        public Category GetCategoryById(int categoryId)
         {
             if (categoryId == 0)
                 return null;
@@ -189,7 +189,7 @@ namespace Nop.Services.Catalog
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
-        public void Insert(Category category)
+        public void InsertCategory(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
@@ -211,13 +211,13 @@ namespace Nop.Services.Catalog
         /// Updates the category
         /// </summary>
         /// <param name="category">Category</param>
-        public void Update(Category category)
+        public void UpdateCategory(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
 
             //validate category hierarchy
-            var parentCategory = GetById(category.ParentCategoryId);
+            var parentCategory = GetCategoryById(category.ParentCategoryId);
             while (parentCategory != null)
             {
                 if (category.Id == parentCategory.Id)
@@ -225,7 +225,7 @@ namespace Nop.Services.Catalog
                     category.ParentCategoryId = 0;
                     break;
                 }
-                parentCategory = GetById(parentCategory.ParentCategoryId);
+                parentCategory = GetCategoryById(parentCategory.ParentCategoryId);
             }
 
             _categoryRepository.Update(category);

@@ -186,7 +186,6 @@
       <DependentUpon>GridLocalization.uk-UA.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\Admin\Controllers\BaseNopController.cs" />
     <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\LanguageController.cs" />
     <Compile Include="Areas\Admin\Controllers\PictureController.cs" />

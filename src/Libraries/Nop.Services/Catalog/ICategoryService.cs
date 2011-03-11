@@ -9,8 +9,14 @@ namespace Nop.Services.Catalog
     /// <summary>
     /// Category service interface
     /// </summary>
-    public partial interface ICategoryService : IEntityService<Category>
+    public partial interface ICategoryService
     {
+        /// <summary>
+        /// Marks category as deleted
+        /// </summary>
+        /// <param name="category">Category</param>
+        void DeleteCategory(Category category);
+
         /// <summary>
         /// Gets all categories
         /// </summary>
@@ -41,6 +47,25 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <returns>Categories</returns>
         IList<Category> GetAllCategoriesDisplayedOnHomePage();
+                
+        /// <summary>
+        /// Gets a category
+        /// </summary>
+        /// <param name="categoryId">Category identifier</param>
+        /// <returns>Category</returns>
+        Category GetCategoryById(int categoryId);
+
+        /// <summary>
+        /// Inserts category
+        /// </summary>
+        /// <param name="category">Category</param>
+        void InsertCategory(Category category);
+
+        /// <summary>
+        /// Updates the category
+        /// </summary>
+        /// <param name="category">Category</param>
+        void UpdateCategory(Category category);
 
         /// <summary>
         /// Deletes a product category mapping

@@ -16,7 +16,7 @@ using Telerik.Web.Mvc.UI;
 namespace Nop.Web.MVC.Areas.Admin.Models
 {
     [Validator(typeof(CategoryValidator))]
-    public class CategoryModel : BaseNopEntityModel<Category>, ILocalizedModel<CategoryLocalizedModel>
+    public class CategoryModel : BaseNopEntityModel, ILocalizedModel<CategoryLocalizedModel>
     {
         public CategoryModel()
         {
@@ -42,7 +42,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             ParentCategoryId = category.ParentCategoryId;
             if (categoryService != null)
             {
-                if (ParentCategoryId > 0) ParentCategory = categoryService.GetById(category.ParentCategoryId);
+                if (ParentCategoryId > 0) ParentCategory = categoryService.GetCategoryById(category.ParentCategoryId);
             }
             PictureId = category.PictureId;
             PageSize = category.PageSize;
@@ -88,7 +88,6 @@ namespace Nop.Web.MVC.Areas.Admin.Models
                 return parentCategories;
             }
         }
-
     }
 
     public class CategoryLocalizedModel : ILocalizedModelLocal
