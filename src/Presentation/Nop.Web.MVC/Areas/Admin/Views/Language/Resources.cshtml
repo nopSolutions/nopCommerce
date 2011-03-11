@@ -1,0 +1,30 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Web.MVC.Areas.Admin.Models.LanguageResourceModel>
+@using Telerik.Web.Mvc.UI;
+<div class="section-header">
+    <div class="title">
+        <img alt="Localization" src="Common/ico-content.png">
+        Localization
+    </div>
+    <div class="options">
+        <input type="submit" class="adminButtonBlue" id="ctl00_cph1_ctrlLocaleStringResources_btnSearch"
+            value="Search" name="ctl00$cph1$ctrlLocaleStringResources$btnSearch">
+        <input type="submit" class="adminButtonBlue" title="Add a new resource string" id="ctl00_cph1_ctrlLocaleStringResources_btnAddNew"
+            value="Add new" name="ctl00$cph1$ctrlLocaleStringResources$btnAddNew">
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Web.MVC.Areas.Admin.Models.LanguageResourceModel>()
+                    .Name("Grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("Resources", "Language"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

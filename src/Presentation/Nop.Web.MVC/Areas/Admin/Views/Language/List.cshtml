@@ -19,6 +19,11 @@
                     {
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.Published).Template(x => x.Published.ToString().ToLower());
+                        columns.Template(
+                            @<div>
+                                @Html.ActionLink("View string resources", "Resources", new { languageId = @item.Id })
+                            </div>
+                        );
                         columns.Bound(x => x.DisplayOrder);
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink("Edit", "Edit", new { id = x.Id }))

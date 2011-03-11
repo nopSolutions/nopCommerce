@@ -15,10 +15,12 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
     [AdminAuthorize]
     public class LanguageController : Controller
     {
-        private ILanguageService _languageService;
+        private readonly ILanguageService _languageService;
+        private ILocalizationService _localizationService;
 
-        public LanguageController(ILanguageService languageService)
+        public LanguageController(ILanguageService languageService, ILocalizationService localizationService)
         {
+            _localizationService = localizationService;
             _languageService = languageService;
         }
 
@@ -139,6 +141,34 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         #endregion
 
         #region Resources
+
+        public ActionResult Resources(int languageId)
+        {
+            //if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
+            //{
+                //TODO redirect to access denied page
+            //}
+            var resources = _localizationService.GetAllResourcesByLanguageId(languageId);
+            var gridModel = new GridModel<LanguageResourceModel>
+            {
+                Data = resources.Take(10).Select(x => new LanguageResourceModel(x.Value)),
+                Total = resources.Count
+            };
+            return View(gridModel);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult Resources(int languageId, GridCommand command)
+        {
+            var model = new GridModel<LanguageResourceModel>();
+            var resources = _localizationService.GetAllResourcesByLanguageId(languageId);
+            model.Data = resources.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize).Select(x => new LanguageResourceModel(x.Value));
+            model.Total = resources.Count;
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
 
         #endregion
 

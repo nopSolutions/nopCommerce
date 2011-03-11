@@ -92,12 +92,90 @@
 
     <LocaleResource Name="Configuration">
         <Value>Configuration</Value>
+        <Children>
+            <LocaleResource Name="Categories">
+                <Value>Categories</Value>
+                <Children>
+                    <LocaleResource Name="Manage">
+                        <Value>Manage Categories</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SwitchToTreeview">
+                        <Value>switch to tree view</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Fields">
+                        <Children>
+                            <LocaleResource Name="Name">
+                                <Value>Name</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Description">
+                                <Value>Description</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="MetaKeywords">
+                                <Value>MetaKeywords</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="MetaDescription">
+                                <Value>MetaDescription</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="MetaTitle">
+                                <Value>MetaTitle</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Parent">
+                                <Value>Parent</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="PageSize">
+                                <Value>PageSize</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="PriceRanges">
+                                <Value>PriceRanges</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="ShowOnHomePage">
+                                <Value>ShowOnHomePage</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Published">
+                                <Value>Published</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Deleted">
+                                <Value>Deleted</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="DisplayOrder">
+                                <Value>DisplayOrder</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="CreatedOn">
+                                <Value>CreatedOn</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="UpdatedOn">
+                                <Value>UpdatedOn</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="DisplayOrder">
+                                <Value>DisplayOrder</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="DisplayOrder">
+                                <Value>DisplayOrder</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="DisplayOrder">
+                                <Value>DisplayOrder</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="Common">
+                <Children>
+                    <LocaleResource Name="AddNew">
+                        <Value>Add new</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Edit">
+                        <Value>Edit</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+        </Children>
     </LocaleResource>
 
     <LocaleResource Name="Configuration.Location">
         <Value>Location</Value>
     </LocaleResource>
-    
+
     <LocaleResource Name="Configuration.Location.Languages">
         <Value>Languages</Value>
     </LocaleResource>
