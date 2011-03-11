@@ -1,7 +1,11 @@
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Hosting;
 using System.Xml;
 using Nop.Core.Configuration;
@@ -75,6 +79,176 @@ namespace Nop.Services.Installation
             this._productVariantRepository = productVariantRepository;
 
             this._settingService = settingService;
+        }
+
+        #endregion
+
+        #region Classes
+
+        private class LocaleStringResourceParent : LocaleStringResource
+        {
+            public LocaleStringResourceParent(XmlNode localStringResource, string nameSpace = "")
+            {
+                Namespace = nameSpace;
+                string resName = localStringResource.Attributes["Name"].InnerText.Trim();
+                string resValue = localStringResource.SelectSingleNode("Value").InnerText;
+                if (!String.IsNullOrEmpty(resName))
+                {
+                    ResourceName = resName;
+                    ResourceValue = resValue;
+                }
+
+                foreach (XmlNode childResource in localStringResource.SelectNodes("Children/LocaleResource"))
+                {
+                    ChildLocaleStringResources.Add(new LocaleStringResourceParent(childResource, NameWithNamespace));
+                }
+            }
+            public string Namespace { get; set; }
+            public IList<LocaleStringResourceParent> ChildLocaleStringResources = new List<LocaleStringResourceParent>();
+
+            public string NameWithNamespace
+            {
+                get
+                {
+                    var newNamespace = Namespace;
+                    if (!string.IsNullOrEmpty(newNamespace))
+                    {
+                        newNamespace += ".";
+                    }
+                    return newNamespace + ResourceName;
+                }
+            }
+        }
+
+        private class ComparisonComparer<T> : IComparer<T>, IComparer
+        {
+            private readonly Comparison<T> _comparison;
+
+            public ComparisonComparer(Comparison<T> comparison)
+            {
+                _comparison = comparison;
+            }
+
+            public int Compare(T x, T y)
+            {
+                return _comparison(x, y);
+            }
+
+            public int Compare(object o1, object o2)
+            {
+                return _comparison((T)o1, (T)o2);
+            }
+        }
+
+        #endregion
+
+        #region Utilities
+
+        private void RecursivelyWriteResource(LocaleStringResourceParent resource, XmlWriter writer)
+        {
+            writer.WriteStartElement("LocaleResource", "");
+
+            writer.WriteStartAttribute("Name", "");
+            writer.WriteString(resource.NameWithNamespace);
+            writer.WriteEndAttribute();
+
+            writer.WriteStartElement("Value", "");
+            writer.WriteString(resource.ResourceValue);
+            writer.WriteEndElement();
+
+            writer.WriteEndElement();
+
+            foreach (var child in resource.ChildLocaleStringResources)
+            {
+                RecursivelyWriteResource(child, writer);
+            }
+
+        }
+
+        private void RecursivelySortChildrenResource(LocaleStringResourceParent resource)
+        {
+            ArrayList.Adapter((IList)resource.ChildLocaleStringResources).Sort(new InstallationService.ComparisonComparer<LocaleStringResourceParent>((x1, x2) => x1.ResourceName.CompareTo(x2.ResourceName)));
+            
+            foreach (var child in resource.ChildLocaleStringResources)
+            {
+                RecursivelySortChildrenResource(child);
+            }
+
+        }
+
+        private void AddLocaleResources(Language language1)
+        {
+            //insert default sting resources (temporary solution). Requires some performance optimization
+            //TODO find better way to insert default locale string resources
+            //TODO use IStorageProvider instead of HostingEnvironment.MapPath
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(HostingEnvironment.MapPath("~/App_Data/"), "*.nopres.xml"))
+            {
+                //read and parse original file with resources (with <Children> elements)
+
+                var originalXmlDocument = new XmlDocument();
+                originalXmlDocument.Load(filePath);
+
+                var resources = new List<LocaleStringResourceParent>();
+
+                foreach (XmlNode resNode in originalXmlDocument.SelectNodes(@"//Language/LocaleResource"))
+                    resources.Add(new LocaleStringResourceParent(resNode));
+
+                resources.Sort((x1, x2) => x1.ResourceName.CompareTo(x2.ResourceName));
+
+                foreach (var resource in resources)
+                    RecursivelySortChildrenResource(resource);
+
+                var sb = new StringBuilder();
+                var writer = XmlWriter.Create(sb);
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Language", "");
+
+                writer.WriteStartAttribute("Name", "");
+                writer.WriteString(originalXmlDocument.SelectSingleNode(@"//Language").Attributes["Name"].InnerText.Trim());
+                writer.WriteEndAttribute();
+
+                foreach (var resource in resources)
+                    RecursivelyWriteResource(resource, writer);
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
+
+
+
+                //read and parse resources (without <Children> elements)
+                var resXml = new XmlDocument();
+                var sr = new StringReader(sb.ToString());
+                resXml.Load(sr);
+                var resNodeList = resXml.SelectNodes(@"//Language/LocaleResource");
+                foreach (XmlNode resNode in resNodeList)
+                    if (resNode.Attributes != null && resNode.Attributes["Name"] != null)
+                    {
+                        string resName = resNode.Attributes["Name"].InnerText.Trim();
+                        string resValue = resNode.SelectSingleNode("Value").InnerText;
+                        if (!String.IsNullOrEmpty(resName))
+                        {
+                            //ensure it's not duplicate
+                            bool duplicate = false;
+                            foreach (var res1 in language1.LocaleStringResources)
+                                if (resName.Equals(res1.ResourceName, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    duplicate = true;
+                                    break;
+                                }
+                            if (duplicate)
+                                continue;
+
+                            //insert resource
+                            var lsr = new LocaleStringResource
+                            {
+                                ResourceName = resName,
+                                ResourceValue = resValue
+                            };
+                            language1.LocaleStringResources.Add(lsr);
+                        }
+                    }
+            }
         }
 
         #endregion
@@ -197,32 +371,7 @@ namespace Nop.Services.Installation
                 Published = true,
                 DisplayOrder = 1
             };
-            //insert default sting resources (temporary solution). Requires some performance optimization
-            //TODO find better way to insert default locale string resources
-            //TODO use IStorageProvider instead of HostingEnvironment.MapPath
-            foreach (var resFile in System.IO.Directory.EnumerateFiles(HostingEnvironment.MapPath("~/App_Data/"), "*.nopres.xml"))
-            {
-                var resXml = new XmlDocument();
-                resXml.Load(resFile);
-                var resNodeList = resXml.SelectNodes(@"//Language/LocaleResource");
-                foreach (XmlNode resNode in resNodeList)
-                {
-                    if (resNode.Attributes != null && resNode.Attributes["Name"] != null)
-                    {
-                        string resName = resNode.Attributes["Name"].InnerText.Trim();
-                        string resValue = resNode.SelectSingleNode("Value").InnerText;
-                        if (!String.IsNullOrEmpty(resName))
-                        {
-                            var lsr = new LocaleStringResource
-                            {
-                                ResourceName = resName,
-                                ResourceValue = resValue
-                            };
-                            language1.LocaleStringResources.Add(lsr);
-                        }
-                    }
-                }
-            }
+            AddLocaleResources(language1);
             _languageRepository.Insert(language1);
 
             #endregion
