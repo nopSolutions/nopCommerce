@@ -30,35 +30,8 @@
   <LocaleResource Name="Account.ShoppingCart">
     <Value>Shopping Cart</Value>
   </LocaleResource>
-  <LocaleResource Name="Catalog">
-    <Value>Catalog</Value>
-  </LocaleResource>
-  <LocaleResource Name="Catalog.Categories">
-    <Value>Categories</Value>
-  </LocaleResource>
-  <LocaleResource Name="Catalog.Category.Name.Validation">
-    <Value>Name is invalid.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Configuration">
-    <Value>Configuration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Configuration.Location">
-    <Value>Location</Value>
-  </LocaleResource>
-  <LocaleResource Name="Configuration.Location.Languages">
-    <Value>Languages</Value>
-  </LocaleResource>
   <LocaleResource Name="Content.CopyrightNotice">
     <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
-  </LocaleResource>
-  <LocaleResource Name="General.List">
-    <Value>List</Value>
-  </LocaleResource>
-  <LocaleResource Name="General.Treeview">
-    <Value>Tree view</Value>
-  </LocaleResource>
-  <LocaleResource Name="GiftCardAttribute.For">
-    <Value>For: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="GiftCardAttribute.From">
     <Value>From: {0}</Value>
