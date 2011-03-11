@@ -1,43 +1,147 @@
 <Language Name="English">
-  <LocaleResource Name="ExampleOfNestedResources">
-    <Value>Resouce name will be 'ExampleOfNestedResources'</Value>
-    <Children>
-      <LocaleResource Name="Childred1">
-        <Value>Resouce name will be 'ExampleOfNestedResources.Childred1'</Value>
-      </LocaleResource>
-      <LocaleResource Name="Childred2">
-        <Value>Resouce name will be 'ExampleOfNestedResources.Childred2'</Value>
+    <LocaleResource Name="ExampleOfNestedResources">
+        <Value>Resouce name will be 'ExampleOfNestedResources'</Value>
         <Children>
-          <LocaleResource Name="Childred3">
-            <Value>Resouce name will be 'ExampleOfNestedResources.Childred2.Childred3'</Value>
-          </LocaleResource>
+            <LocaleResource Name="Childred1">
+                <Value>Resouce name will be 'ExampleOfNestedResources.Childred1'</Value>
+            </LocaleResource>
+            <LocaleResource Name="Childred2">
+                <Value>Resouce name will be 'ExampleOfNestedResources.Childred2'</Value>
+                <Children>
+                    <LocaleResource Name="Childred3">
+                        <Value>Resouce name will be 'ExampleOfNestedResources.Childred2.Childred3'</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
         </Children>
-      </LocaleResource>
-    </Children>
-  </LocaleResource>
-  
-  <LocaleResource Name="Catalog">
-    <Value>Catalog</Value>
-  </LocaleResource>
-  <LocaleResource Name="Catalog.Categories">
-    <Value>Categories</Value>
-  </LocaleResource>
-  <LocaleResource Name="Catalog.Category.Name.Validation">
-    <Value>Name is invalid.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Configuration">
-    <Value>Configuration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Configuration.Location">
-    <Value>Location</Value>
-  </LocaleResource>
-  <LocaleResource Name="Configuration.Location.Languages">
-    <Value>Languages</Value>
-  </LocaleResource>
-  <LocaleResource Name="General.List">
-    <Value>List</Value>
-  </LocaleResource>
-  <LocaleResource Name="General.Treeview">
-    <Value>Tree view</Value>
-  </LocaleResource>
+    </LocaleResource>
+    <LocaleResource Name="Admin">
+        <Value>Admin</Value>
+        <Children>
+            <LocaleResource Name="Catalog">
+                <Value>Catalog</Value>
+                <Children>
+                    <LocaleResource Name="Categories">
+                        <Value>Categories</Value>
+                        <Children>
+                            <LocaleResource Name="Manage">
+                                <Value>Manage Categories</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="SwitchToTreeview">
+                                <Value>switch to tree view</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Fields">
+                                <Children>
+                                    <LocaleResource Name="Name">
+                                        <Value>Name</Value>
+                                        <Children>
+                                            <LocaleResource Name="Validation">
+                                                <Value>Please provide a name.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Description">
+                                        <Value>Description</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="MetaKeywords">
+                                        <Value>MetaKeywords</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="MetaDescription">
+                                        <Value>MetaDescription</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="MetaTitle">
+                                        <Value>MetaTitle</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Parent">
+                                        <Value>Parent</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="PageSize">
+                                        <Value>PageSize</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="PriceRanges">
+                                        <Value>PriceRanges</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="ShowOnHomePage">
+                                        <Value>ShowOnHomePage</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Published">
+                                        <Value>Published</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Deleted">
+                                        <Value>Deleted</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                        <Value>DisplayOrder</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="CreatedOn">
+                                        <Value>CreatedOn</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="UpdatedOn">
+                                        <Value>UpdatedOn</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                        <Value>DisplayOrder</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                        <Value>DisplayOrder</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                        <Value>DisplayOrder</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="Configuration">
+                <Value>Configuration</Value>
+                <Children>
+                    <LocaleResource Name="Location">
+                        <Value>Location</Value>
+                        <Children>
+                            <LocaleResource Name="Languages">
+                                <Value>Languages</Value>
+                                <Children>
+                                    <LocaleResource Name="Resources">
+                                        <Value>Language resources</Value>
+                                        <Children>
+                                            <LocaleResource Name="Fields">
+                                                <Children>
+                                                    <LocaleResource Name="Name">
+                                                        <Value>Resource name</Value>
+                                                        <Children>
+                                                            <LocaleResource Name="Validation">
+                                                                <Value>Resource name must be valid.</Value>
+                                                            </LocaleResource>
+                                                        </Children>
+                                                    </LocaleResource>
+                                                </Children>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="Common">
+                <Children>
+                    <LocaleResource Name="AddNew">
+                        <Value>Add new</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Edit">
+                        <Value>Edit</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="List">
+                        <Value>List</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Treeview">
+                        <Value>Tree view</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>
 </Language>

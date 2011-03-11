@@ -235,9 +235,9 @@ td.adminData
 	vertical-align: middle;
 }
 
-td.adminData .text-box.single-line
+td.adminData .text-box.single-line, .t-grid .text-box.single-line
 {
-    border:1px solid #ACACAC;
+    border:1px solid #A7BAC5;
     width:250px;
     padding:2px;
 }

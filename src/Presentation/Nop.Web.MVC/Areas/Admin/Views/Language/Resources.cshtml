@@ -1,5 +1,6 @@
 ﻿@model Telerik.Web.Mvc.GridModel<Nop.Web.MVC.Areas.Admin.Models.LanguageResourceModel>
 @using Telerik.Web.Mvc.UI;
+@using System.Linq;
 <div class="section-header">
     <div class="title">
         <img alt="Localization" src="Common/ico-content.png">
@@ -12,18 +13,55 @@
             value="Add new" name="ctl00$cph1$ctrlLocaleStringResources$btnAddNew">
     </div>
 </div>
+@if (ViewBag.AllLanguages != null)
+{
+    <table>
+        <tr>
+            <td class="adminTitle">
+                Select Language
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().ComboBox().Name("select-language")
+                .ClientEvents(x => x.OnChange("onLanguageSelected"))
+                .BindTo(ViewBag.AllLanguages))
+                <script type="text/javascript">
+                    function onLanguageSelected(e) {
+                        window.location = "/Admin/Language/Resources?languageId=" + e.value;
+                    }
+                </script>
+            </td>
+        </tr>
+    </table>
+}
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Web.MVC.Areas.Admin.Models.LanguageResourceModel>()
+            @(Html.Telerik().Grid(Model.Data)
                     .Name("Grid")
-                    .BindTo(Model.Data)
+                    .DataKeys(x => x.Add(y => y.Id))
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Name);
+                        columns.Template(x => x.LanguageName).ClientTemplate("<#= LanguageName #>").Width(100);
+                        columns.Bound(x => x.Name).EditorTemplateName("String").Width(300);
+                        columns.Bound(x => x.Value).EditorTemplateName("String");
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        }).Width(180);
+
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("Resources", "Language"))
+                    .Editable(x =>{
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .Filterable()
+                    .Pageable(settings => settings.PageSize(10).Total(Model.Total))
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("Resources", "Language")
+                            .Update("ResourceUpdate", "Language")
+                            .Delete("ResourceDelete", "Language");
+                    })
                     .EnableCustomBinding(true))
         </td>
     </tr>

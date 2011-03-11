@@ -64,6 +64,7 @@
     <Compile Include="BaseNopModel.cs" />
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="HtmlExtensions.cs" />
     <Compile Include="ImageResult.cs" />
     <Compile Include="Localization\ILocalizedModel.cs" />

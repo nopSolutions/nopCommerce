@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Hosting;
 using System.Xml;
+using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
@@ -90,12 +91,28 @@ namespace Nop.Services.Installation
             public LocaleStringResourceParent(XmlNode localStringResource, string nameSpace = "")
             {
                 Namespace = nameSpace;
-                string resName = localStringResource.Attributes["Name"].InnerText.Trim();
-                string resValue = localStringResource.SelectSingleNode("Value").InnerText;
-                if (!String.IsNullOrEmpty(resName))
+                var resNameAttribute = localStringResource.Attributes["Name"];
+                var resValueNode = localStringResource.SelectSingleNode("Value");
+
+                if (resNameAttribute == null)
                 {
-                    ResourceName = resName;
-                    ResourceValue = resValue;
+                    throw new NopException("All language resources must have an attribute Name=\"Value\".");
+                }
+                var resName = resNameAttribute.Value.Trim();
+                if (string.IsNullOrEmpty(resName))
+                {
+                    throw new NopException("All languages resource attributes 'Name' must have a value.'");
+                }
+                ResourceName = resName;
+               
+                if (resValueNode == null || string.IsNullOrEmpty(resValueNode.InnerText.Trim()))
+                {
+                    IsPersistable = false;
+                }
+                else
+                {
+                    IsPersistable = true;
+                    ResourceValue = resValueNode.InnerText.Trim();
                 }
 
                 foreach (XmlNode childResource in localStringResource.SelectNodes("Children/LocaleResource"))
@@ -105,6 +122,8 @@ namespace Nop.Services.Installation
             }
             public string Namespace { get; set; }
             public IList<LocaleStringResourceParent> ChildLocaleStringResources = new List<LocaleStringResourceParent>();
+
+            public bool IsPersistable { get; set; }
 
             public string NameWithNamespace
             {
@@ -146,17 +165,21 @@ namespace Nop.Services.Installation
 
         private void RecursivelyWriteResource(LocaleStringResourceParent resource, XmlWriter writer)
         {
-            writer.WriteStartElement("LocaleResource", "");
+            //The value isn't actually used, but the name is used to create a namespace.
+            if (resource.IsPersistable)
+            {
+                writer.WriteStartElement("LocaleResource", "");
 
-            writer.WriteStartAttribute("Name", "");
-            writer.WriteString(resource.NameWithNamespace);
-            writer.WriteEndAttribute();
+                writer.WriteStartAttribute("Name", "");
+                writer.WriteString(resource.NameWithNamespace);
+                writer.WriteEndAttribute();
 
-            writer.WriteStartElement("Value", "");
-            writer.WriteString(resource.ResourceValue);
-            writer.WriteEndElement();
+                writer.WriteStartElement("Value", "");
+                writer.WriteString(resource.ResourceValue);
+                writer.WriteEndElement();
 
-            writer.WriteEndElement();
+                writer.WriteEndElement();
+            }
 
             foreach (var child in resource.ChildLocaleStringResources)
             {

@@ -194,6 +194,7 @@
     <Compile Include="Areas\Admin\Models\LanguageModel.cs" />
     <Compile Include="Areas\Admin\Models\LanguageResourceModel.cs" />
     <Compile Include="Areas\Admin\Validators\CategoryValidator.cs" />
+    <Compile Include="Areas\Admin\Validators\LanguageResourceValidator.cs" />
     <Compile Include="Areas\Admin\Views\Shared\TestMenuPlugin1.cs" />
     <Compile Include="Areas\Admin\Views\Shared\TestMenuPlugin2.cs" />
     <Compile Include="Areas\Public\Controllers\HomeController.cs" />
