@@ -25,17 +25,16 @@ namespace Nop.Web.Framework
             var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
             return urlHelper.Content(url);
         }
-        public static MvcHtmlString Hint(this HtmlHelper helper, string resourceName)
+
+        public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
             // Create tag builder
             var builder = new TagBuilder("img");
 
             // Add attributes
-            var resource = EngineContext.Current.Resolve<Services.Localization.ILocalizationService>().GetResource(
-                    resourceName);
             builder.MergeAttribute("src", ResolveUrl(helper, "/Areas/Admin/Content/images/ico-help.gif"));
-            builder.MergeAttribute("alt", resource);
-            builder.MergeAttribute("title", resource);
+            builder.MergeAttribute("alt", value);
+            builder.MergeAttribute("title", value);
 
             // Render tag
             return MvcHtmlString.Create(builder.ToString());
@@ -79,7 +78,7 @@ namespace Nop.Web.Framework
             var modalId = helper.DeleteConfirmationModelId().ToHtmlString();
 
             #region Write click events for button, if supplied
-            
+
             if (!string.IsNullOrEmpty(buttonsSelector))
             {
                 var textWriter = new StringWriter();
@@ -94,7 +93,7 @@ namespace Nop.Web.Framework
             #endregion
 
             var window = helper.Telerik().Window().Name(modalId)
-                .Title("Are you sure?")
+                .Title(EngineContext.Current.LocalizationService().GetResource("Admin.Common.AreYouSure"))
                 .Modal(true)
                 .Effects(x => x.Toggle())
                 .Resizable(x => x.Enabled(false))
@@ -108,6 +107,51 @@ namespace Nop.Web.Framework
         public static MvcHtmlString DeleteConfirmationModelId<T>(this HtmlHelper<T> helper) where T : BaseNopEntityModel
         {
             return MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation");
+        }
+
+        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
+        {
+            var result = new StringBuilder();
+            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
+            var hintResource = string.Empty;
+            object value = null;
+            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
+            {
+                var resourceDisplayName = value as NopResourceDisplayName;
+                if (resourceDisplayName != null)
+                {
+                    hintResource =
+                        EngineContext.Current.Resolve<ILocalizationService>().GetResource(
+                            resourceDisplayName.ResourceKey + ".Hint",
+                            EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id, false, "");
+
+                    result.Append(helper.Hint(hintResource).ToHtmlString());
+                }
+            }
+            result.Append(helper.LabelFor(expression, new {title=hintResource}));
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes)
+        {
+            return LabelFor(html, expression, new RouteValueDictionary(htmlAttributes));
+        }
+
+        public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes)
+        {
+            ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
+            string labelText = metadata.DisplayName ?? metadata.PropertyName ?? htmlFieldName.Split('.').Last();
+            if (String.IsNullOrEmpty(labelText))
+            {
+                return MvcHtmlString.Empty;
+            }
+
+            TagBuilder tag = new TagBuilder("label");
+            tag.MergeAttributes(htmlAttributes);
+            tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
+            tag.SetInnerText(labelText);
+            return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
 
     }

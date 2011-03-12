@@ -6,17 +6,17 @@
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" />
-        @T("Manage categories") @Html.ActionLink("(switch to list view)", "List")
+        @T("Admin.Catalog.Categories.Manage") @Html.ActionLink("(" + T("Admin.Catalog.Categories.SwitchToListView") + ")", "List")
     </div>
     <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Add new")</a>
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
             @(Html.Telerik().TreeView()
-        .Name("AjaxTreeView")
+        .Name("category-treeview")
         .BindTo(Model, (item, category) =>
         {
             item.Text = category.Name;
@@ -57,7 +57,7 @@
             }
 
             function onSelect(e) {
-                var itemId = $('#AjaxTreeView').data('tTreeView').getItemValue(e.item);
+                var itemId = $('#category-treeview').data('tTreeView').getItemValue(e.item);
                 var url = "@(Url.Action("Edit"))" + "/" + itemId;
                 window.location = url;
             }

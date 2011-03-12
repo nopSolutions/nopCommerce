@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <siteMap>
     <siteMapNode title="Home" controller="Home" action="Overview">
-        <siteMapNode title="Catalog" nopResource="Catalog">
-            <siteMapNode controller="Category" action="List" title="Categories" nopResource="Catalog.Categories">
-                <siteMapNode controller="Category" action="List" title="List" nopResource="General.List" />
-                <siteMapNode controller="Category" action="Tree" title="Tree view" nopResource="General.Treeview" />
+        <siteMapNode title="Catalog" nopResource="Admin.Catalog">
+            <siteMapNode controller="Category" action="List" title="Categories" nopResource="Admin.Catalog.Categories">
+                <siteMapNode controller="Category" action="List" title="List" nopResource="Admin.Common.List" />
+                <siteMapNode controller="Category" action="Tree" title="Tree view" nopResource="Admin.Common.Treeview" />
             </siteMapNode>
         </siteMapNode>
-        <siteMapNode title="Configuration" nopResource="Configuration">
-            <siteMapNode title="Location" nopResource="Configuration.Location">
-                <siteMapNode controller="Language" action="List" title="Languages" nopResource="Configuration.Location.Languages" />
+        <siteMapNode title="Configuration" nopResource="Admin.Configuration">
+            <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
+                <siteMapNode controller="Language" action="List" title="Languages" nopResource="Admin.Configuration.Location.Languages" />
             </siteMapNode>
         </siteMapNode>
         <!--<siteMapNode title="Menu">

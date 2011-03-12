@@ -24,11 +24,29 @@
                     <LocaleResource Name="Categories">
                         <Value>Categories</Value>
                         <Children>
+                            <LocaleResource Name="Info">
+                                <Value>Category Info</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="AddNew">
+                                <Value>Add a new category</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="BackToList">
+                                <Value>back to category list</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Breadcrumb">
+                                <Value>Breadcrumb</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="EditCategoryDetails">
+                                <Value>Edit category details</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Manage">
                                 <Value>Manage Categories</Value>
                             </LocaleResource>
-                            <LocaleResource Name="SwitchToTreeview">
+                            <LocaleResource Name="SwitchToTreeView">
                                 <Value>switch to tree view</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="SwitchToListView">
+                                <Value>switch to list view</Value>
                             </LocaleResource>
                             <LocaleResource Name="Fields">
                                 <Children>
@@ -38,55 +56,115 @@
                                             <LocaleResource Name="Validation">
                                                 <Value>Please provide a name.</Value>
                                             </LocaleResource>
+                                            <LocaleResource Name="Hint">
+                                                <Value>The category's name.</Value>
+                                            </LocaleResource>
                                         </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Description">
                                         <Value>Description</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>A description of the category.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="MetaKeywords">
-                                        <Value>MetaKeywords</Value>
+                                        <Value>Meta keywords</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Meta keywords to be added to category page header.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="MetaDescription">
-                                        <Value>MetaDescription</Value>
+                                        <Value>Meta description</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Meta description to be added to category page header.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="MetaTitle">
-                                        <Value>MetaTitle</Value>
+                                        <Value>Meta title</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Override the page title. The default is the name of the category.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SeName">
+                                        <Value>Search engine friendly page name</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the category ID). The default is the name of category.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Parent">
-                                        <Value>Parent</Value>
+                                        <Value>Parent category</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Select a parent category for this category. Leave this field empty to make this the root level category</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="PageSize">
-                                        <Value>PageSize</Value>
+                                        <Value>Page size</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Set the page size for products in this category e.g. '4' products per page.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="PriceRanges">
-                                        <Value>PriceRanges</Value>
+                                        <Value>Price ranges</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Define the price ranges for the store price range filter. Separate ranges with a semicolon e.g. '0-199;200-300;301-;' (301- means 301 and over)</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="ShowOnHomePage">
-                                        <Value>ShowOnHomePage</Value>
+                                        <Value>Show on home page</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Check if you want to show a category on home page.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Published">
                                         <Value>Published</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Check to publish this category (visible in store). Uncheck to unpublish (category not available in store).</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Deleted">
                                         <Value>Deleted</Value>
                                     </LocaleResource>
                                     <LocaleResource Name="DisplayOrder">
-                                        <Value>DisplayOrder</Value>
+                                        <Value>Display order</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Set the category's display order. 1 represents the top of the list.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="CreatedOn">
-                                        <Value>CreatedOn</Value>
+                                        <Value>Created on</Value>
                                     </LocaleResource>
                                     <LocaleResource Name="UpdatedOn">
-                                        <Value>UpdatedOn</Value>
+                                        <Value>Updated on</Value>
                                     </LocaleResource>
-                                    <LocaleResource Name="DisplayOrder">
-                                        <Value>DisplayOrder</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="DisplayOrder">
-                                        <Value>DisplayOrder</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="DisplayOrder">
-                                        <Value>DisplayOrder</Value>
+                                    <LocaleResource Name="Picture">
+                                        <Value>Picture</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>The category picture.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
@@ -128,14 +206,44 @@
             </LocaleResource>
             <LocaleResource Name="Common">
                 <Children>
+                    <LocaleResource Name="DeleteConfirmation">
+                        <Value>Are you sure you want to delete "{0}"?</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="AreYouSure">
+                        <Value>Are you sure?</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SEO">
+                        <Value>SEO</Value>
+                    </LocaleResource>
                     <LocaleResource Name="AddNew">
                         <Value>Add new</Value>
                     </LocaleResource>
                     <LocaleResource Name="Edit">
                         <Value>Edit</Value>
                     </LocaleResource>
+                    <LocaleResource Name="Delete">
+                        <Value>Delete</Value>
+                    </LocaleResource>
                     <LocaleResource Name="List">
                         <Value>List</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Save">
+                        <Value>Save</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Cancel">
+                        <Value>Cancel</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Standard">
+                        <Value>Standard</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="No">
+                        <Value>No</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="NoCancel">
+                        <Value>No, cancel</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SaveContinue">
+                        <Value>Save and Continue Edit</Value>
                     </LocaleResource>
                     <LocaleResource Name="Treeview">
                         <Value>Tree view</Value>

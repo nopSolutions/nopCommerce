@@ -53,9 +53,9 @@ namespace Nop.Web.MVC
 
             //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel),new NopModelBinder());
-            //ModelBinders.Binders.Add(typeof (ILocalizedModels), new LocalizedPropertyBinder());
 
             //other MVC stuff
+            ModelMetadataProviders.Current = new NopMetadataProvider();
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);

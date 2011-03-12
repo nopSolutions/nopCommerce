@@ -3,10 +3,10 @@
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" />
-        @T("Manage categories") @Html.ActionLink("(switch to tree view)", "Tree")
+        @T("Admin.Catalog.Categories.Manage") @Html.ActionLink("(" + T("Admin.Catalog.Categories.SwitchToTreeView") + ")", "Tree")
     </div>
     <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Add new")</a>
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
 <table class="adminContent">
@@ -17,16 +17,16 @@
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.Breadcrumb);
-                        columns.Bound(x => x.Published).Template(x => x.Published.ToString().ToLower());
-                        columns.Bound(x => x.DisplayOrder);
+                        columns.Bound(x => x.Name).Title(T("Admin.Catalog.Categories.Fields.Name").Text);
+                        columns.Bound(x => x.Breadcrumb).Title(T("Admin.Catalog.Categories.Breadcrumb").Text);
+                        columns.Bound(x => x.Published).Template(x => x.Published.ToString().ToLower()).Title(T("Admin.Catalog.Categories.Fields.Published").Text);
+                        columns.Bound(x => x.DisplayOrder).Title(T("Admin.Catalog.Categories.Fields.DisplayOrder").Text);
                         columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink("Edit", "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"<#= Id #>\">Edit</a>")
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Width(50)
                             .HtmlAttributes(new { align = "center" })
-                            .HeaderTemplate("Edit")
+                            .Title(T("Admin.Common.Edit").Text)//.HeaderTemplate("Edit")
                             .HeaderHtmlAttributes(new { align = "center" }).Filterable(false);
                     })
                     .Pageable(settings => settings.Total(Model.Total).PageSize(10))

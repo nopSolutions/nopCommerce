@@ -1,5 +1,6 @@
 ﻿@using Telerik.Web.Mvc.UI;
 @{
+    Telerik.Web.Mvc.SiteMapManager.SiteMaps.Remove("admin");
     if (!Telerik.Web.Mvc.SiteMapManager.SiteMaps.ContainsKey("admin"))
     {
         Telerik.Web.Mvc.SiteMapManager.SiteMaps.Register<Telerik.Web.Mvc.XmlSiteMap>("admin", sitmap =>

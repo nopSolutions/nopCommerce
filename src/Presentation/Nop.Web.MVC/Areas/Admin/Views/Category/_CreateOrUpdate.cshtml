@@ -4,19 +4,18 @@
 @using Nop.Web.MVC.Areas.Admin.Models;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("CategoryEdit").Items(x =>
+@Html.Telerik().TabStrip().Name("category-edit").Items(x =>
 {
-    x.Add().Text(T("Category Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
-    x.Add().Text(T("SEO").Text).Content(TabSeo().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Categories.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
 })
 @helper TabInfo()
     { 
-    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("tabInfoLocalized",
+    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
                 @<table class="adminContent">
                     <tr>
                         <td class="adminTitle">
-                            @Html.Hint("The category's name.")
-                            @Html.LabelFor(model => model.Locales[item].Name)
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
                         </td>
                         <td class="adminData">
                             @Html.EditorFor(model => Model.Locales[item].Name)
@@ -25,8 +24,7 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            @Html.Hint("A description of the category.")
-                            @Html.LabelFor(model => model.Locales[item].Description):
+                            @Html.NopLabelFor(model => model.Locales[item].Description):
                         </td>
                         <td class="adminData">
                             @Html.Telerik().EditorFor(model => model.Locales[item].Description)
@@ -43,8 +41,7 @@
                 @<table class="adminContent">
                     <tr>
                         <td class="adminTitle">
-                            @Html.Hint("The category's name.")
-                            @Html.LabelFor(model => model.Name):
+                            @Html.NopLabelFor(model => model.Name):
                         </td>
                         <td class="adminData">
                             @Html.EditorFor(model => model.Name)
@@ -53,8 +50,7 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            @Html.Hint("A description of the category.")
-                            @Html.LabelFor(model => model.Description):
+                            @Html.NopLabelFor(model => model.Description):
                         </td>
                         <td class="adminData">
                             @Html.Telerik().EditorFor(x => x.Description)
@@ -66,8 +62,7 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.Hint("The category image.")
-                @Html.LabelFor(model => model.PictureId)
+                @Html.NopLabelFor(model => model.PictureId)
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.PictureId)
@@ -76,8 +71,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.Hint("Select a parent category for this category. Leave as [ --- ] to make this the root level category.")
-                @Html.LabelFor(model => model.ParentCategoryId):
+                @Html.NopLabelFor(model => model.ParentCategoryId):
             </td>
             <td class="adminData">
                 @(Html.Telerik().ComboBoxFor(x => x.ParentCategoryId).BindTo(Model.ParentCategories).Encode(true)
@@ -87,8 +81,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.Hint("Define the price ranges for the store price range filter. Separate ranges with a semicolon e.g. '0-199;200-300;301-;' (301- means 301 and over)")
-                @Html.LabelFor(model => model.PriceRanges):
+                @Html.NopLabelFor(model => model.PriceRanges):
             </td>
             <td class="adminData">
                 @Html.EditorFor(x => x.PriceRanges)
@@ -97,8 +90,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.Hint("Check if you want to show a category on home page.")
-                @Html.LabelFor(model => model.ShowOnHomePage):
+                @Html.NopLabelFor(model => model.ShowOnHomePage):
             </td>
             <td class="adminData">
                 @Html.EditorFor(x => x.ShowOnHomePage)
@@ -107,8 +99,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.Hint("Check to publish this category (visible in store). Uncheck to unpublish (category not available in store).")
-                @Html.LabelFor(model => model.Published):
+                @Html.NopLabelFor(model => model.Published):
             </td>
             <td class="adminData">
                 @Html.EditorFor(x => x.Published)
@@ -117,8 +108,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.Hint("Set the category's display order. 1 represents the top of the list.")
-                @Html.LabelFor(model => model.DisplayOrder):
+                @Html.NopLabelFor(model => model.DisplayOrder):
             </td>
             <td class="adminData">
                 @Html.Telerik().NumericTextBoxFor(x => x.DisplayOrder).DecimalDigits(0)
@@ -129,12 +119,11 @@
 }
 @helper TabSeo()
     {
-    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("tabSeoLocalized",
+    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
                @<table class="adminContent">
                    <tr>
                        <td class="adminTitle">
-                           @Html.Hint("Meta keywords to be added to category page header.")
-                           @Html.LabelFor(model => model.Locales[item].MetaKeywords):
+                           @Html.NopLabelFor(model => model.Locales[item].MetaKeywords):
                        </td>
                        <td class="adminData">
                            @Html.EditorFor(model => model.Locales[item].MetaKeywords)
@@ -143,8 +132,7 @@
                    </tr>
                    <tr>
                        <td class="adminTitle">
-                           @Html.Hint("Meta description to be added to category page header.")
-                           @Html.LabelFor(model => model.Locales[item].MetaDescription):
+                           @Html.NopLabelFor(model => model.Locales[item].MetaDescription):
                        </td>
                        <td class="adminData">
                            @Html.TextAreaFor(model => model.Locales[item].MetaDescription)
@@ -153,8 +141,7 @@
                    </tr>
                    <tr>
                        <td class="adminTitle">
-                           @Html.Hint("Override the page title. The default is the name of the category.")
-                           @Html.LabelFor(model => model.Locales[item].MetaTitle):
+                           @Html.NopLabelFor(model => model.Locales[item].MetaTitle):
                        </td>
                        <td class="adminData">
                            @Html.TextAreaFor(model => model.Locales[item].MetaTitle)
@@ -163,8 +150,7 @@
                    </tr>
                    <tr>
                        <td class="adminTitle">
-                           @Html.Hint("Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the category ID). The default is the name of category.")
-                           @Html.LabelFor(model => model.Locales[item].SeName):
+                           @Html.NopLabelFor(model => model.Locales[item].SeName):
                        </td>
                        <td class="adminData">
                            @Html.TextAreaFor(model => model.Locales[item].SeName)
@@ -181,8 +167,7 @@
                @<table class="adminContent">
                    <tr>
                        <td class="adminTitle">
-                           @Html.Hint("Meta keywords to be added to category page header.")
-                           @Html.LabelFor(model => model.MetaKeywords):
+                           @Html.NopLabelFor(model => model.MetaKeywords):
                        </td>
                        <td class="adminData">
                            @Html.EditorFor(x => x.MetaKeywords)
@@ -191,8 +176,7 @@
                    </tr>
                    <tr>
                        <td class="adminTitle">
-                           @Html.Hint("Meta description to be added to category page header.")
-                           @Html.LabelFor(model => model.MetaDescription):
+                           @Html.NopLabelFor(model => model.MetaDescription):
                        </td>
                        <td class="adminData">
                            @Html.TextAreaFor(x => x.MetaDescription)
@@ -201,8 +185,7 @@
                    </tr>
                    <tr>
                        <td class="adminTitle">
-                           @Html.Hint("Override the page title. The default is the name of the category.")
-                           @Html.LabelFor(model => model.MetaTitle):
+                           @Html.NopLabelFor(model => model.MetaTitle):
                        </td>
                        <td class="adminData">
                            @Html.TextAreaFor(x => x.MetaTitle)
@@ -211,8 +194,7 @@
                    </tr>
                    <tr>
                        <td class="adminTitle">
-                           @Html.Hint("Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the category ID). The default is the name of category.")
-                           @Html.LabelFor(model => model.SeName):
+                           @Html.NopLabelFor(model => model.SeName):
                        </td>
                        <td class="adminData">
                            @Html.TextAreaFor(x => x.SeName)
@@ -223,8 +205,7 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.Hint("Set the page size for products in this category e.g. '4' products per page.")
-                @Html.LabelFor(model => model.PageSize):
+                @Html.NopLabelFor(model => model.PageSize):
             </td>
             <td class="adminData">
                 @Html.Telerik().NumericTextBoxFor(x => x.PageSize).DecimalDigits(0).MinValue(1)
