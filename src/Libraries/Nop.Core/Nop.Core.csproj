@@ -163,6 +163,7 @@
     <Compile Include="Html\ResolveLinksHelper.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
     <Compile Include="Plugins\BasePluginAttribute.cs" />
+    <Compile Include="Plugins\IConfigurablePlugin.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Infrastructure\DependencyManagement\DependencyAttribute.cs" />
