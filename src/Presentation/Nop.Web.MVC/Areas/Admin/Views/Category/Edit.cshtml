@@ -8,12 +8,12 @@
             @T("Admin.Catalog.Categories.EditCategoryDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Catalog.Categories.BackToList") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="@T("Admin.Common.Save")" class="t-button" />
-            <input type="submit" class="t-button" onclick="saveCategory();">@T("Admin.Common.SaveContinue")</span> <span
+            <button type="submit" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <button type="submit" value="savecontinue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+            <span
                 id="category-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("category-delete")
-

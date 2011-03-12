@@ -1,14 +1,17 @@
-﻿     
+﻿@model int
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
 
 @{
-    var product = Engine.Current.Resolve<Nop.Services.Catalog.IProductService>().GetProductById(Model);    
+    var product = EngineContext.Current.Resolve<Nop.Services.Catalog.IProductService>().GetProductById(Model);    
 }
-@ViewData.TemplateInfo.FormattedModelValue
+@(Html.Telerik().ComboBox().Name(ViewData.TemplateInfo.HtmlFieldPrefix)
+    .DataBinding(binding => {
+        binding.Ajax().Select("_AjaxComboBo", "Product");
+    }))
 
-@if(product != null){
+@*@if(product != null){
     <div>exists</div>   
 }else{
     <div>doesnt</div> 
-}
+}*@

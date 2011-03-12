@@ -8,7 +8,9 @@
 {
     x.Add().Text(T("Admin.Catalog.Categories.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
+    x.Add().Text("Products").Content(TabProducts().ToHtmlString());
 })
+
 @helper TabInfo()
     { 
     @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
@@ -213,4 +215,8 @@
             </td>
         </tr>
     </table>
+}
+@helper TabProducts()
+{
+      @Html.Action("Products", new { id = Model.Id })
 }

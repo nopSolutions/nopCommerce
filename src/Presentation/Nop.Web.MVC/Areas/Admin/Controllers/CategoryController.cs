@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Security.Permissions;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Telerik.Web.Mvc;
@@ -142,6 +144,91 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 
         #endregion Methods
 
+        #region Products
+
+        public ActionResult Products(int id)
+        {
+            CategoryProductsAttribute.Clear();
+            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
+            var model = new GridModel<CategoryProductModel>(products);
+            return PartialView(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding=true), CategoryProducts]
+        public ActionResult Products(int id, GridCommand command,
+            IList<CategoryProductModel> addedCategoryProducts,
+            IList<CategoryProductModel> removedCategoryProducts)
+        {
+            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
+            var model = new GridModel<CategoryProductModel>(products);
+            return PartialView(model);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductRemove(CategoryProductModel categoryProduct, GridCommand command)
+        {
+            CategoryProductsAttribute.Remove(categoryProduct);
+            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
+            CategoryProductsAttribute.MergeList(products);
+            var gridModel = new GridModel<CategoryProductModel>
+            {
+                Data = products.PagedForCommand(command),
+                Total = products.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductAdd(int id, CategoryProductModel categoryProduct, GridCommand command)
+        {
+            
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult {Data = "error"};
+            }
+            categoryProduct.CategoryId = id;
+            CategoryProductsAttribute.Add(categoryProduct);
+            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
+            CategoryProductsAttribute.MergeList(products);
+            var gridModel = new GridModel<CategoryProductModel>
+            {
+                Data = products.PagedForCommand(command),
+                Total = products.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductEdit(int id, CategoryProductModel categoryProduct, GridCommand command)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult { Data = "error" };
+            }
+            categoryProduct.CategoryId = id;
+
+            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
+            CategoryProductsAttribute.MergeList(products);
+            var gridModel = new GridModel<CategoryProductModel>
+            {
+                Data = products.PagedForCommand(command),
+                Total = products.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        #endregion
+
         #region Create
 
         public ActionResult Create()
@@ -180,11 +267,14 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
                 localizedModel.SeName = category.GetLocalized(x => x.SeName, language.Id, false);
                 model.Locales.Add(localizedModel);
             }
+            CategoryProductsAttribute.Clear();
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Edit(CategoryModel categoryModel)
+        [HttpPost, CategoryProducts]
+        public ActionResult Edit(CategoryModel categoryModel,
+            IList<CategoryProductModel> addedCategoryProducts,
+            IList<CategoryProductModel> removedCategoryProducts)
         {
             if (!ModelState.IsValid)
             {
@@ -194,6 +284,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             UpdateInstance(category, categoryModel);
             _categoryService.UpdateCategory(category);
             UpdateLocales(category, categoryModel);
+            CategoryProductsAttribute.Clear();
             return RedirectToAction("List");
         }
 

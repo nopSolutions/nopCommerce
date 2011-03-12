@@ -1,0 +1,31 @@
+﻿@using Nop.Web.MVC.Areas.Admin.Models;
+@using Telerik.Web.Mvc.UI;
+@using Telerik.Web.Mvc;
+@model GridModel<CategoryProductModel>
+@(Html.Telerik().Grid<CategoryProductModel>().Name("category-products-grid")
+    .BindTo(Model.Data)
+    .DataKeys(keys => { 
+        keys.Add(x => x.CategoryId);
+        keys.Add(x => x.Id);
+        keys.Add(x => x.ProductId);
+    })
+    .ToolBar(x => x.Insert())
+    .Columns(columns =>
+    {
+        columns.Bound(x => x.CategoryId).Hidden();
+        columns.Bound(x => x.ProductId);
+        columns.Bound(x => x.IsFeaturedProduct);
+        columns.Bound(x => x.DisplayOrder);
+        columns.Command(x => { x.Delete(); x.Edit(); });
+    })
+    .Editable(configurator =>{
+        configurator.Mode(GridEditMode.PopUp);
+    })
+    .Pageable(x => x.PageSize(10).Total(Model.Total))
+    .DataBinding(binding =>
+    {
+        binding.Ajax().Select("Products", "Category");
+        binding.Ajax().Delete("ProductRemove", "Category");
+        binding.Ajax().Insert("ProductAdd", "Category");
+        binding.Ajax().Update("ProductEdit", "Category");
+    }))
