@@ -201,75 +201,264 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
         {
-            //UNDONE: filter by product specs
-            //string commaSeparatedSpecIds = string.Empty;
-            //if (filteredSpecs != null)
-            //{
-            //    filteredSpecs.Sort();
-            //    for (int i = 0; i < filteredSpecs.Count; i++)
-            //    {
-            //        commaSeparatedSpecIds += filteredSpecs[i].ToString();
-            //        if (i != filteredSpecs.Count - 1)
-            //        {
-            //            commaSeparatedSpecIds += ",";
-            //        }
-            //    }
-            //}
+            #region UNDONE temporary solution
 
-            bool searchKeywords = String.IsNullOrWhiteSpace(keywords);
+            var allProducts = GetAllProducts(showHidden);
+            var filteredProducts = new List<Product>();
+            foreach (var prod in allProducts)
+            {
+                var productVariants = prod.ProductVariants.Where(pv => (showHidden || !pv.Deleted) && (showHidden || pv.Published)).ToList();
 
-            var query1 = from p in _productRepository.Table
-                         from pcm in _productCategoryRepository.Table
-                         .Where(pcm => p.Id == pcm.ProductId).DefaultIfEmpty()
-                         from pmm in _productManufacturerRepository.Table
-                         .Where(pmm => p.Id == pmm.ProductId).DefaultIfEmpty()
-                         from rp in _relatedProductRepository.Table
-                         .Where(rp => p.Id == rp.ProductId2).DefaultIfEmpty()
-                         from pv in _productVariantRepository.Table
-                         .Where(pv => p.Id == pv.ProductId).DefaultIfEmpty()
-                         //UNDONE: search in localized properties
-                         //from pvl in _context.ProductVariantLocalized
-                         //.Where(pvl => pv.ProductVariantId == pvl.ProductVariantId && pvl.LanguageId == languageId).DefaultIfEmpty()
-                         //from pl in _context.ProductLocalized
-                         //.Where(pl => p.ProductId == pl.ProductId && pl.LanguageId == languageId).DefaultIfEmpty()
-                         //UNDONE search product tags
-                         where
-                         (categoryId == 0 || (pcm.CategoryId == categoryId && (!featuredProducts.HasValue || pcm.IsFeaturedProduct == featuredProducts.Value))) &&
-                         (manufacturerId == 0 || (pmm.ManufacturerId == manufacturerId && (!featuredProducts.HasValue || pmm.IsFeaturedProduct == featuredProducts.Value))) &&
-                         (relatedToProductId == 0 || rp.ProductId1 == relatedToProductId) &&
-                         (showHidden || p.Published) &&
-                         (!p.Deleted) &&
-                         (showHidden || pv.Published) &&
-                         (showHidden || !pv.Deleted) &&
-                         (!priceMin.HasValue || priceMin.Value == 0 || pv.Price > priceMin.Value) &&
-                         (!priceMax.HasValue || priceMax.Value == int.MaxValue || pv.Price < priceMax.Value) &&
-                         (!searchKeywords ||
-                         //search standard content
-                         (p.Name.Contains(keywords)
-                         || pv.Name.Contains(keywords)
-                         || pv.Sku.Contains(keywords)
-                         || (searchDescriptions && p.ShortDescription.Contains(keywords))
-                         || (searchDescriptions && p.FullDescription.Contains(keywords))
-                         || (searchDescriptions && pv.Description.Contains(keywords))
-                         //search language content
-                         //|| pl.Name.Contains(keywords)
-                         //|| pvl.Name.Contains(keywords)
-                         //|| (searchDescriptions && pl.ShortDescription.Contains(keywords))
-                         //|| (searchDescriptions && pl.FullDescription.Contains(keywords))
-                         //|| (searchDescriptions && pvl.Description.Contains(keywords))
-                         )
-                         )
-                         select p.Id;
-            //UNDONE issue with EF4 CTP5 here 
-            //http://social.msdn.microsoft.com/Forums/en-US/adodotnetentityframework/thread/382a580e-57e2-47e4-8663-e14766d943fb
-            var query = from p in _productRepository.Table
-                        where query1.Contains(p.Id)
-                        orderby p.CreatedOnUtc descending
-                        select p;
-            //UNDONE sort by ProductSortingEnum orderBy
+                //filter by category
+                bool categoryOK = false;
+                if (categoryId > 0)
+                {
+                    var pc = prod.ProductCategories.FirstOrDefault(pc1 => pc1.CategoryId == categoryId);
+                    if (pc != null)
+                    {
+                        if (featuredProducts.HasValue)
+                        {
+                            categoryOK = featuredProducts.Value == pc.IsFeaturedProduct;
+                        }
+                        else
+                        {
+                            categoryOK = true;
+                        }
+                    }
+                }
+                else
+                    categoryOK = true;
 
-            var products = new PagedList<Product>(query, pageIndex, pageSize);
+                //filter by manufacturer
+                bool manufacturerOK = false;
+                if (manufacturerId > 0)
+                {
+                    var pm = prod.ProductManufacturers.FirstOrDefault(pm1 => pm1.ManufacturerId == manufacturerId);
+                    if (pm != null)
+                    {
+                        if (featuredProducts.HasValue)
+                        {
+                            manufacturerOK = featuredProducts.Value == pm.IsFeaturedProduct;
+                        }
+                        else
+                        {
+                            manufacturerOK = true;
+                        }
+                    }
+                }
+                else
+                    manufacturerOK = true;
+
+                //filter by price
+                bool priceMinOK = false;
+                if (priceMin.HasValue)
+                {
+                    foreach (var pv in productVariants)
+                    {
+                        if (pv.Price > priceMin.Value)
+                        {
+                            priceMinOK = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                    priceMinOK = true;
+                bool priceMaxOK = false;
+                if (priceMax.HasValue)
+                {
+                    foreach (var pv in productVariants)
+                    {
+                        if (pv.Price < priceMax.Value)
+                        {
+                            priceMaxOK = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                    priceMaxOK = true;
+
+
+                //filter by related products
+                bool relatedProductOK = false;
+                if (relatedToProductId > 0)
+                {
+                    var relatedProducts = GetRelatedProductsByProductId1(prod.Id, showHidden);
+                    foreach (var rp in relatedProducts)
+                    {
+                        if (rp.Id == relatedToProductId)
+                        {
+                            relatedProductOK = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                    relatedProductOK = true;
+
+
+                //filter by keywords
+                bool keywordsOK = false;
+                if (!String.IsNullOrWhiteSpace(keywords))
+                {
+                    keywords = keywords.ToLowerInvariant();
+                    //UNDONE search localized values (languageId parameter)
+                    if (!String.IsNullOrEmpty(prod.Name) && prod.Name.ToLowerInvariant().Contains(keywords))
+                    {
+                        keywordsOK = true;
+                    }
+
+                    if (!keywordsOK)
+                    {
+                        if (searchDescriptions)
+                        {
+                            if (!String.IsNullOrEmpty(prod.ShortDescription) && prod.ShortDescription.ToLowerInvariant().Contains(keywords))
+                            {
+                                keywordsOK = true;
+                            }
+
+                            if (!String.IsNullOrEmpty(prod.FullDescription) && prod.FullDescription.ToLowerInvariant().Contains(keywords))
+                            {
+                                keywordsOK = true;
+                            }
+                        }
+                    }
+
+                    if (!keywordsOK)
+                    {
+                        foreach (var pv in productVariants)
+                        {
+                            if (!String.IsNullOrEmpty(pv.Name) && pv.Name.ToLowerInvariant().Contains(keywords))
+                            {
+                                keywordsOK = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!keywordsOK)
+                    {
+                        if (searchDescriptions)
+                        {
+                            foreach (var pv in productVariants)
+                            {
+                                if (!String.IsNullOrEmpty(pv.Description) && pv.Description.ToLowerInvariant().Contains(keywords))
+                                {
+                                    keywordsOK = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                    keywordsOK = true;
+
+                //UNDONE filter by specs (filteredSpecs parameter)
+
+
+                //UNDONE orderBy
+                if (categoryOK && manufacturerOK && priceMinOK && priceMaxOK && relatedProductOK && keywordsOK)
+                    filteredProducts.Add(prod);
+            }
+            //sort products
+            List<Product> sortedProducts = new List<Product>();
+            if (orderBy == ProductSortingEnum.Position && categoryId > 0)
+                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.ProductCategories.First().DisplayOrder).ToList();
+            else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
+                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.ProductManufacturers.First().DisplayOrder).ToList();
+            else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
+            {
+                //sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.RelatedProducts.First().DisplayOrder).ToList();
+                //UNDONE sort by related product ID
+                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.Name).ToList();
+            }
+            else if (orderBy == ProductSortingEnum.Position)
+                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.Name).ToList();
+            else if (orderBy == ProductSortingEnum.Name)
+                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.Name).ToList();
+            else if (orderBy == ProductSortingEnum.Price)
+                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.ProductVariants.First().Price).ToList();
+            else if (orderBy == ProductSortingEnum.CreatedOn)
+                sortedProducts = filteredProducts.AsQueryable().OrderByDescending(p => p.CreatedOnUtc).ToList();
+            
+            var products = new PagedList<Product>(sortedProducts, pageIndex, pageSize);
             return products;
+            #endregion
+
+            #region Old implementation (EF4 CTP5 bug)
+            ////UNDONE issue with EF4 CTP5 here 
+            ////http://social.msdn.microsoft.com/Forums/en-US/adodotnetentityframework/thread/382a580e-57e2-47e4-8663-e14766d943fb
+            
+            ////UNDONE: filter by product specs
+            ////string commaSeparatedSpecIds = string.Empty;
+            ////if (filteredSpecs != null)
+            ////{
+            ////    filteredSpecs.Sort();
+            ////    for (int i = 0; i < filteredSpecs.Count; i++)
+            ////    {
+            ////        commaSeparatedSpecIds += filteredSpecs[i].ToString();
+            ////        if (i != filteredSpecs.Count - 1)
+            ////        {
+            ////            commaSeparatedSpecIds += ",";
+            ////        }
+            ////    }
+            ////}
+
+            //bool searchKeywords = String.IsNullOrWhiteSpace(keywords);
+
+            //var query1 = from p in _productRepository.Table
+            //             from pcm in _productCategoryRepository.Table
+            //             .Where(pcm => p.Id == pcm.ProductId).DefaultIfEmpty()
+            //             from pmm in _productManufacturerRepository.Table
+            //             .Where(pmm => p.Id == pmm.ProductId).DefaultIfEmpty()
+            //             from rp in _relatedProductRepository.Table
+            //             .Where(rp => p.Id == rp.ProductId2).DefaultIfEmpty()
+            //             from pv in _productVariantRepository.Table
+            //             .Where(pv => p.Id == pv.ProductId).DefaultIfEmpty()
+            //             //UNDONE: search in localized properties
+            //             //from pvl in _context.ProductVariantLocalized
+            //             //.Where(pvl => pv.ProductVariantId == pvl.ProductVariantId && pvl.LanguageId == languageId).DefaultIfEmpty()
+            //             //from pl in _context.ProductLocalized
+            //             //.Where(pl => p.ProductId == pl.ProductId && pl.LanguageId == languageId).DefaultIfEmpty()
+            //             //UNDONE search product tags
+            //             where
+            //             (categoryId == 0 || (pcm.CategoryId == categoryId && (!featuredProducts.HasValue || pcm.IsFeaturedProduct == featuredProducts.Value))) &&
+            //             (manufacturerId == 0 || (pmm.ManufacturerId == manufacturerId && (!featuredProducts.HasValue || pmm.IsFeaturedProduct == featuredProducts.Value))) &&
+            //             (relatedToProductId == 0 || rp.ProductId1 == relatedToProductId) &&
+            //             (showHidden || p.Published) &&
+            //             (!p.Deleted) &&
+            //             (showHidden || pv.Published) &&
+            //             (showHidden || !pv.Deleted) &&
+            //             (!priceMin.HasValue || priceMin.Value == 0 || pv.Price > priceMin.Value) &&
+            //             (!priceMax.HasValue || priceMax.Value == int.MaxValue || pv.Price < priceMax.Value) &&
+            //             (!searchKeywords ||
+            //             //search standard content
+            //             (p.Name.Contains(keywords)
+            //             || pv.Name.Contains(keywords)
+            //             || pv.Sku.Contains(keywords)
+            //             || (searchDescriptions && p.ShortDescription.Contains(keywords))
+            //             || (searchDescriptions && p.FullDescription.Contains(keywords))
+            //             || (searchDescriptions && pv.Description.Contains(keywords))
+            //             //search language content
+            //             //|| pl.Name.Contains(keywords)
+            //             //|| pvl.Name.Contains(keywords)
+            //             //|| (searchDescriptions && pl.ShortDescription.Contains(keywords))
+            //             //|| (searchDescriptions && pl.FullDescription.Contains(keywords))
+            //             //|| (searchDescriptions && pvl.Description.Contains(keywords))
+            //             )
+            //             )
+            //             select p.Id;
+            //var query = from p in _productRepository.Table
+            //            where query1.Contains(p.Id)
+            //            orderby p.CreatedOnUtc descending
+            //            select p;
+            ////UNDONE sort by ProductSortingEnum orderBy
+
+            //var products = new PagedList<Product>(query, pageIndex, pageSize);
+            //return products;
+            #endregion
         }
         #endregion
 
