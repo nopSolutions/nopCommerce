@@ -15,18 +15,16 @@ namespace Nop.Web.MVC.Areas.Admin.Models
 
         public CategoryProductModel(ProductCategory productCategory)
         {
-            Id = productCategory.Id;
             ProductId = productCategory.ProductId;
+            ProductName = productCategory.Product.Name;
             CategoryId = productCategory.CategoryId;
             IsFeaturedProduct = productCategory.IsFeaturedProduct;
             DisplayOrder = productCategory.DisplayOrder;
         }
 
-        [ScaffoldColumn(false)]
-        public int Id { get; set; }
         [UIHint("ProductSelector")]
         public int ProductId { get; set; }
-        [ScaffoldColumn(false)]
+        public string ProductName {get;set;}
         public int CategoryId { get; set; }
         public bool IsFeaturedProduct { get; set; }
         public int DisplayOrder { get; set; }

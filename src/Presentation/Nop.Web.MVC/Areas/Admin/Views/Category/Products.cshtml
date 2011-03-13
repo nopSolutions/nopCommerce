@@ -1,31 +1,25 @@
 ﻿@using Nop.Web.MVC.Areas.Admin.Models;
 @using Telerik.Web.Mvc.UI;
 @using Telerik.Web.Mvc;
-@model GridModel<CategoryProductModel>
+@model int
 @(Html.Telerik().Grid<CategoryProductModel>().Name("category-products-grid")
-    .BindTo(Model.Data)
-    .DataKeys(keys => { 
-        keys.Add(x => x.CategoryId);
-        keys.Add(x => x.Id);
-        keys.Add(x => x.ProductId);
+    .DataKeys(keys => {
+        keys.Add(x => x.ProductId).RouteKey("productId");
+        keys.Add(x => x.CategoryId).RouteKey("categoryId");
     })
-    .ToolBar(x => x.Insert())
-    .Columns(columns =>
-    {
-        columns.Bound(x => x.CategoryId).Hidden();
-        columns.Bound(x => x.ProductId);
-        columns.Bound(x => x.IsFeaturedProduct);
-        columns.Bound(x => x.DisplayOrder);
-        columns.Command(x => { x.Delete(); x.Edit(); });
-    })
-    .Editable(configurator =>{
-        configurator.Mode(GridEditMode.PopUp);
-    })
-    .Pageable(x => x.PageSize(10).Total(Model.Total))
     .DataBinding(binding =>
     {
-        binding.Ajax().Select("Products", "Category");
-        binding.Ajax().Delete("ProductRemove", "Category");
-        binding.Ajax().Insert("ProductAdd", "Category");
-        binding.Ajax().Update("ProductEdit", "Category");
-    }))
+        binding.Ajax().Select("ProductsSelect", "Category")
+            .Delete("ProductsRemove", "Category")
+            .Insert("ProductsAdd", "Category")
+            .Update("ProductsEdit", "Category");
+    })
+    .Columns(columns =>
+    {
+        columns.Bound(x => x.ProductName).ReadOnly();
+        columns.Bound(x => x.IsFeaturedProduct);
+        columns.Bound(x => x.DisplayOrder).Width("100px");
+        columns.Command(x => { x.Edit(); x.Delete(); }).Width("180px");
+    })
+    .ToolBar(x => x.Insert())
+    .Pageable(x => x.PageSize(10)))

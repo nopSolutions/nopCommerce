@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -202,6 +204,27 @@ namespace Nop.Core
         {
             //return (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
             return (T)To(value, typeof(T));
+        }
+
+        public static IEnumerable<T> SelectNRandom<T>(IEnumerable<T> enumerable, int numberOfRandomSamples)
+        {
+            var list = enumerable.ToList();
+            if(numberOfRandomSamples > enumerable.Count())
+            {
+                throw new ArgumentOutOfRangeException("numberOfRandomSamples",
+                                                      "This value must not be greater than the count of items in the list.");
+            }
+            var random = new Random();
+            IList<int> toTake = new List<int>();
+            while (toTake.Count < numberOfRandomSamples)
+            {
+                var randomIndex = random.Next(0, list.Count - 1);
+                if (!toTake.Contains(randomIndex))
+                {
+                    toTake.Add(randomIndex);
+                }
+            }
+            return toTake.Select(x => list[x]);
         }
     }
 }

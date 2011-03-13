@@ -17,393 +17,421 @@ using Telerik.Web.Mvc.UI;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
-    [AdminAuthorizeAttribute]
-    public class CategoryController : Controller
-    {
-        #region Fields (4)
+	[AdminAuthorizeAttribute]
+	public class CategoryController : Controller
+	{
+		#region Fields (4) 
 
-        private readonly ICategoryService _categoryService;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IPermissionService _permissionService;
+		private readonly ICategoryService _categoryService;
+		private readonly ILanguageService _languageService;
+		private readonly ILocalizedEntityService _localizedEntityService;
+		private readonly IPermissionService _permissionService;
 
-        #endregion Fields
+		#endregion Fields 
 
-        #region Constructors (1)
+		#region Constructors (1) 
 
-        public CategoryController(ICategoryService categoryService,
-            IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
-        {
-            _categoryService = categoryService;
-            _permissionService = permissionService;
-            _languageService = languageService;
-            _localizedEntityService = localizedEntityService;
-        }
+		public CategoryController(ICategoryService categoryService,
+			IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
+		{
+			_categoryService = categoryService;
+			_permissionService = permissionService;
+			_languageService = languageService;
+			_localizedEntityService = localizedEntityService;
+		}
 
-        #endregion Constructors
+		#endregion Constructors 
 
-        #region Methods (4)
 
-        // Public Methods (4) 
 
-        public ActionResult AllCategories(string text, int selectedId)
-        {
-            var categories = _categoryService.GetAllCategories(true);
-            categories.Insert(0, new Category { Name = "[None]", Id = 0 });
-            var selectList = new SelectList(categories, "Id", "Name", selectedId);
-            return new JsonResult { Data = selectList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        }
+		#region Saving/Updating/Inserting
 
-        public ActionResult EditCategoryProducts(int id)
-        {
-            var model = _categoryService.GetProductCategoriesByCategoryId(id, true).Select(x => new CategoryProductModel(x)).ToList();
+		public void UpdateInstance(Category category, CategoryModel model)
+		{
+			category.Name = model.Name;
+			category.Description = HttpUtility.HtmlDecode(model.Description);
+			category.MetaKeywords = model.MetaKeywords;
+			category.MetaDescription = model.MetaDescription;
+			category.MetaTitle = model.MetaTitle;
+			category.SeName = model.SeName;
+			category.ParentCategoryId = model.ParentCategoryId;
+			category.PictureId = model.PictureId;
+			category.PageSize = model.PageSize;
+			category.PriceRanges = model.PriceRanges;
+			category.ShowOnHomePage = model.ShowOnHomePage;
+			category.Published = model.Published;
+			category.Deleted = model.Deleted;
+			category.DisplayOrder = model.DisplayOrder;
+		}
 
-            //TODO:Take out test products
-            var products = EngineContext.Current.Resolve<IProductService>().GetAllProducts(true);
-            model.Add(new CategoryProductModel { Id = 234, ProductId = products[0].Id });
+		public void UpdateLocales(Category category, CategoryModel model)
+		{
+			foreach (var localized in model.Locales)
+			{
+				_localizedEntityService.SaveLocalizedValue(category,
+															   x => x.Name,
+															   localized.Name,
+															   localized.Language.Id);
 
-            return View(model);
-        }
+				_localizedEntityService.SaveLocalizedValue(category,
+														   x => x.Description,
+														   HttpUtility.HtmlDecode(localized.Description),
+														   localized.Language.Id);
 
-        public void UpdateInstance(Category category, CategoryModel model)
-        {
-            category.Name = model.Name;
-            category.Description = HttpUtility.HtmlDecode(model.Description);
-            category.MetaKeywords = model.MetaKeywords;
-            category.MetaDescription = model.MetaDescription;
-            category.MetaTitle = model.MetaTitle;
-            category.SeName = model.SeName;
-            category.ParentCategoryId = model.ParentCategoryId;
-            category.PictureId = model.PictureId;
-            category.PageSize = model.PageSize;
-            category.PriceRanges = model.PriceRanges;
-            category.ShowOnHomePage = model.ShowOnHomePage;
-            category.Published = model.Published;
-            category.Deleted = model.Deleted;
-            category.DisplayOrder = model.DisplayOrder;
-        }
+				_localizedEntityService.SaveLocalizedValue(category,
+														   x => x.MetaKeywords,
+														   localized.MetaKeywords,
+														   localized.Language.Id);
 
-        public void UpdateLocales(Category category, CategoryModel model)
-        {
-            foreach (var localized in model.Locales)
-            {
-                _localizedEntityService.SaveLocalizedValue(category,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.Language.Id);
+				_localizedEntityService.SaveLocalizedValue(category,
+														   x => x.MetaDescription,
+														   localized.MetaDescription,
+														   localized.Language.Id);
 
-                _localizedEntityService.SaveLocalizedValue(category,
-                                                           x => x.Description,
-                                                           HttpUtility.HtmlDecode(localized.Description),
-                                                           localized.Language.Id);
+				_localizedEntityService.SaveLocalizedValue(category,
+														   x => x.MetaTitle,
+														   localized.MetaTitle,
+														   localized.Language.Id);
 
-                _localizedEntityService.SaveLocalizedValue(category,
-                                                           x => x.MetaKeywords,
-                                                           localized.MetaKeywords,
-                                                           localized.Language.Id);
+				_localizedEntityService.SaveLocalizedValue(category,
+														   x => x.SeName,
+														   localized.SeName,
+														   localized.Language.Id);
+			}
+		}
 
-                _localizedEntityService.SaveLocalizedValue(category,
-                                                           x => x.MetaDescription,
-                                                           localized.MetaDescription,
-                                                           localized.Language.Id);
+		public void UpdateCategoryProducts(Category category, IList<CategoryProductModel> addedCategoryProducts, IList<CategoryProductModel> removedCategoryProducts)
+		{
+			var currentProductCategories = category.ProductCategories;
+			foreach (var added in addedCategoryProducts)
+			{
+				var productId = added.ProductId;
+				var updated = category.ProductCategories.SingleOrDefault(x => x.ProductId == productId);
+				if (updated != null)
+				{
+					updated.IsFeaturedProduct = added.IsFeaturedProduct;
+					updated.DisplayOrder = added.DisplayOrder;
+					_categoryService.UpdateProductCategory(updated);
+				}
+				else
+				{
+					var newProductCategory = new ProductCategory();
+					newProductCategory.CategoryId = category.Id;
+					newProductCategory.ProductId = productId;
+					newProductCategory.IsFeaturedProduct = added.IsFeaturedProduct;
+					newProductCategory.DisplayOrder = added.DisplayOrder;
+					_categoryService.InsertProductCategory(newProductCategory);
+				}
+			}
 
-                _localizedEntityService.SaveLocalizedValue(category,
-                                                           x => x.MetaTitle,
-                                                           localized.MetaTitle,
-                                                           localized.Language.Id);
+			foreach (var removed in removedCategoryProducts)
+			{
+				int productId = removed.ProductId;
+				var toDelete = currentProductCategories.SingleOrDefault(x => x.ProductId == productId);
+				if (toDelete != null)
+				{
+					_categoryService.DeleteProductCategory(toDelete);
+				}
+			}
+		}
 
-                _localizedEntityService.SaveLocalizedValue(category,
-                                                           x => x.SeName,
-                                                           localized.SeName,
-                                                           localized.Language.Id);
-            }
-        }
+		#endregion
 
-        [NonAction]
-        private string GetCategoryBreadCrumb(Category category)
-        {
-            string result = string.Empty;
+		#region Common Ajax
 
-            while (category != null && !category.Deleted)
-            {
-                if (String.IsNullOrEmpty(result))
-                    result = category.Name;
-                else
-                    result = category.Name + " >> " + result;
+		public ActionResult AllCategories(string text, int selectedId)
+		{
+			var categories = _categoryService.GetAllCategories(true);
+			categories.Insert(0, new Category { Name = "[None]", Id = 0 });
+			var selectList = new SelectList(categories, "Id", "Name", selectedId);
+			return new JsonResult { Data = selectList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+		}
 
-                category = _categoryService.GetCategoryById(category.ParentCategoryId);
+		#endregion
 
-            }
-            return result;
-        }
+		#region Utility
 
-        public ActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+		[NonAction]
+		private string GetCategoryBreadCrumb(Category category)
+		{
+			string result = string.Empty;
 
-        #endregion Methods
+			while (category != null && !category.Deleted)
+			{
+				if (String.IsNullOrEmpty(result))
+					result = category.Name;
+				else
+					result = category.Name + " >> " + result;
 
-        #region Products
+				category = _categoryService.GetCategoryById(category.ParentCategoryId);
 
-        public ActionResult Products(int id)
-        {
-            CategoryProductsAttribute.Clear();
-            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
-            var model = new GridModel<CategoryProductModel>(products);
-            return PartialView(model);
-        }
+			}
+			return result;
+		}
 
-        [HttpPost, GridAction(EnableCustomBinding=true), CategoryProducts]
-        public ActionResult Products(int id, GridCommand command,
-            IList<CategoryProductModel> addedCategoryProducts,
-            IList<CategoryProductModel> removedCategoryProducts)
-        {
-            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
-            var model = new GridModel<CategoryProductModel>(products);
-            return PartialView(model);
-        }
+		#endregion
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductRemove(CategoryProductModel categoryProduct, GridCommand command)
-        {
-            CategoryProductsAttribute.Remove(categoryProduct);
-            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
-            CategoryProductsAttribute.MergeList(products);
-            var gridModel = new GridModel<CategoryProductModel>
-            {
-                Data = products.PagedForCommand(command),
-                Total = products.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
-        }
+		#region Products
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductAdd(int id, CategoryProductModel categoryProduct, GridCommand command)
-        {
-            
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult {Data = "error"};
-            }
-            categoryProduct.CategoryId = id;
-            CategoryProductsAttribute.Add(categoryProduct);
-            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
-            CategoryProductsAttribute.MergeList(products);
-            var gridModel = new GridModel<CategoryProductModel>
-            {
-                Data = products.PagedForCommand(command),
-                Total = products.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
-        }
+		public ActionResult Products(int id)
+		{
+			CategoryProductsAttribute.Clear();
+			return PartialView(id);
+		}
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductEdit(int id, CategoryProductModel categoryProduct, GridCommand command)
-        {
+		#region Ajax
 
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult { Data = "error" };
-            }
-            categoryProduct.CategoryId = id;
+		[GridAction]
+		public ActionResult ProductsSelect(int id)
+		{
+			var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
+			CategoryProductsAttribute.MakeStateful(products);
+			
+			return new JsonResult
+					   {
+						   Data = new GridModel(products)
+					   };
+		}
 
-            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
-            CategoryProductsAttribute.MergeList(products);
-            var gridModel = new GridModel<CategoryProductModel>
-            {
-                Data = products.PagedForCommand(command),
-                Total = products.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
-        }
+		[GridAction]
+		public ActionResult ProductsRemove(CategoryProductModel categoryProduct)
+		{
+			CategoryProductsAttribute.Remove(categoryProduct);
+			var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
+			CategoryProductsAttribute.MakeStateful(products);
+			
+			return new JsonResult
+						{
+							Data = new GridModel(products)
+						};
+		}
 
-        #endregion
+		[GridAction]
+		public ActionResult ProductsAdd(CategoryProductModel categoryProduct)
+		{
+			if (!ModelState.IsValid)
+			{
+				//TODO:Find out how telerik handles errors.
+				return new JsonResult { Data = "error" };
+			}
 
-        #region Create
+			CategoryProductsAttribute.Add(categoryProduct);
+			var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
+			CategoryProductsAttribute.MakeStateful(products);
+			
+			return new JsonResult
+						{
+						   Data = new GridModel(products)
+						};
+		}
 
-        public ActionResult Create()
-        {
-            return View(new CategoryModel());
-        }
+		[GridAction]
+		public ActionResult ProductsEdit(CategoryProductModel categoryProduct)
+		{
+			if (!ModelState.IsValid)
+			{
+				//TODO:Find out how telerik handles errors.
+				return new JsonResult { Data = "error" };
+			}
 
-        [HttpPost]
-        public ActionResult Create(CategoryModel model)
-        {
-            var category = new Category();
-            UpdateInstance(category, model);
-            _categoryService.InsertCategory(category);
-            UpdateLocales(category, model);
-            return RedirectToAction("Edit", new { id = category.Id });
-        }
+			CategoryProductsAttribute.Add(categoryProduct);
+			var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
+			CategoryProductsAttribute.MakeStateful(products);
 
-        #endregion
+			return new JsonResult
+						{
+						   Data = new GridModel(products)
+						};
+		}
 
-        #region Edit
+		#endregion
+		#endregion
 
-        public ActionResult Edit(int id)
-        {
-            var category = _categoryService.GetCategoryById(id);
-            if (category == null) throw new ArgumentException("No category found with the specified id", "id");
-            var model = new CategoryModel(category, _categoryService);
-            foreach (var language in _languageService.GetAllLanguages())
-            {
-                var localizedModel = new CategoryLocalizedModel();
-                localizedModel.Language = language;
-                localizedModel.Description = category.GetLocalized(x => x.Description, language.Id, false);
-                localizedModel.Name = category.GetLocalized(x => x.Name, language.Id, false);
-                localizedModel.MetaKeywords = category.GetLocalized(x => x.MetaKeywords, language.Id, false);
-                localizedModel.MetaDescription = category.GetLocalized(x => x.MetaDescription, language.Id, false);
-                localizedModel.MetaTitle = category.GetLocalized(x => x.MetaTitle, language.Id, false);
-                localizedModel.SeName = category.GetLocalized(x => x.SeName, language.Id, false);
-                model.Locales.Add(localizedModel);
-            }
-            CategoryProductsAttribute.Clear();
-            return View(model);
-        }
+		#region Create
 
-        [HttpPost, CategoryProducts]
-        public ActionResult Edit(CategoryModel categoryModel,
-            IList<CategoryProductModel> addedCategoryProducts,
-            IList<CategoryProductModel> removedCategoryProducts)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("Edit", categoryModel);
-            }
-            var category = _categoryService.GetCategoryById(categoryModel.Id);
-            UpdateInstance(category, categoryModel);
-            _categoryService.UpdateCategory(category);
-            UpdateLocales(category, categoryModel);
-            CategoryProductsAttribute.Clear();
-            return RedirectToAction("List");
-        }
+		public ActionResult Create()
+		{
+			return View(new CategoryModel());
+		}
 
-        #endregion
+		[HttpPost]
+		public ActionResult Create(CategoryModel model)
+		{
+			var category = new Category();
+			UpdateInstance(category, model);
+			_categoryService.InsertCategory(category);
+			UpdateLocales(category, model);
+			return RedirectToAction("Edit", new { id = category.Id });
+		}
 
-        #region Delete
+		#endregion
 
-        public ActionResult Delete(int id)
-        {
-            var category = _categoryService.GetCategoryById(id);
-            if (category == null)
-            {
-                return List();
-            }
-            var modal = new CategoryModel(category, _categoryService);
-            return Delete(modal);
-        }
+		#region Edit
 
-        public ActionResult Delete(CategoryModel model)
-        {
-            return PartialView(model);
-        }
+		public ActionResult Edit(int id)
+		{
+			var category = _categoryService.GetCategoryById(id);
+			if (category == null) throw new ArgumentException("No category found with the specified id", "id");
+			var model = new CategoryModel(category, _categoryService);
+			foreach (var language in _languageService.GetAllLanguages())
+			{
+				var localizedModel = new CategoryLocalizedModel();
+				localizedModel.Language = language;
+				localizedModel.Description = category.GetLocalized(x => x.Description, language.Id, false);
+				localizedModel.Name = category.GetLocalized(x => x.Name, language.Id, false);
+				localizedModel.MetaKeywords = category.GetLocalized(x => x.MetaKeywords, language.Id, false);
+				localizedModel.MetaDescription = category.GetLocalized(x => x.MetaDescription, language.Id, false);
+				localizedModel.MetaTitle = category.GetLocalized(x => x.MetaTitle, language.Id, false);
+				localizedModel.SeName = category.GetLocalized(x => x.SeName, language.Id, false);
+				model.Locales.Add(localizedModel);
+			}
+			CategoryProductsAttribute.Clear();
+			return View(model);
+		}
 
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            var category = _categoryService.GetCategoryById(id);
-            _categoryService.DeleteCategory(category);
-            return RedirectToAction("List");
-        }
+		[HttpPost, CategoryProducts]
+		public ActionResult Edit(CategoryModel categoryModel,
+			IList<CategoryProductModel> addedCategoryProducts,
+			IList<CategoryProductModel> removedCategoryProducts)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View("Edit", categoryModel);
+			}
+			var category = _categoryService.GetCategoryById(categoryModel.Id);
+			UpdateInstance(category, categoryModel);
+			_categoryService.UpdateCategory(category);
+			UpdateLocales(category, categoryModel);
+			UpdateCategoryProducts(category, addedCategoryProducts, removedCategoryProducts);
+			CategoryProductsAttribute.Clear();
+			return RedirectToAction("List");
+		}
 
-        #endregion
+		#endregion
 
-        #region List
+		#region Delete
 
-        public ActionResult List()
-        {
-            if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
-            {
-                //TODO redirect to access denied page
-            }
+		public ActionResult Delete(int id)
+		{
+			var category = _categoryService.GetCategoryById(id);
+			if (category == null)
+			{
+				return List();
+			}
+			var modal = new CategoryModel(category, _categoryService);
+			return Delete(modal);
+		}
 
-            var categories = _categoryService.GetAllCategories(0, 10, true);
-            var gridModel = new GridModel<CategoryModel>
-                            {
-                                Data = categories.Select(x => new CategoryModel(x, null) { Breadcrumb = GetCategoryBreadCrumb(x) }),
-                                Total = categories.TotalCount
-                            };
-            //var gridModel = new GridModel<Category> { Data = categories, Total = categories.TotalCount };
-            return View(gridModel);
-        }
+		public ActionResult Delete(CategoryModel model)
+		{
+			return PartialView(model);
+		}
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
-        {
-            var model = new GridModel();
-            var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize);
-            model.Data = categories.Select(x =>
-                new { Id = Url.Action("Edit", new { x.Id }), x.Name, x.DisplayOrder, Breadcrumb = GetCategoryBreadCrumb(x), x.Published });
-            model.Total = categories.TotalCount;
-            return new JsonResult
-            {
-                Data = model
-            };
-        }
+		[HttpPost, ActionName("Delete")]
+		public ActionResult DeleteConfirmed(int id)
+		{
+			var category = _categoryService.GetCategoryById(id);
+			_categoryService.DeleteCategory(category);
+			return RedirectToAction("List");
+		}
 
-        #endregion
+		#endregion
 
-        #region Tree
+		#region List
 
-        public ActionResult Tree()
-        {
-            var rootCategories = _categoryService.GetAllCategoriesByParentCategoryId(0, true);
-            return View(rootCategories);
-        }
+		public ActionResult Index()
+		{
+			return RedirectToAction("List");
+		}
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult TreeLoadChildren(TreeViewItem node)
-        {
-            var parentId = !string.IsNullOrEmpty(node.Value) ? Convert.ToInt32(node.Value) : 0;
+		public ActionResult List()
+		{
+			if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
+			{
+				//TODO redirect to access denied page
+			}
 
-            var children = _categoryService.GetAllCategoriesByParentCategoryId(parentId).Select(x =>
-                new TreeViewItem
-                {
-                    Text = x.Name,
-                    Value = x.Id.ToString(),
-                    LoadOnDemand = _categoryService.GetAllCategoriesByParentCategoryId(x.Id).Count > 0,
-                    Enabled = true,
-                    ImageUrl = Url.Content("~/Areas/Admin/Content/images/ico-content.png")
-                });
+			var categories = _categoryService.GetAllCategories(0, 10, true);
+			var gridModel = new GridModel<CategoryModel>
+							{
+								Data = categories.Select(x => new CategoryModel(x, null) { Breadcrumb = GetCategoryBreadCrumb(x) }),
+								Total = categories.TotalCount
+							};
+			//var gridModel = new GridModel<Category> { Data = categories, Total = categories.TotalCount };
+			return View(gridModel);
+		}
 
-            return new JsonResult { Data = children };
-        }
+		[HttpPost, GridAction(EnableCustomBinding = true)]
+		public ActionResult List(GridCommand command)
+		{
+			var model = new GridModel();
+			var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize);
+			model.Data = categories.Select(x =>
+				new { Id = Url.Action("Edit", new { x.Id }), x.Name, x.DisplayOrder, Breadcrumb = GetCategoryBreadCrumb(x), x.Published });
+			model.Total = categories.TotalCount;
+			return new JsonResult
+			{
+				Data = model
+			};
+		}
 
-        public ActionResult TreeDrop(int item, int destinationitem, string position)
-        {
-            var categoryItem = _categoryService.GetCategoryById(item);
-            var categoryDestinationItem = _categoryService.GetCategoryById(destinationitem);
+		#endregion
 
-            switch (position)
-            {
-                case "over":
-                    categoryItem.ParentCategoryId = categoryDestinationItem.Id;
-                    break;
-                case "before":
-                    categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
-                    categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder - 1;
-                    break;
-                case "after":
-                    categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
-                    categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder + 1;
-                    break;
-            }
+		#region Tree
 
-            _categoryService.UpdateCategory(categoryItem);
+		public ActionResult Tree()
+		{
+			var rootCategories = _categoryService.GetAllCategoriesByParentCategoryId(0, true);
+			return View(rootCategories);
+		}
 
-            return Json(new { success = true });
-        }
+		#region Ajax
 
-        #endregion
-    }
+		[AcceptVerbs(HttpVerbs.Post)]
+		public ActionResult TreeLoadChildren(TreeViewItem node)
+		{
+			var parentId = !string.IsNullOrEmpty(node.Value) ? Convert.ToInt32(node.Value) : 0;
+
+			var children = _categoryService.GetAllCategoriesByParentCategoryId(parentId).Select(x =>
+				new TreeViewItem
+				{
+					Text = x.Name,
+					Value = x.Id.ToString(),
+					LoadOnDemand = _categoryService.GetAllCategoriesByParentCategoryId(x.Id).Count > 0,
+					Enabled = true,
+					ImageUrl = Url.Content("~/Areas/Admin/Content/images/ico-content.png")
+				});
+
+			return new JsonResult { Data = children };
+		}
+
+		public ActionResult TreeDrop(int item, int destinationitem, string position)
+		{
+			var categoryItem = _categoryService.GetCategoryById(item);
+			var categoryDestinationItem = _categoryService.GetCategoryById(destinationitem);
+
+			switch (position)
+			{
+				case "over":
+					categoryItem.ParentCategoryId = categoryDestinationItem.Id;
+					break;
+				case "before":
+					categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
+					categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder - 1;
+					break;
+				case "after":
+					categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
+					categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder + 1;
+					break;
+			}
+
+			_categoryService.UpdateCategory(categoryItem);
+
+			return Json(new { success = true });
+		}
+
+		#endregion
+
+		#endregion
+	}
 }

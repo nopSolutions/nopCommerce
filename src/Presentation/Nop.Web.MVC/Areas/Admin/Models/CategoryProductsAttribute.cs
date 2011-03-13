@@ -38,9 +38,18 @@ namespace Nop.Web.MVC.Areas.Admin.Models
 
         public static void Add(CategoryProductModel categoryProduct)
         {
-            var added = Added();
-            if (!added.Contains(categoryProduct)) added.Add(categoryProduct);
             Removed().Remove(categoryProduct);
+            var added = Added();
+            var current = added.SingleOrDefault(x => x.ProductId.Equals(categoryProduct.ProductId));
+            if (current == null)
+            {
+                added.Add(categoryProduct);
+            }
+            else
+            {
+                current.DisplayOrder = categoryProduct.DisplayOrder;
+                current.IsFeaturedProduct = categoryProduct.IsFeaturedProduct;
+            }
         }
 
         public static void Remove(CategoryProductModel categoryProduct)
@@ -56,23 +65,31 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             Removed().Clear();
         }
 
-        public static void MergeList(IList<CategoryProductModel> categoryProducts)
+        public static void MakeStateful(IList<CategoryProductModel> categoryProducts)
         {
             var added = Added();
             var removed = Removed();
+
             foreach (var categoryProduct in categoryProducts)
             {
-                if (added.Contains(categoryProduct))
-                    added.Remove(categoryProduct);
+                var productId = categoryProduct.ProductId;
+                //If the products exist in the added list, then it was updated and we should update the existing category product
+                var updated = added.SingleOrDefault(x => x.ProductId.Equals(productId));
+                if (updated != null)
+                {
+                    categoryProduct.DisplayOrder = updated.DisplayOrder;
+                    categoryProduct.IsFeaturedProduct = updated.IsFeaturedProduct;
+                }
             }
             foreach (var toAdd in added)
             {
-                categoryProducts.Add(toAdd);
+                if (!categoryProducts.Contains(toAdd)) categoryProducts.Add(toAdd);
             }
             foreach (var toRemove in removed)
             {
                 categoryProducts.Remove(toRemove);
             }
+            categoryProducts = categoryProducts.OrderBy(x => x.DisplayOrder).ToList();
         }
     }
 }

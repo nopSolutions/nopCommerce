@@ -622,7 +622,7 @@ namespace Nop.Services.Installation
             {
                 #region Categories
 
-                for (int i = 0; i < 100; i++)
+                for (int i = 1; i <= 30; i++)
                 {
                     var cat = new Category()
                     {
@@ -669,61 +669,68 @@ namespace Nop.Services.Installation
 
                 #region Products
 
-                var product1 = new Product()
-                {
-                    Name = "Black & White Diamond Heart",
-                    ShortDescription = "Heart Pendant 1/4 Carat (ctw) in Sterling Silver",
-                    FullDescription =
-                        "<p>Bold black diamonds alternate with sparkling white diamonds along a crisp sterling silver heart to create a look that is simple and beautiful. This sleek and stunning 1/4 carat (ctw) diamond heart pendant which includes an 18 inch silver chain, and a free box of godiva chocolates makes the perfect Valentine's Day gift.</p>",
-                    AdminComment = string.Empty,
-                    ShowOnHomePage = false,
-                    MetaKeywords = string.Empty,
-                    MetaDescription = string.Empty,
-                    MetaTitle = string.Empty,
-                    SeName = string.Empty,
-                    AllowCustomerReviews = true,
-                    AllowCustomerRatings = true,
-                    RatingSum = 0,
-                    TotalRatingVotes = 0,
-                    Published = true,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    UpdatedOnUtc = DateTime.UtcNow
-                };
-                var productVariant1 = new ProductVariant()
-                {
-                    Name = string.Empty,
-                    Sku = string.Empty,
-                    Description = string.Empty,
-                    AdminComment = string.Empty,
-                    ManufacturerPartNumber = string.Empty,
-                    UserAgreementText = string.Empty,
-                    IsShipEnabled = true,
-                    ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                    LowStockActivity = LowStockActivity.Unpublish,
-                    BackorderMode = BackorderMode.NoBackorders,
-                    OrderMinimumQuantity = 1,
-                    OrderMaximumQuantity = 10000,
-                    Price = 130.12345M,
-                    Weight = 1,
-                    Length = 1,
-                    Width = 1,
-                    Height = 1,
-                    Published = true,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    UpdatedOnUtc = DateTime.UtcNow
-                };
-                product1.ProductVariants.Add(productVariant1);
+                var allCategories = _categoryRepository.Table.ToList();
 
-                var pcm1 = new ProductCategory()
+                for (var i = 1; i <= 50; i++)
                 {
-                    Category = category1,
-                    Product = product1,
-                    DisplayOrder = 1
-                };
-                product1.ProductCategories.Add(pcm1);
+                    var product = new Product()
+                    {
+                        Name = "Product " + i,
+                        ShortDescription = "ShortDescription " + i,
+                        FullDescription = "FullDescription " + i,
+                        AdminComment = string.Empty,
+                        ShowOnHomePage = false,
+                        MetaKeywords = string.Empty,
+                        MetaDescription = string.Empty,
+                        MetaTitle = string.Empty,
+                        SeName = string.Empty,
+                        AllowCustomerReviews = true,
+                        AllowCustomerRatings = true,
+                        RatingSum = 0,
+                        TotalRatingVotes = 0,
+                        Published = true,
+                        CreatedOnUtc = DateTime.UtcNow,
+                        UpdatedOnUtc = DateTime.UtcNow
+                    };
+                    var productVariant = new ProductVariant()
+                    {
+                        Name = string.Empty,
+                        Sku = string.Empty,
+                        Description = string.Empty,
+                        AdminComment = string.Empty,
+                        ManufacturerPartNumber = string.Empty,
+                        UserAgreementText = string.Empty,
+                        IsShipEnabled = true,
+                        ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                        LowStockActivity = LowStockActivity.Unpublish,
+                        BackorderMode = BackorderMode.NoBackorders,
+                        OrderMinimumQuantity = 1,
+                        OrderMaximumQuantity = 10000,
+                        Price = 130.12345M,
+                        Weight = 1,
+                        Length = 1,
+                        Width = 1,
+                        Height = 1,
+                        Published = true,
+                        CreatedOnUtc = DateTime.UtcNow,
+                        UpdatedOnUtc = DateTime.UtcNow
+                    };
+                    product.ProductVariants.Add(productVariant);
+
+                    foreach (var category in CommonHelper.SelectNRandom(allCategories, 15))
+                    {
+                        var pcm = new ProductCategory()
+                        {
+                            Category = category,
+                            Product = product,
+                            DisplayOrder = i
+                        };
+                        product.ProductCategories.Add(pcm);
+                    }
+                    
+                    _productRepository.Insert(product);
+                }
                 
-                _productRepository.Insert(product1);
-
                 #endregion
             }
         }
