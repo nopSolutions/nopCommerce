@@ -8,7 +8,7 @@ using Nop.Web.Framework;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
-    public class PictureController : Controller
+    public class PictureController : BaseNopController
     {
         private IPictureService _pictureService;
 

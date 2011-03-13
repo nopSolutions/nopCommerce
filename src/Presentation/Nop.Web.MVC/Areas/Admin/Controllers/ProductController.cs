@@ -10,7 +10,7 @@ using Telerik.Web.Mvc.Extensions;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : BaseNopController
     {
         private IProductService _productService;
 

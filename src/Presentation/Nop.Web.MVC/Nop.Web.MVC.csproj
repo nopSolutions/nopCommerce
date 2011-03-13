@@ -96,101 +96,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_GlobalResources\EditorLocalization.bg-BG.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditorLocalization.bg-BG.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\EditorLocalization.de-DE.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditorLocalization.de-DE.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\EditorLocalization.en-US.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditorLocalization.en-US.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\EditorLocalization.fr-FR.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditorLocalization.fr-FR.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\EditorLocalization.pl-PL.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditorLocalization.pl-PL.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\EditorLocalization.pt-BR.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditorLocalization.pt-BR.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\EditorLocalization.ru-RU.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditorLocalization.ru-RU.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\EditorLocalization.uk-UA.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditorLocalization.uk-UA.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.bg-BG.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.bg-BG.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.de-DE.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.de-DE.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.en-US.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.en-US.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.es-ES.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.es-ES.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.fr-FR.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.fr-FR.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.pl-PL.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.pl-PL.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.pt-BR.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.pt-BR.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.pt-PT.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.pt-PT.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.ru-RU.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.ru-RU.resx</DependentUpon>
-    </Compile>
-    <Compile Include="App_GlobalResources\GridLocalization.uk-UA.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GridLocalization.uk-UA.resx</DependentUpon>
-    </Compile>
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\BaseNopController.cs" />
     <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\LanguageController.cs" />
     <Compile Include="Areas\Admin\Controllers\PictureController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
+    <Compile Include="Areas\Admin\Infrastructure\TelerikLocalizationServiceFactory.cs" />
+    <Compile Include="Areas\Admin\Infrastructure\TelerikResourceService.cs" />
     <Compile Include="Areas\Admin\Models\CategoryModel.cs" />
     <Compile Include="Areas\Admin\Models\CategoryProductModel.cs" />
     <Compile Include="Areas\Admin\Models\CategoryProductsAttribute.cs" />
@@ -208,8 +121,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\DependencyRegistar.cs" />
+    <Compile Include="Infrastructure\ILocalizationService.cs" />
     <Compile Include="Infrastructure\NopDependencyResolver.cs" />
     <Compile Include="Infrastructure\NopValidatorFactory.cs" />
+    <Compile Include="Infrastructure\TelerikLocalizationServiceFactory.cs" />
     <Compile Include="StartupTasks\RegisterDefaultPermissionsStartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -819,114 +734,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Category\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.bg-BG.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>EditorLocalization.bg-BG.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.de-DE.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>EditorLocalization.de-DE.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.en-US.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>EditorLocalization.en-US.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.fr-FR.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>EditorLocalization.fr-FR.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.pl-PL.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>EditorLocalization.pl-PL.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.pt-BR.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>EditorLocalization.pt-BR.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.ru-RU.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>EditorLocalization.ru-RU.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.uk-UA.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>EditorLocalization.uk-UA.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.bg-BG.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.bg-BG.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.de-DE.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.de-DE.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.en-US.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.en-US.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.es-ES.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.es-ES.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.fr-FR.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.fr-FR.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.pl-PL.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.pl-PL.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.pt-BR.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.pt-BR.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.pt-PT.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.pt-PT.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.ru-RU.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.ru-RU.designer.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_GlobalResources\GridLocalization.uk-UA.resx">
-      <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>GridLocalization.uk-UA.designer.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="EditorTemplates\Category.cshtml" />

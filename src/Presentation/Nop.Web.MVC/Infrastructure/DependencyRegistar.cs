@@ -153,7 +153,7 @@ namespace Nop.Web.MVC.Infrastructure
 
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
 
-            //builder.RegisterType<NopModelBinderProvider>().As<IModelBinderProvider>().InstancePerHttpRequest();
+            builder.RegisterType<TelerikLocalizationServiceFactory>().As<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>().InstancePerHttpRequest();
         }
     }
 

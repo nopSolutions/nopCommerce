@@ -16,7 +16,7 @@ using Telerik.Web.Mvc.Extensions;
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
 	[AdminAuthorize]
-	public class LanguageController : Controller
+    public class LanguageController : BaseNopController
 	{
 		#region Fields (2) 
 

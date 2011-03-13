@@ -60,6 +60,10 @@ namespace Nop.Web.MVC
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
+            //set localization service for telerik
+            Telerik.Web.Mvc.Infrastructure.DI.Current.Register(
+                () => EngineContext.Current.Resolve<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>());
+
             DataAnnotationsModelValidatorProvider
                 .AddImplicitRequiredAttributeForValueTypes = false;
 
