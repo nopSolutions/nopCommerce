@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
-
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
@@ -12,85 +12,52 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Sends an email
         /// </summary>
+        /// <param name="emailAccount">Email account to use</param>
         /// <param name="subject">Subject</param>
         /// <param name="body">Body</param>
-        /// <param name="from">From</param>
-        /// <param name="to">To</param>
-        /// <param name="emailAccount">Email account to use</param>
-        public void SendEmail(string subject, string body, string from, string to,
-            EmailAccount emailAccount)
-        {
-            SendEmail(subject, body, new MailAddress(from), new MailAddress(to),
-                new List<String>(), new List<String>(), emailAccount);
-        }
-
-        /// <summary>
-        /// Sends an email
-        /// </summary>
-        /// <param name="subject">Subject</param>
-        /// <param name="body">Body</param>
-        /// <param name="from">From</param>
-        /// <param name="to">To</param>
-        /// <param name="emailAccount">Email account to use</param>
-        public void SendEmail(string subject, string body, MailAddress from,
-            MailAddress to, EmailAccount emailAccount)
-        {
-            SendEmail(subject, body, from, to, new List<String>(), new List<String>(), emailAccount);
-        }
-
-        /// <summary>
-        /// Sends an email
-        /// </summary>
-        /// <param name="subject">Subject</param>
-        /// <param name="body">Body</param>
-        /// <param name="from">From</param>
-        /// <param name="to">To</param>
-        /// <param name="bcc">BCC</param>
-        /// <param name="cc">CC</param>
-        /// <param name="emailAccount">Email account to use</param>
-        public void SendEmail(string subject, string body,
-            MailAddress from, MailAddress to, List<string> bcc,
-            List<string> cc, EmailAccount emailAccount)
+        /// <param name="fromAddress">From address</param>
+        /// <param name="fromName">From display name</param>
+        /// <param name="toAddress">To address</param>
+        /// <param name="toName">To display name</param>
+        /// <param name="bcc">BCC addresses list</param>
+        /// <param name="cc">CC addresses ist</param>
+        public void SendEmail(EmailAccount emailAccount, string subject, string body,
+            string fromAddress, string fromName, string toAddress, string toName,
+            IEnumerable<string> bcc = null, IEnumerable<string> cc = null)
         {
             var message = new MailMessage();
-            message.From = from;
-            message.To.Add(to);
+            message.From =  new MailAddress(fromAddress, fromName);
+            message.To.Add(new MailAddress(toAddress, toName));
             if (null != bcc)
-                foreach (string address in bcc)
+            {
+                foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
                 {
-                    if (address != null)
-                    {
-                        if (!String.IsNullOrEmpty(address.Trim()))
-                        {
-                            message.Bcc.Add(address.Trim());
-                        }
-                    }
+                    message.Bcc.Add(address.Trim());
                 }
+            }
             if (null != cc)
-                foreach (string address in cc)
+            {
+                foreach (var address in cc.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
                 {
-                    if (address != null)
-                    {
-                        if (!String.IsNullOrEmpty(address.Trim()))
-                        {
-                            message.CC.Add(address.Trim());
-                        }
-                    }
+                    message.CC.Add(address.Trim());
                 }
+            }
             message.Subject = subject;
             message.Body = body;
             message.IsBodyHtml = true;
 
-            var smtpClient = new SmtpClient();
-            smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
-            smtpClient.Host = emailAccount.Host;
-            smtpClient.Port = emailAccount.Port;
-            smtpClient.EnableSsl = emailAccount.EnableSSL;
-            if (emailAccount.UseDefaultCredentials)
-                smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
-            else
-                smtpClient.Credentials = new NetworkCredential(emailAccount.Username, emailAccount.Password);
-            smtpClient.Send(message);
+            using (var smtpClient = new SmtpClient())
+            {
+                smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
+                smtpClient.Host = emailAccount.Host;
+                smtpClient.Port = emailAccount.Port;
+                smtpClient.EnableSsl = emailAccount.EnableSSL;
+                if (emailAccount.UseDefaultCredentials)
+                    smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
+                else
+                    smtpClient.Credentials = new NetworkCredential(emailAccount.Username, emailAccount.Password);
+                smtpClient.Send(message);
+            }
         }
     }
 }

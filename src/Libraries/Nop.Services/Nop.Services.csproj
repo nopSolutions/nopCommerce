@@ -109,6 +109,7 @@
     <Compile Include="Messages\MessageTemplateService.cs" />
     <Compile Include="Messages\NewsLetterSubscriptionService.cs" />
     <Compile Include="Messages\QueuedEmailService.cs" />
+    <Compile Include="Messages\QueuedMessagesSendTask.cs" />
     <Compile Include="Messages\SMSService.cs" />
     <Compile Include="Messages\Tokenizer.cs" />
     <Compile Include="Messages\Token.cs" />
