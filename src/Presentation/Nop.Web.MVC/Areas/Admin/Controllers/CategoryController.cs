@@ -374,7 +374,6 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 								Data = categories.Select(x => new CategoryModel(x, null) { Breadcrumb = GetCategoryBreadCrumb(x) }),
 								Total = categories.TotalCount
 							};
-			//var gridModel = new GridModel<Category> { Data = categories, Total = categories.TotalCount };
 			return View(gridModel);
 		}
 

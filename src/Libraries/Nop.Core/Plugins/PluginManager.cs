@@ -12,7 +12,7 @@ using Nop.Core.Plugins;
 // SEE THIS POST for full details of what this does
 //http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
-[assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
+//[assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
 
 namespace Nop.Core.Plugins
 {

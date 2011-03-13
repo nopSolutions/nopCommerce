@@ -100,6 +100,7 @@
     <Compile Include="Areas\Admin\Controllers\BaseNopController.cs" />
     <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\LanguageController.cs" />
+    <Compile Include="Areas\Admin\Controllers\LogController.cs" />
     <Compile Include="Areas\Admin\Controllers\PictureController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Infrastructure\TelerikLocalizationServiceFactory.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Areas\Admin\Models\CategoryProductsAttribute.cs" />
     <Compile Include="Areas\Admin\Models\LanguageModel.cs" />
     <Compile Include="Areas\Admin\Models\LanguageResourceModel.cs" />
+    <Compile Include="Areas\Admin\Models\LogModel.cs" />
     <Compile Include="Areas\Admin\Validators\CategoryProductValidator.cs" />
     <Compile Include="Areas\Admin\Validators\CategoryValidator.cs" />
     <Compile Include="Areas\Admin\Validators\LanguageResourceValidator.cs" />
@@ -788,6 +790,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Category\Products.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\Log\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

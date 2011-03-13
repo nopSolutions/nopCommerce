@@ -2,15 +2,18 @@
 <siteMap>
     <siteMapNode title="Home" controller="Home" action="Overview">
         <siteMapNode title="Catalog" nopResource="Admin.Catalog">
-            <siteMapNode controller="Category" action="List" title="Categories" nopResource="Admin.Catalog.Categories">
-                <siteMapNode controller="Category" action="List" title="List" nopResource="Admin.Common.List" />
-                <siteMapNode controller="Category" action="Tree" title="Tree view" nopResource="Admin.Common.Treeview" />
+            <siteMapNode title="Categories" nopResource="Admin.Catalog.Categories" controller="Category" action="List">
+                <siteMapNode title="List" nopResource="Admin.Common.List" controller="Category" action="List"/>
+                <siteMapNode title="Tree view" nopResource="Admin.Common.Treeview" controller="Category" action="Tree"/>
             </siteMapNode>
         </siteMapNode>
         <siteMapNode title="Configuration" nopResource="Admin.Configuration">
             <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
-                <siteMapNode controller="Language" action="List" title="Languages" nopResource="Admin.Configuration.Location.Languages" />
+                <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>
             </siteMapNode>
+        </siteMapNode>
+        <siteMapNode title="System" nopResource="Admin.System">
+            <siteMapNode title="Log" nopResource="Admin.System.Log" controller="Log" action="List" />
         </siteMapNode>
         <!--<siteMapNode title="Menu">
             <siteMapNode controller="menu" action="FirstLook" title="First Look"/>
