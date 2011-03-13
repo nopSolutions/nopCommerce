@@ -23,6 +23,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		#region Fields (4) 
 
 		private readonly ICategoryService _categoryService;
+	    private readonly IProductService _productService;
 		private readonly ILanguageService _languageService;
 		private readonly ILocalizedEntityService _localizedEntityService;
 		private readonly IPermissionService _permissionService;
@@ -32,12 +33,13 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		#region Constructors (1) 
 
 		public CategoryController(ICategoryService categoryService,
-			IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
+			IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService, IProductService productService)
 		{
 			_categoryService = categoryService;
 			_permissionService = permissionService;
 			_languageService = languageService;
 			_localizedEntityService = localizedEntityService;
+		    _productService = productService;
 		}
 
 		#endregion Constructors 
@@ -185,7 +187,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		public ActionResult ProductsSelect(int id)
 		{
 			var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
-			CategoryProductsAttribute.MakeStateful(products);
+            products = CategoryProductsAttribute.MakeStateful(products);
 			
 			return new JsonResult
 					   {
@@ -194,11 +196,12 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		}
 
 		[GridAction]
-		public ActionResult ProductsRemove(CategoryProductModel categoryProduct)
+		public ActionResult ProductsRemove(int id, CategoryProductModel categoryProduct)
 		{
+            categoryProduct.CategoryId = id;
+            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
 			CategoryProductsAttribute.Remove(categoryProduct);
-			var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
-			CategoryProductsAttribute.MakeStateful(products);
+            products = CategoryProductsAttribute.MakeStateful(products);
 			
 			return new JsonResult
 						{
@@ -206,8 +209,33 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 						};
 		}
 
+        [GridAction]
+        public ActionResult ProductsAdd(int id, CategoryProductModel categoryProduct)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors.
+                return new JsonResult { Data = "error" };
+            }
+
+            categoryProduct.CategoryId = id;
+            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
+            if (string.IsNullOrEmpty(categoryProduct.ProductName))
+            {
+                //Lets add the product name to use in the grid.
+                categoryProduct.ProductName = _productService.GetProductById(categoryProduct.ProductId).Name;
+            }
+            CategoryProductsAttribute.Add(categoryProduct);
+            products = CategoryProductsAttribute.MakeStateful(products);
+
+            return new JsonResult
+                        {
+                            Data = new GridModel(products)
+                        };
+        }
+
 		[GridAction]
-		public ActionResult ProductsAdd(CategoryProductModel categoryProduct)
+		public ActionResult ProductsEdit(int id, CategoryProductModel categoryProduct)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -215,28 +243,10 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 				return new JsonResult { Data = "error" };
 			}
 
+            categoryProduct.CategoryId = id;
+            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
 			CategoryProductsAttribute.Add(categoryProduct);
-			var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
-			CategoryProductsAttribute.MakeStateful(products);
-			
-			return new JsonResult
-						{
-						   Data = new GridModel(products)
-						};
-		}
-
-		[GridAction]
-		public ActionResult ProductsEdit(CategoryProductModel categoryProduct)
-		{
-			if (!ModelState.IsValid)
-			{
-				//TODO:Find out how telerik handles errors.
-				return new JsonResult { Data = "error" };
-			}
-
-			CategoryProductsAttribute.Add(categoryProduct);
-			var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
-			CategoryProductsAttribute.MakeStateful(products);
+            products = CategoryProductsAttribute.MakeStateful(products);
 
 			return new JsonResult
 						{
@@ -245,6 +255,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		}
 
 		#endregion
+
 		#endregion
 
 		#region Create
@@ -289,10 +300,11 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			return View(model);
 		}
 
-		[HttpPost, CategoryProducts]
+        [HttpPost, CategoryProducts, FormValueExists("save", "save-continue", "continueEditing")]
 		public ActionResult Edit(CategoryModel categoryModel,
 			IList<CategoryProductModel> addedCategoryProducts,
-			IList<CategoryProductModel> removedCategoryProducts)
+			IList<CategoryProductModel> removedCategoryProducts,
+            bool continueEditing)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -304,7 +316,12 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			UpdateLocales(category, categoryModel);
 			UpdateCategoryProducts(category, addedCategoryProducts, removedCategoryProducts);
 			CategoryProductsAttribute.Clear();
-			return RedirectToAction("List");
+
+            if (continueEditing)
+            {
+                return RedirectToAction("Edit", category.Id);
+            }
+            return RedirectToAction("List");
 		}
 
 		#endregion

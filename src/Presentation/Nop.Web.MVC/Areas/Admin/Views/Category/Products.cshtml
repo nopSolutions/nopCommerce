@@ -3,23 +3,39 @@
 @using Telerik.Web.Mvc;
 @model int
 @(Html.Telerik().Grid<CategoryProductModel>().Name("category-products-grid")
-    .DataKeys(keys => {
+    .DataKeys(keys =>
+    {
         keys.Add(x => x.ProductId).RouteKey("productId");
         keys.Add(x => x.CategoryId).RouteKey("categoryId");
     })
     .DataBinding(binding =>
     {
-        binding.Ajax().Select("ProductsSelect", "Category")
-            .Delete("ProductsRemove", "Category")
-            .Insert("ProductsAdd", "Category")
-            .Update("ProductsEdit", "Category");
+        binding.Ajax().Select("ProductsSelect", "Category", new{id=Model})
+            .Delete("ProductsRemove", "Category", new { id = Model })
+            .Update("ProductsEdit", "Category", new { id = Model })
+            .Insert("ProductsAdd", "Category", new { id = Model });
     })
     .Columns(columns =>
     {
-        columns.Bound(x => x.ProductName).ReadOnly();
-        columns.Bound(x => x.IsFeaturedProduct);
+        columns.Bound(x => x.ProductId).HtmlAttributes(new {@class = "product-id"});
+        columns.Bound(x => x.IsFeaturedProduct).Width("200px");
         columns.Bound(x => x.DisplayOrder).Width("100px");
         columns.Command(x => { x.Edit(); x.Delete(); }).Width("180px");
     })
     .ToolBar(x => x.Insert())
+    .ClientEvents(x => {
+        x.OnRowDataBound("onRow");
+        x.OnEdit("onEdit");
+    })
     .Pageable(x => x.PageSize(10)))
+
+    <script type="text/javascript">
+        function onRow(e) {
+            $(e.row).find("td.product-id").html(e.dataItem.ProductName);
+        }
+        function onEdit(e) {
+            if (e.mode == "edit") {
+                $(e.form).find("td.product-id").html(e.dataItem.ProductName);
+            }
+        }
+    </script>

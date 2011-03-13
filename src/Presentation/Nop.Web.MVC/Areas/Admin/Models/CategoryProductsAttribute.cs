@@ -65,7 +65,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             Removed().Clear();
         }
 
-        public static void MakeStateful(IList<CategoryProductModel> categoryProducts)
+        public static List<CategoryProductModel> MakeStateful(List<CategoryProductModel> categoryProducts)
         {
             var added = Added();
             var removed = Removed();
@@ -89,7 +89,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             {
                 categoryProducts.Remove(toRemove);
             }
-            categoryProducts = categoryProducts.OrderBy(x => x.DisplayOrder).ToList();
+            return categoryProducts.OrderBy(x => x.DisplayOrder).ToList();
         }
     }
 }
