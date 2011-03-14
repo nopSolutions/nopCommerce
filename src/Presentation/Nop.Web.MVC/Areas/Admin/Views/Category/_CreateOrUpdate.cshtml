@@ -8,7 +8,7 @@
 {
     x.Add().Text(T("Admin.Catalog.Categories.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
-    x.Add().Text("Products").Content(TabProducts().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
 })
 
 @helper TabInfo()

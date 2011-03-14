@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Text;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
+using Telerik.Web.Mvc.UI.Fluent;
+
 namespace Nop.Web.Framework
 {
     public static class Extensions
@@ -107,5 +109,11 @@ namespace Nop.Web.Framework
             typeof(Math),
             typeof(Convert)
         };
+
+        public static GridBoundColumnBuilder<T> Centered<T>(this GridBoundColumnBuilder<T> columnBuilder) where T:class
+        {
+            return columnBuilder.HtmlAttributes(new { align = "center" })
+                            .HeaderHtmlAttributes(new { style = "text-align:center;" });
+        }
     }
 }

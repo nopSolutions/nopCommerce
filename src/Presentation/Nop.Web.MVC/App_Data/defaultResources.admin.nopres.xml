@@ -171,8 +171,24 @@
                             <LocaleResource Name="Products">
                                 <Value>Products</Value>
                                 <Children>
-                                    <LocaleResource Name="Add">
-                                        <Value>Add product</Value>
+                                    <LocaleResource Name="Fields">
+                                        <Children>
+                                            <LocaleResource Name="Product">
+                                                <Value>Product</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="ProductName">
+                                                <Value>Product</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="Category">
+                                                <Value>Category</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="IsFeaturedProduct">
+                                                <Value>Featured Product</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="DisplayOrder">
+                                                <Value>Display order</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
@@ -256,6 +272,10 @@
                     <LocaleResource Name="Treeview">
                         <Value>Tree view</Value>
                     </LocaleResource>
+                    <LocaleResource Name="ExportToXml">
+                        <Value>Export to XML</Value>
+                    </LocaleResource>
+                    
                 </Children>
             </LocaleResource>
         </Children>
