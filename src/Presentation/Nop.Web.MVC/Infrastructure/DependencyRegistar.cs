@@ -24,6 +24,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
@@ -154,6 +155,8 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
 
             builder.RegisterType<TelerikLocalizationServiceFactory>().As<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>().InstancePerHttpRequest();
+
+            builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
         }
     }
 

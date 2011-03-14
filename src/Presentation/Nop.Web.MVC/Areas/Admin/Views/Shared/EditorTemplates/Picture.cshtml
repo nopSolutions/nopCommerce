@@ -2,6 +2,7 @@
 @{
     var clientId = "picture" + new Random().Next();
     var pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
+    var picture = pictureService.GetPictureById(Model);
 }
 <div id="@(clientId + "value")">
     @Html.HiddenFor(x => x)
@@ -9,7 +10,14 @@
 <div id="@(clientId + "image")">
     <img src="@(pictureService.GetPictureUrl(Model, 100, true))" />
 </div>
-<span id="@(clientId + "remove")" class="t-button">Remove picture</span><br />
+@if(picture != null){
+    <span id="@(clientId + "remove")" class="t-button">Remove picture</span>
+}
+else
+{
+    <span id="@(clientId + "remove")" class="t-button" style="display:none;">Remove picture</span>
+}
+<br />
 <input type="file" id="@clientId"/>
 <script type="text/javascript">
     $(function () {
@@ -25,12 +33,14 @@
                     var json = jQuery.parseJSON(response);
                     $("#@(clientId + "image")").html("<img src='" + json.imageUrl + "'/>");
                     $("#@(clientId + "value") input").val(json.pictureId);
+                    $("#@(clientId + "remove")").show();
                 }
             });
 
             $("#@(clientId + "remove")").click(function(e){
                 $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl()'/>");
-                $("@(clientId + "value") input").val(0);
+                $("#@(clientId + "value") input").val(0);
+                $(this).hide();
             });
 
         });

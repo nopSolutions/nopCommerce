@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Nop.Core.Domain.Catalog;
+using Nop.Web.Framework;
 using Nop.Web.MVC.Areas.Admin.Validators;
 using FluentValidation.Attributes;
 namespace Nop.Web.MVC.Areas.Admin.Models
@@ -23,10 +24,19 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         }
 
         [UIHint("ProductSelector")]
+        [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Product")]
         public int ProductId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.ProductName")]
         public string ProductName {get;set;}
+
+        [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Category")]
         public int CategoryId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")]
         public bool IsFeaturedProduct { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
         public override bool Equals(object obj)
@@ -34,14 +44,9 @@ namespace Nop.Web.MVC.Areas.Admin.Models
             var productCategory = obj as ProductCategory;
             if (productCategory != null)
             {
-                return productCategory.ProductId.Equals(ProductId);
+                return Equals(productCategory);
             }
             return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return ProductId.GetHashCode();
         }
 
         public bool Equals(CategoryProductModel other)

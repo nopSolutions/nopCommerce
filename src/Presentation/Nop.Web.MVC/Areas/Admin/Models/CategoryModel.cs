@@ -55,9 +55,11 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
+        [AllowHtml]
         public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
@@ -102,6 +104,7 @@ namespace Nop.Web.MVC.Areas.Admin.Models
 
         public IList<CategoryLocalizedModel> Locales { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Breadcrumb")]
         public string Breadcrumb { get; set; }
 
         #endregion
@@ -126,9 +129,11 @@ namespace Nop.Web.MVC.Areas.Admin.Models
         public Core.Domain.Localization.Language Language { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
+        [AllowHtml]
         public string Description {get;set;}
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]

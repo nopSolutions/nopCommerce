@@ -1,5 +1,6 @@
 ﻿@model Telerik.Web.Mvc.GridModel<Nop.Web.MVC.Areas.Admin.Models.CategoryModel>
 @using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Areas/Admin/Content/images/ico-catalog.png")" />
@@ -7,27 +8,30 @@
     </div>
     <div class="options">
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Export")" class="t-button">@T("Admin.Common.ExportToXml")</a>
     </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Web.MVC.Areas.Admin.Models.CategoryModel>()
-                    .Name("Grid")
-                    .BindTo(Model.Data)
+            @(Html.Telerik().Grid<Nop.Web.MVC.Areas.Admin.Models.CategoryModel>(Model.Data)
+                    .Name("categories-grid")
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Name).Title(T("Admin.Catalog.Categories.Fields.Name").Text);
-                        columns.Bound(x => x.Breadcrumb).Title(T("Admin.Catalog.Categories.Breadcrumb").Text);
-                        columns.Bound(x => x.Published).Template(x => x.Published.ToString().ToLower()).Title(T("Admin.Catalog.Categories.Fields.Published").Text);
-                        columns.Bound(x => x.DisplayOrder).Title(T("Admin.Catalog.Categories.Fields.DisplayOrder").Text);
+                        columns.Bound(x => x.Breadcrumb).Title(T("Admin.Catalog.Categories.Fields.Name").Text);
+                        columns.Bound(x => x.Published)
+                            .Width("100px")
+                            .Template(x => x.Published.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width("100px")
+                            .Centered();
                         columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Width(50)
-                            .HtmlAttributes(new { align = "center" })
-                            .Title(T("Admin.Common.Edit").Text)//.HeaderTemplate("Edit")
-                            .HeaderHtmlAttributes(new { align = "center" }).Filterable(false);
+                            .Title(T("Admin.Common.Edit").Text);
                     })
                     .Pageable(settings => settings.Total(Model.Total).PageSize(10))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Category"))

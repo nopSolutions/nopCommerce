@@ -70,6 +70,9 @@
     <Compile Include="Discounts\DiscountService.cs" />
     <Compile Include="Discounts\IDiscountRequirementRule.cs" />
     <Compile Include="Discounts\IDiscountService.cs" />
+    <Compile Include="ExportImport\ExcelHelper.cs" />
+    <Compile Include="ExportImport\ExcelHelperReadTableMode.cs" />
+    <Compile Include="ExportImport\ExportManager.cs" />
     <Compile Include="FormsAuthenticationService.cs" />
     <Compile Include="Helpers\IDateTimeHelper.cs" />
     <Compile Include="Helpers\DateTimeSettings.cs" />
@@ -86,6 +89,8 @@
     <Compile Include="Customers\ICustomerService.cs" />
     <Compile Include="Directory\IMeasureService.cs" />
     <Compile Include="Directory\IStateProvinceService.cs" />
+    <Compile Include="ExportImport\IExportManager.cs" />
+    <Compile Include="ExportImport\IImportManager.cs" />
     <Compile Include="Installation\IInstallationService.cs" />
     <Compile Include="Installation\InstallationService.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
