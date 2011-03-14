@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configurationSnapshot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:schemas-microsoft-com:xml-wcfconfigurationsnapshot">
+  <behaviors />
+  <bindings>
+    <binding digest="System.ServiceModel.Configuration.BasicHttpBindingElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089:&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data hostNameComparisonMode=&quot;StrongWildcard&quot; maxBufferSize=&quot;65536&quot; messageEncoding=&quot;Text&quot; name=&quot;PushServerWSBinding&quot; textEncoding=&quot;utf-8&quot; transferMode=&quot;Buffered&quot;&gt;&lt;readerQuotas maxArrayLength=&quot;16384&quot; maxBytesPerRead=&quot;4096&quot; maxDepth=&quot;32&quot; maxNameTableCharCount=&quot;16384&quot; maxStringContentLength=&quot;8192&quot; /&gt;&lt;security mode=&quot;None&quot;&gt;&lt;message algorithmSuite=&quot;Default&quot; clientCredentialType=&quot;UserName&quot; /&gt;&lt;transport clientCredentialType=&quot;None&quot; proxyCredentialType=&quot;None&quot; realm=&quot;&quot; /&gt;&lt;/security&gt;&lt;/Data&gt;" bindingType="basicHttpBinding" name="PushServerWSBinding" />
+  </bindings>
+  <endpoints>
+    <endpoint normalizedDigest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://api.clickatell.com/soap/webservice_vs.php&quot; binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;PushServerWSBinding&quot; contract=&quot;Clickatell.PushServerWSPortType&quot; name=&quot;PushServerWSPort&quot; /&gt;" digest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://api.clickatell.com/soap/webservice_vs.php&quot; binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;PushServerWSBinding&quot; contract=&quot;Clickatell.PushServerWSPortType&quot; name=&quot;PushServerWSPort&quot; /&gt;" contractName="Clickatell.PushServerWSPortType" name="PushServerWSPort" />
+  </endpoints>
+</configurationSnapshot>
