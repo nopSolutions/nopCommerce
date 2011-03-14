@@ -5,10 +5,11 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Areas/Admin/Content/images/ico-configuration.png")" />
-            @T("Edit language details") - @Model.Name @Html.ActionLink("(" + T("back to language list") + ")", "List")
+            @T("Admin.Configuration.Location.Languages.EditLanguageDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Configuration.Location.Languages.BackToList") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="Save" class="t-button" /> <span id="language-delete" class="t-button">Delete</span>
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <span id="language-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

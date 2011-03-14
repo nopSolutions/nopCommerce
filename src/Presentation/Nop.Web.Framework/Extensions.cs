@@ -115,5 +115,11 @@ namespace Nop.Web.Framework
             return columnBuilder.HtmlAttributes(new { align = "center" })
                             .HeaderHtmlAttributes(new { style = "text-align:center;" });
         }
+
+        public static GridTemplateColumnBuilder<T> Centered<T>(this GridTemplateColumnBuilder<T> columnBuilder) where T : class
+        {
+            return columnBuilder.HtmlAttributes(new { align = "center" })
+                            .HeaderHtmlAttributes(new { style = "text-align:center;" });
+        }
     }
 }
