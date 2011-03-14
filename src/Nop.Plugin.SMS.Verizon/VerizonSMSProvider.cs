@@ -6,6 +6,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
+using Nop.Core.Domain;
 
 namespace Nop.Plugin.SMS.Verizon
 {
@@ -18,16 +19,18 @@ namespace Nop.Plugin.SMS.Verizon
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILogger _logger;
+        private readonly StoreInformationSettings _storeSettings;
 
         public VerizonSMSProvider(ISettingService settingService,
-            IQueuedEmailService queuedEmailService,
-            IEmailAccountService emailAccountService,
-            ILogger logger)
+            IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
+            ILogger logger, StoreInformationSettings storeSettigs)
         {
             this._settingService = settingService;
             this._queuedEmailService = queuedEmailService;
             this._emailAccountService = emailAccountService;
             this._logger = logger;
+
+            this._storeSettings = storeSettigs;
         }
 
         /// <summary>
@@ -64,8 +67,7 @@ namespace Nop.Plugin.SMS.Verizon
                     FromName = emailAccount.DisplayName,
                     To = VerizonEmail,
                     ToName = string.Empty,
-                    //TODO: implement getting store name
-                    //Subject = SettingService.GetSettingByKey<string>("Common.StoreNamw"),
+                    Subject = _storeSettings.StoreName,
                     Body = text,
                     CreatedOn = DateTime.UtcNow,
                     EmailAccountId = emailAccount.Id
