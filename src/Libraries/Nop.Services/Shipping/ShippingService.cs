@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -42,7 +43,7 @@ namespace Nop.Services.Shipping
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ShippingSettings _shippingSettings;
-        private readonly ITypeFinder _typeFinder;
+        private readonly IPluginFinder _pluginFinder;
         
         #endregion
 
@@ -57,14 +58,14 @@ namespace Nop.Services.Shipping
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="shippingSettings">Shipping settings</param>
-        /// <param name="typeFinder">Type finder</param>
+        /// <param name="pluginFinder">Plugin finder</param>
         public ShippingService(ICacheManager cacheManager, 
             IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
             ShippingSettings shippingSettings,
-            ITypeFinder typeFinder)
+            IPluginFinder pluginFinder)
         {
             this._cacheManager = cacheManager;
             this._shippingMethodRepository = shippingMethodRepository;
@@ -72,7 +73,7 @@ namespace Nop.Services.Shipping
             this._productAttributeParser = productAttributeParser;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._shippingSettings = shippingSettings;
-            this._typeFinder = typeFinder;
+            this._pluginFinder = pluginFinder;
         }
 
         #endregion
@@ -115,18 +116,7 @@ namespace Nop.Services.Shipping
         /// <returns>Tax providers</returns>
         public IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods()
         {
-            var providers = new List<IShippingRateComputationMethod>();
-            
-            var typesToRegister = _typeFinder.FindClassesOfType<IShippingRateComputationMethod>();
-
-            foreach (var type in typesToRegister)
-            {
-                //TODO inject ISettingService into type.SettingService (and IMeasureService)
-                dynamic provider = Activator.CreateInstance(type);
-                providers.Add(provider);
-            }
-
-            //sort and return
+            var providers = _pluginFinder.GetPlugins<IShippingRateComputationMethod>();
             return providers.OrderBy(tp => tp.FriendlyName).ToList();
         }
 

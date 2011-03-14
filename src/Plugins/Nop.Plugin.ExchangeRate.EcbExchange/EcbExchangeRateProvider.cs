@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Text;
 using System.Xml;
 using Nop.Core;
+using Nop.Core.Plugins;
 using Nop.Services.Directory;
 
 namespace Nop.Plugin.ExchangeRate.EcbExchange
@@ -83,5 +85,27 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         }
         #endregion
 
+        #region IPlugin Members
+
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
+
+        public int SortOrder
+        {
+            get { return 1; }
+        }
+
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
+        #endregion
     }
 }

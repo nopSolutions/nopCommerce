@@ -1,7 +1,8 @@
 ﻿using System;
-
+using System.Security.Principal;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -13,6 +14,22 @@ namespace Nop.Plugin.SMS.Verizon
     /// </summary>
     public class VerizonSMSProvider : ISMSProvider
     {
+        private readonly ISettingService _settingService;
+        private readonly IQueuedEmailService _queuedEmailService;
+        private readonly IEmailAccountService _emailAccountService;
+        private readonly ILogger _logger;
+
+        public VerizonSMSProvider(ISettingService settingService,
+            IQueuedEmailService queuedEmailService,
+            IEmailAccountService emailAccountService,
+            ILogger logger)
+        {
+            this._settingService = settingService;
+            this._queuedEmailService = queuedEmailService;
+            this._emailAccountService = emailAccountService;
+            this._logger = logger;
+        }
+
         /// <summary>
         /// Gets the friendly name
         /// </summary>
@@ -38,7 +55,7 @@ namespace Nop.Plugin.SMS.Verizon
         {
             try
             {
-                var emailAccount = EmailAccountService.DefaultEmailAccount;
+                var emailAccount = _emailAccountService.DefaultEmailAccount;
 
                 var queuedEmail = new QueuedEmail()
                 {
@@ -54,36 +71,16 @@ namespace Nop.Plugin.SMS.Verizon
                     EmailAccountId = emailAccount.Id
                 };
 
-                QueuedEmailService.InsertQueuedEmail(queuedEmail);
+                _queuedEmailService.InsertQueuedEmail(queuedEmail);
 
                 return true;
             }
             catch (Exception ex)
             {
-                Logger.InsertLog(LogLevel.Error, ex.Message, ex);
+                _logger.InsertLog(LogLevel.Error, ex.Message, ex);
                 return false;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ISettingService SettingService { get; set; }
-
-        /// <summary>
-        /// Gets or sets the queued email service
-        /// </summary>
-        public IQueuedEmailService QueuedEmailService { get; set; }
-
-        /// <summary>
-        /// Gets or sets the email account service
-        /// </summary>
-        public IEmailAccountService EmailAccountService { get; set; }
-
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ILogger Logger { get; set; }
 
         /// <summary>
         /// Gets or sets the Verizon email
@@ -92,13 +89,35 @@ namespace Nop.Plugin.SMS.Verizon
         {
             get
             {
-                return SettingService.GetSettingByKey<string>("Mobile.SMS.Verizon.Email");
+                return _settingService.GetSettingByKey<string>("Mobile.SMS.Verizon.Email");
             }
             set
             {
-                SettingService.SetSetting<string>("Mobile.SMS.Verizon.Email", value);
+                _settingService.SetSetting<string>("Mobile.SMS.Verizon.Email", value);
             }
         }
 
+        #region IPlugin Members
+
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
+
+        public int SortOrder
+        {
+            get { return 1; }
+        }
+
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
+        #endregion
     }
 }

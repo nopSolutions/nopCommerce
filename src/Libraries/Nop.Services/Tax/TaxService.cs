@@ -10,6 +10,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Services.Common;
 
 namespace Nop.Services.Tax
@@ -24,7 +25,7 @@ namespace Nop.Services.Tax
         private readonly IAddressService _addressService;
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
-        private readonly ITypeFinder _typeFinder;
+        private readonly IPluginFinder _pluginFinder;
 
         #endregion
 
@@ -36,16 +37,16 @@ namespace Nop.Services.Tax
         /// <param name="addressService">Address service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="taxSettings">Tax settings</param>
-        /// <param name="typeFinder">Type finder</param>
+        /// <param name="pluginFinder">Plugin finder</param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
             TaxSettings taxSettings,
-            ITypeFinder typeFinder)
+            IPluginFinder pluginFinder)
         {
             this._addressService = addressService;
             this._workContext = workContext;
             this._taxSettings = taxSettings;
-            this._typeFinder = typeFinder;
+            this._pluginFinder = pluginFinder;
         }
 
         #endregion
@@ -175,17 +176,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax providers</returns>
         public IList<ITaxProvider> LoadAllTaxProviders()
         {
-            var taxProviders = new List<ITaxProvider>();
-
-            var typesToRegister = _typeFinder.FindClassesOfType<ITaxProvider>();
-            foreach (var type in typesToRegister)
-            {
-                //TODO inject ISettingService into type.SettingService
-                dynamic taxProvider = Activator.CreateInstance(type);
-                taxProviders.Add(taxProvider);
-            }
-
-            //sort and return
+            var taxProviders = _pluginFinder.GetPlugins<ITaxProvider>();
             return taxProviders.OrderBy(tp => tp.FriendlyName).ToList();
         }
 

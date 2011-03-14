@@ -6,6 +6,7 @@ using System.Reflection;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Core.Domain.Customers;
 
@@ -26,7 +27,7 @@ namespace Nop.Services.Discounts
 
         private readonly IRepository<Discount> _discountRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly ITypeFinder _typeFinder;
+        private readonly IPluginFinder _pluginFinder;
         #endregion
 
         #region Ctor
@@ -36,14 +37,14 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="discountRepository">Discount repository</param>
-        /// <param name="typeFinder">Type finder</param>
+        /// <param name="pluginFinder">Plugin finder</param>
         public DiscountService(ICacheManager cacheManager,
             IRepository<Discount> discountRepository,
-            ITypeFinder typeFinder)
+            IPluginFinder pluginFinder)
         {
             this._cacheManager = cacheManager;
             this._discountRepository = discountRepository;
-            this._typeFinder = typeFinder;
+            this._pluginFinder = pluginFinder;
         }
 
         #endregion
@@ -221,16 +222,7 @@ namespace Nop.Services.Discounts
         /// <returns>Discount requirement rules</returns>
         public IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules()
         {
-            var rules = new List<IDiscountRequirementRule>();
-
-            var typesToRegister = _typeFinder.FindClassesOfType<IDiscountRequirementRule>();
-            foreach (var type in typesToRegister)
-            {
-                dynamic rule = Activator.CreateInstance(type);
-                rules.Add(rule);
-            }
-            
-            //sort and return
+            var rules = _pluginFinder.GetPlugins<IDiscountRequirementRule>();
             return rules.OrderBy(drr => drr.FriendlyName).ToList();
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 
@@ -7,7 +8,7 @@ namespace Nop.Services.Shipping
     /// <summary>
     /// Provides an interface of shipping rate computation method
     /// </summary>
-    public partial interface IShippingRateComputationMethod
+    public partial interface IShippingRateComputationMethod : IPlugin
     {
         /// <summary>
         /// Gets or sets the friendly name
@@ -23,21 +24,6 @@ namespace Nop.Services.Shipping
         /// Gets a shipping rate computation method type
         /// </summary>
         ShippingRateComputationMethodType ShippingRateComputationMethodType { get; }
-
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        ISettingService SettingService { get; set; }
-
-        /// <summary>
-        /// Gets or sets the measure service
-        /// </summary>
-        IMeasureService MeasureService { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the shipping service
-        /// </summary>
-        IShippingService ShippingService { get; set; }
 
         /// <summary>
         ///  Gets available shipping options

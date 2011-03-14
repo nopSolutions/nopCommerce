@@ -1,7 +1,8 @@
 ﻿using System;
-
+using System.Security.Principal;
 using Nop.Core;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Plugins;
 using Nop.Plugin.SMS.Clickatell.Clickatell;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
@@ -15,6 +16,16 @@ namespace Nop.Plugin.SMS.Clickatell
     /// </summary>
     public class ClickatellSMSProvider : ISMSProvider
     {
+        private readonly ILogger _logger;
+        private readonly ISettingService _settingService;
+
+        public ClickatellSMSProvider(ISettingService settingService,
+            ILogger logger)
+        {
+            this._settingService = settingService;
+            this._logger = logger;
+        }
+
         /// <summary>
         /// Gets the friendly name
         /// </summary>
@@ -64,20 +75,10 @@ namespace Nop.Plugin.SMS.Clickatell
             }
             catch (Exception ex)
             {
-                Logger.InsertLog(LogLevel.Error, ex.Message, ex);
+                _logger.InsertLog(LogLevel.Error, ex.Message, ex);
             }
             return false;
         }
-
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ILogger Logger { get; set; }
-
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ISettingService SettingService { get; set; }
 
         /// <summary>
         /// Gets or sets the Clickatell phone number
@@ -86,11 +87,11 @@ namespace Nop.Plugin.SMS.Clickatell
         {
             get
             {
-                return SettingService.GetSettingByKey<string>("Mobile.SMS.Clickatell.PhoneNumber");
+                return _settingService.GetSettingByKey<string>("Mobile.SMS.Clickatell.PhoneNumber");
             }
             set
             {
-                SettingService.SetSetting<string>("Mobile.SMS.Clickatell.PhoneNumber", value);
+                _settingService.SetSetting<string>("Mobile.SMS.Clickatell.PhoneNumber", value);
             }
         }
 
@@ -101,11 +102,11 @@ namespace Nop.Plugin.SMS.Clickatell
         {
             get
             {
-                return SettingService.GetSettingByKey<string>("Mobile.SMS.Clickatell.APIID");
+                return _settingService.GetSettingByKey<string>("Mobile.SMS.Clickatell.APIID");
             }
             set
             {
-                SettingService.SetSetting<string>("Mobile.SMS.Clickatell.APIID", value);
+                _settingService.SetSetting<string>("Mobile.SMS.Clickatell.APIID", value);
             }
         }
 
@@ -116,11 +117,11 @@ namespace Nop.Plugin.SMS.Clickatell
         {
             get
             {
-                return SettingService.GetSettingByKey<string>("Mobile.SMS.Clickatell.Username");
+                return _settingService.GetSettingByKey<string>("Mobile.SMS.Clickatell.Username");
             }
             set
             {
-                SettingService.SetSetting<string>("Mobile.SMS.Clickatell.Username", value);
+                _settingService.SetSetting<string>("Mobile.SMS.Clickatell.Username", value);
             }
         }
 
@@ -131,12 +132,35 @@ namespace Nop.Plugin.SMS.Clickatell
         {
             get
             {
-                return SettingService.GetSettingByKey<string>("Mobile.SMS.Clickatell.Password");
+                return _settingService.GetSettingByKey<string>("Mobile.SMS.Clickatell.Password");
             }
             set
             {
-                SettingService.SetSetting<string>("Mobile.SMS.Clickatell.Password", value);
+                _settingService.SetSetting<string>("Mobile.SMS.Clickatell.Password", value);
             }
         }
+        
+        #region IPlugin Members
+
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
+
+        public int SortOrder
+        {
+            get { return 1; }
+        }
+
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
+        #endregion
     }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Security.Principal;
 using Nop.Core;
+using Nop.Core.Plugins;
 using Nop.Services.Discounts;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles
@@ -66,5 +68,28 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
 
             return true;
         }
+
+        #region IPlugin Members
+
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
+
+        public int SortOrder
+        {
+            get { return 1; }
+        }
+
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
+        #endregion
     }
 }

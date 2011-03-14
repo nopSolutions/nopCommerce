@@ -1,10 +1,12 @@
 ﻿
+using Nop.Core.Plugins;
+
 namespace Nop.Services.Discounts
 {
     /// <summary>
     /// Represents a discount requirement rule
     /// </summary>
-    public partial interface IDiscountRequirementRule
+    public partial interface IDiscountRequirementRule : IPlugin
     {
         /// <summary>
         /// Gets or sets the friendly name

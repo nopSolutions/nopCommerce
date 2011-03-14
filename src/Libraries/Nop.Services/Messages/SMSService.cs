@@ -4,6 +4,7 @@ using System.Linq;
 
 using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 
 namespace Nop.Services.Messages
 {
@@ -12,18 +13,18 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class SMSService:ISMSService
     {
-        private readonly ITypeFinder _typeFinder;
+        private readonly IPluginFinder _pluginFinder;
         private readonly SMSSettings _smsSettings;
 
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="typeFinder">ITypeFinder instance</param>
+        /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="smsSettings">SMSSettings instance</param>
-        public SMSService(ITypeFinder typeFinder, SMSSettings smsSettings)
+        public SMSService(IPluginFinder pluginFinder, SMSSettings smsSettings)
         {
-            _typeFinder = typeFinder;
-            _smsSettings = smsSettings;
+            this._pluginFinder = pluginFinder;
+            this._smsSettings = smsSettings;
         }
 
         /// <summary>
@@ -32,12 +33,8 @@ namespace Nop.Services.Messages
         /// <returns>SMS provider list</returns>
         public IList<ISMSProvider> LoadAllSMSProviders()
         {
-            var smsProviders = _typeFinder.FindClassesOfType<ISMSProvider>()
-                .Select(smsProviderType => (ISMSProvider)Activator.CreateInstance(smsProviderType))
-                .OrderBy(smsProvider => smsProvider.FriendlyName)
-                .ToList();
-
-            return smsProviders;
+            var smsProviders = _pluginFinder.GetPlugins<ISMSProvider>();
+            return smsProviders.OrderBy(tp => tp.FriendlyName).ToList();
         }
 
         /// <summary>

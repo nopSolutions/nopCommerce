@@ -1,6 +1,8 @@
 using System;
+using System.Security.Principal;
 using Nop.Core;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Plugins;
 using Nop.Services.Discounts;
 
 namespace Nop.Plugin.DiscountRules.ShippingCountry
@@ -55,5 +57,28 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
             bool result = request.Customer.ShippingAddress.CountryId == request.DiscountRequirement.ShippingCountryId;
             return result;
         }
+
+        #region IPlugin Members
+
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
+
+        public int SortOrder
+        {
+            get { return 1; }
+        }
+
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
+        #endregion
     }
 }

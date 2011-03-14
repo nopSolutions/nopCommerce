@@ -7,6 +7,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -29,7 +30,7 @@ namespace Nop.Services.Directory
         private readonly IRepository<Currency> _currencyRepository;
         private readonly ICacheManager _cacheManager;
         private readonly CurrencySettings _currencySettings;
-        private readonly ITypeFinder _typeFinder;
+        private readonly IPluginFinder _pluginFinder;
 
         #endregion
 
@@ -41,15 +42,16 @@ namespace Nop.Services.Directory
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="currencyRepository">Currency repository</param>
         /// <param name="currencySettings">Currency settings</param>
+        /// <param name="pluginFinder">Plugin finder</param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             CurrencySettings currencySettings,
-            ITypeFinder typeFinder)
+            IPluginFinder pluginFinder)
         {
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
             this._currencySettings = currencySettings;
-            this._typeFinder = typeFinder;
+            this._pluginFinder = pluginFinder;
 
         }
 
@@ -265,17 +267,7 @@ namespace Nop.Services.Directory
         /// <returns>Exchange rate providers</returns>
         public IList<IExchangeRateProvider> LoadAllExchangeRateProviders()
         {
-            var exchangeRateProviders = new List<IExchangeRateProvider>();
-
-            var typesToRegister = _typeFinder.FindClassesOfType<IExchangeRateProvider>();
-            foreach (var type in typesToRegister)
-            {
-                //TODO inject ISettingService into type.SettingService
-                dynamic exchangeRateProvider = Activator.CreateInstance(type);
-                exchangeRateProviders.Add(exchangeRateProvider);
-            }
-
-            //sort and return
+            var exchangeRateProviders = _pluginFinder.GetPlugins<IExchangeRateProvider>();
             return exchangeRateProviders.OrderBy(tp => tp.FriendlyName).ToList();
         }
         #endregion

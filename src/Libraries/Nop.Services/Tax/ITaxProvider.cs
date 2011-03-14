@@ -1,11 +1,11 @@
 
-using Nop.Services.Configuration;
+using Nop.Core.Plugins;
 namespace Nop.Services.Tax
 {
     /// <summary>
     /// Provides an interface for creating tax providers
     /// </summary>
-    public partial interface ITaxProvider
+    public partial interface ITaxProvider : IPlugin
     {
         /// <summary>
         /// Gets or sets the friendly name
@@ -16,11 +16,6 @@ namespace Nop.Services.Tax
         /// Gets or sets the system name
         /// </summary>
         string SystemName { get; }
-
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        ISettingService SettingService { get; set; }
 
         /// <summary>
         /// Gets tax rate

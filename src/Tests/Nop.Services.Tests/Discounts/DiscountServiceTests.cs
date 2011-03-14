@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Security;
 using Nop.Tests;
@@ -53,7 +54,8 @@ namespace Nop.Services.Tests.Discounts
             _discountRepo.Expect(x => x.Table).Return(new List<Discount>() { discount1, discount2 }.AsQueryable());
 
             var cacheManager = new NopNullCache();
-            _discountService = new DiscountService(cacheManager, _discountRepo, new AppDomainTypeFinder());
+            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            _discountService = new DiscountService(cacheManager, _discountRepo, pluginFinder);
         }
 
         [Test]
@@ -64,21 +66,20 @@ namespace Nop.Services.Tests.Discounts
             (discounts.Count > 0).ShouldBeTrue();
         }
 
-        //TODO uncomment when we'll be able to test plugins
-        //[Test]
-        //public void Can_load_discountRequirementRules()
-        //{
-        //    var rules = _discountService.LoadAllDiscountRequirementRules();
-        //    rules.ShouldNotBeNull();
-        //    (rules.Count > 0).ShouldBeTrue();
-        //}
+        [Test]
+        public void Can_load_discountRequirementRules()
+        {
+            var rules = _discountService.LoadAllDiscountRequirementRules();
+            rules.ShouldNotBeNull();
+            (rules.Count > 0).ShouldBeTrue();
+        }
 
-        //[Test]
-        //public void Can_load_discountRequirementRuleBySystemKeyword()
-        //{
-        //    var rule = _discountService.LoadDiscountRequirementRuleBySystemName("BillingCountryIs");
-        //    rule.ShouldNotBeNull();
-        //}
+        [Test]
+        public void Can_load_discountRequirementRuleBySystemKeyword()
+        {
+            var rule = _discountService.LoadDiscountRequirementRuleBySystemName("TestDiscountRequirementRule");
+            rule.ShouldNotBeNull();
+        }
 
         [Test]
         public void Can_validate_discount_code()

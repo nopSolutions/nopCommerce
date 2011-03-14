@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -12,10 +14,27 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
     /// </summary>
     public class FixedRateShippingComputationMethod : IShippingRateComputationMethod
     {
+        #region Fields
+
+        private readonly ISettingService _settingService;
+        private readonly IShippingService _shippingService;
+
+        #endregion
+
+        #region Ctor
+        public FixedRateShippingComputationMethod(ISettingService settingService,
+            IShippingService shippingService)
+        {
+            this._settingService = settingService;
+            this._shippingService = shippingService;
+        }
+        #endregion
+
+
         private decimal GetRate(int shippingMethodId)
         {
             string key = string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId);
-            decimal rate = this.SettingService.GetSettingByKey<decimal>(key);
+            decimal rate = this._settingService.GetSettingByKey<decimal>(key);
             return rate;
         }
 
@@ -51,7 +70,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             
             //TODO uncomment vode below after "restricting shipping by country" is implemented
             //var shippingMethods = this.ShippingService.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
-            var shippingMethods = this.ShippingService.GetAllShippingMethods();
+            var shippingMethods = this._shippingService.GetAllShippingMethods();
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();
@@ -83,7 +102,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
 
             //TODO uncomment vode below after "restricting shipping by country" is implemented
             //var shippingMethods = this.ShippingService.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
-            var shippingMethods = this.ShippingService.GetAllShippingMethods();
+            var shippingMethods = this._shippingService.GetAllShippingMethods();
             var rates = new List<decimal>();
             foreach (var shippingMethod in shippingMethods)
             {
@@ -134,21 +153,29 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             }
         }
 
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ISettingService SettingService { get; set; }
+        #endregion
 
-        /// <summary>
-        /// Gets or sets the measure service
-        /// </summary>
-        public IMeasureService MeasureService { get; set; }
+        #region IPlugin Members
 
-        /// <summary>
-        /// Gets or sets the shipping service
-        /// </summary>
-        public IShippingService ShippingService { get; set; }
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
 
+        public int SortOrder
+        {
+            get { return 1; }
+        }
+
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
         #endregion
     }
 }

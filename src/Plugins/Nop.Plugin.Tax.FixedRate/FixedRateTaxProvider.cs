@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
+using Nop.Core.Plugins;
 using Nop.Services.Tax;
 using Nop.Services.Configuration;
 
@@ -12,6 +14,12 @@ namespace Nop.Plugin.Tax.FixedRate
     /// </summary>
     public class FixedRateTaxProvider: ITaxProvider
     {
+        private ISettingService _settingService;
+
+        public FixedRateTaxProvider(ISettingService settingService)
+        {
+            _settingService = settingService;
+        }
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
@@ -36,11 +44,6 @@ namespace Nop.Plugin.Tax.FixedRate
         }
 
         /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ISettingService SettingService { get; set; }
-
-        /// <summary>
         /// Gets tax rate
         /// </summary>
         /// <param name="calculateTaxRequest">Tax calculation request</param>
@@ -61,8 +64,31 @@ namespace Nop.Plugin.Tax.FixedRate
         /// <returns>Tax rate</returns>
         protected decimal GetTaxRate(int taxCategoryId)
         {
-            decimal rate = this.SettingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
+            decimal rate = this._settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
             return rate;
         }
+
+        #region IPlugin Members
+
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
+
+        public int SortOrder
+        {
+            get { return 1; }
+        }
+
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
+        #endregion
     }
 }

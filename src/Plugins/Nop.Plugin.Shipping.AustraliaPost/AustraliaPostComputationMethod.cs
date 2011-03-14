@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Security.Principal;
 using System.Text;
+using Nop.Core.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -30,13 +32,32 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         #endregion
 
+        #region Fields
+
+        private readonly ISettingService _settingService;
+        private readonly IMeasureService _measureService;
+        private readonly IShippingService _shippingService;
+
+        #endregion
+
+        #region Ctor
+        public AustraliaPostComputationMethod(ISettingService settingService,
+            IMeasureService measureService,
+            IShippingService shippingService)
+        {
+            this._settingService = settingService;
+            this._measureService = measureService;
+            this._shippingService = shippingService;
+        }
+        #endregion
+
         #region Utilities
 
         private MeasureWeight GatewayMeasureWeight
         {
             get
             {
-                return this.MeasureService.GetMeasureWeightBySystemKeyword("grams");
+                return this._measureService.GetMeasureWeightBySystemKeyword("grams");
             }
         }
 
@@ -44,38 +65,38 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         {
             get
             {
-                return this.MeasureService.GetMeasureDimensionBySystemKeyword("millimetres");
+                return this._measureService.GetMeasureDimensionBySystemKeyword("millimetres");
             }
         }
 
         private string GetGatewayUrl()
         {
-            return this.SettingService.GetSettingByKey<string>("ShippingRateComputationMethod.AustraliaPost.GatewayUrl", "http://drc.edeliver.com.au/ratecalc.asp");
+            return this._settingService.GetSettingByKey<string>("ShippingRateComputationMethod.AustraliaPost.GatewayUrl", "http://drc.edeliver.com.au/ratecalc.asp");
         }
 
         private int GetWeight(GetShippingOptionRequest getShippingOptionRequest)
         {
-            var totalWeigth = this.ShippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items);
+            var totalWeigth = _shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items);
 
-            int value = Convert.ToInt32(Math.Ceiling(this.MeasureService.ConvertFromPrimaryMeasureWeight(totalWeigth, this.GatewayMeasureWeight)));
+            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureWeight(totalWeigth, this.GatewayMeasureWeight)));
             return (value < MIN_WEIGHT ? MIN_WEIGHT : value);
         }
 
         private int GetLength(GetShippingOptionRequest getShippingOptionRequest)
         {
-            int value = Convert.ToInt32(Math.Ceiling(this.MeasureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalLength(), this.GatewayMeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalLength(), this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
 
         private int GetWidth(GetShippingOptionRequest getShippingOptionRequest)
         {
-            int value = Convert.ToInt32(Math.Ceiling(this.MeasureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalWidth(), this.GatewayMeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalWidth(), this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
 
         private int GetHeight(GetShippingOptionRequest getShippingOptionRequest)
         {
-            int value = Convert.ToInt32(Math.Ceiling(this.MeasureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalHeight(), this.GatewayMeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalHeight(), this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
 
@@ -172,7 +193,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 return response;
             }
 
-            string zipPostalCodeFrom = this.SettingService.GetSettingByKey<string>("ShippingRateComputationMethod.AustraliaPost.DefaultShippedFromZipPostalCode");
+            string zipPostalCodeFrom = this._settingService.GetSettingByKey<string>("ShippingRateComputationMethod.AustraliaPost.DefaultShippedFromZipPostalCode");
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             int weight = GetWeight(getShippingOptionRequest);
             int length = GetLength(getShippingOptionRequest);
@@ -244,7 +265,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
                 foreach (var shippingOption in response.ShippingOptions)
                 {
-                    shippingOption.Rate += this.SettingService.GetSettingByKey<decimal>("ShippingRateComputationMethod.AustraliaPost.AdditionalHandlingCharge");
+                    shippingOption.Rate += this._settingService.GetSettingByKey<decimal>("ShippingRateComputationMethod.AustraliaPost.AdditionalHandlingCharge");
                 }
             }
             catch (Exception ex)
@@ -300,21 +321,29 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             }
         }
 
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ISettingService SettingService { get; set; }
+        #endregion
+        
+        #region IPlugin Members
 
-        /// <summary>
-        /// Gets or sets the measure service
-        /// </summary>
-        public IMeasureService MeasureService { get; set; }
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
 
-        /// <summary>
-        /// Gets or sets the shipping service
-        /// </summary>
-        public IShippingService ShippingService { get; set; }
+        public int SortOrder
+        {
+            get { return 1; }
+        }
 
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
         #endregion
     }
 }

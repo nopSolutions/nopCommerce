@@ -1,5 +1,7 @@
 using System;
+using System.Security.Principal;
 using Nop.Core;
+using Nop.Core.Plugins;
 using Nop.Services.Discounts;
 
 namespace Nop.Plugin.DiscountRules.BillingCountry
@@ -54,5 +56,28 @@ namespace Nop.Plugin.DiscountRules.BillingCountry
             bool result = request.Customer.BillingAddress.CountryId == request.DiscountRequirement.BillingCountryId;
             return result;
         }
+       
+        #region IPlugin Members
+
+        public string Name
+        {
+            get { return FriendlyName; }
+        }
+
+        public int SortOrder
+        {
+            get { return 1; }
+        }
+
+        public bool IsAuthorized(IPrincipal user)
+        {
+            return true;
+        }
+
+        public int CompareTo(IPlugin other)
+        {
+            return SortOrder - other.SortOrder;
+        }
+        #endregion
     }
 }

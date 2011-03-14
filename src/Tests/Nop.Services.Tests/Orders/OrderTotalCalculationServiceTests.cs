@@ -12,6 +12,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -68,7 +69,9 @@ namespace Nop.Services.Tests.Orders
             _addressService = MockRepository.GenerateMock<IAddressService>();
             //default tax address
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address() { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, new AppDomainTypeFinder());
+
+            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder);
 
             _rewardPointsSettings = new RewardPointsSettings();
 

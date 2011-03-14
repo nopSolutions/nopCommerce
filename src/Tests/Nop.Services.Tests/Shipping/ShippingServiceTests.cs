@@ -13,6 +13,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -52,12 +53,13 @@ namespace Nop.Services.Tests.Shipping
 
             var cacheManager = new NopNullCache();
 
+            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
             _shippingService = new ShippingService(cacheManager, 
                 _shippingMethodRepository, 
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,
-                _shippingSettings, new AppDomainTypeFinder());
+                _shippingSettings, pluginFinder);
         }
 
         [Test]

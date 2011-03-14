@@ -11,6 +11,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Discounts;
@@ -41,7 +42,8 @@ namespace Nop.Services.Tests.Tax
             //default tax address
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address() { Id = _taxSettings.DefaultTaxAddressId });
 
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, new AppDomainTypeFinder());
+            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder);
         }
 
         [Test]

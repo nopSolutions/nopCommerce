@@ -4,47 +4,44 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using Nop.Core.Plugins;
+using Nop.Services.Discounts;
 using Nop.Services.Tax;
 using Nop.Services.Configuration;
 
-namespace Nop.Services.Tests.Tax
+namespace Nop.Services.Tests.Discounts
 {
-    public class FixedRateTestTaxProvider : ITaxProvider
+    public partial class TestDiscountRequirementRule : IDiscountRequirementRule
     {
+        /// <summary>
+        /// Gets or sets the friendly name
+        /// </summary>
         public string FriendlyName
         {
             get
             {
-                return "Fixed tax rate provider";
+                return "Tets discount requirement rule";
             }
         }
 
+        /// <summary>
+        /// Gets or sets the system name
+        /// </summary>
         public string SystemName
         {
             get
             {
-                return "FixedTaxRateTest";
+                return "TestDiscountRequirementRule";
             }
-        }
-        
-        public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
-        {
-            var result = new CalculateTaxResult()
-            {
-                TaxRate = GetTaxRate(calculateTaxRequest.TaxCategoryId)
-            };
-            return result;
         }
 
         /// <summary>
-        /// Gets a tax rate
+        /// Check discount requirement
         /// </summary>
-        /// <param name="taxCategoryId">The tax category identifier</param>
-        /// <returns>Tax rate</returns>
-        protected decimal GetTaxRate(int taxCategoryId)
+        /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
+        /// <returns>true - requirement is met; otherwise, false</returns>
+        public bool CheckRequirement(CheckDiscountRequirementRequest request)
         {
-            decimal rate = 10;
-            return rate;
+            return true;
         }
 
         #region IPlugin Members

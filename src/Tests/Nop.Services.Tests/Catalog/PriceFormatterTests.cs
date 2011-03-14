@@ -7,6 +7,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -60,7 +61,9 @@ namespace Nop.Services.Tests.Catalog
             };            
             _currencyRepo = MockRepository.GenerateMock<IRepository<Currency>>();
             _currencyRepo.Expect(x => x.Table).Return(new List<Currency>() { currency1, currency2 }.AsQueryable());
-            _currencyService = new CurrencyService(cacheManager, _currencyRepo, _currencySettings, new AppDomainTypeFinder());
+
+            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            _currencyService = new CurrencyService(cacheManager, _currencyRepo, _currencySettings, pluginFinder);
             
 
             
