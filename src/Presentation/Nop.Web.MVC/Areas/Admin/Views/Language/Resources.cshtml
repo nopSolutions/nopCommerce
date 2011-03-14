@@ -3,22 +3,16 @@
 @using System.Linq;
 <div class="section-header">
     <div class="title">
-        <img alt="Localization" src="Common/ico-content.png">
-        Localization
-    </div>
-    <div class="options">
-        <input type="submit" class="adminButtonBlue" id="ctl00_cph1_ctrlLocaleStringResources_btnSearch"
-            value="Search" name="ctl00$cph1$ctrlLocaleStringResources$btnSearch">
-        <input type="submit" class="adminButtonBlue" title="Add a new resource string" id="ctl00_cph1_ctrlLocaleStringResources_btnAddNew"
-            value="Add new" name="ctl00$cph1$ctrlLocaleStringResources$btnAddNew">
+        <img src="@Url.Content("~/Areas/Admin/Content/images/ico-content.png")" />
+        @T("Admin.Configuration.Location.Languages.Localization")
     </div>
 </div>
 @if (ViewBag.AllLanguages != null)
 {
-    <table>
+    <table class="adminContent" style="margin-bottom:10px;">
         <tr>
             <td class="adminTitle">
-                Select Language
+                @T("Admin.Configuration.Location.Languages.Select")
             </td>
             <td class="adminData">
                 @(Html.Telerik().ComboBox().Name("select-language")
@@ -41,7 +35,7 @@
                     .DataKeys(x => x.Add(y => y.Id))
                     .Columns(columns =>
                     {
-                        columns.Template(x => x.LanguageName).ClientTemplate("<#= LanguageName #>").Width(100);
+                        columns.Bound(x => x.LanguageName).ClientTemplate("<#= LanguageName #>").Width(100).ReadOnly();
                         columns.Bound(x => x.Name).EditorTemplateName("String").Width(300);
                         columns.Bound(x => x.Value).EditorTemplateName("String");
                         columns.Command(commands =>
@@ -51,18 +45,28 @@
                         }).Width(180);
 
                     })
+                    .ToolBar(x => x.Insert())
                     .Editable(x =>{
                         x.Mode(GridEditMode.InLine);
                     })
                     .Filterable()
-                    .Pageable(settings => settings.PageSize(10).Total(Model.Total))
+                    .Pageable(settings => settings.PageSize(20).Total(Model.Total))
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax().Select("Resources", "Language")
                             .Update("ResourceUpdate", "Language")
-                            .Delete("ResourceDelete", "Language");
+                            .Delete("ResourceDelete", "Language")
+                            .Insert("ResourceAdd", "Language", new { id = ViewBag.LanguageId });
                     })
-                    .EnableCustomBinding(true))
+                    .EnableCustomBinding(true)
+                    .ClientEvents(x => x.OnEdit("onResourceEdit")))
         </td>
     </tr>
 </table>
+<script type="text/javascript">
+    function onResourceEdit(e) {
+        if (e.mode == "insert") {
+            $(e.form).find("td:first").html("@ViewBag.LanguageName");
+        }
+    }
+</script>

@@ -1,19 +1,15 @@
 ﻿@model Nop.Web.MVC.Areas.Admin.Models.LanguageModel
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
-
 @{
     var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures).ToList();
 }
-
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-
 <table class="adminContent">
     <tr>
         <td class="adminTitle">
-            @Html.Hint("The name of the language.")
-            @Html.LabelFor(model => model.Name)
+            @Html.NopLabelFor(model => model.Name)
         </td>
         <td class="adminData">
             @Html.EditorFor(model => model.Name)
@@ -22,23 +18,21 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.Hint("The language specific culture code.")
-            @Html.LabelFor(model => model.LanguageCulture):
+            @Html.NopLabelFor(model => model.LanguageCulture):
         </td>
         <td class="adminData">
             @(Html.Telerik().ComboBoxFor(x => x.LanguageCulture)
-                .BindTo(cultures.Select(x=> 
-                    new DropDownItem{Value = x.IetfLanguageTag, Text =  string.Format("{0}. {1}", x.IetfLanguageTag, x.EnglishName)} ))
+                .BindTo(cultures.Select(x =>
+                    new DropDownItem { Value = x.IetfLanguageTag, Text = string.Format("{0}. {1}", x.IetfLanguageTag, x.EnglishName) }))
                 .Encode(true)
                 .AutoFill(false)
-                .Filterable(x => { x.Enabled(false);}))
+                .Filterable(x => { x.Enabled(false); }))
             @Html.ValidationMessageFor(model => model.LanguageCulture)
         </td>
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.Hint("The flag image file name. The image should be saved into \\images\\flags\\ directory.")
-            @Html.LabelFor(model => model.FlagImageFileName):
+            @Html.NopLabelFor(model => model.FlagImageFileName):
         </td>
         <td class="adminData">
             @Html.EditorFor(model => model.FlagImageFileName)
@@ -47,8 +41,7 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.Hint("Determines whether this language is published and can therefore be selected by visitors to your store.")
-            @Html.LabelFor(model => model.Published):
+            @Html.NopLabelFor(model => model.Published):
         </td>
         <td class="adminData">
             @Html.EditorFor(model => model.Published)
@@ -57,8 +50,7 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.Hint("The display order of this language. 1 represents the top of the list.")
-            @Html.LabelFor(model => model.DisplayOrder):
+            @Html.NopLabelFor(model => model.DisplayOrder):
         </td>
         <td class="adminData">
             @Html.Telerik().NumericTextBoxFor(model => model.DisplayOrder).DecimalDigits(0)
@@ -67,11 +59,11 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.Hint("Import resource strings from an XML file. You can download XML resource files from the nopCommerce website.")
-            <label>Import resources from XML:</label>:
+            <label>
+                Import resources from XML:</label>:
         </td>
         <td class="adminData">
-            @*TODO// Add support for importing resources*@
+            TODO @*TODO// Add support for importing resources*@
         </td>
     </tr>
 </table>

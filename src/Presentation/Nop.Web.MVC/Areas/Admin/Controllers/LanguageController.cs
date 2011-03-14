@@ -117,6 +117,10 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		[HttpPost]
 		public ActionResult Edit(LanguageModel languageModel)
 		{
+            if (!ModelState.IsValid)
+            {
+                return View(languageModel);
+            }
 			var language = _languageService.GetLanguageById(languageModel.Id);
 			UpdateInstance(language, languageModel);
 			_languageService.UpdateLanguage(language);
@@ -188,10 +192,14 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 																							  Text = x.Name,
 																							  Value = x.Id.ToString()
 																						  }).ToList();
+		    var language = _languageService.GetLanguageById(languageId);
+		    ViewBag.LanguageId = languageId;
+		    ViewBag.LanguageName = language.Name;
+
 			var resources = _localizationService.GetAllResourcesByLanguageId(languageId);
 			var gridModel = new GridModel<LanguageResourceModel>
 			{
-				Data = resources.Take(10).Select(x => new LanguageResourceModel(x.Value)),
+				Data = resources.Take(20).Select(x => new LanguageResourceModel(x.Value)),
 				Total = resources.Count
 			};
 			return View(gridModel);
@@ -201,10 +209,10 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		public ActionResult Resources(int languageId, GridCommand command)
 		{
 
-            var resources = _localizationService.GetAllResourcesByLanguageId(languageId).Select(x => new LanguageResourceModel(x.Value))
-                .ForCommand(command);
+            var resources = _localizationService.GetAllResourcesByLanguageId(languageId).Select(x => x.Value)
+                .ForCommand(command)
+                .Select(x => new LanguageResourceModel(x));
 
-            
             var model = new GridModel<LanguageResourceModel>
                             {
                                 Data = resources.PagedForCommand(command),
@@ -234,8 +242,9 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 
             #region Return a model with the current page and pagesize
 
-            var resources = _localizationService.GetAllResourcesByLanguageId(model.LanguageId).Select(x => x.Value).Select(x => new LanguageResourceModel(x))
-                .ForCommand(command);
+            var resources = _localizationService.GetAllResourcesByLanguageId(model.LanguageId).Select(x => x.Value)
+                .ForCommand(command)
+                .Select(x => new LanguageResourceModel(x));
 
             var gridModel = new GridModel<LanguageResourceModel>
                                 {
@@ -248,6 +257,38 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             };
 
             #endregion
+        }
+
+        #endregion
+
+        #region Add
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ResourceAdd(int id, LanguageResourceModel resourceModel, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult {Data = "error"};
+            }
+
+            var resource = new LocaleStringResource() {LanguageId = id};
+            UpdateInstance(resource, resourceModel);
+            _localizationService.InsertLocaleStringResource(resource);
+
+            var resources = _localizationService.GetAllResourcesByLanguageId(id).Select(x => x.Value)
+                .ForCommand(command)
+                .Select(x => new LanguageResourceModel(x));
+
+            var gridModel = new GridModel<LanguageResourceModel>
+            {
+                Data = resources.PagedForCommand(command),
+                Total = resources.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
         }
 
         #endregion

@@ -1,37 +1,48 @@
 ﻿@model Telerik.Web.Mvc.GridModel<Nop.Web.MVC.Areas.Admin.Models.LanguageModel>
 @using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Areas/Admin/Content/images/ico-configuration.png")" />
-        @T("Languages")
+        @T("Admin.Configuration.Location.Languages")
     </div>
     <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Add new")</a>
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
             @(Html.Telerik().Grid<Nop.Web.MVC.Areas.Admin.Models.LanguageModel>()
-                    .Name("Grid")
+                    .Name("languages-grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name);
-                        columns.Bound(x => x.Published).Template(x => x.Published.ToString().ToLower());
+                        columns.Bound(x => x.LanguageCulture)
+                            .Width(150)
+                            .Centered();
                         columns.Template(
-                            @<div>
-                                @Html.ActionLink("View string resources", "Resources", new { languageId = @item.Id })
-                            </div>
-                        );
-                        columns.Bound(x => x.DisplayOrder);
+                                @<div>
+                                    @Html.ActionLink(T("Admin.Configuration.Location.Languages.Resources.View").Text, "Resources", new { languageId = @item.Id })
+                                </div>
+                            ).Width(200)
+                            .Centered()
+                            .Title(T("Admin.Configuration.Location.Languages.Resources.View").Text);
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.Published)
+                            .Width(100)
+                            .Centered()
+                            .Template(x => x.Published.ToString().ToLower());
                         columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink("Edit", "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"<#= Id #>\">Edit</a>")
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Width(50)
-                            .HtmlAttributes(new { align = "center" })
+                            .Centered()
                             .HeaderTemplate("Edit")
-                            .HeaderHtmlAttributes(new { align = "center" }).Filterable(false);
+                            .Filterable(false);
                     })
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Language"))
                     .EnableCustomBinding(true))

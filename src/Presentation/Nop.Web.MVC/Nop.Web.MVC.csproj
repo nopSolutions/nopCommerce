@@ -114,6 +114,7 @@
     <Compile Include="Areas\Admin\Validators\CategoryProductValidator.cs" />
     <Compile Include="Areas\Admin\Validators\CategoryValidator.cs" />
     <Compile Include="Areas\Admin\Validators\LanguageResourceValidator.cs" />
+    <Compile Include="Areas\Admin\Validators\LanguageValidator.cs" />
     <Compile Include="Areas\Admin\Views\Shared\TestMenuPlugin1.cs" />
     <Compile Include="Areas\Admin\Views\Shared\TestMenuPlugin2.cs" />
     <Compile Include="Areas\Public\Controllers\HomeController.cs" />

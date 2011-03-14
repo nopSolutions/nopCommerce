@@ -31,13 +31,13 @@ namespace Nop.Web.MVC.Infrastructure
 
         public string One(string key)
         {
-            var resourceName = "Telerik." + _resourceName + "." + key;
+            var resourceName = "Admin.Telerik." + _resourceName + "." + key;
             return _localizationService.GetResource(resourceName, _currentLanguageId, true, resourceName);
         }
 
         private IDictionary<string, string> ScopedResources()
         {
-            var scope = "telerik." + _resourceName;
+            var scope = "Admin.Telerik." + _resourceName;
             return _localizationService.GetAllResourcesByLanguageId(_currentLanguageId).Where(x => x.Key.ToLower().StartsWith(scope)).ToDictionary(x => x.Key.Replace(scope,""),
                                                                                                     x => x.Value.ResourceValue);
         }
