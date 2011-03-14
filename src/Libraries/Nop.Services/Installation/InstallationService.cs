@@ -557,6 +557,13 @@ namespace Nop.Services.Installation
                     CaseInvariantReplacement = false
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<SMSSettings>>()
+                .SaveSettings(new SMSSettings()
+                {
+                    //TODO IList<> property is not saved because GenericListTypeConverter is not loaded yet
+                    ActiveSMSProviderSystemNames = new List<string>() 
+                });
+
             EngineContext.Current.Resolve<IConfigurationProvider<ShoppingCartSettings>>()
                 .SaveSettings(new ShoppingCartSettings()
                 {

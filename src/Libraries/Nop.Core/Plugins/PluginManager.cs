@@ -12,6 +12,7 @@ using Nop.Core.Plugins;
 // SEE THIS POST for full details of what this does
 //http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
+//TODO uncomment PreApplicationStartMethod because it's used to load all plugin assemblies
 //[assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
 
 namespace Nop.Core.Plugins
