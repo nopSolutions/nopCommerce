@@ -9,5 +9,11 @@ namespace Nop.Data
         {
             DbDatabase.SetInitializer<NopObjectContext>(new DatabaseInitializer());
         }
+
+        public int Order
+        {
+            //ensure that this task is run first 
+            get { return -1000; }
+        }
     }
 }

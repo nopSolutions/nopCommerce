@@ -51,9 +51,16 @@ namespace Nop.Core.Infrastructure
         {
             var typeFinder = _containerManager.Resolve<ITypeFinder>();
             var startUpTaskTypes = typeFinder.FindClassesOfType<IStartupTask>();
+            var startUpTasks = new List<IStartupTask>();
             foreach (var startUpTaskType in startUpTaskTypes)
             {
                 var startUpTask = ((IStartupTask)Activator.CreateInstance(startUpTaskType));
+                startUpTasks.Add(startUpTask);
+            }
+
+            startUpTasks = startUpTasks.AsQueryable().OrderBy(st => st.Order).ToList();
+            foreach (var startUpTask in startUpTasks)
+            {
                 startUpTask.Execute();
             }
         }

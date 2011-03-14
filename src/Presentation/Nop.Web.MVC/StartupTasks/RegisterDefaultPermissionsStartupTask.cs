@@ -18,5 +18,10 @@ namespace Nop.Web.MVC.StartupTasks
                 EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
             }
         }
+
+        public int Order
+        {
+            get { return 10; }
+        }
     }
 }

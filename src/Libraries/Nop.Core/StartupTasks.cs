@@ -22,5 +22,10 @@ namespace Nop.Core
             TypeDescriptor.AddAttributes(typeof(ShippingOption),
                 new TypeConverterAttribute(typeof(ShippingOptionTypeConverter)));
         }
+        
+        public int Order
+        {
+            get { return 1; }
+        }
     }
 }
