@@ -9,7 +9,7 @@ namespace Nop.Web.MVC.Areas.Admin.Views.Shared
     public class TestMenuPlugin1 : Nop.Core.Web.AdminMenuPlugin
     {
         public TestMenuPlugin1(ILanguageService service)
-            : base("TestPlugin1", 2)
+            : base("TestPlugin1", "TestPlugin1", 2)
         {
         }
 

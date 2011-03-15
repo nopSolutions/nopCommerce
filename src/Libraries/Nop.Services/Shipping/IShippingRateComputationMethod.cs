@@ -11,16 +11,6 @@ namespace Nop.Services.Shipping
     public partial interface IShippingRateComputationMethod : IPlugin
     {
         /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        string FriendlyName { get; }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        string SystemName { get; }
-
-        /// <summary>
         /// Gets a shipping rate computation method type
         /// </summary>
         ShippingRateComputationMethodType ShippingRateComputationMethodType { get; }

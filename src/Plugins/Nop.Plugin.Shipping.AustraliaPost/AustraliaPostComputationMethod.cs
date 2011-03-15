@@ -19,7 +19,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
     /// <summary>
     /// Australia post computation method
     /// </summary>
-    public class AustraliaPostComputationMethod : IShippingRateComputationMethod
+    public class AustraliaPostComputationMethod : BasePlugin, IShippingRateComputationMethod
     {
         #region Constants
 
@@ -291,7 +291,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
-        public string FriendlyName
+        public override string FriendlyName
         {
             get
             {
@@ -302,7 +302,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// <summary>
         /// Gets or sets the system name
         /// </summary>
-        public string SystemName
+        public override string SystemName
         {
             get
             {
@@ -321,29 +321,6 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             }
         }
 
-        #endregion
-        
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
         #endregion
     }
 }

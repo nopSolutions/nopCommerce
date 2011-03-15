@@ -12,7 +12,7 @@ namespace Nop.Plugin.Tax.FixedRate
     /// <summary>
     /// Fixed rate tax provider
     /// </summary>
-    public class FixedRateTaxProvider: ITaxProvider
+    public class FixedRateTaxProvider : BasePlugin, ITaxProvider
     {
         private ISettingService _settingService;
 
@@ -20,10 +20,11 @@ namespace Nop.Plugin.Tax.FixedRate
         {
             _settingService = settingService;
         }
+
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
-        public string FriendlyName
+        public override string FriendlyName
         {
             get
             {
@@ -35,7 +36,7 @@ namespace Nop.Plugin.Tax.FixedRate
         /// <summary>
         /// Gets or sets the system name
         /// </summary>
-        public string SystemName
+        public override string SystemName
         {
             get
             {
@@ -67,28 +68,5 @@ namespace Nop.Plugin.Tax.FixedRate
             decimal rate = this._settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
             return rate;
         }
-
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
-        #endregion
     }
 }

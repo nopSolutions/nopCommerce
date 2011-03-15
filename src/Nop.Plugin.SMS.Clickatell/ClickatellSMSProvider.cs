@@ -14,7 +14,7 @@ namespace Nop.Plugin.SMS.Clickatell
     /// <summary>
     /// Represents the Clickatell SMS provider
     /// </summary>
-    public class ClickatellSMSProvider : ISMSProvider
+    public class ClickatellSMSProvider : BasePlugin, ISMSProvider
     {
         private readonly ILogger _logger;
         private readonly ISettingService _settingService;
@@ -29,7 +29,7 @@ namespace Nop.Plugin.SMS.Clickatell
         /// <summary>
         /// Gets the friendly name
         /// </summary>
-        public string FriendlyName
+        public override string FriendlyName
         {
             get { return "Clickatell SMS Provider"; }
         }
@@ -37,7 +37,7 @@ namespace Nop.Plugin.SMS.Clickatell
         /// <summary>
         /// Gets the system name
         /// </summary>
-        public string SystemName
+        public override string SystemName
         {
             get { return "Mobile.SMS.Clickatell"; }
         }
@@ -139,28 +139,5 @@ namespace Nop.Plugin.SMS.Clickatell
                 _settingService.SetSetting<string>("Mobile.SMS.Clickatell.Password", value);
             }
         }
-        
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
-        #endregion
     }
 }

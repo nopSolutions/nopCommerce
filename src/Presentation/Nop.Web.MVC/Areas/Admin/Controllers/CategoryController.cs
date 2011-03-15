@@ -21,7 +21,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
     [AdminAuthorizeAttribute]
     public class CategoryController : BaseNopController
     {
-        #region Fields (4)
+        #region Fields
 
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
@@ -32,7 +32,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 
         #endregion Fields
 
-        #region Constructors (1)
+        #region Constructors
 
         public CategoryController(ICategoryService categoryService,
             IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService, IProductService productService, IExportManager exportManager)
@@ -46,9 +46,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         }
 
         #endregion Constructors
-
-
-
+        
         #region Saving/Updating/Inserting
 
         public void UpdateInstance(Category category, CategoryModel model)

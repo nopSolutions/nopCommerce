@@ -12,7 +12,7 @@ using Nop.Services.Tax;
 
 namespace Nop.Services.Tests.Shipping
 {
-    public class FixedRateTestShippingRateComputationMethod : IShippingRateComputationMethod
+    public class FixedRateTestShippingRateComputationMethod : BasePlugin, IShippingRateComputationMethod
     {
         private decimal GetRate()
         {
@@ -63,7 +63,7 @@ namespace Nop.Services.Tests.Shipping
         #region Properties
 
 
-        public string FriendlyName
+        public override string FriendlyName
         {
             get
             {
@@ -71,7 +71,7 @@ namespace Nop.Services.Tests.Shipping
             }
         }
 
-        public string SystemName
+        public override string SystemName
         {
             get
             {
@@ -105,28 +105,6 @@ namespace Nop.Services.Tests.Shipping
         /// </summary>
         public IShippingService ShippingService { get; set; }
 
-        #endregion
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
         #endregion
     }
 }

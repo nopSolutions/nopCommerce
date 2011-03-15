@@ -17,8 +17,8 @@ namespace Nop.Services.Configuration
             this._settingService = settingService;
             this.BuildConfiguration();
         }
-        
-        public TSettings Settings { get; private set; }
+
+        public TSettings Settings { get; protected set; }
 
         private void BuildConfiguration() 
         {

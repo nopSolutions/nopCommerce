@@ -9,8 +9,16 @@ namespace Nop.Core.Plugins
 {
     public abstract class PluginDescriptor : IComparable<PluginDescriptor>
     {
-        public string Name { get; protected set; }
-        public int SortOrder { get; protected set; }
+        /// <summary>
+        /// Gets or sets the friendly name
+        /// </summary>
+        public virtual string FriendlyName { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the system name
+        /// </summary>
+        public virtual string SystemName { get; protected set; }
+        public int DisplayOrder { get; protected set; }
 
         #region Properties (1)
 
@@ -33,7 +41,7 @@ namespace Nop.Core.Plugins
 
         public int CompareTo(PluginDescriptor other)
         {
-            return SortOrder - other.SortOrder;
+            return DisplayOrder - other.DisplayOrder;
         }
     }
 
@@ -50,11 +58,12 @@ namespace Nop.Core.Plugins
 
         public PluginAttributeDescriptor(IPlugin pluginInstance)
         {
-            _pluginInstance = pluginInstance;
-            _pluginType = _pluginInstance.GetType();
+            this._pluginInstance = pluginInstance;
+            this._pluginType = _pluginInstance.GetType();
             var instance = Instance<IPlugin>();
-            Name = instance.Name;
-            SortOrder = instance.SortOrder;
+            this.FriendlyName = instance.FriendlyName;
+            this.SystemName = instance.SystemName;
+            this.DisplayOrder = instance.DisplayOrder;
         }
 
         #endregion Constructors
@@ -92,10 +101,11 @@ namespace Nop.Core.Plugins
 
         public PluginImplementationDescriptor(Type pluginType)
         {
-            _pluginType = pluginType;
+            this._pluginType = pluginType;
             var instance = Instance<IPlugin>();
-            Name = instance.Name;
-            SortOrder = instance.SortOrder;
+            this.FriendlyName = instance.FriendlyName;
+            this.SystemName = instance.SystemName;
+            this.DisplayOrder = instance.DisplayOrder;
         }
 
         #endregion Constructors

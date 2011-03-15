@@ -12,8 +12,17 @@ namespace Nop.Core.Plugins
     /// </summary>
     public interface IPlugin : IComparable<IPlugin>
     {
-        string Name { get; }
-        int SortOrder { get; }
+        /// <summary>
+        /// Gets or sets the friendly name
+        /// </summary>
+        string FriendlyName { get; }
+
+        /// <summary>
+        /// Gets or sets the system name
+        /// </summary>
+        string SystemName { get; }
+
+        int DisplayOrder { get; }
         bool IsAuthorized(IPrincipal user);
     }
 }

@@ -13,7 +13,7 @@ namespace Nop.Plugin.SMS.Verizon
     /// <summary>
     /// Represents the Verizon SMS provider
     /// </summary>
-    public class VerizonSMSProvider : ISMSProvider
+    public class VerizonSMSProvider : BasePlugin, ISMSProvider
     {
         private readonly ISettingService _settingService;
         private readonly IQueuedEmailService _queuedEmailService;
@@ -36,7 +36,7 @@ namespace Nop.Plugin.SMS.Verizon
         /// <summary>
         /// Gets the friendly name
         /// </summary>
-        public string FriendlyName
+        public override string FriendlyName
         {
             get { return "Verizon SMS Provider"; }
         }
@@ -44,7 +44,7 @@ namespace Nop.Plugin.SMS.Verizon
         /// <summary>
         /// Gets the system name
         /// </summary>
-        public string SystemName
+        public override string SystemName
         {
             get { return "Mobile.SMS.Verizon"; }
         }
@@ -98,28 +98,5 @@ namespace Nop.Plugin.SMS.Verizon
                 _settingService.SetSetting<string>("Mobile.SMS.Verizon.Email", value);
             }
         }
-
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
-        #endregion
     }
 }

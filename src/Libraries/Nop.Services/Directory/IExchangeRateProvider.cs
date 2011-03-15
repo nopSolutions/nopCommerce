@@ -30,15 +30,5 @@ namespace Nop.Services.Directory
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
         List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode);
-
-        /// <summary>
-        /// Gets exchange rate provider friendly name
-        /// </summary>
-        string FriendlyName { get; }
-
-        /// <summary>
-        /// Gets exchange rate provider system name
-        /// </summary>
-        string SystemName { get; }
     }
 }

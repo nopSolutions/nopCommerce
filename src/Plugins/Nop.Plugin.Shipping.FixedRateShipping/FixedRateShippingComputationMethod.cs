@@ -12,7 +12,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
     /// <summary>
     /// Fixed rate shipping computation method
     /// </summary>
-    public class FixedRateShippingComputationMethod : IShippingRateComputationMethod
+    public class FixedRateShippingComputationMethod : BasePlugin, IShippingRateComputationMethod
     {
         #region Fields
 
@@ -30,6 +30,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
         }
         #endregion
 
+        #region Methods
 
         private decimal GetRate(int shippingMethodId)
         {
@@ -117,13 +118,15 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
 
             return null;
         }
-        
+
+        #endregion
+
         #region Properties
 
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
-        public string FriendlyName
+        public override string FriendlyName
         {
             get
             {
@@ -134,7 +137,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
         /// <summary>
         /// Gets or sets the system name
         /// </summary>
-        public string SystemName
+        public override string SystemName
         {
             get
             {
@@ -153,29 +156,6 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             }
         }
 
-        #endregion
-
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
         #endregion
     }
 }

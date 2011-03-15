@@ -11,12 +11,12 @@ namespace Nop.Plugin.Tax.Free
 {/// <summary>
     /// Free tax provider
     /// </summary>
-    public class FreeTaxProvider : ITaxProvider
+    public class FreeTaxProvider : BasePlugin, ITaxProvider
     {
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
-        public string FriendlyName
+        public override string FriendlyName
         {
             get
             {
@@ -28,19 +28,14 @@ namespace Nop.Plugin.Tax.Free
         /// <summary>
         /// Gets or sets the system name
         /// </summary>
-        public string SystemName
+        public override string SystemName
         {
             get
             {
                 return "FreeTaxRate";
             }
         }
-
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ISettingService SettingService { get; set; }
-
+        
         /// <summary>
         /// Gets tax rate
         /// </summary>
@@ -54,28 +49,5 @@ namespace Nop.Plugin.Tax.Free
             };
             return result;
         }
-        
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
-        #endregion
     }
 }

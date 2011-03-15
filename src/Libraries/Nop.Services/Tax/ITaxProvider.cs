@@ -8,16 +8,6 @@ namespace Nop.Services.Tax
     public partial interface ITaxProvider : IPlugin
     {
         /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        string FriendlyName { get; }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        string SystemName { get; }
-
-        /// <summary>
         /// Gets tax rate
         /// </summary>
         /// <param name="calculateTaxRequest">Tax calculation request</param>

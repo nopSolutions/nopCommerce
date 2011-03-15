@@ -17,13 +17,13 @@ namespace Nop.Core.Tests.Plugin
     public class TestPluginImplementation : BasePlugin, ITestPlugin1
     {
         public TestPluginImplementation()
-            : base("TestPluginImplementation"){}
+            : base("TestPluginImplementation", "TestPluginImplementation") { }
     }
 
     public class TestPluginAttribute : BasePluginAttribute, ITestPlugin1
     {
         public TestPluginAttribute()
-            :base("TestPluginAttribute", 5){}
+            :base("TestPluginAttribute", "TestPluginAttribute", 5){}
     }
 
     

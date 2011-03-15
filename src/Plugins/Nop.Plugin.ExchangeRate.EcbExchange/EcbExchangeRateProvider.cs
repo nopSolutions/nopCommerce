@@ -12,7 +12,7 @@ using Nop.Services.Directory;
 
 namespace Nop.Plugin.ExchangeRate.EcbExchange
 {
-    public class EcbExchangeRateProvider : IExchangeRateProvider
+    public class EcbExchangeRateProvider : BasePlugin, IExchangeRateProvider
     {
         #region Methods
 
@@ -64,7 +64,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
-        public string FriendlyName
+        public override string FriendlyName
         {
             get
             {
@@ -76,36 +76,14 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <summary>
         /// Gets or sets the system name
         /// </summary>
-        public string SystemName
+        public override string SystemName
         {
             get
             {
                 return "ECB";
             }
         }
-        #endregion
 
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
         #endregion
     }
 }

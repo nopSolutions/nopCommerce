@@ -59,10 +59,10 @@ namespace Nop.Core.Plugins
             {
                 foreach (PluginDescriptor plugin in FindPluginsIn(assembly))
                 {
-                    if (plugin.Instance().Name == null)
-                        throw new Exception(string.Format("A plugin in the assembly '{0}' has no name. The plugin is likely defined on the assembly ([assembly:...]). Try assigning the plugin a unique name and recompiling.", assembly.FullName));
+                    if (plugin.Instance().SystemName == null)
+                        throw new Exception(string.Format("A plugin in the assembly '{0}' has no system name. The plugin is likely defined on the assembly ([assembly:...]). Try assigning the plugin a unique name and recompiling.", assembly.FullName));
                     if (foundPlugins.Contains(plugin))
-                        throw new Exception(string.Format("A plugin of the type '{0}' named '{1}' is already defined, assembly: {2}", plugin.PluginType.FullName, plugin.Instance().Name, assembly.FullName));
+                        throw new Exception(string.Format("A plugin of the type '{0}' named '{1}' is already defined, assembly: {2}", plugin.PluginType.FullName, plugin.Instance().SystemName, assembly.FullName));
                     
                     foundPlugins.Add(plugin);
                 }

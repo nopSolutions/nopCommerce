@@ -9,9 +9,9 @@ using Nop.Services.Configuration;
 
 namespace Nop.Services.Tests.Tax
 {
-    public class FixedRateTestTaxProvider : ITaxProvider
+    public class FixedRateTestTaxProvider : BasePlugin, ITaxProvider
     {
-        public string FriendlyName
+        public override string FriendlyName
         {
             get
             {
@@ -19,7 +19,7 @@ namespace Nop.Services.Tests.Tax
             }
         }
 
-        public string SystemName
+        public override string SystemName
         {
             get
             {
@@ -46,28 +46,5 @@ namespace Nop.Services.Tests.Tax
             decimal rate = 10;
             return rate;
         }
-
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
-        #endregion
     }
 }

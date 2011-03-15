@@ -12,7 +12,7 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Plugin.ExchangeRate.McExchange
 {
-    public class McExchangeRateProvider : IExchangeRateProvider
+    public class McExchangeRateProvider : BasePlugin, IExchangeRateProvider
     {
         #region Methods
 
@@ -109,10 +109,11 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
-        public string FriendlyName
+        public override string FriendlyName
         {
             get
             {
@@ -124,36 +125,14 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         /// <summary>
         /// Gets or sets the system name
         /// </summary>
-        public string SystemName
+        public override string SystemName
         {
             get
             {
                 return "MoneyConverter";
             }
         }
-        #endregion
 
-        #region IPlugin Members
-
-        public string Name
-        {
-            get { return FriendlyName; }
-        }
-
-        public int SortOrder
-        {
-            get { return 1; }
-        }
-
-        public bool IsAuthorized(IPrincipal user)
-        {
-            return true;
-        }
-
-        public int CompareTo(IPlugin other)
-        {
-            return SortOrder - other.SortOrder;
-        }
         #endregion
     }
 }

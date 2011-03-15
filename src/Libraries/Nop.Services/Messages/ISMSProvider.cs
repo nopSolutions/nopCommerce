@@ -12,16 +12,6 @@ namespace Nop.Services.Messages
     public partial interface ISMSProvider : IPlugin
     {
         /// <summary>
-        /// Gets the friendly name
-        /// </summary>
-        string FriendlyName { get; }
-
-        /// <summary>
-        /// Gets the system name
-        /// </summary>
-        string SystemName { get; }
-
-        /// <summary>
         /// Sends SMS
         /// </summary>
         /// <param name="text">Text</param>

@@ -8,16 +8,25 @@ namespace Nop.Core.Plugins
 {
     public abstract class BasePluginAttribute : Attribute, IPlugin
     {
-        protected BasePluginAttribute(string name, int sortOrder = 0)
+        protected BasePluginAttribute(string friendlyName, string systemName, int displayOrder = 0)
         {
-            Name = name;
-            SortOrder = sortOrder;
+            this.FriendlyName = friendlyName;
+            this.SystemName = systemName;
+            this.DisplayOrder = displayOrder;
         }
 
         #region IPlugin Members
 
-        public string Name { get; set; }
-        public int SortOrder { get; set; }
+        /// <summary>
+        /// Gets or sets the friendly name
+        /// </summary>
+        public virtual string FriendlyName { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the system name
+        /// </summary>
+        public virtual string SystemName { get; protected set; }
+        public int DisplayOrder { get; set; }
 
         public bool IsAuthorized(IPrincipal user)
         {
@@ -30,7 +39,7 @@ namespace Nop.Core.Plugins
 
         public int CompareTo(IPlugin other)
         {
-            return this.SortOrder - other.SortOrder;
+            return this.DisplayOrder - other.DisplayOrder;
         }
 
         #endregion
@@ -38,12 +47,12 @@ namespace Nop.Core.Plugins
         public override bool Equals(object obj)
         {
             var other = obj as IPlugin;
-            return other != null && Name.Equals(other.Name);
+            return other != null && SystemName.Equals(other.SystemName);
         }
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode();
+            return SystemName.GetHashCode();
         }
     }
 }
