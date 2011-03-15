@@ -48,8 +48,8 @@ namespace Nop.Core.Infrastructure
         /// <returns>A new factory</returns>
         public static IEngine CreateEngineInstance(NopConfig config)
         {
-            try
-            {
+            //try
+            //{
                 if (config != null && !string.IsNullOrEmpty(config.EngineType))
                 {
                     var engineType = Type.GetType(config.EngineType);
@@ -61,18 +61,18 @@ namespace Nop.Core.Infrastructure
                 }
 
                 return new NopEngine();
-            }
-            catch (SecurityException ex)
-            {
-                Trace.TraceInformation("Caught SecurityException, reverting to MediumTrustEngine. " + ex);
-                //TODO:Support medium trust?
-                return null;
-            }
-            catch (Exception ex)
-            {
-                //TODO remove try-catch.
-                return null;
-            }
+            //}
+            //catch (SecurityException ex)
+            //{
+            //    Trace.TraceInformation("Caught SecurityException, reverting to MediumTrustEngine. " + ex);
+            //    //TODO:Support medium trust?
+            //    return null;
+            //}
+            //catch (Exception ex)
+            //{
+            //    //TODO remove try-catch.
+            //    return null;
+            //}
         }
 
         #endregion
