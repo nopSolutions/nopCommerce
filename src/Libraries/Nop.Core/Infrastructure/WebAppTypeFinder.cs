@@ -15,6 +15,10 @@ namespace Nop.Core.Infrastructure
     {
         private bool ensureBinFolderAssembliesLoaded = true;
         private bool binFolderAssembliesLoaded = false;
+
+        private bool ensurePluginFolderAssembliesLoaded = true;
+        private bool pluginFolderAssembliesLoaded = false;
+
         private IWebHelper _webHelper;
 
         public WebAppTypeFinder(IWebHelper webHelper)
@@ -26,24 +30,44 @@ namespace Nop.Core.Infrastructure
         {
             this._webHelper = webHelper;
             this.ensureBinFolderAssembliesLoaded = config.DynamicDiscovery;
+            this.ensurePluginFolderAssembliesLoaded = config.DynamicDiscovery;
             //foreach (var assembly in config.Assemblies.AllElements)
             //    AssemblyNames.Add(assembly.Assembly);
         }
 
         #region Properties
-        /// <summary>Gets or sets wether assemblies in the bin folder of the web application should be specificly checked for beeing loaded on application load. This is need in situations where plugins need to be loaded in the AppDomain after the application been reloaded.</summary>
+
+        /// <summary>
+        /// Gets or sets wether assemblies in the bin folder of the web application should be specificly checked for beeing loaded on application load. This is need in situations where plugins need to be loaded in the AppDomain after the application been reloaded.
+        /// </summary>
         public bool EnsureBinFolderAssembliesLoaded
         {
             get { return ensureBinFolderAssembliesLoaded; }
             set { ensureBinFolderAssembliesLoaded = value; }
         }
 
+        /// <summary>
+        /// Gets or sets wether assemblies in the bin folder of the web application should be specificly checked for beeing loaded on application load. This is need in situations where plugins need to be loaded in the AppDomain after the application been reloaded.
+        /// </summary>
+        public bool EnsurePluginFolderAssembliesLoaded
+        {
+            get { return ensurePluginFolderAssembliesLoaded; }
+            set { ensurePluginFolderAssembliesLoaded = value; }
+        }
+
+
         #endregion
 
         #region Methods
         public override IList<Assembly> GetAssemblies()
         {
-            if (EnsureBinFolderAssembliesLoaded && !binFolderAssembliesLoaded)
+            if (this.EnsurePluginFolderAssembliesLoaded && !pluginFolderAssembliesLoaded)
+            {
+                pluginFolderAssembliesLoaded = true;
+                LoadMatchingAssemblies(_webHelper.MapPath("~/Plugins"));
+            }
+
+            if (this.EnsureBinFolderAssembliesLoaded && !binFolderAssembliesLoaded)
             {
                 binFolderAssembliesLoaded = true;
                 LoadMatchingAssemblies(_webHelper.MapPath("~/bin"));

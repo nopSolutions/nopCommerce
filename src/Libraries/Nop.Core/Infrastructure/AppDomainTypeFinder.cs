@@ -209,11 +209,18 @@ namespace Nop.Core.Infrastructure
             {
                 try
                 {
-                    Assembly a = Assembly.ReflectionOnlyLoadFrom(dllPath);
-                    if (Matches(a.FullName) && !loadedAssemblyNames.Contains(a.FullName))
+                    var an = AssemblyName.GetAssemblyName(dllPath);
+                    if (Matches(an.FullName) && !loadedAssemblyNames.Contains(an.FullName))
                     {
-                        App.Load(a.FullName);
+                        App.Load(an);
                     }
+                    
+                    //old loading stuff
+                    //Assembly a = Assembly.ReflectionOnlyLoadFrom(dllPath);
+                    //if (Matches(a.FullName) && !loadedAssemblyNames.Contains(a.FullName))
+                    //{
+                    //    App.Load(a.FullName);
+                    //}
                 }
                 catch (BadImageFormatException ex)
                 {
@@ -221,14 +228,5 @@ namespace Nop.Core.Infrastructure
                 }
             }
         }
-
-
-
-
-
-
-
-
-
     }
 }
