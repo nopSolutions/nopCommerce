@@ -1,5 +1,9 @@
 ﻿#region Using...
 
+using System;
+using System.IO;
+using System.Web.Mvc;
+using System.Web.WebPages;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
@@ -58,6 +62,25 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         }
 
         #endregion Methods 
+
+        public HelperResult RenderWrappedSection(string name,  object wrapperHtmlAttributes)
+        {
+            Action<TextWriter> action = delegate(TextWriter tw)
+                                {
+                                    var htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(wrapperHtmlAttributes);
+                                    var tagBuilder = new TagBuilder("div");
+                                    tagBuilder.MergeAttributes(htmlAttributes);
+
+                                    var section = RenderSection(name, false);
+                                    if (section != null)
+                                    {
+                                        tw.Write(tagBuilder.ToString(TagRenderMode.StartTag));
+                                        section.WriteTo(tw);
+                                        tw.Write(tagBuilder.ToString(TagRenderMode.EndTag));
+                                    }
+                                };
+            return new HelperResult(action);
+        }
     }
 
     public abstract class WebViewPage : WebViewPage<dynamic>

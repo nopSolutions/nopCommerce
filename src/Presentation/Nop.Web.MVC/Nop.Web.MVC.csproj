@@ -132,7 +132,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\defaultResources.admin.nopres.xml" />
+    <Content Include="App_Data\defaultResources.admin.nopres.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\defaultResources.public.nopres.xml" />
     <Content Include="Areas\Admin\sitemap.xml" />
     <Content Include="Areas\Public\Content\images\bbeditor-button-bg.gif" />
@@ -794,6 +796,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Log\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Public\Views\Home\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
