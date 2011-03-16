@@ -1,98 +1,121 @@
 ﻿
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Web;
-//using System.IO;
-//using System.Web.Hosting;
-//using System.Web.Compilation;
-//using System.Reflection;
-//using Nop.Core.Plugins;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.IO;
+using System.Web.Hosting;
+using System.Web.Compilation;
+using System.Reflection;
+using Nop.Core.Plugins;
 
-//// SEE THIS POST for full details of what this does
-////http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
+// SEE THIS POST for full details of what this does
+//http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
+//contributor is Umbraco (umbraco.org)
 
-////TODO uncomment PreApplicationStartMethod because it's used to load all plugin assemblies
-////[assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
+//TODO uncomment PreApplicationStartMethod because it's used to load all plugin assemblies
+[assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
 
 
-//TODO delete this file after tasting new implementation of plugin loading in WebAppTypeFinder
-//namespace Nop.Core.Plugins
-//{
-//    /// <summary>
-//    /// Plugin manager
-//    /// </summary>
-//    public class PluginManager
-//    {
+namespace Nop.Core.Plugins
+{
+    /// <summary>
+    /// Plugin manager
+    /// </summary>
+    public class PluginManager
+    {
 
-//        internal const string PluginsPath = "~/Plugins";
-//        internal const string ShadowCopyPath = "~/Plugins/bin";
+        internal const string PluginsPath = "~/Plugins";
+        internal const string ShadowCopyPath = "~/Plugins/bin";
 
-//        private static readonly object _locker = new object();
+        private static readonly object _locker = new object();
+        private volatile static bool _isInit = false;
 
-//        static PluginManager()
-//        {
-//            //UNDONE HostingEnvironment doesn't support mocking (required for unit testing)
-//            //We should use IStorageProvider
-//            if (HostingEnvironment.IsHosted)
-//            {
-//                PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
-//                ShadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
-//            }
-//        }
+        /// <summary>
+        /// Returns a collection of all referenced plugin assemblies that have been shadow copied
+        /// </summary>
+        public static IEnumerable<Assembly> ReferencedPlugins { get; protected set; }
 
-//        /// <summary>
-//        /// The source plugin folder from which to shadow copy from
-//        /// </summary>
-//        /// <remarks>
-//        /// This folder can contain sub folderst to organize plugin types
-//        /// </remarks>
-//        private static readonly DirectoryInfo PluginFolder;
+        public static void Initialize()
+        {
+            if (!_isInit)
+            {
+                lock (_locker)
+                {
+                    //double check
+                    if (!_isInit)
+                    {
+                        // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
+                        // prevent app from starting altogether
+                        var pluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
+                        var shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
 
-//        /// <summary>
-//        /// The folder to shadow copy the plugin DLLs to use for running the app
-//        /// </summary>
-//        private static readonly DirectoryInfo ShadowCopyFolder;
+                        var referencedAssemblies = new List<Assembly>();
 
-//        /// <summary>
-//        /// Returns a collection of all referenced plugin assemblies that have been shadow copied
-//        /// </summary>
-//        public static IEnumerable<Assembly> ReferencedPlugins { get; protected set; }
+                        Directory.CreateDirectory(shadowCopyFolder.FullName);
+                        //get list of all DLLs in bin
+                        var binFiles = shadowCopyFolder.GetFiles("*.dll", SearchOption.AllDirectories);
+                        //get list of all DLLs in plugins (not in bin!)
+                        var pluginFiles = pluginFolder.GetFiles("*.dll", SearchOption.AllDirectories)
+                            .Where(x => !binFiles.Select(q => q.FullName).Contains(x.FullName));
 
-//        public static void Initialize()
-//        {
-//            lock (_locker)
-//            {
-//                var referencedAssemblies = new List<Assembly>();
 
-//                Directory.CreateDirectory(ShadowCopyFolder.FullName);
+#if RELEASE
+                        //Visual studio maintains a lock on shadow copied files sometimes which is really annoying while developing
+                        //so just to be slightly less annoying while developing, we won't clear them out and simply overwrite them below
+                        //if they've chagned.
 
-//                //UNDONE how do we prevent assemblies from locking?
-//                //see here http://stackoverflow.com/questions/1646049/how-to-load-an-assembly-without-using-assembly-load
-                
-//                //clear out plugins
-//                foreach (var f in ShadowCopyFolder.GetFiles("*.dll", SearchOption.AllDirectories))
-//                {
-//                    File.Delete(f.FullName);
-//                }
+                        //clear out shadow copied plugins
+                        foreach (var f in binFiles)
+                        {                            
+                            if (shouldDelete)
+                            {
+                                File.Delete(f.FullName);    
+                            }
+                        }
+#endif
 
-//                //shadow copy files
-//                foreach (var plug in PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories))
-//                {
-//                    var di = Directory.CreateDirectory(ShadowCopyFolder.FullName);
-//                    File.Copy(plug.FullName, Path.Combine(di.FullName, plug.Name), true);
-//                }
+                        //shadow copy files
+                        foreach (var plug in pluginFiles)
+                        {
+                            //var shadowCopyPlugFolder = Directory.CreateDirectory(Path.Combine(shadowCopyFolder.FullName, plug.Directory.Name));
+                            var shadowCopyPlugFolder = new DirectoryInfo(shadowCopyFolder.FullName);
+                            var shouldCopy = true;
+                            var shadowCopyPlugFileName = Path.Combine(shadowCopyPlugFolder.FullName, plug.Name);
 
-//                foreach (var file in ShadowCopyFolder.GetFiles("*.dll", SearchOption.AllDirectories))
-//                {
-//                    var an = AssemblyName.GetAssemblyName(file.FullName);
-//                    var a = Assembly.Load(an.FullName);
-//                    BuildManager.AddReferencedAssembly(a);
-//                    referencedAssemblies.Add(a);
-//                }
+#if DEBUG
+                            //check if a shadow copied file already exists and if it does, check if its updated, if not don't copy
+                            if (File.Exists(shadowCopyPlugFileName))
+                            {
+                                if (File.GetCreationTimeUtc(shadowCopyPlugFileName).Ticks == plug.CreationTimeUtc.Ticks)
+                                {
+                                    shouldCopy = false;
+                                }
+                            }
+#endif
 
-//                ReferencedPlugins = referencedAssemblies;
-//            }
-//        }
-//    }
-//}
+                            if (shouldCopy)
+                            {
+                                File.Copy(plug.FullName, Path.Combine(shadowCopyPlugFolder.FullName, plug.Name), true);
+                            }
+                        }
+
+                        foreach (var a in
+                            shadowCopyFolder
+                            .GetFiles("*.dll", SearchOption.AllDirectories)
+                            .Select(x => AssemblyName.GetAssemblyName(x.FullName))
+                            .Select(x => Assembly.Load(x.FullName)))
+                        {
+                            BuildManager.AddReferencedAssembly(a);
+                            referencedAssemblies.Add(a);
+                        }
+
+                        ReferencedPlugins = referencedAssemblies;
+
+                        _isInit = true;
+                    }
+                }
+            }
+        }
+    }
+}
