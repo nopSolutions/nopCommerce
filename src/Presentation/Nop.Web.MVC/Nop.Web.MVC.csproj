@@ -42,9 +42,6 @@
     <Reference Include="Autofac.Integration.Mvc, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Autofac.Mvc3.2.4.5.724\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="AutofacContrib.CommonServiceLocator">
-      <HintPath>..\..\packages\AutofacContrib-2.4.4.705-NET40\Library\AutofacContrib.CommonServiceLocator.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\..\packages\EFCodeFirst.0.8\lib\EntityFramework.dll</HintPath>
     </Reference>
