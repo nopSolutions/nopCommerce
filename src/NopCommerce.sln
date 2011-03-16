@@ -47,9 +47,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.ExchangeRate.McE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.ExchangeRate.EcbExchange", "Plugins\Nop.Plugin.ExchangeRate.EcbExchange\Nop.Plugin.ExchangeRate.EcbExchange.csproj", "{6DF00C56-EC49-4AB8-8B29-404E3694026C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.SMS.Clickatell", "Nop.Plugin.SMS.Clickatell\Nop.Plugin.SMS.Clickatell.csproj", "{E3362B5B-DA5A-4515-BCB0-0DF982F80E89}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.SMS.Clickatell", "Plugins\Nop.Plugin.SMS.Clickatell\Nop.Plugin.SMS.Clickatell.csproj", "{E3362B5B-DA5A-4515-BCB0-0DF982F80E89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.SMS.Verizon", "Nop.Plugin.SMS.Verizon\Nop.Plugin.SMS.Verizon.csproj", "{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.SMS.Verizon", "Plugins\Nop.Plugin.SMS.Verizon\Nop.Plugin.SMS.Verizon.csproj", "{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
