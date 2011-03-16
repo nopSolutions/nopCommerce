@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac;
-using AutofacContrib.CommonServiceLocator;
-using FluentValidation.Attributes;
 using FluentValidation.Mvc;
-using Microsoft.Practices.ServiceLocation;
-using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Services.Installation;
-using Nop.Services.Security.Permissions;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Localization;
 using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
@@ -71,11 +62,11 @@ namespace Nop.Web.MVC
                 new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
         }
 
-        protected void RegisterServiceLocator()
-        {
-            var serviceLocator = new AutofacServiceLocator(EngineContext.Current.ContainerManager.Scope());
-            ServiceLocator.SetLocatorProvider(() => serviceLocator);
-        }
+        //protected void RegisterServiceLocator()
+        //{
+        //    var serviceLocator = new AutofacServiceLocator(EngineContext.Current.ContainerManager.Scope());
+        //    ServiceLocator.SetLocatorProvider(() => serviceLocator);
+        //}
 
         protected void InstallDatabase(object sender, EventArgs e)
         {
