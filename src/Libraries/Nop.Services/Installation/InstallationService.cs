@@ -529,11 +529,11 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<RewardPointsSettings>>()
                 .SaveSettings(new RewardPointsSettings()
                 {
-                    RewardPointsEnabled = true,
-                    RewardPointsExchangeRate = 1,
-                    RewardPointsForRegistration = 0,
-                    RewardPointsForPurchases_Amount = 10,
-                    RewardPointsForPurchases_Points = 1
+                    Enabled = true,
+                    ExchangeRate = 1,
+                    PointsForRegistration = 0,
+                    PointsForPurchases_Amount = 10,
+                    PointsForPurchases_Points = 1
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>()

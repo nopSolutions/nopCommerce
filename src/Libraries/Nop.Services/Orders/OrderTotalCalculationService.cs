@@ -763,7 +763,7 @@ namespace Nop.Services.Orders
             if (customer != null)
                 useRewardPoints = customer.UseRewardPointsDuringCheckout;
             
-            if (_rewardPointsSettings.RewardPointsEnabled && useRewardPoints && customer != null)
+            if (_rewardPointsSettings.Enabled && useRewardPoints && customer != null)
             {
                 int rewardPointsBalance = customer.GetRewardPointsBalance();
                 decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);
@@ -843,7 +843,7 @@ namespace Nop.Services.Orders
             if (rewardPoints <= 0)
                 return decimal.Zero;
 
-            result = rewardPoints * _rewardPointsSettings.RewardPointsExchangeRate;
+            result = rewardPoints * _rewardPointsSettings.ExchangeRate;
             result = Math.Round(result, 2);
             return result;
         }
@@ -859,8 +859,8 @@ namespace Nop.Services.Orders
             if (amount <= 0)
                 return 0;
 
-            if (_rewardPointsSettings.RewardPointsExchangeRate > 0)
-                result = (int)Math.Ceiling(amount / _rewardPointsSettings.RewardPointsExchangeRate);
+            if (_rewardPointsSettings.ExchangeRate > 0)
+                result = (int)Math.Ceiling(amount / _rewardPointsSettings.ExchangeRate);
             return result;
         }
  

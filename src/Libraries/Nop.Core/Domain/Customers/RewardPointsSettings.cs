@@ -9,27 +9,27 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets a value indicating whether Reward Points Program is enabled
         /// </summary>
-        public bool RewardPointsEnabled { get; set; }
+        public bool Enabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether Reward Points exchange rate
+        /// Gets or sets a value of Reward Points exchange rate
         /// </summary>
-        public decimal RewardPointsExchangeRate { get; set; }
+        public decimal ExchangeRate { get; set; }
 
         /// <summary>
         /// Gets or sets a number of points awarded for registration
         /// </summary>
-        public int RewardPointsForRegistration { get; set; }
+        public int PointsForRegistration { get; set; }
 
         /// <summary>
         /// Gets or sets a number of points awarded for purchases (amount in primary store currency)
         /// </summary>
-        public decimal RewardPointsForPurchases_Amount { get; set; }
+        public decimal PointsForPurchases_Amount { get; set; }
 
         /// <summary>
         /// Gets or sets a number of points awarded for purchases
         /// </summary>
-        public int RewardPointsForPurchases_Points { get; set; }
+        public int PointsForPurchases_Points { get; set; }
 
     }
 }
