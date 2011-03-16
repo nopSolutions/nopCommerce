@@ -92,17 +92,20 @@ namespace Nop.Services.Logging
         public IPagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc,
             string message, LogLevel? logLevel, int pageIndex, int pageSize)
         {
-            int? logLevelId = null;
+            var query = _logRepository.Table;
+            if (fromUtc.HasValue)
+                query = query.Where(l => fromUtc.Value <= l.CreatedOnUtc);
+            if (toUtc.HasValue)
+                query = query.Where(l => toUtc.Value >= l.CreatedOnUtc);
             if (logLevel.HasValue)
-                logLevelId = (int)logLevel.Value;
+            {
+                int logLevelId = (int)logLevel.Value;
+                query = query.Where(l => logLevelId == l.LogLevelId);
+            }
+             if (!String.IsNullOrEmpty(message))
+                query = query.Where(l => l.Message.Contains(message) || l.Exception.Contains(message));
+            query = query.OrderByDescending(l => l.CreatedOnUtc);
 
-            var query = from l in _logRepository.Table
-                        where (!fromUtc.HasValue || fromUtc.Value <= l.CreatedOnUtc) &&
-                        (!toUtc.HasValue || toUtc.Value >= l.CreatedOnUtc) &&
-                        (!logLevelId.HasValue || logLevelId.Value == l.LogLevelId) &&
-                        (String.IsNullOrEmpty(message) || l.Message.Contains(message) || l.Exception.Contains(message))
-                        orderby l.CreatedOnUtc descending
-                        select l;
             var log = new PagedList<Log>(query, pageIndex, pageSize);
             return log;
         }
