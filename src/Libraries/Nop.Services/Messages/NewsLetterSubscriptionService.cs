@@ -160,17 +160,15 @@ namespace Nop.Services.Messages
             //var newsletterSubscriptions = query2.ToList();
             //return newsletterSubscriptions;
 
-            //TODO implement (customer entity doesn't have Email property anymore
-            var query = from nls in _newsLetterSubscriptionRepository.Table
-                        where (String.IsNullOrEmpty(email) || nls.Email.Contains(email)) &&
-                        (showHidden || nls.Active)
-                        orderby nls.Email
-                        select nls;
 
-            //var newsletterSubscriptions = query2.ToList();
-            //return newsletterSubscriptions;
+            var query = _newsLetterSubscriptionRepository.Table;
+            if (!String.IsNullOrEmpty(email))
+                query = query.Where(nls => nls.Email.Contains(email));
+            query = query.Where(nls => showHidden || nls.Active);
+            query = query.OrderBy(nls => nls.Email);
 
-            throw new NotImplementedException();
+            var newsletterSubscriptions = query.ToList();
+            return newsletterSubscriptions;
         }
 
         /// <summary>
