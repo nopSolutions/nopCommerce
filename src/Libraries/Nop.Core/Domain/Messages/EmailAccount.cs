@@ -43,7 +43,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets a value that controls whether the SmtpClient uses Secure Sockets Layer (SSL) to encrypt the connection
         /// </summary>
-        public bool EnableSSL { get; set; }
+        public bool EnableSsl { get; set; }
 
         /// <summary>
         /// Gets or sets a value that controls whether the default system credentials of the application are sent with requests.
@@ -62,11 +62,6 @@ namespace Nop.Core.Domain.Messages
                 return this.Email;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the collection of message templates
-        /// </summary>
-        public virtual ICollection<MessageTemplate> MessageTemplates { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of queued emails

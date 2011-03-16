@@ -51,7 +51,7 @@ namespace Nop.Services.Messages
                 smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
                 smtpClient.Host = emailAccount.Host;
                 smtpClient.Port = emailAccount.Port;
-                smtpClient.EnableSsl = emailAccount.EnableSSL;
+                smtpClient.EnableSsl = emailAccount.EnableSsl;
                 if (emailAccount.UseDefaultCredentials)
                     smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
                 else

@@ -35,7 +35,7 @@ namespace Nop.Data.Tests
                     Port = 125,
                     Username = "John",
                     Password = "111",
-                    EnableSSL = true,
+                    EnableSsl = true,
                     UseDefaultCredentials = true
                 }
 
