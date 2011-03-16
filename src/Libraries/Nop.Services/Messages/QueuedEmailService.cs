@@ -99,20 +99,22 @@ namespace Nop.Services.Messages
         {
             fromEmail = (fromEmail ?? String.Empty).Trim();
             toEmail = (toEmail ?? String.Empty).Trim();
-
-            var query = from qe in _queuedEmailRepository.Table
-                        where 
-                        (String.IsNullOrEmpty(fromEmail) || qe.From.Contains(fromEmail)) &&
-                        (String.IsNullOrEmpty(toEmail) || qe.To.Contains(toEmail)) &&
-                        (!startTime.HasValue || qe.CreatedOn >= startTime) &&
-                        (!endTime.HasValue || qe.CreatedOn <= endTime) &&
-                        (!loadNotSentItemsOnly || qe.SentOn.HasValue) &&
-                        qe.SendTries < maxSendTries
-                        select qe;
-
+            
+            var query = _queuedEmailRepository.Table;
+            if (!String.IsNullOrEmpty(fromEmail))
+                query = query.Where(qe => qe.From.Contains(fromEmail));
+            if (!String.IsNullOrEmpty(toEmail))
+                query = query.Where(qe => qe.To.Contains(toEmail));
+            if (startTime.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc >= startTime);
+            if (endTime.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc <= endTime);
+            if (loadNotSentItemsOnly)
+                query = query.Where(qe => qe.SentOnUtc.HasValue);
+            query = query.Where(qe => qe.SendTries < maxSendTries);
             if (queuedEmailCount > 0)
                 query = query.Take(queuedEmailCount);
-            query = query.OrderByDescending(qe => qe.Priority).ThenBy(qe => qe.CreatedOn);
+            query = query.OrderByDescending(qe => qe.Priority).ThenBy(qe => qe.CreatedOnUtc);
 
             var queuedEmails = query.ToList();
             return queuedEmails;

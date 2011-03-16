@@ -482,7 +482,7 @@ namespace Nop.Services.Messages
                 Bcc = bcc,
                 Subject = subjectReplaced,
                 Body = bodyReplaced,
-                CreatedOn = DateTime.UtcNow,
+                CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = emailAccount.Id
             };
 

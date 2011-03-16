@@ -56,9 +56,9 @@ namespace Nop.Core.Domain.Messages
         public string Body { get; set; }
 
         /// <summary>
-        /// Gets or sets the date and time of item creation
+        /// Gets or sets the date and time of item creation in UTC
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the send tries
@@ -68,7 +68,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the sent date and time
         /// </summary>
-        public DateTime? SentOn { get; set; }
+        public DateTime? SentOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the used email account identifier

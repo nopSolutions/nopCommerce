@@ -69,7 +69,7 @@ namespace Nop.Plugin.SMS.Verizon
                     ToName = string.Empty,
                     Subject = _storeSettings.StoreName,
                     Body = text,
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOnUtc = DateTime.UtcNow,
                     EmailAccountId = emailAccount.Id
                 };
 

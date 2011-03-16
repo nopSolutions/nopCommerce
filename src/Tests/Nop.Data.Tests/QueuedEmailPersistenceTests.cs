@@ -24,9 +24,9 @@ namespace Nop.Data.Tests
                 Bcc = "Bcc",
                 Subject = "Subject",
                 Body = "Body",
-                CreatedOn = new DateTime(2010, 01, 01),
+                CreatedOnUtc = new DateTime(2010, 01, 01),
                 SendTries = 5,
-                SentOn = new DateTime(2010, 02, 02),
+                SentOnUtc = new DateTime(2010, 02, 02),
                 EmailAccount = new EmailAccount
                 {
                     Email = "admin@yourstore.com",
@@ -53,9 +53,9 @@ namespace Nop.Data.Tests
             fromDb.Bcc.ShouldEqual("Bcc");
             fromDb.Subject.ShouldEqual("Subject");
             fromDb.Body.ShouldEqual("Body");
-            fromDb.CreatedOn.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.SendTries.ShouldEqual(5);
-            fromDb.SentOn.Value.ShouldEqual(new DateTime(2010, 02, 02));
+            fromDb.SentOnUtc.Value.ShouldEqual(new DateTime(2010, 02, 02));
 
             fromDb.EmailAccount.ShouldNotBeNull();
             fromDb.EmailAccount.DisplayName.ShouldEqual("Administrator");

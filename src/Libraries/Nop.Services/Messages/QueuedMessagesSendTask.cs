@@ -42,7 +42,7 @@ namespace Nop.Services.Messages
                     _emailSender.SendEmail(queuedEmail.EmailAccount, queuedEmail.Subject, queuedEmail.Body,
                        queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName, bcc, cc);
 
-                    queuedEmail.SentOn = DateTime.UtcNow;
+                    queuedEmail.SentOnUtc = DateTime.UtcNow;
                 }
                 catch (Exception exc)
                 {

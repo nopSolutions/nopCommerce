@@ -101,7 +101,7 @@ namespace Nop.Data.Tests
                         Bcc = "Bcc",
                         Subject = "Subject",
                         Body = "Body",
-                        CreatedOn = new DateTime(2010, 01, 01)
+                        CreatedOnUtc = new DateTime(2010, 01, 01)
                     }
                 }
             };
