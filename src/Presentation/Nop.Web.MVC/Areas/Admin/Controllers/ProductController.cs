@@ -22,7 +22,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult _AjaxComboBo(string text)
         {
-            var products = _productService.GetAllProducts().Where(x => x.Name.ToLower().Contains(text.ToLower()));
+            var products = _productService.GetAllProducts(true).Where(x => x.Name.ToLower().Contains(text.ToLower()));
 
             return new JsonResult
             {
