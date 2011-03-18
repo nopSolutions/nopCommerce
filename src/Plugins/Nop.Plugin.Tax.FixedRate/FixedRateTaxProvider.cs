@@ -28,7 +28,6 @@ namespace Nop.Plugin.Tax.FixedRate
         {
             get
             {
-                //TODO localize
                 return "Fixed tax rate provider";
             }
         }
@@ -40,7 +39,7 @@ namespace Nop.Plugin.Tax.FixedRate
         {
             get
             {
-                return "FixedTaxRate";
+                return "Tax.FixedRate";
             }
         }
 

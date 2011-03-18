@@ -542,7 +542,7 @@ namespace Nop.Services.Installation
                 {
                     PrimaryStoreCurrencyId = currencyUSD.Id,
                     PrimaryExchangeRateCurrencyId = currencyUSD.Id,
-                    ActiveExchangeRateProviderSystemName = "ECB"
+                    ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB"
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<MeasureSettings>>()
@@ -584,7 +584,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new ShippingSettings()
                 {
                     //TODO IList<> property is not saved because GenericListTypeConverter is not loaded yet
-                    ActiveShippingRateComputationMethodSystemNames = new List<string>() { "FixedRateShipping" },
+                    ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<TaxSettings>>()
@@ -592,7 +592,7 @@ namespace Nop.Services.Installation
                 {
                     TaxBasedOn = TaxBasedOn.BillingAddress,
                     TaxDisplayType= TaxDisplayType.ExcludingTax,
-                    ActiveTaxProviderSystemName = "FixedTaxRate",
+                    ActiveTaxProviderSystemName = "Tax.FixedRate",
                     DefaultTaxAddressId = 0,
                     DisplayTaxSuffix = false,
                     DisplayTaxRates= false,

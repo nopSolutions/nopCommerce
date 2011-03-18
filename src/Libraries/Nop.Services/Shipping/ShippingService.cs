@@ -99,10 +99,10 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
-        /// Load tax provider by system name
+        /// Load shipping rate computation method by system name
         /// </summary>
         /// <param name="systemName">System name</param>
-        /// <returns>Found tax provider</returns>
+        /// <returns>Found Shipping rate computation method</returns>
         public IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName)
         {
             var providers = LoadAllShippingRateComputationMethods();
@@ -111,9 +111,9 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
-        /// Load all tax providers
+        /// Load all shipping rate computation methods
         /// </summary>
-        /// <returns>Tax providers</returns>
+        /// <returns>Shipping rate computation methods</returns>
         public IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods()
         {
             var providers = _pluginFinder.GetPlugins<IShippingRateComputationMethod>();

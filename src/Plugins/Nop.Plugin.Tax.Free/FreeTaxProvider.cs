@@ -32,7 +32,7 @@ namespace Nop.Plugin.Tax.Free
         {
             get
             {
-                return "FreeTaxRate";
+                return "Tax.FreeTaxRate";
             }
         }
         

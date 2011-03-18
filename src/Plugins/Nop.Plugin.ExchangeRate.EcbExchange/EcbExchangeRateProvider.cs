@@ -80,7 +80,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         {
             get
             {
-                return "ECB";
+                return "CurrencyExchange.ECB";
             }
         }
 

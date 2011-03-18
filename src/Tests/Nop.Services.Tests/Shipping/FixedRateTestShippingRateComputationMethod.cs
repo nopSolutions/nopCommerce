@@ -90,21 +90,6 @@ namespace Nop.Services.Tests.Shipping
             }
         }
 
-        /// <summary>
-        /// Gets or sets the setting service
-        /// </summary>
-        public ISettingService SettingService { get; set; }
-
-        /// <summary>
-        /// Gets or sets the measure service
-        /// </summary>
-        public IMeasureService MeasureService { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipping service
-        /// </summary>
-        public IShippingService ShippingService { get; set; }
-
         #endregion
     }
 }

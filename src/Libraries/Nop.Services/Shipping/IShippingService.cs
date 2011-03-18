@@ -18,16 +18,16 @@ namespace Nop.Services.Shipping
         IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods();
 
         /// <summary>
-        /// Load tax provider by system name
+        /// Load shipping rate computation method by system name
         /// </summary>
         /// <param name="systemName">System name</param>
-        /// <returns>Found tax provider</returns>
+        /// <returns>Found Shipping rate computation method</returns>
         IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName);
 
         /// <summary>
-        /// Load all tax providers
+        /// Load all shipping rate computation methods
         /// </summary>
-        /// <returns>Tax providers</returns>
+        /// <returns>Shipping rate computation methods</returns>
         IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods();
 
 

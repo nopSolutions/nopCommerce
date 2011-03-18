@@ -27,7 +27,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         {
             get
             {
-                return "MustBeAssignedToCustomerRole";
+                return "DiscountRequirement.MustBeAssignedToCustomerRole";
             }
         }
 

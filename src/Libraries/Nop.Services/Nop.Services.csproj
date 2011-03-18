@@ -134,8 +134,22 @@
     <Compile Include="Orders\OrderTotalCalculationService.cs" />
     <Compile Include="Orders\ShoppingCartExtensions.cs" />
     <Compile Include="Orders\ShoppingCartService.cs" />
+    <Compile Include="Payments\RefundPaymentResult.cs" />
+    <Compile Include="Payments\RefundPaymentRequest.cs" />
+    <Compile Include="Payments\CapturePaymentRequest.cs" />
+    <Compile Include="Payments\CapturePaymentResult.cs" />
+    <Compile Include="Payments\CancelRecurringPaymentRequest.cs" />
+    <Compile Include="Payments\CancelRecurringPaymentResult.cs" />
+    <Compile Include="Payments\VoidPaymentRequest.cs" />
+    <Compile Include="Payments\VoidPaymentResult.cs" />
+    <Compile Include="Payments\PostProcessPaymentRequest.cs" />
+    <Compile Include="Payments\IPaymentMethod.cs" />
     <Compile Include="Payments\IPaymentService.cs" />
+    <Compile Include="Payments\ProcessPaymentRequest.cs" />
+    <Compile Include="Payments\PaymentMethodType.cs" />
     <Compile Include="Payments\PaymentService.cs" />
+    <Compile Include="Payments\ProcessPaymentResult.cs" />
+    <Compile Include="Payments\RecurringPaymentType.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

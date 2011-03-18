@@ -141,7 +141,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
         {
             get
             {
-                return "FixedRateShipping";
+                return "Shipping.FixedRate";
             }
         }
 

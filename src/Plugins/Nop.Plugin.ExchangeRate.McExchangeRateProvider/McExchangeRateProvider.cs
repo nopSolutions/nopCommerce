@@ -129,7 +129,7 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         {
             get
             {
-                return "MoneyConverter";
+                return "CurrencyExchange.MoneyConverter";
             }
         }
 

@@ -72,6 +72,8 @@
     <Compile Include="Localization\LanguageServiceTests.cs" />
     <Compile Include="Orders\CheckoutAttributeParserAndFormatterTests.cs" />
     <Compile Include="Orders\OrderTotalCalculationServiceTests.cs" />
+    <Compile Include="Payments\TestPaymentMethod.cs" />
+    <Compile Include="Payments\PaymentServiceTests.cs" />
     <Compile Include="Security\EncryptionServiceTests.cs" />
     <Compile Include="Security\UserServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

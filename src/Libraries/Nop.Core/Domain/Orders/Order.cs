@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Payments;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -28,6 +29,21 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the customer identifier
         /// </summary>
         public int CustomerId { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the payment status identifier
+        /// </summary>
+        public int PaymentStatusId { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the payment method system name
+        /// </summary>
+        public string PaymentMethodSystemName { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the order total
+        /// </summary>
+        public decimal OrderTotal { get; set; }
 
         //UNDONE add other properties
 
@@ -60,5 +76,20 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets gift card usage history (gift card that were used with this order)
         /// </summary>
         public virtual ICollection<GiftCardUsageHistory> GiftCardUsageHistory { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the payment status
+        /// </summary>
+        public PaymentStatus PaymentStatus
+        {
+            get
+            {
+                return (PaymentStatus)this.PaymentStatusId;
+            }
+            set
+            {
+                this.PaymentStatusId = (int)value;
+            }
+        }
     }
 }

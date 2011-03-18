@@ -27,7 +27,7 @@ namespace Nop.Plugin.DiscountRules.BillingCountry
         {
             get
             {
-                return "BillingCountryIs";
+                return "DiscountRequirement.BillingCountryIs";
             }
         }
 

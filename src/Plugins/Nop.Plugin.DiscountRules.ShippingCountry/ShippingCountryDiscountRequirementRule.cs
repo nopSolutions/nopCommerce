@@ -28,7 +28,7 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
         {
             get
             {
-                return "ShippingCountryIs";
+                return "DiscountRequirement.ShippingCountryIs";
             }
         }
 

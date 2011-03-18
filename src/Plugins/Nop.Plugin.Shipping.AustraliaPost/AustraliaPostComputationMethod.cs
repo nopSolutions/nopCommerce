@@ -306,7 +306,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         {
             get
             {
-                return "AustraliaPost";
+                return "Shipping.AustraliaPost";
             }
         }
 
