@@ -13,7 +13,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security.Permissions;
 using Nop.Web.Framework.Controllers;
 
-namespace Nop.Web.MVC.Areas.Public.Controllers
+namespace Nop.Web.MVC.Controllers
 {
     public class HomeController : Controller
     {
@@ -22,6 +22,11 @@ namespace Nop.Web.MVC.Areas.Public.Controllers
         public HomeController(ILanguageService languageService)
         {
             _languageService = languageService;
+        }
+
+        public ActionResult Index()
+        {
+            return View();
         }
        
         public ActionResult List()

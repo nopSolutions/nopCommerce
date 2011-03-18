@@ -26,7 +26,7 @@ namespace Nop.Web.MVC
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Catalog", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+                new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
 
         }
@@ -50,6 +50,8 @@ namespace Nop.Web.MVC
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+            
+            //RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
 
             //set localization service for telerik
             Telerik.Web.Mvc.Infrastructure.DI.Current.Register(

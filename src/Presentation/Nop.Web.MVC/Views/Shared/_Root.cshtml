@@ -1,4 +1,4 @@
-﻿
+﻿@using Nop.Core.Infrastructure.DependencyManagement
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -11,11 +11,12 @@
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 </head>
 <body>
+
     <div class="master-wrapper-page">
         <div class="master-wrapper-content">
             <div class="header">
                 <div class="header-logo">
-                    <a href="@(EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation())" class="logo">
+                    <a href="@(Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation())" class="logo">
                         &nbsp; </a>
                 </div>
                 <div class="header-links-wrapper">
@@ -62,7 +63,7 @@
                     </div>
                 </div>
                 <ul class="topmenu">
-                    <li><a href="@(EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation())">
+                    <li><a href="@(Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation())">
                         Home page</a></li>
                     <li><a href="recentlyaddedproducts.aspx">New products</a> </li>
                     <li><a href="search.aspx">Search</a> </li>
