@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>NopCommerce public store. @ViewBag.Title</title>
@@ -71,17 +72,7 @@
                     <li><a href="contactus.aspx">Contact us</a></li>
                 </ul>
             </div>
-            <div class="master-main-content-right">
-                    @RenderWrappedSection("right", new { @class = "master-main-content-sidebar" })
-            </div>
-            <div class="master-main-content-left">
-                    @RenderWrappedSection("left", new { @class = "master-main-content-sidebar" })
-            </div>
-            <div class="master-main-content">
-                <div class="master-main-content-inner">
-                    @RenderBody()
-                </div>
-            </div>
+            @RenderBody()
             <div class="clear">
             </div>
         </div>
@@ -93,7 +84,7 @@
                 info here http://www.nopcommerce.com/copyrightremoval.aspx -->
             </div>
             <div class="footer-disclaimer">
-                @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), "Store name here")
+                @T("Content.CopyrightNotice", DateTime.Now.Year.ToString() , "Store name here")
             </div>
             <div class="footer-storetheme">
                 <!--UNDONE store theme selector -->

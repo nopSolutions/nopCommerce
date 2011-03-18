@@ -14,14 +14,14 @@ namespace Nop.Web.Framework.ViewEngines.Razor
 {
     public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel>
     {
-        #region Fields (2) 
+        #region Fields (2)
 
         private ILocalizationService _localizationService;
         private Localizer _localizer;
 
-        #endregion Fields 
+        #endregion Fields
 
-        #region Properties (1) 
+        #region Properties (1)
 
         public Localizer T
         {
@@ -50,9 +50,9 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             }
         }
 
-        #endregion Properties 
+        #endregion Properties
 
-        #region Methods (1) 
+        #region Methods (1)
 
         public override void InitHelpers()
         {
@@ -61,9 +61,9 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
         }
 
-        #endregion Methods 
+        #endregion Methods
 
-        public HelperResult RenderWrappedSection(string name,  object wrapperHtmlAttributes)
+        public HelperResult RenderWrappedSection(string name, object wrapperHtmlAttributes)
         {
             Action<TextWriter> action = delegate(TextWriter tw)
                                 {
@@ -80,6 +80,11 @@ namespace Nop.Web.Framework.ViewEngines.Razor
                                     }
                                 };
             return new HelperResult(action);
+        }
+
+        public HelperResult RenderSection(string sectionName, Func<object, HelperResult> defaultContent)
+        {
+            return IsSectionDefined(sectionName) ? RenderSection(sectionName) : defaultContent(new object());
         }
     }
 
