@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Database;
 using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
 using Nop.Services.Security.Permissions;

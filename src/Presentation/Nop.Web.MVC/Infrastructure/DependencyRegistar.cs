@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Database;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -50,9 +51,9 @@ namespace Nop.Web.MVC.Infrastructure
             //data layer
             //TODO make configurable
             //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
-            DbDatabase.DefaultConnectionFactory = new SqlCeConnectionFactory(
+            Database.DefaultConnectionFactory = new SqlCeConnectionFactory(
                 "System.Data.SqlServerCe.4.0", HostingEnvironment.MapPath("~/App_Data/"), "");
-            string connectionString = "Data Source=" + HostingEnvironment.MapPath("~/App_Data/") + @"\\Nop.Db.sdf;Persist Security Info=False";
+            string connectionString = "Data Source=" + HostingEnvironment.MapPath("~/App_Data/") + @"Nop.Db.sdf;Persist Security Info=False";
             builder.Register<IDbContext>(c => new NopObjectContext(connectionString)).InstancePerHttpRequest();
 
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();

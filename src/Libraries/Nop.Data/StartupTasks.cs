@@ -1,4 +1,4 @@
-﻿using System.Data.Entity.Database;
+﻿using System.Data.Entity;
 using Nop.Core.Tasks;
 
 namespace Nop.Data
@@ -7,7 +7,7 @@ namespace Nop.Data
     {
         public void Execute()
         {
-            DbDatabase.SetInitializer<NopObjectContext>(new DatabaseInitializer());
+            Database.SetInitializer<NopObjectContext>(new DatabaseInitializer());
         }
 
         public int Order

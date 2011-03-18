@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -396,7 +397,7 @@ namespace Nop.Services.Installation
             };
             AddLocaleResources(language1);
             _languageRepository.Insert(language1);
-
+            
             #endregion
 
             #region Currency

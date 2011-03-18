@@ -10,7 +10,8 @@ namespace Nop.Data.Mapping.Catalog
         public ProductRatingMap()
         {
             this.ToTable("ProductRating");
-            this.HasKey(pr => pr.Id);
+            //commented because it's already configured by CustomerContentMap class
+            //this.HasKey(pr => pr.Id);
 
 
             this.HasRequired(pr => pr.Product)

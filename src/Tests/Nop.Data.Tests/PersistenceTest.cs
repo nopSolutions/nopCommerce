@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Database;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using Nop.Core;
@@ -17,7 +18,7 @@ namespace Nop.Data.Tests
         [SetUp]
         public void SetUp()
         {
-            DbDatabase.DefaultConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
+            Database.DefaultConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
             context = new NopObjectContext(GetTestDbName());
             context.Database.Delete();
             context.Database.Create();

@@ -1,11 +1,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Database;
-using System.IO;
+using System.Data.Entity;
 using System.Linq;
-using System.Web.Hosting;
-using System.Xml;
 using Nop.Core.Infrastructure;
 
 

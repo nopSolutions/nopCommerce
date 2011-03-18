@@ -46,7 +46,7 @@ namespace Nop.Data
         public DbSet<CrossSellProduct> CrossSellProducts { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<CustomerAttribute> CustomerAttributes { get; set; }
-        public DbSet<CustomerContent> CustomerContent { get; set; }
+        //public DbSet<CustomerContent> CustomerContent { get; set; }
         public DbSet<CustomerRole> CustomerRoles { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Discount> Discounts { get; set; }
@@ -93,7 +93,7 @@ namespace Nop.Data
         public DbSet<TierPrice> TierPrices { get; set; }
         public DbSet<User> Users { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //dynamically load all configuration
             System.Type configType = typeof(LanguageMap);   //any of your configuration classes here
