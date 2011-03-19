@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Diagnostics.Contracts;
 
 namespace Nop.Core.Infrastructure
 {
@@ -76,6 +77,16 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
+        #region Internal Attributed Assembly class
+
+        private class AttributedAssembly
+        {
+            internal Assembly Assembly { get; set; }
+            internal Type PluginAttributeType { get; set; }
+        }
+
+        #endregion
+
         #region ITypeFinder
 
         public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
@@ -122,6 +133,62 @@ namespace Nop.Core.Infrastructure
             //        from t in a.GetTypes()
             //        where !t.IsInterface && assignTypeFrom.IsAssignableFrom(t) && (onlyConcreteClasses ? (t.IsClass && !t.IsAbstract) : true)
             //        select t).ToList();
+        }
+
+        public IEnumerable<Type> FindClassesOfType<T, TAssemblyAttribute>(bool onlyConcreteClasses = true) where TAssemblyAttribute : Attribute
+        {
+            var found = FindAssembliesWithAttribute<TAssemblyAttribute>();
+            return FindClassesOfType<T>(found, onlyConcreteClasses);
+        }
+
+        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>()
+        {
+            return FindAssembliesWithAttribute<T>(GetAssemblies());
+        }
+
+        /// <summary>
+        /// Caches attributed assembly information so they don't have to be re-read
+        /// </summary>
+        private readonly List<AttributedAssembly> _attributedAssemblies = new List<AttributedAssembly>();
+
+        /// <summary>
+        /// Caches the assembly attributes that have been searched for
+        /// </summary>
+        private readonly List<Type> _assemblyAttributesSearched = new List<Type>();
+
+        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>(IEnumerable<Assembly> assemblies)
+        {
+            //check if we've already searched this assembly);)
+            if (!_assemblyAttributesSearched.Contains(typeof(T)))
+            {
+                var foundAssemblies = (from assembly in assemblies
+                                      let customAttributes = assembly.GetCustomAttributes(typeof(T), false)
+                                      where customAttributes.Any()
+                                      select assembly).ToList();
+                //now update the cache
+                _assemblyAttributesSearched.Add(typeof(T));
+                foreach (var a in foundAssemblies)
+                {
+                    _attributedAssemblies.Add(new AttributedAssembly { Assembly = a, PluginAttributeType = typeof(T) });
+                }
+            }
+
+            //We must do a ToList() here because it is required to be serializable when using other app domains.
+            return _attributedAssemblies
+                .Where(x => x.PluginAttributeType.Equals(typeof(T)))
+                .Select(x => x.Assembly)
+                .ToList();
+        }
+
+        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>(DirectoryInfo assemblyPath)
+        {
+            var assemblies = (from f in Directory.GetFiles(assemblyPath.FullName, "*.dll")
+                              select Assembly.LoadFrom(f)
+                                  into assembly
+                                  let customAttributes = assembly.GetCustomAttributes(typeof(T), false)
+                                  where customAttributes.Any()
+                                  select assembly).ToList();
+            return FindAssembliesWithAttribute<T>(assemblies);
         }
 
         /// <summary>Gets tne assemblies related to the current implementation.</summary>
@@ -228,5 +295,8 @@ namespace Nop.Core.Infrastructure
                 }
             }
         }
+
+
+        
     }
 }
