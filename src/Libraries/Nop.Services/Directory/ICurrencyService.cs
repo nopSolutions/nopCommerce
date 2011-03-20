@@ -16,7 +16,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode);
+        IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode);
 
         /// <summary>
         /// Deletes currency
@@ -58,6 +58,15 @@ namespace Nop.Services.Directory
         void UpdateCurrency(Currency currency);
 
 
+
+        /// <summary>
+        /// Converts currency
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="exchangeRate">Currency exchange rate</param>
+        /// <returns>Converted value</returns>
+        decimal ConvertCurrency(decimal amount, decimal exchangeRate);
+
         /// <summary>
         /// Converts currency
         /// </summary>
@@ -90,7 +99,9 @@ namespace Nop.Services.Directory
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
         decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode);
+       
 
+        
         /// <summary>
         /// Load active exchange rate provider
         /// </summary>

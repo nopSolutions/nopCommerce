@@ -16,6 +16,6 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode);
+        IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode);
     }
 }

@@ -15,31 +15,28 @@ using Nop.Core.Domain.Orders;
 namespace Nop.Data.Tests
 {
     [TestFixture]
-    public class GiftCardUsageHistoryPersistenceTests : PersistenceTest
+    public class OrderNotePersistenceTests : PersistenceTest
     {
         [Test]
-        public void Can_save_and_load_giftCardUsageHistory()
+        public void Can_save_and_load_orderNote()
         {
-            var gcuh = new GiftCardUsageHistory()
+            var on = new OrderNote()
             {
-                UsedValue = 1.1M,
-                UsedValueInCustomerCurrency = 2.1M,
+                Order = GetTestOrder(),
+                Note = "Note1",
+                DisplayToCustomer= true,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                GiftCard = GetTestGiftCard(),
-                UsedWithOrder = GetTestOrder()
             };
 
-            var fromDb = SaveAndLoadEntity(gcuh);
+            var fromDb = SaveAndLoadEntity(on);
             fromDb.ShouldNotBeNull();
-            fromDb.UsedValue.ShouldEqual(1.1M);
-            fromDb.UsedValueInCustomerCurrency.ShouldEqual(2.1M);
+            fromDb.Note.ShouldEqual("Note1");
+            fromDb.DisplayToCustomer.ShouldEqual(true);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 
-            fromDb.GiftCard.ShouldNotBeNull();
-            fromDb.UsedWithOrder.ShouldNotBeNull();
+            fromDb.Order.ShouldNotBeNull();
         }
-
-
+        
         protected Customer GetTestCustomer()
         {
             return new Customer
@@ -50,23 +47,6 @@ namespace Nop.Data.Tests
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
-        }
-
-        protected GiftCard GetTestGiftCard()
-        {
-            return new GiftCard()
-             {
-                 Amount = 1,
-                 IsGiftCardActivated = true,
-                 GiftCardCouponCode = "Secret",
-                 RecipientName = "RecipientName 1",
-                 RecipientEmail = "a@b.c",
-                 SenderName = "SenderName 1",
-                 SenderEmail = "d@e.f",
-                 Message = "Message 1",
-                 IsRecipientNotified = true,
-                 CreatedOnUtc = new DateTime(2010, 01, 01),
-             };
         }
 
         protected Order GetTestOrder()

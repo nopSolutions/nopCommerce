@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using NUnit.Framework;
 using Nop.Tests;
@@ -77,10 +79,21 @@ namespace Nop.Data.Tests
 
         protected Order GetTestOrder()
         {
-            return new Order
+            return new Order()
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
+                BillingAddress = new Address()
+                {
+                    Country = new Country()
+                    {
+                        Name = "United States",
+                        TwoLetterIsoCode = "US",
+                        ThreeLetterIsoCode = "USA",
+                    },
+                    CreatedOnUtc = new DateTime(2010, 01, 01),
+                },
+                Deleted = true,
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
         }

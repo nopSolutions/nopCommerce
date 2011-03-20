@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Tests;
 using NUnit.Framework;
@@ -44,15 +46,26 @@ namespace Nop.Data.Tests
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
         }
-        
+
         protected Order GetTestOrder()
         {
-            return new Order
-            {
-                OrderGuid = Guid.NewGuid(),
-                Customer = GetTestCustomer(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
+            return new Order()
+                {
+                    OrderGuid = Guid.NewGuid(),
+                    Customer = GetTestCustomer(),
+                    BillingAddress = new Address()
+                    {
+                        Country = new Country()
+                        {
+                            Name = "United States",
+                            TwoLetterIsoCode = "US",
+                            ThreeLetterIsoCode = "USA",
+                        },
+                        CreatedOnUtc = new DateTime(2010, 01, 01),
+                    },
+                    Deleted = true,
+                    CreatedOnUtc = new DateTime(2010, 01, 01)
+                };
         }
 
         protected Discount GetTestDiscount()

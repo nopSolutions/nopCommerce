@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -17,6 +18,7 @@ namespace Nop.Core.Domain.Catalog
             this.ProductVariantAttributeCombinations = new List<ProductVariantAttributeCombination>();
             this.TierPrices = new List<TierPrice>();
             this.AppliedDiscounts = new List<Discount>();
+            this.OrderProductVariants = new List<OrderProductVariant>();
         }
 
         /// <summary>
@@ -431,6 +433,12 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the product variant attribute combinations
         /// </summary>
         public virtual ICollection<ProductVariantAttributeCombination> ProductVariantAttributeCombinations { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the ordered product variants
+        /// </summary>
+        public virtual ICollection<OrderProductVariant> OrderProductVariants { get; set; }
 
         /// <summary>
         /// Gets or sets the tier prices

@@ -21,7 +21,7 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public List<Nop.Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public IList<Nop.Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             var exchangeRates = new List<Nop.Core.Domain.Directory.ExchangeRate>();
             string url = string.Format("http://themoneyconverter.com/{0}/rss.xml", exchangeRateCurrencyCode);

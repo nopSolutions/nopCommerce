@@ -56,7 +56,7 @@ namespace Nop.Services.Directory
         }
 
         #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             var exchangeRateProvider = LoadActiveExchangeRateProvider();
             return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
@@ -162,6 +162,21 @@ namespace Nop.Services.Directory
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
         }
 
+
+
+        /// <summary>
+        /// Converts currency
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="exchangeRate">Currency exchange rate</param>
+        /// <returns>Converted value</returns>
+        public decimal ConvertCurrency(decimal amount, decimal exchangeRate)
+        {
+            if (amount != decimal.Zero && exchangeRate != decimal.Zero)
+                return amount * exchangeRate;
+            return decimal.Zero;
+        }
+
         /// <summary>
         /// Converts currency
         /// </summary>
@@ -235,7 +250,7 @@ namespace Nop.Services.Directory
             result = ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
             return result;
         }
-
+       
 
         /// <summary>
         /// Load active exchange rate provider

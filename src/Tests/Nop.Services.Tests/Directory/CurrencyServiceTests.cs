@@ -1,0 +1,127 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Nop.Core;
+using Nop.Core.Caching;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
+using Nop.Data;
+using Nop.Services.Directory;
+using Nop.Tests;
+using NUnit.Framework;
+using Rhino.Mocks;
+
+namespace Nop.Services.Tests.Directory
+{
+    [TestFixture]
+    public class CurrencyServiceTests
+    {
+        IRepository<Currency> _currencyRepository;
+        CurrencySettings _currencySettings;
+        ICurrencyService _currencyService;
+
+        Currency currencyUSD, currencyRUR, currencyEUR;
+        
+        [SetUp]
+        public void SetUp()
+        {
+            currencyUSD = new Currency()
+            {
+                Id = 1,
+                Name = "US Dollar",
+                CurrencyCode = "USD",
+                Rate = 1.2M,
+                DisplayLocale = "en-US",
+                CustomFormatting = "",
+                Published = true,
+                DisplayOrder = 1,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+            };
+            currencyEUR = new Currency()
+            {
+                Id = 2,
+                Name = "Euro",
+                CurrencyCode = "EUR",
+                Rate = 1,
+                DisplayLocale = "",
+                CustomFormatting = "€0.00",
+                Published = true,
+                DisplayOrder = 2,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+            };
+            currencyRUR = new Currency()
+            {
+                Id = 3,
+                Name = "Russian Rouble",
+                CurrencyCode = "RUB",
+                Rate = 34.5M,
+                DisplayLocale = "ru-RU",
+                CustomFormatting = "",
+                Published = true,
+                DisplayOrder = 3,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+            };
+            _currencyRepository = MockRepository.GenerateMock<IRepository<Currency>>();
+            _currencyRepository.Expect(x => x.Table).Return(new List<Currency>() { currencyUSD, currencyEUR, currencyRUR }.AsQueryable());
+            _currencyRepository.Expect(x => x.GetById(currencyUSD.Id)).Return(currencyUSD);
+            _currencyRepository.Expect(x => x.GetById(currencyEUR.Id)).Return(currencyEUR);
+            _currencyRepository.Expect(x => x.GetById(currencyRUR.Id)).Return(currencyRUR);
+
+            var cacheManager = new NopNullCache();
+
+            _currencySettings = new CurrencySettings();
+            _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
+            _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;
+            
+            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            _currencyService = new CurrencyService(cacheManager,
+                _currencyRepository,
+                _currencySettings, pluginFinder);
+        }
+        
+        [Test]
+        public void Can_load_exchangeRateProviders()
+        {
+            var providers = _currencyService.LoadAllExchangeRateProviders();
+            providers.ShouldNotBeNull();
+            (providers.Count > 0).ShouldBeTrue();
+        }
+
+        [Test]
+        public void Can_load_exchangeRateProvider_by_systemKeyword()
+        {
+            var provider = _currencyService.LoadExchangeRateProviderBySystemName("CurrencyExchange.TestProvider");
+            provider.ShouldNotBeNull();
+        }
+
+        [Test]
+        public void Can_load_active_exchangeRateProvider()
+        {
+            var provider = _currencyService.LoadActiveExchangeRateProvider();
+            provider.ShouldNotBeNull();
+        }
+
+        [Test]
+        public void Can_convert_currency_1()
+        {
+            _currencyService.ConvertCurrency(10.1M, 1.5M).ShouldEqual(15.15M);
+            _currencyService.ConvertCurrency(10.1M, 1).ShouldEqual(10.1M);
+            _currencyService.ConvertCurrency(10.1M, 0).ShouldEqual(0);
+            _currencyService.ConvertCurrency(0, 5).ShouldEqual(0);
+        }
+
+        [Test]
+        public void Can_convert_currency_2()
+        {
+            _currencyService.ConvertCurrency(10M, currencyEUR, currencyRUR).ShouldEqual(345M);
+            _currencyService.ConvertCurrency(10.1M, currencyEUR, currencyEUR).ShouldEqual(10.1M);
+            _currencyService.ConvertCurrency(10.1M, currencyRUR, currencyRUR).ShouldEqual(10.1M);
+            _currencyService.ConvertCurrency(12M, currencyUSD, currencyRUR).ShouldEqual(345M);
+            _currencyService.ConvertCurrency(345M, currencyRUR, currencyUSD).ShouldEqual(12M);
+        }
+    }
+}

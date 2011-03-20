@@ -21,7 +21,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public List<Nop.Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public IList<Nop.Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             if (String.IsNullOrEmpty(exchangeRateCurrencyCode) ||
                 exchangeRateCurrencyCode.ToLower() != "eur")

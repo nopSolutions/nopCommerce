@@ -65,6 +65,8 @@
     <Compile Include="Catalog\PriceFormatterTests.cs" />
     <Compile Include="Configuration\ConfigFileSettingService.cs" />
     <Compile Include="Configuration\ConfigurationProviderTests.cs" />
+    <Compile Include="Directory\CurrencyServiceTests.cs" />
+    <Compile Include="Directory\TestExchangeRateProvider.cs" />
     <Compile Include="Directory\MeasureServiceTests.cs" />
     <Compile Include="Discounts\DiscountServiceTests.cs" />
     <Compile Include="Discounts\TestDiscountRequirementRule.cs" />

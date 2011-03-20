@@ -89,9 +89,13 @@
     <Compile Include="Domain\Messages\NewsLetterSubscription.cs" />
     <Compile Include="Domain\Messages\QueuedEmail.cs" />
     <Compile Include="Domain\Messages\SMSSettings.cs" />
+    <Compile Include="Domain\Orders\OrderNote.cs" />
+    <Compile Include="Domain\Orders\OrderProductVariant.cs" />
+    <Compile Include="Domain\Orders\OrderStatusEnum.cs" />
     <Compile Include="Domain\Payments\PaymentSettings.cs" />
     <Compile Include="Domain\Payments\PaymentStatus.cs" />
     <Compile Include="Domain\Security\UserSettings.cs" />
+    <Compile Include="Domain\Shipping\ShippingStatus.cs" />
     <Compile Include="Domain\StoreInformationSettings.cs" />
     <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\Permissions\DefaultPermissionRecord.cs" />

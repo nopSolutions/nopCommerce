@@ -228,6 +228,16 @@ namespace Nop.Data.Tests
                 new Order()
                 {
                     OrderGuid = Guid.NewGuid(),
+                    BillingAddress = new Address()
+                    {
+                        Country = new Country()
+                        {
+                            Name = "United States",
+                            TwoLetterIsoCode = "US",
+                            ThreeLetterIsoCode = "USA",
+                        },
+                        CreatedOnUtc = new DateTime(2010, 01, 01),
+                    },
                     Deleted = true,
                     CreatedOnUtc = new DateTime(2010, 01, 01)
                 }
