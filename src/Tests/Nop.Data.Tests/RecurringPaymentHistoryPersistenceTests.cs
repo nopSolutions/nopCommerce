@@ -1,0 +1,95 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Nop.Core.Domain;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
+using Nop.Tests;
+using NUnit.Framework;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
+
+namespace Nop.Data.Tests
+{
+    [TestFixture]
+    public class RecurringPaymentHistoryPersistenceTests : PersistenceTest
+    {
+        [Test]
+        public void Can_save_and_load_recurringPaymentHistory()
+        {
+            var rph = new RecurringPaymentHistory()
+            {
+                CreatedOnUtc = new DateTime(2010, 01, 03),
+                RecurringPayment = new RecurringPayment()
+                {
+                    StartDateUtc = new DateTime(2010, 01, 01),
+                    CreatedOnUtc = new DateTime(2010, 01, 02),
+                    InitialOrder = GetTestOrder(),
+                },
+                Order = GetTestOrder()
+            };
+
+            var fromDb = SaveAndLoadEntity(rph);
+            fromDb.ShouldNotBeNull();
+            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
+
+            fromDb.RecurringPayment.ShouldNotBeNull();
+            fromDb.RecurringPayment.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.Order.ShouldNotBeNull();
+            fromDb.Order.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
+        }
+        
+        protected Customer GetTestCustomer()
+        {
+            return new Customer
+            {
+                CustomerGuid = Guid.NewGuid(),
+                AdminComment = "some comment here",
+                Active = true,
+                Deleted = false,
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
+        }
+
+        protected GiftCard GetTestGiftCard()
+        {
+            return new GiftCard()
+             {
+                 Amount = 1,
+                 IsGiftCardActivated = true,
+                 GiftCardCouponCode = "Secret",
+                 RecipientName = "RecipientName 1",
+                 RecipientEmail = "a@b.c",
+                 SenderName = "SenderName 1",
+                 SenderEmail = "d@e.f",
+                 Message = "Message 1",
+                 IsRecipientNotified = true,
+                 CreatedOnUtc = new DateTime(2010, 01, 01),
+             };
+        }
+
+        protected Order GetTestOrder()
+        {
+            return new Order()
+            {
+                OrderGuid = Guid.NewGuid(),
+                Customer = GetTestCustomer(),
+                BillingAddress = new Address()
+                {
+                    Country = new Country()
+                    {
+                        Name = "United States",
+                        TwoLetterIsoCode = "US",
+                        ThreeLetterIsoCode = "USA",
+                    },
+                    CreatedOnUtc = new DateTime(2010, 01, 01),
+                },
+                Deleted = true,
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
+        }
+    }
+}

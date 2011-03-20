@@ -73,6 +73,8 @@
     <Compile Include="CategoryPersistenceTests.cs" />
     <Compile Include="CheckoutAttributePersistenceTests.cs" />
     <Compile Include="CheckoutAttributeValuePersistenceTests.cs" />
+    <Compile Include="RecurringPaymentHistoryPersistenceTests.cs" />
+    <Compile Include="RecurringPaymentPersistenceTests.cs" />
     <Compile Include="OrderProductVariantPersistenceTests.cs" />
     <Compile Include="OrderNotePersistenceTests.cs" />
     <Compile Include="DownloadPersistenceTests.cs" />

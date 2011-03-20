@@ -60,6 +60,7 @@
     <Compile Include="Domain\Customers\CustomerTests.cs" />
     <Compile Include="Domain\Discounts\DiscountTests.cs" />
     <Compile Include="Domain\EntityEqualityTests.cs" />
+    <Compile Include="Domain\Orders\RecurringPaymentTests.cs" />
     <Compile Include="Domain\Orders\GiftCardTests.cs" />
     <Compile Include="Domain\Shipping\ShippingOptionTypeConverterTests.cs" />
     <Compile Include="Fakes\FakeTypeFinder.cs" />

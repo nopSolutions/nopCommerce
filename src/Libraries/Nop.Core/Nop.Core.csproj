@@ -92,6 +92,8 @@
     <Compile Include="Domain\Orders\OrderNote.cs" />
     <Compile Include="Domain\Orders\OrderProductVariant.cs" />
     <Compile Include="Domain\Orders\OrderStatusEnum.cs" />
+    <Compile Include="Domain\Orders\RecurringPayment.cs" />
+    <Compile Include="Domain\Orders\RecurringPaymentHistory.cs" />
     <Compile Include="Domain\Payments\PaymentSettings.cs" />
     <Compile Include="Domain\Payments\PaymentStatus.cs" />
     <Compile Include="Domain\Security\UserSettings.cs" />
