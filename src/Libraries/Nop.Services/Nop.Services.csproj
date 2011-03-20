@@ -123,6 +123,7 @@
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\CheckoutAttributeParser.cs" />
     <Compile Include="Orders\CheckoutAttributeService.cs" />
+    <Compile Include="Orders\IOrderService.cs" />
     <Compile Include="Orders\IOrderTotalCalculationService.cs" />
     <Compile Include="Orders\IGiftCardService.cs" />
     <Compile Include="Orders\IShoppingCartService.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Orders\ICheckoutAttributeService.cs" />
     <Compile Include="Orders\CheckoutAttributeExtensions.cs" />
     <Compile Include="Orders\GiftCardService.cs" />
+    <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Orders\OrderTotalCalculationService.cs" />
     <Compile Include="Orders\ShoppingCartExtensions.cs" />
     <Compile Include="Orders\ShoppingCartService.cs" />
