@@ -298,6 +298,16 @@ namespace Nop.Services.Catalog
                     relatedProductOK = true;
 
 
+                //filter by product tags
+                bool productTagOK = false; 
+                if (productTagId > 0)
+                {
+                    //UNDONE use productTagId parameter
+                    productTagOK = true;
+                }
+                else
+                    productTagOK = true;
+
                 //filter by keywords
                 bool keywordsOK = false;
                 if (!String.IsNullOrWhiteSpace(keywords))
@@ -355,15 +365,36 @@ namespace Nop.Services.Catalog
                 else
                     keywordsOK = true;
 
-                //UNDONE filter by specs (filteredSpecs parameter)
+                //filter by specs
+                bool specificationsOK = true;
+                if (filteredSpecs != null && filteredSpecs.Count > 0)
+                {
+                    for (int i = 0; i < filteredSpecs.Count; i++)
+                    {
+                        bool specIsFound = false;
+                        foreach (var psa in prod.ProductSpecificationAttributes.Where(psa => psa.AllowFiltering))
+                            if (psa.SpecificationAttributeOptionId == filteredSpecs[i])
+                            {
+                                specIsFound = true;
+                                break;
+                            }
+                        if (!specIsFound)
+                        {
+                            specificationsOK = false;
+                            break;
+                        }
+                    }
+                }
+                else
+                    specificationsOK = true;
 
-
-                //UNDONE orderBy
-                if (categoryOK && manufacturerOK && priceMinOK && priceMaxOK && relatedProductOK && keywordsOK)
+                if (categoryOK && manufacturerOK && priceMinOK && priceMaxOK 
+                    && relatedProductOK && productTagOK && specificationsOK && keywordsOK)
                     filteredProducts.Add(prod);
             }
+
             //sort products
-            List<Product> sortedProducts = new List<Product>();
+            var sortedProducts = new List<Product>();
             if (orderBy == ProductSortingEnum.Position && categoryId > 0)
                 sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.ProductCategories.First().DisplayOrder).ToList();
             else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)

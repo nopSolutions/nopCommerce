@@ -3,9 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Catalog
 {
@@ -25,11 +27,11 @@ namespace Nop.Services.Catalog
 
         #region Fields
         
-        
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly IProductService _productService;
 
         #endregion
 
@@ -42,15 +44,18 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeRepository">Specification attribute repository</param>
         /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
+        /// <param name="productService">Product service</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
-            IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository)
+            IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
+            IProductService productService)
         {
             this._cacheManager = cacheManager;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             this._productSpecificationAttributeRepository = productSpecificationAttributeRepository;
+            this._productService = productService;
         }
 
         #endregion
@@ -330,6 +335,55 @@ namespace Nop.Services.Catalog
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+        }
+
+        #endregion
+
+        #region Specification attribute option filter
+        
+        /// <summary>
+        /// Gets a filtered product specification attribute mapping collection by category id
+        /// </summary>
+        /// <param name="categoryId">Category identifier</param>
+        /// <param name="workContext">Work context</param>
+        /// <returns>Product specification attribute mapping collection</returns>
+        public IList<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, IWorkContext workContext)
+        {
+            if (categoryId == 0)
+                throw new ArgumentException("Category identifier could not be null", "categoryId");
+            var result = new List<SpecificationAttributeOptionFilter>();
+
+            //TODO the method requires optimization
+            var products = _productService.SearchProducts(categoryId, 0, null, null, null, 0, 0,
+                null, false, workContext.WorkingLanguage.Id, null, ProductSortingEnum.Position,
+                0, int.MaxValue, false);
+            foreach (var product in products)
+            {
+                foreach (var psa in product.ProductSpecificationAttributes.Where(psa => psa.AllowFiltering))
+                {
+                    var specificationAttributeOptionId = psa.SpecificationAttributeOption.Id;
+                    if (result.Find(saof => saof.SpecificationAttributeOptionId == specificationAttributeOptionId) == null)
+                    {
+                        var specificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(sa => sa.Name, workContext);
+                        var specificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id;
+                        var displayOrder = psa.SpecificationAttributeOption.DisplayOrder;
+                        var specificationAttributeOptionName = psa.SpecificationAttributeOption.GetLocalized(sao => sao.Name, workContext);
+
+                        result.Add(new SpecificationAttributeOptionFilter()
+                            {
+                                SpecificationAttributeId = specificationAttributeId,
+                                SpecificationAttributeName = specificationAttributeName,
+                                DisplayOrder = displayOrder,
+                                SpecificationAttributeOptionId = specificationAttributeOptionId,
+                                SpecificationAttributeOptionName = specificationAttributeOptionName
+                            });
+                    }
+                }
+            }
+            result.OrderBy(saof => saof.DisplayOrder)
+                .ThenBy(saof => saof.SpecificationAttributeName)
+                .ThenBy(saof => saof.SpecificationAttributeOptionName);
+            return result;
         }
 
         #endregion

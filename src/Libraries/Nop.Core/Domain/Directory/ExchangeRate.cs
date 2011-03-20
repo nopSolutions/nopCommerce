@@ -20,7 +20,7 @@ namespace Nop.Core.Domain.Directory
     /// <summary>
     /// Represents an exchange rate
     /// </summary>
-    public partial class ExchangeRate : BaseEntity
+    public partial class ExchangeRate
     {
         #region Ctor
 
