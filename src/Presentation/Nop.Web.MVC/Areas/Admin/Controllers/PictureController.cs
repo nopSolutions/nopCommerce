@@ -5,9 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Services.Media;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class PictureController : BaseNopController
     {
         private IPictureService _pictureService;

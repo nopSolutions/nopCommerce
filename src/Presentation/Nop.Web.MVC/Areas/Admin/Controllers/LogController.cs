@@ -4,11 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Services.Logging;
+using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Telerik.Web.Mvc;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class LogController : BaseNopController
     {
         private ILogger _logger;

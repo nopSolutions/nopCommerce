@@ -6,10 +6,12 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
+using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc.Extensions;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class ProductController : BaseNopController
     {
         private IProductService _productService;

@@ -18,14 +18,14 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 	[AdminAuthorize]
     public class LanguageController : BaseNopController
 	{
-		#region Fields (2) 
+		#region Fields
 
 		private readonly ILanguageService _languageService;
 		private ILocalizationService _localizationService;
 
 		#endregion Fields 
 
-		#region Constructors (1) 
+		#region Constructors
 
 		public LanguageController(ILanguageService languageService, ILocalizationService localizationService)
 		{
@@ -35,9 +35,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 
 		#endregion Constructors 
 
-		#region Methods (2) 
-
-		// Public Methods (2) 
+		#region Methods
 
 		public ActionResult Index()
 		{
@@ -61,9 +59,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         }
 
 		#endregion Methods 
-
-
-
+        
 		#region Languages
 
 		#region List
@@ -105,6 +101,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		}
 
 		#endregion
+
 		#region Edit
 
 		public ActionResult Edit(int id)
@@ -128,6 +125,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		}
 
 		#endregion
+
 		#region Delete
 
 		public ActionResult Delete(int id)
