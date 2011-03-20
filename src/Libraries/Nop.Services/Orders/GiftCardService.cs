@@ -76,13 +76,16 @@ namespace Nop.Services.Orders
         public IList<GiftCard> GetAllGiftCards(DateTime? startTime = null, DateTime? endTime = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = "")
         {
-            var query = from gc in _giftCardRepository.Table
-                          where
-                          (!startTime.HasValue || startTime.Value <= gc.CreatedOnUtc) &&
-                          (!endTime.HasValue || endTime.Value >= gc.CreatedOnUtc) &&
-                          (!isGiftCardActivated.HasValue || gc.IsGiftCardActivated == isGiftCardActivated.Value) &&
-                          (string.IsNullOrEmpty(giftCardCouponCode) || gc.GiftCardCouponCode == giftCardCouponCode)
-                          select gc;
+            var query = _giftCardRepository.Table;
+            if (startTime.HasValue)
+                query = query.Where(gc => startTime.Value <= gc.CreatedOnUtc);
+            if (endTime.HasValue)
+                query = query.Where(gc => endTime.Value >= gc.CreatedOnUtc);
+            if (isGiftCardActivated.HasValue)
+                query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
+            if (!String.IsNullOrEmpty(giftCardCouponCode))
+                query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
+            query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 
             var giftCards = query.ToList();
             return giftCards;
