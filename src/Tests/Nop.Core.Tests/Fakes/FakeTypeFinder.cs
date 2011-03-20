@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -33,6 +34,7 @@ namespace Nop.Core.Tests.Fakes
         }
 
 
+
         public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
         {
             return (from t in Types
@@ -42,7 +44,7 @@ namespace Nop.Core.Tests.Fakes
 
         public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
         {
-            return FindClassesOfType(typeof (T), onlyConcreteClasses);
+            return FindClassesOfType(typeof(T), onlyConcreteClasses);
         }
 
         public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
@@ -53,6 +55,33 @@ namespace Nop.Core.Tests.Fakes
         public IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
         {
             return FindClassesOfType(typeof(T), onlyConcreteClasses);
+        }
+
+
+
+
+
+
+
+
+        public IEnumerable<Type> FindClassesOfType<T, TAssemblyAttribute>(bool onlyConcreteClasses = true) where TAssemblyAttribute : Attribute
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>(IEnumerable<Assembly> assemblies)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>(DirectoryInfo assemblyPath)
+        {
+            throw new NotImplementedException();
         }
     }
 }
