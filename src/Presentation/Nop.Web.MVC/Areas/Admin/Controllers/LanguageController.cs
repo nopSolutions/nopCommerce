@@ -206,10 +206,9 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult Resources(int languageId, GridCommand command)
 		{
-
-            var resources = _localizationService.GetAllResourcesByLanguageId(languageId).Select(x => x.Value)
-                .ForCommand(command)
-                .Select(x => new LanguageResourceModel(x));
+		    var resources = _localizationService.GetAllResourcesByLanguageId(languageId).Select(x => x.Value)
+		        .Select(x => new LanguageResourceModel(x))
+		        .ForCommand(command);
 
             var model = new GridModel<LanguageResourceModel>
                             {
