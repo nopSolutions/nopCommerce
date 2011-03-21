@@ -295,17 +295,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the paid date and time
         /// </summary>
         public DateTime? PaidDateUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the billing address identifier
-        /// </summary>
-        public int BillingAddressId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipping address identifier
-        /// </summary>
-        public int? ShippingAddressId { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the shipping method
         /// </summary>

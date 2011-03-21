@@ -5,7 +5,7 @@ namespace Nop.Services.Security
     {
         string CreateSaltKey(int size);
         string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1");
-        string EncryptText(string plainText, string encryptionPrivateKey);
-        string DecryptText(string cipherText, string encryptionPrivateKey);
+        string EncryptText(string plainText, string encryptionPrivateKey = "");
+        string DecryptText(string cipherText, string encryptionPrivateKey = "");
     }
 }

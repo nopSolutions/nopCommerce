@@ -71,7 +71,6 @@ namespace Nop.Data.Tests
                     new GiftCardUsageHistory()
                     {
                         UsedValue = 1.1M,
-                        UsedValueInCustomerCurrency = 2.1M,
                         CreatedOnUtc = new DateTime(2010, 01, 01),
                         UsedWithOrder = GetTestOrder()
                     }

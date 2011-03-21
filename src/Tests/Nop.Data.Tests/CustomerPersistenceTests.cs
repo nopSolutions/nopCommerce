@@ -35,6 +35,7 @@ namespace Nop.Data.Tests
             fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
             fromDb.DiscountCouponCode.ShouldEqual("coupon1");
             fromDb.GiftCardCouponCodes.ShouldEqual("GiftCardCouponCodes 1");
+            fromDb.AffiliateId.ShouldEqual(1);
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
@@ -268,6 +269,7 @@ namespace Nop.Data.Tests
                 CheckoutAttributes = "CheckoutAttributes 1",
                 DiscountCouponCode= "coupon1",
                 GiftCardCouponCodes = "GiftCardCouponCodes 1",
+                AffiliateId = 1,
                 Active = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),

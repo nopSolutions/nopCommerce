@@ -58,5 +58,13 @@ namespace Nop.Services.Tests.Payments
             srcm.ShouldNotBeNull();
             (srcm.Count > 0).ShouldBeTrue();
         }
+
+        [Test]
+        public void Can_get_masked_credit_card_number()
+        {
+            _paymentService.GetMaskedCreditCardNumber("").ShouldEqual("");
+            _paymentService.GetMaskedCreditCardNumber("123").ShouldEqual("123");
+            _paymentService.GetMaskedCreditCardNumber("1234567890123456").ShouldEqual("************3456");
+        }
     }
 }

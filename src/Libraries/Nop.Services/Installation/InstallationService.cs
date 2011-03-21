@@ -583,6 +583,12 @@ namespace Nop.Services.Installation
                     HashedPasswordFormat= "SHA1"
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()
+                .SaveSettings(new SecuritySettings()
+                {
+                    EncryptionKey = "273ece6f97dd844d"
+                });
+
             EngineContext.Current.Resolve<IConfigurationProvider<ShippingSettings>>()
                 .SaveSettings(new ShippingSettings()
                 {

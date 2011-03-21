@@ -3,7 +3,7 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Core.Domain.Common
 {
-    public class Address : BaseEntity
+    public class Address : BaseEntity, ICloneable
     {
         /// <summary>
         /// Gets or sets the first name
@@ -79,6 +79,29 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the state/province
         /// </summary>
         public virtual StateProvince StateProvince { get; set; }
-        
+
+
+        public object Clone()
+        {
+            var addr = new Address()
+            {
+                FirstName = this.FirstName,
+                LastName = this.LastName,
+                Email = this.Email,
+                Company = this.Company,
+                Country = this.Country,
+                CountryId = this.CountryId,
+                StateProvince = this.StateProvince,
+                StateProvinceId = this.StateProvinceId,
+                City = this.City,
+                Address1 = this.Address1,
+                Address2 = this.Address2,
+                ZipPostalCode = this.ZipPostalCode,
+                PhoneNumber = this.PhoneNumber,
+                FaxNumber = this.FaxNumber,
+                CreatedOnUtc = this.CreatedOnUtc,
+            };
+            return addr;
+        }
     }
 }

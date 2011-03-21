@@ -25,8 +25,6 @@ namespace Nop.Data.Tests
                 Message = "Points for registration",
                 PointsBalance = 2,
                 UsedAmount = 3.1M,
-                UsedAmountInCustomerCurrency = 4.1M,
-                CustomerCurrencyCode = "USD",
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
 
@@ -36,8 +34,6 @@ namespace Nop.Data.Tests
             fromDb.Message.ShouldEqual("Points for registration");
             fromDb.PointsBalance.ShouldEqual(2);
             fromDb.UsedAmount.ShouldEqual(3.1M);
-            fromDb.UsedAmountInCustomerCurrency.ShouldEqual(4.1M);
-            fromDb.CustomerCurrencyCode.ShouldEqual("USD");
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 
             fromDb.Customer.ShouldNotBeNull();
@@ -53,8 +49,6 @@ namespace Nop.Data.Tests
                 Message = "Points for registration",
                 PointsBalance = 2,
                 UsedAmount = 3,
-                UsedAmountInCustomerCurrency = 4,
-                CustomerCurrencyCode = "USD",
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
 

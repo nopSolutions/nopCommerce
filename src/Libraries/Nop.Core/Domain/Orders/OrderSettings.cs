@@ -20,5 +20,10 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a minimum order total amount
         /// </summary>
         public decimal MinOrderTotalAmount { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether anonymous checkout allowed
+        /// </summary>
+        public bool AnonymousCheckoutAllowed { get; set; }
     }
 }

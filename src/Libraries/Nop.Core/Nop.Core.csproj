@@ -97,6 +97,7 @@
     <Compile Include="Domain\Orders\OrderSettings.cs" />
     <Compile Include="Domain\Payments\PaymentSettings.cs" />
     <Compile Include="Domain\Payments\PaymentStatus.cs" />
+    <Compile Include="Domain\Security\SecuritySettings.cs" />
     <Compile Include="Domain\Security\UserSettings.cs" />
     <Compile Include="Domain\Shipping\ShippingStatus.cs" />
     <Compile Include="Domain\StoreInformationSettings.cs" />
