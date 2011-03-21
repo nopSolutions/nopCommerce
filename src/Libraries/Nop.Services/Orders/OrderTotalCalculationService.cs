@@ -290,17 +290,13 @@ namespace Nop.Services.Orders
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal);
             var allowedDiscounts = new List<Discount>();
             if (allDiscounts != null)
-            {
                 foreach (var discount in allDiscounts)
-                {
                     if (_discountService.IsDiscountValid(discount, customer) &&
                                discount.DiscountType == DiscountType.AssignedToOrderSubTotal &&
                                !allowedDiscounts.Contains(discount))
                     {
                         allowedDiscounts.Add(discount);
                     }
-                }
-            }
 
             appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderSubTotal);
             if (appliedDiscount != null)
@@ -411,7 +407,7 @@ namespace Nop.Services.Orders
                     shippingAddress = customer.ShippingAddress;
 
                 var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods();
-                if (shippingRateComputationMethods.Count == 0)
+                if (shippingRateComputationMethods == null || shippingRateComputationMethods.Count == 0)
                     throw new NopException("Shipping rate computation method could not be loaded");
 
                 if (shippingRateComputationMethods.Count == 1)
@@ -459,15 +455,14 @@ namespace Nop.Services.Orders
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToShipping);
             var allowedDiscounts = new List<Discount>();
+            if (allDiscounts != null)
             foreach (var discount in allDiscounts)
-            {
                 if (_discountService.IsDiscountValid(discount, customer) &&
                            discount.DiscountType == DiscountType.AssignedToShipping &&
                            !allowedDiscounts.Contains(discount))
                 {
                     allowedDiscounts.Add(discount);
                 }
-            }
 
             appliedDiscount = allowedDiscounts.GetPreferredDiscount(shippingTotal);
             if (appliedDiscount != null)
@@ -492,29 +487,34 @@ namespace Nop.Services.Orders
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <param name="paymentMethodSystemName">Payment method identifier</param>
         /// <returns>Tax total</returns>
-        public decimal GetTaxTotal(IList<ShoppingCartItem> cart, string paymentMethodSystemName = "")
+        public decimal GetTaxTotal(IList<ShoppingCartItem> cart)
         {
-            //TODO don't pass 'paymentMethodSystemName' param (we can get it from 'customer' entity)
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
             SortedDictionary<decimal, decimal> taxRates = null;
-            return GetTaxTotal(cart, paymentMethodSystemName, out taxRates);
+            return GetTaxTotal(cart, out taxRates);
         }
 
         /// <summary>
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <param name="paymentMethodSystemName">Payment method identifier</param>
         /// <param name="taxRates">Tax rates</param>
         /// <returns>Tax total</returns>
-        public decimal GetTaxTotal(IList<ShoppingCartItem> cart, string paymentMethodSystemName,
+        public decimal GetTaxTotal(IList<ShoppingCartItem> cart,
             out SortedDictionary<decimal, decimal> taxRates)
         {
-            //TODO don't pass 'paymentMethodSystemName' param (we can get it from 'customer' entity)
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
             taxRates = new SortedDictionary<decimal, decimal>();
 
             var customer = cart.GetCustomer();
+            string paymentMethodSystemName = "";
+            if (customer != null)
+                paymentMethodSystemName = customer.SelectedPaymentMethodSystemName;
 
             //order sub total (items + checkout attributes)
             decimal subTotalTaxTotal = decimal.Zero;
@@ -604,10 +604,8 @@ namespace Nop.Services.Orders
         /// Gets shopping cart total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="paymentMethodSystemName">Payment method identifier</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        public decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            string paymentMethodSystemName)
+        public decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart)
         {
             decimal discountAmount = decimal.Zero;
             Discount appliedDiscount = null;
@@ -615,8 +613,7 @@ namespace Nop.Services.Orders
             int redeemedRewardPoints = 0;
             decimal redeemedRewardPointsAmount = decimal.Zero;
             List<AppliedGiftCard> appliedGiftCards = null;
-            return GetShoppingCartTotal(cart, paymentMethodSystemName,
-                out discountAmount, out appliedDiscount,
+            return GetShoppingCartTotal(cart, out discountAmount, out appliedDiscount,
                 out appliedGiftCards,
                 out redeemedRewardPoints, out redeemedRewardPointsAmount);
         }
@@ -625,7 +622,6 @@ namespace Nop.Services.Orders
         /// Gets shopping cart total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="paymentMethodSystemName">Payment method identifier</param>
         /// <param name="appliedGiftCards">Applied gift cards</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscount">Applied discount</param>
@@ -633,7 +629,6 @@ namespace Nop.Services.Orders
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            string paymentMethodSystemName,
             out decimal discountAmount, out Discount appliedDiscount,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount)
@@ -642,6 +637,10 @@ namespace Nop.Services.Orders
             redeemedRewardPointsAmount = decimal.Zero;
 
             var customer = cart.GetCustomer();
+            string paymentMethodSystemName = "";
+            if (customer != null)
+                paymentMethodSystemName = customer.SelectedPaymentMethodSystemName;
+
 
             //subtotal without tax
             decimal subtotalBase = decimal.Zero;
@@ -664,7 +663,7 @@ namespace Nop.Services.Orders
 
             //payment method additional fee without tax
             decimal paymentMethodAdditionalFeeWithoutTax = decimal.Zero;
-            if (String.IsNullOrEmpty(paymentMethodSystemName))
+            if (!String.IsNullOrEmpty(paymentMethodSystemName))
             {
                 decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(paymentMethodSystemName);
                 paymentMethodAdditionalFeeWithoutTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee,
@@ -675,7 +674,7 @@ namespace Nop.Services.Orders
 
 
             //tax
-            decimal shoppingCartTax = GetTaxTotal(cart, paymentMethodSystemName);
+            decimal shoppingCartTax = GetTaxTotal(cart);
 
 
 
@@ -716,26 +715,25 @@ namespace Nop.Services.Orders
             {
                 //we don't apply gift cards for recurring products
                 var giftCards = _giftCardService.GetActiveGiftCardsAppliedByCustomer(customer);
-                foreach (var gc in giftCards)
-                {
-                    if (resultTemp > decimal.Zero)
-                    {
-                        decimal remainingAmount = gc.GetGiftCardRemainingAmount();
-                        decimal amountCanBeUsed = decimal.Zero;
-                        if (resultTemp > remainingAmount)
-                            amountCanBeUsed = remainingAmount;
-                        else
-                            amountCanBeUsed = resultTemp;
+                if (giftCards!=null)
+                    foreach (var gc in giftCards)
+                        if (resultTemp > decimal.Zero)
+                        {
+                            decimal remainingAmount = gc.GetGiftCardRemainingAmount();
+                            decimal amountCanBeUsed = decimal.Zero;
+                            if (resultTemp > remainingAmount)
+                                amountCanBeUsed = remainingAmount;
+                            else
+                                amountCanBeUsed = resultTemp;
 
-                        //reduce subtotal
-                        resultTemp -= amountCanBeUsed;
+                            //reduce subtotal
+                            resultTemp -= amountCanBeUsed;
 
-                        var appliedGiftCard = new AppliedGiftCard();
-                        appliedGiftCard.GiftCard = gc;
-                        appliedGiftCard.AmountCanBeUsed = amountCanBeUsed;
-                        appliedGiftCards.Add(appliedGiftCard);
-                    }
-                }
+                            var appliedGiftCard = new AppliedGiftCard();
+                            appliedGiftCard.GiftCard = gc;
+                            appliedGiftCard.AmountCanBeUsed = amountCanBeUsed;
+                            appliedGiftCards.Add(appliedGiftCard);
+                        }
             }
 
             #endregion
@@ -806,15 +804,14 @@ namespace Nop.Services.Orders
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToOrderTotal);
             var allowedDiscounts = new List<Discount>();
-            foreach (var discount in allDiscounts)
-            {
-                if (_discountService.IsDiscountValid(discount, customer) &&
-                           discount.DiscountType == DiscountType.AssignedToOrderTotal &&
-                           !allowedDiscounts.Contains(discount))
-                {
-                    allowedDiscounts.Add(discount);
-                }
-            }
+            if (allDiscounts!=null)
+                foreach (var discount in allDiscounts)
+                    if (_discountService.IsDiscountValid(discount, customer) &&
+                               discount.DiscountType == DiscountType.AssignedToOrderTotal &&
+                               !allowedDiscounts.Contains(discount))
+                    {
+                        allowedDiscounts.Add(discount);
+                    }
 
             appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderTotal);
             if (appliedDiscount != null)

@@ -351,10 +351,7 @@ namespace Nop.Services.Tests.Catalog
         public void Can_get_shopping_cart_item_unitPrice()
         {
             //customer
-            Customer customer = new Customer()
-            {
-                Id = 10
-            };
+            Customer customer = new Customer();
 
             //shopping cart
             var productVariant1 = new ProductVariant
@@ -388,10 +385,7 @@ namespace Nop.Services.Tests.Catalog
         public void Can_get_shopping_cart_item_subTotal()
         {
             //customer
-            Customer customer = new Customer()
-            {
-                Id = 10
-            };
+            Customer customer = new Customer();
 
             //shopping cart
             var productVariant1 = new ProductVariant

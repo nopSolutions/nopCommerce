@@ -208,6 +208,7 @@ namespace Nop.Services.Tests.Shipping
             var cart = new List<ShoppingCartItem>() { sci1, sci2 };
             var customer = new Customer();
             cart.ForEach(sci => sci.Customer = customer);
+            cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             _shippingService.IsFreeShipping(cart).ShouldEqual(true);
         }
@@ -246,6 +247,7 @@ namespace Nop.Services.Tests.Shipping
             var cart = new List<ShoppingCartItem>() { sci1, sci2 };
             var customer = new Customer();
             cart.ForEach(sci => sci.Customer = customer);
+            cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             _shippingService.IsFreeShipping(cart).ShouldEqual(false);
         }
@@ -296,6 +298,7 @@ namespace Nop.Services.Tests.Shipping
             customer.CustomerRoles.Add(customerRole1);
             customer.CustomerRoles.Add(customerRole2);
             cart.ForEach(sci => sci.Customer = customer);
+            cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             _shippingService.IsFreeShipping(cart).ShouldEqual(true);
         }

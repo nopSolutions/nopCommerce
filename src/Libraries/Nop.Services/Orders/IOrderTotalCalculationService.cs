@@ -122,19 +122,16 @@ namespace Nop.Services.Orders
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <param name="paymentMethodSystemName">Payment method identifier</param>
         /// <returns>Tax total</returns>
-        decimal GetTaxTotal(IList<ShoppingCartItem> cart, string paymentMethodSystemName = "");
+        decimal GetTaxTotal(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <param name="paymentMethodSystemName">Payment method identifier</param>
         /// <param name="taxRates">Tax rates</param>
         /// <returns>Tax total</returns>
-        decimal GetTaxTotal(IList<ShoppingCartItem> cart, string paymentMethodSystemName,
-            out SortedDictionary<decimal, decimal> taxRates);
+        decimal GetTaxTotal(IList<ShoppingCartItem> cart, out SortedDictionary<decimal, decimal> taxRates);
 
 
 
@@ -144,16 +141,12 @@ namespace Nop.Services.Orders
         /// Gets shopping cart total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="paymentMethodSystemName">Payment method identifier</param>
-        /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            string paymentMethodSystemName);
+        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Gets shopping cart total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="paymentMethodSystemName">Payment method identifier</param>
         /// <param name="appliedGiftCards">Applied gift cards</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscount">Applied discount</param>
@@ -161,7 +154,6 @@ namespace Nop.Services.Orders
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            string paymentMethodSystemName,
             out decimal discountAmount, out Discount appliedDiscount,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount);

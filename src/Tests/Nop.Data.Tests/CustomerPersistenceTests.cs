@@ -29,6 +29,7 @@ namespace Nop.Data.Tests
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.TaxDisplayType.ShouldEqual(TaxDisplayType.IncludingTax);
             fromDb.IsTaxExempt.ShouldEqual(true);
+            fromDb.SelectedPaymentMethodSystemName.ShouldEqual("test1");
             fromDb.VatNumber.ShouldEqual("123456");
             fromDb.VatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
             fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
@@ -261,6 +262,7 @@ namespace Nop.Data.Tests
                 AdminComment = "some comment here",
                 TaxDisplayType = TaxDisplayType.IncludingTax,
                 IsTaxExempt = true,
+                SelectedPaymentMethodSystemName = "test1",
                 VatNumber = "123456",
                 VatNumberStatus = VatNumberStatus.Valid,
                 CheckoutAttributes = "CheckoutAttributes 1",

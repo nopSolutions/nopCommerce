@@ -107,8 +107,8 @@ namespace Nop.Services.Tests.Tax
 
         protected decimal GetFixedTestTaxRate()
         {
-            //10 is a fixed tax rate returned from FixedRateTestTaxProvider. Perhaps, it should be configured in some way 
-            return 10M;
+            //10 is a fixed tax rate returned from FixedRateTestTaxProvider. Perhaps, it should be configured in some other way 
+            return 10;
         }
 
         [Test]
