@@ -61,7 +61,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether capture is supported</returns>
-        bool CanCapture(string paymentMethodSystemName);
+        bool SupportCapture(string paymentMethodSystemName);
 
         /// <summary>
         /// Captures payment
@@ -77,14 +77,14 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether partial refund is supported</returns>
-        bool CanPartiallyRefund(string paymentMethodSystemName);
+        bool SupportPartiallyRefund(string paymentMethodSystemName);
 
         /// <summary>
         /// Gets a value indicating whether refund is supported by payment method
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether refund is supported</returns>
-        bool CanRefund(string paymentMethodSystemName);
+        bool SupportRefund(string paymentMethodSystemName);
 
         /// <summary>
         /// Refunds a payment
@@ -100,7 +100,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether void is supported</returns>
-        bool CanVoid(string paymentMethodSystemName);
+        bool SupportVoid(string paymentMethodSystemName);
 
         /// <summary>
         /// Voids a payment
@@ -116,7 +116,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A recurring payment type of payment method</returns>
-        RecurringPaymentType SupportRecurringPayments(string paymentMethodSystemName);
+        RecurringPaymentType GetRecurringPaymentType(string paymentMethodSystemName);
 
         /// <summary>
         /// Process recurring payment

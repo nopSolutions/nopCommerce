@@ -144,12 +144,12 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether capture is supported</returns>
-        public bool CanCapture(string paymentMethodSystemName)
+        public bool SupportCapture(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
-            return paymentMethod.CanCapture;
+            return paymentMethod.SupportCapture;
         }
 
         /// <summary>
@@ -172,12 +172,12 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether partial refund is supported</returns>
-        public bool CanPartiallyRefund(string paymentMethodSystemName)
+        public bool SupportPartiallyRefund(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
-            return paymentMethod.CanPartiallyRefund;
+            return paymentMethod.SupportPartiallyRefund;
         }
 
         /// <summary>
@@ -185,12 +185,12 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether refund is supported</returns>
-        public bool CanRefund(string paymentMethodSystemName)
+        public bool SupportRefund(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
-            return paymentMethod.CanRefund;
+            return paymentMethod.SupportRefund;
         }
 
         /// <summary>
@@ -213,12 +213,12 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether void is supported</returns>
-        public bool CanVoid(string paymentMethodSystemName)
+        public bool SupportVoid(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
-            return paymentMethod.CanVoid;
+            return paymentMethod.SupportVoid;
         }
 
         /// <summary>
@@ -241,12 +241,12 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A recurring payment type of payment method</returns>
-        public RecurringPaymentType SupportRecurringPayments(string paymentMethodSystemName)
+        public RecurringPaymentType GetRecurringPaymentType(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RecurringPaymentType.NotSupported;
-            return paymentMethod.SupportRecurringPayments;
+            return paymentMethod.RecurringPaymentType;
         }
 
         /// <summary>

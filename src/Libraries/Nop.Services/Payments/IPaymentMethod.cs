@@ -74,33 +74,31 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        bool CanCapture { get; }
+        bool SupportCapture { get; }
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        bool CanPartiallyRefund { get; }
+        bool SupportPartiallyRefund { get; }
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        bool CanRefund { get; }
+        bool SupportRefund { get; }
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        bool CanVoid { get; }
+        bool SupportVoid { get; }
 
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
-        /// <returns>A recurring payment type of payment method</returns>
-        RecurringPaymentType SupportRecurringPayments { get; }
+        RecurringPaymentType RecurringPaymentType { get; }
         
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        /// <returns>A payment method type</returns>
         PaymentMethodType PaymentMethodType { get; }
         
         #endregion

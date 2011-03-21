@@ -1102,7 +1102,7 @@ namespace Nop.Services.Orders
                 return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized &&
-                _paymentService.CanCapture(order.PaymentMethodSystemName))
+                _paymentService.SupportCapture(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -1266,7 +1266,7 @@ namespace Nop.Services.Orders
                 return false;
 
             if (order.PaymentStatus == PaymentStatus.Paid &&
-                _paymentService.CanRefund(order.PaymentMethodSystemName))
+                _paymentService.SupportRefund(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -1433,7 +1433,7 @@ namespace Nop.Services.Orders
 
             if ((order.PaymentStatus == PaymentStatus.Paid ||
                 order.PaymentStatus == PaymentStatus.PartiallyRefunded) &&
-                _paymentService.CanPartiallyRefund(order.PaymentMethodSystemName))
+                _paymentService.SupportPartiallyRefund(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -1605,7 +1605,7 @@ namespace Nop.Services.Orders
                 return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized &&
-                _paymentService.CanVoid(order.PaymentMethodSystemName))
+                _paymentService.SupportVoid(order.PaymentMethodSystemName))
                 return true;
 
             return false;
