@@ -58,7 +58,7 @@ namespace Nop.Web.MVC
             //ViewEngines.Engines.Add(themeableRazorViewEngine);
 
             ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(new ThemableViewEngine());
+            ViewEngines.Engines.Add(new ThemableRazorViewEngine());
             ModelMetadataProviders.Current = new NopMetadataProvider();
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);

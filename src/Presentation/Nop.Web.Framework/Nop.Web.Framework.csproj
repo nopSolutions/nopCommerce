@@ -81,8 +81,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatefulStorage.cs" />
     <Compile Include="Themes\IThemeProvider.cs" />
+    <Compile Include="Themes\ThemeableBuildManagerViewEngine .cs" />
+    <Compile Include="Themes\ThemeableVirtualPathProviderViewEngine.cs" />
     <Compile Include="Themes\ThemeConfiguration.cs" />
-    <Compile Include="Themes\ThemeableViewEngine.cs" />
+    <Compile Include="Themes\ThemableRazorViewEngine.cs" />
     <Compile Include="Themes\ThemeProvider.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
   </ItemGroup>
