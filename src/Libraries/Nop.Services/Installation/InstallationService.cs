@@ -46,6 +46,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductVariant> _productVariantRepository;
+        private readonly IRepository<EmailAccount> _emailAccountRepository;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -64,6 +65,7 @@ namespace Nop.Services.Installation
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IRepository<ProductVariant> productVariantRepository,
+            IRepository<EmailAccount> emailAccountRepository,
             ISettingService settingService)
         {
             this._measureDimensionRepository = measureDimensionRepository;
@@ -79,6 +81,8 @@ namespace Nop.Services.Installation
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
             this._productVariantRepository = productVariantRepository;
+
+            this._emailAccountRepository = emailAccountRepository;
 
             this._settingService = settingService;
         }
@@ -627,6 +631,48 @@ namespace Nop.Services.Installation
                     DefaultStoreTimeZoneId = "",
                     AllowCustomersToSetTimeZone = false
                 });
+            #endregion
+
+            #region Email accounts
+
+            var emailAccounts = new List<EmailAccount>
+                               {
+                                   new EmailAccount
+                                       {
+                                           Email = "test@mail.com",
+                                           DisplayName = "General contact",
+                                           Host = "smtp.mail.com",
+                                           Port = 25,
+                                           Username = "123",
+                                           Password = "123",
+                                           EnableSsl = false,
+                                           UseDefaultCredentials = false
+                                       },
+                                   new EmailAccount
+                                       {
+                                           Email = "test@mail.com",
+                                           DisplayName = "Sales representative",
+                                           Host = "smtp.mail.com",
+                                           Port = 25,
+                                           Username = "123",
+                                           Password = "123",
+                                           EnableSsl = false,
+                                           UseDefaultCredentials = false
+                                       },
+                                   new EmailAccount
+                                       {
+                                           Email = "test@mail.com",
+                                           DisplayName = "Customer support",
+                                           Host = "smtp.mail.com",
+                                           Port = 25,
+                                           Username = "123",
+                                           Password = "123",
+                                           EnableSsl = false,
+                                           UseDefaultCredentials = false
+                                       }, 
+                               };
+            emailAccounts.ForEach(ea => _emailAccountRepository.Insert(ea));
+
             #endregion
 
             if (installSampleData)

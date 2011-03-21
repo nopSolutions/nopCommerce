@@ -11,6 +11,7 @@
             <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
                 <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>
             </siteMapNode>
+          <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
         </siteMapNode>
         <siteMapNode title="System" nopResource="Admin.System">
             <siteMapNode title="Log" nopResource="Admin.System.Log" controller="Log" action="List" />

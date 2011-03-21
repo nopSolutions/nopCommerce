@@ -298,6 +298,90 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
+ 
+                    <LocaleResource Name="EmailAccounts">
+                        <Value>Email Accounts</Value>
+                        <Children>
+                          <LocaleResource Name="AddNew">
+                            <Value>Add a new email account</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="BackToList">
+                            <Value>back to email account list</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="EditEmailAccountDetails">
+                            <Value>Edit email account details</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Email">
+                                <Value>Email address</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>This is the from address for all outgoing emails from your store e.g. 'sales@yourstore.com'.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayName">
+                                <Value>Email display name</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>This is the friendly display name for outgoing emails from your store e.g. 'Your Store Sales Department'.</Value>
+                                  </LocaleResource>                
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Host">
+                                <Value>Host</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>This is the host name or IP address of your mail server. You can normally find this out from your ISP or web host.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Port">
+                                <Value>Port</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>This is the SMTP port of your mail server. This is usually port 25.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Username">
+                                <Value>User</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>This is the username you use to authenticate to your mail server.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Password">
+                                <Value>Password</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>This is the password you use to authenticate to your mail server</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="EnableSsl">
+                                <Value>SSL</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check to use Secure Sockets Layer (SSL) to encrypt the SMTP connection.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="UseDefaultCredentials">
+                                <Value>Use default credentials</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check to use default credentials for the connection</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Common">

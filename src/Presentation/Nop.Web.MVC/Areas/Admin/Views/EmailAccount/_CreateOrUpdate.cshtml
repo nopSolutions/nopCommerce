@@ -1,0 +1,90 @@
+﻿@model Nop.Web.MVC.Areas.Admin.Models.EmailAccountModel
+
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Email)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DisplayName)
+            @Html.ValidationMessageFor(model => model.DisplayName)
+        </td>
+    </tr>
+	<tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Host):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Host)
+            @Html.ValidationMessageFor(model => model.Host)
+        </td>
+    </tr>
+	<tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Port):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Port)
+            @Html.ValidationMessageFor(model => model.Port)
+        </td>
+    </tr>
+		<tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Username):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Username)
+            @Html.ValidationMessageFor(model => model.Username)
+        </td>
+    </tr>
+	<tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Password):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Password)
+            @Html.ValidationMessageFor(model => model.Password)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.EnableSsl):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.EnableSsl)
+            @Html.ValidationMessageFor(model => model.EnableSsl)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.UseDefaultCredentials):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.UseDefaultCredentials)
+            @Html.ValidationMessageFor(model => model.UseDefaultCredentials)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            <label>
+                Send test message:</label>:
+        </td>
+        <td class="adminData">
+            TODO @*TODO// Add support for sending test message*@
+        </td>
+    </tr>
+</table>
