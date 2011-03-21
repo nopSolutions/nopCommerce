@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Domain.Customers;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Catalog;
 using Nop.Core.Domain.Orders;
@@ -28,7 +30,8 @@ namespace Nop.Services.Orders
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IPriceFormatter _priceFormatter;
-        
+        private readonly ICustomerService _customerService;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
         #region Ctor
@@ -44,6 +47,8 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributeService">Checkout attribute service</param>
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="priceFormatter">Price formatter</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext,
             ICurrencyService currencyService,
@@ -51,7 +56,9 @@ namespace Nop.Services.Orders
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICheckoutAttributeParser checkoutAttributeParser,
-            IPriceFormatter priceFormatter)
+            IPriceFormatter priceFormatter,
+            ICustomerService customerService,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -61,6 +68,8 @@ namespace Nop.Services.Orders
             this._checkoutAttributeService = checkoutAttributeService;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._priceFormatter = priceFormatter;
+            this._customerService = customerService;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -213,7 +222,7 @@ namespace Nop.Services.Orders
             foreach (var cartItem in cartItems)
                 _sciRepository.Delete(cartItem);
         }
-
+        
         /// <summary>
         /// Validates shopping cart item
         /// </summary>
@@ -460,19 +469,25 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="productVariant">Product variant</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Price entered by a customer</param>
         /// <returns>Found shopping cart item</returns>
         public ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
-            int productVariantId,
+            ProductVariant productVariant,
             string selectedAttributes = "",
             decimal customerEnteredPrice = decimal.Zero)
         {
+            if (shoppingCart == null)
+                throw new ArgumentNullException("shoppingCart");
+
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
             foreach (var sci in shoppingCart.Where(a => a.ShoppingCartType == shoppingCartType))
             {
-                if (sci.ProductVariantId == productVariantId)
+                if (sci.ProductVariantId == productVariant.Id)
                 {
                     //attributes
                     bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, selectedAttributes);
@@ -505,22 +520,164 @@ namespace Nop.Services.Orders
                             giftCardInfoSame = false;
                     }
 
-                    //price is the same (for products which requires customers to enter a price)
+                    //price is the same (for products which require customers to enter a price)
                     bool customerEnteredPricesEqual = true;
                     if (sci.ProductVariant.CustomerEntersPrice)
-                    {
                         customerEnteredPricesEqual = Math.Round(sci.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
-                    }
 
                     //found?
                     if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual)
-                    {
                         return sci;
-                    }
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Add a product variant to shopping cart
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="customerEnteredPrice">The price enter by a customer</param>
+        /// <param name="quantity">Quantity</param>
+        /// <returns>Warnings</returns>
+        public IList<string> AddToCart(Customer customer, ProductVariant productVariant, 
+            ShoppingCartType shoppingCartType, string selectedAttributes,
+            decimal customerEnteredPrice, int quantity)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            var warnings = new List<string>();
+            if (shoppingCartType == ShoppingCartType.Wishlist && !_shoppingCartSettings.WishlistEnabled)
+                return warnings;
+
+            //TODO ResetCheckoutData
+            //_customerService.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+
+            var cart = customer.ShoppingCartItems.Where(sci=>sci.ShoppingCartType == shoppingCartType).ToList();
+
+            ShoppingCartItem shoppingCartItem = FindShoppingCartItemInTheCart(cart,
+                shoppingCartType, productVariant, selectedAttributes, customerEnteredPrice);
+
+            if (shoppingCartItem != null)
+            {
+                //update existing shopping cart item
+                int newQuantity = shoppingCartItem.Quantity + quantity;
+                warnings.AddRange(GetShoppingCartItemWarnings(shoppingCartType, productVariant,
+                    selectedAttributes, customerEnteredPrice, newQuantity));
+
+                if (warnings.Count == 0)
+                {
+                    shoppingCartItem.AttributesXml = selectedAttributes;
+                    shoppingCartItem.Quantity = newQuantity;
+                    shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+                    _customerService.UpdateCustomer(customer);
+                }
+            }
+            else
+            {
+                //new shopping cart item
+                warnings.AddRange(GetShoppingCartItemWarnings(shoppingCartType, productVariant,
+                    selectedAttributes, customerEnteredPrice, quantity));
+                if (warnings.Count == 0)
+                {
+                    //maximum items validation
+                    switch (shoppingCartType)
+                    {
+                        case ShoppingCartType.ShoppingCart:
+                            {
+                                if (cart.Count >= _shoppingCartSettings.MaximumShoppingCartItems)
+                                    return warnings;
+                            }
+                            break;
+                        case ShoppingCartType.Wishlist:
+                            {
+                                if (cart.Count >= _shoppingCartSettings.MaximumWishlistItems)
+                                    return warnings;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                    DateTime now = DateTime.UtcNow;
+                    customer.ShoppingCartItems.Add(new ShoppingCartItem()
+                    {
+                        ShoppingCartType = shoppingCartType,
+                        ProductVariant = productVariant,
+                        AttributesXml = selectedAttributes,
+                        CustomerEnteredPrice = customerEnteredPrice,
+                        Quantity = quantity,
+                        CreatedOnUtc = now,
+                        UpdatedOnUtc = now
+                    });
+                    _customerService.UpdateCustomer(customer);
+                }
+            }
+
+            return warnings;
+        }
+
+        /// <summary>
+        /// Updates the shopping cart item
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="shoppingCartItemId">Shopping cart item identifier</param>
+        /// <param name="newQuantity">New shopping cart item quantity</param>
+        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        /// <returns>Warnings</returns>
+        public IList<string> UpdateShoppingCartItem(Customer customer, int shoppingCartItemId, 
+            int newQuantity, bool resetCheckoutData)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var warnings = new List<string>();
+
+            var shoppingCartItem = customer.ShoppingCartItems.Where(sci => sci.Id == shoppingCartItemId).FirstOrDefault();
+            if (shoppingCartItem != null)
+            {
+                if (resetCheckoutData)
+                {
+                    //TODO ResetCheckoutData
+                    //_customerService.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+                }
+                if (newQuantity > 0)
+                {
+                    //check warnings
+                    warnings.AddRange(GetShoppingCartItemWarnings(shoppingCartItem.ShoppingCartType,
+                        shoppingCartItem.ProductVariant, shoppingCartItem.AttributesXml,
+                        shoppingCartItem.CustomerEnteredPrice, newQuantity));
+                    if (warnings.Count == 0)
+                    {
+                        //if everything is OK, then update a shopping cart item
+                        shoppingCartItem.Quantity = newQuantity;
+                        shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+                        _customerService.UpdateCustomer(customer);
+                    }
+                }
+                else
+                {
+                    //delete a shopping cart item
+                    customer.ShoppingCartItems.Remove(shoppingCartItem);
+                    _customerService.UpdateCustomer(customer);
+                    
+                    if (resetCheckoutData)
+                    {
+                        //TODO ResetCheckoutData
+                        //_customerService.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+                    }
+                }
+            }
+
+            return warnings;
         }
 
         #endregion

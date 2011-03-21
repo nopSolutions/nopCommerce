@@ -39,8 +39,10 @@ namespace Nop.Services.Orders
         private readonly ILogger _logger;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
+
         #endregion
 
         #region Ctor
@@ -60,6 +62,7 @@ namespace Nop.Services.Orders
         /// <param name="logger">Logger</param>
         /// <param name="orderTotalCalculationService">Order total calculationservice</param>
         /// <param name="priceFormatter">Price formatter</param>
+        /// <param name="shoppingCartService">Shopping cart service</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
         public OrderService(IRepository<Order> orderRepository,
@@ -74,6 +77,7 @@ namespace Nop.Services.Orders
             ILogger logger,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPriceFormatter priceFormatter,
+            IShoppingCartService shoppingCartService,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings)
         {
@@ -89,6 +93,7 @@ namespace Nop.Services.Orders
             this._logger = logger;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._priceFormatter = priceFormatter;
+            this._shoppingCartService = shoppingCartService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
         }
@@ -751,7 +756,26 @@ namespace Nop.Services.Orders
 
             return IsDownloadAllowed(orderProductVariant) && orderProductVariant.LicenseDownloadId > 0;
         }
-        
+
+        /// <summary>
+        /// Place order items in current user shopping cart.
+        /// </summary>
+        /// <param name="order">The order</param>
+        public void ReOrder(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            foreach (var opv in order.OrderProductVariants)
+            {
+                _shoppingCartService.AddToCart(opv.Order.Customer, opv.ProductVariant,
+                     ShoppingCartType.ShoppingCart, opv.AttributesXml,
+                    opv.UnitPriceExclTax, opv.Quantity);
+
+                //TODO reset checkout info (selected shipping option, payment method, etc). Old ICustomerService.ResetCheckoutData method
+            }
+        }
+
         /// <summary>
         /// Cancels a recurring payment
         /// </summary>

@@ -570,8 +570,9 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<ShoppingCartSettings>>()
                 .SaveSettings(new ShoppingCartSettings()
                 {
-                    MaximumShoppingCartItems = 10000,
-                    MaximumWishlistItems = 10000
+                    MaximumShoppingCartItems = 1000,
+                    MaximumWishlistItems = 1000,
+                    WishlistEnabled = true
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<UserSettings>>()

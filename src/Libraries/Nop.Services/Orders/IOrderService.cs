@@ -190,6 +190,12 @@ namespace Nop.Services.Orders
         bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant);
 
         /// <summary>
+        /// Place order items in current user shopping cart.
+        /// </summary>
+        /// <param name="order">The order</param>
+        void ReOrder(Order order);
+
+        /// <summary>
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
