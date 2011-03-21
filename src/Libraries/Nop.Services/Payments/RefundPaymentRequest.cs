@@ -15,7 +15,7 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets an amount
         /// </summary>
-        public decimal Amount { get; set; }
+        public decimal AmountToRefund { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether it's a partial refund; otherwize, full refund

@@ -33,6 +33,8 @@ namespace Nop.Services.Catalog
         private readonly IRepository<RelatedProduct> _relatedProductRepository;
         private readonly IRepository<CrossSellProduct> _crossSellProductRepository;
         private readonly IRepository<TierPrice> _tierPriceRepository;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -50,6 +52,8 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProductRepository">Related product repository</param>
         /// <param name="crossSellProductRepository">Cross-sell product repository</param>
         /// <param name="tierPriceRepository">Tier price repository</param>
+        /// <param name="productAttributeService">Product attribute service</param>
+        /// <param name="productAttributeParser">Product attribute parser service</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductCategory> productCategoryRepository,
@@ -57,7 +61,9 @@ namespace Nop.Services.Catalog
             IRepository<ProductVariant> productVariantRepository,
             IRepository<RelatedProduct> relatedProductRepository,
             IRepository<CrossSellProduct> crossSellProductRepository,
-            IRepository<TierPrice> tierPriceRepository)
+            IRepository<TierPrice> tierPriceRepository,
+            IProductAttributeService productAttributeService,
+            IProductAttributeParser productAttributeParser)
         {
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
@@ -67,6 +73,8 @@ namespace Nop.Services.Catalog
             this._relatedProductRepository = relatedProductRepository;
             this._crossSellProductRepository = crossSellProductRepository;
             this._tierPriceRepository = tierPriceRepository;
+            this._productAttributeService = productAttributeService;
+            this._productAttributeParser = productAttributeParser;
         }
 
         #endregion
@@ -628,6 +636,111 @@ namespace Nop.Services.Catalog
 
             productVariant.Deleted = true;
             UpdateProductVariant(productVariant);
+        }
+
+
+        /// <summary>
+        /// Adjusts inventory
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="decrease">A value indicating whether to increase or descrease product variant stock quantity</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        public void AdjustInventory(ProductVariant productVariant, bool decrease,
+            int quantity, string attributesXml)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            switch (productVariant.ManageInventoryMethod)
+            {
+                case ManageInventoryMethod.DontManageStock:
+                    {
+                        //do nothing
+                        return;
+                    }
+                case ManageInventoryMethod.ManageStock:
+                    {
+                        int newStockQuantity = 0;
+                        if (decrease)
+                            newStockQuantity = productVariant.StockQuantity - quantity;
+                        else
+                            newStockQuantity = productVariant.StockQuantity + quantity;
+
+                        bool newPublished = productVariant.Published;
+                        bool newDisableBuyButton = productVariant.DisableBuyButton;
+
+                        //check if minimum quantity is reached
+                        if (decrease)
+                        {
+                            if (productVariant.MinStockQuantity >= newStockQuantity)
+                            {
+                                switch (productVariant.LowStockActivity)
+                                {
+                                    case LowStockActivity.DisableBuyButton:
+                                        newDisableBuyButton = true;
+                                        break;
+                                    case LowStockActivity.Unpublish:
+                                        newPublished = false;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+
+                        if (decrease && productVariant.NotifyAdminForQuantityBelow > newStockQuantity)
+                        {
+                            //UNDONE send email notification
+                            //UNDONE add DefaultAdminLanguage property (we need to decide where it should be added to)
+                            //_messageService.SendQuantityBelowStoreOwnerNotification(productVariant, _localizationService.DefaultAdminLanguage.LanguageId);
+                        }
+
+                        productVariant.StockQuantity = newStockQuantity;
+                        productVariant.DisableBuyButton = newDisableBuyButton;
+                        productVariant.Published = newPublished;
+                        UpdateProductVariant(productVariant);
+
+                        if (decrease)
+                        {
+                            var product = productVariant.Product;
+                            bool allProductVariantsUnpublished = true;
+                            foreach (var pv2 in product.ProductVariants)
+                            {
+                                if (pv2.Published)
+                                {
+                                    allProductVariantsUnpublished = false;
+                                    break;
+                                }
+                            }
+
+                            if (allProductVariantsUnpublished)
+                            {
+                                product.Published = false;
+                                UpdateProduct(product);
+                            }
+                        }
+                    }
+                    break;
+                case ManageInventoryMethod.ManageStockByAttributes:
+                    {
+                        var combination = _productAttributeParser.FindProductVariantAttributeCombination(productVariant, attributesXml);
+                        if (combination != null)
+                        {
+                            int newStockQuantity = 0;
+                            if (decrease)
+                                newStockQuantity = combination.StockQuantity - quantity;
+                            else
+                                newStockQuantity = combination.StockQuantity + quantity;
+
+                            combination.StockQuantity = newStockQuantity;
+                            _productAttributeService.UpdateProductVariantAttributeCombination(combination);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion

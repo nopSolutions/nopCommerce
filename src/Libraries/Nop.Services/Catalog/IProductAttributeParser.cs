@@ -58,6 +58,15 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         bool AreProductAttributesEqual(string attributes1, string attributes2);
 
+        /// <summary>
+        /// Finds a product variant attribute combination by attributes stored in XML 
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Found product variant attribute combination</returns>
+        ProductVariantAttributeCombination FindProductVariantAttributeCombination(ProductVariant productVariant,
+            string attributesXml);
+
         #endregion
 
         #region Gift card attributes

@@ -281,6 +281,33 @@ namespace Nop.Services.Catalog
             return attributesEqual;
         }
 
+        /// <summary>
+        /// Finds a product variant attribute combination by attributes stored in XML 
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <returns>Found product variant attribute combination</returns>
+        public ProductVariantAttributeCombination FindProductVariantAttributeCombination(ProductVariant productVariant, 
+            string attributesXml)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            //existing combinations
+            var combinations = _productAttributeService.GetAllProductVariantAttributeCombinations(productVariant.Id);
+            if (combinations.Count == 0)
+                return null;
+
+            foreach (var combination in combinations)
+            {
+                bool attributesEqual = AreProductAttributesEqual(combination.AttributesXml, attributesXml);
+                if (attributesEqual)
+                    return combination;
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region Gift card attributes

@@ -48,6 +48,20 @@
   <LocaleResource Name="Products.InclTaxSuffix">
     <Value>{0} incl tax</Value>
   </LocaleResource>
+
+
+
+
+
+  <LocaleResource Name="RewardPoints.Message.EarnedForOrder">
+    <Value>Earned promotion for order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.ReducedForOrder">
+    <Value>Reduced promotion for order #{0}</Value>
+  </LocaleResource>
+  
+  
+  
   <LocaleResource Name="ShoppingCart.CannotMixStandardAndAutoshipProducts">
     <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
   </LocaleResource>
@@ -67,21 +81,21 @@
     <Value>Your quantity exceeds stock on hand. The maximum quantity that can be added is {0}.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.SelectAttribute">
-        <Value>Please select {0}</Value>
-    </LocaleResource>
+    <Value>Please select {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCartWarning.RecipientEmailError">
-        <Value>Enter valid recipient email</Value>
-    </LocaleResource>
+    <Value>Enter valid recipient email</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCartWarning.RecipientNameError">
-        <Value>Enter valid recipient name</Value>
-    </LocaleResource>
+    <Value>Enter valid recipient name</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCartWarning.SenderEmailError">
-        <Value>Enter valid sender email</Value>
-    </LocaleResource>
+    <Value>Enter valid sender email</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCartWarning.SenderNameError">
-        <Value>Enter valid sender name</Value>
-    </LocaleResource>
+    <Value>Enter valid sender name</Value>
+  </LocaleResource>
   <LocaleResource Name="Wishlist.Wishlist">
-        <Value>Wishlist</Value>
-    </LocaleResource>
+    <Value>Wishlist</Value>
+  </LocaleResource>
 </Language>

@@ -534,7 +534,9 @@ namespace Nop.Services.Installation
                     ExchangeRate = 1,
                     PointsForRegistration = 0,
                     PointsForPurchases_Amount = 10,
-                    PointsForPurchases_Points = 1
+                    PointsForPurchases_Points = 1,
+                    PointsForPurchases_Awarded = OrderStatus.Complete,
+                    PointsForPurchases_Canceled = OrderStatus.Cancelled,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>()

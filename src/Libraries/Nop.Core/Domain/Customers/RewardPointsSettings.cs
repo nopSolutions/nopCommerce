@@ -1,6 +1,7 @@
 ﻿
 using Nop.Core.Configuration;
 using System.Collections.Generic;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -30,6 +31,15 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a number of points awarded for purchases
         /// </summary>
         public int PointsForPurchases_Points { get; set; }
+        
+        /// <summary>
+        /// Points are awarded when the order status is
+        /// </summary>
+        public OrderStatus PointsForPurchases_Awarded { get; set; }
 
+        /// <summary>
+        /// Points are canceled when the order is
+        /// </summary>
+        public OrderStatus PointsForPurchases_Canceled { get; set; }
     }
 }

@@ -125,6 +125,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         void DeleteProductVariant(ProductVariant productVariant);
+        
+        /// <summary>
+        /// Adjusts inventory
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="decrease">A value indicating whether to increase or descrease product variant stock quantity</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        void AdjustInventory(ProductVariant productVariant, bool decrease,
+            int quantity, string attributesXml);
 
         #endregion
 
