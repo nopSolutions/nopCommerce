@@ -19,6 +19,7 @@ namespace Nop.Core.Configuration
         private bool _dynamicDiscovery;
         private string _engineType;
         private XmlNode _scheduleTasks;
+        private string _themeBasePath;
 
         #endregion
 
@@ -56,6 +57,14 @@ namespace Nop.Core.Configuration
                 var attribute = engineNode.Attributes["Type"];
                 if (attribute != null)
                     config.EngineType = attribute.Value;
+            }
+
+            var themeNode = section.SelectSingleNode("Themes");
+            if (themeNode != null)
+            {
+                var attribute = themeNode.Attributes["basePath"];
+                if (attribute != null)
+                    config.ThemeBasePath = attribute.Value;
             }
 
             config.ScheduleTasks = section.SelectSingleNode("ScheduleTasks");
@@ -141,6 +150,22 @@ namespace Nop.Core.Configuration
                 _scheduleTasks = value;
             }
         }
+
+        /// <summary>
+        /// Specifices where the themes will be stored (~/Themes/)
+        /// </summary>
+        public string ThemeBasePath
+        {
+            get
+            {
+                return _themeBasePath;
+            }
+            set
+            {
+                _themeBasePath = value;
+            }
+        }
+
         #endregion
     }
 }

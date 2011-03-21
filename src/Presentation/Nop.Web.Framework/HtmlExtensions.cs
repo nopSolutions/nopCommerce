@@ -20,10 +20,10 @@ namespace Nop.Web.Framework
 {
     public static class HtmlExtensions
     {
-        public static string ResolveUrl(this HtmlHelper helper, string url)
+        public static MvcHtmlString ResolveUrl(this HtmlHelper htmlHelper, string url)
         {
-            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
-            return urlHelper.Content(url);
+            var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
+            return MvcHtmlString.Create(urlHelper.Content(url));
         }
 
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
@@ -32,7 +32,7 @@ namespace Nop.Web.Framework
             var builder = new TagBuilder("img");
 
             // Add attributes
-            builder.MergeAttribute("src", ResolveUrl(helper, "/Areas/Admin/Content/images/ico-help.gif"));
+            builder.MergeAttribute("src", ResolveUrl(helper, "/Areas/Admin/Content/images/ico-help.gif").ToHtmlString());
             builder.MergeAttribute("alt", value);
             builder.MergeAttribute("title", value);
 
@@ -128,7 +128,7 @@ namespace Nop.Web.Framework
                     result.Append(helper.Hint(hintResource).ToHtmlString());
                 }
             }
-            result.Append(helper.LabelFor(expression, new {title=hintResource}));
+            result.Append(helper.LabelFor(expression, new { title = hintResource }));
             return MvcHtmlString.Create(result.ToString());
         }
 

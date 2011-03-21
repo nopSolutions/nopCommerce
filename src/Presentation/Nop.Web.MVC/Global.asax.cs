@@ -2,9 +2,12 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 using FluentValidation.Mvc;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Installation;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Themes;
+using System.Linq;
 using Nop.Web.MVC.Infrastructure;
 
 namespace Nop.Web.MVC
@@ -46,6 +49,16 @@ namespace Nop.Web.MVC
             ModelBinders.Binders.Add(typeof(BaseNopModel),new NopModelBinder());
 
             //other MVC stuff
+
+            //var themeableRazorViewEngine = new ThemeableViewEngine
+            //                                   {
+            //                                       CurrentTheme = httpContext => httpContext.Session["theme"] as string ?? string.Empty
+            //                                   };
+            //ViewEngines.Engines.Clear();
+            //ViewEngines.Engines.Add(themeableRazorViewEngine);
+
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new ThemableViewEngine());
             ModelMetadataProviders.Current = new NopMetadataProvider();
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -77,6 +90,12 @@ namespace Nop.Web.MVC
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
+            //TODO:Get "WorkingTheme" to persist throught the session (cookie?).
+            var defaultTheme =
+                EngineContext.Current.Resolve<IThemeProvider>().GetThemeConfigurations().Where(x => x.IsDefault).
+                    FirstOrDefault();
+            EngineContext.Current.Resolve<IWorkContext>().WorkingTheme = defaultTheme == null ? string.Empty : defaultTheme.ThemeName;
+
             //Service locator. We register it per request because ILifetimeScope could be changed per request
             //TODO uncomment to register ServiceLocator
             //RegisterServiceLocator();

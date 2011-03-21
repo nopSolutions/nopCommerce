@@ -39,6 +39,7 @@ using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Themes;
 
 namespace Nop.Web.MVC.Infrastructure
 {
@@ -160,6 +161,7 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<TelerikLocalizationServiceFactory>().As<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>().InstancePerHttpRequest();
 
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
+            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().SingleInstance();
         }
     }
 
