@@ -15,7 +15,7 @@ namespace Nop.Services.Orders
     /// <summary>
     /// Order service interface
     /// </summary>
-    partial interface IOrderService
+    public partial interface IOrderService
     {
         #region Orders
 

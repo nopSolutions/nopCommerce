@@ -112,7 +112,7 @@ namespace Nop.Services.Tests.Payments
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool CanCapture
+        public bool SupportCapture
         {
             get
             {
@@ -123,7 +123,7 @@ namespace Nop.Services.Tests.Payments
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool CanPartiallyRefund
+        public bool SupportPartiallyRefund
         {
             get
             {
@@ -134,7 +134,7 @@ namespace Nop.Services.Tests.Payments
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool CanRefund
+        public bool SupportRefund
         {
             get
             {
@@ -145,7 +145,7 @@ namespace Nop.Services.Tests.Payments
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool CanVoid
+        public bool SupportVoid
         {
             get
             {
@@ -157,7 +157,7 @@ namespace Nop.Services.Tests.Payments
         /// Gets a recurring payment type of payment method
         /// </summary>
         /// <returns>A recurring payment type of payment method</returns>
-        public RecurringPaymentType SupportRecurringPayments
+        public RecurringPaymentType RecurringPaymentType
         {
             get
             {
