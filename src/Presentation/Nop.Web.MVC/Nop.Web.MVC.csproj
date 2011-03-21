@@ -659,6 +659,45 @@
     <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
     <Content Include="Scripts\swfobject.js" />
     <None Include="Themes\DarkOrange\theme.config" />
+    <Content Include="Themes\nopClassic\Content\images\bbeditor-button-bg.gif" />
+    <Content Include="Themes\nopClassic\Content\images\bgTextBox.gif" />
+    <Content Include="Themes\nopClassic\Content\images\btn_download_bg.gif" />
+    <Content Include="Themes\nopClassic\Content\images\cart_line_x.gif" />
+    <Content Include="Themes\nopClassic\Content\images\cart_line_y.gif" />
+    <Content Include="Themes\nopClassic\Content\images\closelabel.gif" />
+    <Content Include="Themes\nopClassic\Content\images\EmptyStar.png" />
+    <Content Include="Themes\nopClassic\Content\images\FilledStar.png" />
+    <Content Include="Themes\nopClassic\Content\images\grey_button_bg.gif" />
+    <Content Include="Themes\nopClassic\Content\images\grid_header_back.png" />
+    <Content Include="Themes\nopClassic\Content\images\ico-account.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-admin.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-arrow-r.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-cart.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-delete.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-edit.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-forum-post-add.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-forum-post-high.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-forum-post.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-forum-watch.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-forum.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-inbox.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-login.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-logout.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-moveTopic.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-pm.png" />
+    <Content Include="Themes\nopClassic\Content\images\ico-register.gif" />
+    <Content Include="Themes\nopClassic\Content\images\ico-wishlist.gif" />
+    <Content Include="Themes\nopClassic\Content\images\loading.gif" />
+    <Content Include="Themes\nopClassic\Content\images\logo.gif" />
+    <Content Include="Themes\nopClassic\Content\images\nextlabel.gif" />
+    <Content Include="Themes\nopClassic\Content\images\orange_button_bg.gif" />
+    <Content Include="Themes\nopClassic\Content\images\prevlabel.gif" />
+    <Content Include="Themes\nopClassic\Content\images\progress-step-active.gif" />
+    <Content Include="Themes\nopClassic\Content\images\progress-step-inactive.gif" />
+    <Content Include="Themes\nopClassic\Content\images\SavedStar.png" />
+    <Content Include="Themes\nopClassic\Content\images\tab-line.png" />
+    <Content Include="Themes\nopClassic\Content\images\tab.png" />
+    <Content Include="Themes\nopClassic\Content\styles.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -689,6 +728,11 @@
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Themes\nopClassic\theme.config" />
+    <Content Include="Themes\nopClassic\Views\Shared\Head.cshtml" />
+    <Content Include="Themes\nopClassic\Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Scripts\" />
