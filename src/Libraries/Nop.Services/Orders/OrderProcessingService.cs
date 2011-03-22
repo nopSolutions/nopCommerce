@@ -191,7 +191,7 @@ namespace Nop.Services.Orders
                 //        DisplayToCustomer = false,
                 //        CreatedOnUtc = DateTime.UtcNow
                 //    });
-                //    UpdateOrder(order);
+                //    _orderService.UpdateOrder(order);
                 //}
             }
 
@@ -209,7 +209,7 @@ namespace Nop.Services.Orders
                 //        DisplayToCustomer = false,
                 //        CreatedOnUtc = DateTime.UtcNow
                 //    });
-                //    UpdateOrder(order);
+                //    _orderService.UpdateOrder(order);
                 //}
             }
 
@@ -1201,7 +1201,7 @@ namespace Nop.Services.Orders
                         //        DisplayToCustomer = false,
                         //        CreatedOnUtc = DateTime.UtcNow
                         //    });
-                        //    UpdateOrder(order);
+                        //    _orderService.UpdateOrder(order);
                         //}
 
                         //int orderPlacedCustomerNotificationQueuedEmailId = messageService.SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId);
@@ -1213,7 +1213,7 @@ namespace Nop.Services.Orders
                         //        DisplayToCustomer = false,
                         //        CreatedOnUtc = DateTime.UtcNow
                         //    });
-                        //    UpdateOrder(order);
+                        //    _orderService.UpdateOrder(order);
                         //}
 
                         //UNDONE send SMS
@@ -1328,7 +1328,7 @@ namespace Nop.Services.Orders
                     RecurringTotalCycles = recurringPayment.TotalCycles,
                 };
 
-                //place new order
+                //place a new order
                 var result = this.PlaceOrder(paymentInfo);
                 if (result.Success)
                 {
@@ -1527,7 +1527,7 @@ namespace Nop.Services.Orders
                 //        DisplayToCustomer = false,
                 //        CreatedOnUtc = DateTime.UtcNow
                 //    });
-                //    UpdateOrder(order);
+                //    _orderService.UpdateOrder(order);
                 //}
             }
 
@@ -1592,7 +1592,7 @@ namespace Nop.Services.Orders
                 //        DisplayToCustomer = false,
                 //        CreatedOnUtc = DateTime.UtcNow
                 //    });
-                //    UpdateOrder(order);
+                //    _orderService.UpdateOrder(order);
                 //}
             }
 
