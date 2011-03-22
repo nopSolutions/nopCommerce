@@ -9,6 +9,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Services.Payments;
 
 namespace Nop.Services.Orders
 {
@@ -188,6 +189,19 @@ namespace Nop.Services.Orders
         /// <param name="orderProductVariant">Order produvt variant to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
         bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant);
+         
+        /// <summary>
+        /// Places an order
+        /// </summary>
+        /// <param name="processPaymentRequest">Process payment request</param>
+        /// <returns>Place order result</returns>
+        PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest);
+
+        /// <summary>
+        /// Process next recurring psayment
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        void ProcessNextRecurringPayment(RecurringPayment recurringPayment);
 
         /// <summary>
         /// Place order items in current user shopping cart.

@@ -134,6 +134,7 @@
     <Compile Include="Orders\GiftCardService.cs" />
     <Compile Include="Orders\OrderService.cs" />
     <Compile Include="Orders\OrderTotalCalculationService.cs" />
+    <Compile Include="Orders\PlaceOrderResult.cs" />
     <Compile Include="Orders\ShoppingCartExtensions.cs" />
     <Compile Include="Orders\ShoppingCartService.cs" />
     <Compile Include="Payments\RefundPaymentResult.cs" />

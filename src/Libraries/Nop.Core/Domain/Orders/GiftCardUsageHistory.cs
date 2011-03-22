@@ -25,11 +25,6 @@ namespace Nop.Core.Domain.Orders
         public decimal UsedValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the used value (customer currency)
-        /// </summary>
-        public decimal UsedValueInCustomerCurrency { get; set; }
-
-        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

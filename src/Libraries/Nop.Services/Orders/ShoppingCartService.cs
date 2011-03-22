@@ -558,7 +558,9 @@ namespace Nop.Services.Orders
             if (shoppingCartType == ShoppingCartType.Wishlist && !_shoppingCartSettings.WishlistEnabled)
                 return warnings;
 
-            //TODO ResetCheckoutData
+
+
+            //TODO reset checkout info (selected shipping option, payment method, etc). Old ICustomerService.ResetCheckoutData method
             //_customerService.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
 
             var cart = customer.ShoppingCartItems.Where(sci=>sci.ShoppingCartType == shoppingCartType).ToList();

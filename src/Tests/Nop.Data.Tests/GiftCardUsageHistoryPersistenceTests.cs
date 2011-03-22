@@ -23,7 +23,6 @@ namespace Nop.Data.Tests
             var gcuh = new GiftCardUsageHistory()
             {
                 UsedValue = 1.1M,
-                UsedValueInCustomerCurrency = 2.1M,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 GiftCard = GetTestGiftCard(),
                 UsedWithOrder = GetTestOrder()
@@ -32,7 +31,6 @@ namespace Nop.Data.Tests
             var fromDb = SaveAndLoadEntity(gcuh);
             fromDb.ShouldNotBeNull();
             fromDb.UsedValue.ShouldEqual(1.1M);
-            fromDb.UsedValueInCustomerCurrency.ShouldEqual(2.1M);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 
             fromDb.GiftCard.ShouldNotBeNull();

@@ -173,8 +173,6 @@ namespace Nop.Data.Tests
                     Message = "Used with order",
                     PointsBalance = 2,
                     UsedAmount = 3,
-                    UsedAmountInCustomerCurrency = 4,
-                    CustomerCurrencyCode = "USD",
                     CreatedOnUtc = new DateTime(2010, 01, 01)
                 },
                 BillingAddress = GetTestBillingAddress(),
@@ -232,7 +230,6 @@ namespace Nop.Data.Tests
                     new GiftCardUsageHistory()
                     {
                         UsedValue = 1.1M,
-                        UsedValueInCustomerCurrency = 2.2M,
                         CreatedOnUtc = new DateTime(2010, 01, 01),
                         GiftCard = GetTestGiftCard()
                     }

@@ -4,12 +4,20 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security
 {
     public class EncryptionService : IEncryptionService
     {
-        public string CreateSaltKey(int size) {
+        private readonly SecuritySettings _securitySettings;
+        public EncryptionService(SecuritySettings securitySettings)
+        {
+            this._securitySettings = securitySettings;
+        }
+
+        public string CreateSaltKey(int size) 
+        {
             // Generate a cryptographic random number
             var rng = new RNGCryptoServiceProvider();
             var buff = new byte[size];
@@ -30,9 +38,13 @@ namespace Nop.Services.Security
             return hashedPassword;
         }
 
-        public string EncryptText(string plainText, string encryptionPrivateKey) {
+        public string EncryptText(string plainText, string encryptionPrivateKey = "") 
+        {
             if (string.IsNullOrEmpty(plainText))
                 return plainText;
+
+            if (String.IsNullOrEmpty(encryptionPrivateKey))
+                encryptionPrivateKey = _securitySettings.EncryptionKey;
 
             var tDESalg = new TripleDESCryptoServiceProvider();
             tDESalg.Key = new ASCIIEncoding().GetBytes(encryptionPrivateKey.Substring(0, 16));
@@ -42,9 +54,13 @@ namespace Nop.Services.Security
             return Convert.ToBase64String(encryptedBinary);
         }
 
-        public string DecryptText(string cipherText, string encryptionPrivateKey) {
+        public string DecryptText(string cipherText, string encryptionPrivateKey = "") 
+        {
             if (String.IsNullOrEmpty(cipherText))
                 return cipherText;
+
+            if (String.IsNullOrEmpty(encryptionPrivateKey))
+                encryptionPrivateKey = _securitySettings.EncryptionKey;
 
             var tDESalg = new TripleDESCryptoServiceProvider();
             tDESalg.Key = new ASCIIEncoding().GetBytes(encryptionPrivateKey.Substring(0, 16));
@@ -56,7 +72,8 @@ namespace Nop.Services.Security
 
         #region Utilities
 
-        private byte[] EncryptTextToMemory(string data, byte[] key, byte[] iv) {
+        private byte[] EncryptTextToMemory(string data, byte[] key, byte[] iv) 
+        {
             using (var ms = new MemoryStream()) {
                 using (var cs = new CryptoStream(ms, new TripleDESCryptoServiceProvider().CreateEncryptor(key, iv), CryptoStreamMode.Write)) {
                     byte[] toEncrypt = new UnicodeEncoding().GetBytes(data);
@@ -68,7 +85,8 @@ namespace Nop.Services.Security
             }
         }
 
-        private string DecryptTextFromMemory(byte[] data, byte[] key, byte[] iv) {
+        private string DecryptTextFromMemory(byte[] data, byte[] key, byte[] iv) 
+        {
             using (var ms = new MemoryStream(data)) {
                 using (var cs = new CryptoStream(ms, new TripleDESCryptoServiceProvider().CreateDecryptor(key, iv), CryptoStreamMode.Read))
                 {

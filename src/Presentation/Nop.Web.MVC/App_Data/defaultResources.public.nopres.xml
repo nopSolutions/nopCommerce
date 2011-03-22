@@ -59,9 +59,12 @@
   <LocaleResource Name="RewardPoints.Message.ReducedForOrder">
     <Value>Reduced promotion for order #{0}</Value>
   </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.RedeemedForOrder">
+    <Value>Redeemed for order #{0}</Value>
+  </LocaleResource>
   
-  
-  
+
+
   <LocaleResource Name="ShoppingCart.CannotMixStandardAndAutoshipProducts">
     <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
   </LocaleResource>

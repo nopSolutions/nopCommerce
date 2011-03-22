@@ -1,4 +1,5 @@
 using System;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -109,7 +110,7 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets the cycle period
         /// </summary>
-        public int RecurringCyclePeriod { get; set; }
+        public RecurringProductCyclePeriod RecurringCyclePeriod { get; set; }
 
         /// <summary>
         /// Gets or sets the total cycles

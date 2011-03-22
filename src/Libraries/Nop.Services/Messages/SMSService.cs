@@ -69,6 +69,7 @@ namespace Nop.Services.Messages
         {
             int i = 0;
 
+            //UNDONE ensure than only active SMS providers are loaded
             foreach (var smsProvider in LoadAllSMSProviders())
             {
                 if (smsProvider.SendSMS(text))

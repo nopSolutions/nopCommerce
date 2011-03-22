@@ -51,13 +51,8 @@ namespace Nop.Services.Orders
             foreach (ShoppingCartItem sci in shoppingCart)
             {
                 var productVariant = sci.ProductVariant;
-                if (productVariant != null)
-                {
-                    if (productVariant.IsRecurring)
-                    {
+                if (productVariant != null && productVariant.IsRecurring)
                         return true;
-                    }
-                }
             }
             return false;
         }

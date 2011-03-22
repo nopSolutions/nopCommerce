@@ -107,6 +107,11 @@ namespace Nop.Core.Domain.Customers
         public string TimeZoneId { get; set; }
 
         /// <summary>
+        /// Gets or sets the affiliate identifier
+        /// </summary>
+        public int AffiliateId { get; set; }
+        
+        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }
@@ -248,8 +253,7 @@ namespace Nop.Core.Domain.Customers
         #region Reward points
 
         public virtual void AddRewardPointsHistoryEntry(int points, string message = "",
-            Order usedWithOrder = null, decimal usedAmount = 0M,
-            decimal usedAmountInCustomerCurrency = 0M, string customerCurrencyCode = "")
+            Order usedWithOrder = null, decimal usedAmount = 0M)
         {
             int newPointsBalance = this.GetRewardPointsBalance() + points;
 
@@ -258,11 +262,9 @@ namespace Nop.Core.Domain.Customers
                 Customer = this,
                 UsedWithOrder = usedWithOrder,
                 Points = points,
-                Message = message,
                 PointsBalance = newPointsBalance,
                 UsedAmount = usedAmount,
-                UsedAmountInCustomerCurrency = usedAmountInCustomerCurrency,
-                CustomerCurrencyCode = customerCurrencyCode,
+                Message = message,
                 CreatedOnUtc = DateTime.UtcNow
             };
 
@@ -276,7 +278,7 @@ namespace Nop.Core.Domain.Customers
         {
             int result = 0;
             if (this.RewardPointsHistory.Count > 0)
-                result = this.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).FirstOrDefault().PointsBalance;
+                result = this.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id).FirstOrDefault().PointsBalance;
             return result;
         }
 

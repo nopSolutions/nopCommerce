@@ -11,7 +11,6 @@ namespace Nop.Services.Security
         private readonly IEncryptionService _encryptionService;
         private readonly IRepository<User> _userRepository;
         private readonly UserSettings _userSettings;
-        string encryptionKey = "273ece6f97dd844d"; // TODO - inject
 
         public UserService(IEncryptionService encryptionService, 
             IRepository<User> userRepository,
@@ -86,7 +85,7 @@ namespace Nop.Services.Security
             switch (user.PasswordFormat)
             {
                 case PasswordFormat.Encrypted:
-                    pwd = _encryptionService.EncryptText(password, encryptionKey);
+                    pwd = _encryptionService.EncryptText(password);
                     break;
                 case PasswordFormat.Hashed:
                     pwd = _encryptionService.CreatePasswordHash(password, user.PasswordSalt, _userSettings.HashedPasswordFormat);
@@ -148,8 +147,8 @@ namespace Nop.Services.Security
                     break;
                 case PasswordFormat.Encrypted:
                     {
-                        user.Password = _encryptionService.EncryptText(request.Password, encryptionKey);
-                        user.SecurityAnswer = _encryptionService.EncryptText(request.SecurityAnswer, encryptionKey);
+                        user.Password = _encryptionService.EncryptText(request.Password);
+                        user.SecurityAnswer = _encryptionService.EncryptText(request.SecurityAnswer);
                     }
                     break;
                 case PasswordFormat.Hashed:
@@ -242,7 +241,7 @@ namespace Nop.Services.Security
                         break;
                     case PasswordFormat.Encrypted:
                         {
-                            user.Password = _encryptionService.EncryptText(request.NewPassword, encryptionKey);
+                            user.Password = _encryptionService.EncryptText(request.NewPassword);
                         }
                         break;
                     case PasswordFormat.Hashed:

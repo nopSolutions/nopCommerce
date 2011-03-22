@@ -30,16 +30,6 @@ namespace Nop.Core.Domain.Customers
         public decimal UsedAmount { get; set; }
 
         /// <summary>
-        /// Gets or sets the used amount (customer currency)
-        /// </summary>
-        public decimal UsedAmountInCustomerCurrency { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer currency code
-        /// </summary>
-        public string CustomerCurrencyCode { get; set; }
-
-        /// <summary>
         /// Gets or sets the message
         /// </summary>
         public string Message { get; set; }
