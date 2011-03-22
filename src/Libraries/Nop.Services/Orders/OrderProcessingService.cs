@@ -352,89 +352,6 @@ namespace Nop.Services.Orders
         #region Methods
 
         /// <summary>
-        /// Gets a value indicating whether download is allowed
-        /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
-        /// <returns>True if download is allowed; otherwise, false.</returns>
-        public bool IsDownloadAllowed(OrderProductVariant orderProductVariant)
-        {
-            if (orderProductVariant == null)
-                return false;
-
-            var order = orderProductVariant.Order;
-            if (order == null || order.Deleted)
-                return false;
-
-            //order status
-            if (order.OrderStatus == OrderStatus.Cancelled)
-                return false;
-
-            var productVariant = orderProductVariant.ProductVariant;
-            if (productVariant == null || !productVariant.IsDownload)
-                return false;
-
-            //payment status
-            switch (productVariant.DownloadActivationType)
-            {
-                case DownloadActivationType.WhenOrderIsPaid:
-                    {
-                        if (order.PaymentStatus == PaymentStatus.Paid && order.PaidDateUtc.HasValue)
-                        {
-                            //expiration date
-                            if (productVariant.DownloadExpirationDays.HasValue)
-                            {
-                                if (order.PaidDateUtc.Value.AddDays(productVariant.DownloadExpirationDays.Value) > DateTime.UtcNow)
-                                {
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    break;
-                case DownloadActivationType.Manually:
-                    {
-                        if (orderProductVariant.IsDownloadActivated)
-                        {
-                            //expiration date
-                            if (productVariant.DownloadExpirationDays.HasValue)
-                            {
-                                if (order.CreatedOnUtc.AddDays(productVariant.DownloadExpirationDays.Value) > DateTime.UtcNow)
-                                {
-                                    return true;
-                                }
-                            }
-                            else
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether license download is allowed
-        /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
-        /// <returns>True if license download is allowed; otherwise, false.</returns>
-        public bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant)
-        {
-            if (orderProductVariant == null)
-                return false;
-
-            return IsDownloadAllowed(orderProductVariant) && orderProductVariant.LicenseDownloadId > 0;
-        }
-
-        /// <summary>
         /// Places an order
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
@@ -1288,23 +1205,8 @@ namespace Nop.Services.Orders
             return result;
         }
 
-        /// <summary>
-        /// Place order items in current user shopping cart.
-        /// </summary>
-        /// <param name="order">The order</param>
-        public void ReOrder(Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
 
-            foreach (var opv in order.OrderProductVariants)
-            {
-                _shoppingCartService.AddToCart(opv.Order.Customer, opv.ProductVariant,
-                     ShoppingCartType.ShoppingCart, opv.AttributesXml,
-                    opv.UnitPriceExclTax, opv.Quantity);
-            }
-        }
-        
+
         /// <summary>
         /// Process next recurring psayment
         /// </summary>
@@ -1415,7 +1317,8 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                result = new CancelRecurringPaymentResult();
+                if (result == null)
+                    result = new CancelRecurringPaymentResult();
                 result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
             }
 
@@ -1484,6 +1387,8 @@ namespace Nop.Services.Orders
             return true;
         }
 
+
+
         /// <summary>
         /// Gets a value indicating whether shipping is allowed
         /// </summary>
@@ -1548,7 +1453,7 @@ namespace Nop.Services.Orders
             //check order status
             CheckOrderStatus(order);
         }
-
+        
         /// <summary>
         /// Gets a value indicating whether order is delivered
         /// </summary>
@@ -1614,6 +1519,8 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
         }
 
+
+
         /// <summary>
         /// Gets a value indicating whether cancel is allowed
         /// </summary>
@@ -1667,6 +1574,8 @@ namespace Nop.Services.Orders
                 _productService.AdjustInventory(opv.ProductVariant, false, opv.Quantity, opv.AttributesXml);
         }
 
+
+
         /// <summary>
         /// Gets a value indicating whether order can be marked as authorized
         /// </summary>
@@ -1710,6 +1619,8 @@ namespace Nop.Services.Orders
             //check order status
             CheckOrderStatus(order);
         }
+
+
 
         /// <summary>
         /// Gets a value indicating whether capture from admin panel is allowed
@@ -1786,7 +1697,8 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                result = new CapturePaymentResult();
+                if (result == null)
+                    result = new CapturePaymentResult();
                 result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
             }
 
@@ -1873,6 +1785,8 @@ namespace Nop.Services.Orders
             //}
         }
 
+
+
         /// <summary>
         /// Gets a value indicating whether refund from admin panel is allowed
         /// </summary>
@@ -1895,7 +1809,7 @@ namespace Nop.Services.Orders
 
             return false;
         }
-
+        
         /// <summary>
         /// Refunds an order (from admin panel)
         /// </summary>
@@ -1943,7 +1857,8 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                result = new RefundPaymentResult();
+                if (result == null)
+                    result = new RefundPaymentResult();
                 result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
             }
 
@@ -2115,7 +2030,8 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                result = new RefundPaymentResult();
+                if (result == null)
+                    result = new RefundPaymentResult();
                 result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
             }
 
@@ -2212,6 +2128,8 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
         }
 
+
+
         /// <summary>
         /// Gets a value indicating whether void from admin panel is allowed
         /// </summary>
@@ -2276,7 +2194,8 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                result = new VoidPaymentResult();
+                if (result == null)
+                    result = new VoidPaymentResult();
                 result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
             }
 
@@ -2355,6 +2274,110 @@ namespace Nop.Services.Orders
             //check orer status
             CheckOrderStatus(order);
         }
+
+
+
+        /// <summary>
+        /// Place order items in current user shopping cart.
+        /// </summary>
+        /// <param name="order">The order</param>
+        public void ReOrder(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            foreach (var opv in order.OrderProductVariants)
+            {
+                _shoppingCartService.AddToCart(opv.Order.Customer, opv.ProductVariant,
+                     ShoppingCartType.ShoppingCart, opv.AttributesXml,
+                    opv.UnitPriceExclTax, opv.Quantity);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether download is allowed
+        /// </summary>
+        /// <param name="orderProductVariant">Order produvt variant to check</param>
+        /// <returns>True if download is allowed; otherwise, false.</returns>
+        public bool IsDownloadAllowed(OrderProductVariant orderProductVariant)
+        {
+            if (orderProductVariant == null)
+                return false;
+
+            var order = orderProductVariant.Order;
+            if (order == null || order.Deleted)
+                return false;
+
+            //order status
+            if (order.OrderStatus == OrderStatus.Cancelled)
+                return false;
+
+            var productVariant = orderProductVariant.ProductVariant;
+            if (productVariant == null || !productVariant.IsDownload)
+                return false;
+
+            //payment status
+            switch (productVariant.DownloadActivationType)
+            {
+                case DownloadActivationType.WhenOrderIsPaid:
+                    {
+                        if (order.PaymentStatus == PaymentStatus.Paid && order.PaidDateUtc.HasValue)
+                        {
+                            //expiration date
+                            if (productVariant.DownloadExpirationDays.HasValue)
+                            {
+                                if (order.PaidDateUtc.Value.AddDays(productVariant.DownloadExpirationDays.Value) > DateTime.UtcNow)
+                                {
+                                    return true;
+                                }
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    break;
+                case DownloadActivationType.Manually:
+                    {
+                        if (orderProductVariant.IsDownloadActivated)
+                        {
+                            //expiration date
+                            if (productVariant.DownloadExpirationDays.HasValue)
+                            {
+                                if (order.CreatedOnUtc.AddDays(productVariant.DownloadExpirationDays.Value) > DateTime.UtcNow)
+                                {
+                                    return true;
+                                }
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether license download is allowed
+        /// </summary>
+        /// <param name="orderProductVariant">Order produvt variant to check</param>
+        /// <returns>True if license download is allowed; otherwise, false.</returns>
+        public bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant)
+        {
+            if (orderProductVariant == null)
+                return false;
+
+            return IsDownloadAllowed(orderProductVariant) && orderProductVariant.LicenseDownloadId > 0;
+        }
+
+
 
 
         /// <summary>

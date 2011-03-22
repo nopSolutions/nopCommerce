@@ -19,37 +19,19 @@ namespace Nop.Services.Orders
     public partial interface IOrderProcessingService
     {
         /// <summary>
-        /// Gets a value indicating whether download is allowed
-        /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
-        /// <returns>True if download is allowed; otherwise, false.</returns>
-        bool IsDownloadAllowed(OrderProductVariant orderProductVariant);
-
-        /// <summary>
-        /// Gets a value indicating whether license download is allowed
-        /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
-        /// <returns>True if license download is allowed; otherwise, false.</returns>
-        bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant);
-         
-        /// <summary>
         /// Places an order
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Place order result</returns>
         PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest);
 
+
+
         /// <summary>
         /// Process next recurring psayment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         void ProcessNextRecurringPayment(RecurringPayment recurringPayment);
-
-        /// <summary>
-        /// Place order items in current user shopping cart.
-        /// </summary>
-        /// <param name="order">The order</param>
-        void ReOrder(Order order);
 
         /// <summary>
         /// Cancels a recurring payment
@@ -65,6 +47,8 @@ namespace Nop.Services.Orders
         /// <returns>value indicating whether a customer can cancel recurring payment</returns>
         bool CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment);
 
+
+
         /// <summary>
         /// Gets a value indicating whether shipping is allowed
         /// </summary>
@@ -78,7 +62,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="notifyCustomer">True to notify customer</param>
         void Ship(Order order, bool notifyCustomer);
-
+        
         /// <summary>
         /// Gets a value indicating whether order is delivered
         /// </summary>
@@ -92,6 +76,8 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="notifyCustomer">True to notify customer</param>
         void Deliver(Order order, bool notifyCustomer);
+
+
 
         /// <summary>
         /// Gets a value indicating whether cancel is allowed
@@ -107,6 +93,8 @@ namespace Nop.Services.Orders
         /// <param name="notifyCustomer">True to notify customer</param>
         void CancelOrder(Order order, bool notifyCustomer);
 
+
+
         /// <summary>
         /// Gets a value indicating whether order can be marked as authorized
         /// </summary>
@@ -119,6 +107,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         void MarkAsAuthorized(Order order);
+
+
 
         /// <summary>
         /// Gets a value indicating whether capture from admin panel is allowed
@@ -146,6 +136,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         void MarkOrderAsPaid(Order order);
+
+
 
         /// <summary>
         /// Gets a value indicating whether refund from admin panel is allowed
@@ -205,6 +197,8 @@ namespace Nop.Services.Orders
         /// <param name="amountToRefund">Amount to refund</param>
         void PartiallyRefundOffline(Order order, decimal amountToRefund);
 
+
+
         /// <summary>
         /// Gets a value indicating whether void from admin panel is allowed
         /// </summary>
@@ -231,6 +225,31 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         void VoidOffline(Order order);
+
+
+
+
+        /// <summary>
+        /// Gets a value indicating whether download is allowed
+        /// </summary>
+        /// <param name="orderProductVariant">Order produvt variant to check</param>
+        /// <returns>True if download is allowed; otherwise, false.</returns>
+        bool IsDownloadAllowed(OrderProductVariant orderProductVariant);
+
+        /// <summary>
+        /// Gets a value indicating whether license download is allowed
+        /// </summary>
+        /// <param name="orderProductVariant">Order produvt variant to check</param>
+        /// <returns>True if license download is allowed; otherwise, false.</returns>
+        bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant);
+
+        /// <summary>
+        /// Place order items in current user shopping cart.
+        /// </summary>
+        /// <param name="order">The order</param>
+        void ReOrder(Order order);
+
+
 
 
         /// <summary>
