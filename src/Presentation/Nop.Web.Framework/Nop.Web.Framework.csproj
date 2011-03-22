@@ -78,6 +78,7 @@
     <Compile Include="Localization\ILocalizedModelLocal.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Localizer.cs" />
+    <Compile Include="Models\DeleteConfirmationModel.cs" />
     <Compile Include="NopMetadataProvider.cs" />
     <Compile Include="NopModelBinder.cs" />
     <Compile Include="NopResourceDisplayName.cs" />
@@ -109,7 +110,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="State\" />
     <Folder Include="Themes\Html\" />
   </ItemGroup>

@@ -393,8 +393,11 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
-                    <LocaleResource Name="DeleteConfirmation">
+                    <LocaleResource Name="DeleteConfirmationParam">
                         <Value>Are you sure you want to delete "{0}"?</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="DeleteConfirmation">
+                        <Value>Are you sure you want to delete this item?</Value>
                     </LocaleResource>
                     <LocaleResource Name="AreYouSure">
                         <Value>Are you sure?</Value>

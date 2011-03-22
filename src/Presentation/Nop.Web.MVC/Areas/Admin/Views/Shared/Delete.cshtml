@@ -1,9 +1,9 @@
-﻿@model Nop.Web.MVC.Areas.Admin.Models.CategoryModel
-@using (Html.BeginForm("Delete", "Category", new { id = Model.Id }))
+﻿@model Nop.Web.Framework.Models.DeleteConfirmationModel
+@using (Html.BeginForm(Model.ActionName, Model.ControllerName, new { id = Model.Id }))
 {
     <div>
         <p>
-            @T("Admin.Common.DeleteConfirmation", Model.Name)
+            @T("Admin.Common.DeleteConfirmation")
         </p>
         <div class="form-actions">
             <span class="t-button" onclick="closeModalWindow();">@T("Admin.Common.NoCancel")</span>

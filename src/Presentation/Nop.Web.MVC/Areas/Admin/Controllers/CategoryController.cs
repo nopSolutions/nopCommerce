@@ -12,6 +12,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security.Permissions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Models;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Nop.Web.MVC.Extensions;
 using Telerik.Web.Mvc;
@@ -314,21 +315,6 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         #endregion
 
         #region Delete
-
-        public ActionResult Delete(int id)
-        {
-            var category = _categoryService.GetCategoryById(id);
-            if (category == null)
-            {
-                return List();
-            }
-            return Delete(category.ToModel());
-        }
-
-        public ActionResult Delete(CategoryModel model)
-        {
-            return PartialView(model);
-        }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)

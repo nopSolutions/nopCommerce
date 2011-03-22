@@ -32,7 +32,10 @@
         <td>
             @(Html.Telerik().Grid(Model.Data)
                     .Name("Grid")
-                    .DataKeys(x => x.Add(y => y.Id))
+                    .DataKeys(x => {
+                        x.Add(y => y.Id).RouteKey("Id");
+                        x.Add(y => y.LanguageId).RouteKey("languageId");
+                    })
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.LanguageName).ClientTemplate("<#= LanguageName #>").Width(100).ReadOnly();

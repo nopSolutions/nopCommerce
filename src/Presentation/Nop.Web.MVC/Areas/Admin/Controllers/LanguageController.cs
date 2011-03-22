@@ -7,6 +7,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Models;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Nop.Web.MVC.Extensions;
 using Telerik.Web.Mvc;
@@ -123,21 +124,6 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		#endregion
 
 		#region Delete
-
-		public ActionResult Delete(int id)
-		{
-			var language = _languageService.GetLanguageById(id);
-			if (language == null)
-			{
-				return List();
-			}
-			return Delete(language.ToModel());
-		}
-
-		public ActionResult Delete(LanguageModel model)
-		{
-			return PartialView(model);
-		}
 
 		[HttpPost, ActionName("Delete")]
 		public ActionResult DeleteConfirmed(int id)
@@ -267,6 +253,37 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             _localizationService.InsertLocaleStringResource(resource);
 
             var resources = _localizationService.GetAllResourcesByLanguageId(id).Select(x => x.Value)
+                .Select(x => x.ToModel())
+                .ForCommand(command);
+
+            var gridModel = new GridModel<LanguageResourceModel>
+            {
+                Data = resources.PagedForCommand(command),
+                Total = resources.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        #endregion
+
+        #region Add
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ResourceDelete(int id, int languageId, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var resource = _localizationService.GetLocaleStringResourceById(id);
+            _localizationService.DeleteLocaleStringResource(resource);
+
+            var resources = _localizationService.GetAllResourcesByLanguageId(languageId).Select(x => x.Value)
                 .Select(x => x.ToModel())
                 .ForCommand(command);
 

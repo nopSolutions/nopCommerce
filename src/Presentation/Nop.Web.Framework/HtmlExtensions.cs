@@ -14,6 +14,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 using Telerik.Web.Mvc.UI;
 using System.Web.Mvc.Html;
 namespace Nop.Web.Framework
@@ -92,6 +93,15 @@ namespace Nop.Web.Framework
 
             #endregion
 
+            
+
+            var deleteConfirmationModel = new DeleteConfirmationModel
+                                              {
+                                                  Id = helper.ViewData.Model.Id,
+                                                  ControllerName = helper.ViewContext.RouteData.GetRequiredString("controller"),
+                                                  ActionName = "Delete"
+                                              };
+
             var window = helper.Telerik().Window().Name(modalId)
                 .Title(EngineContext.Current.LocalizationService().GetResource("Admin.Common.AreYouSure"))
                 .Modal(true)
@@ -99,7 +109,7 @@ namespace Nop.Web.Framework
                 .Resizable(x => x.Enabled(false))
                 .Buttons(x => x.Close())
                 .Visible(false)
-                .Content(helper.Partial("Delete", helper.ViewData.Model).ToHtmlString()).ToHtmlString();
+                .Content(helper.Partial("Delete", deleteConfirmationModel).ToHtmlString()).ToHtmlString();
 
             return MvcHtmlString.Create(window);
         }
