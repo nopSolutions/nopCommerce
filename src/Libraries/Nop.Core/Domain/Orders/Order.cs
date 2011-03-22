@@ -48,8 +48,8 @@ namespace Nop.Core.Domain.Orders
                 {
                     try
                     {
-                        decimal taxRate = decimal.Parse(taxes[0].Trim(), new CultureInfo("en-US"));
-                        decimal taxValue = decimal.Parse(taxes[1].Trim(), new CultureInfo("en-US"));
+                        decimal taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
+                        decimal taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
                         taxRatesDictionary.Add(taxRate, taxValue);
                     }
                     catch (Exception exc)
