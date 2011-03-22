@@ -123,6 +123,8 @@
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\CheckoutAttributeParser.cs" />
     <Compile Include="Orders\CheckoutAttributeService.cs" />
+    <Compile Include="Orders\IOrderProcessingService.cs" />
+    <Compile Include="Orders\OrderProcessingService.cs" />
     <Compile Include="Orders\IOrderService.cs" />
     <Compile Include="Orders\IOrderTotalCalculationService.cs" />
     <Compile Include="Orders\IGiftCardService.cs" />

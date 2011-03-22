@@ -137,6 +137,7 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<GiftCardService>().As<IGiftCardService>().InstancePerHttpRequest();
             builder.RegisterType<OrderService>().As<IOrderService>().InstancePerHttpRequest();
+            builder.RegisterType<OrderProcessingService>().As<IOrderProcessingService>().InstancePerHttpRequest();
             builder.RegisterType<OrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerHttpRequest();
             builder.RegisterType<ShoppingCartService>().As<IShoppingCartService>().InstancePerHttpRequest();
 
