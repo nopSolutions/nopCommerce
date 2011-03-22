@@ -579,6 +579,18 @@ namespace Nop.Services.Installation
                     WishlistEnabled = true
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<OrderSettings>>()
+                .SaveSettings(new OrderSettings()
+                {
+                    IsReOrderAllowed = true,
+                    MinOrderSubtotalAmount = 0,
+                    MinOrderTotalAmount = 0,
+                    AnonymousCheckoutAllowed = false,
+                    ReturnRequestsEnabled = true,
+                    ReturnRequestActions = "Received Wrong Product, Wrong Product Ordered, There Was A Problem With The Product",
+                    ReturnRequestReasons = "Repair, Replacement, Store Credit"
+                });
+
             EngineContext.Current.Resolve<IConfigurationProvider<UserSettings>>()
                 .SaveSettings(new UserSettings()
                 {

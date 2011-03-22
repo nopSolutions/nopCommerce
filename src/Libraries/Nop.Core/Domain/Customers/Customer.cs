@@ -27,6 +27,7 @@ namespace Nop.Core.Domain.Customers
             this.ShoppingCartItems = new List<ShoppingCartItem>();
             this.Orders = new List<Order>();
             this.RewardPointsHistory = new List<RewardPointsHistory>();
+            this.ReturnRequests = new List<ReturnRequest>();
         }
 
         /// <summary>
@@ -202,6 +203,11 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual ICollection<RewardPointsHistory> RewardPointsHistory { get; set; }
 
+        /// <summary>
+        /// Gets or sets return request of this customer
+        /// </summary>
+        public virtual ICollection<ReturnRequest> ReturnRequests { get; set; }
+        
         /// <summary>
         /// Default billing address
         /// </summary>

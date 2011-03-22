@@ -66,6 +66,7 @@
     <Compile Include="Mapping\Messages\QueuedEmailMap.cs" />
     <Compile Include="Mapping\Orders\CheckoutAttributeMap.cs" />
     <Compile Include="Mapping\Orders\CheckoutAttributeValueMap.cs" />
+    <Compile Include="Mapping\Orders\ReturnRequestMap.cs" />
     <Compile Include="Mapping\Orders\RecurringPaymentHistoryMap.cs" />
     <Compile Include="Mapping\Orders\RecurringPaymentMap.cs" />
     <Compile Include="Mapping\Orders\OrderProductVariantMap.cs" />

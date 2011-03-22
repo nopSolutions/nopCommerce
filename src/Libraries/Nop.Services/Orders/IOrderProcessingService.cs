@@ -249,6 +249,15 @@ namespace Nop.Services.Orders
         /// <param name="order">The order</param>
         void ReOrder(Order order);
 
+        
+
+
+        /// <summary>
+        /// Check whether return request is allowed
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        bool IsReturnRequestAllowed(Order order);
 
 
 

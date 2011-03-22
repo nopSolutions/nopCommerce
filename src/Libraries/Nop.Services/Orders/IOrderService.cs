@@ -1,15 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Data;
-using Nop.Services.Payments;
 
 namespace Nop.Services.Orders
 {
@@ -173,5 +166,27 @@ namespace Nop.Services.Orders
            int orderId);
 
         #endregion
+
+        #region Return requests
+
+        /// <summary>
+        /// Gets a return request
+        /// </summary>
+        /// <param name="returnRequestId">Return request identifier</param>
+        /// <returns>Return request</returns>
+        ReturnRequest GetReturnRequestById(int returnRequestId);
+        
+        /// <summary>
+        /// Search return requests
+        /// </summary>
+        /// <param name="customerId">Customer identifier; null to load all entries</param>
+        /// <param name="orderProductVariantId">Order product variant identifier; null to load all entries</param>
+        /// <param name="rs">Return request status; null to load all entries</param>
+        /// <returns>Return requests</returns>
+        IList<ReturnRequest> SearchReturnRequests(int customerId,
+            int orderProductVariantId, ReturnRequestStatus? rs);
+        
+        #endregion
+
     }
 }

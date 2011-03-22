@@ -65,6 +65,8 @@ namespace Nop.Data
         public DbSet<MeasureWeight> MeasureWeights { get; set; }
         public DbSet<MessageTemplate> MessageTemplates { get; set; }
         public DbSet<NewsLetterSubscription> NewsLetterSubscriptions { get; set; }
+        public DbSet<OrderNote> OrderNotes { get; set; }
+        public DbSet<OrderProductVariant> OrderProductVariants { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<PermissionRecord> PermissionRecords { get; set; }
         public DbSet<Picture> Pictures { get; set; }
@@ -81,7 +83,10 @@ namespace Nop.Data
         public DbSet<ProductVariantAttributeValue> ProductVariantAttributeValues { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<QueuedEmail> QueuedEmails { get; set; }
+        public DbSet<RecurringPayment> RecurringPayments { get; set; }
+        public DbSet<RecurringPaymentHistory> RecurringPaymentHistory { get; set; }
         public DbSet<RelatedProduct> RelatedProducts { get; set; }
+        public DbSet<ReturnRequest> ReturnRequests { get; set; }
         public DbSet<RewardPointsHistory> RewardPointsHistory { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<ShippingMethod> ShippingMethods { get; set; }

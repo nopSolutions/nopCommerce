@@ -95,6 +95,8 @@
     <Compile Include="Domain\Orders\RecurringPayment.cs" />
     <Compile Include="Domain\Orders\RecurringPaymentHistory.cs" />
     <Compile Include="Domain\Orders\OrderSettings.cs" />
+    <Compile Include="Domain\Orders\ReturnRequest.cs" />
+    <Compile Include="Domain\Orders\ReturnRequestStatus.cs" />
     <Compile Include="Domain\Payments\PaymentSettings.cs" />
     <Compile Include="Domain\Payments\PaymentStatus.cs" />
     <Compile Include="Domain\Security\SecuritySettings.cs" />

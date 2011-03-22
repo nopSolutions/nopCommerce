@@ -40,6 +40,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<ReturnRequest> _returnRequestRepository;
 
         #endregion
 
@@ -54,12 +55,14 @@ namespace Nop.Services.Orders
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
         /// <param name="recurringPaymentHistoryRepository">Recurring payment history repository</param>
         /// <param name="customerRepository">Customer repository</param>
+        /// <param name="returnRequestRepository">Return request repository</param>
         public OrderService(IRepository<Order> orderRepository,
             IRepository<OrderProductVariant> opvRepository,
             IRepository<ProductVariant> pvRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
-            IRepository<Customer> customerRepository)
+            IRepository<Customer> customerRepository, 
+            IRepository<ReturnRequest> returnRequestRepository)
         {
             this._orderRepository = orderRepository;
             this._opvRepository = opvRepository;
@@ -67,6 +70,7 @@ namespace Nop.Services.Orders
             this._recurringPaymentRepository = recurringPaymentRepository;
             this._recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
             this._customerRepository = customerRepository;
+            this._returnRequestRepository = returnRequestRepository;
         }
 
         #endregion
@@ -435,7 +439,51 @@ namespace Nop.Services.Orders
         }
 
         #endregion
+
+        #region Return requests
         
+        /// <summary>
+        /// Gets a return request
+        /// </summary>
+        /// <param name="returnRequestId">Return request identifier</param>
+        /// <returns>Return request</returns>
+        public ReturnRequest GetReturnRequestById(int returnRequestId)
+        {
+            if (returnRequestId == 0)
+                return null;
+
+            return _returnRequestRepository.GetById(returnRequestId);
+        }
+
+        /// <summary>
+        /// Search return requests
+        /// </summary>
+        /// <param name="customerId">Customer identifier; null to load all entries</param>
+        /// <param name="orderProductVariantId">Order product variant identifier; null to load all entries</param>
+        /// <param name="rs">Return request status; null to load all entries</param>
+        /// <returns>Return requests</returns>
+        public IList<ReturnRequest> SearchReturnRequests(int customerId,
+            int orderProductVariantId, ReturnRequestStatus? rs)
+        {
+            var query = _returnRequestRepository.Table;
+            if (customerId > 0)
+                query = query.Where(rr => customerId == rr.CustomerId);
+            if (rs.HasValue)
+            {
+                int returnStatusId = (int)rs.Value;
+                query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
+            }
+            if (orderProductVariantId > 0)
+                query = query.Where(rr => rr.OrderProductVariantId == orderProductVariantId);
+
+            query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
+            
+            var returnRequests = query.ToList();
+            return returnRequests;
+        }
+
+        #endregion
+
         #endregion
     }
 }

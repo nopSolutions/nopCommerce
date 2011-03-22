@@ -33,7 +33,7 @@ namespace Nop.Services.Orders
     public partial class OrderProcessingService : IOrderProcessingService
     {
         #region Fields
-
+        
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
@@ -358,6 +358,7 @@ namespace Nop.Services.Orders
         /// <returns>Place order result</returns>
         public PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest)
         {
+            //think about moving functionality of processing recurring orders (after the initial order was placed) to ProcessNextRecurringPayment() method
             if (processPaymentRequest == null)
                 throw new ArgumentNullException("processPaymentRequest");
 
@@ -2377,7 +2378,24 @@ namespace Nop.Services.Orders
             return IsDownloadAllowed(orderProductVariant) && orderProductVariant.LicenseDownloadId > 0;
         }
 
+        
 
+        /// <summary>
+        /// Check whether return request is allowed
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        public bool IsReturnRequestAllowed(Order order)
+        {
+            if (!_orderSettings.ReturnRequestsEnabled)
+                return false;
+
+            if (order == null || order.Deleted)
+                return false;
+
+            return order.OrderStatus == OrderStatus.Complete;
+        }
+        
 
 
         /// <summary>
