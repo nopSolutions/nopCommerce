@@ -54,9 +54,9 @@ namespace Nop.Services.Orders
         private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
         private readonly IEncryptionService _encryptionService;
-        
+
         private readonly IWorkContext _workContext;
-        
+
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
@@ -227,7 +227,7 @@ namespace Nop.Services.Orders
                         {
                             if (_rewardPointsSettings.PointsForPurchases_Awarded == order.OrderStatus)
                             {
-                                order.Customer.AddRewardPointsHistoryEntry(points, 
+                                order.Customer.AddRewardPointsHistoryEntry(points,
                                     string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
                                 _orderService.UpdateOrder(order);
                             }
@@ -447,8 +447,17 @@ namespace Nop.Services.Orders
             var result = new PlaceOrderResult();
             try
             {
+                #region Order details (customer, addresses, totals)
+
                 //Recurring orders. Load initial order
                 Order initialOrder = processPaymentRequest.InitialOrder;
+                if (processPaymentRequest.IsRecurringPayment)
+                {
+                    if (initialOrder == null)
+                        throw new ArgumentException("Initial order is not set for recurring payment");
+
+                    processPaymentRequest.PaymentMethodSystemName = initialOrder.PaymentMethodSystemName;
+                }
 
                 //customer
                 var customer = processPaymentRequest.Customer;
@@ -475,7 +484,7 @@ namespace Nop.Services.Orders
                 //UNDONE check whether customer is guest
                 //if (customer.IsGuest && !_orderSettings.AnonymousCheckoutAllowed)
                 //    throw new NopException("Anonymous checkout is not allowed");
-                
+
                 //billing address
                 Address billingAddress = null;
                 if (!processPaymentRequest.IsRecurringPayment)
@@ -502,16 +511,6 @@ namespace Nop.Services.Orders
                         throw new NopException(string.Format("Country '{0}' is not allowed for billing", billingAddress.Country.Name));
                 }
                 
-                //Recurring orders. Load payment method name from initial order
-                if (processPaymentRequest.IsRecurringPayment)
-                {
-                    if (initialOrder == null)
-                        throw new ArgumentException("Initial order is not set for recurring payment");
-
-                    processPaymentRequest.PaymentMethodSystemName = initialOrder.PaymentMethodSystemName;
-                }
-
-
                 //load and validate customer shopping cart
                 IList<ShoppingCartItem> cart = null;
                 if (!processPaymentRequest.IsRecurringPayment)
@@ -580,7 +579,7 @@ namespace Nop.Services.Orders
 
                 //applied discount (used to store discount usage history)
                 var appliedDiscounts = new List<Discount>();
-                
+
                 //sub total
                 decimal orderSubTotalInclTax, orderSubTotalExclTax;
                 decimal orderSubTotalDiscountInclTax = 0, orderSubTotalDiscountExclTax = 0;
@@ -767,6 +766,10 @@ namespace Nop.Services.Orders
                 }
                 processPaymentRequest.OrderTotal = orderTotal.Value;
 
+                #endregion
+
+                #region Payment workflow
+
                 //skip payment workflow if order total equals zero
                 bool skipPaymentWorkflow = false;
                 if (orderTotal.Value == decimal.Zero)
@@ -786,7 +789,7 @@ namespace Nop.Services.Orders
                 }
                 else
                     processPaymentRequest.PaymentMethodSystemName = "";
-                
+
                 //recurring or standard shopping cart?
                 bool isRecurringShoppingCart = false;
                 if (!processPaymentRequest.IsRecurringPayment)
@@ -873,17 +876,21 @@ namespace Nop.Services.Orders
                 if (processPaymentResult == null)
                     throw new NopException("processPaymentResult is not available");
 
-                //process order
+                #endregion
+
                 if (processPaymentResult.Success)
                 {
-                    var shippingStatus = ShippingStatus.NotYetShipped;
-                    if (!shoppingCartRequiresShipping)
-                        shippingStatus = ShippingStatus.ShippingNotRequired;
 
                     //save order in data storage
                     //uncomment this line to support transactions
                     //using (var scope = new System.Transactions.TransactionScope())
                     {
+                        #region Save order details
+
+                        var shippingStatus = ShippingStatus.NotYetShipped;
+                        if (!shoppingCartRequiresShipping)
+                            shippingStatus = ShippingStatus.ShippingNotRequired;
+
                         var order = new Order()
                         {
                             OrderGuid = processPaymentRequest.OrderGuid,
@@ -957,7 +964,7 @@ namespace Nop.Services.Orders
                                 decimal scUnitPriceExclTax = _taxService.GetProductPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
                                 decimal scSubTotalInclTax = _taxService.GetProductPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
                                 decimal scSubTotalExclTax = _taxService.GetProductPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
-                                
+
                                 //discounts
                                 Discount scDiscount = null;
                                 decimal discountAmount = _priceCalculationService.GetDiscountAmount(sc, out scDiscount);
@@ -1181,6 +1188,9 @@ namespace Nop.Services.Orders
                             }
                         }
 
+                        #endregion
+
+                        #region Notifications & notes
 
                         //notes, messages
                         order.OrderNotes.Add(new OrderNote()
@@ -1245,6 +1255,8 @@ namespace Nop.Services.Orders
                         //TODO raise event         
                         //if (order.PaymentStatus == PaymentStatus.Paid)
                         //    EventContext.Current.OnOrderPaid(null, new OrderEventArgs() { Order = order });
+
+                        #endregion
                     }
                 }
             }
@@ -1255,7 +1267,8 @@ namespace Nop.Services.Orders
                 result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
             }
 
-            //process errors
+            #region Process errors
+
             string error = "";
             for (int i = 0; i < result.Errors.Count; i++)
             {
@@ -1269,7 +1282,9 @@ namespace Nop.Services.Orders
                 string logError = string.Format("Error while placing order. {0}", error);
                 _logger.InsertLog(LogLevel.Error, logError, logError);
             }
-            
+
+            #endregion
+
             return result;
         }
 
@@ -1289,8 +1304,7 @@ namespace Nop.Services.Orders
                     opv.UnitPriceExclTax, opv.Quantity);
             }
         }
-
-
+        
         /// <summary>
         /// Process next recurring psayment
         /// </summary>
@@ -1373,7 +1387,7 @@ namespace Nop.Services.Orders
 
             var initialOrder = recurringPayment.InitialOrder;
             if (initialOrder == null)
-                return new List<string>() { "Initial order could not be loaded"};
+                return new List<string>() { "Initial order could not be loaded" };
 
 
             var request = new CancelRecurringPaymentRequest();
@@ -1773,7 +1787,7 @@ namespace Nop.Services.Orders
             catch (Exception exc)
             {
                 result = new CapturePaymentResult();
-                result.AddError(string.Format("Error: {0}. Full exception: {1}",exc.Message,exc.ToString()));
+                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
             }
 
 
@@ -1904,7 +1918,7 @@ namespace Nop.Services.Orders
                 request.IsPartialRefund = false;
                 result = _paymentService.Refund(request);
                 if (result.Success)
-                { 
+                {
                     //total amount refunded
                     decimal totalAmountRefunded = order.RefundedAmount + request.AmountToRefund;
 
@@ -2184,7 +2198,7 @@ namespace Nop.Services.Orders
             order.RefundedAmount = totalAmountRefunded;
             order.PaymentStatus = PaymentStatus.PartiallyRefunded;
             _orderService.UpdateOrder(order);
-            
+
             //add a note
             order.OrderNotes.Add(new OrderNote()
             {
@@ -2193,7 +2207,7 @@ namespace Nop.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow
             });
             _orderService.UpdateOrder(order);
-            
+
             //check order status
             CheckOrderStatus(order);
         }
@@ -2392,7 +2406,7 @@ namespace Nop.Services.Orders
 
             return true;
         }
-        
+
         #endregion
     }
 }
