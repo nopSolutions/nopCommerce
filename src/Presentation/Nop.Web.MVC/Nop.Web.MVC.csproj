@@ -133,7 +133,10 @@
     <Compile Include="Infrastructure\NopDependencyResolver.cs" />
     <Compile Include="Infrastructure\NopValidatorFactory.cs" />
     <Compile Include="Infrastructure\TelerikLocalizationServiceFactory.cs" />
+    <Compile Include="Models\Catalog\CatalogCategoryModel.cs" />
+    <Compile Include="Models\Catalog\CatalogProductModel.cs" />
     <Compile Include="Models\Home\LanguageSelectorModel.cs" />
+    <Compile Include="Models\PagingFilteringCommandContext.cs" />
     <Compile Include="StartupTasks\RegisterDefaultPermissionsStartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -748,6 +751,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Home\LanguageSelector.cshtml" />
+    <Content Include="Views\Catalog\Category.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Scripts\" />

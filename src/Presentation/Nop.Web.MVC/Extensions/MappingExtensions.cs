@@ -3,6 +3,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Web.MVC.Areas.Admin.Models;
+using Nop.Web.MVC.Models.Catalog;
 
 namespace Nop.Web.MVC.Extensions
 {
@@ -113,6 +114,21 @@ namespace Nop.Web.MVC.Extensions
         public static Log ToEntity(this LogModel model, Log destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Catalog
+
+        public static TDestination To<TDestination>(this Product product)
+        {
+            return AutoMapper.Mapper.Map<Product, TDestination>(product);
+        }
+
+        //TODO:Make all mapping use To<T>()
+        public static TDestination To<TDestination>(this Category category)
+        {
+            return AutoMapper.Mapper.Map<Category, TDestination>(category);
         }
 
         #endregion
