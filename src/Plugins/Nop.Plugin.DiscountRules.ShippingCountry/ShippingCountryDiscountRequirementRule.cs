@@ -16,7 +16,6 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
         {
             get
             {
-                //TODO localize
                 return "Shipping country is";
             }
         }

@@ -25,8 +25,6 @@ namespace Nop.Services.Configuration
             Settings = Activator.CreateInstance<TSettings>();
 
             // get properties we can write to
-            //TODO ensure that we can convert Enum (e.g., TaxSettings.TaxBasedOn)
-            //TODO support default values (set using attributes)
             var properties = from prop in typeof(TSettings).GetProperties()
                              where prop.CanWrite && prop.CanRead
                              let setting = _settingService.GetSettingByKey<string>(typeof(TSettings).Name + "." + prop.Name)

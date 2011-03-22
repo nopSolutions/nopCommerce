@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Security.Permissions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Models;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Nop.Web.MVC.Extensions;
 using Telerik.Web.Mvc;
@@ -23,7 +20,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
     [AdminAuthorize]
     public class CategoryController : BaseNopController
     {
-        #region Fields
+        #region Fields
 
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
@@ -34,7 +31,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 
         #endregion Fields
 
-        #region Constructors
+        #region Constructors
 
         public CategoryController(ICategoryService categoryService,
             IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService, IProductService productService, IExportManager exportManager)

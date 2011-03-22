@@ -209,7 +209,7 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
         {
-            #region UNDONE temporary solution
+            //UNDONE temporary solution (requires optimization
 
             var allProducts = GetAllProducts(showHidden);
             var filteredProducts = new List<Product>();
@@ -424,80 +424,6 @@ namespace Nop.Services.Catalog
             
             var products = new PagedList<Product>(sortedProducts, pageIndex, pageSize);
             return products;
-            #endregion
-
-            #region Old implementation (EF4 CTP5 bug)
-            ////UNDONE issue with EF4 CTP5 here 
-            ////http://social.msdn.microsoft.com/Forums/en-US/adodotnetentityframework/thread/382a580e-57e2-47e4-8663-e14766d943fb
-            
-            ////UNDONE: filter by product specs
-            ////string commaSeparatedSpecIds = string.Empty;
-            ////if (filteredSpecs != null)
-            ////{
-            ////    filteredSpecs.Sort();
-            ////    for (int i = 0; i < filteredSpecs.Count; i++)
-            ////    {
-            ////        commaSeparatedSpecIds += filteredSpecs[i].ToString();
-            ////        if (i != filteredSpecs.Count - 1)
-            ////        {
-            ////            commaSeparatedSpecIds += ",";
-            ////        }
-            ////    }
-            ////}
-
-            //bool searchKeywords = String.IsNullOrWhiteSpace(keywords);
-
-            //var query1 = from p in _productRepository.Table
-            //             from pcm in _productCategoryRepository.Table
-            //             .Where(pcm => p.Id == pcm.ProductId).DefaultIfEmpty()
-            //             from pmm in _productManufacturerRepository.Table
-            //             .Where(pmm => p.Id == pmm.ProductId).DefaultIfEmpty()
-            //             from rp in _relatedProductRepository.Table
-            //             .Where(rp => p.Id == rp.ProductId2).DefaultIfEmpty()
-            //             from pv in _productVariantRepository.Table
-            //             .Where(pv => p.Id == pv.ProductId).DefaultIfEmpty()
-            //             //UNDONE: search in localized properties
-            //             //from pvl in _context.ProductVariantLocalized
-            //             //.Where(pvl => pv.ProductVariantId == pvl.ProductVariantId && pvl.LanguageId == languageId).DefaultIfEmpty()
-            //             //from pl in _context.ProductLocalized
-            //             //.Where(pl => p.ProductId == pl.ProductId && pl.LanguageId == languageId).DefaultIfEmpty()
-            //             //UNDONE search product tags
-            //             where
-            //             (categoryId == 0 || (pcm.CategoryId == categoryId && (!featuredProducts.HasValue || pcm.IsFeaturedProduct == featuredProducts.Value))) &&
-            //             (manufacturerId == 0 || (pmm.ManufacturerId == manufacturerId && (!featuredProducts.HasValue || pmm.IsFeaturedProduct == featuredProducts.Value))) &&
-            //             (relatedToProductId == 0 || rp.ProductId1 == relatedToProductId) &&
-            //             (showHidden || p.Published) &&
-            //             (!p.Deleted) &&
-            //             (showHidden || pv.Published) &&
-            //             (showHidden || !pv.Deleted) &&
-            //             (!priceMin.HasValue || priceMin.Value == 0 || pv.Price > priceMin.Value) &&
-            //             (!priceMax.HasValue || priceMax.Value == int.MaxValue || pv.Price < priceMax.Value) &&
-            //             (!searchKeywords ||
-            //             //search standard content
-            //             (p.Name.Contains(keywords)
-            //             || pv.Name.Contains(keywords)
-            //             || pv.Sku.Contains(keywords)
-            //             || (searchDescriptions && p.ShortDescription.Contains(keywords))
-            //             || (searchDescriptions && p.FullDescription.Contains(keywords))
-            //             || (searchDescriptions && pv.Description.Contains(keywords))
-            //             //search language content
-            //             //|| pl.Name.Contains(keywords)
-            //             //|| pvl.Name.Contains(keywords)
-            //             //|| (searchDescriptions && pl.ShortDescription.Contains(keywords))
-            //             //|| (searchDescriptions && pl.FullDescription.Contains(keywords))
-            //             //|| (searchDescriptions && pvl.Description.Contains(keywords))
-            //             )
-            //             )
-            //             select p.Id;
-            //var query = from p in _productRepository.Table
-            //            where query1.Contains(p.Id)
-            //            orderby p.CreatedOnUtc descending
-            //            select p;
-            ////UNDONE sort by ProductSortingEnum orderBy
-
-            //var products = new PagedList<Product>(query, pageIndex, pageSize);
-            //return products;
-            #endregion
         }
         #endregion
 

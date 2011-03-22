@@ -303,11 +303,11 @@ namespace Nop.Services.Shipping
             //Discount orderSubTotalAppliedDiscount = null;
             //decimal subTotalWithoutDiscountBase = decimal.Zero; 
             //decimal subTotalWithDiscountBase = decimal.Zero;
-            //string subTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
+            //string subTotalError = _shoppingCartService.GetShoppingCartSubTotal(cart,
             //    customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
             //    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             //subTotalBase = subTotalWithDiscountBase;
-            //if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled"))
+            //if (_settingManager.GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled"))
             //{
             //    decimal freeShippingOverX = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
             //    if (subTotalBase > freeShippingOverX)

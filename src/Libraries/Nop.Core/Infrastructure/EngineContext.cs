@@ -48,31 +48,17 @@ namespace Nop.Core.Infrastructure
         /// <returns>A new factory</returns>
         public static IEngine CreateEngineInstance(NopConfig config)
         {
-            //try
-            //{
-                if (config != null && !string.IsNullOrEmpty(config.EngineType))
-                {
-                    var engineType = Type.GetType(config.EngineType);
-                    if (engineType == null)
-                        throw new ConfigurationErrorsException("The type '" + engineType + "' could not be found. Please check the configuration at /configuration/nop/engine[@engineType] or check for missing assemblies.");
-                    if (!typeof(IEngine).IsAssignableFrom(engineType))
-                        throw new ConfigurationErrorsException("The type '" + engineType + "' doesn't implement 'Nop.Core.Infrastructure.IEngine' and cannot be configured in /configuration/nop/engine[@engineType] for that purpose.");
-                    return Activator.CreateInstance(engineType) as IEngine;
-                }
+            if (config != null && !string.IsNullOrEmpty(config.EngineType))
+            {
+                var engineType = Type.GetType(config.EngineType);
+                if (engineType == null)
+                    throw new ConfigurationErrorsException("The type '" + engineType + "' could not be found. Please check the configuration at /configuration/nop/engine[@engineType] or check for missing assemblies.");
+                if (!typeof(IEngine).IsAssignableFrom(engineType))
+                    throw new ConfigurationErrorsException("The type '" + engineType + "' doesn't implement 'Nop.Core.Infrastructure.IEngine' and cannot be configured in /configuration/nop/engine[@engineType] for that purpose.");
+                return Activator.CreateInstance(engineType) as IEngine;
+            }
 
-                return new NopEngine();
-            //}
-            //catch (SecurityException ex)
-            //{
-            //    Trace.TraceInformation("Caught SecurityException, reverting to MediumTrustEngine. " + ex);
-            //    //TODO:Support medium trust?
-            //    return null;
-            //}
-            //catch (Exception ex)
-            //{
-            //    //TODO remove try-catch.
-            //    return null;
-            //}
+            return new NopEngine();
         }
 
         #endregion

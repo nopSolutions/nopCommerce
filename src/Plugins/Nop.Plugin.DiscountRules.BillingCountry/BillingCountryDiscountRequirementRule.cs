@@ -15,7 +15,6 @@ namespace Nop.Plugin.DiscountRules.BillingCountry
         {
             get
             {
-                //TODO localize
                 return "Billing country is";
             }
         }

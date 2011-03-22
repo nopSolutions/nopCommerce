@@ -117,7 +117,6 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         {
             get
             {
-                //TODO localize
                 return "Money converter exchange rate provider";
             }
         }

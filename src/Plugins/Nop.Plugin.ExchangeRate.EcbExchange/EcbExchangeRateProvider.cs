@@ -68,7 +68,6 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         {
             get
             {
-                //TODO localize
                 return "ECB exchange rate provider";
             }
         }

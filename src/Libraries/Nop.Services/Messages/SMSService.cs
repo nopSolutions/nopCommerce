@@ -55,7 +55,7 @@ namespace Nop.Services.Messages
         /// <returns>Active SMS provider list</returns>
         public IList<ISMSProvider> LoadActiveSMSProviders()
         {
-            return LoadActiveSMSProviders()
+            return LoadAllSMSProviders()
                 .Where(smsProvider => _smsSettings.ActiveSMSProviderSystemNames.Contains(smsProvider.SystemName, StringComparer.InvariantCultureIgnoreCase))
                 .ToList();
         }
@@ -69,8 +69,7 @@ namespace Nop.Services.Messages
         {
             int i = 0;
 
-            //UNDONE ensure than only active SMS providers are loaded
-            foreach (var smsProvider in LoadAllSMSProviders())
+            foreach (var smsProvider in LoadActiveSMSProviders())
             {
                 if (smsProvider.SendSMS(text))
                 {

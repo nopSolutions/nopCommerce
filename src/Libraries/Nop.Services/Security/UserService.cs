@@ -131,8 +131,6 @@ namespace Nop.Services.Security
             //at this point request is valid
             var user = new User();
             user.Username = request.Username;
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
             user.Email = request.Email;
             user.PasswordFormat = request.PasswordFormat;
             user.SecurityQuestion = request.SecurityQuestion;

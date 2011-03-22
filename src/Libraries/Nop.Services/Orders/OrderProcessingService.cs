@@ -1687,11 +1687,11 @@ namespace Nop.Services.Orders
                     CheckOrderStatus(order);
 
                     //TODO raise event         
-                    //if (order.PaymentStatus == PaymentStatus.Paid)
-                    //{
+                    if (order.PaymentStatus == PaymentStatus.Paid)
+                    {
                     //    EventContext.Current.OnOrderPaid(null,
                     //        new OrderEventArgs() { Order = order });
-                    //}
+                    }
                 }
             }
             catch (Exception exc)
@@ -1777,11 +1777,11 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
 
             //TODO raise event         
-            //if (order.PaymentStatus == PaymentStatus.Paid)
-            //{
+            if (order.PaymentStatus == PaymentStatus.Paid)
+            {
             //    EventContext.Current.OnOrderPaid(null,
             //        new OrderEventArgs() { Order = order });
-            //}
+            }
         }
 
 

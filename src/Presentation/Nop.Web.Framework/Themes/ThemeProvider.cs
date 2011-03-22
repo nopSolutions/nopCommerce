@@ -11,14 +11,14 @@ namespace Nop.Web.Framework.Themes
 {
     public class ThemeProvider : IThemeProvider
     {
-		#region Fields (2) 
+		#region Fields
 
         private readonly IList<ThemeConfiguration> _themeConfigurations = new List<ThemeConfiguration>();
         private string basePath = string.Empty;
 
 		#endregion Fields 
 
-		#region Constructors (1) 
+		#region Constructors
 
         public ThemeProvider(NopConfig nopConfig, IWebHelper webHelper)
         {
@@ -27,9 +27,7 @@ namespace Nop.Web.Framework.Themes
         }
 
 		#endregion Constructors 
-
-
-
+        
         #region IThemeProvider
         
         public ThemeConfiguration GetThemeConfiguration(string themeName)

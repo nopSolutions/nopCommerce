@@ -20,7 +20,6 @@ namespace Nop.Plugin.Tax.Free
         {
             get
             {
-                //TODO localize
                 return "Free tax rate provider";
             }
         }

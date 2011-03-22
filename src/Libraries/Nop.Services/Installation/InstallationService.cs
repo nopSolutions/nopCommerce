@@ -207,8 +207,6 @@ namespace Nop.Services.Installation
         private void AddLocaleResources(Language language1)
         {
             //insert default sting resources (temporary solution). Requires some performance optimization
-            //TODO find better way to insert default locale string resources
-            //TODO use IStorageProvider instead of HostingEnvironment.MapPath
             foreach (var filePath in System.IO.Directory.EnumerateFiles(HostingEnvironment.MapPath("~/App_Data/"), "*.nopres.xml"))
             {
                 //read and parse original file with resources (with <Children> elements)
@@ -432,8 +430,6 @@ namespace Nop.Services.Installation
                 Password = "admin",
                 PasswordFormat = PasswordFormat.Clear,
                 PasswordSalt = "",
-                FirstName = "John",
-                LastName = "Smith",
                 SecurityQuestion = "",
                 SecurityAnswer = "",
                 IsApproved = true,
@@ -497,8 +493,6 @@ namespace Nop.Services.Installation
                                             Password = "admin",
                                             PasswordFormat = PasswordFormat.Clear,
                                             PasswordSalt = "",
-                                            FirstName = "John",
-                                            LastName = "Smith",
                                             Email = "admin@yourStore.com",
                                             SecurityQuestion = "",
                                             SecurityAnswer = "",
@@ -566,7 +560,6 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<SMSSettings>>()
                 .SaveSettings(new SMSSettings()
                 {
-                    //TODO IList<> property is not saved because GenericListTypeConverter is not loaded yet
                     ActiveSMSProviderSystemNames = new List<string>() 
                 });
 
@@ -586,8 +579,8 @@ namespace Nop.Services.Installation
                     MinOrderTotalAmount = 0,
                     AnonymousCheckoutAllowed = false,
                     ReturnRequestsEnabled = true,
-                    ReturnRequestActions = "Received Wrong Product, Wrong Product Ordered, There Was A Problem With The Product",
-                    ReturnRequestReasons = "Repair, Replacement, Store Credit"
+                    ReturnRequestActions = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
+                    ReturnRequestReasons = new List<string>() { "Repair", "Replacement", "Store Credit" }
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<UserSettings>>()
@@ -607,7 +600,6 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<ShippingSettings>>()
                 .SaveSettings(new ShippingSettings()
                 {
-                    //TODO IList<> property is not saved because GenericListTypeConverter is not loaded yet
                     ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
                 });
 

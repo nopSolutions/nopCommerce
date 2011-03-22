@@ -15,7 +15,6 @@ namespace Nop.Data.Mapping.Security
             this.Property(u => u.UserGuid);
 
             this.Ignore(u => u.PasswordFormat);
-            this.Ignore(u => u.FullName);
             
         }
     }

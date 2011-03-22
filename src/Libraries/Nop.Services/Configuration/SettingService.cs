@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 
 namespace Nop.Services.Configuration
@@ -180,6 +182,18 @@ namespace Nop.Services.Configuration
 
                 return settings;
             });
+        }
+
+        /// <summary>
+        /// Save settings object
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="settingInstance">Setting instance</param>
+        public void SaveSetting<T>(T settingInstance) where T : ISettings, new()
+        {
+            //TODO don't use EngineContext.Current.Resolve to load IConfigurationProvider
+            //but we should be sure that an appropriate ISettings object will not be cached in IoC tool after updating (by default cached per HTTP request)
+            EngineContext.Current.Resolve<IConfigurationProvider<T>>().SaveSettings(settingInstance);
         }
 
         #endregion

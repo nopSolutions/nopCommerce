@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Security;
@@ -23,6 +24,7 @@ namespace Nop.Services.Tests.Helpers
     {
         IWorkContext _workContext;
         ICustomerService _customerService;
+        ISettingService _settingService;
         DateTimeSettings _dateTimeSettings;
         IDateTimeHelper _dateTimeHelper;
 
@@ -30,13 +32,9 @@ namespace Nop.Services.Tests.Helpers
         public void SetUp()
         {
             _customerService = MockRepository.GenerateMock<ICustomerService>();
+            _settingService = MockRepository.GenerateMock<ISettingService>();
 
-            //var customer = new Customer()
-            //{
-            //    //
-            //};
             _workContext = MockRepository.GenerateMock<IWorkContext>();
-            //_workContext.Expect(x => x.CurrentCustomer).Return(customer);
 
             _dateTimeSettings = new DateTimeSettings()
             {
@@ -44,7 +42,8 @@ namespace Nop.Services.Tests.Helpers
                 DefaultStoreTimeZoneId = ""
             };
 
-            _dateTimeHelper = new DateTimeHelper(_workContext, _customerService, _dateTimeSettings);
+            _dateTimeHelper = new DateTimeHelper(_workContext, _customerService,
+                _settingService, _dateTimeSettings);
         }
 
         [Test]

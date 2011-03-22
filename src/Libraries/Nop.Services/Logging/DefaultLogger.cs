@@ -47,7 +47,6 @@ namespace Nop.Services.Logging
         /// <returns>Result</returns>
         public bool IsEnabled(LogLevel level)
         {
-            //TODO: use ISettingService to determine it
             switch(level)
             {
                 case LogLevel.Debug:

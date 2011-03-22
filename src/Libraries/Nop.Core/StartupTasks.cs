@@ -18,6 +18,10 @@ namespace Nop.Core
             TypeDescriptor.AddAttributes(typeof(List<decimal>),
                 new TypeConverterAttribute(typeof(GenericListTypeConverter<decimal>)));
 
+            //List<string>
+            TypeDescriptor.AddAttributes(typeof(List<string>),
+                new TypeConverterAttribute(typeof(GenericListTypeConverter<string>)));
+
             //ShippingOption
             TypeDescriptor.AddAttributes(typeof(ShippingOption),
                 new TypeConverterAttribute(typeof(ShippingOptionTypeConverter)));

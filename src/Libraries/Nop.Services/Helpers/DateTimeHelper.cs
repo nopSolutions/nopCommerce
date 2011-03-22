@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Helpers
@@ -15,6 +16,7 @@ namespace Nop.Services.Helpers
     {
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
+        private readonly ISettingService _settingService;
         private readonly DateTimeSettings _dateTimeSettings;
 
         /// <summary>
@@ -22,13 +24,16 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="workContext">Work context</param>
         /// <param name="customerService">Customer service</param>
+        /// <param name="settingService">Setting service</param>
         /// <param name="dateTimeSettings">Datetime settings</param>
         public DateTimeHelper(IWorkContext workContext,
-            ICustomerService customerService, 
+            ICustomerService customerService,
+            ISettingService settingService, 
             DateTimeSettings dateTimeSettings)
         {
             this._workContext = workContext;
             this._customerService = customerService;
+            this._settingService = settingService;
             this._dateTimeSettings = dateTimeSettings;
         }
 
@@ -204,8 +209,7 @@ namespace Nop.Services.Helpers
                 }
 
                 _dateTimeSettings.DefaultStoreTimeZoneId = defaultTimeZoneId;
-                //UNDONE save _dateTimeSettings
-                //IoC.Resolve<ISettingManager>().SetParam("Common.DefaultStoreTimeZoneId", defaultTimeZoneId);
+                _settingService.SaveSetting(_dateTimeSettings);
             }
         }
 

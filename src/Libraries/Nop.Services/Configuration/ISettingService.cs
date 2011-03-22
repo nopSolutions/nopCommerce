@@ -1,6 +1,7 @@
 
 
 using System.Collections.Generic;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
 
 namespace Nop.Services.Configuration
@@ -45,5 +46,12 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <returns>Setting collection</returns>
         IDictionary<string, Setting> GetAllSettings();
+
+        /// <summary>
+        /// Save settings object
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="settingInstance">Setting instance</param>
+        void SaveSetting<T>(T settingInstance) where T : ISettings, new();
     }
 }

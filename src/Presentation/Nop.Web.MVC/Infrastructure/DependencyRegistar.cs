@@ -50,10 +50,10 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
 
             //data layer
-            //TODO make configurable
-            //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
+            //TODO database type should be configurable
             Database.DefaultConnectionFactory = new SqlCeConnectionFactory(
                 "System.Data.SqlServerCe.4.0", HostingEnvironment.MapPath("~/App_Data/"), "");
+            //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
             string connectionString = "Data Source=" + HostingEnvironment.MapPath("~/App_Data/") + @"Nop.Db.sdf;Persist Security Info=False";
             builder.Register<IDbContext>(c => new NopObjectContext(connectionString)).InstancePerHttpRequest();
 

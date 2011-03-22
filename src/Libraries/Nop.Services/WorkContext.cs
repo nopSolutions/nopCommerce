@@ -73,8 +73,7 @@ namespace Nop.Services
                 //create guest if not exists
                 if (customer == null)
                 {
-                    //TODO perhaps, we should not create guest customer if request is made by search engine
-                    //or use some predefined account
+                    //TODO we should not create guest customer if request is made by search engine
                     customer = _customerService.InsertGuestCustomer();
                 }
 

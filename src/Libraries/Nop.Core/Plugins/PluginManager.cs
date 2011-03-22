@@ -45,8 +45,6 @@ namespace Nop.Core.Plugins
                     //double check
                     if (!_isInit)
                     {
-                        // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
-                        // prevent app from starting altogether
                         var pluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
                         var shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
 

@@ -20,8 +20,6 @@ namespace Nop.Data.Tests
                 Password = "password",
                 PasswordFormat = PasswordFormat.Clear,
                 PasswordSalt = "",
-                FirstName = "Test",
-                LastName = "Test",
                 Email = "a@b.com",
                 SecurityQuestion = "",
                 SecurityAnswer = "",

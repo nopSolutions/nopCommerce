@@ -15,7 +15,6 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         {
             get
             {
-                //TODO localize
                 return "Must be assigned to customer role";
             }
         }
@@ -47,7 +46,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             if (request.Customer == null)
                 return false;
             
-            var customerRoles = request.Customer.CustomerRoles; //TODO use ICustomerService.GetCustomerRolesByCustomerId
+            var customerRoles = request.Customer.CustomerRoles; 
+            //TODO use ICustomerService.GetCustomerRolesByCustomerId
             if (customerRoles == null ||
                 customerRoles.Count == 0)
                 return false;

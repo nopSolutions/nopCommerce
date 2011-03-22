@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Orders
@@ -33,11 +34,11 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets a list of return request reasons
         /// </summary>
-        public string ReturnRequestReasons { get; set; }
+        public List<string> ReturnRequestReasons { get; set; }
 
         /// <summary>
         /// Gets or sets a list of return request actions
         /// </summary>
-        public string ReturnRequestActions { get; set; }
+        public List<string> ReturnRequestActions { get; set; }
     }
 }

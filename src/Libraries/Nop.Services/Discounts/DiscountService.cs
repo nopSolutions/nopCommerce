@@ -70,14 +70,7 @@ namespace Nop.Services.Discounts
                     }
                 case DiscountLimitationType.NTimesOnly:
                     {
-                        //UNDONE implement (below)
-                        throw new NotImplementedException();
-                        //var usageHistory = GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
-                        //return usageHistory.Count < discount.LimitationTimes;
-
-                        //TODO filter active/not deleted customers
-                        //TODO filter not deleted orders
-                        //or use GetAllDiscountUsageHistoryEntries() method (commented above)
+                        //TODO filter active/not deleted customers & orders
                         return discount.DiscountUsageHistory.Count < discount.LimitationTimes;
                     }
                 case DiscountLimitationType.NTimesPerCustomer:

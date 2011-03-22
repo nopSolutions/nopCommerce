@@ -113,7 +113,7 @@ namespace Nop.Services.Catalog
                     if (customer == null)
                         continue;
 
-                    var customerRoles = customer.CustomerRoles; //TODO filter active roles
+                    var customerRoles = customer.CustomerRoles.Where(cr => cr.Active).ToList();
                     if (customerRoles.Count == 0)
                         continue;
 
