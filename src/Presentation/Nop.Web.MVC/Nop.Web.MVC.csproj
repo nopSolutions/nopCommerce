@@ -106,6 +106,7 @@
     <Compile Include="Areas\Admin\Controllers\LogController.cs" />
     <Compile Include="Areas\Admin\Controllers\PictureController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
+    <Compile Include="Extensions\MappingExtensions.cs" />
     <Compile Include="Areas\Admin\Infrastructure\TelerikLocalizationServiceFactory.cs" />
     <Compile Include="Areas\Admin\Infrastructure\TelerikResourceService.cs" />
     <Compile Include="Areas\Admin\Models\CategoryModel.cs" />

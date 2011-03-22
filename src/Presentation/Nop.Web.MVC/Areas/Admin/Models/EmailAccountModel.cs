@@ -13,24 +13,6 @@ namespace Nop.Web.MVC.Areas.Admin.Models
     //[Validator(typeof(LanguageValidator))]
     public class EmailAccountModel : BaseNopEntityModel
     {
-        public EmailAccountModel()
-        {
-        }
-
-        public EmailAccountModel(EmailAccount emailAccount)
-            :this()
-        {
-            Id = emailAccount.Id;
-            Email = emailAccount.Email;
-            DisplayName = emailAccount.DisplayName;
-            Host = emailAccount.Host;
-            Port = emailAccount.Port;
-            Username = emailAccount.Username;
-            Password = emailAccount.Password;
-            EnableSsl = emailAccount.EnableSsl;
-            UseDefaultCredentials = emailAccount.UseDefaultCredentials;
-        }
-
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Email")]
         public string Email { get; set; }
 

@@ -29,31 +29,6 @@ namespace Nop.Web.MVC.Areas.Admin.Models
 
         #region Model
 
-        public CategoryModel(Category category, ICategoryService categoryService)
-            :this()
-        {
-            Id = category.Id;
-            Name = category.Name;
-            Description = category.Description;
-            MetaKeywords = category.MetaKeywords;
-            MetaDescription = category.MetaDescription;
-            MetaTitle = category.MetaTitle;
-            SeName = category.SeName;
-            ParentCategoryId = category.ParentCategoryId;
-            if (categoryService != null)
-            {
-                if (ParentCategoryId > 0) ParentCategory = categoryService.GetCategoryById(category.ParentCategoryId);
-            }
-            PictureId = category.PictureId;
-            PageSize = category.PageSize;
-            PageSize = category.PageSize;
-            PriceRanges = category.PriceRanges;
-            ShowOnHomePage = category.ShowOnHomePage;
-            Published = category.Published;
-            Deleted = category.Deleted;
-            DisplayOrder = category.DisplayOrder;
-        }
-
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }

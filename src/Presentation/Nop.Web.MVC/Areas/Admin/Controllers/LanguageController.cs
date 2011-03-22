@@ -8,6 +8,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
+using Nop.Web.MVC.Extensions;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
 using Nop.Web.Framework;
@@ -42,21 +43,21 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			return View("List");
 		}
 
-		public void UpdateInstance(Language language, LanguageModel model)
-		{
-			language.Id = model.Id;
-			language.Name = model.Name;
-			language.LanguageCulture = model.LanguageCulture;
-			language.FlagImageFileName = model.FlagImageFileName;
-			language.Published = model.Published;
-			language.DisplayOrder = model.DisplayOrder;
-		}
+        //public void UpdateInstance(Language language, LanguageModel model)
+        //{
+        //    language.Id = model.Id;
+        //    language.Name = model.Name;
+        //    language.LanguageCulture = model.LanguageCulture;
+        //    language.FlagImageFileName = model.FlagImageFileName;
+        //    language.Published = model.Published;
+        //    language.DisplayOrder = model.DisplayOrder;
+        //}
 
-        public void UpdateInstance(LocaleStringResource resource, LanguageResourceModel model)
-        {
-            resource.ResourceName = model.Name;
-            resource.ResourceValue = model.Value;
-        }
+        //public void UpdateInstance(LocaleStringResource resource, LanguageResourceModel model)
+        //{
+        //    resource.ResourceName = model.Name;
+        //    resource.ResourceValue = model.Value;
+        //}
 
 		#endregion Methods 
         
@@ -74,7 +75,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			var languages = _languageService.GetAllLanguages(true);
 			var gridModel = new GridModel<LanguageModel>
 			{
-				Data = languages.Select(AutoMapper.Mapper.Map<Language, LanguageModel>),
+				Data = languages.Select(x => x.ToModel()),
 				Total = languages.Count()
 			};
 			return View(gridModel);
@@ -86,14 +87,9 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			var languages = _languageService.GetAllLanguages(true);
 			var gridModel = new GridModel<LanguageModel>
 			{
-				Data = languages.Select(AutoMapper.Mapper.Map<Language,LanguageModel>),
+				Data = languages.Select(x => x.ToModel()),
 				Total = languages.Count()
 			};
-
-			//var categories = _languageService.GetAllCategories(command.Page - 1, command.PageSize);
-			//model.Data = categories.Select(x =>
-			//    new { Id = Url.Action("Edit", new { x.Id }), x.Name, x.DisplayOrder, Breadcrumb = GetCategoryBreadCrumb(x), x.Published });
-			//model.Total = categories.TotalCount;
 			return new JsonResult
 			{
 				Data = gridModel
@@ -108,7 +104,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		{
 			var language = _languageService.GetLanguageById(id);
 			if (language == null) throw new ArgumentException("No language found with the specified id", "id");
-			return View(AutoMapper.Mapper.Map<Language,LanguageModel>(language));
+			return View(language.ToModel());
 		}
 
 		[HttpPost]
@@ -119,7 +115,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
                 return View(languageModel);
             }
 			var language = _languageService.GetLanguageById(languageModel.Id);
-			UpdateInstance(language, languageModel);
+		    language = languageModel.ToEntity(language);
 			_languageService.UpdateLanguage(language);
 			return Edit(language.Id);
 		}
@@ -135,8 +131,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			{
 				return List();
 			}
-		    var modal = AutoMapper.Mapper.Map<Language, LanguageModel>(language);
-			return Delete(modal);
+			return Delete(language.ToModel());
 		}
 
 		public ActionResult Delete(LanguageModel model)
@@ -164,8 +159,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		[HttpPost]
 		public ActionResult Create(LanguageModel model)
 		{
-			var language = new Language();
-			UpdateInstance(language, model);
+		    var language = model.ToEntity();
 			_languageService.InsertLanguage(language);
 			return RedirectToAction("Edit", new { id = language.Id });
 		}
@@ -197,7 +191,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			var resources = _localizationService.GetAllResourcesByLanguageId(languageId);
 			var gridModel = new GridModel<LanguageResourceModel>
 			{
-				Data = resources.Take(20).Select(x => new LanguageResourceModel(x.Value)),
+				Data = resources.Take(20).Select(x => x.Value.ToModel()),
 				Total = resources.Count
 			};
 			return View(gridModel);
@@ -207,7 +201,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		public ActionResult Resources(int languageId, GridCommand command)
 		{
 		    var resources = _localizationService.GetAllResourcesByLanguageId(languageId).Select(x => x.Value)
-		        .Select(x => new LanguageResourceModel(x))
+		        .Select(x => x.ToModel())
 		        .ForCommand(command);
 
             var model = new GridModel<LanguageResourceModel>
@@ -234,15 +228,14 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
-            UpdateInstance(resource, model);
+            resource = model.ToEntity(resource);
             _localizationService.UpdateLocaleStringResource(resource);
 
             #region Return a model with the current page and pagesize
 
             var resources = _localizationService.GetAllResourcesByLanguageId(model.LanguageId).Select(x => x.Value)
-                .ForCommand(command)
-                .Select(x => new LanguageResourceModel(x));
-
+                .Select(x => x.ToModel())
+                .ForCommand(command);
             var gridModel = new GridModel<LanguageResourceModel>
                                 {
                                     Data = resources.PagedForCommand(command),
@@ -269,13 +262,13 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
                 return new JsonResult {Data = "error"};
             }
 
-            var resource = new LocaleStringResource() {LanguageId = id};
-            UpdateInstance(resource, resourceModel);
+            var resource = new LocaleStringResource {LanguageId = id};
+            resource = resourceModel.ToEntity(resource);
             _localizationService.InsertLocaleStringResource(resource);
 
             var resources = _localizationService.GetAllResourcesByLanguageId(id).Select(x => x.Value)
-                .ForCommand(command)
-                .Select(x => new LanguageResourceModel(x));
+                .Select(x => x.ToModel())
+                .ForCommand(command);
 
             var gridModel = new GridModel<LanguageResourceModel>
             {

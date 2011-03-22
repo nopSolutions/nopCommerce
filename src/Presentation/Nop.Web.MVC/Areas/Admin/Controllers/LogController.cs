@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
+using Nop.Web.MVC.Extensions;
 using Telerik.Web.Mvc;
 
 namespace Nop.Web.MVC.Areas.Admin.Controllers
@@ -25,7 +26,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var logs = _logger.GetAllLogs(null, null, string.Empty, null, 0, 10);
             var model = new GridModel<LogModel>
             {
-                Data = logs.Select(x => new LogModel(x)),
+                Data = logs.Select(x => x.ToModel()),
                 Total = logs.TotalCount
             };
             return View(model);
@@ -37,7 +38,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var logs = _logger.GetAllLogs(null, null, string.Empty, null, command.Page - 1, command.PageSize);
             var model = new GridModel<LogModel>
             {
-                Data = logs.Select(x => new LogModel(x)),
+                Data = logs.Select(x => x.ToModel()),
                 Total = logs.TotalCount
             };
             return new JsonResult

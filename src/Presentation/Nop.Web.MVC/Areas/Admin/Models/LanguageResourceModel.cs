@@ -10,27 +10,8 @@ using Nop.Web.MVC.Areas.Admin.Validators;
 namespace Nop.Web.MVC.Areas.Admin.Models
 {
     [Validator(typeof(LanguageResourceValidator))]
-    public class LanguageResourceModel
+    public class LanguageResourceModel : BaseNopEntityModel
     {
-        public LanguageResourceModel()
-        {
-            
-        }
-
-        public LanguageResourceModel(LocaleStringResource resource)
-        {
-            Id = resource.Id;
-            Name = resource.ResourceName;
-            Value = resource.ResourceValue;
-            if (resource.Language != null)
-            {
-                LanguageName = resource.Language.Name;
-            }
-            LanguageId = resource.LanguageId;
-        }
-
-        public int Id { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Location.Languages.Resources.Fields.Name")]
         public string Name { get; set; }
 

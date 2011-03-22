@@ -9,20 +9,6 @@ namespace Nop.Web.MVC.Areas.Admin.Models
     [Validator(typeof(CategoryProductValidator))]
     public class CategoryProductModel : IEquatable<CategoryProductModel>
     {
-        public CategoryProductModel()
-        {
-            
-        }
-
-        public CategoryProductModel(ProductCategory productCategory)
-        {
-            ProductId = productCategory.ProductId;
-            ProductName = productCategory.Product.Name;
-            CategoryId = productCategory.CategoryId;
-            IsFeaturedProduct = productCategory.IsFeaturedProduct;
-            DisplayOrder = productCategory.DisplayOrder;
-        }
-
         [UIHint("ProductSelector")]
         [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Product")]
         public int ProductId { get; set; }

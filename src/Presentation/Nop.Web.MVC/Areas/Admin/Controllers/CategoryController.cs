@@ -13,6 +13,7 @@ using Nop.Services.Security.Permissions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.MVC.Areas.Admin.Models;
+using Nop.Web.MVC.Extensions;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
 
@@ -48,24 +49,6 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         #endregion Constructors
         
         #region Saving/Updating/Inserting
-
-        public void UpdateInstance(Category category, CategoryModel model)
-        {
-            category.Name = model.Name;
-            category.Description = HttpUtility.HtmlDecode(model.Description);
-            category.MetaKeywords = model.MetaKeywords;
-            category.MetaDescription = model.MetaDescription;
-            category.MetaTitle = model.MetaTitle;
-            category.SeName = model.SeName;
-            category.ParentCategoryId = model.ParentCategoryId;
-            category.PictureId = model.PictureId;
-            category.PageSize = model.PageSize;
-            category.PriceRanges = model.PriceRanges;
-            category.ShowOnHomePage = model.ShowOnHomePage;
-            category.Published = model.Published;
-            category.Deleted = model.Deleted;
-            category.DisplayOrder = model.DisplayOrder;
-        }
 
         public void UpdateLocales(Category category, CategoryModel model)
         {
@@ -118,11 +101,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
                 }
                 else
                 {
-                    var newProductCategory = new ProductCategory();
-                    newProductCategory.CategoryId = category.Id;
-                    newProductCategory.ProductId = productId;
-                    newProductCategory.IsFeaturedProduct = added.IsFeaturedProduct;
-                    newProductCategory.DisplayOrder = added.DisplayOrder;
+                    var newProductCategory = added.ToEntity();
                     _categoryService.InsertProductCategory(newProductCategory);
                 }
             }
@@ -187,7 +166,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         [GridAction]
         public ActionResult ProductsSelect(int id)
         {
-            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => new CategoryProductModel(x)).ToList();
+            var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => x.ToModel()).ToList();
             products = CategoryProductsAttribute.MakeStateful(products);
 
             return new JsonResult
@@ -200,7 +179,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         public ActionResult ProductsRemove(int id, CategoryProductModel categoryProduct)
         {
             categoryProduct.CategoryId = id;
-            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
+            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => x.ToModel()).ToList();
             CategoryProductsAttribute.Remove(categoryProduct);
             products = CategoryProductsAttribute.MakeStateful(products);
 
@@ -220,13 +199,14 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             }
 
             categoryProduct.CategoryId = id;
-            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
             if (string.IsNullOrEmpty(categoryProduct.ProductName))
             {
                 //Lets add the product name to use in the grid.
                 categoryProduct.ProductName = _productService.GetProductById(categoryProduct.ProductId).Name;
             }
+
             CategoryProductsAttribute.Add(categoryProduct);
+            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => x.ToModel()).ToList();
             products = CategoryProductsAttribute.MakeStateful(products);
 
             return new JsonResult
@@ -245,7 +225,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             }
 
             categoryProduct.CategoryId = id;
-            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => new CategoryProductModel(x)).ToList();
+            var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => x.ToModel()).ToList();
             CategoryProductsAttribute.Add(categoryProduct);
             products = CategoryProductsAttribute.MakeStateful(products);
 
@@ -269,8 +249,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Create(CategoryModel model)
         {
-            var category = new Category();
-            UpdateInstance(category, model);
+            var category = model.ToEntity();
             _categoryService.InsertCategory(category);
             UpdateLocales(category, model);
             return RedirectToAction("Edit", new { id = category.Id });
@@ -284,17 +263,21 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
         {
             var category = _categoryService.GetCategoryById(id);
             if (category == null) throw new ArgumentException("No category found with the specified id", "id");
-            var model = new CategoryModel(category, _categoryService);
+            var model = category.ToModel();
             foreach (var language in _languageService.GetAllLanguages())
             {
-                var localizedModel = new CategoryLocalizedModel();
-                localizedModel.Language = language;
-                localizedModel.Description = category.GetLocalized(x => x.Description, language.Id, false);
-                localizedModel.Name = category.GetLocalized(x => x.Name, language.Id, false);
-                localizedModel.MetaKeywords = category.GetLocalized(x => x.MetaKeywords, language.Id, false);
-                localizedModel.MetaDescription = category.GetLocalized(x => x.MetaDescription, language.Id, false);
-                localizedModel.MetaTitle = category.GetLocalized(x => x.MetaTitle, language.Id, false);
-                localizedModel.SeName = category.GetLocalized(x => x.SeName, language.Id, false);
+                var localizedModel = new CategoryLocalizedModel
+                                         {
+                                             Language = language,
+                                             Description = category.GetLocalized(x => x.Description, language.Id, false),
+                                             Name = category.GetLocalized(x => x.Name, language.Id, false),
+                                             MetaKeywords =
+                                                 category.GetLocalized(x => x.MetaKeywords, language.Id, false),
+                                             MetaDescription =
+                                                 category.GetLocalized(x => x.MetaDescription, language.Id, false),
+                                             MetaTitle = category.GetLocalized(x => x.MetaTitle, language.Id, false),
+                                             SeName = category.GetLocalized(x => x.SeName, language.Id, false)
+                                         };
                 model.Locales.Add(localizedModel);
             }
             CategoryProductsAttribute.Clear();
@@ -311,11 +294,14 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             {
                 return View("Edit", categoryModel);
             }
+
             var category = _categoryService.GetCategoryById(categoryModel.Id);
-            UpdateInstance(category, categoryModel);
+            category = categoryModel.ToEntity(category);
             _categoryService.UpdateCategory(category);
+
             UpdateLocales(category, categoryModel);
             UpdateCategoryProducts(category, addedCategoryProducts, removedCategoryProducts);
+
             CategoryProductsAttribute.Clear();
 
             if (continueEditing)
@@ -336,8 +322,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             {
                 return List();
             }
-            var modal = new CategoryModel(category, _categoryService);
-            return Delete(modal);
+            return Delete(category.ToModel());
         }
 
         public ActionResult Delete(CategoryModel model)
@@ -383,7 +368,12 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
             var categories = _categoryService.GetAllCategories(0, 10, true);
             var gridModel = new GridModel<CategoryModel>
                             {
-                                Data = categories.Select(x => new CategoryModel(x, null) { Breadcrumb = GetCategoryBreadCrumb(x) }),
+                                Data = categories.Select(x =>
+                                                             {
+                                                                 var model = x.ToModel();
+                                                                 model.Breadcrumb = GetCategoryBreadCrumb(x);
+                                                                 return model;
+                                                             }),
                                 Total = categories.TotalCount
                             };
             return View(gridModel);
