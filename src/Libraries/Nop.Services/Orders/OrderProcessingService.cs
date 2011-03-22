@@ -219,9 +219,8 @@ namespace Nop.Services.Orders
                 if (_rewardPointsSettings.PointsForPurchases_Amount > decimal.Zero)
                 {
                     //Ensure that reward points are applied only to registered users
-                    if (order.Customer != null)
+                    if (order.Customer != null && !order.Customer.IsGuest())
                     {
-                        //UNDONE ensure customer is not guest !order.Customer.IsGuest
                         int points = (int)Math.Truncate(order.OrderTotal / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
                         if (points != 0)
                         {
@@ -399,9 +398,9 @@ namespace Nop.Services.Orders
                 if (customerLanguage == null)
                     customerLanguage = _workContext.WorkingLanguage;
 
-                //UNDONE check whether customer is guest
-                //if (customer.IsGuest && !_orderSettings.AnonymousCheckoutAllowed)
-                //    throw new NopException("Anonymous checkout is not allowed");
+                //check whether customer is guest
+                if (customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+                    throw new NopException("Anonymous checkout is not allowed");
 
                 //billing address
                 Address billingAddress = null;
@@ -1373,8 +1372,7 @@ namespace Nop.Services.Orders
             if (initialOrder.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            //TODO check whether customer is admin
-            //if (!customerToValidate.IsAdmin)
+            if (!customerToValidate.IsAdmin())
             {
                 if (customer.Id != customerToValidate.Id)
                     return false;

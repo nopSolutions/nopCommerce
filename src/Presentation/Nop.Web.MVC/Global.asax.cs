@@ -92,16 +92,6 @@ namespace Nop.Web.MVC
                 EngineContext.Current.Resolve<IThemeProvider>().GetThemeConfigurations().Where(x => x.IsDefault).
                     FirstOrDefault();
             EngineContext.Current.Resolve<IWorkContext>().WorkingTheme = defaultTheme == null ? string.Empty : defaultTheme.ThemeName;
-
-            //Service locator. We register it per request because ILifetimeScope could be changed per request
-            //TODO uncomment to register ServiceLocator
-            //RegisterServiceLocator();
         }
-
-        //protected void RegisterServiceLocator()
-        //{
-        //    var serviceLocator = new AutofacServiceLocator(EngineContext.Current.ContainerManager.Scope());
-        //    ServiceLocator.SetLocatorProvider(() => serviceLocator);
-        //}
     }
 }

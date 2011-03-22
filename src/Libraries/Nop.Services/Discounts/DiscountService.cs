@@ -9,6 +9,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Discounts
 {
@@ -71,23 +72,25 @@ namespace Nop.Services.Discounts
                 case DiscountLimitationType.NTimesOnly:
                     {
                         //TODO filter active/not deleted customers & orders
-                        return discount.DiscountUsageHistory.Count < discount.LimitationTimes;
+                        var usageHistory = discount.DiscountUsageHistory;
+                        return usageHistory.Count < discount.LimitationTimes;
                     }
                 case DiscountLimitationType.NTimesPerCustomer:
                     {
-                        //UNDONE implement
-                        throw new NotImplementedException();
-                        //if (customer != null && !customer.IsGuest) 
-                        //{
-                        //    //registered customer
-                        //    var usageHistory = GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
-                        //    return usageHistory.Count < discount.LimitationTimes;
-                        //}
-                        //else
-                        //{
-                        //    //guest
-                        //    return true;
-                        //}
+                        if (customer != null && !customer.IsGuest())
+                        {
+                            //UNDONE implement
+                            throw new NotImplementedException();
+                            //registered customer
+                            //TODO filter active/not deleted customers & orders
+                            //var usageHistory = GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
+                            //return usageHistory.Count < discount.LimitationTimes;
+                        }
+                        else
+                        {
+                            //guest
+                            return true;
+                        }
                     }
                 default:
                     break;

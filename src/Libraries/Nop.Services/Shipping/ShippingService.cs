@@ -286,7 +286,7 @@ namespace Nop.Services.Shipping
             if (customer != null)
             {
                 //check whether customer is in a customer role with free shipping applied
-                var customerRoles = customer.CustomerRoles;  //TODO filter active roles
+                var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
                 foreach (var customerRole in customerRoles)
                     if (customerRole.FreeShipping)
                         return true;

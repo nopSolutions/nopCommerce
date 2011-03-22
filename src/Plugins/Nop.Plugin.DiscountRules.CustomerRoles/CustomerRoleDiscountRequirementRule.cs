@@ -1,5 +1,5 @@
 using System;
-using System.Security.Principal;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Discounts;
@@ -45,11 +45,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
 
             if (request.Customer == null)
                 return false;
-            
-            var customerRoles = request.Customer.CustomerRoles; 
-            //TODO use ICustomerService.GetCustomerRolesByCustomerId
-            if (customerRoles == null ||
-                customerRoles.Count == 0)
+
+            var customerRoles = request.Customer.CustomerRoles.Where(cr => cr.Active).ToList();
+            if (customerRoles.Count == 0)
                 return false;
 
             if (request.DiscountRequirement.RestrictedToCustomerRoles == null ||

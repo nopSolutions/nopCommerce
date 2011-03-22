@@ -94,7 +94,6 @@ namespace Nop.Services.Catalog
             var unsortedCategories = query.ToList();
 
             //sort categories
-            //TODO sort categories on database layer
             var sortedCategories = unsortedCategories.SortCategoriesForTree(0);
             return sortedCategories;
         }

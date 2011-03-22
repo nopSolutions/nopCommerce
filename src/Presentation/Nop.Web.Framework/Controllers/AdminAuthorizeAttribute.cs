@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Controllers
 {
@@ -20,9 +21,8 @@ namespace Nop.Web.Framework.Controllers
             var user = workContext.CurrentCustomer;
             if (user != null)
             {
-                //TODO add some helper method (for example, ICustomerManager.IsAdmin(Customer customer))
                 //TODO uncomment code below after we add authrorization pages (login/register)
-                //isAdmin= user.CustomerRoles.Where(cr => cr.IsSystemRole && cr.SystemName == SystemCustomerRoleNames.Administrators).Any();
+                //isAdmin = user.IsAdmin();
             }
 
             //remove code below after we add authrorization pages (login/register)
