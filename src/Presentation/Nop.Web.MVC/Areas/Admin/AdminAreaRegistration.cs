@@ -18,7 +18,8 @@ namespace Nop.Web.MVC.Areas.Admin
             context.MapRoute(
                 "Admin_default",
                 "Admin/{controller}/{action}/{id}",
-                new { action = "Index", id = "" }
+                new {controller = "Home", action = "Index", id = ""},
+                new[] {"Nop.Web.MVC.Areas.Admin.Controllers"}
             );
         }
     }

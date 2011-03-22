@@ -101,6 +101,7 @@
     <Compile Include="Areas\Admin\Controllers\BaseNopController.cs" />
     <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\EmailAccountController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\LanguageController.cs" />
     <Compile Include="Areas\Admin\Controllers\LogController.cs" />
     <Compile Include="Areas\Admin\Controllers\PictureController.cs" />
@@ -669,6 +670,7 @@
     <Content Include="Areas\Admin\Views\EmailAccount\_CreateOrUpdate.cshtml" />
     <Content Include="Areas\Admin\Views\EmailAccount\Create.cshtml" />
     <Content Include="Areas\Admin\Views\EmailAccount\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <None Include="Themes\DarkOrange\theme.config" />
     <Content Include="Themes\nopClassic\Content\images\bbeditor-button-bg.gif" />
     <Content Include="Themes\nopClassic\Content\images\bgTextBox.gif" />
