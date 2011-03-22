@@ -862,7 +862,6 @@ namespace Nop.Services.Orders
                             DeliveryDateUtc = null,
                             TrackingNumber = "",
                             VatNumber = vatNumber,
-                            Deleted = false,
                             CreatedOnUtc = DateTime.UtcNow
                         };
                         _orderService.InsertOrder(order);
@@ -1068,7 +1067,6 @@ namespace Nop.Services.Orders
                                 TotalCycles = processPaymentRequest.RecurringTotalCycles,
                                 StartDateUtc = DateTime.UtcNow,
                                 IsActive = true,
-                                Deleted = false,
                                 CreatedOnUtc = DateTime.UtcNow,
                                 InitialOrder = order,
                             };

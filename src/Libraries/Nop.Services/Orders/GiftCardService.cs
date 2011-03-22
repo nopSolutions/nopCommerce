@@ -46,7 +46,7 @@ namespace Nop.Services.Orders
         public void DeleteGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
-                return;
+                throw new ArgumentNullException("giftCard");
 
             _giftCardRepository.Delete(giftCard);
         }

@@ -61,13 +61,13 @@ namespace Nop.Services.Catalog
         #region Methods
 
         /// <summary>
-        /// Marks category as deleted
+        /// Delete category
         /// </summary>
         /// <param name="category">Category</param>
         public void DeleteCategory(Category category)
         {
             if (category == null)
-                return;
+                throw new ArgumentNullException("category");
 
             category.Deleted = true;
             UpdateCategory(category);
@@ -242,7 +242,7 @@ namespace Nop.Services.Catalog
         public void DeleteProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
-                return;
+                throw new ArgumentNullException("productCategory");
 
             _productCategoryRepository.Delete(productCategory);
 

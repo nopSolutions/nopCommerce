@@ -155,7 +155,7 @@ namespace Nop.Services.Configuration
         public void DeleteSetting(Setting setting)
         {
             if (setting == null)
-                return;
+                throw new ArgumentNullException("setting");
 
             _settingRepository.Delete(setting);
 

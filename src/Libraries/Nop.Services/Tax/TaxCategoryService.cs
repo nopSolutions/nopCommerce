@@ -51,7 +51,7 @@ namespace Nop.Services.Tax
         public void DeleteTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                return;
+                throw new ArgumentNullException("taxCategory");
 
             _taxCategoryRepository.Delete(taxCategory);
 

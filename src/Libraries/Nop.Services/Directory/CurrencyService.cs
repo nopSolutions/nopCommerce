@@ -77,7 +77,7 @@ namespace Nop.Services.Directory
         public void DeleteCurrency(Currency currency)
         {
             if (currency == null)
-                return;
+                throw new ArgumentNullException("currency");
 
             //TODO load all customers (currency.Customers property) and set new currency to them
 

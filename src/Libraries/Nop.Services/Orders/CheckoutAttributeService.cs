@@ -61,7 +61,7 @@ namespace Nop.Services.Orders
         public void DeleteCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
-                return;
+                throw new ArgumentNullException("checkoutAttribute");
 
             _checkoutAttributeRepository.Delete(checkoutAttribute);
 
@@ -147,7 +147,7 @@ namespace Nop.Services.Orders
         public void DeleteCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
-                return;
+                throw new ArgumentNullException("checkoutAttributeValue");
 
             _checkoutAttributeValueRepository.Delete(checkoutAttributeValue);
 

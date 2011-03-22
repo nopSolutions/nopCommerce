@@ -116,7 +116,7 @@ namespace Nop.Services.Orders
         public void DeleteOrder(Order order)
         {
             if (order == null)
-                return;
+                throw new ArgumentNullException("order");
 
             order.Deleted = true;
             UpdateOrder(order);
@@ -330,7 +330,7 @@ namespace Nop.Services.Orders
         public void DeleteRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                return;
+                throw new ArgumentNullException("recurringPayment");
 
             recurringPayment.Deleted = true;
             UpdateRecurringPayment(recurringPayment);

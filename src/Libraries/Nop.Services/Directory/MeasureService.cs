@@ -65,7 +65,7 @@ namespace Nop.Services.Directory
         public void DeleteMeasureDimension(MeasureDimension measureDimension)
         {
             if (measureDimension == null)
-                return;
+                throw new ArgumentNullException("measureDimension");
 
             _measureDimensionRepository.Delete(measureDimension);
 
@@ -228,7 +228,7 @@ namespace Nop.Services.Directory
         public void DeleteMeasureWeight(MeasureWeight measureWeight)
         {
             if (measureWeight == null)
-                return;
+                throw new ArgumentNullException("measureWeight");
 
             _measureWeightRepository.Delete(measureWeight);
 

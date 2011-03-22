@@ -90,7 +90,7 @@ namespace Nop.Services.Catalog
         public void DeleteProduct(Product product)
         {
             if (product == null)
-                return;
+                throw new ArgumentNullException("product");
 
             product.Deleted = true;
             //delete product
@@ -632,7 +632,7 @@ namespace Nop.Services.Catalog
         public void DeleteProductVariant(ProductVariant productVariant)
         {
             if (productVariant == null)
-                return;
+                throw new ArgumentNullException("productVariant");
 
             productVariant.Deleted = true;
             UpdateProductVariant(productVariant);
@@ -754,7 +754,7 @@ namespace Nop.Services.Catalog
         public void DeleteRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
-                return;
+                throw new ArgumentNullException("relatedProduct");
 
             _relatedProductRepository.Delete(relatedProduct);
         }
@@ -828,7 +828,7 @@ namespace Nop.Services.Catalog
         public void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
-                return;
+                throw new ArgumentNullException("crossSellProduct");
 
             _crossSellProductRepository.Delete(crossSellProduct);
         }
@@ -901,7 +901,7 @@ namespace Nop.Services.Catalog
         public void DeleteTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
-                return;
+                throw new ArgumentNullException("tierPrice");
 
             _tierPriceRepository.Delete(tierPrice);
 

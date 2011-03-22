@@ -128,7 +128,7 @@ namespace Nop.Services.Customers
         public void DeleteCustomer(Customer customer)
         {
             if (customer == null)
-                return;
+                throw new ArgumentNullException("customer");
 
             customer.Deleted = true;
             UpdateCustomer(customer);
@@ -275,7 +275,7 @@ namespace Nop.Services.Customers
         public void DeleteCustomerRole(CustomerRole customerRole)
         {
             if (customerRole == null)
-                return;
+                throw new ArgumentNullException("customerRole");
 
             if (customerRole.IsSystemRole)
                 throw new NopException("System role could not be deleted");
@@ -409,7 +409,7 @@ namespace Nop.Services.Customers
         public void DeleteCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
-                return;
+                throw new ArgumentNullException("customerAttribute");
 
             _customerAttributeRepository.Delete(customerAttribute);
         }

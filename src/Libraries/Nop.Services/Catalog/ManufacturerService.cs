@@ -61,8 +61,8 @@ namespace Nop.Services.Catalog
         public void DeleteManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                return;
-
+                throw new ArgumentNullException("manufacturer");
+            
             manufacturer.Deleted = true;
             UpdateManufacturer(manufacturer);
         }
@@ -144,7 +144,7 @@ namespace Nop.Services.Catalog
         public void DeleteProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                return;
+                throw new ArgumentNullException("productManufacturer");
 
             _productManufacturerRepository.Delete(productManufacturer);
 

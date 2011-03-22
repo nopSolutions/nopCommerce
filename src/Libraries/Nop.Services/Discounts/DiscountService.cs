@@ -113,7 +113,7 @@ namespace Nop.Services.Discounts
         public void DeleteDiscount(Discount discount)
         {
             if (discount == null)
-                return;
+                throw new ArgumentNullException("discount");
 
             //clear many-to-many navigation property because EF doesn't allow to configure cascade delete for this type of associations
             discount.AppliedToCategories.Clear();

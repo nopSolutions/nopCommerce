@@ -50,7 +50,7 @@ namespace Nop.Services.Directory
         public void DeleteStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
-                return;
+                throw new ArgumentNullException("stateProvince");
 
             //TODO ensure that addresses with this country will not be deleted
 

@@ -74,7 +74,7 @@ namespace Nop.Services.Catalog
         public void DeleteProductAttribute(ProductAttribute productAttribute)
         {
             if (productAttribute == null)
-                return;
+                throw new ArgumentNullException("productAttribute");
 
             _productAttributeRepository.Delete(productAttribute);
 
@@ -162,7 +162,7 @@ namespace Nop.Services.Catalog
         public void DeleteProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
         {
             if (productVariantAttribute == null)
-                return;
+                throw new ArgumentNullException("productVariantAttribute");
 
             _productVariantAttributeRepository.Delete(productVariantAttribute);
 
@@ -251,7 +251,7 @@ namespace Nop.Services.Catalog
         public void DeleteProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
         {
             if (productVariantAttributeValue == null)
-                return;
+                throw new ArgumentNullException("productVariantAttributeValue");
 
             _productVariantAttributeValueRepository.Delete(productVariantAttributeValue);
 
@@ -340,7 +340,7 @@ namespace Nop.Services.Catalog
         public void DeleteProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
             if (combination == null)
-                return;
+                throw new ArgumentNullException("combination");
 
             _productVariantAttributeCombinationRepository.Delete(combination);
         }

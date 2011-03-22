@@ -78,7 +78,7 @@ namespace Nop.Services.Media
         public void DeleteDownload(Download download)
         {
             if (download == null)
-                return;
+                throw new ArgumentNullException("download");
 
             _downloadRepository.Delete(download);
         }

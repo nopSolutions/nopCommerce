@@ -53,7 +53,7 @@ namespace Nop.Services.Directory
         public void DeleteCountry(Country country)
         {
             if (country == null)
-                return;
+                throw new ArgumentNullException("country");
 
             //TODO ensure that addresses with this country will not be deleted
 

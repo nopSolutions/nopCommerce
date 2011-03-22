@@ -457,7 +457,7 @@ namespace Nop.Services.Media
         public void DeletePicture(Picture picture)
         {
             if (picture == null)
-                return;
+                throw new ArgumentNullException("picture");
 
             //delete thumbs
             string filter = string.Format("{0}*.*", picture.Id.ToString("0000000"));
@@ -467,9 +467,7 @@ namespace Nop.Services.Media
             
             //delete from file system
             if (!this.StoreInDb)
-            {
                 DeletePictureOnFileSystem(picture);
-            }
 
             //delete from database
             _pictureRepository.Delete(picture);

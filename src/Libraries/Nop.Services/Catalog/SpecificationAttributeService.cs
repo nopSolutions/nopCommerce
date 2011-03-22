@@ -102,7 +102,7 @@ namespace Nop.Services.Catalog
         public void DeleteSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
-                return;
+                throw new ArgumentNullException("specificationAttribute");
 
             _specificationAttributeRepository.Delete(specificationAttribute);
 
@@ -187,7 +187,7 @@ namespace Nop.Services.Catalog
         public void DeleteSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
             if (specificationAttributeOption == null)
-                return;
+                throw new ArgumentNullException("specificationAttributeOption");
 
             _specificationAttributeOptionRepository.Delete(specificationAttributeOption);
 
@@ -239,7 +239,7 @@ namespace Nop.Services.Catalog
         public void DeleteProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
-                return;
+                throw new ArgumentNullException("productSpecificationAttribute");
 
             _productSpecificationAttributeRepository.Delete(productSpecificationAttribute);
 

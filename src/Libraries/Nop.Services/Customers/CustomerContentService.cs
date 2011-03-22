@@ -45,7 +45,7 @@ namespace Nop.Services.Customers
         public void DeleteLanguage(CustomerContent content)
         {
             if (content == null)
-                return;
+                throw new ArgumentNullException("content");
 
             _contentRepository.Delete(content);
         }

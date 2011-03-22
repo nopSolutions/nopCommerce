@@ -51,7 +51,7 @@ namespace Nop.Services.Localization
         public void DeleteLanguage(Language language)
         {
             if (language == null)
-                return;
+                throw new ArgumentNullException("language");
 
             //TODO load all customers (language.Customers property) and set new language to them
 

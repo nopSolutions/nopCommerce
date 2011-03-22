@@ -64,7 +64,7 @@ namespace Nop.Services.Logging
         public void DeleteLog(Log log)
         {
             if (log == null)
-                return;
+                throw new ArgumentNullException("log");
 
             _logRepository.Delete(log);
         }

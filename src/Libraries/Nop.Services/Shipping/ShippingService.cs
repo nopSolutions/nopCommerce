@@ -132,7 +132,7 @@ namespace Nop.Services.Shipping
         public void DeleteShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
-                return;
+                throw new ArgumentNullException("shippingMethod");
 
             _shippingMethodRepository.Delete(shippingMethod);
             _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);

@@ -51,7 +51,7 @@ namespace Nop.Services.Messages
         public void DeleteQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
-                return;
+                throw new ArgumentNullException("queuedEmail");
 
             _queuedEmailRepository.Delete(queuedEmail);
         }

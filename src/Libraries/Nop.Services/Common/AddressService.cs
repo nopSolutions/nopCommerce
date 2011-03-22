@@ -39,9 +39,9 @@ namespace Nop.Services.Common
         public void DeleteAddress(Address address)
         {
             if (address == null)
-                return;
+                throw new ArgumentNullException("address");
 
-            //TODO ensure that customer will not be deleted
+            //TODO ensure that customer will not be deleted, the same is for order
             //in case BillingAddress or ShippingAddress is set to this address
 
             _addressRepository.Delete(address);

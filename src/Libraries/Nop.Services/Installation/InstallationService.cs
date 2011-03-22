@@ -450,7 +450,6 @@ namespace Nop.Services.Installation
                                             AssociatedUserId = user.Id,
                                             AdminComment = string.Empty,
                                             Active = true,
-                                            Deleted = false,
                                             CreatedOnUtc = DateTime.UtcNow,
                                         }
                                 };

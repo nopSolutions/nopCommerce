@@ -12,7 +12,7 @@ namespace Nop.Services.Catalog
     public partial interface ICategoryService
     {
         /// <summary>
-        /// Marks category as deleted
+        /// Delete category
         /// </summary>
         /// <param name="category">Category</param>
         void DeleteCategory(Category category);

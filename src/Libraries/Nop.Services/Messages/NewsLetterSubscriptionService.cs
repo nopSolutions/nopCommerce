@@ -76,7 +76,7 @@ namespace Nop.Services.Messages
         public void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
         {
             if (newsLetterSubscription == null)
-                return;
+                throw new ArgumentNullException("newsLetterSubscription");
 
             _newsLetterSubscriptionRepository.Delete(newsLetterSubscription);
         }
