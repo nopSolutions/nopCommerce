@@ -74,7 +74,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			var languages = _languageService.GetAllLanguages(true);
 			var gridModel = new GridModel<LanguageModel>
 			{
-				Data = languages.Select(x => new LanguageModel(x)),
+				Data = languages.Select(AutoMapper.Mapper.Map<Language, LanguageModel>),
 				Total = languages.Count()
 			};
 			return View(gridModel);
@@ -86,7 +86,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			var languages = _languageService.GetAllLanguages(true);
 			var gridModel = new GridModel<LanguageModel>
 			{
-				Data = languages.Select(x => new LanguageModel(x)),
+				Data = languages.Select(AutoMapper.Mapper.Map<Language,LanguageModel>),
 				Total = languages.Count()
 			};
 
@@ -108,7 +108,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 		{
 			var language = _languageService.GetLanguageById(id);
 			if (language == null) throw new ArgumentException("No language found with the specified id", "id");
-			return View(new LanguageModel(language));
+			return View(AutoMapper.Mapper.Map<Language,LanguageModel>(language));
 		}
 
 		[HttpPost]
@@ -135,7 +135,7 @@ namespace Nop.Web.MVC.Areas.Admin.Controllers
 			{
 				return List();
 			}
-			var modal = new LanguageModel(language);
+		    var modal = AutoMapper.Mapper.Map<Language, LanguageModel>(language);
 			return Delete(modal);
 		}
 

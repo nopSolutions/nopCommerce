@@ -7,8 +7,17 @@ using Nop.Core;
 
 namespace Nop.Web.Framework
 {
+    /// <summary>
+    /// This MetadataProvider adds some functionality on top of the default DataAnnotationsModelMetadataProvider.
+    /// It adds custom attributes (implementing IModelAttribute) to the AdditionalValues property of the model's metadata
+    /// so that it can be retrieved later.
+    /// </summary>
     public class NopMetadataProvider : DataAnnotationsModelMetadataProvider
     {
+		#region Methods (1) 
+
+		// Protected Methods (1) 
+
         protected override ModelMetadata CreateMetadata(IEnumerable<Attribute> attributes, Type containerType, Func<object> modelAccessor, Type modelType, string propertyName)
         {
             var metadata = base.CreateMetadata(attributes, containerType, modelAccessor, modelType, propertyName);
@@ -22,5 +31,7 @@ namespace Nop.Web.Framework
             }
             return metadata;
         }
+
+		#endregion Methods 
     }
 }

@@ -3,15 +3,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>NopCommerce public store. @ViewBag.Title</title>
+
+    @*jquery and other base scripts*@
     <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/public.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/public.js")" type="text/javascript"></script>
+
+    @*jquery ajax scripts*@
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
+
+    @*ajax scripts used by asp.net mvc*@
+    <script src="@Url.Content("~/Scripts/MicrosoftAjax.debug.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.debug.js")" type="text/javascript"></script>
+
+
+    @*jquery validation*@
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+    @*This is used so that themes can inject content into the header*@ 
     @Html.Partial("Head")
 </head>
 <body>
-
     <div class="master-wrapper-page">
         <div class="master-wrapper-content">
             <div class="header">
@@ -43,7 +56,7 @@
                         <!--UNDONE currency selector -->
                     </div>
                     <div class="header-languageselector">
-                        <!--UNDONE language selector -->
+                        @Html.Action("LanguageSelector", "Home")
                     </div>
                 </div>
             </div>
@@ -85,7 +98,7 @@
                 info here http://www.nopcommerce.com/copyrightremoval.aspx -->
             </div>
             <div class="footer-disclaimer">
-                @T("Content.CopyrightNotice", DateTime.Now.Year.ToString() , "Store name here")
+                @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), "Store name here")
             </div>
             <div class="footer-storetheme">
                 <!--UNDONE store theme selector -->

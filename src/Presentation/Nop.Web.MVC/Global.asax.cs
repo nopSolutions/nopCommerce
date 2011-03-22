@@ -41,29 +41,31 @@ namespace Nop.Web.MVC
 
             //initialize engine context
             EngineContext.Initialize(false);
+
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
             DependencyResolver.SetResolver(dependencyResolver);
 
+            //Initilize all the automappings
+            AutoMapperInitialization.Initialize();
+
             //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel),new NopModelBinder());
 
-            //other MVC stuff
-
-            //var themeableRazorViewEngine = new ThemeableViewEngine
-            //                                   {
-            //                                       CurrentTheme = httpContext => httpContext.Session["theme"] as string ?? string.Empty
-            //                                   };
-            //ViewEngines.Engines.Clear();
-            //ViewEngines.Engines.Add(themeableRazorViewEngine);
-
+            //remove all view engines
             ViewEngines.Engines.Clear();
+            //except the themeable razor view engine we use
             ViewEngines.Engines.Add(new ThemableRazorViewEngine());
+
+            //Add some functionality on top of the deafult ModelMetadataProvider
             ModelMetadataProviders.Current = new NopMetadataProvider();
+
+            //Registering some regular mvc stuf
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
             
+            //For debugging
             //RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
 
             //set localization service for telerik
@@ -76,12 +78,6 @@ namespace Nop.Web.MVC
             ModelValidatorProviders.Providers.Add(
                 new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
         }
-
-        //protected void RegisterServiceLocator()
-        //{
-        //    var serviceLocator = new AutofacServiceLocator(EngineContext.Current.ContainerManager.Scope());
-        //    ServiceLocator.SetLocatorProvider(() => serviceLocator);
-        //}
 
         protected void InstallDatabase(object sender, EventArgs e)
         {
@@ -100,5 +96,11 @@ namespace Nop.Web.MVC
             //TODO uncomment to register ServiceLocator
             //RegisterServiceLocator();
         }
+
+        //protected void RegisterServiceLocator()
+        //{
+        //    var serviceLocator = new AutofacServiceLocator(EngineContext.Current.ContainerManager.Scope());
+        //    ServiceLocator.SetLocatorProvider(() => serviceLocator);
+        //}
     }
 }

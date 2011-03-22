@@ -43,6 +43,9 @@
     <Reference Include="Autofac.Integration.Mvc, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Autofac.Mvc3.2.4.5.724\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\packages\AutoMapper.1.1.0.118\lib\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\EntityFramework.4.1.10311.0\lib\EntityFramework.dll</HintPath>
@@ -122,11 +125,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\AutoMapperInitialization.cs" />
     <Compile Include="Infrastructure\DependencyRegistar.cs" />
     <Compile Include="Infrastructure\TelerikLocalizationService.cs" />
     <Compile Include="Infrastructure\NopDependencyResolver.cs" />
     <Compile Include="Infrastructure\NopValidatorFactory.cs" />
     <Compile Include="Infrastructure\TelerikLocalizationServiceFactory.cs" />
+    <Compile Include="Models\Home\LanguageSelectorModel.cs" />
     <Compile Include="StartupTasks\RegisterDefaultPermissionsStartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -739,12 +744,12 @@
     <Content Include="Themes\nopClassic\Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Home\LanguageSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Scripts\" />
     <Folder Include="Content\flash\" />
     <Folder Include="Content\themes\default\" />
-    <Folder Include="Models\" />
     <Folder Include="Plugins\" />
   </ItemGroup>
   <ItemGroup>
@@ -883,7 +888,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1623</DevelopmentServerPort>
+          <DevelopmentServerPort>18401</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

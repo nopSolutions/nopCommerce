@@ -12,21 +12,6 @@ namespace Nop.Web.MVC.Areas.Admin.Models
     [Validator(typeof(LanguageValidator))]
     public class LanguageModel : BaseNopEntityModel
     {
-        public LanguageModel()
-        {
-        }
-
-        public LanguageModel(Language language)
-            :this()
-        {
-            Id = language.Id;
-            Name = language.Name;
-            LanguageCulture = language.LanguageCulture;
-            FlagImageFileName = language.FlagImageFileName;
-            Published = language.Published;
-            DisplayOrder = language.DisplayOrder;
-        }
-
         [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.Name")]
         public string Name { get; set; }
 
