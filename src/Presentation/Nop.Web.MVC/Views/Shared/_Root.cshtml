@@ -40,10 +40,10 @@
                             <li><a href="login.aspx" class="ico-login">@T("Account.Login")</a></li>
                             <li><a href="shoppingcart.aspx" class="ico-cart">@T("Account.ShoppingCart")</a> <a
                                 href="shoppingcart.aspx">(0)</a></li>
-                            <!--UNDONE Check whether wishlist is enabled-->
+                            <!--UNDONE Check whether wishlist is enabled (ShoppingCartSettings.WishlistEnabled)-->
                             <li><a href="wishlist.aspx" class="ico-wishlist">@T("Wishlist.Wishlist")</a> <a href="wishlist.aspx">
                                 (0)</a></li>
-                            <!--UNDONE Check whether current user is admin-->
+                            <!--UNDONE Check whether current user is admin (_workContext.CurrentCustomer !=null && _workContext.CurrentCustomer.IsAdmin() method)-->
                             <li><a href="admin" class="ico-admin">@T("Account.Administration")</a> </li>
                         </ul>
                     </div>

@@ -173,7 +173,7 @@ namespace Nop.Services.Localization
             if (String.IsNullOrEmpty(result))
             {
                 if (logIfNotFound)
-                    _logger.Debug(string.Format("Resource string ({0}) is not found. Language ID = {1}", resourceKey, languageId));
+                    _logger.Warning(string.Format("Resource string ({0}) is not found. Language ID = {1}", resourceKey, languageId));
                 
                 result = !String.IsNullOrEmpty(defaultValue) ? defaultValue : resourceKey;
             }

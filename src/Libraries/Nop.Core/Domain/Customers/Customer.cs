@@ -131,6 +131,8 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the date and time of last activity
         /// </summary>
         public DateTime? LastActivityDateUtc { get; set; }
+        
+        #region Custom properties
 
         /// <summary>
         /// Gets the tax display type
@@ -161,7 +163,10 @@ namespace Nop.Core.Domain.Customers
                 this.VatNumberStatusId = (int)value;
             }
         }
+        
+        #endregion
 
+        #region Navigation properties
 
         /// <summary>
         /// Gets or sets the language
@@ -222,6 +227,8 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets customer addresses
         /// </summary>
         public virtual ICollection<Address> Addresses { get; set; }
+        
+        #endregion
 
         #region Addresses
 

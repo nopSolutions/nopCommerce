@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Web.MVC.Areas.Admin.Models;
 using Nop.Web.MVC.Models.Catalog;
@@ -30,6 +31,8 @@ namespace Nop.Web.MVC.Infrastructure
             ViceVersa<Category, CategoryModel>();
             //category product
             ViceVersa<ProductCategory, CategoryProductModel>();
+            //logs
+            ViceVersa<Log, LogModel>();
             //locale resource
             Mapper.CreateMap<LocaleStringResource, LanguageResourceModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ResourceName))

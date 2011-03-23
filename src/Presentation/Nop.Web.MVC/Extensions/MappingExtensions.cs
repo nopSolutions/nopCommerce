@@ -101,9 +101,9 @@ namespace Nop.Web.MVC.Extensions
 
         #region Log
 
-        public static LogModel ToModel(this Log emailAccount)
+        public static LogModel ToModel(this Log logItem)
         {
-            return AutoMapper.Mapper.Map<Log, LogModel>(emailAccount);
+            return AutoMapper.Mapper.Map<Log, LogModel>(logItem);
         }
 
         public static Log ToEntity(this LogModel model)
