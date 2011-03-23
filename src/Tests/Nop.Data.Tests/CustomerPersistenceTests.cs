@@ -133,6 +133,7 @@ namespace Nop.Data.Tests
             var address = new Address 
             { 
                 FirstName = "Test",
+                Country = GetTestCountry(),
                 CreatedOnUtc = new DateTime(2010, 01, 01),
             };
 
@@ -149,8 +150,8 @@ namespace Nop.Data.Tests
         {
             var customer = GetTestCustomer();
 
-            var address = new Address { FirstName = "Billing", CreatedOnUtc = new DateTime(2010, 01, 01) };
-            var address2 = new Address { FirstName = "Shipping", CreatedOnUtc = new DateTime(2010, 01, 01) };
+            var address = new Address { FirstName = "Billing", Country = GetTestCountry(), CreatedOnUtc = new DateTime(2010, 01, 01) };
+            var address2 = new Address { FirstName = "Shipping", Country = GetTestCountry(), CreatedOnUtc = new DateTime(2010, 01, 01) };
 
             customer.AddAddress(address);
             customer.AddAddress(address2);
@@ -175,7 +176,7 @@ namespace Nop.Data.Tests
         public void Can_remove_a_customer_address()
         {
             var customer = GetTestCustomer();
-            var address = new Address { FirstName = "Test", CreatedOnUtc = new DateTime(2010, 01, 01) };
+            var address = new Address { FirstName = "Test", Country = GetTestCountry(), CreatedOnUtc = new DateTime(2010, 01, 01) };
             customer.AddAddress(address);
             customer.SetBillingAddress(address);
 
@@ -360,5 +361,23 @@ namespace Nop.Data.Tests
                 }
             };
         }
+
+        protected Country GetTestCountry()
+        {
+            return new Country
+            {
+                Name = "United States",
+                AllowsRegistration = true,
+                AllowsBilling = true,
+                AllowsShipping = true,
+                TwoLetterIsoCode = "US",
+                ThreeLetterIsoCode = "USA",
+                NumericIsoCode = 1,
+                SubjectToVat = true,
+                Published = true,
+                DisplayOrder = 1
+            };
+        }
+
     }
 }

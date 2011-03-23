@@ -1,6 +1,8 @@
 
 
 using System;
+using System.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Data;
 
@@ -41,8 +43,15 @@ namespace Nop.Services.Common
             if (address == null)
                 throw new ArgumentNullException("address");
 
-            //TODO ensure that customer will not be deleted, the same is for order
-            //in case BillingAddress or ShippingAddress is set to this address
+            //ensure that an associated order will not be deleted (an order with BillingAddress set to this one)
+            //TODO uncomment code below
+            //var query = from o in _orderRepository.Table
+            //            where (o.BillingAddress.Id == address.Id)
+            //            || (o.ShippingAddress != null && o.ShippingAddress.Id == address.Id)
+            //            select o;
+            //var order = query.FirstOrDefault();
+            //if (order != null)
+            //    throw new NopException(string.Format("Deleting address is not allowed because it's associated with order #{0}", order.Id));
 
             _addressRepository.Delete(address);
         }

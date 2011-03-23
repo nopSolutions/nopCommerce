@@ -46,7 +46,6 @@ namespace Nop.Data.Tests
             context = new NopObjectContext(GetTestDbName());
 
             var fromDb = context.Set<T>().Find(id);
-            fromDb.ShouldNotBeNull();
             return fromDb;
         }
     }

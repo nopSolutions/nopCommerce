@@ -214,7 +214,7 @@ namespace Nop.Services.Security.Permissions
             if (_workContext.CurrentCustomer == null)
                 return false;
 
-            var customerRoles = _workContext.CurrentCustomer.CustomerRoles;
+            var customerRoles = _workContext.CurrentCustomer.CustomerRoles.Where(cr => cr.Active);
             foreach (var role in customerRoles)
                 foreach (var permission1 in role.PermissionRecords)
                     if (permission1.SystemName.Equals(permission.SystemName, StringComparison.InvariantCultureIgnoreCase))
