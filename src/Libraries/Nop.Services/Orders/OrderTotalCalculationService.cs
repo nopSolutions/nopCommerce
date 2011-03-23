@@ -293,10 +293,8 @@ namespace Nop.Services.Orders
                 foreach (var discount in allDiscounts)
                     if (_discountService.IsDiscountValid(discount, customer) &&
                                discount.DiscountType == DiscountType.AssignedToOrderSubTotal &&
-                               !allowedDiscounts.Contains(discount))
-                    {
+                               !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);
-                    }
 
             appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderSubTotal);
             if (appliedDiscount != null)
@@ -459,10 +457,8 @@ namespace Nop.Services.Orders
             foreach (var discount in allDiscounts)
                 if (_discountService.IsDiscountValid(discount, customer) &&
                            discount.DiscountType == DiscountType.AssignedToShipping &&
-                           !allowedDiscounts.Contains(discount))
-                {
+                           !allowedDiscounts.ContainsDiscount(discount))
                     allowedDiscounts.Add(discount);
-                }
 
             appliedDiscount = allowedDiscounts.GetPreferredDiscount(shippingTotal);
             if (appliedDiscount != null)
@@ -808,10 +804,8 @@ namespace Nop.Services.Orders
                 foreach (var discount in allDiscounts)
                     if (_discountService.IsDiscountValid(discount, customer) &&
                                discount.DiscountType == DiscountType.AssignedToOrderTotal &&
-                               !allowedDiscounts.Contains(discount))
-                    {
+                               !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);
-                    }
 
             appliedDiscount = allowedDiscounts.GetPreferredDiscount(orderTotal);
             if (appliedDiscount != null)

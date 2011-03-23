@@ -269,6 +269,7 @@ namespace Nop.Services.Tests.Catalog
             //discounts
             var discount1 = new Discount()
             {
+                Id = 1,
                 Name = "Discount 1",
                 DiscountType = DiscountType.AssignedToSkus,
                 DiscountAmount = 3,
@@ -280,6 +281,7 @@ namespace Nop.Services.Tests.Catalog
 
             var discount2 = new Discount()
             {
+                Id = 2,
                 Name = "Discount 2",
                 DiscountType = DiscountType.AssignedToSkus,
                 DiscountAmount = 4,
@@ -291,6 +293,7 @@ namespace Nop.Services.Tests.Catalog
 
             var discount3 = new Discount()
             {
+                Id = 3,
                 Name = "Discount 3",
                 DiscountType = DiscountType.AssignedToOrderSubTotal,
                 DiscountAmount = 5,
@@ -299,13 +302,14 @@ namespace Nop.Services.Tests.Catalog
                 CouponCode = "SECRET CODE",
                 AppliedToProductVariants = new List<ProductVariant>() { productVariant }
             };
-            productVariant.AppliedDiscounts.Add(discount2);
+            productVariant.AppliedDiscounts.Add(discount3);
             //discount is not valid
-            _discountService.Expect(ds => ds.IsDiscountValid(discount2, customer)).Return(false);
+            _discountService.Expect(ds => ds.IsDiscountValid(discount3, customer)).Return(false);
 
 
             Discount appliedDiscount;
             _priceCalcService.GetDiscountAmount(productVariant, customer, 0, 1, out appliedDiscount).ShouldEqual(4);
+            appliedDiscount.ShouldNotBeNull();
             appliedDiscount.ShouldEqual(discount2);
         }
 

@@ -514,7 +514,7 @@ namespace Nop.Services.Orders
                     orderSubTotalDiscountInclTax = orderSubTotalDiscountAmount1;
 
                     //discount history
-                    if (orderSubTotalAppliedDiscount1 != null && !appliedDiscounts.Contains(orderSubTotalAppliedDiscount1))
+                    if (orderSubTotalAppliedDiscount1 != null && !appliedDiscounts.ContainsDiscount(orderSubTotalAppliedDiscount1))
                         appliedDiscounts.Add(orderSubTotalAppliedDiscount1);
 
                     //sub total (excl tax)
@@ -600,7 +600,7 @@ namespace Nop.Services.Orders
                     if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
                         throw new NopException("Shipping total couldn't be calculated");
 
-                    if (shippingTotalDiscount != null && !appliedDiscounts.Contains(shippingTotalDiscount))
+                    if (shippingTotalDiscount != null && !appliedDiscounts.ContainsDiscount(shippingTotalDiscount))
                         appliedDiscounts.Add(shippingTotalDiscount);
                 }
                 else
@@ -673,7 +673,7 @@ namespace Nop.Services.Orders
                         throw new NopException("Order total couldn't be calculated");
 
                     //discount history
-                    if (orderAppliedDiscount != null && !appliedDiscounts.Contains(orderAppliedDiscount))
+                    if (orderAppliedDiscount != null && !appliedDiscounts.ContainsDiscount(orderAppliedDiscount))
                         appliedDiscounts.Add(orderAppliedDiscount);
                 }
                 else
@@ -886,7 +886,7 @@ namespace Nop.Services.Orders
                                 decimal discountAmount = _priceCalculationService.GetDiscountAmount(sc, out scDiscount);
                                 decimal discountAmountInclTax = _taxService.GetProductPrice(sc.ProductVariant, discountAmount, true, customer, out taxRate);
                                 decimal discountAmountExclTax = _taxService.GetProductPrice(sc.ProductVariant, discountAmount, false, customer, out taxRate);
-                                if (scDiscount != null && !appliedDiscounts.Contains(scDiscount))
+                                if (scDiscount != null && !appliedDiscounts.ContainsDiscount(scDiscount))
                                     appliedDiscounts.Add(scDiscount);
 
                                 //attributes

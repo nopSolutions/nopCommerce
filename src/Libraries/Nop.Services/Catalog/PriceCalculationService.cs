@@ -49,10 +49,8 @@ namespace Nop.Services.Catalog
             {
                 if (_discountService.IsDiscountValid(discount, customer) &&
                     discount.DiscountType == DiscountType.AssignedToSkus &&
-                    !allowedDiscounts.Contains(discount))
-                {
+                    !allowedDiscounts.ContainsDiscount(discount))
                     allowedDiscounts.Add(discount);
-                }
             }
 
             var productCategories = _categoryService.GetProductCategoriesByProductId(productVariant.ProductId);
@@ -65,10 +63,8 @@ namespace Nop.Services.Catalog
                     {
                         if (_discountService.IsDiscountValid(discount, customer) &&
                             discount.DiscountType == DiscountType.AssignedToCategories &&
-                            !allowedDiscounts.Contains(discount))
-                        {
+                            !allowedDiscounts.ContainsDiscount(discount))
                             allowedDiscounts.Add(discount);
-                        }
                     }
                 }
             }
