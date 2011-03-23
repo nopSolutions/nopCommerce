@@ -36,6 +36,28 @@ namespace Nop.Core.Plugins
         /// </summary>
         public static IEnumerable<Assembly> ReferencedPlugins { get; protected set; }
 
+        private static Assembly LoadAssembly(string assemblyPath, bool loadWithoutLocking = false)
+        {
+            if (loadWithoutLocking)
+            {
+                //dynamically load assembly (no file locking)
+                byte[] assemStream = null;
+                using (FileStream fs = new FileStream(assemblyPath, FileMode.Open))
+                {
+                    assemStream = new byte[fs.Length];
+                    fs.Read(assemStream, 0, (int)fs.Length);
+                }
+                var assembly = Assembly.Load(assemStream);
+                return assembly;
+            }
+            else
+            {
+                var assemblyName = AssemblyName.GetAssemblyName(assemblyPath);
+                var assembly = Assembly.Load(assemblyName.FullName);
+                return assembly;
+            }
+        }
+
         public static void Initialize()
         {
             if (!_isInit)
@@ -98,12 +120,11 @@ namespace Nop.Core.Plugins
                             }
                         }
 
-                        foreach (var a in
-                            shadowCopyFolder
-                            .GetFiles("*.dll", SearchOption.AllDirectories)
-                            .Select(x => AssemblyName.GetAssemblyName(x.FullName))
-                            .Select(x => Assembly.Load(x.FullName)))
+                        foreach (var file in shadowCopyFolder
+                            .GetFiles("*.dll", SearchOption.AllDirectories))
                         {
+                            //load assembly without locking
+                            var a = LoadAssembly(file.FullName, true);
                             BuildManager.AddReferencedAssembly(a);
                             referencedAssemblies.Add(a);
                         }
