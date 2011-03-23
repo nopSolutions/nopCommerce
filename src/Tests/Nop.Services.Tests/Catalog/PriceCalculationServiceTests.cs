@@ -233,6 +233,7 @@ namespace Nop.Services.Tests.Catalog
             //discounts
             var discount1 = new Discount()
             {
+                Id = 1,
                 Name = "Discount 1",
                 DiscountType = DiscountType.AssignedToSkus,
                 DiscountAmount = 3,
@@ -337,6 +338,7 @@ namespace Nop.Services.Tests.Catalog
             //discounts
             var discount1 = new Discount()
             {
+                Id = 1,
                 Name = "Discount 1",
                 DiscountType = DiscountType.AssignedToSkus,
                 DiscountAmount = 3,

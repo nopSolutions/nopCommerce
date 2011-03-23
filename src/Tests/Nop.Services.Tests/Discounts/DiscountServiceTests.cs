@@ -30,6 +30,7 @@ namespace Nop.Services.Tests.Discounts
             _discountRepo = MockRepository.GenerateMock<IRepository<Discount>>();
             var discount1 = new Discount
             {
+                Id = 1,
                 DiscountType = DiscountType.AssignedToCategories,
                 Name = "Discount 1",
                 UsePercentage = true,
@@ -40,6 +41,7 @@ namespace Nop.Services.Tests.Discounts
             };
             var discount2 = new Discount
             {
+                Id = 2,
                 DiscountType = DiscountType.AssignedToSkus,
                 Name = "Discount 2",
                 UsePercentage = false,
