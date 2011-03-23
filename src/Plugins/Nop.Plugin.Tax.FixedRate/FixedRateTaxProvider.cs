@@ -14,7 +14,7 @@ namespace Nop.Plugin.Tax.FixedRate
     /// </summary>
     public class FixedRateTaxProvider : BasePlugin, ITaxProvider
     {
-        private ISettingService _settingService;
+        private readonly ISettingService _settingService;
 
         public FixedRateTaxProvider(ISettingService settingService)
         {
