@@ -56,6 +56,12 @@
     <Reference Include="FluentValidation.Mvc">
       <HintPath>..\..\packages\FluentValidation.MVC3.2.0.0.0\lib\NET4\FluentValidation.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Mvc">
+      <HintPath>..\..\packages\Mvc2Futures.2.0.50217.0\lib\Microsoft.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcContrib">
+      <HintPath>..\..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -752,6 +758,7 @@
     </Content>
     <Content Include="Views\Home\LanguageSelector.cshtml" />
     <Content Include="Views\Catalog\Category.cshtml" />
+    <Content Include="Views\Catalog\ProductBox.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Scripts\" />
@@ -892,7 +899,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>18401</DevelopmentServerPort>
+          <DevelopmentServerPort>7285</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

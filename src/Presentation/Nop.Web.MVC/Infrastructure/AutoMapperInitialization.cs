@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
