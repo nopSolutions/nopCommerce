@@ -160,6 +160,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RegisterDefaultPermissionsStartupTask.cs" />
     <Compile Include="Security\ChangePasswordRequest.cs" />
     <Compile Include="Security\PasswordChangeResult.cs" />
     <Compile Include="Security\EncryptionService.cs" />
