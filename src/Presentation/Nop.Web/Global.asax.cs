@@ -30,12 +30,12 @@ namespace Nop.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //routes.MapRoute(
-            //    "Default", // Route name
-            //    "{controller}/{action}/{id}", // URL with parameters
-            //    new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-            //    new[] { "Nop.Web.Controllers" }
-            //);
+            routes.MapRoute(
+                "Default", // Route name
+                "{controller}/{action}/{id}", // URL with parameters
+                new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                new[] { "Nop.Web.Controllers" }
+            );
         }
 
         protected void Application_Start()
@@ -63,9 +63,9 @@ namespace Nop.Web
 
             //Registering some regular mvc stuf
             ViewEngines.Engines.Add(new ThemableRazorViewEngine());
-            RegisterRoutes(RouteTable.Routes);
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
+            RegisterRoutes(RouteTable.Routes);
 
             //For debugging
             //RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
