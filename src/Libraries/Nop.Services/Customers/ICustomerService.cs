@@ -18,8 +18,6 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
         /// <param name="registrationTo">Customer registration to; null to load all customers</param>
-        /// <param name="email">Customer Email</param>
-        /// <param name="username">Customer username</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
@@ -64,7 +62,6 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Insert a guest customer
         /// </summary>
-        /// <param name="userName">Username</param>
         /// <returns>Customer</returns>
         Customer InsertGuestCustomer();
 

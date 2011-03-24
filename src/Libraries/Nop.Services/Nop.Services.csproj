@@ -73,6 +73,7 @@
     <Compile Include="ExportImport\ExcelHelper.cs" />
     <Compile Include="ExportImport\ExcelHelperReadTableMode.cs" />
     <Compile Include="ExportImport\ExportManager.cs" />
+    <Compile Include="ExportImport\ImportManager.cs" />
     <Compile Include="FormsAuthenticationService.cs" />
     <Compile Include="Helpers\IDateTimeHelper.cs" />
     <Compile Include="Helpers\DateTimeSettings.cs" />

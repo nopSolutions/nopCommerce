@@ -14,25 +14,11 @@ namespace Nop.Services.ExportImport
     public interface IExportManager
     {
         /// <summary>
-        /// Export customer list to xml
-        /// </summary>
-        /// <param name="customers">Customers</param>
-        /// <returns>Result in XML format</returns>
-        string ExportCustomersToXml(List<Customer> customers);
-
-        /// <summary>
-        /// Export customer list to XLS
-        /// </summary>
-        /// <param name="filePath">File path to use</param>
-        /// <param name="customers">Customers</param>
-        void ExportCustomersToXls(string filePath, List<Customer> customers);
-
-        /// <summary>
         /// Export manufacturer list to xml
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
         /// <returns>Result in XML format</returns>
-        string ExportManufacturersToXml(List<Manufacturer> manufacturers);
+        string ExportManufacturersToXml(IList<Manufacturer> manufacturers);
 
         /// <summary>
         /// Export category list to xml
@@ -45,33 +31,27 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="products">Products</param>
         /// <returns>Result in XML format</returns>
-        string ExportProductsToXml(List<Product> products);
+        string ExportProductsToXml(IList<Product> products);
 
         /// <summary>
         /// Export products to XLS
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="products">Products</param>
-        void ExportProductsToXls(string filePath, List<Product> products);
+        void ExportProductsToXls(string filePath, IList<Product> products);
 
         /// <summary>
         /// Export order list to xml
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>Result in XML format</returns>
-        string ExportOrdersToXml(List<Order> orders);
+        string ExportOrdersToXml(IList<Order> orders);
 
         /// <summary>
         /// Export orders to XLS
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="orders">Orders</param>
-        void ExportOrdersToXls(string filePath, List<Order> orders);
-
-        /// <summary>
-        /// Export message tokens to xml
-        /// </summary>
-        /// <returns>Result in XML format</returns>
-        string ExportMessageTokensToXml();
+        void ExportOrdersToXls(string filePath, IList<Order> orders);
     }
 }

@@ -94,5 +94,10 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether 'Fax' is required
         /// </summary>
         public bool FaxRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Newsletter' is enabled
+        /// </summary>
+        public bool NewsletterEnabled { get; set; }
     }
 }

@@ -162,6 +162,8 @@ namespace Nop.Web.MVC.Infrastructure
             builder.RegisterType<TelerikLocalizationServiceFactory>().As<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>().InstancePerHttpRequest();
 
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
+            builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerHttpRequest();
+
             builder.RegisterType<ThemeProvider>().As<IThemeProvider>().SingleInstance();
         }
     }

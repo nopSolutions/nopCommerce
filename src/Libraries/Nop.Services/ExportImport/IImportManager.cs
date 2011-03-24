@@ -11,12 +11,6 @@ namespace Nop.Services.ExportImport
     public interface IImportManager
     {
         /// <summary>
-        /// Import customer list from XLS file
-        /// </summary>
-        /// <param name="filePath">Excel file path</param>
-        void ImportCustomersFromXls(string filePath);
-
-        /// <summary>
         /// Import products from XLS file
         /// </summary>
         /// <param name="filePath">Excel file path</param>

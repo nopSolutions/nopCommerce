@@ -31,7 +31,6 @@ namespace Nop.Services.Customers
         private readonly ICacheManager _cacheManager;
         private readonly CustomerSettings _customerSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly LocalizationService _localizationService;
         
         #endregion
 
@@ -46,14 +45,12 @@ namespace Nop.Services.Customers
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
-        /// <param name="localizationService">Localization service</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerAttribute> customerAttributeRepository,
             CustomerSettings customerSettings,
-            RewardPointsSettings rewardPointsSettings,
-            LocalizationService localizationService)
+            RewardPointsSettings rewardPointsSettings)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
@@ -61,7 +58,6 @@ namespace Nop.Services.Customers
             this._customerAttributeRepository = customerAttributeRepository;
             this._customerSettings = customerSettings;
             this._rewardPointsSettings = rewardPointsSettings;
-            this._localizationService = localizationService;
         }
 
         #endregion
@@ -75,8 +71,6 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
         /// <param name="registrationTo">Customer registration to; null to load all customers</param>
-        /// <param name="email">Customer Email</param>
-        /// <param name="username">Customer username</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
@@ -196,7 +190,6 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Insert a guest customer
         /// </summary>
-        /// <param name="userName">Username</param>
         /// <returns>Customer</returns>
         public Customer InsertGuestCustomer()
         {
@@ -250,8 +243,10 @@ namespace Nop.Services.Customers
                 _rewardPointsSettings.PointsForRegistration > 0 &&
                 !customer.IsGuest())
             {
-                customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration,
-                    _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"));
+                //UNDONE uncomment code below to localize note
+                //string note = _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration");
+                string note = "Registered as customer";
+                customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration, note);
             }
 
             _customerRepository.Update(customer);
