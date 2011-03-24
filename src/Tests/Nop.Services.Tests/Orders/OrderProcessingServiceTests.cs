@@ -468,8 +468,118 @@ namespace Nop.Services.Tests.Orders
                     }
         }
 
+        [Test]
+        public void Ensure_order_can_only_be_partially_refunded_when_orderStatus_is_not_cancelled_and_paymentstatus_is_paid_or_partiallyRefunded_and_paymentModule_supports_partialRefund()
+        {
+            _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Return(true);
+            _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_don't_support_partialrefund")).Return(false);
+            var order = new Order();
+            order.OrderTotal = 100;
+            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund";
+
+            foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
+                foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
+                    foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
+                    {
+                        order.OrderStatus = os;
+                        order.PaymentStatus = ps;
+                        order.ShippingStatus = ss;
+
+                        if ((os != OrderStatus.Cancelled)
+                            && (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded))
+                            _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeTrue();
+                        else
+                            _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeFalse();
+                    }
+
+
+
+            order.PaymentMethodSystemName = "paymentMethodSystemName_that_don't_support_partialrefund";
+            foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
+                foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
+                    foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
+                    {
+                        order.OrderStatus = os;
+                        order.PaymentStatus = ps;
+                        order.ShippingStatus = ss;
+
+                        _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeFalse();
+                    }
+        }
+
+        [Test]
+        public void Ensure_order_cannot_be_partially_refunded_when_amountToRefund_is_greater_than_amount_that_can_be_refunded()
+        {
+            _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Return(true);
+            var order = new Order()
+            {
+                OrderTotal = 100,
+                RefundedAmount = 30, //100-30=70 can be refunded
+            };
+            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund";
+
+            foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
+                foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
+                    foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
+                    {
+                        order.OrderStatus = os;
+                        order.PaymentStatus = ps;
+                        order.ShippingStatus = ss;
+
+                        _orderProcessingService.CanPartiallyRefund(order, 80).ShouldBeFalse();
+                    }
+        }
+
+        [Test]
+        public void Ensure_order_can_only_be_partially_refunded_offline_when_orderStatus_is_not_cancelled_and_paymentstatus_is_paid_or_partiallyRefunded()
+        {
+            var order = new Order();
+            order.OrderTotal = 100;
+
+            foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
+                foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
+                    foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
+                    {
+                        order.OrderStatus = os;
+                        order.PaymentStatus = ps;
+                        order.ShippingStatus = ss;
+
+                        {
+                            order.OrderStatus = os;
+                            order.PaymentStatus = ps;
+                            order.ShippingStatus = ss;
+
+                            if ((os != OrderStatus.Cancelled)
+                                && (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded))
+                                _orderProcessingService.CanPartiallyRefundOffline(order, 10).ShouldBeTrue();
+                            else
+                                _orderProcessingService.CanPartiallyRefundOffline(order, 10).ShouldBeFalse();
+                        }
+                    }
+        }
+
+        [Test]
+        public void Ensure_order_cannot_be_partially_refunded_offline_when_amountToRefund_is_greater_than_amount_that_can_be_refunded()
+        {
+            var order = new Order()
+            {
+                OrderTotal = 100,
+                RefundedAmount = 30, //100-30=70 can be refunded
+            };
+
+            foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
+                foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
+                    foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
+                    {
+                        order.OrderStatus = os;
+                        order.PaymentStatus = ps;
+                        order.ShippingStatus = ss;
+
+                        _orderProcessingService.CanPartiallyRefundOffline(order, 80).ShouldBeFalse();
+                    }
+        }
+        
         //TODO write unit tests for the following methods:
-        //CanPartiallyRefund, CanPartiallyRefundOffline
         //PlaceOrder
         //CanCancelRecurringPayment, ProcessNextRecurringPayment, CancelRecurringPayment
     }
