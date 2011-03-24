@@ -56,6 +56,9 @@
   <LocaleResource Name="RewardPoints.Message.EarnedForOrder">
     <Value>Earned promotion for order #{0}</Value>
   </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.EarnedForRegistration">
+    <Value>Registered as customer</Value>
+  </LocaleResource>
   <LocaleResource Name="RewardPoints.Message.ReducedForOrder">
     <Value>Reduced promotion for order #{0}</Value>
   </LocaleResource>

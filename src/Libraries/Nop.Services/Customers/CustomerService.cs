@@ -6,6 +6,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
 {
@@ -29,7 +30,9 @@ namespace Nop.Services.Customers
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly ICacheManager _cacheManager;
         private readonly CustomerSettings _customerSettings;
-
+        private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly LocalizationService _localizationService;
+        
         #endregion
 
         #region Ctor
@@ -42,17 +45,23 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
         /// <param name="customerSettings">Customer settings</param>
+        /// <param name="rewardPointsSettings">Reward points settings</param>
+        /// <param name="localizationService">Localization service</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerAttribute> customerAttributeRepository,
-            CustomerSettings customerSettings)
+            CustomerSettings customerSettings,
+            RewardPointsSettings rewardPointsSettings,
+            LocalizationService localizationService)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._customerAttributeRepository = customerAttributeRepository;
             this._customerSettings = customerSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -236,9 +245,17 @@ namespace Nop.Services.Customers
             if (guestRole != null)
                 customer.CustomerRoles.Remove(guestRole);
 
+            //Add reward points for customer registration (if enabled)
+            if (_rewardPointsSettings.Enabled &&
+                _rewardPointsSettings.PointsForRegistration > 0 &&
+                !customer.IsGuest())
+            {
+                customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration,
+                    _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"));
+            }
+
             _customerRepository.Update(customer);
 
-            //TODO add reward points for registration (if enabled)
             //TODO Send welcome message / email validation message
             return customer;
         }
