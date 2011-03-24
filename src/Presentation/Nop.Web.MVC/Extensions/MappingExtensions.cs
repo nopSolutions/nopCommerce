@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
@@ -131,6 +132,24 @@ namespace Nop.Web.MVC.Extensions
             return AutoMapper.Mapper.Map<Category, TDestination>(category);
         }
 
+        #endregion
+
+        #region Currencies
+
+        public static CurrencyModel ToModel(this Currency currency)
+        {
+            return AutoMapper.Mapper.Map<Currency, CurrencyModel>(currency);
+        }
+
+        public static Currency ToEntity(this CurrencyModel model)
+        {
+            return AutoMapper.Mapper.Map<CurrencyModel, Currency>(model);
+        }
+
+        public static Currency ToEntity(this CurrencyModel model, Currency destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
         #endregion
     }
 }

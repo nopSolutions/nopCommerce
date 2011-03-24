@@ -10,6 +10,7 @@
         <siteMapNode title="Configuration" nopResource="Admin.Configuration">
             <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
                 <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>
+                <siteMapNode title="Currencies" nopResource="Admin.Configuration.Location.Currencies" controller="Currency" action="List"/>
             </siteMapNode>
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
         </siteMapNode>

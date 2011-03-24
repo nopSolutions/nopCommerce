@@ -296,9 +296,126 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="Currencies">
+                            <Value>Currencies</Value>
+                            <Children>
+                              <LocaleResource Name="Localization">
+                                <Value>Localization</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Select">
+                                <Value>Select a currency</Value>
+                              </LocaleResource>
+
+                              <LocaleResource Name="AddNew">
+                                <Value>Add a new currency</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="BackToList">
+                                <Value>back to currency list</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="EditCurrencyDetails">
+                                <Value>Edit currency details</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Resources">
+                                <Value>Currency resources</Value>
+                                <Children>
+                                  <LocaleResource Name="View">
+                                    <Value>View string resources</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Fields">
+                                    <Children>
+                                      <LocaleResource Name="Name">
+                                        <Value>Resource name</Value>
+                                        <Children>
+                                          <LocaleResource Name="Validation">
+                                            <Value>Resource name must be valid.</Value>
+                                          </LocaleResource>
+                                        </Children>
+                                      </LocaleResource>
+                                      <LocaleResource Name="Value">
+                                        <Value>Value</Value>
+                                      </LocaleResource>
+                                      <LocaleResource Name="CurrencyName">
+                                        <Value>Currency</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Fields">
+                                <Children>
+                                  <LocaleResource Name="Name">
+                                    <Value>Name</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The name of the currency.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="CurrencyCulture">
+                                    <Value>Display locale</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The currency specific culture code.</Value>
+                                      </LocaleResource>
+                                      <LocaleResource Name="Validation">
+                                        <Value>Resource name must be valid.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Rate">
+                                    <Value>Rate</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The exchange rate against the primary exchange rate currency.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>                                  
+                                  <LocaleResource Name="CurrencyCode">
+                                    <Value>Currency code</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The currency code. For a list of currency codes, go to: http://www.iso.org/iso/support/currency_codes_list-1.htm</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Published">
+                                    <Value>Published</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Determines whether the currency is published.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="DisplayOrder">
+                                    <Value>Display order</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The display order of this currency. 1 represents the top of the list.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="CreatedOn">
+                                    <Value>Created on</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The date/time the currency was created.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="UpdatedOn">
+                                    <Value>Updated on</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The date/time the currency was updated.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
                     </LocaleResource>
- 
                     <LocaleResource Name="EmailAccounts">
                         <Value>Email Accounts</Value>
                         <Children>

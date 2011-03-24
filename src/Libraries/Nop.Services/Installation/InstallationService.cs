@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -399,7 +398,7 @@ namespace Nop.Services.Installation
             };
             AddLocaleResources(language1);
             _languageRepository.Insert(language1);
-            
+
             #endregion
 
             #region Currency
@@ -567,10 +566,12 @@ namespace Nop.Services.Installation
 
             EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>()
                 .SaveSettings(new CurrencySettings()
-                {
-                    PrimaryStoreCurrencyId = currencyUSD.Id,
-                    PrimaryExchangeRateCurrencyId = currencyUSD.Id,
-                    ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB"
+                                  {
+                                      PrimaryStoreCurrencyId = currencyUSD.Id,
+                                      PrimaryExchangeRateCurrencyId = currencyUSD.Id,
+                                      ActiveExchangeRateProviderSystemName = "ECB",
+                                      AutoUpdateEnabled = true,
+                                      LastUpdateTime = 0
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<MeasureSettings>>()
@@ -629,7 +630,7 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<ShippingSettings>>()
                 .SaveSettings(new ShippingSettings()
                 {
-                    ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
+                    ActiveShippingRateComputationMethodSystemNames = new List<string>() { "FixedRateShipping" },
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<TaxSettings>>()
@@ -637,7 +638,7 @@ namespace Nop.Services.Installation
                 {
                     TaxBasedOn = TaxBasedOn.BillingAddress,
                     TaxDisplayType= TaxDisplayType.ExcludingTax,
-                    ActiveTaxProviderSystemName = "Tax.FixedRate",
+                    ActiveTaxProviderSystemName = "FixedTaxRate",
                     DefaultTaxAddressId = 0,
                     DisplayTaxSuffix = false,
                     DisplayTaxRates= false,
