@@ -79,6 +79,9 @@
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\NopConfig.cs" />
     <Compile Include="Domain\Catalog\SpecificationAttributeOptionFilter.cs" />
+    <Compile Include="Domain\Customers\FormFieldSettings.cs" />
+    <Compile Include="Domain\Customers\CustomerNameFormat.cs" />
+    <Compile Include="Domain\Customers\SystemCustomerAttributeNames.cs" />
     <Compile Include="Domain\Directory\ExchangeRate.cs" />
     <Compile Include="Domain\Media\Download.cs" />
     <Compile Include="Domain\Media\PictureType.cs" />

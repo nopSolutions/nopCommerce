@@ -381,7 +381,7 @@ namespace Nop.Services.Orders
 
             ShippingOption lastShippingOption = null;
             if (customer != null)
-                lastShippingOption = customer.GetAttribute<ShippingOption>("LastShippingOption");
+                lastShippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);
 
             if (lastShippingOption != null)
             {

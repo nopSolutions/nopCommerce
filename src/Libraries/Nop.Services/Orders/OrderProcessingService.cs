@@ -566,7 +566,7 @@ namespace Nop.Services.Orders
                         if (shippingAddress.Country != null && !shippingAddress.Country.AllowsShipping)
                             throw new NopException(string.Format("Country '{0}' is not allowed for shipping", shippingAddress.Country.Name));
 
-                        var shippingOption = customer.GetAttribute<ShippingOption>("LastShippingOption");
+                        var shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);
                         if (shippingOption != null)
                         {
                             shippingMethodName = shippingOption.Name;
