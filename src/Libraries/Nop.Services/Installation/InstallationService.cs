@@ -512,9 +512,38 @@ namespace Nop.Services.Installation
                 {
                     AnonymousCheckoutAllowed = false,
                     AllowUsersToUploadAvatars = false,
+                    DefaultAvatarEnabled = true,
                     AllowAnonymousUsersToReviewProduct = false,
                     AllowAnonymousUsersToSetProductRatings = false,
-                    AllowAnonymousUsersToEmailAFriend = false
+                    AllowAnonymousUsersToEmailAFriend = false,
+                    ShowCustomersLocation = false,
+                    ShowCustomersJoinDate = false,
+                    AllowViewingProfiles = false,
+                    NotifyNewCustomerRegistration = false,
+                    CustomerNameFormat = CustomerNameFormat.ShowEmails
+                });
+
+            EngineContext.Current.Resolve<IConfigurationProvider<FormFieldSettings>>()
+                .SaveSettings(new FormFieldSettings()
+                {
+                    GenderEnabled = true,
+                    DateOfBirthEnabled = true,
+                    CompanyEnabled = true,
+                    CompanyRequired = false,
+                    StreetAddressEnabled = true,
+                    StreetAddressRequired = true,
+                    StreetAddress2Enabled = true,
+                    StreetAddress2Required = false,
+                    PostCodeEnabled = true,
+                    PostCodeRequired = true,
+                    CityEnabled = true,
+                    CityRequired = true,
+                    CountryEnabled = true,
+                    StateEnabled = true,
+                    PhoneEnabled = true,
+                    PhoneRequired = true,
+                    FaxEnabled = true,
+                    FaxRequired = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()
