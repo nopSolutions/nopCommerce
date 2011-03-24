@@ -1394,7 +1394,7 @@ namespace Nop.Services.Orders
         public bool CanShip(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
@@ -1459,7 +1459,7 @@ namespace Nop.Services.Orders
         public bool CanDeliver(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
@@ -1526,7 +1526,7 @@ namespace Nop.Services.Orders
         public bool CanCancelOrder(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
@@ -1581,7 +1581,7 @@ namespace Nop.Services.Orders
         public bool CanMarkOrderAsAuthorized(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
@@ -1627,7 +1627,7 @@ namespace Nop.Services.Orders
         public bool CanCapture(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderStatus == OrderStatus.Cancelled ||
                 order.OrderStatus == OrderStatus.Pending)
@@ -1734,7 +1734,7 @@ namespace Nop.Services.Orders
         public bool CanMarkOrderAsPaid(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
@@ -1792,7 +1792,7 @@ namespace Nop.Services.Orders
         public bool CanRefund(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -1893,7 +1893,7 @@ namespace Nop.Services.Orders
         public bool CanRefundOffline(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -1952,7 +1952,7 @@ namespace Nop.Services.Orders
         public bool CanPartiallyRefund(Order order, decimal amountToRefund)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2067,7 +2067,7 @@ namespace Nop.Services.Orders
         public bool CanPartiallyRefundOffline(Order order, decimal amountToRefund)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2135,7 +2135,7 @@ namespace Nop.Services.Orders
         public bool CanVoid(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
@@ -2230,7 +2230,7 @@ namespace Nop.Services.Orders
         public bool CanVoidOffline(Order order)
         {
             if (order == null)
-                return false;
+                throw new ArgumentNullException("order");
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
