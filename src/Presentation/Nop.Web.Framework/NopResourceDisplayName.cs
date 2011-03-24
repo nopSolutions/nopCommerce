@@ -5,6 +5,7 @@ using System.Text;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Framework
 {

@@ -1,0 +1,69 @@
+﻿@model Nop.Admin.Models.LanguageModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@{
+    var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures).ToList();
+}
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.LanguageCulture):
+        </td>
+        <td class="adminData">
+            @(Html.Telerik().ComboBoxFor(x => x.LanguageCulture)
+                .BindTo(cultures.Select(x =>
+                    new DropDownItem { Value = x.IetfLanguageTag, Text = string.Format("{0}. {1}", x.IetfLanguageTag, x.EnglishName) }))
+                .Encode(true)
+                .AutoFill(false)
+                .Filterable(x => { x.Enabled(false); }))
+            @Html.ValidationMessageFor(model => model.LanguageCulture)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.FlagImageFileName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.FlagImageFileName)
+            @Html.ValidationMessageFor(model => model.FlagImageFileName)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Published):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Published)
+            @Html.ValidationMessageFor(model => model.Published)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayOrder):
+        </td>
+        <td class="adminData">
+            @Html.Telerik().NumericTextBoxFor(model => model.DisplayOrder).DecimalDigits(0)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            <label>
+                Import resources from XML:</label>:
+        </td>
+        <td class="adminData">
+            TODO @*TODO// Add support for importing resources*@
+        </td>
+    </tr>
+</table>

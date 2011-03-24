@@ -14,7 +14,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc.UI;
 using System.Web.Mvc.Html;
 namespace Nop.Web.Framework
@@ -33,7 +33,7 @@ namespace Nop.Web.Framework
             var builder = new TagBuilder("img");
 
             // Add attributes
-            builder.MergeAttribute("src", ResolveUrl(helper, "/Areas/Admin/Content/images/ico-help.gif").ToHtmlString());
+            builder.MergeAttribute("src", ResolveUrl(helper, "/Nop/Admin/Content/images/ico-help.gif").ToHtmlString());
             builder.MergeAttribute("alt", value);
             builder.MergeAttribute("title", value);
 

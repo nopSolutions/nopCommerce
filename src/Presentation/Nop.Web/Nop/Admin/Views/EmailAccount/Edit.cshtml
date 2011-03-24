@@ -1,0 +1,18 @@
+﻿@model Nop.Admin.Models.EmailAccountModel
+
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Nop/Admin/Content/images/ico-configuration.png")" />
+            @T("Admin.Configuration.EmailAccounts.EditEmailAccountDetails") - @Model.Email @Html.ActionLink("(" + T("Admin.Configuration.EmailAccounts.BackToList") + ")", "List")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <span id="emailAccount-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}
+@Html.DeleteConfirmation("emailAccount-delete")

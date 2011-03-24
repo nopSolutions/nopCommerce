@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Themes
 {
     public interface IThemeProvider
     {
-		#region Operations (3) 
+		#region Operations 
 
         ThemeConfiguration GetThemeConfiguration(string themeName);
 

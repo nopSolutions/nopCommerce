@@ -1,0 +1,13 @@
+﻿@model Nop.Web.Models.CategoryModel
+@using MvcContrib.UI.Pager;
+@using MvcContrib.Pagination;
+@Model.Name
+<ul class="product-list">
+    @foreach (var product in Model.Products)
+    { 
+        <li>
+            @Html.Partial("ProductBox", product)
+        </li>
+    }
+</ul>
+@MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
