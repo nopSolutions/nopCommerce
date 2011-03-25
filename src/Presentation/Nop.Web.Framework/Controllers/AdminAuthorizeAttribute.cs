@@ -16,7 +16,6 @@ namespace Nop.Web.Framework.Controllers
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             bool isAdmin = false;
-            //TODO inject IWorkContext
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var user = workContext.CurrentCustomer;
             if (user != null)

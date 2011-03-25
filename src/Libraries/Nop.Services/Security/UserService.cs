@@ -117,15 +117,18 @@ namespace Nop.Services.Security
             }
 
             //validate unique user
-            //TODO check whether it's OK to compare both 'Username' and 'Email'
-            var existingUser = _userRepository.Table
-                .Where(x => x.Username == request.Username || x.Email == request.Email)
-                .FirstOrDefault();
-            
-            if (existingUser != null) 
+            if (GetUserByEmail(request.Email) != null)
             {
-                result.AddError("The specified username or email already exists");
+                result.AddError("The specified email already exists");
                 return result;
+            }
+            if (_userSettings.UsernamesEnabled)
+            {
+                if (GetUserByUsername(request.Username) != null)
+                {
+                    result.AddError("The specified username already exists");
+                    return result;
+                }
             }
 
             //at this point request is valid
@@ -179,52 +182,47 @@ namespace Nop.Services.Security
                 return result;
             }
 
-            //TODO check whether it's OK to compare both 'Username' and 'Email'
-            var user =  GetUserByUsername(request.Username);
+            var user = GetUserByEmail(request.Email);
             if (user == null)
             {
                 result.AddError("The specified username or email could not be found");
                 return result;
             }
 
+
             var requestIsValid = false;
             if (request.ValidateRequest)
             {
+                //password
+                string oldPwd = string.Empty;
                 switch (user.PasswordFormat)
                 {
-                    case PasswordFormat.Clear:
-                        {
-                            //UNDONE validate password
-                            //result.AddError("Old password doesn't match");
-                            requestIsValid = true;
-                        }
-                        break;
                     case PasswordFormat.Encrypted:
-                        {
-                            //UNDONE validate password
-                            //result.AddError("Old password doesn't match");
-                            requestIsValid = true;
-                        }
+                        oldPwd = _encryptionService.EncryptText(request.OldPassword);
                         break;
                     case PasswordFormat.Hashed:
-                        {
-                            //UNDONE validate password
-                            //result.AddError("Old password doesn't match");
-                            requestIsValid = true;
-                        }
+                        oldPwd = _encryptionService.CreatePasswordHash(request.OldPassword, user.PasswordSalt, _userSettings.HashedPasswordFormat);
                         break;
                     default:
+                        oldPwd = request.OldPassword;
                         break;
                 }
 
-                //UNDONE validate security answer (if enabled)
+                bool oldPasswordIsValid = oldPwd == user.Password;
+                if (!oldPasswordIsValid)
+                    result.AddError("Old password doesn't match");
+
+                //validate security answer
+                bool securityAnswerIsValid = true;
+                //UNDONE validate security answer
                 //result.AddError("Wrong security answer");
+
+
+                if (oldPasswordIsValid && securityAnswerIsValid)
                 requestIsValid = true;
             }
             else
-            {
                 requestIsValid = true;
-            }
 
 
             //at this point request is valid

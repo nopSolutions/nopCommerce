@@ -71,7 +71,6 @@ namespace Nop.Services.Discounts
                     }
                 case DiscountLimitationType.NTimesOnly:
                     {
-                        //TODO filter active/not deleted customers & orders
                         var usageHistory = discount.DiscountUsageHistory;
                         return usageHistory.Count < discount.LimitationTimes;
                     }
@@ -80,11 +79,10 @@ namespace Nop.Services.Discounts
                         if (customer != null && !customer.IsGuest())
                         {
                             //registered customer
-                            //TODO filter active/not deleted customers & orders
                             var usageHistory = discount.DiscountUsageHistory
                                 .Where(duh => duh.Order != null
-                                    && !duh.Order.Deleted &&
-                                    duh.Order.CustomerId == customer.Id).ToList();
+                                    //&& !duh.Order.Deleted 
+                                    && duh.Order.CustomerId == customer.Id).ToList();
                             return usageHistory.Count < discount.LimitationTimes;
                         }
                         else

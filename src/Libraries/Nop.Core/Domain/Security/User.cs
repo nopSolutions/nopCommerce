@@ -5,7 +5,8 @@ namespace Nop.Core.Domain.Security
 {
     public class User : BaseEntity {
         
-        public User() {
+        public User() 
+        {
             this.UserGuid = Guid.NewGuid();
             this.PasswordFormat = PasswordFormat.Clear;
         }
@@ -16,7 +17,8 @@ namespace Nop.Core.Domain.Security
         public virtual string Password { get; set; }
 
         public virtual int PasswordFormatId { get; set; }
-        public virtual PasswordFormat PasswordFormat {
+        public virtual PasswordFormat PasswordFormat 
+        {
             get { return (PasswordFormat)PasswordFormatId; }
             set { this.PasswordFormatId = (int)value; }
         }

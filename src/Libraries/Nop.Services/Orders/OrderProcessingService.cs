@@ -18,6 +18,7 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
@@ -53,7 +54,6 @@ namespace Nop.Services.Orders
         private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
         private readonly IEncryptionService _encryptionService;
-
         private readonly IWorkContext _workContext;
 
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -246,7 +246,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            //TODO implement gift cards activation
+            //TODO implement gift cards activation (perhaps, it'll not be possible due to new GiftCard implementation)
             //if (this.GiftCards_Activated.HasValue &&
             //   this.GiftCards_Activated.Value == order.OrderStatus)
             //{
@@ -287,7 +287,7 @@ namespace Nop.Services.Orders
             //    }
             //}
 
-            //TODO implement gift cards deactivation
+            //TODO implement gift cards deactivation (perhaps, it'll not be possible due to new GiftCard implementation)
             //if (this.GiftCards_Deactivated.HasValue &&
             //   this.GiftCards_Deactivated.Value == order.OrderStatus)
             //{
@@ -385,10 +385,12 @@ namespace Nop.Services.Orders
                     throw new ArgumentException("Customer is not set");
 
                 //customer currency
-                var customerCurrency = customer.Currency ?? _workContext.WorkingCurrency;
                 string customerCurrencyCode = "";
                 if (!processPaymentRequest.IsRecurringPayment)
+                {
+                    var customerCurrency = (customer.Currency != null && customer.Currency.Published) ? customer.Currency : _workContext.WorkingCurrency;
                     customerCurrencyCode = customerCurrency.CurrencyCode;
+                }
                 else
                     customerCurrencyCode = initialOrder.CustomerCurrencyCode;
 
@@ -398,7 +400,7 @@ namespace Nop.Services.Orders
                     customerLanguage = customer.Language;
                 else
                     customerLanguage = _languageService.GetLanguageById(initialOrder.CustomerLanguageId);
-                if (customerLanguage == null)
+                if (customerLanguage == null || !customerLanguage.Published)
                     customerLanguage = _workContext.WorkingLanguage;
 
                 //check whether customer is guest
@@ -660,9 +662,7 @@ namespace Nop.Services.Orders
 
                 //order total (and applied discounts, gift cards, reward points)
                 decimal? orderTotal = null;
-                //decimal orderTotalInCustomerCurrency = decimal.Zero;
                 decimal orderDiscountAmount = decimal.Zero;
-                //decimal orderDiscountInCustomerCurrency = decimal.Zero;
                 List<AppliedGiftCard> appliedGiftCards = null;
                 int redeemedRewardPoints = 0;
                 decimal redeemedRewardPointsAmount = decimal.Zero;
@@ -953,7 +953,6 @@ namespace Nop.Services.Orders
                             //clear shopping cart
                             customer.ShoppingCartItems.Clear();
                             _customerService.UpdateCustomer(customer);
-                            //TODO reset checkout data
                         }
                         else
                         {
@@ -1150,9 +1149,9 @@ namespace Nop.Services.Orders
                         //check order status
                         CheckOrderStatus(order);
 
-                        //TODO reset checkout data
-                        //if (!processPaymentRequest.IsRecurringPayment)
-                        //    customerService.ResetCheckoutData(customer.CustomerId, true);
+                        //reset checkout data
+                        if (!processPaymentRequest.IsRecurringPayment)
+                            _customerService.ResetCheckoutData(customer, true);
 
                         //TODO insert activity
                         //if (!processPaymentRequest.IsRecurringPayment)

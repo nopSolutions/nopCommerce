@@ -77,6 +77,13 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomer(Customer customer);
+        
+        /// <summary>
+        /// Reset data required for checkout
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
+        void ResetCheckoutData(Customer customer, bool clearCouponCodes = false);
 
         #endregion
 

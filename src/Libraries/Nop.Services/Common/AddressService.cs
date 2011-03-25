@@ -45,13 +45,16 @@ namespace Nop.Services.Common
 
             //ensure that an associated order will not be deleted (an order with BillingAddress set to this one)
             //TODO uncomment code below
-            //var query = from o in _orderRepository.Table
-            //            where (o.BillingAddress.Id == address.Id)
-            //            || (o.ShippingAddress != null && o.ShippingAddress.Id == address.Id)
-            //            select o;
-            //var order = query.FirstOrDefault();
-            //if (order != null)
-            //    throw new NopException(string.Format("Deleting address is not allowed because it's associated with order #{0}", order.Id));
+            //if (address.Id > 0)
+            //{
+            //    var query = from o in _orderRepository.Table
+            //                where (o.BillingAddress.Id == address.Id)
+            //                || (o.ShippingAddress != null && o.ShippingAddress.Id == address.Id)
+            //                select o;
+            //    var order = query.FirstOrDefault();
+            //    if (order != null)
+            //        throw new NopException(string.Format("Deleting address is not allowed because it's associated with order #{0}", order.Id));
+            //}
 
             _addressRepository.Delete(address);
         }

@@ -55,8 +55,6 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public int? CurrencyId { get; set; }
 
-        //TODO use customer attributes to save most of these values (TaxDisplayTypeId, IsTaxExempt, etc)
-
         /// <summary>
         /// Gets or sets the tax display type identifier
         /// </summary>

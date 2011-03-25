@@ -13,9 +13,7 @@ using Nop.Core.Plugins;
 //http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 //contributor is Umbraco (umbraco.org)
 
-//TODO uncomment PreApplicationStartMethod because it's used to load all plugin assemblies
 [assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
-
 
 namespace Nop.Core.Plugins
 {

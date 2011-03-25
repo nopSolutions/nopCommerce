@@ -5,6 +5,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Services.Localization;
 
@@ -226,7 +227,7 @@ namespace Nop.Services.Customers
                 throw new NopException(string.Format("Customer {0} could not be loaded", customerId));
 
             //TODO pass and save customer attributes as argument
-            //TODO check CustomerRegistrationType (Disabled, EmailValidation, AdminApproval)
+            //TODO check CustomerRegistrationType (Disabled, EmailValidation, AdminApproval, etc)
             
             //add to 'Registered' role
             var registeredRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
@@ -277,6 +278,33 @@ namespace Nop.Services.Customers
             //    subscriptionOld.Email = customer.Email;
             //    IoC.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscriptionOld);
             //}
+        }
+
+        /// <summary>
+        /// Reset data required for checkout
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
+        public void ResetCheckoutData(Customer customer, bool clearCouponCodes = false)
+        {
+            if (customer == null)
+                throw new ArgumentNullException();
+
+            //clear reward points flag
+            customer.UseRewardPointsDuringCheckout = false;
+
+            //clear selected shipping and payment methods
+            SaveCustomerAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
+            customer.SelectedPaymentMethodSystemName = "";
+
+            //clear entered coupon codes
+            if (clearCouponCodes)
+            {
+                customer.DiscountCouponCode = "";
+                customer.GiftCardCouponCodes = "";
+                customer.CheckoutAttributes = "";
+            }
+            UpdateCustomer(customer);
         }
 
         #endregion

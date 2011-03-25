@@ -560,8 +560,8 @@ namespace Nop.Services.Orders
 
 
 
-            //TODO reset checkout info (selected shipping option, payment method, etc). Old ICustomerService.ResetCheckoutData method
-            //_customerService.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+            //reset checkout info
+            _customerService.ResetCheckoutData(customer, false);
 
             var cart = customer.ShoppingCartItems.Where(sci=>sci.ShoppingCartType == shoppingCartType).ToList();
 
@@ -648,8 +648,8 @@ namespace Nop.Services.Orders
             {
                 if (resetCheckoutData)
                 {
-                    //TODO ResetCheckoutData
-                    //_customerService.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+                    //reset checkout data
+                    _customerService.ResetCheckoutData(customer, false);
                 }
                 if (newQuantity > 0)
                 {
@@ -673,8 +673,8 @@ namespace Nop.Services.Orders
                     
                     if (resetCheckoutData)
                     {
-                        //TODO ResetCheckoutData
-                        //_customerService.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+                        //reset checkout data
+                        _customerService.ResetCheckoutData(customer, false);
                     }
                 }
             }
