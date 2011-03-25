@@ -9,6 +9,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Tasks;
+using Nop.Core.Domain.Directory;
 
 namespace Nop.Admin.Infrastructure
 {
@@ -26,6 +27,8 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<ProductCategory, CategoryProductModel>();
             //logs
             ViceVersa<Log, LogModel>();
+            //currencies
+            ViceVersa<Currency, CurrencyModel>();
             //locale resource
             Mapper.CreateMap<LocaleStringResource, LanguageResourceModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ResourceName))

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Tasks;
 using Nop.Services.Localization;
