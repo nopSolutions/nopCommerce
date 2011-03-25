@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Admin;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Web.Framework.Controllers;
 using Nop.Services.Directory;
-using Nop.Web.MVC.Areas.Admin.Models;
-using Nop.Web.MVC.Extensions;
 using Telerik.Web.Mvc;
 
-namespace Nop.Web.MVC.Areas.Admin.Controllers
+namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
     public class CurrencyController : Controller

@@ -141,7 +141,7 @@ namespace Nop.Admin
 
         public static CurrencyModel ToModel(this Currency currency)
         {
-            return Mapper.Map<Currency, CurrencyModel>(currency);
+            return AutoMapper.Mapper.Map<Currency, CurrencyModel>(currency);
         }
 
         public static Currency ToEntity(this CurrencyModel model)

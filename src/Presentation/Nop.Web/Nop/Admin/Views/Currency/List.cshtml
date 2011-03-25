@@ -13,7 +13,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Web.MVC.Areas.Admin.Models.CurrencyModel>()
+            @(Html.Telerik().Grid<Nop.Admin.Models.CurrencyModel>()
                     .Name("currencies-grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>
