@@ -79,12 +79,13 @@ namespace Nop.Services.Discounts
                     {
                         if (customer != null && !customer.IsGuest())
                         {
-                            //UNDONE implement
-                            throw new NotImplementedException();
                             //registered customer
                             //TODO filter active/not deleted customers & orders
-                            //var usageHistory = GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
-                            //return usageHistory.Count < discount.LimitationTimes;
+                            var usageHistory = discount.DiscountUsageHistory
+                                .Where(duh => duh.Order != null
+                                    && !duh.Order.Deleted &&
+                                    duh.Order.CustomerId == customer.Id).ToList();
+                            return usageHistory.Count < discount.LimitationTimes;
                         }
                         else
                         {

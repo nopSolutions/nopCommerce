@@ -243,7 +243,8 @@ namespace Nop.Services.Customers
                 _rewardPointsSettings.PointsForRegistration > 0 &&
                 !customer.IsGuest())
             {
-                //UNDONE uncomment code below to localize note
+                //UNDONE uncomment code below to localize note 
+                //Currently we can't inject _localizationService due to curricular dependencies
                 //string note = _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration");
                 string note = "Registered as customer";
                 customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration, note);
