@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 
 namespace Nop.Services.Logging
@@ -66,22 +67,11 @@ namespace Nop.Services.Logging
         /// Inserts a log item
         /// </summary>
         /// <param name="logLevel">Log level</param>
-        /// <param name="message">The short message</param>
-        /// <param name="exception">The exception</param>
+        /// <param name="shortMessage">The short message</param>
+        /// <param name="fullMessage">The full message</param>
+        /// <param name="customer">The customer to associate log record with</param>
         /// <returns>A log item</returns>
-        public Log InsertLog(LogLevel logLevel, string message, string exception)
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Inserts a log item
-        /// </summary>
-        /// <param name="logLevel">Log level</param>
-        /// <param name="message">The short message</param>
-        /// <param name="exception">The exception</param>
-        /// <returns>A log item</returns>
-        public Log InsertLog(LogLevel logLevel, string message, Exception exception)
+        public Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
             return null;
         }

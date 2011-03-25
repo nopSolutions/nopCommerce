@@ -1195,7 +1195,7 @@ namespace Nop.Services.Orders
             {
                 //log it
                 string logError = string.Format("Error while placing order. {0}", error);
-                _logger.InsertLog(LogLevel.Error, logError, logError);
+                _logger.Error(logError);
             }
 
             #endregion
@@ -1271,7 +1271,7 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                _logger.InsertLog(LogLevel.Error, string.Format("Error while processing recurring order. {0}", exc.Message), exc);
+                _logger.Error(string.Format("Error while processing recurring order. {0}", exc.Message), exc);
                 throw;
             }
         }

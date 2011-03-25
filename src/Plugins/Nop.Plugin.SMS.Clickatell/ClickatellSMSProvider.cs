@@ -75,7 +75,7 @@ namespace Nop.Plugin.SMS.Clickatell
             }
             catch (Exception ex)
             {
-                _logger.InsertLog(LogLevel.Error, ex.Message, ex);
+                _logger.Error(ex.Message, ex);
             }
             return false;
         }

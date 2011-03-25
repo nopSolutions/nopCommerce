@@ -16,12 +16,12 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the short message
         /// </summary>
-        public string Message { get; set; }
+        public string ShortMessage { get; set; }
 
         /// <summary>
         /// Gets or sets the full exception
         /// </summary>
-        public string Exception { get; set; }
+        public string FullMessage { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address

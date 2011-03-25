@@ -46,7 +46,7 @@ namespace Nop.Services.Messages
                 }
                 catch (Exception exc)
                 {
-                    _logger.InsertLog(LogLevel.Error, string.Format("Error sending e-mail. {0}", exc.Message), exc);
+                    _logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
                 }
                 finally
                 {

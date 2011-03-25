@@ -569,7 +569,7 @@ namespace Nop.Services.Installation
                                   {
                                       PrimaryStoreCurrencyId = currencyUSD.Id,
                                       PrimaryExchangeRateCurrencyId = currencyUSD.Id,
-                                      ActiveExchangeRateProviderSystemName = "ECB",
+                                      ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
                                       AutoUpdateEnabled = true,
                                       LastUpdateTime = 0
                 });

@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
 
@@ -15,7 +16,6 @@ namespace Nop.Services.Logging
         #region Fields
 
         private readonly IRepository<Log> _logRepository;
-        private readonly IWorkContext _workContext;
         private readonly IWebHelper _webHelper;
         
         #endregion
@@ -26,13 +26,10 @@ namespace Nop.Services.Logging
         /// Ctor
         /// </summary>
         /// <param name="logRepository">Log repository</param>
-        /// <param name="workContext">Work context</param>
         /// <param name="webHelper">Web helper</param>
-        public DefaultLogger(IRepository<Log> logRepository,
-            IWorkContext workContext, IWebHelper webHelper)
+        public DefaultLogger(IRepository<Log> logRepository, IWebHelper webHelper)
         {
             this._logRepository = logRepository;
-            this._workContext = workContext;
             this._webHelper = webHelper;
         }
 
@@ -102,7 +99,7 @@ namespace Nop.Services.Logging
                 query = query.Where(l => logLevelId == l.LogLevelId);
             }
              if (!String.IsNullOrEmpty(message))
-                query = query.Where(l => l.Message.Contains(message) || l.Exception.Contains(message));
+                query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
             query = query.OrderByDescending(l => l.CreatedOnUtc);
 
             var log = new PagedList<Log>(query, pageIndex, pageSize);
@@ -127,50 +124,21 @@ namespace Nop.Services.Logging
         /// Inserts a log item
         /// </summary>
         /// <param name="logLevel">Log level</param>
-        /// <param name="message">The short message</param>
-        /// <param name="exception">The exception</param>
+        /// <param name="shortMessage">The short message</param>
+        /// <param name="fullMessage">The full message</param>
+        /// <param name="customer">The customer to associate log record with</param>
         /// <returns>A log item</returns>
-        public Log InsertLog(LogLevel logLevel, string message, string exception)
+        public Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
-            return InsertLog(logLevel, message, new Exception(String.IsNullOrEmpty(exception) ? string.Empty : exception));
-        }
-
-        /// <summary>
-        /// Inserts a log item
-        /// </summary>
-        /// <param name="logLevel">Log level</param>
-        /// <param name="message">The short message</param>
-        /// <param name="exception">The exception</param>
-        /// <returns>A log item</returns>
-        public Log InsertLog(LogLevel logLevel, string message, Exception exception)
-        {
-            //don't log thread abort exception
-            if ((exception != null) && (exception is System.Threading.ThreadAbortException))
-                return null;
-
-            string exceptionStr = exception == null ? string.Empty : exception.ToString();
-
-
-            int customerId = 0;
-            if (_workContext != null && _workContext.CurrentCustomer != null)
-                customerId = _workContext.CurrentCustomer.Id;
-            string ipAddress = _webHelper.GetCurrentIpAddress();
-            string pageUrl = _webHelper.GetThisPageUrl(true);
-            string referrerUrl = _webHelper.GetUrlReferrer();
-
-            ipAddress = CommonHelper.EnsureNotNull(ipAddress);
-            pageUrl = CommonHelper.EnsureNotNull(pageUrl);
-            referrerUrl = CommonHelper.EnsureNotNull(referrerUrl);
-
             var log = new Log()
             {
                 LogLevel = logLevel,
-                Message = message,
-                Exception = exceptionStr,
-                IpAddress = ipAddress,
-                CustomerId = customerId,
-                PageUrl = pageUrl,
-                ReferrerUrl = referrerUrl,
+                ShortMessage = shortMessage,
+                FullMessage = fullMessage,
+                IpAddress = _webHelper.GetCurrentIpAddress(),
+                CustomerId = customer != null ? customer.Id : 0,
+                PageUrl = _webHelper.GetThisPageUrl(true),
+                ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow
             };
 

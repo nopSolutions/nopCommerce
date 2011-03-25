@@ -252,6 +252,8 @@ namespace Nop.Services.Customers
             _customerRepository.Update(customer);
 
             //TODO Send welcome message / email validation message
+            bool notify = _customerSettings.NotifyNewCustomerRegistration;
+
             return customer;
         }
 

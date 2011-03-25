@@ -79,7 +79,7 @@ namespace Nop.Plugin.SMS.Verizon
             }
             catch (Exception ex)
             {
-                _logger.InsertLog(LogLevel.Error, ex.Message, ex);
+                _logger.Error(ex.Message, ex);
                 return false;
             }
         }

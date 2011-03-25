@@ -73,6 +73,7 @@
     <Compile Include="CategoryPersistenceTests.cs" />
     <Compile Include="CheckoutAttributePersistenceTests.cs" />
     <Compile Include="CheckoutAttributeValuePersistenceTests.cs" />
+    <Compile Include="LogPersistenceTests.cs" />
     <Compile Include="ReturnRequestPersistenceTests.cs" />
     <Compile Include="RecurringPaymentHistoryPersistenceTests.cs" />
     <Compile Include="RecurringPaymentPersistenceTests.cs" />
