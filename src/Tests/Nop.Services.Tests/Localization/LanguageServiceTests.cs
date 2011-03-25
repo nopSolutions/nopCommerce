@@ -5,6 +5,7 @@ using System.Text;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Data;
+using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Tests;
 using NUnit.Framework;
@@ -20,6 +21,8 @@ namespace Nop.Services.Tests.Localization
     {
         IRepository<Language> _languageRepo;
         ILanguageService _languageService;
+        ISettingService _settingService;
+        LocalizationSettings _localizationSettings;
 
         [SetUp]
         public void SetUp()
@@ -45,7 +48,11 @@ namespace Nop.Services.Tests.Localization
             _languageRepo.Expect(x => x.Table).Return(new List<Language>() { lang1, lang2 }.AsQueryable());
 
             var cacheManager = new NopNullCache();
-            _languageService = new LanguageService(cacheManager, _languageRepo);
+
+            _settingService = MockRepository.GenerateMock<ISettingService>();
+
+            _localizationSettings = new LocalizationSettings();
+            _languageService = new LanguageService(cacheManager, _languageRepo, _settingService, _localizationSettings);
         }
 
         [Test]

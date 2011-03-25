@@ -203,7 +203,7 @@ namespace Nop.Services.Installation
 
         }
 
-        private void AddLocaleResources(Language language1)
+        private void AddLocaleResources(Language language)
         {
             //insert default sting resources (temporary solution). Requires some performance optimization
             foreach (var filePath in System.IO.Directory.EnumerateFiles(HostingEnvironment.MapPath("~/App_Data/"), "*.nopres.xml"))
@@ -255,7 +255,7 @@ namespace Nop.Services.Installation
                         {
                             //ensure it's not duplicate
                             bool duplicate = false;
-                            foreach (var res1 in language1.LocaleStringResources)
+                            foreach (var res1 in language.LocaleStringResources)
                                 if (resName.Equals(res1.ResourceName, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     duplicate = true;
@@ -270,7 +270,7 @@ namespace Nop.Services.Installation
                                 ResourceName = resName,
                                 ResourceValue = resValue
                             };
-                            language1.LocaleStringResources.Add(lsr);
+                            language.LocaleStringResources.Add(lsr);
                         }
                     }
             }
@@ -388,7 +388,7 @@ namespace Nop.Services.Installation
 
             #region Language & locale resources
 
-            var language1 = new Language
+            var languageEng = new Language
             {
                 Name = "English",
                 LanguageCulture = "en-US",
@@ -396,8 +396,8 @@ namespace Nop.Services.Installation
                 Published = true,
                 DisplayOrder = 1
             };
-            AddLocaleResources(language1);
-            _languageRepository.Insert(language1);
+            AddLocaleResources(languageEng);
+            _languageRepository.Insert(languageEng);
 
             #endregion
 
@@ -505,6 +505,12 @@ namespace Nop.Services.Installation
             #endregion
 
             #region Settings
+
+            EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
+                .SaveSettings(new LocalizationSettings()
+                {
+                    DefaultAdminLanguageId = languageEng.Id
+                });
 
             EngineContext.Current.Resolve<IConfigurationProvider<CustomerSettings>>()
                 .SaveSettings(new CustomerSettings()

@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -62,6 +63,7 @@ namespace Nop.Services.Tests.Orders
         ICustomerService _customerService;
         IEncryptionService _encryptionService;
         OrderSettings _orderSettings;
+        LocalizationSettings _localizationSettings;
 
         IOrderProcessingService _orderProcessingService;
 
@@ -130,6 +132,8 @@ namespace Nop.Services.Tests.Orders
 
             _orderSettings = new OrderSettings();
 
+            _localizationSettings = new LocalizationSettings();
+
             _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
                 _localizationService, _languageService,
                 _productService, _paymentService, _logger,
@@ -140,7 +144,7 @@ namespace Nop.Services.Tests.Orders
                 _customerService, _discountService,
                 _encryptionService, _workContext,
                 _rewardPointsSettings,
-                _orderSettings, _taxSettings);
+                _orderSettings, _taxSettings, _localizationSettings);
         }
 
         [Test]

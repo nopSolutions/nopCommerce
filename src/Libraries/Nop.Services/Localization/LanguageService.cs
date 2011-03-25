@@ -5,6 +5,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
+using Nop.Services.Configuration;
 
 namespace Nop.Services.Localization
 {
@@ -23,6 +24,8 @@ namespace Nop.Services.Localization
 
         private readonly IRepository<Language> _languageRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly ISettingService _settingService;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -33,15 +36,21 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
+        /// <param name="settingService">Setting service</param>
+        /// <param name="localizationSettings">Localization settings</param>
         public LanguageService(ICacheManager cacheManager,
-            IRepository<Language> languageRepository)
+            IRepository<Language> languageRepository,
+            ISettingService settingService,
+            LocalizationSettings localizationSettings)
         {
             this._cacheManager = cacheManager;
             this._languageRepository = languageRepository;
+            this._settingService = settingService;
+            this._localizationSettings = localizationSettings;
         }
 
         #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -54,6 +63,20 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException("language");
 
             //TODO load all customers (language.Customers property) and set new language to them
+
+            //update default admin area language (if required)
+            if (_localizationSettings.DefaultAdminLanguageId == language.Id)
+            {
+                foreach (var activeLanguage in GetAllLanguages())
+                {
+                    if (activeLanguage.Id != language.Id)
+                    {
+                        _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
+                        _settingService.SaveSetting(_localizationSettings);
+                        break;
+                    }
+                }
+            }
 
             _languageRepository.Delete(language);
 
@@ -120,7 +143,8 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException("language");
-
+            
+            //update language
             _languageRepository.Update(language);
 
             //cache

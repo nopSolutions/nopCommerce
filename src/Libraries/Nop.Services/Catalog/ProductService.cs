@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Core;
 
@@ -36,6 +37,7 @@ namespace Nop.Services.Catalog
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICacheManager _cacheManager;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -54,6 +56,7 @@ namespace Nop.Services.Catalog
         /// <param name="tierPriceRepository">Tier price repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
+        /// <param name="localizationSettings">Localization settings</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductCategory> productCategoryRepository,
@@ -63,7 +66,8 @@ namespace Nop.Services.Catalog
             IRepository<CrossSellProduct> crossSellProductRepository,
             IRepository<TierPrice> tierPriceRepository,
             IProductAttributeService productAttributeService,
-            IProductAttributeParser productAttributeParser)
+            IProductAttributeParser productAttributeParser,
+            LocalizationSettings localizationSettings)
         {
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
@@ -75,6 +79,7 @@ namespace Nop.Services.Catalog
             this._tierPriceRepository = tierPriceRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
+            this._localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -209,7 +214,7 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
         {
-            //UNDONE temporary solution (requires optimization
+            //UNDONE temporary solution (requires optimization)
 
             var allProducts = GetAllProducts(showHidden);
             var filteredProducts = new List<Product>();
@@ -618,8 +623,7 @@ namespace Nop.Services.Catalog
                         if (decrease && productVariant.NotifyAdminForQuantityBelow > newStockQuantity)
                         {
                             //UNDONE send email notification
-                            //UNDONE add DefaultAdminLanguage property (we need to decide where it should be added to)
-                            //_messageService.SendQuantityBelowStoreOwnerNotification(productVariant, _localizationService.DefaultAdminLanguage.LanguageId);
+                            //_messageService.SendQuantityBelowStoreOwnerNotification(productVariant, _localizationSettings.DefaultAdminLanguageId);
                         }
 
                         productVariant.StockQuantity = newStockQuantity;

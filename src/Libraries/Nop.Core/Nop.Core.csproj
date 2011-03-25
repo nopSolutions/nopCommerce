@@ -83,6 +83,7 @@
     <Compile Include="Domain\Customers\CustomerNameFormat.cs" />
     <Compile Include="Domain\Customers\SystemCustomerAttributeNames.cs" />
     <Compile Include="Domain\Directory\ExchangeRate.cs" />
+    <Compile Include="Domain\Localization\LocalizationSettings.cs" />
     <Compile Include="Domain\Media\Download.cs" />
     <Compile Include="Domain\Media\PictureType.cs" />
     <Compile Include="Domain\Messages\EmailAccountSettings.cs" />

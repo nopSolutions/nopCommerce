@@ -13,7 +13,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -60,6 +59,7 @@ namespace Nop.Services.Orders
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -92,6 +92,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
         /// <param name="taxSettings">Tax settings</param>
+        /// <param name="localizationSettings">Localization settings</param>
         public OrderProcessingService(IOrderService orderService,
             IWebHelper webHelper,
             ILocalizationService localizationService,
@@ -115,7 +116,8 @@ namespace Nop.Services.Orders
             IWorkContext workContext,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            LocalizationSettings localizationSettings)
         {
             this._orderService = orderService;
             this._webHelper = webHelper;
@@ -141,6 +143,7 @@ namespace Nop.Services.Orders
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
+            this._localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -1117,7 +1120,7 @@ namespace Nop.Services.Orders
                         _orderService.UpdateOrder(order);
 
                         //UNDONE send email notifications
-                        //int orderPlacedStoreOwnerNotificationQueuedEmailId = _messageService.SendOrderPlacedStoreOwnerNotification(order, localizationManager.DefaultAdminLanguage.LanguageId);
+                        //int orderPlacedStoreOwnerNotificationQueuedEmailId = _messageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
                         //if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
                         //{
                         //    order.OrderNotes.Add(new OrderNote()
