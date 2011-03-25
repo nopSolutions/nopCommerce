@@ -175,6 +175,7 @@
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
+    <Compile Include="NopEventArgs.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
     <Compile Include="Plugins\BasePluginAttribute.cs" />
     <Compile Include="Plugins\IConfigurablePlugin.cs" />

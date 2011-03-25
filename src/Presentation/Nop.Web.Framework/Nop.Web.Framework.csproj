@@ -46,9 +46,25 @@
     <Reference Include="AutoMapper">
       <HintPath>..\..\packages\AutoMapper.1.1.0.118\lib\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.4.1.10311.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\..\packages\FluentValidation.2.0.0.0\lib\NET35\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.SqlServerCompact.4.1.8482.1\lib\System.Data.SqlServerCe.Entity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -65,25 +81,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseNopModel.cs" />
+    <Compile Include="Mvc\BaseNopModel.cs" />
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\FormValueExistsAttribute.cs" />
-    <Compile Include="DownloadResult.cs" />
+    <Compile Include="DependencyRegistar.cs" />
+    <Compile Include="Mvc\DownloadResult.cs" />
     <Compile Include="EngineExtensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HtmlExtensions.cs" />
-    <Compile Include="ImageResult.cs" />
-    <Compile Include="IModelAttribute.cs" />
+    <Compile Include="Mvc\ImageResult.cs" />
+    <Compile Include="Mvc\IModelAttribute.cs" />
     <Compile Include="Localization\ILocalizedModel.cs" />
     <Compile Include="Localization\ILocalizedModelLocal.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\Localizer.cs" />
-    <Compile Include="Models\DeleteConfirmationModel.cs" />
-    <Compile Include="NopMetadataProvider.cs" />
-    <Compile Include="NopModelBinder.cs" />
+    <Compile Include="Mvc\DeleteConfirmationModel.cs" />
+    <Compile Include="Mvc\Routes\IRouteProvider.cs" />
+    <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
+    <Compile Include="Mvc\NopDependencyResolver.cs" />
+    <Compile Include="Mvc\Routes\RouteDescriptor.cs" />
+    <Compile Include="Mvc\Routes\RoutePublisher.cs" />
+    <Compile Include="Mvc\NopMetadataProvider.cs" />
+    <Compile Include="Mvc\NopModelBinder.cs" />
     <Compile Include="NopResourceDisplayName.cs" />
+    <Compile Include="NopValidatorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatefulStorage.cs" />
+    <Compile Include="TelerikLocalizationService.cs" />
+    <Compile Include="TelerikLocalizationServiceFactory.cs" />
     <Compile Include="Themes\IThemeProvider.cs" />
     <Compile Include="Themes\ThemeableBuildManagerViewEngine .cs" />
     <Compile Include="Themes\ThemeableVirtualPathProviderViewEngine.cs" />
@@ -110,7 +135,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="State\" />
     <Folder Include="Themes\Html\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

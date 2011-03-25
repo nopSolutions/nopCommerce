@@ -1,0 +1,13 @@
+﻿@model Nop.Web.Framework.Mvc.DeleteConfirmationModel
+@using (Html.BeginForm(Model.ActionName, Model.ControllerName, new { id = Model.Id }))
+{
+    <div>
+        <p>
+            @T("Admin.Common.DeleteConfirmation")
+        </p>
+        <div class="form-actions">
+            <span class="t-button" onclick="closeModalWindow();">@T("Admin.Common.NoCancel")</span>
+            <input type="submit" class="t-button" value="@T("Admin.Common.Delete")" />
+        </div>
+    </div>
+}
