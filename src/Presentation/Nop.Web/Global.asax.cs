@@ -30,6 +30,10 @@ namespace Nop.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapRoute("Product",
+                            "Product/{productId}/{productName}",
+                            new {controller = "Catalog", action = "Product"});
+
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
@@ -69,10 +73,6 @@ namespace Nop.Web
 
             //For debugging
             //RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
-
-            //set localization service for telerik
-            Telerik.Web.Mvc.Infrastructure.DI.Current.Register(
-                () => EngineContext.Current.Resolve<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>());
 
             DataAnnotationsModelValidatorProvider
                 .AddImplicitRequiredAttributeForValueTypes = false;

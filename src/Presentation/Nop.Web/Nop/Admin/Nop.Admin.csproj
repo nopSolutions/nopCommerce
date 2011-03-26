@@ -91,6 +91,7 @@
     <Compile Include="Controllers\PictureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CategoryProductModel.cs" />

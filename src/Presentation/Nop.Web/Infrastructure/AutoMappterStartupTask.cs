@@ -1,12 +1,16 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
 using Nop.Services.Localization;
+using Nop.Services.Tax;
 using Nop.Web.Models;
 using Nop.Web.Models.Home;
-
+using System.Linq;
 namespace Nop.Web.Infrastructure
 {
     public class AutoMappterStartupTask : IStartupTask
@@ -30,7 +34,9 @@ namespace Nop.Web.Infrastructure
             ViceVersa<Language, LanguageModel>();
             //catalog product
             Mapper.CreateMap<Product, ProductModel>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
+                .ForMember(dest => dest.ShortDescription,
+                           opt => opt.MapFrom(src => src.GetLocalized(x => x.ShortDescription)));
             //catalog category
             Mapper.CreateMap<Category, CategoryModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)));

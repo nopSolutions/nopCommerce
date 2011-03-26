@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Web.Routing;
 using Autofac;
+using Nop.Core.Plugins;
 
 namespace Nop.Web.Framework.Mvc.Routes
 {
-    public class RoutePublisher : IRoutePublisher
+    public class RoutePublisher : IRoutePublisher, IAutoStart
     {
         private readonly RouteCollection _routeCollection;
         //private readonly ShellSettings _shellSettings;
         private readonly ILifetimeScope _shellLifetimeScope;
+        private IList<IRouteProvider> _routeProviders;
         //private readonly IRunningShellTable _runningShellTable;
 
         public RoutePublisher(
             RouteCollection routeCollection,
-            ILifetimeScope shellLifetimeScope)
+            ILifetimeScope shellLifetimeScope,
+            IList<IRouteProvider> routeProviders)
         {
+            _routeProviders = routeProviders;
             _routeCollection = routeCollection;
             _shellLifetimeScope = shellLifetimeScope;
         }
@@ -39,6 +44,14 @@ namespace Nop.Web.Framework.Mvc.Routes
                     _routeCollection.Add(routeDescriptor.Name, routeDescriptor.Route);
                 }
             }
+        }
+
+        public void Start()
+        {
+        }
+
+        public void Stop()
+        {
         }
     }
 }

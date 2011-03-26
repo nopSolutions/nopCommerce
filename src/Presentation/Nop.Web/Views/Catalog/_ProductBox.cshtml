@@ -1,0 +1,26 @@
+﻿@model Nop.Web.Models.ProductModel
+<td class="item-box">
+    <div class="product-item">
+        <h2 class="product-title">
+            <a href="@Url.RouteUrl("Product", new { productId = Model.Id })">
+                @Model.Name</a>
+        </h2>
+        <div class="picture">
+            <a title="Show details for @Model.Name"
+                href="@Url.RouteUrl("Product", new { productId = Model.Id })">
+                <img style="border-width: 0px;" title="Show details for @Model.Name"
+                    alt="Picture of @Model.Name" src="@Model.ImageUrl"></a>
+        </div>
+        <div class="description">
+            @Model.ShortDescription
+        </div>
+        <div class="add-info">
+            <div class="prices">
+                @Html.Partial("_ProductPrice", Model.ProductPrice)
+            </div>
+            <div class="buttons">
+                
+            </div>
+        </div>
+    </div>
+</td>
