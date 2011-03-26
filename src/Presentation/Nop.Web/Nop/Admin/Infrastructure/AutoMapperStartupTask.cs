@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using AutoMapper;
+﻿using AutoMapper;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Tasks;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Admin.Infrastructure
 {

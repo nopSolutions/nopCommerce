@@ -97,6 +97,7 @@ namespace Nop.Web
 
         #region Utility
 
+        /// <summary>
         /// Get SE name
         /// </summary>
         /// <param name="name">Name</param>
@@ -105,7 +106,7 @@ namespace Nop.Web
         {
             if (String.IsNullOrEmpty(name))
                 return string.Empty;
-            string OKChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
+            string OkChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();
 
             //TODO:Suppot ConvertNonWesternChars?
@@ -126,7 +127,7 @@ namespace Nop.Web
                         c2 = _seoCharacterTable[c2];
                 //}
 
-                if (OKChars.Contains(c2))
+                if (OkChars.Contains(c2))
                     sb.Append(c2);
             }
             string name2 = sb.ToString();

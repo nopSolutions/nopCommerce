@@ -1,19 +1,13 @@
-﻿using System;
-using AutoMapper;
-using Nop.Core;
+﻿using AutoMapper;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
 using Nop.Services.Localization;
-using Nop.Services.Tax;
 using Nop.Web.Models;
 using Nop.Web.Models.Home;
-using System.Linq;
 namespace Nop.Web.Infrastructure
 {
-    public class AutoMappterStartupTask : IStartupTask
+    public class AutoMapperStartupTask : IStartupTask
     {
 		#region Properties 
 

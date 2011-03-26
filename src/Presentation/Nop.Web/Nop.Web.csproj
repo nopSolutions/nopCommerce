@@ -89,7 +89,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\AutoMappterStartupTask.cs" />
+    <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\CategoryModel.cs" />
     <Compile Include="Models\Catalog\ProductModel.cs" />
     <Compile Include="Models\Home\LanguageModel.cs" />
