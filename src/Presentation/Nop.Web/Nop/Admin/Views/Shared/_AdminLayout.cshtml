@@ -70,7 +70,7 @@
                                     .Add("2010.3.1318/telerik.common.css")
                                     .Add("2010.3.1318/telerik.vista.css")
                                     .Add("2010.3.1318/telerik.rtl.css")).ToHtmlString()))
-    @MvcHtmlString.Create(HttpUtility.HtmlDecode(Html.Telerik().ScriptRegistrar()
-    .jQuery(false).ToHtmlString()))
+    @(MvcHtmlString.Create(HttpUtility.HtmlDecode(Html.Telerik().ScriptRegistrar()
+    .jQuery(false).ToHtmlString())))
 </body>
 </html>
