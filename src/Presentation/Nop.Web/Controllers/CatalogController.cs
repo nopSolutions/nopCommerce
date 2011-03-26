@@ -42,37 +42,43 @@ namespace Nop.Web.Controllers
 
 		#region Public Methods 
 
-        public ActionResult Category(int id, PagingFilteringModel command)
+        public ActionResult Category(int categoryId, PagingFilteringModel command)
         {
-            var category = _categoryService.GetCategoryById(id);
-
+            var category = _categoryService.GetCategoryById(categoryId);
             if (category == null) return RedirectToAction("Index", "Home");
 
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
-            var products = _productService.SearchProducts(id, 0, false,
+            var model = category.ToModel();
+            var products = _productService.SearchProducts(categoryId, 0, false,
                                                           command.PriceMin, command.PriceMax, 0, 0, string.Empty,
                                                           false,
                                                           _workContext.WorkingLanguage.Id, command.Specs,
                                                           command.ProductSorting,
                                                           command.PageNumber - 1, command.PageSize);
-
-            var model = category.ToModel();
             model.Products = products.Select(x =>
                                                  {
                                                      var m = x.ToModel();
                                                      m.ProductPrice = BuildProductPriceModel(x);
                                                      return m;
                                                  }).ToList();
+            model.SubCategories =
+                _categoryService.GetAllCategoriesByParentCategoryId(categoryId).Select(
+                    AutoMapper.Mapper.Map<Category, CategoryModel.SubCategoryModel>).ToList();
+
             model.PagingFilteringContext.LoadPagedList(products);
 
             return View(model);
         }
 
-        public ActionResult Product(int id)
+        public ActionResult Product(int productId)
         {
-            return null;
+            var product = _productService.GetProductById(productId);
+            if (product == null) return RedirectToAction("Index", "Home");
+            var model = product.ToModel();
+            model.ProductPrice = BuildProductPriceModel(product);
+            return View(model);
         }
 
         public ActionResult Index()

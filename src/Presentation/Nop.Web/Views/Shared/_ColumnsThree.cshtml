@@ -2,7 +2,15 @@
     Layout = "~/Views/Shared/_Root.cshtml";
 }
 <div class="master-wrapper-leftside-3">
-    @RenderSection("left", true)
+    @if (IsSectionDefined("left"))
+    {
+        @RenderSection("left")
+    }
+    else
+    {
+        <div>
+            Default content</div>
+    }
 </div>
 <div class="master-wrapper-center-3">
     <div class="master-wrapper-cph-3">
@@ -10,5 +18,13 @@
     </div>
 </div>
 <div class="master-wrapper-rightside-3">
-    @RenderSection("right", true)
+    @if (IsSectionDefined("right"))
+    {
+        @RenderSection("right")
+    }
+    else
+    {
+        <div>
+            Default content</div>
+    }
 </div>

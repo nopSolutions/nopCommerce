@@ -2183,6 +2183,8 @@ ul.languagelist li .selected
 {
 	width: 520px;
 	margin: 0 auto 0 auto;
+	padding:0px;
+	list-style-type:none;
 }
 
 .product-list1 .item-box

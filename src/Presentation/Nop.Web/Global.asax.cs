@@ -31,8 +31,12 @@ namespace Nop.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute("Product",
-                            "Product/{productId}/{productName}",
-                            new {controller = "Catalog", action = "Product"});
+                            "Product/{productId}/{SeName}",
+                            new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional});
+
+            routes.MapRoute("Category",
+                            "Category/{categoryId}/{SeName}",
+                            new { controller = "Catalog", action = "Category", SeName = UrlParameter.Optional });
 
             routes.MapRoute(
                 "Default", // Route name

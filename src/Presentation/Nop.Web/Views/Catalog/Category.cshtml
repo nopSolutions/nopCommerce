@@ -1,13 +1,42 @@
 ﻿@model Nop.Web.Models.CategoryModel
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+}
 @using MvcContrib.UI.Pager;
 @using MvcContrib.Pagination;
-@Model.Name
-<ul class="product-list">
-    @foreach (var product in Model.Products)
-    { 
-        <li>
-            @Html.Partial("_ProductBox", product)
-        </li>
+<div class="category-page">
+    @if (Model.SubCategories.Count > 0)
+    {
+        <ul class="sub-category-grid">
+            @foreach (var subCategory in Model.SubCategories)
+            {
+                <li class="item-box">
+                    <div class="sub-category-item">
+                        <h2 class="category-title">
+                            <a href="@Url.RouteUrl("Category", new { categoryId = subCategory.Id, subCategory.SeName })" title="Show products in category @subCategory.Name">
+                                @subCategory.Name</a>
+                        </h2>
+                        <div class="picture">
+                            <a href="@Url.RouteUrl("Category", new { categoryId = subCategory.Id, subCategory.SeName })" title="Show products in category @subCategory.Name">
+                                <img style="border-width: 0px;" alt="Picture for category @subCategory.Name" src="@subCategory.ImageUrl"
+                                    title="Show products in category @subCategory.Name"></a>
+                        </div>
+                    </div>
+                </li> 
+            }
+        </ul>
+        <div class="clear">
+        </div>
     }
-</ul>
-@MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
+    <ul class="product-list1">
+        @foreach (var product in Model.Products)
+        { 
+            <li class="item-box">
+                @Html.Partial("_ProductBox", product)
+            </li>
+        }
+    </ul>
+    <div class="clear">
+    </div>
+    @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
+</div>

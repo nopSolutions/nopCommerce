@@ -644,7 +644,7 @@ namespace Nop.Services.Installation
                 {
                     TaxBasedOn = TaxBasedOn.BillingAddress,
                     TaxDisplayType= TaxDisplayType.ExcludingTax,
-                    ActiveTaxProviderSystemName = "FixedTaxRate",
+                    ActiveTaxProviderSystemName = "Tax.FixedRate",
                     DefaultTaxAddressId = 0,
                     DisplayTaxSuffix = false,
                     DisplayTaxRates= false,
@@ -815,7 +815,8 @@ namespace Nop.Services.Installation
                         Height = 1,
                         Published = true,
                         CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow
+                        UpdatedOnUtc = DateTime.UtcNow,
+                        TaxCategoryId = taxCategories[0].Id
                     };
                     product.ProductVariants.Add(productVariant);
 

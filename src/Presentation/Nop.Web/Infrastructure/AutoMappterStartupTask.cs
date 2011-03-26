@@ -36,10 +36,14 @@ namespace Nop.Web.Infrastructure
             Mapper.CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
                 .ForMember(dest => dest.ShortDescription,
-                           opt => opt.MapFrom(src => src.GetLocalized(x => x.ShortDescription)));
+                           opt => opt.MapFrom(src => src.GetLocalized(x => x.ShortDescription)))
+                .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
             //catalog category
             Mapper.CreateMap<Category, CategoryModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)));
+            Mapper.CreateMap<Category, CategoryModel.SubCategoryModel>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
+                .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
         }
 
         public static void ViceVersa<T1, T2>()
