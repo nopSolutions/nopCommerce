@@ -472,6 +472,8 @@
     <Content Include="Content\Images\ui-icons_454545_256x240.png" />
     <Content Include="Content\Images\ui-icons_888888_256x240.png" />
     <Content Include="Content\Images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Plugins\bin\placeholder.txt" />
+    <Content Include="Plugins\placeholder.txt" />
     <Content Include="Scripts\2010.3.1318\jquery-1.4.4.min.js" />
     <Content Include="Scripts\2010.3.1318\jquery.validate.min.js" />
     <Content Include="Scripts\2010.3.1318\telerik.autocomplete.min.js" />
@@ -628,7 +630,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Plugins\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

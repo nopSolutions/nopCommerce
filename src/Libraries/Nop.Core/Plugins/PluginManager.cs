@@ -70,7 +70,8 @@ namespace Nop.Core.Plugins
 
                         var referencedAssemblies = new List<Assembly>();
 
-                        Directory.CreateDirectory(shadowCopyFolder.FullName);
+                        if (!shadowCopyFolder.Exists)
+                            Directory.CreateDirectory(shadowCopyFolder.FullName);
                         //get list of all DLLs in bin
                         var binFiles = shadowCopyFolder.GetFiles("*.dll", SearchOption.AllDirectories);
                         //get list of all DLLs in plugins (not in bin!)

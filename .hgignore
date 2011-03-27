@@ -36,5 +36,5 @@ _ReSharper*/
 [Bb]uild[Ll]og.*
 *.[Pp]ublish.xml
 Thumbs.db
-Nop.Web/Plugins
+Nop.Web/Plugins/
 glob:src/Presentation/Nop.Web/Content/Images/Thumbs/
