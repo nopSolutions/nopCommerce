@@ -10,7 +10,7 @@ namespace Nop.Admin.Validators
 {
     public class LanguageResourceValidator : AbstractValidator<LanguageResourceModel>
     {
-        #region Constructors (1) 
+		#region Constructors 
 
         public LanguageResourceValidator(ILocalizationService localizationService)
         {

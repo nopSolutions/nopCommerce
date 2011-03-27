@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FluentValidation.Attributes;
+using Nop.Admin.Validators;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models
 {
+    [Validator(typeof(ProductValidator))]
     public class ProductModel : BaseNopEntityModel, ILocalizedModel<ProductLocalizedModel>
     {
         public ProductModel()

@@ -10,7 +10,7 @@ namespace Nop.Admin.Validators
 {
     public class CategoryProductValidator : AbstractValidator<CategoryProductModel>
     {
-        #region Constructors (1) 
+		#region Constructors 
 
         public CategoryProductValidator(ILocalizationService localizationService)
         {

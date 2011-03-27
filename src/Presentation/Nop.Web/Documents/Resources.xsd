@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Language">
+        
+        <xs:annotation>
+            <xs:documentation>Defines the way your code would be shaped.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="LocaleResource" type="LocaleResource"></xs:element>
+            </xs:sequence>
+            <xs:attribute name="Name" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The name of the language that the resources represent.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="LocaleResource">
+        <xs:sequence maxOccurs="1" minOccurs="1">
+            <xs:choice maxOccurs="2" minOccurs="1">
+                <xs:element name="Children" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            This is where all the current LocaleResource's children go. All of the children's names will be prefixed with the current LocaleResource's namespace (Parent.Child).
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                            <xs:element name="LocaleResource" type="LocaleResource"></xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Value" type="xs:string" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The value to be associated with the current LocaleResource.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    This name is appended to its hierarchical namespace and is used as an identifier for the value (if present). 
+                    If no value is present, its purpose it too only create a namespace for its children.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>

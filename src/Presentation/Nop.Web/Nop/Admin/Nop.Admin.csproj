@@ -104,6 +104,7 @@
     <Compile Include="Validators\CurrencyValidator.cs" />
     <Compile Include="Validators\LanguageResourceValidator.cs" />
     <Compile Include="Validators\LanguageValidator.cs" />
+    <Compile Include="Validators\ProductValidator.cs" />
     <Compile Include="Views\Shared\TestMenuPlugin1.cs" />
     <Compile Include="Views\Shared\TestMenuPlugin2.cs" />
   </ItemGroup>

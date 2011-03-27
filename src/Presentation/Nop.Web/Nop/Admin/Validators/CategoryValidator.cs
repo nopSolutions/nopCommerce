@@ -6,7 +6,7 @@ namespace Nop.Admin.Validators
 {
     public class CategoryValidator : AbstractValidator<CategoryModel>
     {
-		#region Constructors (1) 
+		#region Constructors 
 
         public CategoryValidator(ILocalizationService localizationService)
         {
