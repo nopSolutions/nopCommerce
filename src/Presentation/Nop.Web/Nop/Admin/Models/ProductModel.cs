@@ -9,8 +9,13 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models
 {
-    public class ProductModel : BaseNopEntityModel
+    public class ProductModel : BaseNopEntityModel, ILocalizedModel<ProductLocalizedModel>
     {
+        public ProductModel()
+        {
+            Locales = new List<ProductLocalizedModel>();
+        }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         public string Name { get; set; }
 
@@ -46,6 +51,8 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
+
+        public IList<ProductLocalizedModel> Locales { get; set; }
     }
     public class ProductLocalizedModel : ILocalizedModelLocal
     {

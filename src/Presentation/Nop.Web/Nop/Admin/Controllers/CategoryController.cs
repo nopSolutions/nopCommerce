@@ -262,7 +262,7 @@ namespace Nop.Admin.Controllers
             var category = _categoryService.GetCategoryById(id);
             if (category == null) throw new ArgumentException("No category found with the specified id", "id");
             var model = category.ToModel();
-            foreach (var language in _languageService.GetAllLanguages())
+            foreach (var language in _languageService.GetAllLanguages(true))
             {
                 var localizedModel = new CategoryLocalizedModel
                                          {

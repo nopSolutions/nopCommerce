@@ -6,14 +6,13 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("product-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Catalog.Categories.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Products.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
 })
 
 @helper TabInfo()
     { 
-    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
+    @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
                 @<table class="adminContent">
                     <tr>
                         <td class="adminTitle">
@@ -26,11 +25,20 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Locales[item].Description):
+                            @Html.NopLabelFor(model => model.Locales[item].ShortDescription):
                         </td>
                         <td class="adminData">
-                            @Html.Telerik().EditorFor(model => model.Locales[item].Description)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                            @Html.TextAreaFor(model => model.Locales[item].ShortDescription)
+                            @Html.ValidationMessageFor(model => model.Locales[item].ShortDescription)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Locales[item].FullDescription):
+                        </td>
+                        <td class="adminData">
+                            @Html.Telerik().EditorFor(model => model.Locales[item].FullDescription)
+                            @Html.ValidationMessageFor(model => model.Locales[item].FullDescription)
                         </td>
                     </tr>
                     <tr>
@@ -52,11 +60,20 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Description):
+                            @Html.NopLabelFor(model => model.ShortDescription):
                         </td>
                         <td class="adminData">
-                            @Html.Telerik().EditorFor(x => x.Description)
-                            @Html.ValidationMessageFor(model => model.Description)
+                            @Html.TextAreaFor(x => x.ShortDescription)
+                            @Html.ValidationMessageFor(model => model.ShortDescription)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.FullDescription):
+                        </td>
+                        <td class="adminData">
+                            @Html.Telerik().EditorFor(x => x.FullDescription)
+                            @Html.ValidationMessageFor(model => model.FullDescription)
                         </td>
                     </tr>
                 </table>
@@ -64,64 +81,18 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PictureId)
+                @*@Html.NopLabelFor(model => model.PictureId)*@
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.PictureId)
-                @Html.ValidationMessageFor(model => model.PictureId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ParentCategoryId):
-            </td>
-            <td class="adminData">
-                @(Html.Telerik().ComboBoxFor(x => x.ParentCategoryId).BindTo(Model.ParentCategories).Encode(true)
-                            .DataBinding(x => x.Ajax().Enabled(true).Select("AllCategories", "Category", new { selectedId = Model.ParentCategoryId })))
-                @Html.ValidationMessageFor(model => model.ParentCategoryId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PriceRanges):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.PriceRanges)
-                @Html.ValidationMessageFor(model => model.PriceRanges)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShowOnHomePage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.ShowOnHomePage)
-                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Published):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.Published)
-                @Html.ValidationMessageFor(model => model.Published)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.Telerik().NumericTextBoxFor(x => x.DisplayOrder).DecimalDigits(0)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                @*@Html.EditorFor(model => model.PictureId)
+                @Html.ValidationMessageFor(model => model.PictureId)*@
             </td>
         </tr>
     </table>
 }
-@helper TabSeo()
+@*@helper TabSeo()
     {
-    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
+    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("product-seo-localized",
                @<table class="adminContent">
                    <tr>
                        <td class="adminTitle">
@@ -215,8 +186,4 @@
             </td>
         </tr>
     </table>
-}
-@helper TabProducts()
-{
-      @Html.Action("Products", new { id = Model.Id })
-}
+}*@
