@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -22,13 +23,15 @@ namespace Nop.Admin.Controllers
         private IProductService _productService;
         private IWorkContext _workContext;
         private ILanguageService _languageService;
+        private ILocalizedEntityService _localizedEntityService;
 
         #endregion Fields 
 
 		#region Constructors 
 
-        public ProductController(IProductService productService, IWorkContext workContext, ILanguageService languageService)
+        public ProductController(IProductService productService, IWorkContext workContext, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
         {
+            _localizedEntityService = localizedEntityService;
             _languageService = languageService;
             _workContext = workContext;
             _productService = productService;
@@ -79,6 +82,18 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
+        #region Delete
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var product = _productService.GetProductById(id);
+            _productService.DeleteProduct(product);
+            return RedirectToAction("List");
+        }
+
+        #endregion
+
         #region Edit
 
         public ActionResult Edit(int id)
@@ -86,21 +101,28 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(id);
             if (product == null) throw new ArgumentException("No category found with the specified id", "id");
             var model = product.ToModel();
-            foreach (var language in _languageService.GetAllLanguages(true))
-            {
-                var localizedModel = new ProductLocalizedModel
-                {
-                    Language = language,
-                    Name = product.GetLocalized(x => x.Name, language.Id, false),
-                    ShortDescription = product.GetLocalized(x => x.ShortDescription, language.Id, false),
-                    FullDescription = product.GetLocalized(x => x.FullDescription, language.Id, false),
-                    MetaKeywords = product.GetLocalized(x => x.MetaKeywords, language.Id, false),
-                    MetaDescription = product.GetLocalized(x => x.MetaDescription, language.Id, false),
-                    MetaTitle = product.GetLocalized(x => x.MetaTitle, language.Id, false),
-                    SeName = product.GetLocalized(x => x.SeName, language.Id, false),
-                };
-                model.Locales.Add(localizedModel);
-            }
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+                                                            {
+                                                                locale.Name = 
+                                                                    product.GetLocalized(x => x.Name,
+                                                                                                   languageId, false);
+                                                                locale.ShortDescription =
+                                                                    product.GetLocalized(x => x.ShortDescription,
+                                                                                         languageId, false);
+                                                                locale.FullDescription =
+                                                                    product.GetLocalized(x => x.FullDescription,
+                                                                                         languageId, false);
+                                                                locale.MetaKeywords =
+                                                                    product.GetLocalized(x => x.MetaKeywords, languageId,
+                                                                                         false);
+                                                                locale.MetaDescription =
+                                                                    product.GetLocalized(x => x.MetaDescription,
+                                                                                         languageId, false);
+                                                                locale.MetaTitle = 
+                                                                    product.GetLocalized(x => x.MetaTitle, languageId, false);
+                                                                locale.SeName = product.GetLocalized(x => x.SeName,
+                                                                                                     languageId, false);
+                                                            });
             return View(model);
         }
 
@@ -116,14 +138,68 @@ namespace Nop.Admin.Controllers
             product = productModel.ToEntity(product);
             _productService.UpdateProduct(product);
 
-            //UpdateLocales(category, categoryModel);
-            //UpdateCategoryProducts(category, addedCategoryProducts, removedCategoryProducts);
+            UpdateLocales(product, productModel);
 
-            if (continueEditing)
+            return continueEditing ? RedirectToAction("Edit", product.Id) : RedirectToAction("List");
+        }
+
+        #endregion
+
+        #region Create
+
+        public ActionResult Create()
+        {
+            var model = new ProductModel();
+            AddLocales(_languageService, model.Locales);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Create(ProductModel model)
+        {
+            var product = model.ToEntity();
+            _productService.InsertProduct(product);
+            UpdateLocales(product, model);
+            return RedirectToAction("Edit", new { product.Id });
+        }
+
+        #endregion
+
+        #region Saving/Updating/Inserting
+
+        public void UpdateLocales(Product product, ProductModel model)
+        {
+            foreach (var localized in model.Locales)
             {
-                //return RedirectToAction("Edit", category.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.ShortDescription,
+                                                               localized.ShortDescription,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.FullDescription,
+                                                               localized.FullDescription,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.MetaKeywords,
+                                                               localized.MetaKeywords,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.MetaDescription,
+                                                               localized.MetaDescription,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.MetaTitle,
+                                                               localized.MetaTitle,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.SeName,
+                                                               localized.SeName,
+                                                               localized.Language.Id);
             }
-            return RedirectToAction("List");
         }
 
         #endregion

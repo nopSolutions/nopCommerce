@@ -165,6 +165,11 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
+            //TODO:Check and make sure other services are settings this value on insert.
+            product.CreatedOnUtc = DateTime.UtcNow;
+            //TODO:Also check and make sure the updated on property is being set in the services
+            product.UpdatedOnUtc = DateTime.UtcNow;
+
             _productRepository.Insert(product);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);

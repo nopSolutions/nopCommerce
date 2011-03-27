@@ -9,7 +9,6 @@
     x.Add().Text(T("Admin.Catalog.Products.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
 })
-
 @helper TabInfo()
     { 
     @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
@@ -81,18 +80,54 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @*@Html.NopLabelFor(model => model.PictureId)*@
+                @Html.NopLabelFor(model => model.AdminComment)
             </td>
             <td class="adminData">
-                @*@Html.EditorFor(model => model.PictureId)
-                @Html.ValidationMessageFor(model => model.PictureId)*@
+                @Html.TextAreaFor(model => model.AdminComment)
+                @Html.ValidationMessageFor(model => model.AdminComment)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowOnHomePage)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.ShowOnHomePage)
+                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Published)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.Published)
+                @Html.ValidationMessageFor(model => model.Published)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowCustomerReviews)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.AllowCustomerReviews)
+                @Html.ValidationMessageFor(model => model.AllowCustomerReviews)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowCustomerRatings)
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.AllowCustomerRatings)
+                @Html.ValidationMessageFor(model => model.AllowCustomerRatings)
             </td>
         </tr>
     </table>
 }
-@*@helper TabSeo()
+@helper TabSeo()
     {
-    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("product-seo-localized",
+    @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
                @<table class="adminContent">
                    <tr>
                        <td class="adminTitle">
@@ -174,16 +209,5 @@
                            @Html.ValidationMessageFor(model => model.SeName)
                        </td>
                    </tr>
-               </table>)) 
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PageSize):
-            </td>
-            <td class="adminData">
-                @Html.Telerik().NumericTextBoxFor(x => x.PageSize).DecimalDigits(0).MinValue(1)
-                @Html.ValidationMessageFor(model => model.PageSize)
-            </td>
-        </tr>
-    </table>
-}*@
+               </table>))
+}

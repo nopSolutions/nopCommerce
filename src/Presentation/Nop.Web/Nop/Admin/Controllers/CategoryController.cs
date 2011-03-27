@@ -302,11 +302,7 @@ namespace Nop.Admin.Controllers
 
             CategoryProductsAttribute.Clear();
 
-            if (continueEditing)
-            {
-                return RedirectToAction("Edit", category.Id);
-            }
-            return RedirectToAction("List");
+            return continueEditing ? RedirectToAction("Edit", category.Id) : RedirectToAction("List");
         }
 
         #endregion
