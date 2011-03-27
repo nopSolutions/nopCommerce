@@ -46,6 +46,25 @@ namespace Nop.Admin
 
         #endregion
 
+        #region Products
+
+        public static ProductModel ToModel(this Product category)
+        {
+            return AutoMapper.Mapper.Map<Product, ProductModel>(category);
+        }
+
+        public static Product ToEntity(this ProductModel model)
+        {
+            return AutoMapper.Mapper.Map<ProductModel, Product>(model);
+        }
+
+        public static Product ToEntity(this ProductModel model, Product destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
         #region Languages
 
         public static LanguageModel ToModel(this Language language)

@@ -21,6 +21,8 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<Category, CategoryModel>();
             //category product
             ViceVersa<ProductCategory, CategoryProductModel>();
+            //products
+            ViceVersa<Product, ProductModel>();
             //logs
             ViceVersa<Log, LogModel>();
             //currencies

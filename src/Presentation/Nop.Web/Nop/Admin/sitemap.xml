@@ -6,6 +6,9 @@
                 <siteMapNode title="List" nopResource="Admin.Common.List" controller="Category" action="List"/>
                 <siteMapNode title="Tree view" nopResource="Admin.Common.Treeview" controller="Category" action="Tree"/>
             </siteMapNode>
+            <siteMapNode title="Products" nopResource="Admin.Catalog.Products" controller="Product" action="List">
+                <siteMapNode title="Manage Products" nopResource="Admin.Catalog.Products.Manage" controller="Product" action="List"/>
+            </siteMapNode>
         </siteMapNode>
         <siteMapNode title="Configuration" nopResource="Admin.Configuration">
             <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
