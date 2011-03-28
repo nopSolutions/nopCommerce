@@ -29,7 +29,19 @@ namespace Nop.Web.Framework.Themes
             {
                 return string.Empty;
             }
-            string areaName =GetAreaName(controllerContext.RouteData);
+            string areaName = GetAreaName(controllerContext.RouteData);
+
+            //little hack to get nop's admin area to be in /Nop/ instead of /Nop/Admin/ or Areas/Admin/
+            if (!string.IsNullOrEmpty(areaName) && areaName.Equals("admin", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var newLocations = areaLocations.ToList();
+                newLocations.Insert(0, "~/Nop/Views/{1}/{0}.cshtml");
+                newLocations.Insert(0, "~/Nop/Views/{1}/{0}.vbhtml");
+                newLocations.Insert(0, "~/Nop/Views/Shared/{0}.cshtml");
+                newLocations.Insert(0, "~/Nop/Views/Shared/{0}.vbhtml");
+                areaLocations = newLocations.ToArray();
+            }
+
             bool flag = !string.IsNullOrEmpty(areaName);
             List<ViewLocation> viewLocations = GetViewLocations(locations, flag ? areaLocations : null);
             if (viewLocations.Count == 0)
