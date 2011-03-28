@@ -48,9 +48,9 @@ namespace Nop.Admin
 
         #region Products
 
-        public static ProductModel ToModel(this Product category)
+        public static ProductModel ToModel(this Product product)
         {
-            return AutoMapper.Mapper.Map<Product, ProductModel>(category);
+            return AutoMapper.Mapper.Map<Product, ProductModel>(product);
         }
 
         public static Product ToEntity(this ProductModel model)
@@ -59,6 +59,25 @@ namespace Nop.Admin
         }
 
         public static Product ToEntity(this ProductModel model, Product destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Product variants
+
+        public static ProductVariantModel ToModel(this ProductVariant variant)
+        {
+            return AutoMapper.Mapper.Map<ProductVariant, ProductVariantModel>(variant);
+        }
+
+        public static ProductVariant ToEntity(this ProductVariantModel model)
+        {
+            return AutoMapper.Mapper.Map<ProductVariantModel, ProductVariant>(model);
+        }
+
+        public static ProductVariant ToEntity(this ProductVariantModel model, ProductVariant destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }

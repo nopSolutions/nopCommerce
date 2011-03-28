@@ -8,6 +8,10 @@
 {
     x.Add().Text(T("Admin.Catalog.Products.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
+    if (ViewContext.RouteData.GetRequiredString("action").Equals("edit", StringComparison.InvariantCultureIgnoreCase))
+    {
+        x.Add().Text(T("Admin.Catalog.Products.Variants").Text).Content(TabVariants().ToHtmlString());
+    }
 })
 @helper TabInfo()
     { 
@@ -210,4 +214,15 @@
                        </td>
                    </tr>
                </table>))
+}
+@helper TabVariants(){
+    @(Html.Telerik().Grid(Model.ProductVariants).Name("product-variants")
+    .Columns(columns =>{
+        columns.Bound(x => x.Name);
+        columns.Bound(x => x.Sku);
+        columns.Bound(x => x.Price);
+        columns.Bound(x => x.DisplayOrder);
+        columns.Bound(x => x.Published);
+        columns.Template((x) => Html.ActionLink(T("Admin.Common.View").ToString(), "Edit", "ProductVariant", new { id = x.Id }, new { })).Title(T("Admin.Common.View").ToString());
+    }))
 }

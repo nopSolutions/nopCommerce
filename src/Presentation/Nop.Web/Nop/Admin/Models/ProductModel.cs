@@ -17,6 +17,7 @@ namespace Nop.Admin.Models
         public ProductModel()
         {
             Locales = new List<ProductLocalizedModel>();
+            ProductVariants = new List<ProductVariantModel>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
@@ -56,6 +57,8 @@ namespace Nop.Admin.Models
         public bool Published { get; set; }
 
         public IList<ProductLocalizedModel> Locales { get; set; }
+
+        public IList<ProductVariantModel> ProductVariants { get; set; }
     }
     public class ProductLocalizedModel : ILocalizedModelLocal
     {

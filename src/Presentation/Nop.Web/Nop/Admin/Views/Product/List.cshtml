@@ -11,6 +11,21 @@
         <a href="@Url.Action("Export")" class="t-button">@T("Admin.Common.ExportToXml")</a>
     </div>
 </div>
+<table style="margin-bottom:10px;" class="adminContent">
+        <tbody><tr>
+            <td class="adminTitle">
+                Name
+            </td>
+            <td class="adminData">
+                <div id="select-language" class="t-widget t-combobox t-header"><div class="t-dropdown-wrap t-state-default"><input type="text" value="English" name="select-language-input" id="select-language-input" class="t-input" autocomplete="off"><span class="t-select t-header"><span class="t-icon t-arrow-down">select</span></span></div><input type="text" value="1" style="display:none" name="select-language" id="select-language-value"></div>
+                <script type="text/javascript">
+                    function onLanguageSelected(e) {
+                        window.location = "/Admin/Language/Resources?languageId=" + e.value;
+                    }
+                </script>
+            </td>
+        </tr>
+    </tbody></table>
 <table class="adminContent">
     <tr>
         <td>

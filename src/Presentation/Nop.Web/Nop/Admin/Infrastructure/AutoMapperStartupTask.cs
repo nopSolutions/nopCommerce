@@ -23,6 +23,8 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<ProductCategory, CategoryProductModel>();
             //products
             ViceVersa<Product, ProductModel>();
+            //product variants
+            ViceVersa<ProductVariant, ProductVariantModel>();
             //logs
             ViceVersa<Log, LogModel>();
             //currencies
