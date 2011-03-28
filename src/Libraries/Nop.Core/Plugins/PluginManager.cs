@@ -32,28 +32,50 @@ namespace Nop.Core.Plugins
         /// <summary>
         /// Returns a collection of all referenced plugin assemblies that have been shadow copied
         /// </summary>
-        public static IEnumerable<Assembly> ReferencedPlugins { get; protected set; }
+        public static IList<Assembly> ReferencedPlugins { get; protected set; }
+
+        private static bool IsAssemblyAlreadyLoaded(AssemblyName assemblyName)
+        {
+            if (assemblyName == null)
+                throw new ArgumentNullException("assemblyName");
+
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+                if (a.FullName == assemblyName.FullName)
+                    return true;
+
+            return false;
+        }
 
         private static Assembly LoadAssembly(string assemblyPath, bool loadWithoutLocking = false)
         {
+            Assembly assembly = null;
             if (loadWithoutLocking)
             {
                 //dynamically load assembly (no file locking)
                 byte[] assemStream = null;
-                using (FileStream fs = new FileStream(assemblyPath, FileMode.Open))
+                using (var fs = new FileStream(assemblyPath, FileMode.Open))
                 {
                     assemStream = new byte[fs.Length];
                     fs.Read(assemStream, 0, (int)fs.Length);
                 }
-                var assembly = Assembly.Load(assemStream);
-                return assembly;
+
+                var assemblyName = AssemblyName.GetAssemblyName(assemblyPath);
+                if (!IsAssemblyAlreadyLoaded(assemblyName))
+                    assembly = Assembly.Load(assemStream);
             }
             else
             {
                 var assemblyName = AssemblyName.GetAssemblyName(assemblyPath);
-                var assembly = Assembly.Load(assemblyName.FullName);
-                return assembly;
+                if (!IsAssemblyAlreadyLoaded(assemblyName))
+                    assembly = Assembly.Load(assemblyName.FullName);
             }
+
+            if (assembly != null)
+            {
+                BuildManager.AddReferencedAssembly(assembly);
+                ReferencedPlugins.Add(assembly);
+            }
+            return assembly;
         }
 
         public static void Initialize()
@@ -65,10 +87,10 @@ namespace Nop.Core.Plugins
                     //double check
                     if (!_isInit)
                     {
+                        ReferencedPlugins = new List<Assembly>();
+
                         var pluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
                         var shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
-
-                        var referencedAssemblies = new List<Assembly>();
 
                         if (!shadowCopyFolder.Exists)
                             Directory.CreateDirectory(shadowCopyFolder.FullName);
@@ -124,12 +146,8 @@ namespace Nop.Core.Plugins
                         {
                             //load assembly without locking
                             //replace "false" parameter with "true" to load an assembly without locking
-                            var a = LoadAssembly(file.FullName, false);
-                            BuildManager.AddReferencedAssembly(a);
-                            referencedAssemblies.Add(a);
+                            var a = LoadAssembly(file.FullName, true);
                         }
-
-                        ReferencedPlugins = referencedAssemblies;
 
                         _isInit = true;
                     }
