@@ -123,7 +123,8 @@ namespace Nop.Core.Plugins
                             .GetFiles("*.dll", SearchOption.AllDirectories))
                         {
                             //load assembly without locking
-                            var a = LoadAssembly(file.FullName, true);
+                            //replace "false" parameter with "true" to load an assembly without locking
+                            var a = LoadAssembly(file.FullName, false);
                             BuildManager.AddReferencedAssembly(a);
                             referencedAssemblies.Add(a);
                         }
