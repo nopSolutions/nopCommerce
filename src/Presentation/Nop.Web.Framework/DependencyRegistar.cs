@@ -39,6 +39,7 @@ using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
+using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Themes;
 
 namespace Nop.Web.Framework
@@ -162,7 +163,11 @@ namespace Nop.Web.Framework
             builder.RegisterType<TelerikLocalizationServiceFactory>().As<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>().InstancePerHttpRequest();
 
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
+            builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerHttpRequest();
             builder.RegisterType<ThemeProvider>().As<IThemeProvider>().SingleInstance();
+
+
+            builder.RegisterType<EmbeddedViewResolver>().As<IEmbeddedViewResolver>().SingleInstance();
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -10,6 +11,7 @@ using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Installation;
 using Nop.Web.Framework;
+using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
@@ -83,6 +85,11 @@ namespace Nop.Web
 
             ModelValidatorProviders.Providers.Add(
                 new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
+
+            //register virtual path provider for embedded views
+            var embeddedViewResolver = EngineContext.Current.Resolve<IEmbeddedViewResolver>();
+            var embeddedProvider = new EmbeddedViewVirtualPathProvider(embeddedViewResolver.GetEmbeddedViews());
+            HostingEnvironment.RegisterVirtualPathProvider(embeddedProvider);
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)

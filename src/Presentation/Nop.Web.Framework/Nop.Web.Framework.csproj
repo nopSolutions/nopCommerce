@@ -81,6 +81,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmbeddedViews\EmbeddedResourceVirtualFile.cs" />
+    <Compile Include="EmbeddedViews\EmbeddedViewMetadata.cs" />
+    <Compile Include="EmbeddedViews\EmbeddedViewResolver.cs" />
+    <Compile Include="EmbeddedViews\EmbeddedViewTable.cs" />
+    <Compile Include="EmbeddedViews\EmbeddedViewVirtualPathProvider.cs" />
+    <Compile Include="EmbeddedViews\IEmbeddedViewResolver.cs" />
     <Compile Include="Mvc\BaseNopModel.cs" />
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\FormValueExistsAttribute.cs" />
