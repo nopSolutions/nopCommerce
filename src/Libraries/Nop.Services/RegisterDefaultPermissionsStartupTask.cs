@@ -9,6 +9,7 @@ namespace Nop.Services
     {
         public void Execute()
         {
+            //TODO register permission only after database is created or after new plugin installation
             //register permissions
             var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
             foreach (var providerType in permissionProviders)
