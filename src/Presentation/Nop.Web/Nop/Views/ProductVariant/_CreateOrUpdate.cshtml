@@ -1,0 +1,62 @@
+﻿@model Nop.Admin.Models.ProductVariantModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@using Nop.Core.Domain.Catalog;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("product-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Catalog.Products.Variants.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+})
+@helper TabInfo()
+    { 
+    @(Html.LocalizedEditor<ProductVariant, ProductVariantModel>("productvariant-info-localized",
+                @<table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => Model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Locales[item].Description):
+                        </td>
+                        <td class="adminData">
+                            @Html.Telerik().EditorFor(model => model.Locales[item].Description)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            @Html.HiddenFor(model => model.Locales[item].Language.Id)
+                        </td>
+                    </tr>
+                </table>
+                ,
+                @<table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Name):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Description):
+                        </td>
+                        <td class="adminData">
+                            @Html.Telerik().EditorFor(model => x.Description)
+                            @Html.ValidationMessageFor(model => model.Description)
+                        </td>
+                    </tr>
+                </table>
+            ))
+}
