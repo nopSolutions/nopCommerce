@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -46,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ConfigController.cs" />
+    <Compile Include="Models\TestModel.cs" />
     <Compile Include="RouteProvider.cs" />
     <Compile Include="FixedRateTaxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,7 +66,6 @@
       <Name>Nop.Web.Framework</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Views\Config\Configure.cshtml" />
   </ItemGroup>

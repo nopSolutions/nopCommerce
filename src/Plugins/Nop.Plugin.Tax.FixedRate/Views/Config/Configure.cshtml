@@ -1,4 +1,16 @@
-﻿@{
+﻿@model Nop.Plugin.Tax.FixedRate.Models.TestModel
+
+@{
     Layout = "";
 }
 Test view for 'Fixed rate' tax provider (render it as partial view when configuring)
+<br /> 
+@using (Html.BeginForm())
+{
+    @Html.LabelFor(model => model.TestProperty1)
+    <br />
+    @Html.EditorFor(model => model.TestProperty1)
+    <br />
+    
+    <button type="submit" name="save" value="save" class="t-button">Save</button>
+}

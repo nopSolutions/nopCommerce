@@ -144,9 +144,9 @@ namespace Nop.Core.Plugins
                         foreach (var file in shadowCopyFolder
                             .GetFiles("*.dll", SearchOption.AllDirectories))
                         {
-                            //load assembly without locking
                             //replace "false" parameter with "true" to load an assembly without locking
-                            var a = LoadAssembly(file.FullName, true);
+                            //weird, but if this case you can't use models in plugin views.
+                            var a = LoadAssembly(file.FullName, false);
                         }
 
                         _isInit = true;
