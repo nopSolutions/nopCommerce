@@ -17,18 +17,19 @@ namespace Nop.Plugin.Tax.FixedRate
             {
                 new RouteDescriptor 
                 {
-                     Route = new Route("Plugins/FixedTaxRate/Configure",
-                         new RouteValueDictionary 
-                         {
-                             {"controller", "Config"},
-                             {"action", "Configure"}
-                         },
-                         new RouteValueDictionary(),
-                         new RouteValueDictionary()
-                         {
-                             {"Namespaces", "Nop.Plugin.Tax.FixedRate"}
-                         },
-                         new MvcRouteHandler())
+                    Name = "Plugin.Tax.FixedRate.Configure",
+                    Route = new Route("Plugins/FixedTaxRate/Configure",
+                        new RouteValueDictionary 
+                        {
+                            {"controller", "Config"},
+                            {"action", "Configure"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary()
+                        {
+                            {"Namespaces", "Nop.Plugin.Tax.FixedRate"}
+                        },
+                        new MvcRouteHandler())
                 }
 
 

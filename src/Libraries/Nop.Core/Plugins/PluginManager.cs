@@ -146,7 +146,7 @@ namespace Nop.Core.Plugins
                         {
                             //replace "false" parameter with "true" to load an assembly without locking
                             //weird, but if this case you can't use models in plugin views.
-                            var a = LoadAssembly(file.FullName, false);
+                            var a = LoadAssembly(file.FullName, true);
                         }
 
                         _isInit = true;

@@ -17,6 +17,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
             //TODO don't pass logger as parameter (did it to test injection for plugin controllers)
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new TestModel()
@@ -28,9 +29,9 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
 
 
         [HttpPost]
+        [ChildActionOnly]
         public ActionResult Configure(TestModel model)
         {
-            model.TestProperty1 += "updated";
             return View(model);
         }
     }
