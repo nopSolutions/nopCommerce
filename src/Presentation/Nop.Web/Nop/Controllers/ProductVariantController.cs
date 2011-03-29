@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
@@ -14,9 +15,11 @@ namespace Nop.Admin.Controllers
     {
         private IProductService _productService;
         private ILanguageService _languageService;
+        private ILocalizedEntityService _localizedEntityService;
 
-        public ProductVariantController(IProductService productService, ILanguageService languageService)
+        public ProductVariantController(IProductService productService, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
         {
+            _localizedEntityService = localizedEntityService;
             _languageService = languageService;
             _productService = productService;
         }
@@ -48,13 +51,31 @@ namespace Nop.Admin.Controllers
                 return View("Edit", productVariantModel);
             }
 
-            //var product = _productService.GetProductById(productModel.Id);
-            //product = productModel.ToEntity(product);
-            //_productService.UpdateProduct(product);
+            var variant = _productService.GetProductVariantById(productVariantModel.Id);
+            variant = productVariantModel.ToEntity(variant);
+            _productService.UpdateProductVariant(variant);
+            UpdateLocales(variant, productVariantModel);
 
-            //UpdateLocales(product, productModel);
+            return continueEditing ? RedirectToAction("Edit", productVariantModel.Id) : RedirectToAction("List", "Product");
+        }
 
-            return continueEditing ? RedirectToAction("Edit", productVariantModel.Id) : RedirectToAction("List");
+        #endregion
+
+        #region Saving/Updating/Inserting
+
+        public void UpdateLocales(ProductVariant variant, ProductVariantModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(variant,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(variant,
+                                                               x => x.Description,
+                                                               localized.Description,
+                                                               localized.Language.Id);
+            }
         }
 
         #endregion

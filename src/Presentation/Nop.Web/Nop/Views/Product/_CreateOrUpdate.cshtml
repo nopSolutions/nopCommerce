@@ -215,9 +215,11 @@
                    </tr>
                </table>))
 }
-@helper TabVariants(){
+@helper TabVariants()
+    {
     @(Html.Telerik().Grid(Model.ProductVariants).Name("product-variants")
-    .Columns(columns =>{
+    .Columns(columns =>
+    {
         columns.Bound(x => x.Name);
         columns.Bound(x => x.Sku);
         columns.Bound(x => x.Price);
