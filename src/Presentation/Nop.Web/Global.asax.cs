@@ -31,7 +31,12 @@ namespace Nop.Web
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            
+            //register custom routes (plugins, etc)
+            var routePublisher = EngineContext.Current.Resolve<IRoutePublisher>();
+            routePublisher.PublishAll(routes);
 
+            //TODO move these route mapping into separate RouteProvider class (IRouteProvider interface)
             routes.MapRoute("Product",
                             "Product/{productId}/{SeName}",
                             new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional});

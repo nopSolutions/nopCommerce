@@ -8,7 +8,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Tax.FixedRate.Controllers
 {
     [AdminAuthorize]
-    public class FixedRateController : Controller
+    public class ConfigController : Controller
     {
         public ActionResult Configure()
         {

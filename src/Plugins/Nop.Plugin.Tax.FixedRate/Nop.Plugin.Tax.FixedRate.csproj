@@ -45,7 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\FixedRateController.cs" />
+    <Compile Include="Controllers\ConfigController.cs" />
+    <Compile Include="RouteProvider.cs" />
     <Compile Include="FixedRateTaxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -65,7 +66,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Views\FixedRate\Configure.cshtml" />
+    <EmbeddedResource Include="Views\Config\Configure.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
