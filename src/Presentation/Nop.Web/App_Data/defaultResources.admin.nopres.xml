@@ -619,9 +619,135 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
-
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="System">
+                <Value>System</Value>
+                <Children>
+                  <LocaleResource Name="QueuedEmails">
+                    <Value>Message Queue</Value>
+                    <Children>
+                      <LocaleResource Name="BackToList">
+                        <Value>back to message queue</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="EditQueuedEmailDetails">
+                        <Value>Edit message queue item</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="Id">
+                            <Value>Queued email ID</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Priority">
+                            <Value>Message Priority</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The priority of the message.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>                          
+                          <LocaleResource Name="From">
+                            <Value>From</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>From address.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="FromName">
+                            <Value>From name</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>From name.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="To">
+                            <Value>To</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>To address.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="ToName">
+                            <Value>To name</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>To name.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="CC">
+                            <Value>Cc</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Cc address.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Bcc">
+                            <Value>Bcc</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Bcc address.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Subject">
+                            <Value>Subject</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Message subject.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Body">
+                            <Value>Body</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Message body.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="CreatedOnUtc">
+                            <Value>Created on</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Date/Time message added to queue.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="SentTries">
+                            <Value>Sent attempts</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The number of times to attempt to send this message.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="SentOnUtc">
+                            <Value>Sent on</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The date/time message was sent.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="EmailAccountName">
+                            <Value>Email account</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The email account that will be used to send this email.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+            </Children>
+          </LocaleResource>
             <LocaleResource Name="Common">
                 <Children>
                     <LocaleResource Name="Validation">

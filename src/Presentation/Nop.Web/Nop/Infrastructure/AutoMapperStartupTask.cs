@@ -17,6 +17,13 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<Language, LanguageModel>();
             //email account
             ViceVersa<EmailAccount, EmailAccountModel>();
+            //queued email
+            //ViceVersa<QueuedEmail, QueuedEmailModel>();
+            Mapper.CreateMap<QueuedEmail, QueuedEmailModel>()
+                .ForMember(dest => dest.EmailAccountName,
+                           opt => opt.MapFrom(src => src.EmailAccount != null ? src.EmailAccount.FriendlyName : string.Empty));
+            Mapper.CreateMap<QueuedEmailModel, QueuedEmail>();
+
             //category
             ViceVersa<Category, CategoryModel>();
             //category product

@@ -46,6 +46,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductVariant> _productVariantRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
+        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -65,6 +66,7 @@ namespace Nop.Services.Installation
             IRepository<Product> productRepository,
             IRepository<ProductVariant> productVariantRepository,
             IRepository<EmailAccount> emailAccountRepository,
+            IRepository<QueuedEmail> queuedEmailRepository,
             ISettingService settingService)
         {
             this._measureDimensionRepository = measureDimensionRepository;
@@ -82,6 +84,7 @@ namespace Nop.Services.Installation
             this._productVariantRepository = productVariantRepository;
 
             this._emailAccountRepository = emailAccountRepository;
+            this._queuedEmailRepository = queuedEmailRepository;
 
             this._settingService = settingService;
         }
@@ -717,6 +720,48 @@ namespace Nop.Services.Installation
                                        }, 
                                };
             emailAccounts.ForEach(ea => _emailAccountRepository.Insert(ea));
+
+            #endregion
+
+            #region Queued emails(just for testing)
+
+            var queuedEmail = new List<QueuedEmail>()
+            {
+                new QueuedEmail()
+                {
+                    EmailAccountId = 1,
+                    Priority = 1,
+                    From = "admin@test.com",
+                    FromName = "Adminstrator",
+                    To = "cust@test.com",
+                    ToName = "Customer",
+                    CC = "admincc@test.com",
+                    Bcc = "adminbcc@test.com",
+                    Body = "Body",
+                    Subject = "Subject",
+                    CreatedOnUtc = DateTime.Now,
+                    SendTries = 0,
+                    SentOnUtc = null
+                },
+                new QueuedEmail()
+                {
+                    EmailAccountId = 2,
+                    Priority = 2,
+                    From = "admin@test.com",
+                    FromName = "Adminstrator",
+                    To = "cust@test.com",
+                    ToName = "Customer",
+                    CC = "admincc@test.com",
+                    Bcc = "adminbcc@test.com",
+                    Body = "Body",
+                    Subject = "Subject",
+                    CreatedOnUtc = DateTime.UtcNow,
+                    SendTries = 2,
+                    SentOnUtc = DateTime.UtcNow
+                }
+            };
+            queuedEmail.ForEach(qe => _queuedEmailRepository.Insert(qe));
+
 
             #endregion
 

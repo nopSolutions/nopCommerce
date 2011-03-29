@@ -1,4 +1,4 @@
-﻿@model Nop.Admin.Models.EmailAccountModel
+﻿@model Nop.Admin.Models.QueuedEmailModel
            
 @using Nop.Web.Framework;
 @using (Html.BeginForm())
@@ -6,13 +6,13 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Nop/Content/images/ico-configuration.png")" />
-            @T("Admin.Configuration.EmailAccounts.EditEmailAccountDetails") @Html.ActionLink("(" + T("Admin.Configuration.EmailAccounts.BackToList") + ")", "List")
+            @T("Admin.System.QueuedEmails.EditQueuedEmailDetails") @Html.ActionLink("(" + T("Admin.System.QueuedEmails.BackToList") + ")", "List")
         </div>
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
-            <span id="emailAccount-delete" class="t-button">@T("Admin.Common.Delete")</span>
+            <span id="queuedEmail-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
-@Html.DeleteConfirmation("emailAccount-delete")
+@Html.DeleteConfirmation("queuedEmail-delete")

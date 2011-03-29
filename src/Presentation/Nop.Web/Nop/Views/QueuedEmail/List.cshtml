@@ -1,0 +1,38 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.QueuedEmailModel>
+           
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Admin/Content/images/ico-configuration.png")" />
+        @T("Admin.System.QueuedEmails")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.QueuedEmailModel>()
+                    .Name("queuedEmails-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id);
+                        columns.Bound(x => x.Priority);
+                        columns.Bound(x => x.From);
+                        columns.Bound(x => x.FromName);
+                        columns.Bound(x => x.CreatedOnUtc);
+                        columns.Bound(x => x.SentOnUtc);
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate("Edit")
+                            .Filterable(false);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "QueuedEmail"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

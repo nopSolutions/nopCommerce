@@ -144,6 +144,26 @@ namespace Nop.Admin
 
         #endregion
 
+        #region Queued email
+
+        public static QueuedEmailModel ToModel(this QueuedEmail entity)
+        {
+            return AutoMapper.Mapper.Map<QueuedEmail, QueuedEmailModel>(entity);
+        }
+
+        public static QueuedEmail ToEntity(this QueuedEmailModel model)
+        {
+            return AutoMapper.Mapper.Map<QueuedEmailModel, QueuedEmail>(model);
+        }
+
+        public static QueuedEmail ToEntity(this QueuedEmailModel model, QueuedEmail destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+
         #region Log
 
         public static LogModel ToModel(this Log logItem)
