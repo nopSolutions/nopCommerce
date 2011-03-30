@@ -951,8 +951,9 @@ namespace Nop.Services.Orders
                             }
 
                             //clear shopping cart
-                            customer.ShoppingCartItems.Clear();
-                            _customerService.UpdateCustomer(customer);
+                            //customer.ShoppingCartItems.Clear();
+                            //_customerService.UpdateCustomer(customer);
+                            customer.ShoppingCartItems.ToList().ForEach(sci => _shoppingCartService.DeleteShoppingCartItem(sci, false));
                         }
                         else
                         {
@@ -979,7 +980,7 @@ namespace Nop.Services.Orders
                                     IsDownloadActivated = false,
                                     LicenseDownloadId = 0
                                 };
-                                order.OrderProductVariants.Add(opv);
+                                order.OrderProductVariants.Add(newOpv);
                                 _orderService.UpdateOrder(order);
 
                                 //gift cards

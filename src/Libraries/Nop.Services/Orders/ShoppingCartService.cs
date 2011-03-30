@@ -207,6 +207,26 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Methods
+        
+        /// <summary>
+        /// Delete shopping cart item
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        public void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true)
+        {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
+
+            if (resetCheckoutData)
+            {
+                //reset checkout data
+                _customerService.ResetCheckoutData(shoppingCartItem.Customer, false);
+            }
+
+            _sciRepository.Delete(shoppingCartItem);
+        }
 
         /// <summary>
         /// Deletes expired shopping cart items
@@ -668,14 +688,12 @@ namespace Nop.Services.Orders
                 else
                 {
                     //delete a shopping cart item
-                    customer.ShoppingCartItems.Remove(shoppingCartItem);
-                    _customerService.UpdateCustomer(customer);
-                    
-                    if (resetCheckoutData)
-                    {
-                        //reset checkout data
-                        _customerService.ResetCheckoutData(customer, false);
-                    }
+                    //customer.ShoppingCartItems.Remove(shoppingCartItem);
+                    //_customerService.UpdateCustomer(customer);
+                    //_sciRepository.Delete(shoppingCartItem);
+                    //if (resetCheckoutData)
+                    //    _customerService.ResetCheckoutData(customer, false);
+                    DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData);
                 }
             }
 

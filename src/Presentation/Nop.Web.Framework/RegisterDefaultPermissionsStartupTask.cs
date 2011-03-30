@@ -3,7 +3,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
 using Nop.Services.Security.Permissions;
 
-namespace Nop.Services
+namespace Nop.Web.Framework
 {
     public class RegisterDefaultPermissionsStartupTask : IStartupTask
     {

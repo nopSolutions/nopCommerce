@@ -112,6 +112,7 @@
     <Compile Include="NopResourceDisplayName.cs" />
     <Compile Include="NopValidatorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegisterDefaultPermissionsStartupTask.cs" />
     <Compile Include="StatefulStorage.cs" />
     <Compile Include="TelerikLocalizationService.cs" />
     <Compile Include="TelerikLocalizationServiceFactory.cs" />
