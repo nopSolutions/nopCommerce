@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.Routing;
 
 namespace Nop.Web.Framework.Mvc.Routes
 {
     public interface IRoutePublisher
     {
-        void Publish(IEnumerable<RouteDescriptor> routes);
+        void Publish(RouteCollection routeCollection, IEnumerable<RouteDescriptor> routes);
+
+        void PublishAll(RouteCollection routeCollection);
     }
 }

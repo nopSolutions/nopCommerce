@@ -1,57 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Web.Routing;
-using Autofac;
-using Nop.Core.Plugins;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Mvc.Routes
 {
-    public class RoutePublisher : IRoutePublisher, IAutoStart
+    public class RoutePublisher : IRoutePublisher
     {
-        private readonly RouteCollection _routeCollection;
-        //private readonly ShellSettings _shellSettings;
-        private readonly ILifetimeScope _shellLifetimeScope;
-        private IList<IRouteProvider> _routeProviders;
-        //private readonly IRunningShellTable _runningShellTable;
+        private readonly ITypeFinder _typeFinder;
 
         public RoutePublisher(
-            RouteCollection routeCollection,
-            ILifetimeScope shellLifetimeScope,
-            IList<IRouteProvider> routeProviders)
+            ITypeFinder typeFinder)
         {
-            _routeProviders = routeProviders;
-            _routeCollection = routeCollection;
-            _shellLifetimeScope = shellLifetimeScope;
+            this._typeFinder = typeFinder;
         }
 
-        public void Publish(IEnumerable<RouteDescriptor> routes)
+        public void Publish(RouteCollection routeCollection, IEnumerable<RouteDescriptor> routes)
         {
             var routesArray = routes.OrderByDescending(r => r.Priority).ToArray();
 
             // this is not called often, but is intended to surface problems before
             // the actual collection is modified
-            var preloading = new RouteCollection();
-            foreach (var route in routesArray)
-                preloading.Add(route.Name, route.Route);
+            //var preloading = new RouteCollection();
+            //foreach (var route in routesArray)
+            //    preloading.Add(route.Name, route.Route);
 
-            using (_routeCollection.GetWriteLock())
+            using (routeCollection.GetWriteLock())
             {
                 foreach (var routeDescriptor in routesArray)
                 {
-                    _routeCollection.Add(routeDescriptor.Name, routeDescriptor.Route);
+                    routeCollection.Add(routeDescriptor.Name, routeDescriptor.Route);
                 }
             }
         }
 
-        public void Start()
+        public void PublishAll(RouteCollection routeCollection)
         {
-        }
-
-        public void Stop()
-        {
+            var routes = new List<RouteDescriptor>();
+            var routeProviders = _typeFinder.FindClassesOfType<IRouteProvider>();
+            foreach (var providerType in routeProviders)
+            {
+                var provider = Activator.CreateInstance(providerType) as IRouteProvider;
+                if (provider != null)
+                    provider.GetRoutes(routes);
+            }
+            Publish(routeCollection, routes);
         }
     }
 }
