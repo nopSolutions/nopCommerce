@@ -20,20 +20,22 @@ namespace Nop.Core.Plugins
         private bool _arePluginsLoaded = false;
         private readonly ITypeFinder _typeFinder;
 
-        public PluginFinder(ITypeFinder typeFinder, NopConfig config)
-        {
-            this._typeFinder = typeFinder;
-        }
-
         public PluginFinder(ITypeFinder typeFinder)
         {
             this._typeFinder = typeFinder;
         }
 
-        /// <summary>Gets plugins found in the environment sorted and filtered by the given user.</summary>
-        /// <typeparam name="T">The type of plugin to get.</typeparam>
-        /// <param name="user">The user that should be authorized for the plugin.</param>
-        /// <returns>An enumeration of plugins.</returns>
+        /// <summary>
+        /// Gets plugins found in the environment sorted and filtered by the given user.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of plugin to get.
+        /// </typeparam>
+        /// <param name="user">
+        /// The user that should be authorized for the plugin.
+        /// </param>
+        /// <returns>
+        /// An enumeration of plugins.</returns>
         public IEnumerable<T> GetPlugins<T>(IPrincipal user) where T : class, IPlugin
         {
             foreach (T plugin in GetPlugins<T>())
@@ -50,8 +52,12 @@ namespace Nop.Core.Plugins
                     yield return plugin.Instance<T>();
         }
 
-        /// <summary>Finds and sorts plugin defined in known assemblies.</summary>
-        /// <returns>A sorted list of plugins.</returns>
+        /// <summary>
+        /// Finds and sorts plugin defined in known assemblies.
+        /// </summary>
+        /// <returns>
+        /// A sorted list of plugins.
+        /// </returns>
         protected virtual IList<PluginDescriptor> FindPlugins()
         {
             var foundPlugins = new List<PluginDescriptor>();
@@ -83,8 +89,7 @@ namespace Nop.Core.Plugins
         private IEnumerable<PluginDescriptor> FindPluginsIn(Assembly a)
         {
             
-            #region Return plugin attributes
-
+            // return plugin attributes
             foreach (IPlugin attribute in a.GetCustomAttributes(typeof(IPlugin), false))
             {
                 yield return new PluginAttributeDescriptor(attribute);
@@ -96,11 +101,8 @@ namespace Nop.Core.Plugins
                     yield return new PluginAttributeDescriptor(attribute);
                 }
             }
-
-            #endregion
-
-            #region Return plugin implementations
-
+            
+            //return plugin implementations
             foreach (var plugin in _typeFinder.FindClassesOfType<IPlugin>(new List<Assembly> { a }))
             {
                 //Make sure that the IPlugin found is not implemented on a attribute (not an actual implementation)
@@ -109,8 +111,6 @@ namespace Nop.Core.Plugins
                     yield return new PluginImplementationDescriptor(plugin);
                 }
             }
-
-            #endregion
         }
     }
 }

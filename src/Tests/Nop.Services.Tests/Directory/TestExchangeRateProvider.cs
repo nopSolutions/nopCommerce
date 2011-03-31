@@ -26,15 +26,13 @@ namespace Nop.Services.Tests.Directory
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
         public override string FriendlyName
         {
-            get
-            {
-                return "Test exchange rate provider";
-            }
+            get { return "Test exchange rate provider"; }
         }
 
         /// <summary>
@@ -42,10 +40,23 @@ namespace Nop.Services.Tests.Directory
         /// </summary>
         public override string SystemName
         {
-            get
-            {
-                return "CurrencyExchange.TestProvider";
-            }
+            get { return "CurrencyExchange.TestProvider"; }
+        }
+
+        /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
         }
 
         #endregion

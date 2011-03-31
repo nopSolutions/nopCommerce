@@ -17,10 +17,7 @@ namespace Nop.Plugin.Tax.Free
         /// </summary>
         public override string FriendlyName
         {
-            get
-            {
-                return "Free tax rate provider";
-            }
+            get { return "Free tax rate provider"; }
         }
 
         /// <summary>
@@ -28,10 +25,23 @@ namespace Nop.Plugin.Tax.Free
         /// </summary>
         public override string SystemName
         {
-            get
-            {
-                return "Tax.FreeTaxRate";
-            }
+            get { return "Tax.FreeTaxRate"; }
+        }
+
+        /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
         }
         
         /// <summary>

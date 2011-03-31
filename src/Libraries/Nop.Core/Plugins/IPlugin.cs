@@ -22,7 +22,21 @@ namespace Nop.Core.Plugins
         /// </summary>
         string SystemName { get; }
 
+        /// <summary>
+        /// Gets or sets the version
+        /// </summary>
+        string Version { get; }
+
+        /// <summary>
+        /// Gets or sets the author
+        /// </summary>
+        string Author { get; }
+        
+        /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
         int DisplayOrder { get; }
+
         bool IsAuthorized(IPrincipal user);
     }
 }

@@ -8,10 +8,13 @@ namespace Nop.Core.Plugins
 {
     public abstract class BasePluginAttribute : Attribute, IPlugin
     {
-        protected BasePluginAttribute(string friendlyName, string systemName, int displayOrder = 0)
+        protected BasePluginAttribute(string friendlyName, string systemName,
+            string version = "", string author = "", int displayOrder = 0)
         {
             this.FriendlyName = friendlyName;
             this.SystemName = systemName;
+            this.Version = version;
+            this.Author = author;
             this.DisplayOrder = displayOrder;
         }
 
@@ -26,7 +29,22 @@ namespace Nop.Core.Plugins
         /// Gets or sets the system name
         /// </summary>
         public virtual string SystemName { get; protected set; }
-        public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version
+        /// </summary>
+        public virtual string Version { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the author
+        /// </summary>
+        public virtual string Author { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
+        public virtual int DisplayOrder { get; set; }
+
 
         public bool IsAuthorized(IPrincipal user)
         {
@@ -35,14 +53,10 @@ namespace Nop.Core.Plugins
 
         #endregion
 
-        #region IComparable<IPlugin> Members
-
         public int CompareTo(IPlugin other)
         {
             return this.DisplayOrder - other.DisplayOrder;
         }
-
-        #endregion
 
         public override bool Equals(object obj)
         {

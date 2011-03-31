@@ -293,10 +293,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// </summary>
         public override string FriendlyName
         {
-            get
-            {
-                return "Australia Post";
-            }
+            get { return "Australia Post"; }
         }
 
         /// <summary>
@@ -304,10 +301,23 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// </summary>
         public override string SystemName
         {
-            get
-            {
-                return "Shipping.AustraliaPost";
-            }
+            get { return "Shipping.AustraliaPost"; }
+        }
+
+        /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
         }
 
         /// <summary>

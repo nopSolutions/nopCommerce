@@ -115,10 +115,7 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         /// </summary>
         public override string FriendlyName
         {
-            get
-            {
-                return "Money converter exchange rate provider";
-            }
+            get { return "Money converter exchange rate provider"; }
         }
 
         /// <summary>
@@ -126,10 +123,23 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         /// </summary>
         public override string SystemName
         {
-            get
-            {
-                return "CurrencyExchange.MoneyConverter";
-            }
+            get { return "CurrencyExchange.MoneyConverter"; }
+        }
+
+        /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
         }
 
         #endregion

@@ -23,7 +23,7 @@ namespace Nop.Core.Tests.Plugin
     public class TestPluginAttribute : BasePluginAttribute, ITestPlugin1
     {
         public TestPluginAttribute()
-            :base("TestPluginAttribute", "TestPluginAttribute", 5){}
+            :base("TestPluginAttribute", "TestPluginAttribute", "", "", 5){}
     }
 
     

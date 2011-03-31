@@ -192,6 +192,22 @@ namespace Nop.Services.Tests.Payments
         {
             get { return "Payments.TestMethod"; }
         }
+
+        /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
+        }
         #endregion
     }
 }

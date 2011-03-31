@@ -43,6 +43,22 @@ namespace Nop.Plugin.SMS.Clickatell
         }
 
         /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
+        }
+
+        /// <summary>
         /// Sends SMS
         /// </summary>
         /// <param name="text">Text</param>

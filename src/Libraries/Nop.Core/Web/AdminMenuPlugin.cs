@@ -11,9 +11,10 @@ namespace Nop.Core.Web
     public abstract class AdminMenuPlugin : BasePlugin, IAdminMenuPlugin
     {
         protected AdminMenuPlugin(string friendlyName, string systemName, int displayOrder = 0)
-            : base(friendlyName, "IAdminMenuPlugin." + systemName, displayOrder)
+            : base(friendlyName, "IAdminMenuPlugin." + systemName,
+            "", "", displayOrder)
         {
-            
+
         }
 
         public abstract void BuildMenuItem(MenuItemBuilder menuItemBuilder);
@@ -31,7 +32,7 @@ namespace Nop.Core.Web
 
         public AdminMenuPluginAttribute(string friendlyName, string systemName,
             string title, string url, int displayOrder)
-            : base(friendlyName, "IAdminMenuPlugin." + systemName, displayOrder)
+            : base(friendlyName, "IAdminMenuPlugin." + systemName, "", "", displayOrder)
         {
             _url = url;
             _title = title;

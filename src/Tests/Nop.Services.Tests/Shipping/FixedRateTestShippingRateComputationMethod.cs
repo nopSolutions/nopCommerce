@@ -65,18 +65,28 @@ namespace Nop.Services.Tests.Shipping
 
         public override string FriendlyName
         {
-            get
-            {
-                return "Fixed rate shipping computation method";
-            }
+            get { return "Fixed rate shipping computation method"; }
         }
 
         public override string SystemName
         {
-            get
-            {
-                return "FixedRateTestShippingRateComputationMethod";
-            }
+            get { return "FixedRateTestShippingRateComputationMethod"; }
+        }
+
+        /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
         }
 
         /// <summary>

@@ -14,10 +14,7 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
         /// </summary>
         public override string FriendlyName
         {
-            get
-            {
-                return "Shipping country is";
-            }
+            get { return "Shipping country is"; }
         }
 
         /// <summary>
@@ -25,10 +22,23 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
         /// </summary>
         public override string SystemName
         {
-            get
-            {
-                return "DiscountRequirement.ShippingCountryIs";
-            }
+            get { return "DiscountRequirement.ShippingCountryIs"; }
+        }
+
+        /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
         }
 
         /// <summary>

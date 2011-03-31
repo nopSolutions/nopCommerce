@@ -66,10 +66,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// </summary>
         public override string FriendlyName
         {
-            get
-            {
-                return "ECB exchange rate provider";
-            }
+            get { return "ECB exchange rate provider"; }
         }
 
         /// <summary>
@@ -77,10 +74,23 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// </summary>
         public override string SystemName
         {
-            get
-            {
-                return "CurrencyExchange.ECB";
-            }
+            get { return "CurrencyExchange.ECB"; }
+        }
+
+        /// <summary>
+        /// Gets the author
+        /// </summary>
+        public override string Author
+        {
+            get { return "nopCommerce team"; }
+        }
+
+        /// <summary>
+        /// Gets the version
+        /// </summary>
+        public override string Version
+        {
+            get { return "1.00"; }
         }
 
         #endregion
