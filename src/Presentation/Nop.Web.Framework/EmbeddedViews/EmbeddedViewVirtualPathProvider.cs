@@ -21,10 +21,24 @@ namespace Nop.Web.Framework.EmbeddedViews
 
         private bool IsEmbeddedView(string virtualPath)
         {
-            string checkPath = VirtualPathUtility.ToAppRelative(virtualPath);
+            /*old validation
+            it can cause issue if we have several views with the same full path:
+            for example: both Nop.Plugin.Plugin1 and Nop.Plugin.Plugin2 can have Views\Config\Configure.cshtml files
+            
+            That's why we specify FQN for views into plugin controllers  
+             */
+            //string virtualPathAppRelative = VirtualPathUtility.ToAppRelative(virtualPath);
 
-            return checkPath.StartsWith("~/Views/", StringComparison.InvariantCultureIgnoreCase)
-                   && _embeddedViews.ContainsEmbeddedView(checkPath);
+            //return virtualPathAppRelative.StartsWith("~/Views/", StringComparison.InvariantCultureIgnoreCase)
+            //       && _embeddedViews.ContainsEmbeddedView(virtualPathAppRelative);
+
+            string virtualPathAppRelative = VirtualPathUtility.ToAppRelative(virtualPath);
+            if (!virtualPathAppRelative.StartsWith("~/Views/", StringComparison.InvariantCultureIgnoreCase))
+                return false;
+            var fullyQualifiedViewName = virtualPathAppRelative.Substring(virtualPathAppRelative.LastIndexOf("/") + 1, virtualPathAppRelative.Length - 1 - virtualPathAppRelative.LastIndexOf("/"));
+
+            bool isEmbedded = _embeddedViews.ContainsEmbeddedView(fullyQualifiedViewName);
+            return isEmbedded;
         }
 
         public override bool FileExists(string virtualPath)
@@ -37,7 +51,10 @@ namespace Nop.Web.Framework.EmbeddedViews
         {
             if (IsEmbeddedView(virtualPath))
             {
-                var embeddedViewMetadata = _embeddedViews.FindEmbeddedView(virtualPath);
+                string virtualPathAppRelative = VirtualPathUtility.ToAppRelative(virtualPath);
+                var fullyQualifiedViewName = virtualPathAppRelative.Substring(virtualPathAppRelative.LastIndexOf("/") + 1, virtualPathAppRelative.Length - 1 - virtualPathAppRelative.LastIndexOf("/"));
+
+                var embeddedViewMetadata = _embeddedViews.FindEmbeddedView(fullyQualifiedViewName);
                 return new EmbeddedResourceVirtualFile(embeddedViewMetadata, virtualPath);
             }
 

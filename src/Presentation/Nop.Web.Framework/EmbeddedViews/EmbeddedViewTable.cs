@@ -32,19 +32,21 @@ namespace Nop.Web.Framework.EmbeddedViews
             }
         }
 
-        public bool ContainsEmbeddedView(string viewPath)
+        public bool ContainsEmbeddedView(string fullyQualifiedViewName)
         {
-            var foundView = FindEmbeddedView(viewPath);
+            var foundView = FindEmbeddedView(fullyQualifiedViewName);
             return (foundView != null);
         }
 
-        public EmbeddedViewMetadata FindEmbeddedView(string viewPath)
+        public EmbeddedViewMetadata FindEmbeddedView(string fullyQualifiedViewName)
         {
-            var name = GetNameFromPath(viewPath);
+            //var name = GetNameFromPath(viewPath);
+            var name = fullyQualifiedViewName;
             if (string.IsNullOrEmpty(name)) return null;
 
             return Views
-                .Where(view => view.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()))
+                //.Where(view => view.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()))
+                .Where(view => view.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
                 .SingleOrDefault();
         }
 

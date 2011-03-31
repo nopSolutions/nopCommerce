@@ -43,8 +43,8 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
                 Data = tmp,
                 Total = tmp.Count
             };
-            
-            return View(gridModel);
+
+            return View("Nop.Plugin.Tax.FixedRate.Views.Config.Configure", gridModel);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

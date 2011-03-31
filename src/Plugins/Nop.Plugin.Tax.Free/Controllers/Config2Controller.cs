@@ -14,11 +14,11 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Tax.Free.Controllers
 {
     [AdminAuthorize]
-    public class ConfigController : Controller
+    public class Config2Controller : Controller
     {
-        public ActionResult Configure2()
+        public ActionResult Configure()
         {
-            return View();
+            return View("Nop.Plugin.Tax.Free.Views.Config.Configure");
         }
     }
 }

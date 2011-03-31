@@ -13,9 +13,9 @@ namespace Nop.Plugin.Tax.Free
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapRoute("Plugin.Tax.Free.Configure2",
-                 "Plugins/Free/Configure2",
-                 new { controller = "Config", action = "Configure2" },
+            routes.MapRoute("Plugin.Tax.Free.Configure",
+                 "Plugins/Free/Configure",
+                 new { controller = "Config2", action = "Configure" },
                   new[] { "Nop.Plugin.Tax.Free.Controllers" }
             );
         }
