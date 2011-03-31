@@ -43,7 +43,9 @@ namespace Nop.Web.Framework.EmbeddedViews
             var name = GetNameFromPath(viewPath);
             if (string.IsNullOrEmpty(name)) return null;
 
-            return Views.Where(view => view.Name.ToLowerInvariant().Contains(name.ToLowerInvariant())).SingleOrDefault();
+            return Views
+                .Where(view => view.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()))
+                .SingleOrDefault();
         }
 
         protected string GetNameFromPath(string viewPath)

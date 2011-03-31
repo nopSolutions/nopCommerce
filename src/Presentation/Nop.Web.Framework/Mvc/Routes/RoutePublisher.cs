@@ -10,42 +10,22 @@ namespace Nop.Web.Framework.Mvc.Routes
     {
         private readonly ITypeFinder _typeFinder;
 
-        public RoutePublisher(
-            ITypeFinder typeFinder)
+        public RoutePublisher(ITypeFinder typeFinder)
         {
             this._typeFinder = typeFinder;
         }
 
-        public void Publish(RouteCollection routeCollection, IEnumerable<RouteDescriptor> routes)
+        public void RegisterRoutes(RouteCollection routes)
         {
-            var routesArray = routes.OrderByDescending(r => r.Priority).ToArray();
-
-            // this is not called often, but is intended to surface problems before
-            // the actual collection is modified
-            //var preloading = new RouteCollection();
-            //foreach (var route in routesArray)
-            //    preloading.Add(route.Name, route.Route);
-
-            using (routeCollection.GetWriteLock())
-            {
-                foreach (var routeDescriptor in routesArray)
-                {
-                    routeCollection.Add(routeDescriptor.Name, routeDescriptor.Route);
-                }
-            }
-        }
-
-        public void PublishAll(RouteCollection routeCollection)
-        {
-            var routes = new List<RouteDescriptor>();
-            var routeProviders = _typeFinder.FindClassesOfType<IRouteProvider>();
-            foreach (var providerType in routeProviders)
+            var routeProviderTypes = _typeFinder.FindClassesOfType<IRouteProvider>();
+            var routeProviders = new List<IRouteProvider>();
+            foreach (var providerType in routeProviderTypes)
             {
                 var provider = Activator.CreateInstance(providerType) as IRouteProvider;
-                if (provider != null)
-                    provider.GetRoutes(routes);
+                routeProviders.Add(provider);
             }
-            Publish(routeCollection, routes);
+            routeProviders = routeProviders.OrderByDescending(rp => rp.Priority).ToList();
+            routeProviders.ForEach(rp => rp.RegisterRoutes(routes));
         }
     }
 }

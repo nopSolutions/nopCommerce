@@ -1,23 +1,38 @@
-﻿@model Nop.Plugin.Tax.FixedRate.Models.TestModel
-
-@{
+﻿@{
     Layout = "";
 }
-Test view for 'Fixed rate' tax provider (render it as partial view when configuring)
-<br /> 
-@using (Html.BeginForm())
-{
-    @Html.LabelFor(model => model.TestProperty1)
-    <br />
-    @Html.EditorFor(model => model.TestProperty1)
-    <br />
-    
-    <button type="submit" name="save" value="save" class="t-button">Save</button>
-    
-    
-}
-@*
-Use the following code in order to render view
-@Html.Action("Configure", "Config",new RouteValueDictionary(){{"Namespaces", "Nop.Plugin.Tax.FixedRate"}})")</text>
-*@
-    
+@model Telerik.Web.Mvc.GridModel<Nop.Plugin.Tax.FixedRate.Models.FixedTaxRateModel>
+@using Telerik.Web.Mvc.UI;
+@using System.Linq;
+
+<table class="adminContent">
+    <tr>
+        <td>
+                    @(Html.Telerik().Grid(Model.Data)
+                    .Name("Grid")
+                    .DataKeys(keys => keys.Add(x => x.TaxCategoryId).RouteKey("TaxCategoryId"))
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.TaxCategoryName).Width(300).ReadOnly();
+                        columns.Bound(x => x.Rate).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                        }).Width(100);
+
+                    })
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            //TODO "Route values" parameter doesn't take any effect. and it can cause issues
+                            .Select("Configure", "Config", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } })
+                            .Update("TaxRateUpdate", "Config", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } });
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

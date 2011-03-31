@@ -5,7 +5,6 @@ using System.Security.Principal;
 using System.Text;
 using Nop.Core.Plugins;
 using Nop.Services.Tax;
-using Nop.Services.Configuration;
 
 namespace Nop.Plugin.Tax.Free
 {/// <summary>

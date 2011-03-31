@@ -34,9 +34,8 @@ namespace Nop.Web
             
             //register custom routes (plugins, etc)
             var routePublisher = EngineContext.Current.Resolve<IRoutePublisher>();
-            routePublisher.PublishAll(routes);
-
-            //TODO move these route mapping into separate RouteProvider class (IRouteProvider interface)
+            routePublisher.RegisterRoutes(routes);
+            
             routes.MapRoute("Product",
                             "Product/{productId}/{SeName}",
                             new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional});

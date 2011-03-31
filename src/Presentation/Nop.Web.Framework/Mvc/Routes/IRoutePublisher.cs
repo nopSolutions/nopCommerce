@@ -8,8 +8,6 @@ namespace Nop.Web.Framework.Mvc.Routes
 {
     public interface IRoutePublisher
     {
-        void Publish(RouteCollection routeCollection, IEnumerable<RouteDescriptor> routes);
-
-        void PublishAll(RouteCollection routeCollection);
+        void RegisterRoutes(RouteCollection routeCollection);
     }
 }
