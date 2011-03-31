@@ -1,0 +1,32 @@
+﻿@model Nop.Admin.Models.ProductVariantModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Admin;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.ProductId)
+@Html.Telerik().TabStrip().Name("product-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Catalog.Products.Variants.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+})
+@helper TabInfo()
+    { 
+    @(Html.LocalizedEditor<ProductVariantModel, ProductVariantLocalizedModel>("productvariant-info-localized",
+                @<table class="adminContent">
+                    @Html.NopField(model => model.Locales[item].Name)
+                    @Html.NopField(model => model.Locales[item].Description)
+                    <tr>
+                        <td colspan="2">
+                            @Html.HiddenFor(model => model.Locales[item].Language.Id)
+                        </td>
+                    </tr>
+                </table>
+                ,
+                @<table class="adminContent">
+                    @Html.NopField(model => model.Name)
+                    @Html.NopField(model => model.Description)
+                </table>
+            ))
+}

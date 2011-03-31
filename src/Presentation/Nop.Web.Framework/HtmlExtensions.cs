@@ -33,7 +33,7 @@ namespace Nop.Web.Framework
             var builder = new TagBuilder("img");
 
             // Add attributes
-            builder.MergeAttribute("src", ResolveUrl(helper, "/Nop/Content/images/ico-help.gif").ToHtmlString());
+            builder.MergeAttribute("src", ResolveUrl(helper, "/Administration/Content/images/ico-help.gif").ToHtmlString());
             builder.MergeAttribute("alt", value);
             builder.MergeAttribute("title", value);
 

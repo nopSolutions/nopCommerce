@@ -1,0 +1,15 @@
+﻿@model Nop.Admin.Models.ProductModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+            @T("Admin.Catalog.Products.AddNew") - @Html.ActionLink("(" + T("Admin.Catalog.Products.BackToList") + ")", "List")
+        </div>
+        <div class="options">
+            <input type="submit" value="@T("Admin.Common.Save")" class="t-button" />
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}

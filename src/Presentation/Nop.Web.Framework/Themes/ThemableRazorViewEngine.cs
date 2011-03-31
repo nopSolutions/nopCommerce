@@ -26,10 +26,10 @@ namespace Nop.Web.Framework.Themes
                                               "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.vbhtml",
 
                                               //nop
-                                              "~/Nop/{2}/Views/{1}/{0}.cshtml", 
-                                              "~/Nop/{2}/Views/{1}/{0}.vbhtml", 
-                                              "~/Nop/{2}/Views/Shared/{0}.cshtml", 
-                                              "~/Nop/{2}/Views/Shared/{0}.vbhtml",
+                                              //"~/Nop/{2}/Views/{1}/{0}.cshtml", 
+                                              //"~/Nop/{2}/Views/{1}/{0}.vbhtml", 
+                                              //"~/Nop/{2}/Views/Shared/{0}.cshtml", 
+                                              //"~/Nop/{2}/Views/Shared/{0}.vbhtml",
 
                                               //default
                                               "~/Areas/{2}/Views/{1}/{0}.cshtml", 
@@ -47,10 +47,10 @@ namespace Nop.Web.Framework.Themes
                                                 "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.vbhtml",
 
                                                 //nop
-                                                "~/Nop/{2}/Views/{1}/{0}.cshtml", 
-                                                "~/Nop/{2}/Views/{1}/{0}.vbhtml", 
-                                                "~/Nop/{2}/Views/Shared/{0}.cshtml", 
-                                                "~/Nop/{2}/Views/Shared/{0}.vbhtml",
+                                                //"~/Nop/{2}/Views/{1}/{0}.cshtml", 
+                                                //"~/Nop/{2}/Views/{1}/{0}.vbhtml", 
+                                                //"~/Nop/{2}/Views/Shared/{0}.cshtml", 
+                                                //"~/Nop/{2}/Views/Shared/{0}.vbhtml",
 
                                                 //default
                                                 "~/Areas/{2}/Views/{1}/{0}.cshtml", 
@@ -68,10 +68,10 @@ namespace Nop.Web.Framework.Themes
                                                     "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.vbhtml",
 
                                                     //nop
-                                                    "~/Nop/{2}/Views/{1}/{0}.cshtml", 
-                                                    "~/Nop/{2}/Views/{1}/{0}.vbhtml", 
-                                                    "~/Nop/{2}/Views/Shared/{0}.cshtml", 
-                                                    "~/Nop/{2}/Views/Shared/{0}.vbhtml",
+                                                    //"~/Nop/{2}/Views/{1}/{0}.cshtml", 
+                                                    //"~/Nop/{2}/Views/{1}/{0}.vbhtml", 
+                                                    //"~/Nop/{2}/Views/Shared/{0}.cshtml", 
+                                                    //"~/Nop/{2}/Views/Shared/{0}.vbhtml",
 
                                                     //default
                                                     "~/Areas/{2}/Views/{1}/{0}.cshtml", 

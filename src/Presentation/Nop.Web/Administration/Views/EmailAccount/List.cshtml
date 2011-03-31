@@ -1,0 +1,52 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.EmailAccountModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+        @T("Admin.Configuration.EmailAccounts")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.EmailAccountModel>()
+                    .Name("emailAccounts-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Email);
+                        columns.Bound(x => x.DisplayName)
+                            .Width(150)
+                            .Centered();
+                        columns.Bound(x => x.Host);
+                        columns.Bound(x => x.Port)
+                            .Width(100)
+                            .Centered()
+                            .Template(x => x.Port.ToString());
+                        columns.Bound(x => x.Username);
+                        columns.Bound(x => x.Password);
+                        columns.Bound(x => x.EnableSsl)
+                            .Width(100)
+                            .Centered()
+                            .Template(x => x.EnableSsl.ToString().ToLower());
+                        columns.Bound(x => x.UseDefaultCredentials)
+                            .Width(100)
+                            .Centered()
+                            .Template(x => x.UseDefaultCredentials.ToString().ToLower());
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate("Edit")
+                            .Filterable(false);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "EmailAccount"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

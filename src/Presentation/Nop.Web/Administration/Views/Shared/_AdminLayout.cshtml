@@ -1,0 +1,76 @@
+﻿@using Telerik.Web.Mvc.UI;
+@using Telerik.Web.Mvc;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>NopCommerce Web Administration. @ViewBag.Title</title>
+    <link href="@Url.Content("~/Administration/Content/styles.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Administration/Content/jquery-ui-1.8.9.custom.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Administration/Scripts/admin.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.superfishmenu.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.blockUI.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/swfobject.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.uploadify.v2.1.4.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.js")" type="text/javascript"></script>
+</head>
+<body>
+    <div class="master-wrapper-page">
+        <div class="master-wrapper-content">
+            <div class="header">
+                <div class="logo">
+                </div>
+                <div class="languageselector">
+                    <!--TODO language selector here-->
+                </div>
+                <div class="links">
+                    @Html.ActionLink("Public store", "Index", "Home")
+                    <span class="separator">|</span>
+                    <!--TODO clear cache button here-->
+                    <a href="~">Clear Cache</a>
+                </div>
+                <div class="login-info">
+                    <!--TODO logged-in user info here-->
+                    Logged in as: admin@yourstore.com, <a href="/admin/logout/">Logout?</a>
+                </div>
+                <div class="version">
+                    <!--TODO nopCommerce version here StoreInformationSettings.CurrentVersion property-->
+                    <span>nopCommerce 2.00</span>
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="header-menu">
+                @Html.Partial("Menu")
+            </div>
+            <div class="status-bar">
+                <div class="help">
+                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
+                </div>
+                <div class="breadcrumb">
+                    <!-- TODO SiteMapPath here-->
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="content">
+                <!-- TODO notifications, warnings, errors should be here-->
+                <div class="cph">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--These need to be at the end of the page to ensure that all the controls requiring scripts have been rendered-->
+    @MvcHtmlString.Create(HttpUtility.HtmlDecode(Html.Telerik().StyleSheetRegistrar().DefaultGroup(group => group
+                                    .Add("2010.3.1318/telerik.common.css")
+                                    .Add("2010.3.1318/telerik.vista.css")
+                                    .Add("2010.3.1318/telerik.rtl.css")).ToHtmlString()))
+    @(MvcHtmlString.Create(HttpUtility.HtmlDecode(Html.Telerik().ScriptRegistrar()
+    .jQuery(false).ToHtmlString())))
+</body>
+</html>
