@@ -84,7 +84,7 @@
             @Html.NopLabelFor(model => model.Body)
         </td>
         <td class="adminData">
-            @Html.Telerik().EditorFor(model => model.Body)
+            @Html.Telerik().EditorFor(model => model.Body).Encode(false)
             @Html.ValidationMessageFor(model => model.Body)
         </td>
     </tr>
@@ -93,7 +93,7 @@
             @Html.NopLabelFor(model => model.CreatedOnUtc)
         </td>
         <td class="adminData">
-            @Html.LabelFor(model => model.CreatedOnUtc)
+            @Html.DisplayFor(model => model.CreatedOnUtc)
         </td>
     </tr>
     <tr>
@@ -110,7 +110,15 @@
             @Html.NopLabelFor(model => model.SentOnUtc)
         </td>
         <td class="adminData">
-            @Html.LabelFor(model => model.SentOnUtc)
+            @Html.DisplayFor(model => model.SentOnUtc)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.EmailAccountName)
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.EmailAccountName)
         </td>
     </tr>
 </table>

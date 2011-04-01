@@ -740,7 +740,7 @@ namespace Nop.Services.Installation
                     Body = "Body",
                     Subject = "Subject",
                     CreatedOnUtc = DateTime.Now,
-                    SendTries = 0,
+                    SentTries = 0,
                     SentOnUtc = null
                 },
                 new QueuedEmail()
@@ -756,7 +756,7 @@ namespace Nop.Services.Installation
                     Body = "Body",
                     Subject = "Subject",
                     CreatedOnUtc = DateTime.UtcNow,
-                    SendTries = 2,
+                    SentTries = 2,
                     SentOnUtc = DateTime.UtcNow
                 }
             };

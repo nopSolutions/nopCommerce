@@ -14,6 +14,6 @@ namespace Nop.Web.Framework.Mvc
     }
     public class BaseNopEntityModel : BaseNopModel
     {
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
     }
 }

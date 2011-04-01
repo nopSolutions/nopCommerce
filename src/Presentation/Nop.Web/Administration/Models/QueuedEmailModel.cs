@@ -4,13 +4,15 @@ using System.Linq;
 using System.Web;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework;
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace Nop.Admin.Models
 {
     public class QueuedEmailModel: BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Id")]
-        public int Id { get; set; }
+        public override int Id { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Priority")]
         public int Priority { get; set; }
@@ -37,6 +39,7 @@ namespace Nop.Admin.Models
         public string Subject { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Body")]
+        [AllowHtml]
         public string Body { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOnUtc")]
@@ -46,9 +49,10 @@ namespace Nop.Admin.Models
         public int SentTries { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentOnUtc")]
+        [DisplayFormatAttribute(DataFormatString="Sent on {0}", NullDisplayText="Not sent yet")]
         public DateTime? SentOnUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccount")]
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccountName")]
         public string EmailAccountName { get; set; }
 
 

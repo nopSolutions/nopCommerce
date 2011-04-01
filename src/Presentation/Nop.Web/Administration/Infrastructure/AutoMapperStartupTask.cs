@@ -21,7 +21,9 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<QueuedEmail, QueuedEmailModel>()
                 .ForMember(dest => dest.EmailAccountName,
                            opt => opt.MapFrom(src => src.EmailAccount != null ? src.EmailAccount.FriendlyName : string.Empty));
-            Mapper.CreateMap<QueuedEmailModel, QueuedEmail>();
+            Mapper.CreateMap<QueuedEmailModel, QueuedEmail>()
+                .ForMember(dest=> dest.CreatedOnUtc, dt=> dt.Ignore())
+                .ForMember(dest => dest.SentOnUtc, dt => dt.Ignore());
 
             //category
             ViceVersa<Category, CategoryModel>();
