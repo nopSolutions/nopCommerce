@@ -63,7 +63,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the send tries
         /// </summary>
-        public int SendTries { get; set; }
+        public int SentTries { get; set; }
 
         /// <summary>
         /// Gets or sets the sent date and time

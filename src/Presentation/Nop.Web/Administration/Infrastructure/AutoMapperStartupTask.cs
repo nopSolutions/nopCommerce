@@ -18,11 +18,12 @@ namespace Nop.Admin.Infrastructure
             //email account
             ViceVersa<EmailAccount, EmailAccountModel>();
             //queued email
-            //ViceVersa<QueuedEmail, QueuedEmailModel>();
             Mapper.CreateMap<QueuedEmail, QueuedEmailModel>()
                 .ForMember(dest => dest.EmailAccountName,
                            opt => opt.MapFrom(src => src.EmailAccount != null ? src.EmailAccount.FriendlyName : string.Empty));
-            Mapper.CreateMap<QueuedEmailModel, QueuedEmail>();
+            Mapper.CreateMap<QueuedEmailModel, QueuedEmail>()
+                .ForMember(dest=> dest.CreatedOnUtc, dt=> dt.Ignore())
+                .ForMember(dest => dest.SentOnUtc, dt => dt.Ignore());
 
             //category
             ViceVersa<Category, CategoryModel>();

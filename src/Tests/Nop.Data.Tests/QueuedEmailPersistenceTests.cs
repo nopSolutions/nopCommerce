@@ -25,7 +25,7 @@ namespace Nop.Data.Tests
                 Subject = "Subject",
                 Body = "Body",
                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                SendTries = 5,
+                SentTries = 5,
                 SentOnUtc = new DateTime(2010, 02, 02),
                 EmailAccount = new EmailAccount
                 {
@@ -54,7 +54,7 @@ namespace Nop.Data.Tests
             fromDb.Subject.ShouldEqual("Subject");
             fromDb.Body.ShouldEqual("Body");
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
-            fromDb.SendTries.ShouldEqual(5);
+            fromDb.SentTries.ShouldEqual(5);
             fromDb.SentOnUtc.Value.ShouldEqual(new DateTime(2010, 02, 02));
 
             fromDb.EmailAccount.ShouldNotBeNull();

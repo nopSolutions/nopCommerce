@@ -59,8 +59,8 @@ namespace Nop.Admin.Controllers
 			return View(email.ToModel());
 		}
 
-		[HttpPost]
-		public ActionResult Edit(QueuedEmailModel queuedEmailModel)
+		[HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+		public ActionResult Edit(QueuedEmailModel queuedEmailModel, bool continueEditing)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -69,7 +69,8 @@ namespace Nop.Admin.Controllers
 			var email = _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
 			email = queuedEmailModel.ToEntity(email);
 			_queuedEmailService.UpdateQueuedEmail(email);
-			return Edit(email.Id);
+
+			return continueEditing ? RedirectToAction("Edit", email.Id) : RedirectToAction("List");
 		}
 
 

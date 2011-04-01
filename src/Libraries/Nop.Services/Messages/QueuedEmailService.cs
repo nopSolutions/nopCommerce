@@ -111,7 +111,7 @@ namespace Nop.Services.Messages
                 query = query.Where(qe => qe.CreatedOnUtc <= endTime);
             if (loadNotSentItemsOnly)
                 query = query.Where(qe => qe.SentOnUtc.HasValue);
-            query = query.Where(qe => qe.SendTries < maxSendTries);
+            query = query.Where(qe => qe.SentTries < maxSendTries);
             if (queuedEmailCount > 0)
                 query = query.Take(queuedEmailCount);
             query = query.OrderByDescending(qe => qe.Priority).ThenBy(qe => qe.CreatedOnUtc);
