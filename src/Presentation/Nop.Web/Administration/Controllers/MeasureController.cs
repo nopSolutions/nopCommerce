@@ -7,6 +7,7 @@ using Nop.Admin.Models;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
@@ -23,44 +24,68 @@ namespace Nop.Admin.Controllers
 	{
 		#region Fields
 
-		private readonly IMeasureService _measureService;
+        private readonly IMeasureService _measureService;
+        private readonly MeasureSettings _measureSettings;
+        private readonly ISettingService _settingService;
 
 		#endregion Fields 
 
 		#region Constructors
 
-        public MeasureController(IMeasureService measureService)
+        public MeasureController(IMeasureService measureService,
+            MeasureSettings measureSettings, ISettingService settingService)
 		{
             this._measureService = measureService;
+            this._measureSettings = measureSettings;
+            this._settingService = settingService;
 		}
 
 		#endregion Constructors 
 
 		#region Methods
 
-		public ActionResult Weights()
+		public ActionResult Weights(string id)
 		{
-            var weights = _measureService.GetAllMeasureWeights();
-            var gridModel = new GridModel<MeasureWeightModel>
+            //mark as primary weight (if selected)
+            if (!String.IsNullOrEmpty(id))
+            {
+                int primaryWeightId = Convert.ToInt32(id);
+                var primaryWeight = _measureService.GetMeasureWeightById(primaryWeightId);
+                if (primaryWeight != null)
+                {
+                    _measureSettings.BaseWeightId = primaryWeightId;
+                    _settingService.SaveSetting(_measureSettings);
+                }
+            }
+
+            var weightsModel = _measureService.GetAllMeasureWeights()
+                .Select(x => x.ToModel())
+                .ToList();
+            foreach (var wm in weightsModel)
+                wm.IsPrimaryWeight = wm.Id == _measureSettings.BaseWeightId;
+            var model = new GridModel<MeasureWeightModel>
 			{
-				Data = weights.Select(x => x.ToModel()),
-                Total = weights.Count
+                Data = weightsModel,
+                Total = weightsModel.Count
 			};
-			return View(gridModel);
+            return View(model);
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Weights(GridCommand command)
         {
-            var weights = _measureService.GetAllMeasureWeights()
+            var weightsModel = _measureService.GetAllMeasureWeights()
                 .Select(x => x.ToModel())
-                .ForCommand(command);
-
+                .ForCommand(command)
+                .ToList();
+            foreach (var wm in weightsModel)
+                wm.IsPrimaryWeight = wm.Id == _measureSettings.BaseWeightId;
             var model = new GridModel<MeasureWeightModel>
-                            {
-                                Data = weights,
-                                Total = weights.Count()
-                            };
+            {
+                Data = weightsModel,
+                Total = weightsModel.Count
+            };
+
 		    return new JsonResult
 			{
 				Data = model
@@ -80,14 +105,17 @@ namespace Nop.Admin.Controllers
             _measureService.UpdateMeasureWeight(weight);
 
 
-            var weights = _measureService.GetAllMeasureWeights()
+            var weightsModel = _measureService.GetAllMeasureWeights()
                 .Select(x => x.ToModel())
-                .ForCommand(command);
+                .ForCommand(command)
+                .ToList();
+            foreach (var wm in weightsModel)
+                wm.IsPrimaryWeight = wm.Id == _measureSettings.BaseWeightId;
             var gridModel = new GridModel<MeasureWeightModel>
-                                {
-                                    Data = weights,
-                                    Total = weights.Count()
-                                };
+            {
+                Data = weightsModel,
+                Total = weightsModel.Count
+            };
             return new JsonResult
             {
                 Data = gridModel
@@ -107,13 +135,16 @@ namespace Nop.Admin.Controllers
             weight = weightModel.ToEntity(weight);
             _measureService.InsertMeasureWeight(weight);
 
-            var weights = _measureService.GetAllMeasureWeights()
+            var weightsModel = _measureService.GetAllMeasureWeights()
                 .Select(x => x.ToModel())
-                .ForCommand(command);
+                .ForCommand(command)
+                .ToList();
+            foreach (var wm in weightsModel)
+                wm.IsPrimaryWeight = wm.Id == _measureSettings.BaseWeightId;
             var gridModel = new GridModel<MeasureWeightModel>
             {
-                Data = weights,
-                Total = weights.Count()
+                Data = weightsModel,
+                Total = weightsModel.Count
             };
             return new JsonResult
             {
@@ -133,20 +164,23 @@ namespace Nop.Admin.Controllers
             var weight = _measureService.GetMeasureWeightById(id);
             _measureService.DeleteMeasureWeight(weight);
 
-            var weights = _measureService.GetAllMeasureWeights()
+            var weightsModel = _measureService.GetAllMeasureWeights()
                 .Select(x => x.ToModel())
-                .ForCommand(command);
+                .ForCommand(command)
+                .ToList();
+            foreach (var wm in weightsModel)
+                wm.IsPrimaryWeight = wm.Id == _measureSettings.BaseWeightId;
             var gridModel = new GridModel<MeasureWeightModel>
             {
-                Data = weights,
-                Total = weights.Count()
+                Data = weightsModel,
+                Total = weightsModel.Count
             };
             return new JsonResult
             {
                 Data = gridModel
             };
         }
-
+        
         #endregion
     }
 }
