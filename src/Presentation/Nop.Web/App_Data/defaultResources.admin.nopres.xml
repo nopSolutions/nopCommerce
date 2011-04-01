@@ -650,7 +650,43 @@
                                 <Value>Display order</Value>
                               </LocaleResource>
                               <LocaleResource Name="IsPrimaryWeight">
-                                <Value>Is primary weight</Value>
+                                <Value>Is primary weight?</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="Dimensions">
+                        <Value>Dimensions</Value>
+                        <Children>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Name">
+                                <Value>Name</Value>
+                                <Children>
+                                  <LocaleResource Name="Validation">
+                                    <Value>Please provide a name.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="SystemKeyword">
+                                <Value>System keyword</Value>
+                                <Children>
+                                  <LocaleResource Name="Validation">
+                                    <Value>Please provide a system keyword.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Ratio">
+                                <Value>Ratio to primary dimension</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="IsPrimaryWeight">
+                                <Value>Is primary dimension?</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>

@@ -43,8 +43,10 @@ namespace Nop.Admin.Controllers
 		#endregion Constructors 
 
 		#region Methods
+        
+        #region Weights
 
-		public ActionResult Weights(string id)
+        public ActionResult Weights(string id)
 		{
             //mark as primary weight (if selected)
             if (!String.IsNullOrEmpty(id))
@@ -123,7 +125,7 @@ namespace Nop.Admin.Controllers
         }
         
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult WeightAdd(MeasureWeightModel weightModel, GridCommand command)
+        public ActionResult WeightAdd(MeasureWeightModel model, GridCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -132,7 +134,7 @@ namespace Nop.Admin.Controllers
             }
 
             var weight = new MeasureWeight();
-            weight = weightModel.ToEntity(weight);
+            weight = model.ToEntity(weight);
             _measureService.InsertMeasureWeight(weight);
 
             var weightsModel = _measureService.GetAllMeasureWeights()
@@ -180,7 +182,150 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-        
+
+        #endregion
+
+        #region Dimensions
+
+        public ActionResult Dimensions(string id)
+        {
+            //mark as primary dimension (if selected)
+            if (!String.IsNullOrEmpty(id))
+            {
+                int primaryDimensionId = Convert.ToInt32(id);
+                var primaryDimension = _measureService.GetMeasureDimensionById(primaryDimensionId);
+                if (primaryDimension != null)
+                {
+                    _measureSettings.BaseDimensionId = primaryDimensionId;
+                    _settingService.SaveSetting(_measureSettings);
+                }
+            }
+
+            var dimensionsModel = _measureService.GetAllMeasureDimensions()
+                .Select(x => x.ToModel())
+                .ToList();
+            foreach (var wm in dimensionsModel)
+                wm.IsPrimaryDimension = wm.Id == _measureSettings.BaseDimensionId;
+            var model = new GridModel<MeasureDimensionModel>
+            {
+                Data = dimensionsModel,
+                Total = dimensionsModel.Count
+            };
+            return View(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult Dimensions(GridCommand command)
+        {
+            var dimensionsModel = _measureService.GetAllMeasureDimensions()
+                .Select(x => x.ToModel())
+                .ForCommand(command)
+                .ToList();
+            foreach (var wm in dimensionsModel)
+                wm.IsPrimaryDimension = wm.Id == _measureSettings.BaseDimensionId;
+            var model = new GridModel<MeasureDimensionModel>
+            {
+                Data = dimensionsModel,
+                Total = dimensionsModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult DimensionUpdate(MeasureDimensionModel model, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Dimensions");
+            }
+
+            var dimension = _measureService.GetMeasureDimensionById(model.Id);
+            dimension = model.ToEntity(dimension);
+            _measureService.UpdateMeasureDimension(dimension);
+
+
+            var dimensionsModel = _measureService.GetAllMeasureDimensions()
+                .Select(x => x.ToModel())
+                .ForCommand(command)
+                .ToList();
+            foreach (var wm in dimensionsModel)
+                wm.IsPrimaryDimension = wm.Id == _measureSettings.BaseDimensionId;
+            var gridModel = new GridModel<MeasureDimensionModel>
+            {
+                Data = dimensionsModel,
+                Total = dimensionsModel.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult DimensionAdd(MeasureDimensionModel model, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var dimension = new MeasureDimension();
+            dimension = model.ToEntity(dimension);
+            _measureService.InsertMeasureDimension(dimension);
+
+            var dimensionsModel = _measureService.GetAllMeasureDimensions()
+                .Select(x => x.ToModel())
+                .ForCommand(command)
+                .ToList();
+            foreach (var wm in dimensionsModel)
+                wm.IsPrimaryDimension = wm.Id == _measureSettings.BaseDimensionId;
+            var gridModel = new GridModel<MeasureDimensionModel>
+            {
+                Data = dimensionsModel,
+                Total = dimensionsModel.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult DimensionDelete(int id, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var dimension = _measureService.GetMeasureDimensionById(id);
+            _measureService.DeleteMeasureDimension(dimension);
+
+            var dimensionsModel = _measureService.GetAllMeasureDimensions()
+                .Select(x => x.ToModel())
+                .ForCommand(command)
+                .ToList();
+            foreach (var wm in dimensionsModel)
+                wm.IsPrimaryDimension = wm.Id == _measureSettings.BaseDimensionId;
+            var gridModel = new GridModel<MeasureDimensionModel>
+            {
+                Data = dimensionsModel,
+                Total = dimensionsModel.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        #endregion
+
         #endregion
     }
 }

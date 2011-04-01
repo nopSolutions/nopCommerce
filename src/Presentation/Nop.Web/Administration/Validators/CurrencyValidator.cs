@@ -10,14 +10,10 @@ namespace Nop.Admin.Validators
 {
     public class CurrencyValidator : AbstractValidator<CurrencyModel>
     {
-		#region Constructors 
-
         public CurrencyValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Common.Validation.Required"));
             RuleFor(x => x.CurrencyCode).NotEmpty().WithMessage(localizationService.GetResource("Admin.Common.Validation.Required"));
         }
-
-		#endregion Constructors 
     }
 }

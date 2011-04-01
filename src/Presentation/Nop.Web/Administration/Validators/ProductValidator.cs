@@ -10,13 +10,9 @@ namespace Nop.Admin.Validators
 {
     public class ProductValidator : AbstractValidator<ProductModel>
     {
-        #region Constructors 
-
         public ProductValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Common.Validation.Required"));
         }
-
-		#endregion Constructors 
     }
 }

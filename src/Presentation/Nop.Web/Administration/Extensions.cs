@@ -233,6 +233,25 @@ namespace Nop.Admin
         }
 
         #endregion
+
+        #region Measure dimension
+
+        public static MeasureDimensionModel ToModel(this MeasureDimension measureWeight)
+        {
+            return AutoMapper.Mapper.Map<MeasureDimension, MeasureDimensionModel>(measureWeight);
+        }
+
+        public static MeasureDimension ToEntity(this MeasureDimensionModel model)
+        {
+            return AutoMapper.Mapper.Map<MeasureDimensionModel, MeasureDimension>(model);
+        }
+
+        public static MeasureDimension ToEntity(this MeasureDimensionModel model, MeasureDimension destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
     }
 
     public static class HtmlExtensions

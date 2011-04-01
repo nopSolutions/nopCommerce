@@ -1,0 +1,48 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.MeasureDimensionModel>
+@using Telerik.Web.Mvc.UI;
+@using System.Linq;
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
+        @T("Admin.Configuration.Measures.Dimensions")
+    </div>
+</div>
+
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid(Model.Data)
+                    .Name("Grid")
+                    .DataKeys(x => {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name).Width(200);
+                        columns.Bound(x => x.SystemKeyword).Width(200);
+                        columns.Bound(x => x.Ratio).Width(100);
+                        columns.Bound(x => x.DisplayOrder).Width(100);
+                        columns.Bound(x => x.IsPrimaryDimension).Width(100).ReadOnly();
+                        columns.Command(commands => commands.Select()).Title("Mark as primary dimension").Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();                            
+                        }).Width(180);
+
+                    })
+                    .ToolBar(x => x.Insert())
+                    .Editable(x =>{
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("Dimensions", "Measure")
+                            .Update("DimensionUpdate", "Measure")
+                            .Delete("DimensionDelete", "Measure")
+                            .Insert("DimensionAdd", "Measure");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

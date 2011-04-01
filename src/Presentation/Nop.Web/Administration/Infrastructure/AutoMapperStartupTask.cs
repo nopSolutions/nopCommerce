@@ -46,8 +46,12 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<LanguageResourceModel, LocaleStringResource>()
                 .ForMember(dest => dest.ResourceName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ResourceValue, opt => opt.MapFrom(src => src.Value));
+
             //measure weights
             ViceVersa<MeasureWeight, MeasureWeightModel>();
+
+            //measure dimensions
+            ViceVersa<MeasureDimension, MeasureDimensionModel>();
         }
 
         public static void ViceVersa<T1, T2>()

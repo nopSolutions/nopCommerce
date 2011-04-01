@@ -7,8 +7,6 @@ namespace Nop.Admin.Validators
 {
     public class LanguageValidator : AbstractValidator<LanguageModel>
     {
-		#region Constructors 
-
         public LanguageValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Common.Validation.Required"));
@@ -27,7 +25,5 @@ namespace Nop.Admin.Validators
                           })
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Location.Languages.Fields.LanguageCulture.Validation"));
         }
-
-		#endregion Constructors 
     }
 }

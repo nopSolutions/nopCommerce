@@ -17,6 +17,7 @@
             </siteMapNode>
           <siteMapNode title="Measures" nopResource="Admin.Configuration.Measures">
             <siteMapNode title="Weights" nopResource="Admin.Configuration.Measures.Weights" controller="Measure" action="Weights"/>
+            <siteMapNode title="Dimensions" nopResource="Admin.Configuration.Measures.Dimensions" controller="Measure" action="Dimensions"/>
           </siteMapNode>
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
         </siteMapNode>

@@ -10,13 +10,9 @@ namespace Nop.Admin.Validators
 {
     public class LanguageResourceValidator : AbstractValidator<LanguageResourceModel>
     {
-		#region Constructors 
-
         public LanguageResourceValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Configuration.Location.Languages.Resources.Fields.Name.Validation"));
         }
-
-		#endregion Constructors 
     }
 }
