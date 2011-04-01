@@ -320,305 +320,344 @@
             <LocaleResource Name="Configuration">
                 <Value>Configuration</Value>
                 <Children>
-                    <LocaleResource Name="Location">
-                        <Value>Location</Value>
+                  <LocaleResource Name="EmailAccounts">
+                    <Value>Email Accounts</Value>
+                    <Children>
+                      <LocaleResource Name="AddNew">
+                        <Value>Add a new email account</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="BackToList">
+                        <Value>back to email account list</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="EditEmailAccountDetails">
+                        <Value>Edit email account details</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Fields">
                         <Children>
-                            <LocaleResource Name="Languages">
-                                <Value>Languages</Value>
-                                <Children>
-                                    <LocaleResource Name="Localization">
-                                        <Value>Localization</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Select">
-                                        <Value>Select a language</Value>
-                                    </LocaleResource>
-
-                                    <LocaleResource Name="AddNew">
-                                        <Value>Add a new language</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="BackToList">
-                                        <Value>back to language list</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="EditLanguageDetails">
-                                        <Value>Edit language details</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Resources">
-                                        <Value>Language resources</Value>
-                                        <Children>
-                                            <LocaleResource Name="View">
-                                                <Value>View string resources</Value>
-                                            </LocaleResource>
-                                            <LocaleResource Name="Fields">
-                                                <Children>
-                                                    <LocaleResource Name="Name">
-                                                        <Value>Resource name</Value>
-                                                        <Children>
-                                                            <LocaleResource Name="Validation">
-                                                                <Value>Resource name must be valid.</Value>
-                                                            </LocaleResource>
-                                                        </Children>
-                                                    </LocaleResource>
-                                                    <LocaleResource Name="Value">
-                                                        <Value>Value</Value>
-                                                    </LocaleResource>
-                                                    <LocaleResource Name="LanguageName">
-                                                        <Value>Language</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Fields">
-                                        <Children>
-                                            <LocaleResource Name="Name">
-                                                <Value>Name</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The name of the language.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="LanguageCulture">
-                                                <Value>Language culture</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The language specific culture code.</Value>
-                                                    </LocaleResource>
-                                                    <LocaleResource Name="Validation">
-                                                        <Value>Resource name must be valid.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="FlagImageFileName">
-                                                <Value>Flag image file name</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The flag image file name. The image should be saved into \\images\\flags\\ directory.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="Published">
-                                                <Value>Published</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>Determines whether this language is published and can therefore be selected by visitors to your store.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="DisplayOrder">
-                                                <Value>Display order</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The display order of this language. 1 represents the top of the list.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                </Children>
-                            </LocaleResource>
-                            <LocaleResource Name="Currencies">
-                                <Value>Currencies</Value>
-                                <Children>
-                                    <LocaleResource Name="Localization">
-                                        <Value>Localization</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Select">
-                                        <Value>Select a currency</Value>
-                                    </LocaleResource>
-
-                                    <LocaleResource Name="AddNew">
-                                        <Value>Add a new currency</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="BackToList">
-                                        <Value>back to currency list</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="EditCurrencyDetails">
-                                        <Value>Edit currency details</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Resources">
-                                        <Value>Currency resources</Value>
-                                        <Children>
-                                            <LocaleResource Name="View">
-                                                <Value>View string resources</Value>
-                                            </LocaleResource>
-                                            <LocaleResource Name="Fields">
-                                                <Children>
-                                                    <LocaleResource Name="Name">
-                                                        <Value>Resource name</Value>
-                                                        <Children>
-                                                            <LocaleResource Name="Validation">
-                                                                <Value>Resource name must be valid.</Value>
-                                                            </LocaleResource>
-                                                        </Children>
-                                                    </LocaleResource>
-                                                    <LocaleResource Name="Value">
-                                                        <Value>Value</Value>
-                                                    </LocaleResource>
-                                                    <LocaleResource Name="CurrencyName">
-                                                        <Value>Currency</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Fields">
-                                        <Children>
-                                            <LocaleResource Name="Name">
-                                                <Value>Name</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The name of the currency.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="CurrencyCulture">
-                                                <Value>Display locale</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The currency specific culture code.</Value>
-                                                    </LocaleResource>
-                                                    <LocaleResource Name="Validation">
-                                                        <Value>Resource name must be valid.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="Rate">
-                                                <Value>Rate</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The exchange rate against the primary exchange rate currency.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="CurrencyCode">
-                                                <Value>Currency code</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The currency code. For a list of currency codes, go to: http://www.iso.org/iso/support/currency_codes_list-1.htm</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="Published">
-                                                <Value>Published</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>Determines whether the currency is published.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="DisplayOrder">
-                                                <Value>Display order</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The display order of this currency. 1 represents the top of the list.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="CreatedOn">
-                                                <Value>Created on</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The date/time the currency was created.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                            <LocaleResource Name="UpdatedOn">
-                                                <Value>Updated on</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The date/time the currency was updated.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                </Children>
-                            </LocaleResource>
+                          <LocaleResource Name="Email">
+                            <Value>Email address</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>This is the from address for all outgoing emails from your store e.g. 'sales@yourstore.com'.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="DisplayName">
+                            <Value>Email display name</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>This is the friendly display name for outgoing emails from your store e.g. 'Your Store Sales Department'.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Host">
+                            <Value>Host</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>This is the host name or IP address of your mail server. You can normally find this out from your ISP or web host.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Port">
+                            <Value>Port</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>This is the SMTP port of your mail server. This is usually port 25.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Username">
+                            <Value>User</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>This is the username you use to authenticate to your mail server.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Password">
+                            <Value>Password</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>This is the password you use to authenticate to your mail server</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="EnableSsl">
+                            <Value>SSL</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Check to use Secure Sockets Layer (SSL) to encrypt the SMTP connection.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="UseDefaultCredentials">
+                            <Value>Use default credentials</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Check to use default credentials for the connection</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
-                    </LocaleResource>
-                    <LocaleResource Name="EmailAccounts">
-                        <Value>Email Accounts</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Location">
+                    <Value>Location</Value>
+                    <Children>
+                      <LocaleResource Name="Languages">
+                        <Value>Languages</Value>
                         <Children>
-                            <LocaleResource Name="AddNew">
-                                <Value>Add a new email account</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="BackToList">
-                                <Value>back to email account list</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="EditEmailAccountDetails">
-                                <Value>Edit email account details</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Fields">
+                          <LocaleResource Name="Localization">
+                            <Value>Localization</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Select">
+                            <Value>Select a language</Value>
+                          </LocaleResource>
+
+                          <LocaleResource Name="AddNew">
+                            <Value>Add a new language</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="BackToList">
+                            <Value>back to language list</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="EditLanguageDetails">
+                            <Value>Edit language details</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Resources">
+                            <Value>Language resources</Value>
+                            <Children>
+                              <LocaleResource Name="View">
+                                <Value>View string resources</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Fields">
                                 <Children>
-                                    <LocaleResource Name="Email">
-                                        <Value>Email address</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>This is the from address for all outgoing emails from your store e.g. 'sales@yourstore.com'.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="DisplayName">
-                                        <Value>Email display name</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>This is the friendly display name for outgoing emails from your store e.g. 'Your Store Sales Department'.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Host">
-                                        <Value>Host</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>This is the host name or IP address of your mail server. You can normally find this out from your ISP or web host.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Port">
-                                        <Value>Port</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>This is the SMTP port of your mail server. This is usually port 25.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Username">
-                                        <Value>User</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>This is the username you use to authenticate to your mail server.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Password">
-                                        <Value>Password</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>This is the password you use to authenticate to your mail server</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="EnableSsl">
-                                        <Value>SSL</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Check to use Secure Sockets Layer (SSL) to encrypt the SMTP connection.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="UseDefaultCredentials">
-                                        <Value>Use default credentials</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Check to use default credentials for the connection</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
+                                  <LocaleResource Name="Name">
+                                    <Value>Resource name</Value>
+                                    <Children>
+                                      <LocaleResource Name="Validation">
+                                        <Value>Resource name must be valid.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Value">
+                                    <Value>Value</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="LanguageName">
+                                    <Value>Language</Value>
+                                  </LocaleResource>
                                 </Children>
-                            </LocaleResource>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Name">
+                                <Value>Name</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The name of the language.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="LanguageCulture">
+                                <Value>Language culture</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The language specific culture code.</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Validation">
+                                    <Value>Resource name must be valid.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="FlagImageFileName">
+                                <Value>Flag image file name</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The flag image file name. The image should be saved into \\images\\flags\\ directory.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Published">
+                                <Value>Published</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Determines whether this language is published and can therefore be selected by visitors to your store.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The display order of this language. 1 represents the top of the list.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
-                    </LocaleResource>
+                      </LocaleResource>
+                      <LocaleResource Name="Currencies">
+                        <Value>Currencies</Value>
+                        <Children>
+                          <LocaleResource Name="Localization">
+                            <Value>Localization</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Select">
+                            <Value>Select a currency</Value>
+                          </LocaleResource>
+
+                          <LocaleResource Name="AddNew">
+                            <Value>Add a new currency</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="BackToList">
+                            <Value>back to currency list</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="EditCurrencyDetails">
+                            <Value>Edit currency details</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Resources">
+                            <Value>Currency resources</Value>
+                            <Children>
+                              <LocaleResource Name="View">
+                                <Value>View string resources</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Fields">
+                                <Children>
+                                  <LocaleResource Name="Name">
+                                    <Value>Resource name</Value>
+                                    <Children>
+                                      <LocaleResource Name="Validation">
+                                        <Value>Resource name must be valid.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Value">
+                                    <Value>Value</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="CurrencyName">
+                                    <Value>Currency</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Name">
+                                <Value>Name</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The name of the currency.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="CurrencyCulture">
+                                <Value>Display locale</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The currency specific culture code.</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Validation">
+                                    <Value>Resource name must be valid.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Rate">
+                                <Value>Rate</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The exchange rate against the primary exchange rate currency.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="CurrencyCode">
+                                <Value>Currency code</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The currency code. For a list of currency codes, go to: http://www.iso.org/iso/support/currency_codes_list-1.htm</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Published">
+                                <Value>Published</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Determines whether the currency is published.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The display order of this currency. 1 represents the top of the list.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="CreatedOn">
+                                <Value>Created on</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The date/time the currency was created.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="UpdatedOn">
+                                <Value>Updated on</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The date/time the currency was updated.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Measures">
+                    <Value>Measures</Value>
+                    <Children>
+                      <LocaleResource Name="Weights">
+                        <Value>Weights</Value>
+                        <Children>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Name">
+                                <Value>Name</Value>
+                                <Children>
+                                  <LocaleResource Name="Validation">
+                                    <Value>Please provide a name.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="SystemKeyword">
+                                <Value>System keyword</Value>
+                                <Children>
+                                  <LocaleResource Name="Validation">
+                                    <Value>Please provide a system keyword.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Ratio">
+                                <Value>Ratio to primary weight</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="IsPrimaryWeight">
+                                <Value>Is primary weight</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
             </LocaleResource>
             <LocaleResource Name="System">

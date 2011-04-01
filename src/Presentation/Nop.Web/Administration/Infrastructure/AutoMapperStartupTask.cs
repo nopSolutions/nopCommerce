@@ -18,7 +18,6 @@ namespace Nop.Admin.Infrastructure
             //email account
             ViceVersa<EmailAccount, EmailAccountModel>();
             //queued email
-            //ViceVersa<QueuedEmail, QueuedEmailModel>();
             Mapper.CreateMap<QueuedEmail, QueuedEmailModel>()
                 .ForMember(dest => dest.EmailAccountName,
                            opt => opt.MapFrom(src => src.EmailAccount != null ? src.EmailAccount.FriendlyName : string.Empty));
@@ -45,6 +44,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<LanguageResourceModel, LocaleStringResource>()
                 .ForMember(dest => dest.ResourceName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ResourceValue, opt => opt.MapFrom(src => src.Value));
+            //measure weights
+            ViceVersa<MeasureWeight, MeasureWeightModel>();
         }
 
         public static void ViceVersa<T1, T2>()

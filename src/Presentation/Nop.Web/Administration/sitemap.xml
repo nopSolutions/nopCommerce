@@ -15,6 +15,9 @@
                 <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>
                 <siteMapNode title="Currencies" nopResource="Admin.Configuration.Location.Currencies" controller="Currency" action="List"/>
             </siteMapNode>
+          <siteMapNode title="Measures" nopResource="Admin.Configuration.Measures">
+            <siteMapNode title="Weights" nopResource="Admin.Configuration.Measures.Weights" controller="Measure" action="Weights"/>
+          </siteMapNode>
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
         </siteMapNode>
         <siteMapNode title="System" nopResource="Admin.System">

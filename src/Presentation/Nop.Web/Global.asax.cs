@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -98,11 +100,26 @@ namespace Nop.Web
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
+            SetWorkingTheme();
+            SetWorkingCulture();
+        }
+
+        protected void SetWorkingTheme()
+        {
             //TODO:Get "WorkingTheme" to persist throught the session (cookie?).
-            var defaultTheme =
-                EngineContext.Current.Resolve<IThemeProvider>().GetThemeConfigurations().Where(x => x.IsDefault).
-                    FirstOrDefault();
+            var defaultTheme = EngineContext.Current.Resolve<IThemeProvider>().GetThemeConfigurations().Where(x => x.IsDefault).FirstOrDefault();
             EngineContext.Current.Resolve<IWorkContext>().WorkingTheme = defaultTheme == null ? string.Empty : defaultTheme.ThemeName;
+        }
+
+        protected void SetWorkingCulture()
+        {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            if (workContext.CurrentCustomer!=null &&workContext.WorkingLanguage!=null)
+            { 
+                var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = culture;
+            }
         }
 
         protected void InstallDatabase(object sender, EventArgs e)

@@ -14,10 +14,6 @@ namespace Nop.Web.Framework.Mvc
     /// </summary>
     public class NopMetadataProvider : DataAnnotationsModelMetadataProvider
     {
-		#region Methods (1) 
-
-		// Protected Methods (1) 
-
         protected override ModelMetadata CreateMetadata(IEnumerable<Attribute> attributes, Type containerType, Func<object> modelAccessor, Type modelType, string propertyName)
         {
             var metadata = base.CreateMetadata(attributes, containerType, modelAccessor, modelType, propertyName);
@@ -25,13 +21,11 @@ namespace Nop.Web.Framework.Mvc
             foreach (var additionalValue in additionalValues)
             {
                 if (metadata.AdditionalValues.ContainsKey(additionalValue.Name))
-                    throw new NopException("There is allready an attribute with the name of \"" + additionalValue.Name +
+                    throw new NopException("There is already an attribute with the name of \"" + additionalValue.Name +
                                            "\" on this model.");
                 metadata.AdditionalValues.Add(additionalValue.Name, additionalValue);
             }
             return metadata;
         }
-
-		#endregion Methods 
     }
 }

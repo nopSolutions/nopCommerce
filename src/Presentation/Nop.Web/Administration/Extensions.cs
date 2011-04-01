@@ -162,8 +162,7 @@ namespace Nop.Admin
         }
 
         #endregion
-
-
+        
         #region Log
 
         public static LogModel ToModel(this Log logItem)
@@ -214,6 +213,25 @@ namespace Nop.Admin
         {
             return AutoMapper.Mapper.Map(model, destination);
         }
+        #endregion
+
+        #region Measure weights
+
+        public static MeasureWeightModel ToModel(this MeasureWeight measureWeight)
+        {
+            return AutoMapper.Mapper.Map<MeasureWeight, MeasureWeightModel>(measureWeight);
+        }
+
+        public static MeasureWeight ToEntity(this MeasureWeightModel model)
+        {
+            return AutoMapper.Mapper.Map<MeasureWeightModel, MeasureWeight>(model);
+        }
+
+        public static MeasureWeight ToEntity(this MeasureWeightModel model, MeasureWeight destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
         #endregion
     }
 

@@ -9,10 +9,10 @@ namespace Nop.Plugin.Tax.FixedRate.Models
     {
         public int TaxCategoryId { get; set; }
 
-        [NopResourceDisplayName("Tax category")]
+        [DisplayNameAttribute("Tax category")]
         public string TaxCategoryName { get; set; }
 
-        [NopResourceDisplayName("Rate")]
+        [DisplayNameAttribute("Rate")]
         public decimal Rate { get; set; }
     }
 }

@@ -268,7 +268,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Add
+        #region Delete
 
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ResourceDelete(int id, int languageId, GridCommand command)

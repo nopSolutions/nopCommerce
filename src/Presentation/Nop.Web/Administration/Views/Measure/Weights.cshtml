@@ -1,0 +1,47 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.MeasureWeightModel>
+@using Telerik.Web.Mvc.UI;
+@using System.Linq;
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
+        @T("Admin.Configuration.Measures.Weights")
+    </div>
+</div>
+
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid(Model.Data)
+                    .Name("Grid")
+                    .DataKeys(x => {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name).Width(200);
+                        columns.Bound(x => x.SystemKeyword).Width(200);
+                        columns.Bound(x => x.Ratio).Width(100);
+                        columns.Bound(x => x.DisplayOrder).Width(100);
+                        columns.Bound(x => x.IsPrimaryWeight).Width(100).ReadOnly();
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        }).Width(180);
+
+                    })
+                    .ToolBar(x => x.Insert())
+                    .Editable(x =>{
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("Weights", "Measure")
+                            .Update("WeightUpdate", "Measure")
+                            .Delete("WeightDelete", "Measure")
+                            .Insert("WeightAdd", "Measure");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>
