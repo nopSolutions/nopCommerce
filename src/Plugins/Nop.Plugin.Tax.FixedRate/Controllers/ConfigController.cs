@@ -70,6 +70,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
                 Data = gridModel
             };
         }
+
         [GridAction(EnableCustomBinding = true)]
         public ActionResult TaxRateUpdate(FixedTaxRateModel model, GridCommand command)
         {

@@ -11,6 +11,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Directory;
 using System.Web.Mvc.Html;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 namespace Nop.Admin
@@ -259,6 +260,25 @@ namespace Nop.Admin
         public static TaxProviderModel ToModel(this ITaxProvider entity)
         {
             return AutoMapper.Mapper.Map<ITaxProvider, TaxProviderModel>(entity);
+        }
+
+        #endregion
+
+        #region Tax categories
+
+        public static TaxCategoryModel ToModel(this TaxCategory entity)
+        {
+            return AutoMapper.Mapper.Map<TaxCategory, TaxCategoryModel>(entity);
+        }
+
+        public static TaxCategory ToEntity(this TaxCategoryModel model)
+        {
+            return AutoMapper.Mapper.Map<TaxCategoryModel, TaxCategory>(model);
+        }
+
+        public static TaxCategory ToEntity(this TaxCategoryModel model, TaxCategory destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
         }
 
         #endregion
