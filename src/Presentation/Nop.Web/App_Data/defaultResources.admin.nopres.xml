@@ -19,7 +19,7 @@
     <LocaleResource Name="Admin">
         <Value>Admin</Value>
         <Children>
-            <LocaleResource Name="Catalog">
+          <LocaleResource Name="Catalog">
                 <Value>Catalog</Value>
                 <Children>
                     <LocaleResource Name="Categories">
@@ -317,7 +317,67 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
-            <LocaleResource Name="Configuration">
+          <LocaleResource Name="Common">
+            <Children>
+              <LocaleResource Name="Validation">
+                <Children>
+                  <LocaleResource Name="Required">
+                    <Value>This field is required.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="DeleteConfirmationParam">
+                <Value>Are you sure you want to delete "{0}"?</Value>
+              </LocaleResource>
+              <LocaleResource Name="DeleteConfirmation">
+                <Value>Are you sure you want to delete this item?</Value>
+              </LocaleResource>
+              <LocaleResource Name="AreYouSure">
+                <Value>Are you sure?</Value>
+              </LocaleResource>
+              <LocaleResource Name="SEO">
+                <Value>SEO</Value>
+              </LocaleResource>
+              <LocaleResource Name="AddNew">
+                <Value>Add new</Value>
+              </LocaleResource>
+              <LocaleResource Name="Edit">
+                <Value>Edit</Value>
+              </LocaleResource>
+              <LocaleResource Name="Delete">
+                <Value>Delete</Value>
+              </LocaleResource>
+              <LocaleResource Name="List">
+                <Value>List</Value>
+              </LocaleResource>
+              <LocaleResource Name="Save">
+                <Value>Save</Value>
+              </LocaleResource>
+              <LocaleResource Name="Cancel">
+                <Value>Cancel</Value>
+              </LocaleResource>
+              <LocaleResource Name="Standard">
+                <Value>Standard</Value>
+              </LocaleResource>
+              <LocaleResource Name="No">
+                <Value>No</Value>
+              </LocaleResource>
+              <LocaleResource Name="NoCancel">
+                <Value>No, cancel</Value>
+              </LocaleResource>
+              <LocaleResource Name="SaveContinue">
+                <Value>Save and Continue Edit</Value>
+              </LocaleResource>
+              <LocaleResource Name="Treeview">
+                <Value>Tree view</Value>
+              </LocaleResource>
+              <LocaleResource Name="ExportToXml">
+                <Value>Export to XML</Value>
+              </LocaleResource>
+
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="Configuration">
                 <Value>Configuration</Value>
                 <Children>
                   <LocaleResource Name="EmailAccounts">
@@ -694,9 +754,47 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="Tax">
+                    <Value>Tax</Value>
+                    <Children>
+                      <LocaleResource Name="Providers">
+                        <Value>Tax providers</Value>
+                        <Children>
+                          <LocaleResource Name="BackToList">
+                            <Value>back to tax provider list</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Configure">
+                            <Value>Configure</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="FriendlyName">
+                                <Value>Friendly name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SystemName">
+                                <Value>System name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Version">
+                                <Value>Version</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Author">
+                                <Value>Author</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="IsPrimaryTaxProvider">
+                                <Value>Is primary provider?</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
             </LocaleResource>
-            <LocaleResource Name="System">
+          <LocaleResource Name="System">
                 <Value>System</Value>
                 <Children>
                   <LocaleResource Name="QueuedEmails">
@@ -823,67 +921,7 @@
                   </LocaleResource>
             </Children>
           </LocaleResource>
-            <LocaleResource Name="Common">
-                <Children>
-                    <LocaleResource Name="Validation">
-                        <Children>
-                            <LocaleResource Name="Required">
-                                <Value>This field is required.</Value>
-                            </LocaleResource>
-                        </Children>
-                    </LocaleResource>
-                    <LocaleResource Name="DeleteConfirmationParam">
-                        <Value>Are you sure you want to delete "{0}"?</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="DeleteConfirmation">
-                        <Value>Are you sure you want to delete this item?</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="AreYouSure">
-                        <Value>Are you sure?</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="SEO">
-                        <Value>SEO</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="AddNew">
-                        <Value>Add new</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Edit">
-                        <Value>Edit</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Delete">
-                        <Value>Delete</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="List">
-                        <Value>List</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Save">
-                        <Value>Save</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Cancel">
-                        <Value>Cancel</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Standard">
-                        <Value>Standard</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="No">
-                        <Value>No</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="NoCancel">
-                        <Value>No, cancel</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="SaveContinue">
-                        <Value>Save and Continue Edit</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Treeview">
-                        <Value>Tree view</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="ExportToXml">
-                        <Value>Export to XML</Value>
-                    </LocaleResource>
-
-                </Children>
-            </LocaleResource>
-            <LocaleResource Name="Telerik">
+          <LocaleResource Name="Telerik">
                 <Children>
                   <LocaleResource Name="EditorLocalization">
                     <Children>

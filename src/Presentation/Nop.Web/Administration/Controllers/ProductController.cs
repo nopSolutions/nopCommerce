@@ -18,7 +18,7 @@ namespace Nop.Admin.Controllers
     [AdminAuthorize]
     public class ProductController : BaseNopController
     {
-		#region Fields 
+		#region Fields
 
         private IProductService _productService;
         private IWorkContext _workContext;
@@ -27,14 +27,14 @@ namespace Nop.Admin.Controllers
 
         #endregion Fields 
 
-		#region Constructors 
+		#region Constructors
 
         public ProductController(IProductService productService, IWorkContext workContext, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
         {
-            _localizedEntityService = localizedEntityService;
-            _languageService = languageService;
-            _workContext = workContext;
-            _productService = productService;
+            this._localizedEntityService = localizedEntityService;
+            this._languageService = languageService;
+            this._workContext = workContext;
+            this._productService = productService;
         }
 
         #endregion Constructors 
@@ -48,11 +48,6 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            //if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
-            //{
-            //    //TODO redirect to access denied page
-            //}
-
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                                                             _workContext.WorkingLanguage.Id, new List<int>(),
                                                             Core.Domain.Catalog.ProductSortingEnum.Position, 0, 10, true);
@@ -206,8 +201,6 @@ namespace Nop.Admin.Controllers
 
 		#region Methods 
 
-		#region Public Methods 
-
         [HttpPost]
         public ActionResult _AjaxComboBo(string text)
         {
@@ -219,9 +212,7 @@ namespace Nop.Admin.Controllers
                     "Name")
             };
         }
-
-		#endregion Public Methods 
-
+        
 		#endregion Methods 
     }
 }

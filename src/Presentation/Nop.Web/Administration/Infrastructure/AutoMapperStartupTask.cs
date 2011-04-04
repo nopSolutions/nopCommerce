@@ -6,6 +6,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Tasks;
+using Nop.Services.Tax;
 
 namespace Nop.Admin.Infrastructure
 {
@@ -24,7 +25,6 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<QueuedEmailModel, QueuedEmail>()
                 .ForMember(dest=> dest.CreatedOnUtc, dt=> dt.Ignore())
                 .ForMember(dest => dest.SentOnUtc, dt => dt.Ignore());
-
             //category
             ViceVersa<Category, CategoryModel>();
             //category product
@@ -46,12 +46,12 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<LanguageResourceModel, LocaleStringResource>()
                 .ForMember(dest => dest.ResourceName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.ResourceValue, opt => opt.MapFrom(src => src.Value));
-
             //measure weights
             ViceVersa<MeasureWeight, MeasureWeightModel>();
-
             //measure dimensions
             ViceVersa<MeasureDimension, MeasureDimensionModel>();
+            //tax providers
+            Mapper.CreateMap<ITaxProvider, TaxProviderModel>();
         }
 
         public static void ViceVersa<T1, T2>()

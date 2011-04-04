@@ -11,6 +11,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Directory;
 using System.Web.Mvc.Html;
+using Nop.Services.Tax;
 using Nop.Web.Framework;
 namespace Nop.Admin
 {
@@ -18,9 +19,9 @@ namespace Nop.Admin
     {
         #region Category
 
-        public static CategoryModel ToModel(this Category category)
+        public static CategoryModel ToModel(this Category entity)
         {
-            return AutoMapper.Mapper.Map<Category, CategoryModel>(category);
+            return AutoMapper.Mapper.Map<Category, CategoryModel>(entity);
         }
 
         public static Category ToEntity(this CategoryModel model)
@@ -37,9 +38,9 @@ namespace Nop.Admin
 
         #region Category product
 
-        public static CategoryProductModel ToModel(this ProductCategory productCategory)
+        public static CategoryProductModel ToModel(this ProductCategory entity)
         {
-            return AutoMapper.Mapper.Map<ProductCategory, CategoryProductModel>(productCategory);
+            return AutoMapper.Mapper.Map<ProductCategory, CategoryProductModel>(entity);
         }
 
         public static ProductCategory ToEntity(this CategoryProductModel model)
@@ -51,9 +52,9 @@ namespace Nop.Admin
 
         #region Products
 
-        public static ProductModel ToModel(this Product product)
+        public static ProductModel ToModel(this Product entity)
         {
-            return AutoMapper.Mapper.Map<Product, ProductModel>(product);
+            return AutoMapper.Mapper.Map<Product, ProductModel>(entity);
         }
 
         public static Product ToEntity(this ProductModel model)
@@ -70,9 +71,9 @@ namespace Nop.Admin
 
         #region Product variants
 
-        public static ProductVariantModel ToModel(this ProductVariant variant)
+        public static ProductVariantModel ToModel(this ProductVariant entity)
         {
-            return AutoMapper.Mapper.Map<ProductVariant, ProductVariantModel>(variant);
+            return AutoMapper.Mapper.Map<ProductVariant, ProductVariantModel>(entity);
         }
 
         public static ProductVariant ToEntity(this ProductVariantModel model)
@@ -89,9 +90,9 @@ namespace Nop.Admin
 
         #region Languages
 
-        public static LanguageModel ToModel(this Language language)
+        public static LanguageModel ToModel(this Language entity)
         {
-            return AutoMapper.Mapper.Map<Language, LanguageModel>(language);
+            return AutoMapper.Mapper.Map<Language, LanguageModel>(entity);
         }
 
         public static Language ToEntity(this LanguageModel model)
@@ -106,9 +107,9 @@ namespace Nop.Admin
 
         #region Resources
 
-        public static LanguageResourceModel ToModel(this LocaleStringResource localeStringResource)
+        public static LanguageResourceModel ToModel(this LocaleStringResource entity)
         {
-            return AutoMapper.Mapper.Map<LocaleStringResource, LanguageResourceModel>(localeStringResource);
+            return AutoMapper.Mapper.Map<LocaleStringResource, LanguageResourceModel>(entity);
         }
 
         public static LocaleStringResource ToEntity(this LanguageResourceModel model)
@@ -127,9 +128,9 @@ namespace Nop.Admin
 
         #region Email account
 
-        public static EmailAccountModel ToModel(this EmailAccount emailAccount)
+        public static EmailAccountModel ToModel(this EmailAccount entity)
         {
-            return AutoMapper.Mapper.Map<EmailAccount, EmailAccountModel>(emailAccount);
+            return AutoMapper.Mapper.Map<EmailAccount, EmailAccountModel>(entity);
         }
 
         public static EmailAccount ToEntity(this EmailAccountModel model)
@@ -165,9 +166,9 @@ namespace Nop.Admin
         
         #region Log
 
-        public static LogModel ToModel(this Log logItem)
+        public static LogModel ToModel(this Log entity)
         {
-            return AutoMapper.Mapper.Map<Log, LogModel>(logItem);
+            return AutoMapper.Mapper.Map<Log, LogModel>(entity);
         }
 
         public static Log ToEntity(this LogModel model)
@@ -184,9 +185,9 @@ namespace Nop.Admin
 
         #region Catalog
 
-        public static TDestination To<TDestination>(this Product product)
+        public static TDestination To<TDestination>(this Product entity)
         {
-            return AutoMapper.Mapper.Map<Product, TDestination>(product);
+            return AutoMapper.Mapper.Map<Product, TDestination>(entity);
         }
 
         //TODO:Make all mapping use To<T>()
@@ -199,9 +200,9 @@ namespace Nop.Admin
 
         #region Currencies
 
-        public static CurrencyModel ToModel(this Currency currency)
+        public static CurrencyModel ToModel(this Currency entity)
         {
-            return AutoMapper.Mapper.Map<Currency, CurrencyModel>(currency);
+            return AutoMapper.Mapper.Map<Currency, CurrencyModel>(entity);
         }
 
         public static Currency ToEntity(this CurrencyModel model)
@@ -217,9 +218,9 @@ namespace Nop.Admin
 
         #region Measure weights
 
-        public static MeasureWeightModel ToModel(this MeasureWeight measureWeight)
+        public static MeasureWeightModel ToModel(this MeasureWeight entity)
         {
-            return AutoMapper.Mapper.Map<MeasureWeight, MeasureWeightModel>(measureWeight);
+            return AutoMapper.Mapper.Map<MeasureWeight, MeasureWeightModel>(entity);
         }
 
         public static MeasureWeight ToEntity(this MeasureWeightModel model)
@@ -236,9 +237,9 @@ namespace Nop.Admin
 
         #region Measure dimension
 
-        public static MeasureDimensionModel ToModel(this MeasureDimension measureWeight)
+        public static MeasureDimensionModel ToModel(this MeasureDimension entity)
         {
-            return AutoMapper.Mapper.Map<MeasureDimension, MeasureDimensionModel>(measureWeight);
+            return AutoMapper.Mapper.Map<MeasureDimension, MeasureDimensionModel>(entity);
         }
 
         public static MeasureDimension ToEntity(this MeasureDimensionModel model)
@@ -249,6 +250,15 @@ namespace Nop.Admin
         public static MeasureDimension ToEntity(this MeasureDimensionModel model, MeasureDimension destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Tax providers
+
+        public static TaxProviderModel ToModel(this ITaxProvider entity)
+        {
+            return AutoMapper.Mapper.Map<ITaxProvider, TaxProviderModel>(entity);
         }
 
         #endregion

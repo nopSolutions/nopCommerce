@@ -30,48 +30,23 @@ namespace Nop.Admin.Controllers
 
 		public LanguageController(ILanguageService languageService, ILocalizationService localizationService)
 		{
-			_localizationService = localizationService;
-			_languageService = languageService;
+			this._localizationService = localizationService;
+            this._languageService = languageService;
 		}
 
 		#endregion Constructors 
 
-		#region Methods
-
-		public ActionResult Index()
-		{
-			return View("List");
-		}
-
-        //public void UpdateInstance(Language language, LanguageModel model)
-        //{
-        //    language.Id = model.Id;
-        //    language.Name = model.Name;
-        //    language.LanguageCulture = model.LanguageCulture;
-        //    language.FlagImageFileName = model.FlagImageFileName;
-        //    language.Published = model.Published;
-        //    language.DisplayOrder = model.DisplayOrder;
-        //}
-
-        //public void UpdateInstance(LocaleStringResource resource, LanguageResourceModel model)
-        //{
-        //    resource.ResourceName = model.Name;
-        //    resource.ResourceValue = model.Value;
-        //}
-
-		#endregion Methods 
-        
 		#region Languages
 
 		#region List
 
+        public ActionResult Index()
+        {
+            return View("List");
+        }
+
 		public ActionResult List()
 		{
-			//if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
-			//{
-			//TODO redirect to access denied page
-			//}
-
 			var languages = _languageService.GetAllLanguages(true);
 			var gridModel = new GridModel<LanguageModel>
 			{
@@ -159,10 +134,6 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult Resources(int languageId)
 		{
-			//if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
-			//{
-			//TODO redirect to access denied page
-			//}
 			ViewBag.AllLanguages = _languageService.GetAllLanguages(true).Select(x => new DropDownItem
 																						  {
 																							  Selected = (x.Id.Equals(languageId)),

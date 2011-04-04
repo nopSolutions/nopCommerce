@@ -13,7 +13,7 @@ namespace Nop.Plugin.Tax.FixedRate
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapRoute("Plugin.Tax.FixedRate.Configure",
+           routes.MapRoute("Plugin.Tax.FixedRate.Configure",
                  "Plugins/FixedTaxRate/Configure",
                  new { controller = "Config", action = "Configure" },
                  new[] { "Nop.Plugin.Tax.FixedRate.Controllers" }

@@ -11,7 +11,7 @@
             </siteMapNode>
         </siteMapNode>
         <siteMapNode title="Configuration" nopResource="Admin.Configuration">
-            <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
+          <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
                 <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>
                 <siteMapNode title="Currencies" nopResource="Admin.Configuration.Location.Currencies" controller="Currency" action="List"/>
             </siteMapNode>
@@ -20,6 +20,9 @@
             <siteMapNode title="Dimensions" nopResource="Admin.Configuration.Measures.Dimensions" controller="Measure" action="Dimensions"/>
           </siteMapNode>
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
+          <siteMapNode title="Tax" nopResource="Admin.Configuration.Tax">
+            <siteMapNode title="Tax providers" nopResource="Admin.Configuration.Tax.Providers" controller="TaxProvider" action="List"/>
+          </siteMapNode>
         </siteMapNode>
         <siteMapNode title="System" nopResource="Admin.System">
             <siteMapNode title="Log" nopResource="Admin.System.Log" controller="Log" action="List" />

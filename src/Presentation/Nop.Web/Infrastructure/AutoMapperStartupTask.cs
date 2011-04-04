@@ -20,8 +20,6 @@ namespace Nop.Web.Infrastructure
 
 		#region Methods 
 
-		#region Public Methods 
-
         public void Execute()
         {
             //language
@@ -45,9 +43,7 @@ namespace Nop.Web.Infrastructure
             Mapper.CreateMap<T1, T2>();
             Mapper.CreateMap<T2, T1>();
         }
-
-		#endregion Public Methods 
-
+        
 		#endregion Methods 
     }
 }

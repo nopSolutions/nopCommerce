@@ -36,12 +36,12 @@ namespace Nop.Admin.Controllers
         public CategoryController(ICategoryService categoryService,
             IPermissionService permissionService, ILanguageService languageService, ILocalizedEntityService localizedEntityService, IProductService productService, IExportManager exportManager)
         {
-            _exportManager = exportManager;
-            _categoryService = categoryService;
-            _permissionService = permissionService;
-            _languageService = languageService;
-            _localizedEntityService = localizedEntityService;
-            _productService = productService;
+            this._exportManager = exportManager;
+            this._categoryService = categoryService;
+            this._permissionService = permissionService;
+            this._languageService = languageService;
+            this._localizedEntityService = localizedEntityService;
+            this._productService = productService;
         }
 
         #endregion Constructors
