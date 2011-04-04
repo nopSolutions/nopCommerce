@@ -20,7 +20,6 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.FriendlyName).Width(150);
-                        columns.Bound(x => x.DisplayOrder).Width(100);
                         columns.Bound(x => x.IsPrimaryTaxProvider).Width(100);
                         columns.Command(commands => commands.Select()).Title("Mark as primary provider").Width(100);
                         columns.Template(

@@ -780,9 +780,6 @@
                               <LocaleResource Name="Author">
                                 <Value>Author</Value>
                               </LocaleResource>
-                              <LocaleResource Name="DisplayOrder">
-                                <Value>Display order</Value>
-                              </LocaleResource>
                               <LocaleResource Name="IsPrimaryTaxProvider">
                                 <Value>Is primary provider?</Value>
                               </LocaleResource>

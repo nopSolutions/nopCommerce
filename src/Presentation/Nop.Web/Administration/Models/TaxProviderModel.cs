@@ -25,9 +25,6 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.Author")]
         public string Author { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.DisplayOrder")]
-        public string DisplayOrder { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider")]
         public bool IsPrimaryTaxProvider { get; set; }
 
