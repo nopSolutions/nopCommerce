@@ -125,7 +125,7 @@ namespace Nop.Admin.Controllers
         }
         
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult WeightAdd(MeasureWeightModel model, GridCommand command)
+        public ActionResult WeightAdd([Bind(Exclude="Id")] MeasureWeightModel model, GridCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -266,7 +266,7 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult DimensionAdd(MeasureDimensionModel model, GridCommand command)
+        public ActionResult DimensionAdd([Bind(Exclude="Id")] MeasureDimensionModel model, GridCommand command)
         {
             if (!ModelState.IsValid)
             {

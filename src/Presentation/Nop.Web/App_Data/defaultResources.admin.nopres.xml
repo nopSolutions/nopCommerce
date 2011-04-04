@@ -885,7 +885,104 @@
             </LocaleResource>
             <LocaleResource Name="Telerik">
                 <Children>
-                    <LocaleResource Name="GridLocalization">
+                  <LocaleResource Name="EditorLocalization">
+                    <Children>
+                      <LocaleResource Name="Bold">
+                        <Value>Bold</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="CreateLink">
+                        <Value>Insert hyperlink</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="DeleteFile">
+                        <Value>Are you sure you want to delete "{0}"?</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="DirectoryNotFound">
+                        <Value>A directory with this name was not found.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="EmptyFolder">
+                        <Value>Empty Folder</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="FontName">
+                        <Value>Select font family</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="FontNameInherit">
+                        <Value>(inherited font)</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="FontSize">
+                        <Value>Select font size</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="FontSizeInherit">
+                        <Value>(inherited size)</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="FormatBlock">
+                        <Value>Select block type</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Indent">
+                        <Value>Indent</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="InsertHtml">
+                        <Value>Insert HTML</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="InsertImage">
+                        <Value>Insert image</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="InsertOrderedList">
+                        <Value>Insert ordered list</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="InsertUnorderedList">
+                        <Value>Insert unordered list</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="InvalidFileType">
+                        <Value>The selected file \"{0}\" is not valid. Supported file types are {1}.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Italic">
+                        <Value>Italic</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="JustifyCenter">
+                        <Value>Center text</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="JustifyFull">
+                        <Value>Justify</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="JustifyLeft">
+                        <Value>Align text left</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="JustifyRight">
+                        <Value>Align text right</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="OrderBy">
+                        <Value>Arrange by:</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="OrderByName">
+                        <Value>Name</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="OrderBySize">
+                        <Value>Size</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Outdent">
+                        <Value>Outdent</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="OverwriteFile">
+                        <Value>'A file with name "{0}" already exists in the current directory. Do you want to overwrite it?</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Strikethrough">
+                        <Value>Strikethrough</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Style">
+                        <Value>Styles</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Underline">
+                        <Value>Underline</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Unlink">
+                        <Value>Remove hyperlink</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="UploadFile">
+                        <Value>Upload</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="GridLocalization">
                         <Children>
                             <LocaleResource Name="AddNew">
                                 <Value>Add new record</Value>
@@ -893,6 +990,9 @@
                             <LocaleResource Name="Cancel">
                                 <Value>Cancel</Value>
                             </LocaleResource>
+                          <LocaleResource Name="CancelChanges">
+                            <Value>Cancel changes</Value>
+                          </LocaleResource>
                             <LocaleResource Name="Delete">
                                 <Value>Delete</Value>
                             </LocaleResource>
@@ -902,6 +1002,9 @@
                             <LocaleResource Name="DisplayingItems">
                                 <Value>Displaying items {0} - {1} of {2}</Value>
                             </LocaleResource>
+                          <LocaleResource Name="Edit">
+                            <Value>Edit</Value>
+                          </LocaleResource>
                             <LocaleResource Name="Filter">
                                 <Value>Filter</Value>
                             </LocaleResource>
@@ -935,11 +1038,11 @@
                             <LocaleResource Name="FilterDateNe">
                                 <Value>Is not equal to</Value>
                             </LocaleResource>
+                          <LocaleResource Name="FilterEnumNe">
+                            <Value>Is not equal to</Value>
+                          </LocaleResource>
                             <LocaleResource Name="FilterEnumEq">
                                 <Value>Is equal to</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="FilterEnumNe">
-                                <Value>Is not equal to</Value>
                             </LocaleResource>
                             <LocaleResource Name="FilterNumberEq">
                                 <Value>Is equal to</Value>
@@ -995,87 +1098,60 @@
                             <LocaleResource Name="PageOf">
                                 <Value>of {0}</Value>
                             </LocaleResource>
+                          <LocaleResource Name="Refresh">
+                            <Value>Refresh</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="SaveChanges">
+                            <Value>Save changes</Value>
+                          </LocaleResource>
                             <LocaleResource Name="Select">
                                 <Value>Select</Value>
                             </LocaleResource>
+                          <LocaleResource Name="SortedAsc">
+                            <Value>sorted ascending</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="SortedDesc">
+                            <Value>sorted descending</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="UnGroup">
+                            <Value>ungroup</Value>
+                          </LocaleResource>
                             <LocaleResource Name="Update">
                                 <Value>Update</Value>
                             </LocaleResource>
-                            <LocaleResource Name="Edit">
-                                <Value>Edit</Value>
-                            </LocaleResource>
                         </Children>
                     </LocaleResource>
-                    <LocaleResource Name="EditorLocalization">
-                        <Children>
-                            <LocaleResource Name="Bold">
-                                <Value>Bold</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="CreateLink">
-                                <Value>Insert hyperlink</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="FontName">
-                                <Value>Select font family</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="FontNameInherit">
-                                <Value>(inherited font)</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="FontSize">
-                                <Value>Select font size</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="FontSizeInherit">
-                                <Value>(inherited size)</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="FormatBlock">
-                                <Value>Select block type</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Indent">
-                                <Value>Indent</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="InsertHtml">
-                                <Value>Insert HTML</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="InsertImage">
-                                <Value>Insert image</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="InsertOrderedList">
-                                <Value>Insert ordered list</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="InsertUnorderedList">
-                                <Value>Insert unordered list</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Italic">
-                                <Value>Italic</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="JustifyCenter">
-                                <Value>Center text</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="JustifyFull">
-                                <Value>Justify</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="JustifyLeft">
-                                <Value>Align text left</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="JustifyRight">
-                                <Value>Align text right</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Outdent">
-                                <Value>Outdent</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Strikethrough">
-                                <Value>Strikethrough</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Style">
-                                <Value>Styles</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Underline">
-                                <Value>Underline</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Unlink">
-                                <Value>Remove hyperlink</Value>
-                            </LocaleResource>
-                        </Children>
-                    </LocaleResource>
+                  <LocaleResource Name="EditorLocalization">
+                    <Children>
+                      <LocaleResource Name="Cancel">
+                        <Value>Cancel</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="DropFilesHere">
+                        <Value>drop files here to upload</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Remove">
+                        <Value>Remove</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Retry">
+                        <Value>Retry</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Select">
+                        <Value>Select...</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="StatusFailed">
+                        <Value>failed</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="StatusUploaded">
+                        <Value>uploaded</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="StatusUploading">
+                        <Value>uploading</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="UploadSelectedFiles">
+                        <Value>Upload files</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
             </LocaleResource>
         </Children>

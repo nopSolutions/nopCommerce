@@ -69,9 +69,8 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="Telerik.Web.Mvc, Version=2010.3.1318.340, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\TelerikMvcExtensions.2010.3.1318\lib\net40\Telerik.Web.Mvc.dll</HintPath>
+    <Reference Include="Telerik.Web.Mvc">
+      <HintPath>..\..\..\packages\TelerikMvcExtensions.2011.1.315\lib\net40\Telerik.Web.Mvc.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -179,30 +178,6 @@
     <Content Include="EditorTemplates\Integer.ascx" />
     <Content Include="EditorTemplates\Number.ascx" />
     <Content Include="EditorTemplates\Time.ascx" />
-    <Content Include="Scripts\2010.3.1318\jquery-1.4.4.min.js" />
-    <Content Include="Scripts\2010.3.1318\jquery.validate.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.autocomplete.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.calendar.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.combobox.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.common.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.datepicker.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.datetimepicker.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.draganddrop.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.editor.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.grid.editing.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.grid.filtering.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.grid.grouping.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.grid.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.grid.reordering.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.grid.resizing.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.list.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.menu.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.panelbar.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.tabstrip.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.textbox.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.timepicker.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.treeview.min.js" />
-    <Content Include="Scripts\2010.3.1318\telerik.window.min.js" />
     <Content Include="Scripts\admin.js" />
     <Content Include="sitemap.xml" />
   </ItemGroup>
