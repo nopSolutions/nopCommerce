@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
@@ -122,6 +123,15 @@ namespace Nop.Web.Framework
         {
             return columnBuilder.HtmlAttributes(new { align = "center" })
                             .HeaderHtmlAttributes(new { style = "text-align:center;" });
+        }
+
+        public static SelectList ToSelectList<TEnum>(this TEnum enumObj) where TEnum : struct
+        {
+            if (!typeof(TEnum).IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");
+
+            var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))
+                         select new { ID = Convert.ToInt32(enumValue), Name = CommonHelper.ConvertEnum(enumValue.ToString()) };
+            return new SelectList(values, "ID", "Name", Convert.ToInt32(enumObj));
         }
     }
 }

@@ -55,6 +55,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<ITaxProvider, TaxProviderModel>();
             //tax categories
             ViceVersa<TaxCategory, TaxCategoryModel>();
+            //tax settings
+            ViceVersa<TaxSettings, TaxSettingsModel>();
         }
 
         public static void ViceVersa<T1, T2>()

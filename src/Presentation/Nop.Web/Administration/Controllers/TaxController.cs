@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models;
-using Nop.Admin.Models;
-using Nop.Core.Domain.Localization;
+using Nop.Core;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Configuration;
-using Nop.Services.Localization;
+using Nop.Services.Directory;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -24,21 +22,23 @@ namespace Nop.Admin.Controllers
 
         private readonly ITaxService _taxService;
         private readonly ITaxCategoryService _taxCategoryService;
-        private readonly TaxSettings _taxSettings;
+        private TaxSettings _taxSettings;
         private readonly ISettingService _settingService;
+        private readonly ICountryService _countryService;
 
 		#endregion Fields 
 
 		#region Constructors
 
         public TaxController(ITaxService taxService,
-            ITaxCategoryService taxCategoryService,
-            TaxSettings taxSettings, ISettingService settingService)
+            ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
+            ISettingService settingService, ICountryService countryService)
 		{
             this._taxService = taxService;
             this._taxCategoryService = taxCategoryService;
             this._taxSettings = taxSettings;
             this._settingService = settingService;
+            this._countryService = countryService;
 		}
 
 		#endregion Constructors 
@@ -223,6 +223,45 @@ namespace Nop.Admin.Controllers
             };
         }
 
+        #endregion
+
+        #region Tax settings
+
+        public ActionResult Settings()
+        {
+            var model = _taxSettings.ToModel();
+            model.TaxBasedOnValues = _taxSettings.TaxBasedOn.ToSelectList();
+            model.TaxDisplayTypeValues = _taxSettings.TaxDisplayType.ToSelectList();
+
+            //tac categories
+            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            model.ShippingTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+            foreach (var tc in taxCategories)
+                model.ShippingTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == _taxSettings.ShippingTaxClassId });
+            model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+            foreach (var tc in taxCategories)
+                model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == _taxSettings.PaymentMethodAdditionalFeeTaxClassId });
+
+            //EU VAT countries
+            var countries = _countryService.GetAllCountries(true);
+            model.EuVatShopCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in countries)
+                model.EuVatShopCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = c.Id == _taxSettings.EuVatShopCountryId });
+
+            //TODO set default billing address
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Settings(TaxSettingsModel model)
+        {
+            _taxSettings = model.ToEntity(_taxSettings);
+            _settingService.SaveSetting(_taxSettings);
+            return RedirectToAction("Settings");
+        }
+           
         #endregion
     }
 }

@@ -144,7 +144,9 @@ namespace Nop.Core
             return _trustLevel.Value;
         }
 
-        /// <summary>Sets a property on an object to a valuae.</summary>
+        /// <summary>
+        /// Sets a property on an object to a valuae.
+        /// </summary>
         /// <param name="instance">The object whose property to set.</param>
         /// <param name="propertyName">The name of the property to set.</param>
         /// <param name="value">The value to set the property to.</param>
@@ -164,7 +166,9 @@ namespace Nop.Core
             pi.SetValue(instance, value, new object[0]);
         }
 
-        /// <summary>Converts a value to a destination type.</summary>
+        /// <summary>
+        /// Converts a value to a destination type.
+        /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <param name="destinationType">The type to convert the value to.</param>
         /// <returns>The converted value.</returns>
@@ -173,7 +177,9 @@ namespace Nop.Core
             return To(value, destinationType, CultureInfo.InvariantCulture);
         }
 
-        /// <summary>Converts a value to a destination type.</summary>
+        /// <summary>
+        /// Converts a value to a destination type.
+        /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <param name="destinationType">The type to convert the value to.</param>
         /// <param name="culture">Culture</param>
@@ -196,7 +202,9 @@ namespace Nop.Core
             return value;
         }
 
-        /// <summary>Converts a value to a destination type.</summary>
+        /// <summary>
+        /// Converts a value to a destination type.
+        /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <typeparam name="T">The type to convert the value to.</typeparam>
         /// <returns>The converted value.</returns>
@@ -225,6 +233,24 @@ namespace Nop.Core
                 }
             }
             return toTake.Select(x => list[x]);
+        }
+
+
+        /// <summary>
+        /// Convert enum for front-end
+        /// </summary>
+        /// <param name="str">Input string</param>
+        /// <returns>Converted string</returns>
+        public static string ConvertEnum(string str)
+        {
+            string result = string.Empty;
+            char[] letters = str.ToCharArray();
+            foreach (char c in letters)
+                if (c.ToString() != c.ToString().ToLower())
+                    result += " " + c.ToString();
+                else
+                    result += c.ToString();
+            return result;
         }
     }
 }

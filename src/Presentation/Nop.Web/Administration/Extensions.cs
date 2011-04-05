@@ -282,6 +282,25 @@ namespace Nop.Admin
         }
 
         #endregion
+
+        #region Tax settings
+
+        public static TaxSettingsModel ToModel(this TaxSettings entity)
+        {
+            return AutoMapper.Mapper.Map<TaxSettings, TaxSettingsModel>(entity);
+        }
+
+        public static TaxSettings ToEntity(this TaxSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<TaxSettingsModel, TaxSettings>(model);
+        }
+
+        public static TaxSettings ToEntity(this TaxSettingsModel model, TaxSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
     }
 
     public static class HtmlExtensions

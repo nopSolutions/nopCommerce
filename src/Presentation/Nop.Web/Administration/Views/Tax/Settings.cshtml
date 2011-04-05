@@ -1,0 +1,289 @@
+﻿@model Nop.Admin.Models.TaxSettingsModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using (Html.BeginForm())
+{
+
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+        toggleTaxDisplayType();
+        toggleShipping();
+        togglePayment();
+        toggleEUVAT();
+    });
+
+    function toggleTaxDisplayType() {
+        if (getE('AllowCustomersToSelectTaxDisplayType').checked) {
+            $('#pnlTaxDisplayType').hide();
+        }
+        else {
+            $('#pnlTaxDisplayType').show();
+        }
+    }
+
+    function toggleShipping() {
+        if (getE('ShippingIsTaxable').checked) {
+            $('#pnlShippingPriceIncludesTax').show();
+            $('#pnlShippingTaxClass').show();
+        }
+        else {
+            $('#pnlShippingPriceIncludesTax').hide();
+            $('#pnlShippingTaxClass').hide();
+        }
+    }
+
+    function togglePayment() {
+        if (getE('PaymentMethodAdditionalFeeIsTaxable').checked) {
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+        }
+        else {
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+        }
+    }
+
+    function toggleEUVAT() {
+        if (getE('EuVatEnabled').checked) {
+            $('#pnlEuVatShopCountry').show();
+            $('#pnlEuVatAllowVATExemption').show();
+            $('#pnlEuVatUseWebService').show();
+            $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
+        }
+        else {
+            $('#pnlEuVatShopCountry').hide();
+            $('#pnlEuVatAllowVATExemption').hide();
+            $('#pnlEuVatUseWebService').hide();
+            $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
+        }
+    }
+</script>
+    
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+            @T("Admin.Configuration.Tax.Settings")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PricesIncludeTax):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.PricesIncludeTax)
+                @Html.ValidationMessageFor(model => model.PricesIncludeTax)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowCustomersToSelectTaxDisplayType):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.AllowCustomersToSelectTaxDisplayType, new { @onclick = "toggleTaxDisplayType();" })
+                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectTaxDisplayType)
+            </td>
+        </tr>
+        <tr id="pnlTaxDisplayType">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TaxDisplayType):
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownList()
+                .Name("taxDisplayType")
+                .BindTo(Model.TaxDisplayTypeValues)
+                )
+                @Html.ValidationMessageFor(model => model.TaxDisplayType)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayTaxSuffix):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.DisplayTaxSuffix)
+                @Html.ValidationMessageFor(model => model.DisplayTaxSuffix)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayTaxRates):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.DisplayTaxRates)
+                @Html.ValidationMessageFor(model => model.DisplayTaxRates)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.HideZeroTax):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.HideZeroTax)
+                @Html.ValidationMessageFor(model => model.HideZeroTax)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.HideTaxInOrderSummary):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.HideTaxInOrderSummary)
+                @Html.ValidationMessageFor(model => model.HideTaxInOrderSummary)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TaxBasedOn):
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownList()
+                .Name("taxBasedOn")
+                .BindTo(Model.TaxBasedOnValues)
+                )
+                @Html.ValidationMessageFor(model => model.TaxBasedOn)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DefaultTaxAddressId):
+            </td>
+            <td class="adminData">
+                @*TODO add editor*@
+                @Html.ValidationMessageFor(model => model.DefaultTaxAddressId)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippingIsTaxable):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.ShippingIsTaxable, new { @onclick = "toggleShipping();" })
+                @Html.ValidationMessageFor(model => model.ShippingIsTaxable)
+            </td>
+        </tr>
+        <tr id="pnlShippingPriceIncludesTax">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippingPriceIncludesTax):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.ShippingPriceIncludesTax)
+                @Html.ValidationMessageFor(model => model.ShippingPriceIncludesTax)
+            </td>
+        </tr>
+        <tr id="pnlShippingTaxClass">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippingTaxClassId):
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownList()
+                .Name("shippingTaxClassId")
+                .BindTo(Model.ShippingTaxCategories)
+                )
+                @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIsTaxable):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.PaymentMethodAdditionalFeeIsTaxable, new { @onclick = "togglePayment();" })
+                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+            </td>
+        </tr>
+        <tr id="pnlPaymentMethodAdditionalFeeIncludesTax">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIncludesTax):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+            </td>
+        </tr>
+        <tr id="pnlPaymentMethodAdditionalFeeTaxClass">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeTaxClassId):
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownList()
+                .Name("paymentMethodAdditionalFeeTaxClassId")
+                .BindTo(Model.PaymentMethodAdditionalFeeTaxCategories)
+                )
+                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EuVatEnabled):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.EuVatEnabled, new { @onclick = "toggleEUVAT();" })
+                @Html.ValidationMessageFor(model => model.EuVatEnabled)
+            </td>
+        </tr>
+        <tr id="pnlEuVatShopCountry">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EuVatShopCountryId):
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownList()
+                .Name("euVatShopCountryId")
+                .BindTo(Model.EuVatShopCountries)
+                )
+                @Html.ValidationMessageFor(model => model.EuVatShopCountryId)
+            </td>
+        </tr>
+        <tr id="pnlEuVatAllowVATExemption">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EuVatAllowVatExemption):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.EuVatAllowVatExemption)
+                @Html.ValidationMessageFor(model => model.EuVatAllowVatExemption)
+            </td>
+        </tr>
+        <tr id="pnlEuVatUseWebService">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EuVatUseWebService):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.EuVatUseWebService)
+                @Html.ValidationMessageFor(model => model.EuVatUseWebService)
+            </td>
+        </tr>
+        <tr id="pnlEuVatEmailAdminWhenNewVATSubmitted">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EuVatEmailAdminWhenNewVatSubmitted):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                @Html.ValidationMessageFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+            </td>
+        </tr>
+    </table>
+}

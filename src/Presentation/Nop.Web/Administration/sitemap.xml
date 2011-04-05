@@ -21,6 +21,7 @@
           </siteMapNode>
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
           <siteMapNode title="Tax" nopResource="Admin.Configuration.Tax">
+            <siteMapNode title="Tax settings" nopResource="Admin.Configuration.Tax.Settings" controller="Tax" action="Settings"/>
             <siteMapNode title="Tax providers" nopResource="Admin.Configuration.Tax.Providers" controller="Tax" action="Providers"/>
             <siteMapNode title="Tax categories" nopResource="Admin.Configuration.Tax.Categories" controller="Tax" action="Categories"/>
           </siteMapNode>

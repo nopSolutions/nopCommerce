@@ -47,6 +47,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ProductVariant> _productVariantRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
+        private readonly IRepository<Country> _countryRepository;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -67,6 +68,7 @@ namespace Nop.Services.Installation
             IRepository<ProductVariant> productVariantRepository,
             IRepository<EmailAccount> emailAccountRepository,
             IRepository<QueuedEmail> queuedEmailRepository,
+            IRepository<Country> countryRepository,
             ISettingService settingService)
         {
             this._measureDimensionRepository = measureDimensionRepository;
@@ -85,6 +87,8 @@ namespace Nop.Services.Installation
 
             this._emailAccountRepository = emailAccountRepository;
             this._queuedEmailRepository = queuedEmailRepository;
+
+            this._countryRepository = countryRepository;
 
             this._settingService = settingService;
         }
@@ -763,6 +767,86 @@ namespace Nop.Services.Installation
             queuedEmail.ForEach(qe => _queuedEmailRepository.Insert(qe));
 
 
+            #endregion
+
+            #region Countries & states
+
+            var countries = new List<Country>
+                                {
+                                    new Country
+                                        {
+                                            Name = "United States",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "US",
+                                            ThreeLetterIsoCode = "USA",
+                                            NumericIsoCode = 840,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 1,
+                                            Published = true,
+                                            StateProvinces = new List<StateProvince>()
+                                            {
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alabama",
+                                                    Abbreviation = "AL",
+                                                    DisplayOrder = 1,
+                                                },
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alaska",
+                                                    Abbreviation = "AK",
+                                                    DisplayOrder = 1,
+                                                },
+                                                //UNDONE insert other states
+                                            }
+                                        },
+                                    new Country
+                                        {
+                                            Name = "Canada",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "CA",
+                                            ThreeLetterIsoCode = "CAN",
+                                            NumericIsoCode = 124,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 2,
+                                            Published = true,
+                                            StateProvinces = new List<StateProvince>()
+                                            {
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alberta",
+                                                    Abbreviation = "AB",
+                                                    DisplayOrder = 1,
+                                                },
+                                                new StateProvince()
+                                                {
+                                                    Name = "British Columbia",
+                                                    Abbreviation = "BC",
+                                                    DisplayOrder = 1,
+                                                },
+                                                //UNDONE insert other states
+                                            }
+                                        },
+                                    new Country
+                                        {
+                                            Name = "Russia",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "RU",
+                                            ThreeLetterIsoCode = "RUS",
+                                            NumericIsoCode = 643,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 100,
+                                            Published = true,
+                                        },
+                                };
+            countries.ForEach(c => _countryRepository.Insert(c));
+            
             #endregion
 
             if (installSampleData)

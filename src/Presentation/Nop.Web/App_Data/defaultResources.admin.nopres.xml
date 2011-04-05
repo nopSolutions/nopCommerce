@@ -807,6 +807,175 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="Settings">
+                        <Value>Tax settings</Value>
+                        <Children>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="TaxBasedOn">
+                                <Value>Tax based on</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Tax based on.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="TaxDisplayType">
+                                <Value>Tax display type</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Tax display type.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="DefaultTaxAddress">
+                                <Value>Default country</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The default country used for tax calculation.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayTaxSuffix">
+                                <Value>Display tax suffix</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether to display tax suffix (incl tax/excl tax).</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayTaxRates">
+                                <Value>Display all applied tax rates</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether each tax rate should be displayed on separate line (shopping cart page).</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="PricesIncludeTax">
+                                <Value>Prices include tax</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether entered prices include tax.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="AllowCustomersToSelectTaxDisplayType">
+                                <Value>Allow customers to select tax display type</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether customers are allowed to select tax display type.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="HideZeroTax">
+                                <Value>Hide zero tax</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether to hide zero tax in order summary.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="HideTaxInOrderSummary">
+                                <Value>Hide tax in order summary</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether to hide tax in order summary when prices are shown tax inclusive.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="ShippingIsTaxable">
+                                <Value>Shipping is taxable</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether shipping is taxable.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="ShippingPriceIncludesTax">
+                                <Value>Shipping price includes tax</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether shipping price includes tax.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="ShippingTaxClass">
+                                <Value>Shipping tax class</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Select tax class used for shipping tax calculation.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="PaymentMethodAdditionalFeeIsTaxable">
+                                <Value>Payment method additional fee is taxable</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether payment method additional fee is taxable.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="PaymentMethodAdditionalFeeIncludesTax">
+                                <Value>	Payment method additional fee includes tax</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A value indicating whether payment method additional fee includes tax.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="PaymentMethodAdditionalFeeTaxClass">
+                                <Value>Payment method additional fee tax class</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Select tax class used for payment method additional fee tax calculation.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="EuVatEnabled">
+                                <Value>EU VAT enabled</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check to enable EU VAT (the European Union Value Added Tax)</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="EuVatShopCountry">
+                                <Value>Your shop country</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Select your shop country for VAT calculation</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="EuVatAllowVatExemption">
+                                <Value>Allow VAT exemption</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check if this store will exempt eligible VAT-registered customers from VAT.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="EuVatUseWebService">
+                                <Value>Use web service</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check if you want to use the EU web service to validate VAT numbers. WARNING: If this option is enabled, then DO NOT disable country form field available during registration (public store).</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="EuVatEmailAdminWhenNewVatSubmitted">
+                                <Value>Notify admin when a new VAT number is submitted</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check if you want to receive a notification (email) when a new VAT number is submitted.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                 </Children>
