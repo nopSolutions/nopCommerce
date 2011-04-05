@@ -84,7 +84,7 @@
                 @Html.NopLabelFor(model => model.AllowCustomersToSelectTaxDisplayType):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.AllowCustomersToSelectTaxDisplayType, new { @onclick = "toggleTaxDisplayType();" })
+                @Html.CheckBoxFor(model => model.AllowCustomersToSelectTaxDisplayType, new { onclick = "toggleTaxDisplayType();" })
                 @Html.ValidationMessageFor(model => model.AllowCustomersToSelectTaxDisplayType)
             </td>
         </tr>
@@ -172,7 +172,7 @@
                 @Html.NopLabelFor(model => model.ShippingIsTaxable):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.ShippingIsTaxable, new { @onclick = "toggleShipping();" })
+                @Html.CheckBoxFor(model => model.ShippingIsTaxable, new { onclick = "toggleShipping();" })
                 @Html.ValidationMessageFor(model => model.ShippingIsTaxable)
             </td>
         </tr>
@@ -207,7 +207,7 @@
                 @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIsTaxable):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.PaymentMethodAdditionalFeeIsTaxable, new { @onclick = "togglePayment();" })
+                @Html.CheckBoxFor(model => model.PaymentMethodAdditionalFeeIsTaxable, new { onclick = "togglePayment();" })
                 @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
             </td>
         </tr>
@@ -242,7 +242,7 @@
                 @Html.NopLabelFor(model => model.EuVatEnabled):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.EuVatEnabled, new { @onclick = "toggleEUVAT();" })
+                @Html.CheckBoxFor(model => model.EuVatEnabled, new { onclick = "toggleEUVAT();" })
                 @Html.ValidationMessageFor(model => model.EuVatEnabled)
             </td>
         </tr>

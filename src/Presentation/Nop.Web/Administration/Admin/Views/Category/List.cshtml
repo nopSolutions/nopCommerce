@@ -1,0 +1,41 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.CategoryModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Nop/Admin/Content/images/ico-catalog.png")" />
+        @T("Admin.Catalog.Categories.Manage") @Html.ActionLink("(" + T("Admin.Catalog.Categories.SwitchToTreeView") + ")", "Tree")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Export")" class="t-button">@T("Admin.Common.ExportToXml")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.CategoryModel>(Model.Data)
+                    .Name("categories-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Breadcrumb).Title(T("Admin.Catalog.Categories.Fields.Name").Text);
+                        columns.Bound(x => x.Published)
+                            .Width("100px")
+                            .Template(x => x.Published.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width("100px")
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Category"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>
