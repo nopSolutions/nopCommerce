@@ -1,38 +1,56 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
+
 using Nop.Admin.Models;
+using Nop.Core.Domain.Messages;
+using Nop.Services.Configuration;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
+
 using Telerik.Web.Mvc;
-using Nop.Core.Domain.Messages;
-using System;
 
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-    public class EmailAccountController : BaseNopController
+	public class EmailAccountController : BaseNopController
 	{
-        private readonly IEmailAccountService _emailAccountService;
+		private readonly IEmailAccountService _emailAccountService;
+		private readonly EmailAccountSettings _emailAccountSettings;
+		private readonly ISettingService _settingService;
 
-        public EmailAccountController(IEmailAccountService emailAccountService)
+		public EmailAccountController(IEmailAccountService emailAccountService
+			, EmailAccountSettings emailAccountSettings, ISettingService settingService)
 		{
 			_emailAccountService = emailAccountService;
+			_emailAccountSettings = emailAccountSettings;
+			_settingService = settingService;
 		}
 
-
-		public ActionResult Index()
+		public ActionResult List(string id)
 		{
-			return View("List");
-		}
+			//mark as default email account (if selected)
+			if (!String.IsNullOrEmpty(id))
+			{
+				int defaultEmailAccountId = Convert.ToInt32(id);
+				var defaultEmailAccount = _emailAccountService.GetEmailAccountById(defaultEmailAccountId);
+				if (defaultEmailAccount != null)
+				{
+					_emailAccountSettings.DefaultEmailAccountId = defaultEmailAccountId;
+					_settingService.SaveSetting(_emailAccountSettings);
+				}
+			}
 
-		public ActionResult List()
-		{
+			var emailAccountModels = _emailAccountService.GetAllEmailAccounts()
+									.Select(x => x.ToModel())
+									.ToList();
+			foreach (var eam in emailAccountModels)
+				eam.IsDefaultEmailAccount = eam.Id == _emailAccountSettings.DefaultEmailAccountId;
 
-			var emailAccounts = _emailAccountService.GetAllEmailAccounts();
 			var gridModel = new GridModel<EmailAccountModel>
 			{
-                Data = emailAccounts.Select(AutoMapper.Mapper.Map<EmailAccount, EmailAccountModel>),
-                Total = emailAccounts.Count()
+				Data = emailAccountModels,
+				Total = emailAccountModels.Count()
 			};
 			return View(gridModel);
 		}
@@ -40,11 +58,11 @@ namespace Nop.Admin.Controllers
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult List(GridCommand command)
 		{
-            var emailAccounts = _emailAccountService.GetAllEmailAccounts();
-            var gridModel = new GridModel<EmailAccountModel>
+			var emailAccounts = _emailAccountService.GetAllEmailAccounts();
+			var gridModel = new GridModel<EmailAccountModel>
 			{
-                Data = emailAccounts.Select(AutoMapper.Mapper.Map<EmailAccount, EmailAccountModel>),
-                Total = emailAccounts.Count()
+				Data = emailAccounts.Select(AutoMapper.Mapper.Map<EmailAccount, EmailAccountModel>),
+				Total = emailAccounts.Count()
 			};
 
 			return new JsonResult
@@ -53,45 +71,45 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
-        #region Create
+		#region Create
 
-        public ActionResult Create()
-        {
-            return View(new EmailAccountModel());
-        }
+		public ActionResult Create()
+		{
+			return View(new EmailAccountModel());
+		}
 
-        [HttpPost]
-        public ActionResult Create(EmailAccountModel model)
-        {
-            var emailAccount = model.ToEntity();
-            _emailAccountService.InsertEmailAccount(emailAccount);
-            return RedirectToAction("Edit", new { id = emailAccount.Id });
-        }
+		[HttpPost]
+		public ActionResult Create(EmailAccountModel model)
+		{
+			var emailAccount = model.ToEntity();
+			_emailAccountService.InsertEmailAccount(emailAccount);
+			return RedirectToAction("Edit", new { id = emailAccount.Id });
+		}
 
-        #endregion
+		#endregion
 
-        #region Edit
+		#region Edit
 
-        public ActionResult Edit(int id)
-        {
-            var emailAccount = _emailAccountService.GetEmailAccountById(id);
-            if (emailAccount == null) throw new ArgumentException("No email account found with the specified id", "id");
-            return View(emailAccount.ToModel());
-        }
+		public ActionResult Edit(int id)
+		{
+			var emailAccount = _emailAccountService.GetEmailAccountById(id);
+			if (emailAccount == null) throw new ArgumentException("No email account found with the specified id", "id");
+			return View(emailAccount.ToModel());
+		}
 
-        [HttpPost]
-        public ActionResult Edit(EmailAccountModel emailAccountModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(emailAccountModel);
-            }
-            var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountModel.Id);
-            emailAccount = emailAccountModel.ToEntity(emailAccount);
-            _emailAccountService.UpdateEmailAccount(emailAccount);
-            return Edit(emailAccount.Id);
-        }
+		[HttpPost]
+		public ActionResult Edit(EmailAccountModel emailAccountModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(emailAccountModel);
+			}
+			var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountModel.Id);
+			emailAccount = emailAccountModel.ToEntity(emailAccount);
+			_emailAccountService.UpdateEmailAccount(emailAccount);
+			return Edit(emailAccount.Id);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

@@ -683,6 +683,12 @@ namespace Nop.Services.Installation
                     DefaultStoreTimeZoneId = "",
                     AllowCustomersToSetTimeZone = false
                 });
+
+            EngineContext.Current.Resolve<IConfigurationProvider<EmailAccountSettings>>()
+                .SaveSettings(new EmailAccountSettings()
+                {
+                    DefaultEmailAccountId = 1
+                });
             #endregion
 
             #region Email accounts

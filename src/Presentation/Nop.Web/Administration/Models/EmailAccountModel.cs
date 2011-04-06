@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using FluentValidation.Attributes;
-using Nop.Core.Domain.Localization;
-using Nop.Web.Framework;
-using Nop.Core.Domain.Messages;
+﻿using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models
@@ -36,5 +29,9 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials")]
         public bool UseDefaultCredentials { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount")]
+        public bool IsDefaultEmailAccount { get; set; }
+
     }
 }

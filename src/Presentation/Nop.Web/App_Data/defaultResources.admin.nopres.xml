@@ -458,6 +458,9 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
+                          <LocaleResource Name="IsDefaultEmailAccount">
+                            <Value>Is default email account?</Value>
+                          </LocaleResource>
                         </Children>
                       </LocaleResource>
                     </Children>
