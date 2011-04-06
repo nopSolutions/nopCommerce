@@ -510,6 +510,170 @@ namespace Nop.Services.Installation
             users.ForEach(u => _userRepository.Insert(u));
 
             #endregion
+            
+            #region Email accounts
+
+            var emailAccounts = new List<EmailAccount>
+                               {
+                                   new EmailAccount
+                                       {
+                                           Email = "test@mail.com",
+                                           DisplayName = "General contact",
+                                           Host = "smtp.mail.com",
+                                           Port = 25,
+                                           Username = "123",
+                                           Password = "123",
+                                           EnableSsl = false,
+                                           UseDefaultCredentials = false
+                                       },
+                                   new EmailAccount
+                                       {
+                                           Email = "test@mail.com",
+                                           DisplayName = "Sales representative",
+                                           Host = "smtp.mail.com",
+                                           Port = 25,
+                                           Username = "123",
+                                           Password = "123",
+                                           EnableSsl = false,
+                                           UseDefaultCredentials = false
+                                       },
+                                   new EmailAccount
+                                       {
+                                           Email = "test@mail.com",
+                                           DisplayName = "Customer support",
+                                           Host = "smtp.mail.com",
+                                           Port = 25,
+                                           Username = "123",
+                                           Password = "123",
+                                           EnableSsl = false,
+                                           UseDefaultCredentials = false
+                                       }, 
+                               };
+            emailAccounts.ForEach(ea => _emailAccountRepository.Insert(ea));
+
+            #endregion
+
+            #region Queued emails(just for testing)
+
+            var queuedEmail = new List<QueuedEmail>()
+            {
+                new QueuedEmail()
+                {
+                    EmailAccountId = 1,
+                    Priority = 1,
+                    From = "admin@test.com",
+                    FromName = "Adminstrator",
+                    To = "cust@test.com",
+                    ToName = "Customer",
+                    CC = "admincc@test.com",
+                    Bcc = "adminbcc@test.com",
+                    Body = "Body",
+                    Subject = "Subject",
+                    CreatedOnUtc = DateTime.Now,
+                    SentTries = 0,
+                    SentOnUtc = null
+                },
+                new QueuedEmail()
+                {
+                    EmailAccountId = 2,
+                    Priority = 2,
+                    From = "admin@test.com",
+                    FromName = "Adminstrator",
+                    To = "cust@test.com",
+                    ToName = "Customer",
+                    CC = "admincc@test.com",
+                    Bcc = "adminbcc@test.com",
+                    Body = "Body",
+                    Subject = "Subject",
+                    CreatedOnUtc = DateTime.UtcNow,
+                    SentTries = 2,
+                    SentOnUtc = DateTime.UtcNow
+                }
+            };
+            queuedEmail.ForEach(qe => _queuedEmailRepository.Insert(qe));
+
+
+            #endregion
+
+            #region Countries & states
+
+            var countries = new List<Country>
+                                {
+                                    new Country
+                                        {
+                                            Name = "United States",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "US",
+                                            ThreeLetterIsoCode = "USA",
+                                            NumericIsoCode = 840,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 1,
+                                            Published = true,
+                                            StateProvinces = new List<StateProvince>()
+                                            {
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alabama",
+                                                    Abbreviation = "AL",
+                                                    DisplayOrder = 1,
+                                                },
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alaska",
+                                                    Abbreviation = "AK",
+                                                    DisplayOrder = 1,
+                                                },
+                                                //UNDONE insert other states
+                                            }
+                                        },
+                                    new Country
+                                        {
+                                            Name = "Canada",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "CA",
+                                            ThreeLetterIsoCode = "CAN",
+                                            NumericIsoCode = 124,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 2,
+                                            Published = true,
+                                            StateProvinces = new List<StateProvince>()
+                                            {
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alberta",
+                                                    Abbreviation = "AB",
+                                                    DisplayOrder = 1,
+                                                },
+                                                new StateProvince()
+                                                {
+                                                    Name = "British Columbia",
+                                                    Abbreviation = "BC",
+                                                    DisplayOrder = 1,
+                                                },
+                                                //UNDONE insert other states
+                                            }
+                                        },
+                                    new Country
+                                        {
+                                            Name = "Russia",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "RU",
+                                            ThreeLetterIsoCode = "RUS",
+                                            NumericIsoCode = 643,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 100,
+                                            Published = true,
+                                        },
+                                };
+            countries.ForEach(c => _countryRepository.Insert(c));
+
+            #endregion
 
             #region Settings
 
@@ -689,170 +853,6 @@ namespace Nop.Services.Installation
                 {
                     DefaultEmailAccountId = 1
                 });
-            #endregion
-
-            #region Email accounts
-
-            var emailAccounts = new List<EmailAccount>
-                               {
-                                   new EmailAccount
-                                       {
-                                           Email = "test@mail.com",
-                                           DisplayName = "General contact",
-                                           Host = "smtp.mail.com",
-                                           Port = 25,
-                                           Username = "123",
-                                           Password = "123",
-                                           EnableSsl = false,
-                                           UseDefaultCredentials = false
-                                       },
-                                   new EmailAccount
-                                       {
-                                           Email = "test@mail.com",
-                                           DisplayName = "Sales representative",
-                                           Host = "smtp.mail.com",
-                                           Port = 25,
-                                           Username = "123",
-                                           Password = "123",
-                                           EnableSsl = false,
-                                           UseDefaultCredentials = false
-                                       },
-                                   new EmailAccount
-                                       {
-                                           Email = "test@mail.com",
-                                           DisplayName = "Customer support",
-                                           Host = "smtp.mail.com",
-                                           Port = 25,
-                                           Username = "123",
-                                           Password = "123",
-                                           EnableSsl = false,
-                                           UseDefaultCredentials = false
-                                       }, 
-                               };
-            emailAccounts.ForEach(ea => _emailAccountRepository.Insert(ea));
-
-            #endregion
-
-            #region Queued emails(just for testing)
-
-            var queuedEmail = new List<QueuedEmail>()
-            {
-                new QueuedEmail()
-                {
-                    EmailAccountId = 1,
-                    Priority = 1,
-                    From = "admin@test.com",
-                    FromName = "Adminstrator",
-                    To = "cust@test.com",
-                    ToName = "Customer",
-                    CC = "admincc@test.com",
-                    Bcc = "adminbcc@test.com",
-                    Body = "Body",
-                    Subject = "Subject",
-                    CreatedOnUtc = DateTime.Now,
-                    SentTries = 0,
-                    SentOnUtc = null
-                },
-                new QueuedEmail()
-                {
-                    EmailAccountId = 2,
-                    Priority = 2,
-                    From = "admin@test.com",
-                    FromName = "Adminstrator",
-                    To = "cust@test.com",
-                    ToName = "Customer",
-                    CC = "admincc@test.com",
-                    Bcc = "adminbcc@test.com",
-                    Body = "Body",
-                    Subject = "Subject",
-                    CreatedOnUtc = DateTime.UtcNow,
-                    SentTries = 2,
-                    SentOnUtc = DateTime.UtcNow
-                }
-            };
-            queuedEmail.ForEach(qe => _queuedEmailRepository.Insert(qe));
-
-
-            #endregion
-
-            #region Countries & states
-
-            var countries = new List<Country>
-                                {
-                                    new Country
-                                        {
-                                            Name = "United States",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            AllowsRegistration = true,
-                                            TwoLetterIsoCode = "US",
-                                            ThreeLetterIsoCode = "USA",
-                                            NumericIsoCode = 840,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 1,
-                                            Published = true,
-                                            StateProvinces = new List<StateProvince>()
-                                            {
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alabama",
-                                                    Abbreviation = "AL",
-                                                    DisplayOrder = 1,
-                                                },
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alaska",
-                                                    Abbreviation = "AK",
-                                                    DisplayOrder = 1,
-                                                },
-                                                //UNDONE insert other states
-                                            }
-                                        },
-                                    new Country
-                                        {
-                                            Name = "Canada",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            AllowsRegistration = true,
-                                            TwoLetterIsoCode = "CA",
-                                            ThreeLetterIsoCode = "CAN",
-                                            NumericIsoCode = 124,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 2,
-                                            Published = true,
-                                            StateProvinces = new List<StateProvince>()
-                                            {
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alberta",
-                                                    Abbreviation = "AB",
-                                                    DisplayOrder = 1,
-                                                },
-                                                new StateProvince()
-                                                {
-                                                    Name = "British Columbia",
-                                                    Abbreviation = "BC",
-                                                    DisplayOrder = 1,
-                                                },
-                                                //UNDONE insert other states
-                                            }
-                                        },
-                                    new Country
-                                        {
-                                            Name = "Russia",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            AllowsRegistration = true,
-                                            TwoLetterIsoCode = "RU",
-                                            ThreeLetterIsoCode = "RUS",
-                                            NumericIsoCode = 643,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 100,
-                                            Published = true,
-                                        },
-                                };
-            countries.ForEach(c => _countryRepository.Insert(c));
-            
             #endregion
 
             if (installSampleData)

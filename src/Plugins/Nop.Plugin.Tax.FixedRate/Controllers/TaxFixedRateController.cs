@@ -16,12 +16,12 @@ using Telerik.Web.Mvc;
 namespace Nop.Plugin.Tax.FixedRate.Controllers
 {
     [AdminAuthorize]
-    public class ConfigController : Controller
+    public class TaxFixedRateController : Controller
     {
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ISettingService _settingService;
 
-        public ConfigController(ITaxCategoryService taxCategoryService, ISettingService settingService)
+        public TaxFixedRateController(ITaxCategoryService taxCategoryService, ISettingService settingService)
         {
             this._taxCategoryService = taxCategoryService;
             this._settingService = settingService;
@@ -44,7 +44,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
                 Total = tmp.Count
             };
 
-            return View("Nop.Plugin.Tax.FixedRate.Views.Config.Configure", gridModel);
+            return View("Nop.Plugin.Tax.FixedRate.Views.TaxFixedRate.Configure", gridModel);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.strikeiron.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.strikeiron.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.strikeiron.com">
+      <s:element name="GetTaxRateUS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaxRateUSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTaxRateUSResult" type="tns:SIWsOutputOfTaxRateUSAData" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SIWsOutputOfTaxRateUSAData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceStatus" type="tns:SIWsStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceResult" type="tns:TaxRateUSAData" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SIWsStatus">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="StatusNbr" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="StatusDescription" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TaxRateUSAData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="County" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="StateSalesTax" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="StateUseTax" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="CountySalesTax" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="CountyUseTax" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="CitySalesTax" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="CityUseTax" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalSalesTax" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalUseTax" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="TaxShippingAlone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TaxShippingHandling" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTaxRateCanada">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Province" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTaxRateCanadaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTaxRateCanadaResult" type="tns:SIWsOutputOfTaxRateCanadaData" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SIWsOutputOfTaxRateCanadaData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceStatus" type="tns:SIWsStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceResult" type="tns:TaxRateCanadaData" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TaxRateCanadaData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Abbreviation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Province" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="GST" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PST" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="Total" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="TaxShippingHandling" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetStatusCodesForMethod">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MethodName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatusCodesForMethodResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatusCodesForMethodResult" type="tns:SIWsOutputOfMethodStatusRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SIWsOutputOfMethodStatusRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceStatus" type="tns:SIWsStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceResult" type="tns:MethodStatusRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MethodStatusRecord">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:SIWsResultArrayOfSIWsStatus">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="MethodName" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="SIWsResultArrayOfSIWsStatus">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Results" type="tns:ArrayOfSIWsStatus" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSIWsStatus">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SIWsStatus" nillable="true" type="tns:SIWsStatus" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetStatusCodes">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetStatusCodesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatusCodesResult" type="tns:SIWsOutputOfSIWsResultArrayOfMethodStatusRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SIWsOutputOfSIWsResultArrayOfMethodStatusRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceStatus" type="tns:SIWsStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceResult" type="tns:SIWsResultArrayOfMethodStatusRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SIWsResultArrayOfMethodStatusRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Results" type="tns:ArrayOfMethodStatusRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfMethodStatusRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MethodStatusRecord" nillable="true" type="tns:MethodStatusRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetServiceInfo">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetServiceInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetServiceInfoResult" type="tns:SIWsOutputOfSIWsResultArrayOfServiceInfoRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SIWsOutputOfSIWsResultArrayOfServiceInfoRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceStatus" type="tns:SIWsStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="ServiceResult" type="tns:SIWsResultArrayOfServiceInfoRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SIWsResultArrayOfServiceInfoRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Results" type="tns:ArrayOfServiceInfoRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfServiceInfoRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ServiceInfoRecord" nillable="true" type="tns:ServiceInfoRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ServiceInfoRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="InfoKey" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InfoValue" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <xs:schema xmlns:tns1="http://ws.strikeiron.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ws.strikeiron.com" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="LicenseInfo" type="tns1:LicenseInfo" />
+      <xs:complexType name="LicenseInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UnregisteredUser" type="tns1:UnregisteredUser" />
+          <xs:element minOccurs="0" name="RegisteredUser" type="tns1:RegisteredUser" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="UnregisteredUser">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="EmailAddress" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="RegisteredUser">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UserID" type="xs:string" />
+          <xs:element minOccurs="0" name="Password" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="SubscriptionInfo" type="tns1:SubscriptionInfo" />
+      <xs:complexType name="SubscriptionInfo">
+        <xs:sequence>
+          <xs:element name="LicenseStatusCode" type="xs:int" />
+          <xs:element minOccurs="0" name="LicenseStatus" type="xs:string" />
+          <xs:element name="LicenseActionCode" type="xs:int" />
+          <xs:element minOccurs="0" name="LicenseAction" type="xs:string" />
+          <xs:element name="RemainingHits" type="xs:int" />
+          <xs:element name="Amount" type="xs:decimal" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetRemainingHits">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetRemainingHitsResponse">
+        <xs:complexType />
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetTaxRateUSSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTaxRateUS" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxRateUSSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTaxRateUSResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxRateCanadaSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTaxRateCanada" />
+  </wsdl:message>
+  <wsdl:message name="GetTaxRateCanadaSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTaxRateCanadaResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusCodesForMethodSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatusCodesForMethod" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusCodesForMethodSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatusCodesForMethodResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusCodesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatusCodes" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusCodesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatusCodesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetServiceInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetServiceInfo" />
+  </wsdl:message>
+  <wsdl:message name="GetServiceInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetServiceInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRemainingHitsSoapIn">
+    <wsdl:part xmlns:q1="http://ws.strikeiron.com" name="parameters" element="q1:GetRemainingHits" />
+  </wsdl:message>
+  <wsdl:message name="GetRemainingHitsSoapOut">
+    <wsdl:part xmlns:q2="http://ws.strikeiron.com" name="parameters" element="q2:GetRemainingHitsResponse" />
+  </wsdl:message>
+  <wsdl:message name="LicenseInfoMessage">
+    <wsdl:part xmlns:q3="http://ws.strikeiron.com" name="LicenseInfo" element="q3:LicenseInfo" />
+  </wsdl:message>
+  <wsdl:message name="SubscriptionInfoMessage">
+    <wsdl:part xmlns:q4="http://ws.strikeiron.com" name="SubscriptionInfo" element="q4:SubscriptionInfo" />
+  </wsdl:message>
+  <wsdl:portType name="TaxDataBasicSoap">
+    <wsdl:operation name="GetTaxRateUS">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get tax rate of a zipcode in US</wsdl:documentation>
+      <wsdl:input message="tns:GetTaxRateUSSoapIn" />
+      <wsdl:output message="tns:GetTaxRateUSSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxRateCanada">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get tax rate of a province in Canada</wsdl:documentation>
+      <wsdl:input message="tns:GetTaxRateCanadaSoapIn" />
+      <wsdl:output message="tns:GetTaxRateCanadaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusCodesForMethod">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets all status codes a method in the service might return.</wsdl:documentation>
+      <wsdl:input message="tns:GetStatusCodesForMethodSoapIn" />
+      <wsdl:output message="tns:GetStatusCodesForMethodSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusCodes">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get all statuses this service might return.</wsdl:documentation>
+      <wsdl:input message="tns:GetStatusCodesSoapIn" />
+      <wsdl:output message="tns:GetStatusCodesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServiceInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get information about the web service</wsdl:documentation>
+      <wsdl:input message="tns:GetServiceInfoSoapIn" />
+      <wsdl:output message="tns:GetServiceInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRemainingHits">
+      <wsdl:input message="tns:GetRemainingHitsSoapIn" />
+      <wsdl:output message="tns:GetRemainingHitsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TaxDataBasicSoap" type="tns:TaxDataBasicSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetTaxRateUS">
+      <soap:operation soapAction="http://www.strikeiron.com/GetTaxRateUS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTaxRateCanada">
+      <soap:operation soapAction="http://www.strikeiron.com/GetTaxRateCanada" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusCodesForMethod">
+      <soap:operation soapAction="http://www.strikeiron.com/GetStatusCodesForMethod" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusCodes">
+      <soap:operation soapAction="http://www.strikeiron.com/GetStatusCodes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServiceInfo">
+      <soap:operation soapAction="http://www.strikeiron.com/GetServiceInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRemainingHits">
+      <soap:operation soapAction="http://ws.strikeiron.com/StrikeIron/TaxDataBasic5/TaxDataBasic/GetRemainingHits" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:LicenseInfoMessage" part="LicenseInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubscriptionInfoMessage" part="SubscriptionInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TaxDataBasic">
+    <wsdl:port name="TaxDataBasicSoap" binding="tns:TaxDataBasicSoap">
+      <soap:address location="http://ws.strikeiron.com/StrikeIron/TaxDataBasic5/TaxDataBasic" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

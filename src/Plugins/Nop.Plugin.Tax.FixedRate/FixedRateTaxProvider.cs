@@ -19,7 +19,7 @@ namespace Nop.Plugin.Tax.FixedRate
 
         public FixedRateTaxProvider(ISettingService settingService)
         {
-            _settingService = settingService;
+            this._settingService = settingService;
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Nop.Plugin.Tax.FixedRate
         public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
             actionName = "Configure";
-            controllerName = "Config";
+            controllerName = "TaxFixedRate";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", null } };
         }
     }

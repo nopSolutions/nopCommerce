@@ -81,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
     <Compile Include="EmbeddedViews\EmbeddedResourceVirtualFile.cs" />
     <Compile Include="EmbeddedViews\EmbeddedViewMetadata.cs" />
     <Compile Include="EmbeddedViews\EmbeddedViewResolver.cs" />

@@ -28,9 +28,8 @@
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax()
-                            //TODO "Route values" parameter doesn't take any effect. and it can cause issues
-                            .Select("Configure", "Config", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } })
-                            .Update("TaxRateUpdate", "Config", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } });
+                            .Select("Configure", "TaxFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } })
+                            .Update("TaxRateUpdate", "TaxFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } });
                     })
                     .EnableCustomBinding(true))
         </td>
