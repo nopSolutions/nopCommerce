@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Security.Principal;
 using System.Text;
+using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Configuration;
@@ -283,6 +284,19 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Gets a route for provider configuration
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            actionName = null;
+            controllerName = null;
+            routeValues = null;
         }
         #endregion
 

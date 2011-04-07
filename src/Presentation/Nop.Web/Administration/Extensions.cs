@@ -13,6 +13,7 @@ using Nop.Core.Domain.Directory;
 using System.Web.Mvc.Html;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 namespace Nop.Admin
@@ -299,6 +300,15 @@ namespace Nop.Admin
         public static TaxSettings ToEntity(this TaxSettingsModel model, TaxSettings destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Shipping rate computation method
+
+        public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
+        {
+            return AutoMapper.Mapper.Map<IShippingRateComputationMethod, ShippingRateComputationMethodModel>(entity);
         }
 
         #endregion

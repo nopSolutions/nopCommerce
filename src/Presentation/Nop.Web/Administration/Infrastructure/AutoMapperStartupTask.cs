@@ -8,6 +8,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Tasks;
+using Nop.Services.Shipping;
 using Nop.Services.Tax;
 
 namespace Nop.Admin.Infrastructure
@@ -58,8 +59,10 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<TaxCategory, TaxCategoryModel>();
             //tax settings
             ViceVersa<TaxSettings, TaxSettingsModel>();
-            //Shipping methods
+            //shipping methods
             ViceVersa<ShippingMethod, ShippingMethodModel>();
+            //shipping methods
+            Mapper.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
         }
 
         public static void ViceVersa<T1, T2>()

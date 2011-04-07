@@ -27,6 +27,7 @@
           </siteMapNode>
           <siteMapNode title="Shipping" nopResource="Admin.Configuration.Shipping">
             <siteMapNode title="Shipping methods" nopResource="Admin.Configuration.Shipping.Methods" controller="Shipping" action="Methods"/>
+            <siteMapNode title="Shipping providers" nopResource="Admin.Configuration.Shipping.Providers" controller="Shipping" action="Providers"/>
           </siteMapNode>
         </siteMapNode>
         <siteMapNode title="System" nopResource="Admin.System">

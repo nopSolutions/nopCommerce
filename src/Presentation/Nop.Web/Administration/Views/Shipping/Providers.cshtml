@@ -1,0 +1,48 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.ShippingRateComputationMethodModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+        @T("Admin.Configuration.Shipping.Providers")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.ShippingRateComputationMethodModel>()
+                    .Name("shippingproviders-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.SystemName).RouteKey("systemName");
+                    })
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.FriendlyName).Width(150).ReadOnly();
+                        columns.Template(
+                                @<div>
+                                    @Html.ActionLink(T("Admin.Configuration.Shipping.Providers.Configure").Text, "ConfigureProvider", new { systemName = @item.SystemName })
+                                </div>
+                            ).Width(100)
+                            .Centered()
+                            .Title(T("Admin.Configuration.Shipping.Providers.Configure").Text);
+                        columns.Bound(x => x.SystemName).Width(150).ReadOnly();
+                        columns.Bound(x => x.Version).Width(150).ReadOnly();
+                        columns.Bound(x => x.Author).Width(150).ReadOnly();
+                        columns.Bound(x => x.DisplayOrder).Width(100).ReadOnly();
+                        columns.Bound(x => x.IsActive).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                        }).Width(100);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("Providers", "Shipping")
+                            .Update("ProviderUpdate", "Shipping");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

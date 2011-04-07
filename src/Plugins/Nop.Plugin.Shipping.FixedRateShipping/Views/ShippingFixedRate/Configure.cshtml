@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "";
+}
+@model Telerik.Web.Mvc.GridModel<Nop.Plugin.Shipping.FixedRateShipping.Models.FixedShippingRateModel>
+@using Telerik.Web.Mvc.UI;
+@using System.Linq;
+
+<table class="adminContent">
+    <tr>
+        <td>
+                    @(Html.Telerik().Grid(Model.Data)
+                    .Name("Grid")
+                    .DataKeys(keys => keys.Add(x => x.ShippingMethodId).RouteKey("ShippingMethodId"))
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.ShippingMethodName).Width(300).ReadOnly();
+                        columns.Bound(x => x.Rate).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                        }).Width(100);
+
+                    })
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("Configure", "ShippingFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", "" } })
+                            .Update("ShippingRateUpdate", "ShippingFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", "" } });
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

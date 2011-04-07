@@ -173,6 +173,7 @@
     <Compile Include="Security\UserRegistrationResult.cs" />
     <Compile Include="Security\UserService.cs" />
     <Compile Include="Directory\StateProvinceService.cs" />
+    <Compile Include="Shipping\ShippingExtentions.cs" />
     <Compile Include="Shipping\IShippingService.cs" />
     <Compile Include="Shipping\GetShippingOptionRequest.cs" />
     <Compile Include="Shipping\GetShippingOptionResponse.cs" />

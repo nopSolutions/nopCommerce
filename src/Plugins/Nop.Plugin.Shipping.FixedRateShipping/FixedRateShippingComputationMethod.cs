@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Principal;
+using System.Web.Routing;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Services.Shipping;
@@ -117,6 +118,19 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
                 return rates[0];
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets a route for provider configuration
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            actionName = "Configure";
+            controllerName = "ShippingFixedRate";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", null } };
         }
 
         #endregion

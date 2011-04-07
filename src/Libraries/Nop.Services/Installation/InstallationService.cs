@@ -838,7 +838,7 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<ShippingSettings>>()
                 .SaveSettings(new ShippingSettings()
                 {
-                    ActiveShippingRateComputationMethodSystemNames = new List<string>() { "FixedRateShipping" },
+                    ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<TaxSettings>>()

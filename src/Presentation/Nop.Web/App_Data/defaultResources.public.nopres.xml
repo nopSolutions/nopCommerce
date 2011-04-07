@@ -1,6 +1,3 @@
-
-<!--NOTE: Please add resources alphabetically sorted for easier maintenance-->
-
 <?xml version="1.0" encoding="utf-8"?>
 <Language Name="English">
   <LocaleResource Name="ExampleOfNestedResources">

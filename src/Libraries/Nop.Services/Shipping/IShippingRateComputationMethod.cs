@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
@@ -28,5 +29,13 @@ namespace Nop.Services.Shipping
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
         decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest);
+
+        /// <summary>
+        /// Gets a route for provider configuration
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
     }
 }

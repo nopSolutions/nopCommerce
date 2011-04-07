@@ -1,7 +1,3 @@
-
-<!--NOTE: Please add resources alphabetically sorted for easier maintenance-->
-
-
 <?xml version="1.0" encoding="utf-8"?>
 <Language Name="English">
     <LocaleResource Name="ExampleOfNestedResources">
@@ -463,7 +459,7 @@
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="IsDefaultEmailAccount">
-                            <Value>Is default email account?</Value>
+                            <Value>Is default email account</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
@@ -717,7 +713,7 @@
                                 <Value>Display order</Value>
                               </LocaleResource>
                               <LocaleResource Name="IsPrimaryWeight">
-                                <Value>Is primary weight?</Value>
+                                <Value>Is primary weight</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -753,7 +749,7 @@
                                 <Value>Display order</Value>
                               </LocaleResource>
                               <LocaleResource Name="IsPrimaryWeight">
-                                <Value>Is primary dimension?</Value>
+                                <Value>Is primary dimension</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -782,6 +778,39 @@
                               </LocaleResource>
                               <LocaleResource Name="DisplayOrder">
                                 <Value>Display order</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Providers">
+                        <Value>Shipping rate computation methods</Value>
+                        <Children>
+                          <LocaleResource Name="BackToList">
+                            <Value>back to shipping rate computation method list</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Configure">
+                            <Value>Configure</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="FriendlyName">
+                                <Value>Friendly name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SystemName">
+                                <Value>System name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Version">
+                                <Value>Version</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Author">
+                                <Value>Author</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="IsActive">
+                                <Value>Is active</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -836,7 +865,7 @@
                                 <Value>Author</Value>
                               </LocaleResource>
                               <LocaleResource Name="IsPrimaryTaxProvider">
-                                <Value>Is primary provider?</Value>
+                                <Value>Is primary provider</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
