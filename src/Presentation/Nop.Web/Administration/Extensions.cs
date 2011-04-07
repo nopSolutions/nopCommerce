@@ -11,6 +11,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Directory;
 using System.Web.Mvc.Html;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
@@ -296,6 +297,25 @@ namespace Nop.Admin
         }
 
         public static TaxSettings ToEntity(this TaxSettingsModel model, TaxSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Shipping methods
+
+        public static ShippingMethodModel ToModel(this ShippingMethod entity)
+        {
+            return AutoMapper.Mapper.Map<ShippingMethod, ShippingMethodModel>(entity);
+        }
+
+        public static ShippingMethod ToEntity(this ShippingMethodModel model)
+        {
+            return AutoMapper.Mapper.Map<ShippingMethodModel, ShippingMethod>(model);
+        }
+
+        public static ShippingMethod ToEntity(this ShippingMethodModel model, ShippingMethod destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }

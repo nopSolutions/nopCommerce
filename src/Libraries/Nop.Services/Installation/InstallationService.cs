@@ -48,6 +48,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<EmailAccount> _emailAccountRepository;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
         private readonly IRepository<Country> _countryRepository;
+        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -69,6 +70,7 @@ namespace Nop.Services.Installation
             IRepository<EmailAccount> emailAccountRepository,
             IRepository<QueuedEmail> queuedEmailRepository,
             IRepository<Country> countryRepository,
+            IRepository<ShippingMethod> shippingMethodRepository,
             ISettingService settingService)
         {
             this._measureDimensionRepository = measureDimensionRepository;
@@ -89,6 +91,8 @@ namespace Nop.Services.Installation
             this._queuedEmailRepository = queuedEmailRepository;
 
             this._countryRepository = countryRepository;
+
+            this._shippingMethodRepository = shippingMethodRepository;
 
             this._settingService = settingService;
         }
@@ -672,6 +676,33 @@ namespace Nop.Services.Installation
                                         },
                                 };
             countries.ForEach(c => _countryRepository.Insert(c));
+
+            #endregion
+
+            #region Countries & states
+
+            var shippingMethods = new List<ShippingMethod>
+                                {
+                                    new ShippingMethod
+                                        {
+                                            Name = "In-Store Pickup",
+                                            Description ="Pick up your items at the store",
+                                            DisplayOrder = 0
+                                        },
+                                    new ShippingMethod
+                                        {
+                                            Name = "By Ground",
+                                            Description ="Compared to other shipping methods, like by flight or over seas, ground shipping is carried out closer to the earth",
+                                            DisplayOrder = 1
+                                        },
+                                    new ShippingMethod
+                                        {
+                                            Name = "By Air",
+                                            Description ="The one day air shipping",
+                                            DisplayOrder = 3
+                                        },
+                                };
+            shippingMethods.ForEach(sm => _shippingMethodRepository.Insert(sm));
 
             #endregion
 

@@ -5,6 +5,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Tasks;
 using Nop.Services.Tax;
@@ -57,6 +58,8 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<TaxCategory, TaxCategoryModel>();
             //tax settings
             ViceVersa<TaxSettings, TaxSettingsModel>();
+            //Shipping methods
+            ViceVersa<ShippingMethod, ShippingMethodModel>();
         }
 
         public static void ViceVersa<T1, T2>()

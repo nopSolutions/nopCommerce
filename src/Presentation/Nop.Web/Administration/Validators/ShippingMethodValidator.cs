@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using FluentValidation;
+using Nop.Admin.Models;
+using Nop.Core.Domain.Shipping;
+using Nop.Services.Localization;
+
+namespace Nop.Admin.Validators
+{
+    public class ShippingMethodValidator : AbstractValidator<ShippingMethodModel>
+    {
+        public ShippingMethodValidator(ILocalizationService localizationService)
+        {
+            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.Name.Validation"));
+        }
+    }
+}

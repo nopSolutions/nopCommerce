@@ -1,0 +1,45 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.ShippingMethodModel>
+@using Telerik.Web.Mvc.UI;
+@using System.Linq;
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
+        @T("Admin.Configuration.Shipping.Methods")
+    </div>
+</div>
+
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid(Model.Data)
+                    .Name("shippingmethod-grid")
+                    .DataKeys(x => {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name).Width(200);
+                        columns.Bound(x => x.Description).Width(400);
+                        columns.Bound(x => x.DisplayOrder).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();                            
+                        }).Width(180);
+
+                    })
+                    .ToolBar(x => x.Insert())
+                    .Editable(x =>{
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("Methods", "Shipping")
+                            .Update("MethodUpdate", "Shipping")
+                            .Delete("MethodDelete", "Shipping")
+                            .Insert("MethodAdd", "Shipping");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>
