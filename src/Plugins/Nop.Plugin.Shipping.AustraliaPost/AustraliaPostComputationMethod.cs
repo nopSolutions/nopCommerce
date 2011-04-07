@@ -35,20 +35,20 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         #region Fields
 
-        private readonly ISettingService _settingService;
         private readonly IMeasureService _measureService;
         private readonly IShippingService _shippingService;
+        private readonly AustraliaPostSettings _australiaPostSettings;
 
         #endregion
 
         #region Ctor
-        public AustraliaPostComputationMethod(ISettingService settingService,
-            IMeasureService measureService,
-            IShippingService shippingService)
+        public AustraliaPostComputationMethod(IMeasureService measureService,
+            IShippingService shippingService,
+            AustraliaPostSettings australiaPostSettings)
         {
-            this._settingService = settingService;
             this._measureService = measureService;
             this._shippingService = shippingService;
+            this._australiaPostSettings = australiaPostSettings;
         }
         #endregion
 
@@ -72,7 +72,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         private string GetGatewayUrl()
         {
-            return this._settingService.GetSettingByKey<string>("ShippingRateComputationMethod.AustraliaPost.GatewayUrl", "http://drc.edeliver.com.au/ratecalc.asp");
+            return _australiaPostSettings.GatewayUrl;
         }
 
         private int GetWeight(GetShippingOptionRequest getShippingOptionRequest)
@@ -194,7 +194,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 return response;
             }
 
-            string zipPostalCodeFrom = this._settingService.GetSettingByKey<string>("ShippingRateComputationMethod.AustraliaPost.DefaultShippedFromZipPostalCode");
+            string zipPostalCodeFrom = _australiaPostSettings.ShippedFromZipPostalCode;
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             int weight = GetWeight(getShippingOptionRequest);
             int length = GetLength(getShippingOptionRequest);
@@ -266,7 +266,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
                 foreach (var shippingOption in response.ShippingOptions)
                 {
-                    shippingOption.Rate += this._settingService.GetSettingByKey<decimal>("ShippingRateComputationMethod.AustraliaPost.AdditionalHandlingCharge");
+                    shippingOption.Rate += _australiaPostSettings.AdditionalHandlingCharge;
                 }
             }
             catch (Exception ex)
@@ -294,9 +294,9 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// <param name="routeValues">Route values</param>
         public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
-            actionName = null;
-            controllerName = null;
-            routeValues = null;
+            actionName = "Configure";
+            controllerName = "ShippingAustraliaPost";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.AustraliaPost.Controllers" }, { "area", null } };
         }
         #endregion
 

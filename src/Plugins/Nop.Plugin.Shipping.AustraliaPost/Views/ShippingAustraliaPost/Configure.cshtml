@@ -1,0 +1,40 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Shipping.AustraliaPost.Models.AustraliaPostShippingModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GatewayUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GatewayUrl)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdditionalHandlingCharge):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AdditionalHandlingCharge)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippedFromZipPostalCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShippedFromZipPostalCode)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+    </table>    
+}
