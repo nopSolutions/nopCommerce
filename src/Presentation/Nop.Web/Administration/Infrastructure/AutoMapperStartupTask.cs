@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
@@ -17,6 +18,8 @@ namespace Nop.Admin.Infrastructure
     {
         public void Execute()
         {
+            //address
+            ViceVersa<Address, AddressModel>();
             //language
             ViceVersa<Language, LanguageModel>();
             //email account

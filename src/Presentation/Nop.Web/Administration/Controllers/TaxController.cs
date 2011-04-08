@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Tax;
@@ -25,15 +26,17 @@ namespace Nop.Admin.Controllers
         private TaxSettings _taxSettings;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
+	    private IAddressService _addressService;
 
-		#endregion Fields 
+	    #endregion Fields 
 
 		#region Constructors
 
         public TaxController(ITaxService taxService,
             ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
-            ISettingService settingService, ICountryService countryService)
+            ISettingService settingService, ICountryService countryService, IAddressService addressService)
 		{
+            _addressService = addressService;
             this._taxService = taxService;
             this._taxCategoryService = taxCategoryService;
             this._taxSettings = taxSettings;
@@ -249,7 +252,11 @@ namespace Nop.Admin.Controllers
                 model.EuVatShopCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = c.Id == _taxSettings.EuVatShopCountryId });
 
             //TODO set default billing address
-
+            var defaultAddress = _taxSettings.DefaultTaxAddressId > 0
+                                     ? _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId)
+                                     : null;
+            if (defaultAddress != null)
+                model.DefaultTaxAddress = defaultAddress.ToModel();
 
             return View(model);
         }
@@ -258,6 +265,20 @@ namespace Nop.Admin.Controllers
         public ActionResult Settings(TaxSettingsModel model)
         {
             _taxSettings = model.ToEntity(_taxSettings);
+
+            var defaultAddress = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId) ??
+                                         new Core.Domain.Common.Address();
+            defaultAddress = model.DefaultTaxAddress.ToEntity(defaultAddress);
+            if (defaultAddress.Id > 0)
+            {
+                _addressService.UpdateAddress(defaultAddress);
+            }
+            else
+            {
+                _addressService.InsertAddress(defaultAddress);
+            }
+            _taxSettings.DefaultTaxAddressId = defaultAddress.Id;
+
             _settingService.SaveSetting(_taxSettings);
             return RedirectToAction("Settings");
         }

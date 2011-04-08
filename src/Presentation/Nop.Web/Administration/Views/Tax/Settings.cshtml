@@ -155,11 +155,10 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DefaultTaxAddressId):
+                @Html.NopLabelFor(model => model.DefaultTaxAddress):
             </td>
             <td class="adminData">
-                @*TODO add editor*@
-                @Html.ValidationMessageFor(model => model.DefaultTaxAddressId)
+                @Html.EditorFor(x => x.DefaultTaxAddress,"Address")
             </td>
         </tr>
         <tr class="adminSeparator">

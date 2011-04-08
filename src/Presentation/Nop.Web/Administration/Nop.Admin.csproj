@@ -92,6 +92,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
+    <Compile Include="Models\AddressModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CategoryProductModel.cs" />
     <Compile Include="Models\CategoryProductsAttribute.cs" />
@@ -309,6 +310,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shipping\ConfigureProvider.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Address.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

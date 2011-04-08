@@ -12,6 +12,7 @@ namespace Nop.Admin.Models
             PaymentMethodAdditionalFeeTaxCategories = new List<SelectListItem>();
             ShippingTaxCategories = new List<SelectListItem>();
             EuVatShopCountries = new List<SelectListItem>();
+            DefaultTaxAddress = new AddressModel();
         }
 
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.PricesIncludeTax")]
@@ -32,7 +33,7 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.TaxBasedOn")]
         public TaxBasedOn TaxBasedOn { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.DefaultTaxAddress")]
-        public int DefaultTaxAddressId { get; set; }
+        public AddressModel DefaultTaxAddress { get; set; }
        
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.ShippingIsTaxable")]
         public bool ShippingIsTaxable { get; set; }

@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
@@ -326,6 +327,25 @@ namespace Nop.Admin
         }
 
         public static ShippingMethod ToEntity(this ShippingMethodModel model, ShippingMethod destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Address
+
+        public static AddressModel ToModel(this Address entity)
+        {
+            return AutoMapper.Mapper.Map<Address, AddressModel>(entity);
+        }
+
+        public static Address ToEntity(this AddressModel model)
+        {
+            return AutoMapper.Mapper.Map<AddressModel, Address>(model);
+        }
+
+        public static Address ToEntity(this AddressModel model, Address destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }
