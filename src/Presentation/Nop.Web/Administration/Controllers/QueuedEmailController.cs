@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 
 using Nop.Admin.Models;
+using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 
@@ -59,20 +60,65 @@ namespace Nop.Admin.Controllers
 			return View(email.ToModel());
 		}
 
-		[HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
-		public ActionResult Edit(QueuedEmailModel queuedEmailModel, bool continueEditing)
+        [HttpPost, ActionName("Edit"), FormValueRequired("save")]
+        public ActionResult Save(QueuedEmailModel queuedEmailModel)
 		{
 			if (!ModelState.IsValid)
 			{
 				return View(queuedEmailModel);
 			}
-			var email = _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
-			email = queuedEmailModel.ToEntity(email);
-			_queuedEmailService.UpdateQueuedEmail(email);
 
-			return continueEditing ? RedirectToAction("Edit", email.Id) : RedirectToAction("List");
+            Update(queuedEmailModel);
+
+            return RedirectToAction("List");
 		}
 
+        [HttpPost, ActionName("Edit"), FormValueRequired("save-continue")]
+        public ActionResult SaveAndContinue(QueuedEmailModel queuedEmailModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(queuedEmailModel);
+            }
+
+            Update(queuedEmailModel);
+
+            return RedirectToAction("Edit", queuedEmailModel.Id);
+        }
+
+        [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
+        public ActionResult Requeue(QueuedEmailModel queuedEmailModel)
+        {
+            var queuedEmail = _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
+            if (queuedEmail != null)
+            {
+                var requeuedEmail = new QueuedEmail()
+                {
+                    Priority = queuedEmail.Priority,
+                    From = queuedEmail.From,
+                    FromName = queuedEmail.FromName,
+                    To = queuedEmail.To,
+                    ToName = queuedEmail.ToName,
+                    CC = queuedEmail.CC,
+                    Bcc = queuedEmail.Bcc,
+                    Subject = queuedEmail.Subject,
+                    Body = queuedEmail.Body,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    EmailAccountId = queuedEmail.EmailAccountId
+                };
+                _queuedEmailService.InsertQueuedEmail(requeuedEmail);
+                return RedirectToAction("Edit", requeuedEmail.Id);
+            }
+            else
+                return RedirectToAction("List");
+        }
+
+        private void Update(QueuedEmailModel queuedEmailModel)
+        {
+            var email = _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
+            email = queuedEmailModel.ToEntity(email);
+            _queuedEmailService.UpdateQueuedEmail(email);
+        }
 
 		[HttpPost, ActionName("Delete")]
 		public ActionResult DeleteConfirmed(int id)
