@@ -1,0 +1,26 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.NewsLetterSubscriptionModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
+        @T("Admin.Promotions.newsLetterSubscriptions")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.NewsLetterSubscriptionModel>()
+                    .Name("newsLetterSubscriptions-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Email);
+                        columns.Bound(x => x.Active);
+                        columns.Bound(x => x.CreatedOnUTC);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "NewsLetterSubscription"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

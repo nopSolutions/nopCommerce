@@ -10,6 +10,10 @@
                 <siteMapNode title="Manage Products" nopResource="Admin.Catalog.Products.Manage" controller="Product" action="List"/>
             </siteMapNode>
         </siteMapNode>
+      <siteMapNode title="Promotions" nopResource="Admin.Promotions">
+        <siteMapNode title="NewsletterSubscriptions" nopResource="Admin.Promotions.NewsletterSubscriptions" controller="NewsLetterSubscription" action="List">
+        </siteMapNode>
+      </siteMapNode>      
         <siteMapNode title="Configuration" nopResource="Admin.Configuration">
           <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
                 <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>

@@ -351,6 +351,26 @@ namespace Nop.Admin
         }
 
         #endregion
+
+        #region NewsLetter subscriptions
+
+        public static NewsLetterSubscriptionModel ToModel(this NewsLetterSubscription entity)
+        {
+            return AutoMapper.Mapper.Map<NewsLetterSubscription, NewsLetterSubscriptionModel>(entity);
+        }
+
+        public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model)
+        {
+            return AutoMapper.Mapper.Map<NewsLetterSubscriptionModel, NewsLetterSubscription>(model);
+        }
+
+        public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model, NewsLetterSubscription destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
     }
 
     public static class HtmlExtensions
