@@ -2,10 +2,9 @@
 @using Nop.Web.Framework;
 <script type="text/javascript">
      $(function() {
-     //TODO why DefaultTaxAddress_ddlCountries?
-            $("#DefaultTaxAddress_CountryId").change(function() {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
-                var ddlStates = $("#DefaultTaxAddress_StateProvinceId")
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)")
                 $.ajax({
                     type: "GET",
                     url: "@(Url.Action("GetStatesByCountryId", "Country"))",
@@ -23,7 +22,6 @@
             });
         });
 </script>
-@*TODO display only required fields (for example, on 'tax settings' page)*@
 @if (!Model.FirstNameDisabled)
 {
 <tr>
