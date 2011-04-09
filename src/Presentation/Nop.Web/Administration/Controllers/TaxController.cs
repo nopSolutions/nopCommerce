@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -34,14 +35,15 @@ namespace Nop.Admin.Controllers
 
         public TaxController(ITaxService taxService,
             ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
-            ISettingService settingService, ICountryService countryService, IAddressService addressService)
+            ISettingService settingService, ICountryService countryService, 
+            IAddressService addressService)
 		{
-            _addressService = addressService;
             this._taxService = taxService;
             this._taxCategoryService = taxCategoryService;
             this._taxSettings = taxSettings;
             this._settingService = settingService;
             this._countryService = countryService;
+            this._addressService = addressService;
 		}
 
 		#endregion Constructors 
@@ -246,40 +248,68 @@ namespace Nop.Admin.Controllers
                 model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == _taxSettings.PaymentMethodAdditionalFeeTaxClassId });
 
             //EU VAT countries
-            var countries = _countryService.GetAllCountries(true);
             model.EuVatShopCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-            foreach (var c in countries)
+            foreach (var c in _countryService.GetAllCountries(true))
                 model.EuVatShopCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = c.Id == _taxSettings.EuVatShopCountryId });
 
-            //TODO set default billing address
+            //default tax address
             var defaultAddress = _taxSettings.DefaultTaxAddressId > 0
                                      ? _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId)
                                      : null;
             if (defaultAddress != null)
                 model.DefaultTaxAddress = defaultAddress.ToModel();
+            else
+                model.DefaultTaxAddress = new AddressModel();
+
+            model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (defaultAddress != null && c.Id == defaultAddress.CountryId) });
+
+            if (defaultAddress != null && defaultAddress.Country != null && defaultAddress.Country.StateProvinces.Count > 0)
+            {
+                foreach (var s in defaultAddress.Country.StateProvinces)
+                    model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == defaultAddress.StateProvinceId) });
+            }
+            else
+                model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+            model.DefaultTaxAddress.FirstNameDisabled = true;
+            model.DefaultTaxAddress.LastNameDisabled = true;
+            model.DefaultTaxAddress.EmailDisabled = true;
+            model.DefaultTaxAddress.CompanyDisabled = true;
+            model.DefaultTaxAddress.CityDisabled = true;
+            model.DefaultTaxAddress.Address1Disabled = true;
+            model.DefaultTaxAddress.Address2Disabled = true;
+            model.DefaultTaxAddress.PhoneNumberDisabled = true;
+            model.DefaultTaxAddress.FaxNumberDisabled = true;
 
             return View(model);
         }
-
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult FetchData(string countryId)
+        // This action method gets called via an ajax request
+        {
+            //TODO remove this method
+            return Json(string.Format("Server Data: {0} You selected {1}", DateTime.UtcNow, countryId));
+        }
         [HttpPost]
         public ActionResult Settings(TaxSettingsModel model)
         {
             _taxSettings = model.ToEntity(_taxSettings);
 
             var defaultAddress = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId) ??
-                                         new Core.Domain.Common.Address();
+                                         new Core.Domain.Common.Address()
+                                         {
+                                             CreatedOnUtc = DateTime.UtcNow,
+                                         };
             defaultAddress = model.DefaultTaxAddress.ToEntity(defaultAddress);
             if (defaultAddress.Id > 0)
-            {
                 _addressService.UpdateAddress(defaultAddress);
-            }
             else
-            {
                 _addressService.InsertAddress(defaultAddress);
-            }
-            _taxSettings.DefaultTaxAddressId = defaultAddress.Id;
 
+            _taxSettings.DefaultTaxAddressId = defaultAddress.Id;
             _settingService.SaveSetting(_taxSettings);
+
             return RedirectToAction("Settings");
         }
            

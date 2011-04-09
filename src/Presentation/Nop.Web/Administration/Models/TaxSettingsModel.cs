@@ -62,8 +62,8 @@ namespace Nop.Admin.Models
 
         public SelectList TaxDisplayTypeValues { get; set; }
         public SelectList TaxBasedOnValues { get; set; }
-        public List<SelectListItem> PaymentMethodAdditionalFeeTaxCategories { get; set; }
-        public List<SelectListItem> ShippingTaxCategories { get; set; }
-        public List<SelectListItem> EuVatShopCountries { get; set; }
+        public IList<SelectListItem> PaymentMethodAdditionalFeeTaxCategories { get; set; }
+        public IList<SelectListItem> ShippingTaxCategories { get; set; }
+        public IList<SelectListItem> EuVatShopCountries { get; set; }
     }
 }

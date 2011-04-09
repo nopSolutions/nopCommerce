@@ -85,6 +85,12 @@ namespace Nop.Services.Common
             //TODO:Make sure other entities are doing this
             address.CreatedOnUtc = DateTime.UtcNow;
 
+            //some validation
+            if (address.CountryId == 0)
+                address.CountryId = null;
+            if (address.StateProvinceId == 0)
+                address.StateProvinceId = null;
+
             _addressRepository.Insert(address);
         }
 
@@ -96,6 +102,12 @@ namespace Nop.Services.Common
         {
             if (address == null)
                 throw new ArgumentNullException("address");
+
+            //some validation
+            if (address.CountryId == 0)
+                address.CountryId = null;
+            if (address.StateProvinceId == 0)
+                address.StateProvinceId = null;
 
             _addressRepository.Update(address);
         }

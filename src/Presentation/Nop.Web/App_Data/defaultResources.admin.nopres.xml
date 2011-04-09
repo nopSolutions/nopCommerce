@@ -374,7 +374,51 @@
               <LocaleResource Name="ExportToXml">
                 <Value>Export to XML</Value>
               </LocaleResource>
-
+              <LocaleResource Name="Address">
+                <Value>Address</Value>
+                <Children>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="FirstName">
+                        <Value>First name</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="LastName">
+                        <Value>Last name</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Email">
+                        <Value>Email</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Company">
+                        <Value>Company</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Country">
+                        <Value>Country</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="StateProvince">
+                        <Value>State / province</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="City">
+                        <Value>City</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Address 1">
+                        <Value>Address 1</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Address 2">
+                        <Value>Address 2</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="ZipPostalCode">
+                        <Value>Zip / postal code</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="PhoneNumber">
+                        <Value>Phone number</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="FaxNumber">
+                        <Value>Fax number</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Configuration">
@@ -893,10 +937,10 @@
                                 </Children>
                               </LocaleResource>
                               <LocaleResource Name="DefaultTaxAddress">
-                                <Value>Default country</Value>
+                                <Value>Default tax address</Value>
                                 <Children>
                                   <LocaleResource Name="Hint">
-                                    <Value>The default country used for tax calculation.</Value>
+                                    <Value>The default address used for tax calculation.</Value>
                                   </LocaleResource>
                                 </Children>
                               </LocaleResource>

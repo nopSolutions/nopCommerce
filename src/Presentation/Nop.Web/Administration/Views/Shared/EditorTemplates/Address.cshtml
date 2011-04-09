@@ -1,2 +1,171 @@
 ﻿@model Nop.Admin.Models.AddressModel
-@Html.EditorFor(x => x.Address1)
+@using Nop.Web.Framework;
+<script type="text/javascript">
+     $(function() {
+     //TODO why DefaultTaxAddress_ddlCountries?
+            $("#DefaultTaxAddress_CountryId").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#DefaultTaxAddress_StateProvinceId")
+                $.ajax({
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: "countryId=" + selectedItem + "&addEmptyStateIfRequired=true",
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve states.')
+                    }  
+                });
+            });
+        });
+</script>
+@*TODO display only required fields (for example, on 'tax settings' page)*@
+@if (!Model.FirstNameDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.FirstName):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.FirstName)
+        @Html.ValidationMessageFor(model => model.FirstName)
+    </td>
+</tr>
+}
+@if (!Model.LastNameDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.LastName):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.LastName)
+        @Html.ValidationMessageFor(model => model.LastName)
+    </td>
+</tr>
+}
+@if (!Model.EmailDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.Email):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.Email)
+        @Html.ValidationMessageFor(model => model.Email)
+    </td>
+</tr>
+}
+@if (!Model.CompanyDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.Company):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.Company)
+        @Html.ValidationMessageFor(model => model.Company)
+    </td>
+</tr>
+}
+@if (!Model.CountryDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.CountryId):
+    </td>
+    <td class="adminData">
+        @Html.DropDownList("CountryId", Model.AvailableCountries)
+        @Html.ValidationMessageFor(model => model.CountryId)
+        @*TODO display validation message from 'AddressValidator' (country should be selected)*@
+    </td>
+</tr>
+}
+@if (!Model.StateProvinceDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.StateProvinceId):
+    </td>
+    <td class="adminData">
+        @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+        @Html.ValidationMessageFor(model => model.StateProvinceId)
+    </td>
+</tr>
+}
+@if (!Model.CityDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.City):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.City)
+        @Html.ValidationMessageFor(model => model.City)
+    </td>
+</tr>
+}
+@if (!Model.Address1Disabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.Address1):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.Address1)
+        @Html.ValidationMessageFor(model => model.Address1)
+    </td>
+</tr>
+}
+@if (!Model.Address2Disabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.Address2):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.Address2)
+        @Html.ValidationMessageFor(model => model.Address2)
+    </td>
+</tr>
+}
+@if (!Model.ZipPostalCodeDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.ZipPostalCode):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.ZipPostalCode)
+        @Html.ValidationMessageFor(model => model.ZipPostalCode)
+    </td>
+</tr>
+}
+@if (!Model.PhoneNumberDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.PhoneNumber):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.PhoneNumber)
+        @Html.ValidationMessageFor(model => model.PhoneNumber)
+    </td>
+</tr>
+}
+@if (!Model.FaxNumberDisabled)
+{
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.FaxNumber):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.FaxNumber)
+        @Html.ValidationMessageFor(model => model.FaxNumber)
+    </td>
+</tr>
+}

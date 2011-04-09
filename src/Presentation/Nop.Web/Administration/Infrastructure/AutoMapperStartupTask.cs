@@ -19,7 +19,11 @@ namespace Nop.Admin.Infrastructure
         public void Execute()
         {
             //address
-            ViceVersa<Address, AddressModel>();
+            //queued email
+            Mapper.CreateMap<Address, AddressModel>();
+            Mapper.CreateMap<AddressModel, Address>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+
             //language
             ViceVersa<Language, LanguageModel>();
             //email account
