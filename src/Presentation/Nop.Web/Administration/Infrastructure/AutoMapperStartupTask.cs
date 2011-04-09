@@ -70,6 +70,8 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<ShippingMethod, ShippingMethodModel>();
             //shipping methods
             Mapper.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
+            //newsLetter subscriptions
+            ViceVersa<NewsLetterSubscription, NewsLetterSubscriptionModel>();
         }
 
         public static void ViceVersa<T1, T2>()

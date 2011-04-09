@@ -421,6 +421,30 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+          <LocaleResource Name="Promotions">
+            <Value>Promotions</Value>
+            <Children>
+              <LocaleResource Name="NewsLetterSubscriptions">
+                <Value>Newsletter Subscribers</Value>
+                <Children>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="Email">
+                        <Value>Email</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Active">
+                        <Value>Active</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="CreatedOnUTC">
+                        <Value>Subscribed on</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+
           <LocaleResource Name="Configuration">
                 <Value>Configuration</Value>
                 <Children>
