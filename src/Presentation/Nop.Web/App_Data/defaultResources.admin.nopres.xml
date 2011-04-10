@@ -380,40 +380,100 @@
                             <LocaleResource Name="Fields">
                                 <Children>
                                     <LocaleResource Name="FirstName">
-                                        <Value>First name</Value>
+                                      <Value>First name</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter first name</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="LastName">
-                                        <Value>Last name</Value>
+                                      <Value>Last name</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter last name</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Email">
-                                        <Value>Email</Value>
+                                      <Value>Email</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter email</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Company">
-                                        <Value>Company</Value>
+                                      <Value>Company</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter company</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Country">
-                                        <Value>Country</Value>
+                                      <Value>Country</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select country</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="StateProvince">
                                         <Value>State / province</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select state / province</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="City">
-                                        <Value>City</Value>
+                                      <Value>City</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter city</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Address 1">
-                                        <Value>Address 1</Value>
+                                      <Value>Address 1</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter address 1</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Address 2">
-                                        <Value>Address 2</Value>
+                                      <Value>Address 2</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter address 2</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="ZipPostalCode">
-                                        <Value>Zip / postal code</Value>
+                                      <Value>Zip / postal code</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter zip / postal code</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="PhoneNumber">
-                                        <Value>Phone number</Value>
+                                      <Value>Phone number</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter phone number</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="FaxNumber">
-                                        <Value>Fax number</Value>
+                                      <Value>Fax number</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter fax number</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
@@ -444,7 +504,6 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
-
             <LocaleResource Name="Configuration">
                 <Value>Configuration</Value>
                 <Children>
@@ -825,6 +884,59 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Payment">
+                      <Value>Payment</Value>
+                      <Children>
+                        <LocaleResource Name="Methods">
+                        <Value>Payment methods</Value>
+                        <Children>
+                          <LocaleResource Name="BackToList">
+                            <Value>back to payment method list</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Configure">
+                            <Value>Configure</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="FriendlyName">
+                                <Value>Friendly name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SystemName">
+                                <Value>System name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Version">
+                                <Value>Version</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Author">
+                                <Value>Author</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="IsActive">
+                                <Value>Is active</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SupportCapture">
+                                <Value>Supports capture</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SupportPartiallyRefund">
+                                <Value>Supports partial refund</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SupportRefund">
+                                <Value>Supports refund</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SupportVoid">
+                                <Value>Supports void</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="RecurringPaymentType">
+                                <Value>Recurring payment type</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Shipping">
                         <Value>Shipping</Value>
                         <Children>
@@ -884,6 +996,47 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                          <LocaleResource Name="Settings">
+                            <Value>Shipping settings</Value>
+                            <Children>
+                              <LocaleResource Name="Fields">
+                                <Children>
+                                  <LocaleResource Name="FreeShippingOverXEnabled">
+                                    <Value>Free shipping over 'X'</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Check to enable free shipping for all orders over 'X'. Set the value for X below.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="FreeShippingOverXValue">
+                                    <Value>Value of 'X'</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>All orders with a total greater than the value of 'X' will qualify for free shipping.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="EstimateShippingEnabled">
+                                    <Value>Estimate shipping enabled</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Check to allow customers to estimate shipping on shopping cart page</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="ShippingOriginAddress">
+                                    <Value>Shipping Origin</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Shipping origin address</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
                     </LocaleResource>
                     <LocaleResource Name="Tax">

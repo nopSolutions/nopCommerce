@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
+using System.Web.Routing;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -14,8 +15,7 @@ namespace Nop.Services.Tests.Payments
     public class TestPaymentMethod : BasePlugin, IPaymentMethod
     {
         #region Methods
-
-
+        
         /// <summary>
         /// Process a payment
         /// </summary>
@@ -105,6 +105,21 @@ namespace Nop.Services.Tests.Payments
             result.AddError("Cancelling recurring orders not supported");
             return result;
         }
+
+
+        /// <summary>
+        /// Gets a route for provider configuration
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            actionName = null;
+            controllerName = null;
+            routeValues = null;
+        }
+
         #endregion
 
         #region Properies

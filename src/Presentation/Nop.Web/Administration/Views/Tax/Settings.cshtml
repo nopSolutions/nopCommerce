@@ -185,7 +185,7 @@
         </tr>
         <tr>
             <td class="adminTitle" colspan="2">
-                @Html.NopLabelFor(model => model.DefaultTaxAddress):
+                <b>@Html.LabelFor(model => model.DefaultTaxAddress):</b>
             </td>
         </tr>
         @Html.EditorFor(x => x.DefaultTaxAddress,"Address")

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
+using System.Web.Routing;
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Payments
@@ -67,6 +66,14 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest);
 
+        /// <summary>
+        /// Gets a route for provider configuration
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
+        
         #endregion
 
         #region Properties

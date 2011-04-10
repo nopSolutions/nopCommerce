@@ -19,6 +19,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -860,6 +861,12 @@ namespace Nop.Services.Installation
                 .SaveSettings(new ShippingSettings()
                 {
                     ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
+                });
+
+            EngineContext.Current.Resolve<IConfigurationProvider<PaymentSettings>>()
+                .SaveSettings(new PaymentSettings()
+                {
+                    ActivePaymentMethodSystemNames = new List<string>() { "Payments.Manual" },
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<TaxSettings>>()

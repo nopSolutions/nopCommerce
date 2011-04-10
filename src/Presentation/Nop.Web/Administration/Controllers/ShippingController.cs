@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Shipping;
@@ -21,19 +22,24 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
         private readonly IShippingService _shippingService;
-        private readonly ShippingSettings _shippingSettings;
-        private ISettingService _settingService;
+        private ShippingSettings _shippingSettings;
+        private readonly ISettingService _settingService;
+        private readonly ICountryService _countryService;
+        private readonly IAddressService _addressService;
 
 		#endregion Fields 
 
 		#region Constructors
 
         public ShippingController(IShippingService shippingService, ShippingSettings shippingSettings,
-            ISettingService settingService)
+            ISettingService settingService, ICountryService countryService, 
+            IAddressService addressService)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
             this._settingService = settingService;
+            this._countryService = countryService;
+            this._addressService = addressService;
 		}
 
 		#endregion Constructors 
@@ -266,6 +272,69 @@ namespace Nop.Admin.Controllers
             {
                 Data = gridModel
             };
+        }
+
+        #endregion
+        
+        #region Shipping settings
+
+        public ActionResult Settings()
+        {
+            var model = _shippingSettings.ToModel();
+
+            //shipping origin
+            var originAddress = _shippingSettings.ShippingOriginAddressId > 0
+                                     ? _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId)
+                                     : null;
+            if (originAddress != null)
+                model.ShippingOriginAddress = originAddress.ToModel();
+            else
+                model.ShippingOriginAddress = new AddressModel();
+
+            model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (originAddress != null && c.Id == originAddress.CountryId) });
+
+            if (originAddress != null && originAddress.Country != null && originAddress.Country.StateProvinces.Count > 0)
+            {
+                foreach (var s in originAddress.Country.StateProvinces)
+                    model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == originAddress.StateProvinceId) });
+            }
+            else
+                model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+            model.ShippingOriginAddress.FirstNameDisabled = true;
+            model.ShippingOriginAddress.LastNameDisabled = true;
+            model.ShippingOriginAddress.EmailDisabled = true;
+            model.ShippingOriginAddress.CompanyDisabled = true;
+            model.ShippingOriginAddress.CityDisabled = true;
+            model.ShippingOriginAddress.Address1Disabled = true;
+            model.ShippingOriginAddress.Address2Disabled = true;
+            model.ShippingOriginAddress.PhoneNumberDisabled = true;
+            model.ShippingOriginAddress.FaxNumberDisabled = true;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Settings(ShippingSettingsModel model)
+        {
+            _shippingSettings = model.ToEntity(_shippingSettings);
+
+            var originAddress = _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId) ??
+                                         new Core.Domain.Common.Address()
+                                         {
+                                             CreatedOnUtc = DateTime.UtcNow,
+                                         };
+            originAddress = model.ShippingOriginAddress.ToEntity(originAddress);
+            if (originAddress.Id > 0)
+                _addressService.UpdateAddress(originAddress);
+            else
+                _addressService.InsertAddress(originAddress);
+
+            _shippingSettings.ShippingOriginAddressId = originAddress.Id;
+            _settingService.SaveSetting(_shippingSettings);
+
+            return RedirectToAction("Settings");
         }
 
         #endregion

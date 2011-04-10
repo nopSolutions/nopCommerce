@@ -148,6 +148,7 @@
     <Compile Include="Payments\CapturePaymentResult.cs" />
     <Compile Include="Payments\CancelRecurringPaymentRequest.cs" />
     <Compile Include="Payments\CancelRecurringPaymentResult.cs" />
+    <Compile Include="Payments\PaymentExtentions.cs" />
     <Compile Include="Payments\VoidPaymentRequest.cs" />
     <Compile Include="Payments\VoidPaymentResult.cs" />
     <Compile Include="Payments\PostProcessPaymentRequest.cs" />

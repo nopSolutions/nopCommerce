@@ -10,6 +10,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Tasks;
+using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 
@@ -69,8 +70,12 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<TaxSettings, TaxSettingsModel>();
             //shipping methods
             ViceVersa<ShippingMethod, ShippingMethodModel>();
-            //shipping methods
+            //shipping rate computation methods
             Mapper.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
+            //shipping settings
+            ViceVersa<ShippingSettings, ShippingSettingsModel>();
+            //payment methods
+            Mapper.CreateMap<IPaymentMethod, PaymentMethodModel>();
             //newsLetter subscriptions
             ViceVersa<NewsLetterSubscription, NewsLetterSubscriptionModel>();
             //forums
