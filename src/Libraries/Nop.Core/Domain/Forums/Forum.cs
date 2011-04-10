@@ -54,9 +54,9 @@ namespace Nop.Core.Domain.Forums
         public int LastPostId { get; set; }
 
         /// <summary>
-        /// Gets or sets the last post user identifier
+        /// Gets or sets the last post customer identifier
         /// </summary>
-        public int LastPostUserId { get; set; }
+        public int LastPostCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post date and time
@@ -71,12 +71,12 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOn { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of Forums
@@ -97,7 +97,7 @@ namespace Nop.Core.Domain.Forums
             {
                 if (this.ForumTopics.Count > 0)
                 {
-                    return this.ForumTopics.OrderBy(ft => ft.CreatedOn).ThenBy(ft => ft.Id).LastOrDefault();
+                    return this.ForumTopics.OrderBy(ft => ft.CreatedOnUtc).ThenBy(ft => ft.Id).LastOrDefault();
                 }
                 return null;
             }
@@ -113,16 +113,16 @@ namespace Nop.Core.Domain.Forums
                 var lastTopic = this.LastTopic;
                 if (lastTopic != null)
                 {
-                    return lastTopic.ForumPosts.OrderBy(fp => fp.CreatedOn).ThenBy(fp => fp.Id).LastOrDefault();
+                    return lastTopic.ForumPosts.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id).LastOrDefault();
                 }
                 return null;
             }
         }
 
         /// <summary>
-        /// Gets the last post user
+        /// Gets the last post customer
         /// </summary>
-        public Customer LastPostUser
+        public Customer LastPostCustomer
         {
             get
             {

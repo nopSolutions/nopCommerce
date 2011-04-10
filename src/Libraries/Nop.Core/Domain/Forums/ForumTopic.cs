@@ -24,9 +24,9 @@ namespace Nop.Core.Domain.Forums
         public int ForumId { get; set; }
 
         /// <summary>
-        /// Gets or sets the user identifier
+        /// Gets or sets the customer identifier
         /// </summary>
-        public int UserId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the topic type identifier
@@ -54,9 +54,9 @@ namespace Nop.Core.Domain.Forums
         public int LastPostId { get; set; }
 
         /// <summary>
-        /// Gets or sets the last post user identifier
+        /// Gets or sets the last post customer identifier
         /// </summary>
-        public int LastPostUserId { get; set; }
+        public int LastPostCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post date and time
@@ -66,21 +66,21 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOn { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the forum topic type
         /// </summary>
-        public ForumTopicTypeEnum ForumTopicType
+        public ForumTopicType ForumTopicType
         {
             get
             {
-                return (ForumTopicTypeEnum)this.TopicTypeId;
+                return (ForumTopicType)this.TopicTypeId;
             }
             set
             {
@@ -94,7 +94,7 @@ namespace Nop.Core.Domain.Forums
         public virtual Forum Forum { get; set; }
 
         /// <summary>
-        /// Gets the user
+        /// Gets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
 
@@ -126,7 +126,7 @@ namespace Nop.Core.Domain.Forums
             {
                 if (this.ForumPosts.Count > 0)
                 {
-                    return this.ForumPosts.OrderBy(fp => fp.CreatedOn).ThenBy(fp => fp.Id).FirstOrDefault();
+                    return this.ForumPosts.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id).FirstOrDefault();
                 }
 
                 return null;
@@ -142,7 +142,7 @@ namespace Nop.Core.Domain.Forums
             {
                 if (this.ForumPosts.Count > 0)
                 {
-                    return this.ForumPosts.OrderBy(fp => fp.CreatedOn).ThenBy(fp => fp.Id).LastOrDefault();
+                    return this.ForumPosts.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id).LastOrDefault();
                 }
 
                 return null;
@@ -150,9 +150,9 @@ namespace Nop.Core.Domain.Forums
         }
 
         /// <summary>
-        /// Gets the last post user
+        /// Gets the last post customer
         /// </summary>
-        public Customer LastPostUser
+        public Customer LastPostCustomer
         {
             get
             {

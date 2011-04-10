@@ -10,32 +10,32 @@ namespace Nop.Core.Domain.Forums
         public bool ForumsEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether relative date and time formatting is enabled  (e.g. 2 hours ago, a month ago)
+        /// Gets or sets a value indicating whether relative date and time formatting is enabled (e.g. 2 hours ago, a month ago)
         /// </summary>
         public bool RelativeDateTimeFormattingEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to edit posts that they created.
+        /// Gets or sets a value indicating whether customers are allowed to edit posts that they created
         /// </summary>
         public bool AllowCustomersToEditPosts { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to manage theirs subscriptions
+        /// Gets or sets a value indicating whether customers are allowed to manage their subscriptions
         /// </summary>
         public bool AllowCustomersToManageSubscriptions { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the guests are allowed to create posts.
+        /// Gets or sets a value indicating whether guests are allowed to create posts
         /// </summary>
         public bool AllowGuestsToCreatePosts { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the guests are allowed to create topics.
+        /// Gets or sets a value indicating whether guests are allowed to create topics
         /// </summary>
         public bool AllowGuestsToCreateTopics { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to delete posts that they created.
+        /// Gets or sets a value indicating whether customers are allowed to delete posts that they created
         /// </summary>
         public bool AllowCustomersToDeletePosts { get; set; }
 
@@ -80,9 +80,9 @@ namespace Nop.Core.Domain.Forums
         public int SearchResultsPageSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the page size for latest user post
+        /// Gets or sets the page size for latest customer posts
         /// </summary>
-        public int LatestUserPostsPageSize { get; set; }
+        public int LatestCustomerPostsPageSize { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show customers forum post count
@@ -92,10 +92,10 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets a forum editor type
         /// </summary>
-        public EditorTypeEnum ForumEditor { get; set; }
+        public EditorType ForumEditor { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers are allowed to specify signature.
+        /// Gets or sets a value indicating whether customers are allowed to specify a signature
         /// </summary>
         public bool SignaturesEnabled { get; set; }
 

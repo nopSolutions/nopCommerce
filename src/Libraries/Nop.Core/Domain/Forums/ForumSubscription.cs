@@ -14,9 +14,9 @@ namespace Nop.Core.Domain.Forums
         public Guid SubscriptionGuid { get; set; }
 
         /// <summary>
-        /// Gets or sets the user identifier
+        /// Gets or sets the customer identifier
         /// </summary>
-        public int UserId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the forum identifier
@@ -31,11 +31,11 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets the user
+        /// Gets the customer
         /// </summary>
-        public virtual Customer User { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

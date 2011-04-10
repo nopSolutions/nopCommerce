@@ -21,7 +21,7 @@
                 {
                     columns.Bound(x => x.Name);
                     columns.Bound(x => x.DisplayOrder).Width(150).Centered();
-                    columns.Bound(x => x.CreatedOn).Width(200).Centered(); //TOOD convert to user time
+                    columns.Bound(x => x.CreatedOnUtc).Width(200).Centered();
                     columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()
@@ -37,7 +37,7 @@
                             {
                                 columns.Bound(x => x.Name);
                                 columns.Bound(x => x.DisplayOrder).Width(150).Centered();
-                                columns.Bound(x => x.CreatedOn).Width(200).Centered(); //TOOD convert to user time
+                                columns.Bound(x => x.CreatedOnUtc).Width(200).Centered();
                                 columns.Bound(x => x.Id)
                                         .Width(50)
                                         .Centered()

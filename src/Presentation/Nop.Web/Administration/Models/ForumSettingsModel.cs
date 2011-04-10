@@ -37,7 +37,7 @@ namespace Nop.Admin.Models
         public int PostsPageSize { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Settings.Fields.ForumEditor")]
-        public EditorTypeEnum ForumEditor { get; set; }
+        public EditorType ForumEditor { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Settings.Fields.SignaturesEnabled")]
         public bool SignaturesEnabled { get; set; }

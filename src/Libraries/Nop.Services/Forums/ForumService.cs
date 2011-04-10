@@ -111,25 +111,25 @@ namespace Nop.Services.Forums
             //last values
             int lastTopicId = 0;
             int lastPostId = 0;
-            int lastPostUserId = 0;
+            int lastPostCustomerId = 0;
             DateTime? lastPostTime = null;
             var queryLastValues = from ft in _forumTopicRepository.Table
                                   join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
                                   where ft.ForumId == forumId
-                                  orderby fp.CreatedOn descending, ft.CreatedOn descending
+                                  orderby fp.CreatedOnUtc descending, ft.CreatedOnUtc descending
                                   select new
                                   {
                                       LastTopicId = ft.Id,
                                       LastPostId = fp.Id,
-                                      LastPostUserId = fp.UserId,
-                                      LastPostTime = fp.CreatedOn
+                                      LastPostCustomerId = fp.CustomerId,
+                                      LastPostTime = fp.CreatedOnUtc
                                   };
             var lastValues = queryLastValues.FirstOrDefault();
             if (lastValues != null)
             {
                 lastTopicId = lastValues.LastTopicId;
                 lastPostId = lastValues.LastPostId;
-                lastPostUserId = lastValues.LastPostUserId;
+                lastPostCustomerId = lastValues.LastPostCustomerId;
                 lastPostTime = lastValues.LastPostTime;
             }
 
@@ -138,7 +138,7 @@ namespace Nop.Services.Forums
             forum.NumPosts = numPosts;
             forum.LastTopicId = lastTopicId;
             forum.LastPostId = lastPostId;
-            forum.LastPostUserId = lastPostUserId;
+            forum.LastPostCustomerId = lastPostCustomerId;
             forum.LastPostTime = lastPostTime;
             UpdateForum(forum);
         }
@@ -163,38 +163,38 @@ namespace Nop.Services.Forums
 
             //last values
             int lastPostId = 0;
-            int lastPostUserId = 0;
+            int lastPostCustomerId = 0;
             DateTime? lastPostTime = null;
             var queryLastValues = from fp in _forumPostRepository.Table
                                   where fp.TopicId == Id
-                                  orderby fp.CreatedOn descending
+                                  orderby fp.CreatedOnUtc descending
                                   select new
                                   {
                                       LastPostId = fp.Id,
-                                      LastPostUserId = fp.UserId,
-                                      LastPostTime = fp.CreatedOn
+                                      LastPostCustomerId = fp.CustomerId,
+                                      LastPostTime = fp.CreatedOnUtc
                                   };
             var lastValues = queryLastValues.FirstOrDefault();
             if (lastValues != null)
             {
                 lastPostId = lastValues.LastPostId;
-                lastPostUserId = lastValues.LastPostUserId;
+                lastPostCustomerId = lastValues.LastPostCustomerId;
                 lastPostTime = lastValues.LastPostTime;
             }
 
             //update topic
             forumTopic.NumPosts = numPosts;
             forumTopic.LastPostId = lastPostId;
-            forumTopic.LastPostUserId = lastPostUserId;
+            forumTopic.LastPostCustomerId = lastPostCustomerId;
             forumTopic.LastPostTime = lastPostTime;
             UpdateTopic(forumTopic);
         }
 
         /// <summary>
-        /// Update user stats
+        /// Update customer stats
         /// </summary>
         /// <param name="customerId">The customer identifier</param>
-        public void UpdateUserStats(int customerId)
+        public void UpdateCustomerStats(int customerId)
         {
             if (customerId == 0)
                 return;
@@ -204,7 +204,7 @@ namespace Nop.Services.Forums
                 return;
 
             var query = from fp in _forumPostRepository.Table
-                        where fp.UserId == customerId
+                        where fp.CustomerId == customerId
                         select fp.Id;
             int numPosts = query.Count();
 
@@ -408,7 +408,7 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 return;
 
-            int userId = forumTopic.UserId;
+            int customerId = forumTopic.CustomerId;
             int forumId = forumTopic.ForumId;
 
             //delete topic
@@ -426,7 +426,7 @@ namespace Nop.Services.Forums
 
             //update stats
             UpdateForumStats(forumId);
-            UpdateUserStats(userId);
+            UpdateCustomerStats(customerId);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -473,7 +473,7 @@ namespace Nop.Services.Forums
         /// Gets all topics
         /// </summary>
         /// <param name="forumId">The forum group identifier</param>
-        /// <param name="userId">The user identifier</param>
+        /// <param name="customerId">The customer identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchType">Search type</param>
         /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
@@ -481,7 +481,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <returns>Topics</returns>
         public IList<ForumTopic> GetAllTopics(int forumId,
-            int userId, string keywords, ForumSearchTypeEnum searchType,
+            int customerId, string keywords, ForumSearchType searchType,
             int limitDays, int pageIndex, int pageSize)
         {
             DateTime? limitDate = null;
@@ -493,12 +493,12 @@ namespace Nop.Services.Forums
                          join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
                          where
                          (forumId == 0 || ft.ForumId == forumId) &&
-                         (userId == 0 || ft.UserId == userId) &&
+                         (customerId == 0 || ft.CustomerId == customerId) &&
                          (
                              // following line causes SqlCeException on SQLCE4 (comparing parameter to IS NULL in query) -works on SQL Server
                              // String.IsNullOrEmpty(keywords) ||
-                         ((searchType == ForumSearchTypeEnum.All || searchType == ForumSearchTypeEnum.TopicTitlesOnly) && ft.Subject.Contains(keywords)) ||
-                         ((searchType == ForumSearchTypeEnum.All || searchType == ForumSearchTypeEnum.PostTextOnly) && fp.Text.Contains(keywords))) &&
+                         ((searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly) && ft.Subject.Contains(keywords)) ||
+                         ((searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly) && fp.Text.Contains(keywords))) &&
                          (!limitDate.HasValue || limitDate.Value <= ft.LastPostTime)
                          select ft.Id;
 
@@ -537,7 +537,7 @@ namespace Nop.Services.Forums
         /// Inserts a topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        /// <param name="sendNotifications">A value indicating whether to send notifications to users</param>
+        /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
         public void InsertTopic(ForumTopic forumTopic, bool sendNotifications)
         {
             if (forumTopic == null)
@@ -561,7 +561,7 @@ namespace Nop.Services.Forums
 
                 foreach (var subscription in subscriptions)
                 {
-                    if (subscription.UserId == forumTopic.UserId)
+                    if (subscription.CustomerId == forumTopic.CustomerId)
                         continue;
 
                     // TODO send message about new topic to forum subscribers
@@ -598,7 +598,7 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 return forumTopic;
 
-            if (this.IsUserAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic))
+            if (this.IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic))
             {
                 int previousForumId = forumTopic.ForumId;
                 var newForum = GetForumById(newForumId);
@@ -608,7 +608,7 @@ namespace Nop.Services.Forums
                     if (previousForumId != newForumId)
                     {
                         forumTopic.ForumId = newForum.Id;
-                        forumTopic.UpdatedOn = DateTime.UtcNow;
+                        forumTopic.UpdatedOnUtc = DateTime.UtcNow;
                         UpdateTopic(forumTopic);
 
                         //update forum stats
@@ -631,7 +631,7 @@ namespace Nop.Services.Forums
                 return;
 
             int Id = forumPost.TopicId;
-            int userId = forumPost.UserId;
+            int customerId = forumPost.CustomerId;
             var forumTopic = this.GetTopicById(Id);
             int forumId = forumTopic.ForumId;
 
@@ -659,7 +659,7 @@ namespace Nop.Services.Forums
             if (!deleteTopic)
                 UpdateForumTopicStats(Id);
             UpdateForumStats(forumId);
-            UpdateUserStats(userId);
+            UpdateCustomerStats(customerId);
 
             //clear cache            
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
@@ -689,15 +689,15 @@ namespace Nop.Services.Forums
         /// Gets all posts
         /// </summary>
         /// <param name="Id">The forum topic identifier</param>
-        /// <param name="userId">The user identifier</param>
+        /// <param name="customerId">The customer identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
         public PagedList<ForumPost> GetAllPosts(int Id,
-            int userId, string keywords, int pageIndex, int pageSize)
+            int customerId, string keywords, int pageIndex, int pageSize)
         {
-            return GetAllPosts(Id, userId, keywords, true,
+            return GetAllPosts(Id, customerId, keywords, true,
                 pageIndex, pageSize);
         }
 
@@ -705,26 +705,26 @@ namespace Nop.Services.Forums
         /// Gets all posts
         /// </summary>
         /// <param name="Id">The forum topic identifier</param>
-        /// <param name="userId">The user identifier</param>
+        /// <param name="customerId">The customer identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="ascSort">Sort order</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        public PagedList<ForumPost> GetAllPosts(int Id, int userId,
+        public PagedList<ForumPost> GetAllPosts(int Id, int customerId,
             string keywords, bool ascSort, int pageIndex, int pageSize)
         {
             var query = _forumPostRepository.Table;
             if (Id > 0)
                 query = query.Where(fp => Id == fp.TopicId);
-            if (userId > 0)
-                query = query.Where(fp => userId == fp.UserId);
+            if (customerId > 0)
+                query = query.Where(fp => customerId == fp.CustomerId);
             if (!String.IsNullOrEmpty(keywords))
                 query = query.Where(fp => fp.Text.Contains(keywords));
             if (ascSort)
-                query = query.OrderBy(fp => fp.CreatedOn).ThenBy(fp => fp.Id);
+                query = query.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
             else
-                query = query.OrderByDescending(fp => fp.CreatedOn).ThenBy(fp => fp.Id);
+                query = query.OrderByDescending(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
 
             var forumPosts = new PagedList<ForumPost>(query, pageIndex, pageSize);
 
@@ -735,7 +735,7 @@ namespace Nop.Services.Forums
         /// Inserts a post
         /// </summary>
         /// <param name="forumPost">The forum post</param>
-        /// <param name="sendNotifications">A value indicating whether to send notifications to users</param>
+        /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
         public void InsertPost(ForumPost forumPost, bool sendNotifications)
         {
             if (forumPost == null)
@@ -744,12 +744,12 @@ namespace Nop.Services.Forums
             _forumPostRepository.Insert(forumPost);
 
             //update stats
-            int userId = forumPost.UserId;
+            int customerId = forumPost.CustomerId;
             var forumTopic = this.GetTopicById(forumPost.TopicId);
             int forumId = forumTopic.ForumId;
             UpdateForumTopicStats(forumPost.TopicId);
             UpdateForumStats(forumId);
-            UpdateUserStats(userId);
+            UpdateCustomerStats(customerId);
 
             //clear cache            
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
@@ -764,7 +764,7 @@ namespace Nop.Services.Forums
 
                 foreach (ForumSubscription subscription in subscriptions)
                 {
-                    if (subscription.UserId == forumPost.UserId)
+                    if (subscription.CustomerId == forumPost.CustomerId)
                         continue;
 
                     // TODO send message about new post to topic subscribers
@@ -824,8 +824,8 @@ namespace Nop.Services.Forums
         /// <summary>
         /// Gets private messages
         /// </summary>
-        /// <param name="fromUserId">The user identifier who sent the message</param>
-        /// <param name="toUserId">The user identifier who should receive the message</param>
+        /// <param name="fromCustomerId">The customer identifier who sent the message</param>
+        /// <param name="toCustomerId">The customer identifier who should receive the message</param>
         /// <param name="isRead">A value indicating whether loaded messages are read. false - to load not read messages only, 1 to load read messages only, null to load all messages</param>
         /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
         /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
@@ -833,20 +833,20 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        public PagedList<PrivateMessage> GetAllPrivateMessages(int fromUserId,
-            int toUserId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
+        public PagedList<PrivateMessage> GetAllPrivateMessages(int fromCustomerId,
+            int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex, int pageSize)
         {
             var query = from pm in _forumPrivateMessageRepository.Table
                         where
-                        (fromUserId == 0 || fromUserId == pm.FromUserId) &&
-                        (toUserId == 0 || toUserId == pm.ToUserId) &&
+                        (fromCustomerId == 0 || fromCustomerId == pm.FromCustomerId) &&
+                        (toCustomerId == 0 || toCustomerId == pm.ToCustomerId) &&
                         (!isRead.HasValue || isRead.Value == pm.IsRead) &&
                         (!isDeletedByAuthor.HasValue || isDeletedByAuthor.Value == pm.IsDeletedByAuthor) &&
                         (!isDeletedByRecipient.HasValue || isDeletedByRecipient.Value == pm.IsDeletedByRecipient) &&
                         (String.IsNullOrEmpty(keywords) || pm.Subject.Contains(keywords)) &&
                         (String.IsNullOrEmpty(keywords) || pm.Text.Contains(keywords))
-                        orderby pm.CreatedOn descending
+                        orderby pm.CreatedOnUtc descending
                         select pm;
             var privateMessages = new PagedList<PrivateMessage>(query, pageIndex, pageSize);
 
@@ -864,7 +864,7 @@ namespace Nop.Services.Forums
 
             _forumPrivateMessageRepository.Insert(privateMessage);
 
-            var customerTo = _customerService.GetCustomerById(privateMessage.ToUserId);
+            var customerTo = _customerService.GetCustomerById(privateMessage.ToCustomerId);
             if (customerTo == null)
                 throw new NopException("Recipient could not be loaded");
 
@@ -931,19 +931,19 @@ namespace Nop.Services.Forums
         /// <summary>
         /// Gets forum subscriptions
         /// </summary>
-        /// <param name="userId">The user identifier</param>
+        /// <param name="customerId">The customer identifier</param>
         /// <param name="forumId">The forum identifier</param>
         /// <param name="topicId">The topic identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        public PagedList<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
+        public PagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
             int topicId, int pageIndex, int pageSize)
         {
             var fsQuery = from fs in _forumSubscriptionRepository.Table
-                          join c in _customerRepository.Table on fs.UserId equals c.Id
+                          join c in _customerRepository.Table on fs.CustomerId equals c.Id
                           where
-                          (userId == 0 || fs.UserId == userId) &&
+                          (customerId == 0 || fs.CustomerId == customerId) &&
                           (forumId == 0 || fs.ForumId == forumId) &&
                           (topicId == 0 || fs.TopicId == topicId) &&
                           (c.Active && !c.Deleted)
@@ -951,7 +951,7 @@ namespace Nop.Services.Forums
 
             var query = from fs in _forumSubscriptionRepository.Table
                         where fsQuery.Contains(fs.SubscriptionGuid)
-                        orderby fs.CreatedOn descending, fs.SubscriptionGuid descending
+                        orderby fs.CreatedOnUtc descending, fs.SubscriptionGuid descending
                         select fs;
 
             var forumSubscriptions = new PagedList<ForumSubscription>(query, pageIndex, pageSize);
@@ -983,12 +983,12 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to create new topics
+        /// Check whether customer is allowed to create new topics
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="forum">Forum</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToCreateTopic(Customer customer, Forum forum)
+        public bool IsCustomerAllowedToCreateTopic(Customer customer, Forum forum)
         {
             if (forum == null)
                 return false;
@@ -1008,12 +1008,12 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to edit topic
+        /// Check whether customer is allowed to edit topic
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToEditTopic(Customer customer, ForumTopic topic)
+        public bool IsCustomerAllowedToEditTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1031,7 +1031,7 @@ namespace Nop.Services.Forums
             //TODO get AllowCustomersToEditPosts from forum settings
             //if (this.AllowCustomersToEditPosts)
             //{
-            //    bool ownTopic = customer.Id == topic.UserId;
+            //    bool ownTopic = customer.Id == topic.CustomerId;
             //    return ownTopic;
             //}
 
@@ -1039,12 +1039,12 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to move topic
+        /// Check whether customer is allowed to move topic
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToMoveTopic(Customer customer, ForumTopic topic)
+        public bool IsCustomerAllowedToMoveTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1063,12 +1063,12 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to delete topic
+        /// Check whether customer is allowed to delete topic
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToDeleteTopic(Customer customer, ForumTopic topic)
+        public bool IsCustomerAllowedToDeleteTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1086,7 +1086,7 @@ namespace Nop.Services.Forums
             // TODO get AllowCustomersToDeletePosts from forum settings
             //if (this.AllowCustomersToDeletePosts)
             //{
-            //    bool ownTopic = customer.Id == topic.UserId;
+            //    bool ownTopic = customer.Id == topic.CustomerId;
             //    return ownTopic;
             //}
 
@@ -1094,12 +1094,12 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to create new post
+        /// Check whether customer is allowed to create new post
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToCreatePost(Customer customer, ForumTopic topic)
+        public bool IsCustomerAllowedToCreatePost(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1119,12 +1119,12 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to edit post
+        /// Check whether customer is allowed to edit post
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToEditPost(Customer customer, ForumPost post)
+        public bool IsCustomerAllowedToEditPost(Customer customer, ForumPost post)
         {
             if (post == null)
                 return false;
@@ -1142,7 +1142,7 @@ namespace Nop.Services.Forums
             //TODO 
             //if (this.AllowCustomersToEditPosts)
             //{
-            //    bool ownPost = customer.CustomerId == post.UserId;
+            //    bool ownPost = customer.CustomerId == post.CustomerId;
             //    return ownPost;
             //}
 
@@ -1150,12 +1150,12 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to delete post
+        /// Check whether customer is allowed to delete post
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToDeletePost(Customer customer, ForumPost post)
+        public bool IsCustomerAllowedToDeletePost(Customer customer, ForumPost post)
         {
             if (post == null)
                 return false;
@@ -1173,7 +1173,7 @@ namespace Nop.Services.Forums
             // TODO get AllowCustomersToDeletePosts from forum settings
             //if (this.AllowCustomersToDeletePosts)
             //{
-            //    bool ownPost = customer.Id == post.UserId;
+            //    bool ownPost = customer.Id == post.CustomerId;
             //    return ownPost;
             //}
 
@@ -1181,11 +1181,11 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to set topic priority
+        /// Check whether customer is allowed to set topic priority
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToSetTopicPriority(Customer customer)
+        public bool IsCustomerAllowedToSetTopicPriority(Customer customer)
         {
             if (customer == null)
                 return false;
@@ -1201,11 +1201,11 @@ namespace Nop.Services.Forums
         }
 
         /// <summary>
-        /// Check whether user is allowed to watch topics
+        /// Check whether customer is allowed to watch topics
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToSubscribe(Customer customer)
+        public bool IsCustomerAllowedToSubscribe(Customer customer)
         {
             if (customer == null)
                 return false;

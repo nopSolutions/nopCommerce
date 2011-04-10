@@ -1,21 +1,21 @@
 ﻿namespace Nop.Core.Domain.Forums
 {
     /// <summary>
-    /// Represents an editor type
+    /// Represents a forum topic type
     /// </summary>
-    public enum EditorTypeEnum
+    public enum ForumTopicType
     {
         /// <summary>
-        /// SimpleTextBox
+        /// Normal
         /// </summary>
-        SimpleTextBox = 10,
+        Normal = 10,
         /// <summary>
-        /// BBCode Editor
+        /// Sticky
         /// </summary>
-        BBCodeEditor = 20,
+        Sticky = 15,
         /// <summary>
-        /// Html Editor
+        /// Announcement
         /// </summary>
-        HtmlEditor = 30,
+        Announcement = 20,
     }
 }

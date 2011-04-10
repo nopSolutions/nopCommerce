@@ -14,12 +14,12 @@ namespace Nop.Data.Mapping.Content.Forums
 
             this.HasRequired(pm => pm.FromCustomer)
                .WithMany()
-               .HasForeignKey(pm => pm.FromUserId)
+               .HasForeignKey(pm => pm.FromCustomerId)
                .WillCascadeOnDelete(false);
 
             this.HasRequired(pm => pm.ToCustomer)
                .WithMany()
-               .HasForeignKey(pm => pm.ToUserId)
+               .HasForeignKey(pm => pm.ToCustomerId)
                .WillCascadeOnDelete(false);
         }
     }

@@ -4,7 +4,7 @@
 @using Nop.Admin.Models;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.HiddenFor(model => model.CreatedOn)
+@Html.HiddenFor(model => model.CreatedOnUtc)
 <table class="adminContent">
     <tr>
         <td class="adminTitle">

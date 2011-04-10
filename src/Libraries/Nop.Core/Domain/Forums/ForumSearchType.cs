@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a forum search type
     /// </summary>
-    public enum ForumSearchTypeEnum
+    public enum ForumSearchType
     {
         /// <summary>
         /// Topic titles and post text

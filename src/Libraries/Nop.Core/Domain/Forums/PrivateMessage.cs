@@ -9,14 +9,14 @@ namespace Nop.Core.Domain.Forums
     public partial class PrivateMessage : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the user identifier who sent the message
+        /// Gets or sets the customer identifier who sent the message
         /// </summary>
-        public int FromUserId { get; set; }
+        public int FromCustomerId { get; set; }
 
         /// <summary>
-        /// Gets or sets the user identifier who should receive the message
+        /// Gets or sets the customer identifier who should receive the message
         /// </summary>
-        public int ToUserId { get; set; }
+        public int ToCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the subject
@@ -46,17 +46,16 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets the user who sent the message
+        /// Gets the customer who sent the message
         /// </summary>
         public virtual Customer FromCustomer { get; set; }
 
         /// <summary>
-        /// Gets the user who should receive the message
+        /// Gets the customer who should receive the message
         /// </summary>
         public virtual Customer ToCustomer { get; set; }
-
     }
 }

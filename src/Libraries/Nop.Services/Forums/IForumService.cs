@@ -98,7 +98,7 @@ namespace Nop.Services.Forums
         /// Gets all topics
         /// </summary>
         /// <param name="forumId">The forum group identifier</param>
-        /// <param name="userId">The user identifier</param>
+        /// <param name="customerId">The customer identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchType">Search type</param>
         /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
@@ -106,7 +106,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <returns>Topics</returns>
         IList<ForumTopic> GetAllTopics(int forumId,
-            int userId, string keywords, ForumSearchTypeEnum searchType,
+            int customerId, string keywords, ForumSearchType searchType,
             int limitDays, int pageIndex, int pageSize);
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Nop.Services.Forums
         /// Inserts a topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        /// <param name="sendNotifications">A value indicating whether to send notifications to users</param>
+        /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
         void InsertTopic(ForumTopic forumTopic, bool sendNotifications);
 
         /// <summary>
@@ -155,32 +155,32 @@ namespace Nop.Services.Forums
         /// Gets all posts
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
-        /// <param name="userId">The user identifier</param>
+        /// <param name="customerId">The customer identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
         PagedList<ForumPost> GetAllPosts(int forumTopicId,
-            int userId, string keywords, int pageIndex, int pageSize);
+            int customerId, string keywords, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all posts
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
-        /// <param name="userId">The user identifier</param>
+        /// <param name="customerId">The customer identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="ascSort">Sort order</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        PagedList<ForumPost> GetAllPosts(int forumTopicId, int userId,
+        PagedList<ForumPost> GetAllPosts(int forumTopicId, int customerId,
             string keywords, bool ascSort, int pageIndex, int pageSize);
 
         /// <summary>
         /// Inserts a post
         /// </summary>
         /// <param name="forumPost">The forum post</param>
-        /// <param name="sendNotifications">A value indicating whether to send notifications to users</param>
+        /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
         void InsertPost(ForumPost forumPost, bool sendNotifications);
 
         /// <summary>
@@ -205,8 +205,8 @@ namespace Nop.Services.Forums
         /// <summary>
         /// Gets private messages
         /// </summary>
-        /// <param name="fromUserId">The user identifier who sent the message</param>
-        /// <param name="toUserId">The user identifier who should receive the message</param>
+        /// <param name="fromCustomerId">The customer identifier who sent the message</param>
+        /// <param name="toCustomerId">The customer identifier who should receive the message</param>
         /// <param name="isRead">A value indicating whether loaded messages are read. false - to load not read messages only, 1 to load read messages only, null to load all messages</param>
         /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
         /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
@@ -214,8 +214,8 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        PagedList<PrivateMessage> GetAllPrivateMessages(int fromUserId,
-            int toUserId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
+        PagedList<PrivateMessage> GetAllPrivateMessages(int fromCustomerId,
+            int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex, int pageSize);
 
         /// <summary>
@@ -246,13 +246,13 @@ namespace Nop.Services.Forums
         /// <summary>
         /// Gets forum subscriptions
         /// </summary>
-        /// <param name="userId">The user identifier</param>
+        /// <param name="customerId">The customer identifier</param>
         /// <param name="forumId">The forum identifier</param>
         /// <param name="topicId">The topic identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        PagedList<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
+        PagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
             int topicId, int pageIndex, int pageSize);
 
         /// <summary>
@@ -268,74 +268,74 @@ namespace Nop.Services.Forums
         void UpdateSubscription(ForumSubscription forumSubscription);
 
         /// <summary>
-        /// Check whether user is allowed to create new topics
+        /// Check whether customer is allowed to create new topics
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="forum">Forum</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToCreateTopic(Customer customer, Forum forum);
+        bool IsCustomerAllowedToCreateTopic(Customer customer, Forum forum);
 
         /// <summary>
-        /// Check whether user is allowed to edit topic
+        /// Check whether customer is allowed to edit topic
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToEditTopic(Customer customer, ForumTopic topic);
+        bool IsCustomerAllowedToEditTopic(Customer customer, ForumTopic topic);
 
         /// <summary>
-        /// Check whether user is allowed to move topic
+        /// Check whether customer is allowed to move topic
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToMoveTopic(Customer customer, ForumTopic topic);
+        bool IsCustomerAllowedToMoveTopic(Customer customer, ForumTopic topic);
 
         /// <summary>
-        /// Check whether user is allowed to delete topic
+        /// Check whether customer is allowed to delete topic
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToDeleteTopic(Customer customer, ForumTopic topic);
+        bool IsCustomerAllowedToDeleteTopic(Customer customer, ForumTopic topic);
 
         /// <summary>
-        /// Check whether user is allowed to create new post
+        /// Check whether customer is allowed to create new post
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToCreatePost(Customer customer, ForumTopic topic);
+        bool IsCustomerAllowedToCreatePost(Customer customer, ForumTopic topic);
 
         /// <summary>
-        /// Check whether user is allowed to edit post
+        /// Check whether customer is allowed to edit post
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToEditPost(Customer customer, ForumPost post);
+        bool IsCustomerAllowedToEditPost(Customer customer, ForumPost post);
 
         /// <summary>
-        /// Check whether user is allowed to delete post
+        /// Check whether customer is allowed to delete post
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToDeletePost(Customer customer, ForumPost post);
+        bool IsCustomerAllowedToDeletePost(Customer customer, ForumPost post);
 
         /// <summary>
-        /// Check whether user is allowed to set topic priority
+        /// Check whether customer is allowed to set topic priority
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToSetTopicPriority(Customer customer);
+        bool IsCustomerAllowedToSetTopicPriority(Customer customer);
 
         /// <summary>
-        /// Check whether user is allowed to watch topics
+        /// Check whether customer is allowed to watch topics
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToSubscribe(Customer customer);
+        bool IsCustomerAllowedToSubscribe(Customer customer);
 
         /// <summary>
         /// Calculates topic page index by post identifier

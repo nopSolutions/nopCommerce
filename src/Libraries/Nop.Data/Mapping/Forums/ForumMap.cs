@@ -14,7 +14,7 @@ namespace Nop.Data.Mapping.Content.Forums
 
             this.Ignore(f => f.LastPost);
             this.Ignore(f => f.LastTopic);
-            this.Ignore(f => f.LastPostUser);
+            this.Ignore(f => f.LastPostCustomer);
 
             this.HasRequired(f => f.ForumGroup)
                 .WithMany(fg => fg.Forums)

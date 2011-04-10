@@ -12,9 +12,9 @@ namespace Nop.Data.Mapping.Content.Forums
             this.Property(fs => fs.ForumId).IsOptional();
             this.Property(fs => fs.TopicId).IsOptional();
 
-            this.HasRequired(fs => fs.User)
+            this.HasRequired(fs => fs.Customer)
                 .WithMany()
-                .HasForeignKey(fs => fs.UserId)
+                .HasForeignKey(fs => fs.CustomerId)
                 .WillCascadeOnDelete(false);
         }
     }

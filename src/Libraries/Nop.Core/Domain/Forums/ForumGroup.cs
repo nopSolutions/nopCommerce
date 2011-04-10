@@ -34,12 +34,12 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOn { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of Forums

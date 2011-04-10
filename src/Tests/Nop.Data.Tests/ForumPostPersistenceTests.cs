@@ -22,8 +22,8 @@ namespace Nop.Data.Tests
                 Name = "Forum Group 1",
                 Description = "Forum Group 1 Description",
                 DisplayOrder = 1,
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
                 Forums = new List<Forum>(),
             };
 
@@ -40,8 +40,8 @@ namespace Nop.Data.Tests
                 Description = "Forum 1 Description",
                 ForumGroupId = forumGroupFromDb.Id,
                 DisplayOrder = 10,
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
                 NumPosts = 25,
                 NumTopics = 15,
                 ForumTopics = new List<ForumTopic>(),
@@ -61,12 +61,12 @@ namespace Nop.Data.Tests
             {
                 Subject = "Forum Topic 1",
                 ForumId = forumFromDb.Id,
-                TopicTypeId = (int)ForumTopicTypeEnum.Sticky,
+                TopicTypeId = (int)ForumTopicType.Sticky,
                 Views = 123,
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
                 NumPosts = 100,
-                UserId = customerFromDb.Id,
+                CustomerId = customerFromDb.Id,
             };
             forum.ForumTopics.Add(forumTopic);
 
@@ -75,7 +75,7 @@ namespace Nop.Data.Tests
             forumTopicFromDb.Subject.ShouldEqual("Forum Topic 1");
             forumTopicFromDb.Views.ShouldEqual(123);
             forumTopicFromDb.NumPosts.ShouldEqual(100);
-            forumTopicFromDb.TopicTypeId.ShouldEqual((int)ForumTopicTypeEnum.Sticky);
+            forumTopicFromDb.TopicTypeId.ShouldEqual((int)ForumTopicType.Sticky);
             forumTopicFromDb.ForumId.ShouldEqual(forumFromDb.Id);
 
             var forumPost = new ForumPost
@@ -84,9 +84,9 @@ namespace Nop.Data.Tests
                 ForumTopic = forumTopicFromDb,
                 TopicId = forumTopicFromDb.Id,
                 IPAddress = "127.0.0.1",
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now,
-                UserId = customerFromDb.Id,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                CustomerId = customerFromDb.Id,
             };
 
             var forumPostFromDb = SaveAndLoadEntity(forumPost);

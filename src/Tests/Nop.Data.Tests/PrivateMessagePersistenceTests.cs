@@ -27,9 +27,9 @@ namespace Nop.Data.Tests
                 IsDeletedByAuthor = false,
                 IsDeletedByRecipient = false,
                 IsRead = false,
-                CreatedOn = DateTime.Now,
-                FromUserId = customer1FromDb.Id,
-                ToUserId = customer2FromDb.Id,
+                CreatedOnUtc = DateTime.UtcNow,
+                FromCustomerId = customer1FromDb.Id,
+                ToCustomerId = customer2FromDb.Id,
             };
 
             var fromDb = SaveAndLoadEntity(privateMessage);

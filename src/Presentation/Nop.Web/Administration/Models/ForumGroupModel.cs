@@ -27,10 +27,10 @@ namespace Nop.Admin.Models
         public int DisplayOrder { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn")]
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.UpdatedOn")]
-        public DateTime UpdatedOn { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         public List<Forum> Forums { get; set; }
     }

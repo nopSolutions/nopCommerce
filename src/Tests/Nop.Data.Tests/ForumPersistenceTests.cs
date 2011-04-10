@@ -17,8 +17,8 @@ namespace Nop.Data.Tests
                 Name = "Forum Group 1",
                 Description = "Forum Group 1 Description",
                 DisplayOrder = 1,
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
                 Forums = new List<Forum>(),
             };
 
@@ -35,8 +35,8 @@ namespace Nop.Data.Tests
                 Description = "Forum 1 Description",
                 ForumGroupId = fromDb.Id,
                 DisplayOrder = 10,
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
                 NumPosts = 25,
                 NumTopics = 15,
             };

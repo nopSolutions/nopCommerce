@@ -66,8 +66,8 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult CreateForumGroup(ForumGroupModel model, bool continueEditing)
         {
-            model.CreatedOn = DateTime.UtcNow;
-            model.UpdatedOn = DateTime.UtcNow;
+            model.CreatedOnUtc = DateTime.UtcNow;
+            model.UpdatedOnUtc = DateTime.UtcNow;
             var forumGroup = model.ToEntity();
             _forumService.InsertForumGroup(forumGroup);
             return continueEditing ? RedirectToAction("EditForumGroup", new { forumGroup.Id }) : RedirectToAction("List");
@@ -84,8 +84,8 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult CreateForum(ForumModel model, bool continueEditing)
         {
-            model.CreatedOn = DateTime.UtcNow;
-            model.UpdatedOn = DateTime.UtcNow;
+            model.CreatedOnUtc = DateTime.UtcNow;
+            model.UpdatedOnUtc = DateTime.UtcNow;
             var forum = model.ToEntity();
             _forumService.InsertForum(forum);
             if (continueEditing)
@@ -109,7 +109,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult EditForumGroup(ForumGroupModel model, bool continueEditing)
         {
-            model.UpdatedOn = DateTime.UtcNow;
+            model.UpdatedOnUtc = DateTime.UtcNow;
             var forumGroup = _forumService.GetForumGroupById(model.Id);
             forumGroup = model.ToEntity(forumGroup);
             _forumService.UpdateForumGroup(forumGroup);
@@ -128,7 +128,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult EditForum(ForumModel model, bool continueEditing)
         {
-            model.UpdatedOn = DateTime.UtcNow;
+            model.UpdatedOnUtc = DateTime.UtcNow;
             var forum = _forumService.GetForumById(model.Id);
             forum = model.ToEntity(forum);
             _forumService.UpdateForum(forum);

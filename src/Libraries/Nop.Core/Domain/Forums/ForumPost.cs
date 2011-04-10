@@ -14,9 +14,9 @@ namespace Nop.Core.Domain.Forums
         public int TopicId { get; set; }
 
         /// <summary>
-        /// Gets or sets the user identifier
+        /// Gets or sets the customer identifier
         /// </summary>
-        public int UserId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the text
@@ -31,12 +31,12 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOn { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets the topic
@@ -44,7 +44,7 @@ namespace Nop.Core.Domain.Forums
         public virtual ForumTopic ForumTopic { get; set; }
 
         /// <summary>
-        /// Gets the user
+        /// Gets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
 

@@ -907,8 +907,8 @@ namespace Nop.Services.Installation
                     RelativeDateTimeFormattingEnabled = true,
                     AllowCustomersToEditPosts = true,
                     AllowCustomersToManageSubscriptions = true,
-                    AllowGuestsToCreatePosts = true,
-                    AllowGuestsToCreateTopics = true,
+                    AllowGuestsToCreatePosts = false,
+                    AllowGuestsToCreateTopics = false,
                     AllowCustomersToDeletePosts = true,
                     TopicSubjectMaxLength = 450,
                     PostMaxLength = 4000,
@@ -918,12 +918,12 @@ namespace Nop.Services.Installation
                     ForumTopicsPageLinkDisplayCount = 5,
                     SearchPageLinkDisplayCount = 10,
                     SearchResultsPageSize = 15,
-                    LatestUserPostsPageSize = 5,
+                    LatestCustomerPostsPageSize = 5,
                     ShowCustomersPostCount = true,
-                    ForumEditor = EditorTypeEnum.BBCodeEditor,
+                    ForumEditor = EditorType.BBCodeEditor,
                     SignaturesEnabled = true,
                     AllowPrivateMessages = true,
-                    NotifyAboutPrivateMessages = true,
+                    NotifyAboutPrivateMessages = false,
                     PMSubjectMaxLength = 450,
                     PMTextMaxLength = 4000,
                     ActiveDiscussionsCount = 25,
@@ -1057,7 +1057,7 @@ namespace Nop.Services.Installation
 
                 #region Forums
 
-                int forumGroupCount = 5;
+                int forumGroupCount = 2;
                 int forumCount = 5;
                 int topicCount = 1;
                 int postCount = 1;
@@ -1071,8 +1071,8 @@ namespace Nop.Services.Installation
                         Name = "Forum Group " + a.ToString(),
                         Description = "ForumGroup " + a.ToString() + " Description",
                         DisplayOrder = a,
-                        CreatedOn = DateTime.UtcNow,
-                        UpdatedOn = DateTime.UtcNow,
+                        CreatedOnUtc = DateTime.UtcNow,
+                        UpdatedOnUtc = DateTime.UtcNow,
                         Forums = new List<Forum>()
                     };
 
@@ -1087,11 +1087,11 @@ namespace Nop.Services.Installation
                             Description = String.Format("FG{0}, Forum {1} Description", a.ToString(), b.ToString()),
                             NumTopics = 0,
                             NumPosts = 0,
-                            LastPostUserId = customer.Id,
+                            LastPostCustomerId = customer.Id,
                             LastPostTime = DateTime.UtcNow,
                             DisplayOrder = b,
-                            CreatedOn = DateTime.UtcNow,
-                            UpdatedOn = DateTime.UtcNow,
+                            CreatedOnUtc = DateTime.UtcNow,
+                            UpdatedOnUtc = DateTime.UtcNow,
                             ForumGroup = forumGroup,
                             ForumTopics = new List<ForumTopic>()
                         };
@@ -1105,15 +1105,15 @@ namespace Nop.Services.Installation
                             {
                                 Id = forum.Id,
                                 Forum = forum,
-                                UserId = customer.Id,
-                                TopicTypeId = (int)ForumTopicTypeEnum.Normal,
+                                CustomerId = customer.Id,
+                                TopicTypeId = (int)ForumTopicType.Normal,
                                 Subject = String.Format("FG{0}, F{1}, Topic {2} Subject", a.ToString(), b.ToString(), c.ToString()),
                                 NumPosts = 0,
                                 Views = 0,
                                 LastPostId = 0,
                                 LastPostTime = DateTime.UtcNow,
-                                CreatedOn = DateTime.UtcNow,
-                                UpdatedOn = DateTime.UtcNow,
+                                CreatedOnUtc = DateTime.UtcNow,
+                                UpdatedOnUtc = DateTime.UtcNow,
                                 ForumPosts = new List<ForumPost>()
                             };
 
@@ -1127,11 +1127,11 @@ namespace Nop.Services.Installation
                                 {
                                     Id = forumTopic.Id,
                                     ForumTopic = forumTopic,
-                                    UserId = customer.Id,
+                                    CustomerId = customer.Id,
                                     Text = String.Format("Post {0} Text. {1}", d.ToString(), forumTopic.Subject),
                                     IPAddress = "127.0.0.1",
-                                    CreatedOn = DateTime.UtcNow,
-                                    UpdatedOn = DateTime.UtcNow
+                                    CreatedOnUtc = DateTime.UtcNow,
+                                    UpdatedOnUtc = DateTime.UtcNow
                                 };
                                 _forumPostRepository.Insert(forumPost);
                                 forumTopic.ForumPosts.Add(forumPost);
