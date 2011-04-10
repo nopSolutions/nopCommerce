@@ -1,0 +1,102 @@
+﻿@model Nop.Admin.Models.ShippingSettingsModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+
+    <script type="text/javascript">
+        //TODO move to admin.js file (used to display laoding indicator)
+        //prepare the form when the DOM is ready 
+        $(document).ready(function () {
+
+            //Setup the ajax indicator
+            $('body').append('<div id="ajaxBusy"><p><img src="/administration/content/images/ajax-loading.gif"></p></div>');
+
+            $('#ajaxBusy').css({
+                display: "none",
+                margin: "0px",
+                paddingLeft: "0px",
+                paddingRight: "0px",
+                paddingTop: "0px",
+                paddingBottom: "0px",
+                position: "absolute",
+                right: "3px",
+                top: "3px",
+                width: "auto"
+            });
+        });
+
+        // Ajax activity indicator bound to ajax start/stop document events
+        $(document).ajaxStart(function () {
+            $('#ajaxBusy').show();
+        }).ajaxStop(function () {
+            $('#ajaxBusy').hide();
+        });
+
+    </script>
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+        toggleFreeShippingOverX();
+    });
+
+    function toggleFreeShippingOverX() {
+        if (getE('FreeShippingOverXEnabled').checked) {
+            $('#pnlValueOfX').show();
+        }
+        else {
+            $('#pnlValueOfX').hide();
+        }
+    }
+
+</script>
+    
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+            @T("Admin.Configuration.Shipping.Settings")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FreeShippingOverXEnabled):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.FreeShippingOverXEnabled, new { onclick = "toggleFreeShippingOverX();" })
+                @Html.ValidationMessageFor(model => model.FreeShippingOverXEnabled)
+            </td>
+        </tr>
+        <tr id="pnlValueOfX">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FreeShippingOverXValue):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FreeShippingOverXValue)
+                @Html.ValidationMessageFor(model => model.FreeShippingOverXValue)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EstimateShippingEnabled):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.EstimateShippingEnabled)
+                @Html.ValidationMessageFor(model => model.EstimateShippingEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle" colspan="2">
+                <b>@Html.LabelFor(model => model.ShippingOriginAddress):</b>
+            </td>
+        </tr>
+        @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+    </table>
+}

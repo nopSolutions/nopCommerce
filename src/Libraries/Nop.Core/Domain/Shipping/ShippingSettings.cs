@@ -10,5 +10,25 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets an system names of active shipping rate computation methods
         /// </summary>
         public List<string> ActiveShippingRateComputationMethodSystemNames { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Free shipping over X' is enabled
+        /// </summary>
+        public bool FreeShippingOverXEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of 'Free shipping over X' option
+        /// </summary>
+        public decimal FreeShippingOverXValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Estimate shipping' option is enabled
+        /// </summary>
+        public bool EstimateShippingEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets shipping origin address
+        /// </summary>
+        public int ShippingOriginAddressId { get; set; }
     }
 }

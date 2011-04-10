@@ -69,8 +69,10 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<TaxSettings, TaxSettingsModel>();
             //shipping methods
             ViceVersa<ShippingMethod, ShippingMethodModel>();
-            //shipping methods
+            //shipping rate computation methods
             Mapper.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
+            //shipping settings
+            ViceVersa<ShippingSettings, ShippingSettingsModel>();
             //newsLetter subscriptions
             ViceVersa<NewsLetterSubscription, NewsLetterSubscriptionModel>();
             //forums

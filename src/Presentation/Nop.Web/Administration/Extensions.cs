@@ -336,6 +336,25 @@ namespace Nop.Admin
 
         #endregion
 
+        #region Shipping settings
+
+        public static ShippingSettingsModel ToModel(this ShippingSettings entity)
+        {
+            return AutoMapper.Mapper.Map<ShippingSettings, ShippingSettingsModel>(entity);
+        }
+
+        public static ShippingSettings ToEntity(this ShippingSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<ShippingSettingsModel, ShippingSettings>(model);
+        }
+
+        public static ShippingSettings ToEntity(this ShippingSettingsModel model, ShippingSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
         #region Address
 
         public static AddressModel ToModel(this Address entity)

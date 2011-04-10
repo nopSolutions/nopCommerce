@@ -444,7 +444,6 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
-
             <LocaleResource Name="Configuration">
                 <Value>Configuration</Value>
                 <Children>
@@ -884,6 +883,47 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                          <LocaleResource Name="Settings">
+                            <Value>Shipping settings</Value>
+                            <Children>
+                              <LocaleResource Name="Fields">
+                                <Children>
+                                  <LocaleResource Name="FreeShippingOverXEnabled">
+                                    <Value>Free shipping over 'X'</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Check to enable free shipping for all orders over 'X'. Set the value for X below.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="FreeShippingOverXValue">
+                                    <Value>Value of 'X'</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>All orders with a total greater than the value of 'X' will qualify for free shipping.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="EstimateShippingEnabled">
+                                    <Value>Estimate shipping enabled</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Check to allow customers to estimate shipping on shopping cart page</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="ShippingOriginAddress">
+                                    <Value>Shipping Origin</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Shipping origin address</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
                     </LocaleResource>
                     <LocaleResource Name="Tax">

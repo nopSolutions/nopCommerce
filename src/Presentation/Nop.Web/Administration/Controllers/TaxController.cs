@@ -27,7 +27,7 @@ namespace Nop.Admin.Controllers
         private TaxSettings _taxSettings;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
-	    private IAddressService _addressService;
+        private readonly IAddressService _addressService;
 
 	    #endregion Fields 
 
@@ -238,7 +238,7 @@ namespace Nop.Admin.Controllers
             model.TaxBasedOnValues = _taxSettings.TaxBasedOn.ToSelectList();
             model.TaxDisplayTypeValues = _taxSettings.TaxDisplayType.ToSelectList();
 
-            //tac categories
+            //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
             model.ShippingTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
             foreach (var tc in taxCategories)
@@ -284,13 +284,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult FetchData(string countryId)
-        // This action method gets called via an ajax request
-        {
-            //TODO remove this method
-            return Json(string.Format("Server Data: {0} You selected {1}", DateTime.UtcNow, countryId));
-        }
+
         [HttpPost]
         public ActionResult Settings(TaxSettingsModel model)
         {
