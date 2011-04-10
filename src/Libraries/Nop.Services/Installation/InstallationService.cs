@@ -15,6 +15,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
@@ -26,6 +27,7 @@ using Nop.Core.IO;
 using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Helpers;
+
 
 namespace Nop.Services.Installation
 {
@@ -46,7 +48,13 @@ namespace Nop.Services.Installation
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductVariant> _productVariantRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
+        private readonly IRepository<QueuedEmail> _queuedEmailRepository;        
+        private readonly IRepository<ForumGroup> _forumGroupRepository;
+        private readonly IRepository<Forum> _forumRepository;
+        private readonly IRepository<ForumTopic> _forumTopicRepository;
+        private readonly IRepository<ForumPost> _forumPostRepository;
+        private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
+        private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly ISettingService _settingService;
@@ -69,6 +77,12 @@ namespace Nop.Services.Installation
             IRepository<ProductVariant> productVariantRepository,
             IRepository<EmailAccount> emailAccountRepository,
             IRepository<QueuedEmail> queuedEmailRepository,
+            IRepository<ForumGroup> forumGroupRepository,
+            IRepository<Forum> forumRepository,
+            IRepository<ForumTopic> forumTopicRepository,
+            IRepository<ForumPost> forumPostRepository,
+            IRepository<PrivateMessage> forumPrivateMessageRepository,
+            IRepository<ForumSubscription> forumSubscriptionRepository,
             IRepository<Country> countryRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             ISettingService settingService)
@@ -90,6 +104,13 @@ namespace Nop.Services.Installation
             this._emailAccountRepository = emailAccountRepository;
             this._queuedEmailRepository = queuedEmailRepository;
 
+            this._forumGroupRepository = forumGroupRepository;
+            this._forumRepository = forumRepository;
+            this._forumTopicRepository = forumTopicRepository;
+            this._forumPostRepository = forumPostRepository;
+            this._forumPrivateMessageRepository = forumPrivateMessageRepository;
+            this._forumSubscriptionRepository = forumSubscriptionRepository;
+            
             this._countryRepository = countryRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
@@ -780,7 +801,7 @@ namespace Nop.Services.Installation
                                       ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
                                       AutoUpdateEnabled = true,
                                       LastUpdateTime = 0
-                });
+                                  });
 
             EngineContext.Current.Resolve<IConfigurationProvider<MeasureSettings>>()
                 .SaveSettings(new MeasureSettings()
@@ -798,7 +819,7 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<SMSSettings>>()
                 .SaveSettings(new SMSSettings()
                 {
-                    ActiveSMSProviderSystemNames = new List<string>() 
+                    ActiveSMSProviderSystemNames = new List<string>()
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<ShoppingCartSettings>>()
@@ -826,7 +847,7 @@ namespace Nop.Services.Installation
                 {
                     UsernamesEnabled = false,
                     AllowUsersToChangeUsernames = false,
-                    HashedPasswordFormat= "SHA1"
+                    HashedPasswordFormat = "SHA1"
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()
@@ -845,26 +866,26 @@ namespace Nop.Services.Installation
                 .SaveSettings(new TaxSettings()
                 {
                     TaxBasedOn = TaxBasedOn.BillingAddress,
-                    TaxDisplayType= TaxDisplayType.ExcludingTax,
+                    TaxDisplayType = TaxDisplayType.ExcludingTax,
                     ActiveTaxProviderSystemName = "Tax.FixedRate",
                     DefaultTaxAddressId = 0,
                     DisplayTaxSuffix = false,
-                    DisplayTaxRates= false,
+                    DisplayTaxRates = false,
                     PricesIncludeTax = false,
-                    AllowCustomersToSelectTaxDisplayType= false,
+                    AllowCustomersToSelectTaxDisplayType = false,
                     HideZeroTax = false,
-                    HideTaxInOrderSummary= false,
+                    HideTaxInOrderSummary = false,
                     ShippingIsTaxable = false,
-                    ShippingPriceIncludesTax =false,
-                    ShippingTaxClassId= 0,
-                    PaymentMethodAdditionalFeeIsTaxable= false,
-                    PaymentMethodAdditionalFeeIncludesTax= false,
-                    PaymentMethodAdditionalFeeTaxClassId= 0,
+                    ShippingPriceIncludesTax = false,
+                    ShippingTaxClassId = 0,
+                    PaymentMethodAdditionalFeeIsTaxable = false,
+                    PaymentMethodAdditionalFeeIncludesTax = false,
+                    PaymentMethodAdditionalFeeTaxClassId = 0,
                     EuVatEnabled = false,
                     EuVatShopCountryId = 0,
-                    EuVatAllowVatExemption= true,
+                    EuVatAllowVatExemption = true,
                     EuVatUseWebService = false,
-                    EuVatEmailAdminWhenNewVatSubmitted= false
+                    EuVatEmailAdminWhenNewVatSubmitted = false
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<FileSystemSettings>>()
@@ -878,6 +899,38 @@ namespace Nop.Services.Installation
                     DefaultStoreTimeZoneId = "",
                     AllowCustomersToSetTimeZone = false
                 });
+
+            EngineContext.Current.Resolve<IConfigurationProvider<ForumSettings>>()
+                .SaveSettings(new ForumSettings()
+                {
+                    ForumsEnabled = true,
+                    RelativeDateTimeFormattingEnabled = true,
+                    AllowCustomersToEditPosts = true,
+                    AllowCustomersToManageSubscriptions = true,
+                    AllowGuestsToCreatePosts = true,
+                    AllowGuestsToCreateTopics = true,
+                    AllowCustomersToDeletePosts = true,
+                    TopicSubjectMaxLength = 450,
+                    PostMaxLength = 4000,
+                    TopicsPageSize = 10,
+                    PostsPageSize = 10,
+                    TopicPostsPageLinkDisplayCount = 5,
+                    ForumTopicsPageLinkDisplayCount = 5,
+                    SearchPageLinkDisplayCount = 10,
+                    SearchResultsPageSize = 15,
+                    LatestUserPostsPageSize = 5,
+                    ShowCustomersPostCount = true,
+                    ForumEditor = EditorTypeEnum.BBCodeEditor,
+                    SignaturesEnabled = true,
+                    AllowPrivateMessages = true,
+                    NotifyAboutPrivateMessages = true,
+                    PMSubjectMaxLength = 450,
+                    PMTextMaxLength = 4000,
+                    ActiveDiscussionsCount = 25,
+                    ActiveDiscussionsFeedCount = 25,
+                    ForumFeedCount = 10,
+                    ForumSearchTermMinimumLength = 3,
+                });                
 
             EngineContext.Current.Resolve<IConfigurationProvider<EmailAccountSettings>>()
                 .SaveSettings(new EmailAccountSettings()
@@ -911,7 +964,7 @@ namespace Nop.Services.Installation
                     _categoryRepository.Insert(cat);
                 }
                 Category category1 = _categoryRepository.Table.FirstOrDefault();
-                
+
                 #endregion
 
                 #region Manufacturers
@@ -996,10 +1049,104 @@ namespace Nop.Services.Installation
                         };
                         product.ProductCategories.Add(pcm);
                     }
-                    
+
                     _productRepository.Insert(product);
                 }
-                
+
+                #endregion
+
+                #region Forums
+
+                int forumGroupCount = 1;
+                int forumCount = 1;
+                int topicCount = 1;
+                int postCount = 1;
+
+                var customer = customers.FirstOrDefault();
+
+                for (int a = 1; a <= forumGroupCount; a++)
+                {
+                    var forumGroup = new ForumGroup()
+                    {
+                        Name = "Forum Group " + a.ToString(),
+                        Description = "ForumGroup " + a.ToString() + " Description",
+                        DisplayOrder = 1,
+                        CreatedOn = DateTime.UtcNow,
+                        UpdatedOn = DateTime.UtcNow,
+                        Forums = new List<Forum>()
+                    };
+
+                    _forumGroupRepository.Insert(forumGroup);
+
+                    for (int b = 1; b <= forumCount; b++)
+                    {
+                        var forum = new Forum()
+                        {
+                            Id = forumGroup.Id,
+                            Name = String.Format("FG{0} Forum {1}", a.ToString(), b.ToString()),
+                            Description = String.Format("FG{0}, Forum {1} Description", a.ToString(), b.ToString()),
+                            NumTopics = 0,
+                            NumPosts = 0,
+                            LastPostUserId = customer.Id,
+                            LastPostTime = DateTime.UtcNow,
+                            DisplayOrder = 1,
+                            CreatedOn = DateTime.UtcNow,
+                            UpdatedOn = DateTime.UtcNow,
+                            ForumGroup = forumGroup,
+                            ForumTopics = new List<ForumTopic>()
+                        };
+
+                        _forumRepository.Insert(forum);
+                        forumGroup.Forums.Add(forum);
+
+                        for (int c = 1; c <= topicCount; c++)
+                        {
+                            var forumTopic = new ForumTopic()
+                            {
+                                Id = forum.Id,
+                                Forum = forum,
+                                UserId = customer.Id,
+                                TopicTypeId = (int)ForumTopicTypeEnum.Normal,
+                                Subject = String.Format("FG{0}, F{1}, Topic {2} Subject", a.ToString(), b.ToString(), c.ToString()),
+                                NumPosts = 0,
+                                Views = 0,
+                                LastPostId = 0,
+                                LastPostTime = DateTime.UtcNow,
+                                CreatedOn = DateTime.UtcNow,
+                                UpdatedOn = DateTime.UtcNow,
+                                ForumPosts = new List<ForumPost>()
+                            };
+
+                            _forumTopicRepository.Insert(forumTopic);
+                            forum.ForumTopics.Add(forumTopic);
+                            forum.LastTopicId = forumTopic.Id;
+
+                            for (int d = 1; d <= postCount; d++)
+                            {
+                                var forumPost = new ForumPost()
+                                {
+                                    Id = forumTopic.Id,
+                                    ForumTopic = forumTopic,
+                                    UserId = customer.Id,
+                                    Text = String.Format("Post {0} Text. {1}", d.ToString(), forumTopic.Subject),
+                                    IPAddress = "127.0.0.1",
+                                    CreatedOn = DateTime.UtcNow,
+                                    UpdatedOn = DateTime.UtcNow
+                                };
+                                _forumPostRepository.Insert(forumPost);
+                                forumTopic.ForumPosts.Add(forumPost);
+                                forum.LastPostId = forumPost.Id;
+                                forum.LastPostTime = DateTime.UtcNow;
+                                forumTopic.LastPostId = forumPost.Id;
+                                forumTopic.LastPostTime = DateTime.UtcNow;
+                            }
+
+                            forumTopic.NumPosts = postCount;
+                            forum.NumPosts += postCount;
+                        }
+                        forum.NumTopics = topicCount;
+                    }
+                }
                 #endregion
             }
         }

@@ -75,6 +75,8 @@
     <Compile Include="ExportImport\ExportManager.cs" />
     <Compile Include="ExportImport\ImportManager.cs" />
     <Compile Include="FormsAuthenticationService.cs" />
+    <Compile Include="Forums\ForumService.cs" />
+    <Compile Include="Forums\IForumService.cs" />
     <Compile Include="Helpers\IDateTimeHelper.cs" />
     <Compile Include="Helpers\DateTimeSettings.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />

@@ -26,6 +26,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
+using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
@@ -42,6 +43,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
+
 
 namespace Nop.Web.Framework
 {
@@ -158,6 +160,8 @@ namespace Nop.Web.Framework
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
 
             builder.RegisterType<InstallationService>().As<IInstallationService>().InstancePerHttpRequest();
+
+            builder.RegisterType<ForumService>().As<IForumService>().InstancePerHttpRequest();
 
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
 

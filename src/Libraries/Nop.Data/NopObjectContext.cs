@@ -13,17 +13,19 @@ using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Security.Permissions;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping.Localization;
-using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Messages;
+
 
 namespace Nop.Data
 {
@@ -97,6 +99,10 @@ namespace Nop.Data
         public DbSet<TaxCategory> TaxCategories { get; set; }
         public DbSet<TierPrice> TierPrices { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ForumGroup> ForumGroups { get; set; }
+        public DbSet<Forum> Forums { get; set; }
+        public DbSet<ForumTopic> ForumTopics { get; set; }
+        public DbSet<ForumPost> ForumPosts { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
