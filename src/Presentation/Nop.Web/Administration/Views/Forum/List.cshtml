@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Nop.Admin.Models.ForumGroupModel>
+@using Telerik.Web.Mvc.UI;
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+        @T("Admin.ContentManagement.Forums.Manage")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @{ Html.Telerik().Grid(Model)
+                .Name("forumgroup-grid")
+                .ToolBar(commands =>
+                {
+                    commands.Custom().Text(T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup").Text).Action("CreateForumGroup", "Forum").HtmlAttributes(new { style = "margin:0 0.2em;" });
+                    commands.Custom().Text(T("Admin.ContentManagement.Forums.Forum.CreateForum").Text).Action("CreateForum", "Forum");
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Name);
+                    columns.Bound(x => x.DisplayOrder).Width(150).Centered();
+                    columns.Bound(x => x.CreatedOn).Width(200).Centered(); //TOOD convert to user time
+                    columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "EditForumGroup", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                })
+                .DetailView(detailView => detailView.Template(
+                    @<text>
+                        @(Html.Telerik().Grid(item.Forums.OrderBy(x => x.DisplayOrder))
+                            .Name("forums_" + item.Id)
+                            .Columns(columns =>
+                            {
+                                columns.Bound(x => x.Name);
+                                columns.Bound(x => x.DisplayOrder).Width(150).Centered();
+                                columns.Bound(x => x.CreatedOn).Width(200).Centered(); //TOOD convert to user time
+                                columns.Bound(x => x.Id)
+                                        .Width(50)
+                                        .Centered()
+                                        .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "EditForum", new { id = x.Id }))
+                                        .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                                        .Title(T("Admin.Common.Edit").Text);
+                            })
+                        )
+                    </text>
+                ))
+                .Render();
+            }
+        </td>
+    </tr>
+</table>

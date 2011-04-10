@@ -4,19 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Html;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Directory;
-using System.Web.Mvc.Html;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
+
+
 namespace Nop.Admin
 {
     public static class MappingExtensions
@@ -369,6 +372,54 @@ namespace Nop.Admin
             return AutoMapper.Mapper.Map(model, destination);
         }
 
+        #endregion
+
+        #region Forums
+        //forum settings
+        public static ForumSettingsModel ToModel(this ForumSettings entity)
+        {
+            return AutoMapper.Mapper.Map<ForumSettings, ForumSettingsModel>(entity);
+        }
+
+        public static ForumSettings ToEntity(this ForumSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<ForumSettingsModel, ForumSettings>(model);
+        }
+
+        public static ForumSettings ToEntity(this ForumSettingsModel model, ForumSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+        //forum groups
+        public static ForumGroupModel ToModel(this ForumGroup entity)
+        {
+            return AutoMapper.Mapper.Map<ForumGroup, ForumGroupModel>(entity);
+        }
+
+        public static ForumGroup ToEntity(this ForumGroupModel model)
+        {
+            return AutoMapper.Mapper.Map<ForumGroupModel, ForumGroup>(model);
+        }
+
+        public static ForumGroup ToEntity(this ForumGroupModel model, ForumGroup destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+        //forums
+        public static ForumModel ToModel(this Forum entity)
+        {
+            return AutoMapper.Mapper.Map<Forum, ForumModel>(entity);
+        }
+
+        public static Forum ToEntity(this ForumModel model)
+        {
+            return AutoMapper.Mapper.Map<ForumModel, Forum>(model);
+        }
+
+        public static Forum ToEntity(this ForumModel model, Forum destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
         #endregion
 
     }

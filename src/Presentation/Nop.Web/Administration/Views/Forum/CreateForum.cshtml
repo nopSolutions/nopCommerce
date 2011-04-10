@@ -1,0 +1,16 @@
+﻿@model Nop.Admin.Models.ForumModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+            @T("Admin.ContentManagement.Forums.Forum.CreateForum") - @Html.ActionLink(String.Format("({0})", T("Admin.ContentManagement.Forums.Forum.BackToList")), "List")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateForum", Model)
+}

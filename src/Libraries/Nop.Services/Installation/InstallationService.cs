@@ -1057,8 +1057,8 @@ namespace Nop.Services.Installation
 
                 #region Forums
 
-                int forumGroupCount = 1;
-                int forumCount = 1;
+                int forumGroupCount = 5;
+                int forumCount = 5;
                 int topicCount = 1;
                 int postCount = 1;
 
@@ -1070,7 +1070,7 @@ namespace Nop.Services.Installation
                     {
                         Name = "Forum Group " + a.ToString(),
                         Description = "ForumGroup " + a.ToString() + " Description",
-                        DisplayOrder = 1,
+                        DisplayOrder = a,
                         CreatedOn = DateTime.UtcNow,
                         UpdatedOn = DateTime.UtcNow,
                         Forums = new List<Forum>()
@@ -1089,7 +1089,7 @@ namespace Nop.Services.Installation
                             NumPosts = 0,
                             LastPostUserId = customer.Id,
                             LastPostTime = DateTime.UtcNow,
-                            DisplayOrder = 1,
+                            DisplayOrder = b,
                             CreatedOn = DateTime.UtcNow,
                             UpdatedOn = DateTime.UtcNow,
                             ForumGroup = forumGroup,

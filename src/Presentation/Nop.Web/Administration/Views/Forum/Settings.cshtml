@@ -1,0 +1,129 @@
+﻿@model Nop.Admin.Models.ForumSettingsModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+            @T("Admin.ContentManagement.Forums.Settings")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ForumsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.ForumsEnabled)
+                @Html.ValidationMessageFor(model => model.ForumsEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RelativeDateTimeFormattingEnabled):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.RelativeDateTimeFormattingEnabled)
+                @Html.ValidationMessageFor(model => model.RelativeDateTimeFormattingEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowCustomersPostCount):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.ShowCustomersPostCount)
+                @Html.ValidationMessageFor(model => model.ShowCustomersPostCount)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowGuestsToCreatePosts):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.AllowGuestsToCreatePosts)
+                @Html.ValidationMessageFor(model => model.AllowGuestsToCreatePosts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowGuestsToCreateTopics):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.AllowGuestsToCreateTopics)
+                @Html.ValidationMessageFor(model => model.AllowGuestsToCreateTopics)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowCustomersToEditPosts):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.AllowCustomersToEditPosts)
+                @Html.ValidationMessageFor(model => model.AllowCustomersToEditPosts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowCustomersToDeletePosts):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.AllowCustomersToDeletePosts)
+                @Html.ValidationMessageFor(model => model.AllowCustomersToDeletePosts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowCustomersToManageSubscriptions):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.AllowCustomersToManageSubscriptions)
+                @Html.ValidationMessageFor(model => model.AllowCustomersToManageSubscriptions)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TopicsPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TopicsPageSize)
+                @Html.ValidationMessageFor(model => model.TopicsPageSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PostsPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PostsPageSize)
+                @Html.ValidationMessageFor(model => model.PostsPageSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ForumEditor):
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownList()
+                    .Name("forumEditor")
+                    .BindTo(Model.ForumEditorValues)
+                    .HtmlAttributes(new { style = "width:255px" })
+                )
+                @Html.ValidationMessageFor(model => model.ForumEditor)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SignaturesEnabled):
+            </td>
+            <td class="adminData">
+                @Html.CheckBoxFor(model => model.SignaturesEnabled)
+                @Html.ValidationMessageFor(model => model.SignaturesEnabled)
+            </td>
+        </tr>
+    </table>
+}

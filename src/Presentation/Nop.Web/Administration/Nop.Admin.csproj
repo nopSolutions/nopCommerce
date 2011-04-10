@@ -77,6 +77,7 @@
     <Compile Include="AdminAreaRegistration.cs" />
     <Compile Include="Controllers\BaseNopController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\NewsLetterSubscriptionController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\ShippingController.cs" />
@@ -98,6 +99,9 @@
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CategoryProductModel.cs" />
     <Compile Include="Models\CategoryProductsAttribute.cs" />
+    <Compile Include="Models\ForumGroupModel.cs" />
+    <Compile Include="Models\ForumModel.cs" />
+    <Compile Include="Models\ForumSettingsModel.cs" />
     <Compile Include="Models\NewsLetterSubscriptionModel.cs" />
     <Compile Include="Models\ShippingRateComputationMethodModel.cs" />
     <Compile Include="Models\ShippingMethodModel.cs" />
@@ -118,6 +122,8 @@
     <Compile Include="Validators\CategoryProductValidator.cs" />
     <Compile Include="Validators\CategoryValidator.cs" />
     <Compile Include="Validators\AddressValidator.cs" />
+    <Compile Include="Validators\ForumGroupValidator.cs" />
+    <Compile Include="Validators\ForumValidator.cs" />
     <Compile Include="Validators\ShippingMethodValidator.cs" />
     <Compile Include="Validators\TaxCategoryValidator.cs" />
     <Compile Include="Validators\MeasureDimensionValidator.cs" />
@@ -321,6 +327,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\NewsLetterSubscription\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Forum\CreateForum.cshtml" />
+    <Content Include="Views\Forum\CreateForumGroup.cshtml" />
+    <Content Include="Views\Forum\EditForum.cshtml" />
+    <Content Include="Views\Forum\EditForumGroup.cshtml" />
+    <Content Include="Views\Forum\List.cshtml" />
+    <Content Include="Views\Forum\Settings.cshtml" />
+    <Content Include="Views\Forum\_CreateOrUpdateForum.cshtml" />
+    <Content Include="Views\Forum\_CreateOrUpdateForumGroup.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

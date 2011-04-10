@@ -3,6 +3,7 @@ using Nop.Admin.Models;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
@@ -72,6 +73,10 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
             //newsLetter subscriptions
             ViceVersa<NewsLetterSubscription, NewsLetterSubscriptionModel>();
+            //forums
+            ViceVersa<ForumSettings, ForumSettingsModel>();
+            ViceVersa<ForumGroup, ForumGroupModel>();
+            ViceVersa<Forum, ForumModel>();
         }
 
         public static void ViceVersa<T1, T2>()
