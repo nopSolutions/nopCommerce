@@ -6,6 +6,11 @@ namespace Nop.Core.Domain.Shipping
 {
     public class ShippingSettings : ISettings
     {
+        public ShippingSettings()
+        {
+            ActiveShippingRateComputationMethodSystemNames = new List<string>();
+        }
+
         /// <summary>
         /// Gets or sets an system names of active shipping rate computation methods
         /// </summary>

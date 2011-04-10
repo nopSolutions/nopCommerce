@@ -30,6 +30,9 @@
                 <siteMapNode title="Dimensions" nopResource="Admin.Configuration.Measures.Dimensions" controller="Measure" action="Dimensions"/>
             </siteMapNode>
             <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
+            <siteMapNode title="Payment" nopResource="Admin.Configuration.Payment">
+              <siteMapNode title="Payment methods" nopResource="Admin.Configuration.Payment.Methods" controller="Payment" action="Methods"/>
+            </siteMapNode>
             <siteMapNode title="Tax" nopResource="Admin.Configuration.Tax">
                 <siteMapNode title="Tax settings" nopResource="Admin.Configuration.Tax.Settings" controller="Tax" action="Settings"/>
                 <siteMapNode title="Tax providers" nopResource="Admin.Configuration.Tax.Providers" controller="Tax" action="Providers"/>

@@ -884,6 +884,59 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Payment">
+                      <Value>Payment</Value>
+                      <Children>
+                        <LocaleResource Name="Methods">
+                        <Value>Payment methods</Value>
+                        <Children>
+                          <LocaleResource Name="BackToList">
+                            <Value>back to payment method list</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Configure">
+                            <Value>Configure</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="FriendlyName">
+                                <Value>Friendly name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SystemName">
+                                <Value>System name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Version">
+                                <Value>Version</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Author">
+                                <Value>Author</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="IsActive">
+                                <Value>Is active</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SupportCapture">
+                                <Value>Supports capture</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SupportPartiallyRefund">
+                                <Value>Supports partial refund</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SupportRefund">
+                                <Value>Supports refund</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="SupportVoid">
+                                <Value>Supports void</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="RecurringPaymentType">
+                                <Value>Recurring payment type</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Shipping">
                         <Value>Shipping</Value>
                         <Children>

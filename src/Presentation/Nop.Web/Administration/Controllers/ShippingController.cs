@@ -275,8 +275,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-
-
+        
         #region Shipping settings
 
         public ActionResult Settings()

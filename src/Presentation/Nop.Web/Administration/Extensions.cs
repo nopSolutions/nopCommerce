@@ -15,6 +15,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
@@ -351,6 +352,15 @@ namespace Nop.Admin
         public static ShippingSettings ToEntity(this ShippingSettingsModel model, ShippingSettings destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Payment methods
+
+        public static PaymentMethodModel ToModel(this IPaymentMethod entity)
+        {
+            return AutoMapper.Mapper.Map<IPaymentMethod, PaymentMethodModel>(entity);
         }
 
         #endregion

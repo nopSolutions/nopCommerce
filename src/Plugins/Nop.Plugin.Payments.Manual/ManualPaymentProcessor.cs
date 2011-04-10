@@ -1,4 +1,5 @@
 using System;
+using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
@@ -13,14 +14,14 @@ namespace Nop.Plugin.Payments.Manual
     public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     {
         #region Fields
-        private readonly ISettingService _settingService;
+        private readonly ManualPaymentSettings _manualPaymentSettings;
         #endregion
 
         #region Ctor
 
-        public ManualPaymentProcessor(ISettingService settingService)
+        public ManualPaymentProcessor(ManualPaymentSettings manualPaymentSettings)
         {
-            this._settingService = settingService;
+            this._manualPaymentSettings = manualPaymentSettings;
         }
 
         #endregion
@@ -33,11 +34,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Current transaction mode</returns>
         private TransactMode GetCurrentTransactionMode()
         {
-            TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode =  _settingService.GetSettingByKey<string>("PaymentMethod.Manual.TransactionMode");
-            if (!String.IsNullOrEmpty(transactionMode))
-                transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
-            return transactionModeEnum;
+            return _manualPaymentSettings.TransactMode;
         }
         #endregion
         
@@ -91,7 +88,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return _settingService.GetSettingByKey<decimal>("PaymentMethod.Manual.AdditionalFee");
+            return _manualPaymentSettings.AdditionalFee;
         }
 
         /// <summary>
@@ -196,6 +193,20 @@ namespace Nop.Plugin.Payments.Manual
             result.AddError("Cancelling recurring orders not supported");
             return result;
         }
+
+        /// <summary>
+        /// Gets a route for provider configuration
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            actionName = "Configure";
+            controllerName = "PaymentManual";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
+        }
+
         #endregion
 
         #region Properies
