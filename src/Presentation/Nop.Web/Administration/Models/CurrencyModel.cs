@@ -10,7 +10,6 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Admin.Models
 {
-    [Validator(typeof(CurrencyValidator))]
     public class CurrencyModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.Name")]

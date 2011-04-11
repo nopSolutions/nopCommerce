@@ -20,10 +20,10 @@ namespace Nop.Admin.Controllers
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
 		}
 
-		public ActionResult Index()
-		{
-			return View("List");
-		}
+        public ActionResult Index()
+        {
+            return RedirectToAction("List");
+        }
 
 		public ActionResult List()
 		{

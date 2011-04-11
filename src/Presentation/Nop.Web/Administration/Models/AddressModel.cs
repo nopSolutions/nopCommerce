@@ -4,11 +4,12 @@ using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models
 {
     [Validator(typeof(AddressValidator))]
-    public class AddressModel
+    public class AddressModel : BaseNopEntityModel
     {
         public AddressModel()
         {

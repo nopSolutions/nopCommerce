@@ -1,0 +1,20 @@
+﻿@model Nop.Admin.Models.CustomerRoleModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
+            @T("Admin.Customers.CustomerRoles.EditCustomerRoleDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Customers.CustomerRoles.BackToList") + ")", "List")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+            @*<span id="customerrole-delete" class="t-button">@T("Admin.Common.Delete")</span>*@
+            <input type="button" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'" value="Delete" class="t-button"·/>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}
+@*Delete button should be with confirmation
+@Html.DeleteConfirmation("customerrole-delete")*@

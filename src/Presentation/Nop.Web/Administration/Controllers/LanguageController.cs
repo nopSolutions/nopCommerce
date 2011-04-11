@@ -42,7 +42,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Index()
         {
-            return View("List");
+            return RedirectToAction("List");
         }
 
 		public ActionResult List()

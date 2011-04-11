@@ -8,6 +8,7 @@ using System.Web.Mvc.Html;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
@@ -446,6 +447,24 @@ namespace Nop.Admin
         }
 
         public static Forum ToEntity(this ForumModel model, Forum destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+        #endregion
+
+        #region Customers/users/customer roles
+        //customer roles
+        public static CustomerRoleModel ToModel(this CustomerRole entity)
+        {
+            return AutoMapper.Mapper.Map<CustomerRole, CustomerRoleModel>(entity);
+        }
+
+        public static CustomerRole ToEntity(this CustomerRoleModel model)
+        {
+            return AutoMapper.Mapper.Map<CustomerRoleModel, CustomerRole>(model);
+        }
+
+        public static CustomerRole ToEntity(this CustomerRoleModel model, CustomerRole destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }

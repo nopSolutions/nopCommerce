@@ -8,6 +8,7 @@ namespace Nop.Admin.Validators
     {
         public CategoryValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Category.Name.Validation"));
-        }}
+            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.Name.Validation"));
+        }
+    }
 }

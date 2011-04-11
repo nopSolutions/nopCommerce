@@ -92,21 +92,6 @@ namespace Nop.Admin.Controllers
 
         #region Delete
 
-        public ActionResult Delete(int id)
-        {
-            var currency = _currencyService.GetCurrencyById(id);
-            if (currency == null)
-            {
-                return List();
-            }
-            var model = currency.ToModel();
-            return Delete(model);
-        }
-
-        public ActionResult Delete(CurrencyModel model)
-        {
-            return PartialView(model);
-        }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)

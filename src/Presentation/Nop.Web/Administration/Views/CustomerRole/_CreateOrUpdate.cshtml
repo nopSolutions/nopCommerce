@@ -1,0 +1,62 @@
+﻿@model Nop.Admin.Models.CustomerRoleModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SystemName)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SystemName)
+            @Html.ValidationMessageFor(model => model.SystemName)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.FreeShipping):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.FreeShipping)
+            @Html.ValidationMessageFor(model => model.FreeShipping)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.TaxExempt):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.TaxExempt)
+            @Html.ValidationMessageFor(model => model.TaxExempt)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Active):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Active)
+            @Html.ValidationMessageFor(model => model.Active)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsSystemRole):
+        </td>
+        <td class="adminData">
+            @Model.IsSystemRole.ToString()
+            @Html.HiddenFor(model => model.IsSystemRole)
+            @Html.ValidationMessageFor(model => model.IsSystemRole)
+        </td>
+    </tr>
+</table>
