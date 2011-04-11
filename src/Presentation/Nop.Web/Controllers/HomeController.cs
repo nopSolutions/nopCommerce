@@ -37,8 +37,8 @@ namespace Nop.Web.Controllers
         {
             var model = new LanguageSelectorModel();
             var avaibleLanguages = _languageService.GetAllLanguages();
-            model.CurrentLanguage = AutoMapper.Mapper.Map<Language, LanguageModel>(_workContext.WorkingLanguage);
-            model.AvaibleLanguages = avaibleLanguages.Select(AutoMapper.Mapper.Map<Language, LanguageModel>).ToList();
+            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
+            model.AvaibleLanguages = avaibleLanguages.Select(x=> x.ToModel()).ToList();
             return PartialView(model);
         }
 
@@ -51,8 +51,8 @@ namespace Nop.Web.Controllers
             }
             var model = new LanguageSelectorModel();
             var avaibleLanguages = _languageService.GetAllLanguages();
-            model.CurrentLanguage = AutoMapper.Mapper.Map<Language, LanguageModel>(_workContext.WorkingLanguage);
-            model.AvaibleLanguages = avaibleLanguages.Select(AutoMapper.Mapper.Map<Language, LanguageModel>).ToList();
+            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
+            model.AvaibleLanguages = avaibleLanguages.Select(x => x.ToModel()).ToList();
             model.IsAjaxRequest = true;
             return PartialView("LanguageSelector", model);
         }

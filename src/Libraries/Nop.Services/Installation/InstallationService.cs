@@ -595,7 +595,7 @@ namespace Nop.Services.Installation
                     Bcc = "adminbcc@test.com",
                     Body = "Body",
                     Subject = "Subject",
-                    CreatedOnUtc = DateTime.Now,
+                    CreatedOnUtc = DateTime.UtcNow,
                     SentTries = 0,
                     SentOnUtc = null
                 },

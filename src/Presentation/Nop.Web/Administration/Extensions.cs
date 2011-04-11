@@ -450,7 +450,6 @@ namespace Nop.Admin
             return AutoMapper.Mapper.Map(model, destination);
         }
         #endregion
-
     }
 
     public static class HtmlExtensions

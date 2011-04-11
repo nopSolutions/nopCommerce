@@ -32,19 +32,14 @@ namespace Nop.Web.Models
 		#endregion Properties 
 
 		#region Nested Classes 
-
-
+        
         public class SubCategoryModel : BaseNopEntityModel
         {
-		#region Properties 
-
             public string ImageUrl { get; set; }
 
             public string Name { get; set; }
 
             public string SeName { get; set; }
-
-		#endregion Properties 
         }
 		#endregion Nested Classes 
     }

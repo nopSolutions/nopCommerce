@@ -61,7 +61,7 @@ namespace Nop.Admin.Controllers
 			var emailAccounts = _emailAccountService.GetAllEmailAccounts();
 			var gridModel = new GridModel<EmailAccountModel>
 			{
-				Data = emailAccounts.Select(AutoMapper.Mapper.Map<EmailAccount, EmailAccountModel>),
+				Data = emailAccounts.Select(x=>x.ToModel()),
 				Total = emailAccounts.Count()
 			};
 

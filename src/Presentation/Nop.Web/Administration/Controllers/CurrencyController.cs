@@ -36,7 +36,7 @@ namespace Nop.Admin.Controllers
             //var rates = _currencyService.GetCurrencyLiveRates(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
             var gridModel = new GridModel<CurrencyModel>
             {
-                Data = currencies.Select(x => new CurrencyModel(x)),
+                Data = currencies.Select(x => x.ToModel()),
                 Total = currencies.Count()
             };
             return View(gridModel);
