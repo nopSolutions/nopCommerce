@@ -1,5 +1,6 @@
 ﻿@model Nop.Admin.Models.CustomerRoleModel
 @using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -10,11 +11,9 @@
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
             <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
-            @*<span id="customerrole-delete" class="t-button">@T("Admin.Common.Delete")</span>*@
-            <input type="button" onclick="location.href='@Url.Action("Delete", new { id = Model.Id })'" value="Delete" class="t-button"·/>
+            <span id="customerrole-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
-@*Delete button should be with confirmation
-@Html.DeleteConfirmation("customerrole-delete")*@
+@Html.DeleteConfirmation("customerrole-delete")

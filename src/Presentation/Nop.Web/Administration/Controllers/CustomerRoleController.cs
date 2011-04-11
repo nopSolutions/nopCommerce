@@ -87,9 +87,7 @@ namespace Nop.Admin.Controllers
             return continueEditing ? RedirectToAction("Edit", customerRole.Id) : RedirectToAction("List");
 		}
 
-		//TODO uncomment attributes when delete confirmation issue is fixed
-        //[HttpPost]
-        [ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
 		{
             //TODO display warning when customer role could not be deleted (system role)
