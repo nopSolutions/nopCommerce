@@ -943,7 +943,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>2162</DevelopmentServerPort>
+          <DevelopmentServerPort>9556</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2451/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

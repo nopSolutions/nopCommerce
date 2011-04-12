@@ -7,9 +7,11 @@ using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security.Permissions;
 using Nop.Web.Framework.Controllers;
@@ -25,14 +27,24 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
+        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion Fields
 
         #region Constructors
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService, IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService, DateTimeSettings dateTimeSettings, 
+            TaxSettings taxSettings)
         {
             this._customerService = customerService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
+            this._dateTimeSettings = dateTimeSettings;
+            this._taxSettings = taxSettings;
         }
 
         #endregion Constructors
@@ -55,6 +67,18 @@ namespace Nop.Admin.Controllers
             return sb.ToString();
         }
 
+
+        /// <summary>
+        /// Gets VAT Number status name
+        /// </summary>
+        /// <param name="status">VAT Number status</param>
+        /// <returns>VAT Number status name</returns>
+        [NonAction]
+        private string GetVatNumberStatusName(VatNumberStatus status)
+        {
+            return _localizationService.GetResource(string.Format("Admin.Common.VatNumberStatus.{0}", status.ToString()));
+        }
+
         #endregion
 
         #region Methods
@@ -66,7 +90,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            //TODO add filtering by 
+            //TODO add filtering by customer role, registration date
             var customers = _customerService.GetAllCustomers(null,null, 0, 10);
             var gridModel = new GridModel<CustomerModel>
             {
@@ -75,6 +99,7 @@ namespace Nop.Admin.Controllers
                     var model = x.ToModel();
                     model.FullName = string.Format("{0} {1}", x.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), x.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
                     model.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
+                    model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
                     return model;
                 }),
                 Total = customers.TotalCount
@@ -93,6 +118,7 @@ namespace Nop.Admin.Controllers
                     var model = x.ToModel();
                     model.FullName = string.Format("{0} {1}", x.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), x.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
                     model.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
+                    model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
                     return model;
                 }),
                 Total = customers.TotalCount
@@ -103,75 +129,132 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        //public ActionResult Create()
-        //{
-        //    return View(new CategoryModel());
-        //}
+        public ActionResult Create()
+        {
+            var model = new CustomerModel();
+            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
+            model.DisplayVatNumber = false;
+            model.VatNumberStatusNote = GetVatNumberStatusName(VatNumberStatus.Empty);
 
-        //[HttpPost]
-        //public ActionResult Create(CategoryModel model)
-        //{
-        //    var category = model.ToEntity();
-        //    _categoryService.InsertCategory(category);
-        //    UpdateLocales(category, model);
-        //    return RedirectToAction("Edit", new { id = category.Id });
-        //}
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Create(CustomerModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var customer = model.ToEntity();
+            customer.CustomerGuid = Guid.NewGuid();
+            customer.CreatedOnUtc = DateTime.UtcNow;
+            _customerService.InsertCustomer(customer);
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+            
+            return RedirectToAction("Edit", new { id = customer.Id });
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var customer = _customerService.GetCustomerById(id);
+            if (customer == null) 
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            var model = customer.ToModel();
+            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == customer.TimeZoneId) });
+            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
+            model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+            model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+            model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
+            model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+
+            return View(model);
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        [FormValueRequired("save", "save-continue")]
+        public ActionResult Edit(CustomerModel model, bool continueEditing)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null) 
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            customer = model.ToEntity(customer);
+
+            //UNDONE set VAT number after country is saved
+            //TODO get country from default address (can this be "hacked" during checkout? for example, selecting a new address with new country)
+            //if (_taxSettings.EuVatEnabled)
+            //{
+            //    string prevVatNumber = customer.VatNumber;
+            //    customer.VatNumber = txtVatNumber.Text;
+            //    //set VAT number status
+            //    if (!txtVatNumber.Text.Trim().Equals(prevVatNumber))
+            //        customer.VatNumberStatus = _taxService.GetVatNumberStatus(_countryService.GetCountryById(_countryId), customer.VatNumber);
+            //}
+
+            _customerService.UpdateCustomer(customer);
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+
+
+            return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
+        }
         
-        //public ActionResult Edit(int id)
-        //{
-        //    var category = _categoryService.GetCategoryById(id);
-        //    if (category == null) throw new ArgumentException("No category found with the specified id", "id");
-        //    var model = category.ToModel();
-        //    foreach (var language in _languageService.GetAllLanguages(true))
-        //    {
-        //        var localizedModel = new CategoryLocalizedModel
-        //                                 {
-        //                                     Language = language,
-        //                                     Description = category.GetLocalized(x => x.Description, language.Id, false),
-        //                                     Name = category.GetLocalized(x => x.Name, language.Id, false),
-        //                                     MetaKeywords =
-        //                                         category.GetLocalized(x => x.MetaKeywords, language.Id, false),
-        //                                     MetaDescription =
-        //                                         category.GetLocalized(x => x.MetaDescription, language.Id, false),
-        //                                     MetaTitle = category.GetLocalized(x => x.MetaTitle, language.Id, false),
-        //                                     SeName = category.GetLocalized(x => x.SeName, language.Id, false)
-        //                                 };
-        //        model.Locales.Add(localizedModel);
-        //    }
-        //    CategoryProductsAttribute.Clear();
-        //    return View(model);
-        //}
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("markVatNumberAsValid")]
+        public ActionResult MarkVatNumberAsValid(CustomerModel model)
+        {
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
 
-        //[HttpPost, CategoryProducts, FormValueExists("save", "save-continue", "continueEditing")]
-        //public ActionResult Edit(CategoryModel categoryModel,
-        //    IList<CategoryProductModel> addedCategoryProducts,
-        //    IList<CategoryProductModel> removedCategoryProducts,
-        //    bool continueEditing)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View("Edit", categoryModel);
-        //    }
+            customer.VatNumberStatus = VatNumberStatus.Valid;
+            _customerService.UpdateCustomer(customer);
 
-        //    var category = _categoryService.GetCategoryById(categoryModel.Id);
-        //    category = categoryModel.ToEntity(category);
-        //    _categoryService.UpdateCategory(category);
+            return RedirectToAction("Edit", customer.Id);
+        }
 
-        //    UpdateLocales(category, categoryModel);
-        //    UpdateCategoryProducts(category, addedCategoryProducts, removedCategoryProducts);
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("markVatNumberAsInvalid")]
+        public ActionResult MarkVatNumberAsInvalid(CustomerModel model)
+        {
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
 
-        //    CategoryProductsAttribute.Clear();
+            customer.VatNumberStatus = VatNumberStatus.Invalid;
+            _customerService.UpdateCustomer(customer);
 
-        //    return continueEditing ? RedirectToAction("Edit", category.Id) : RedirectToAction("List");
-        //}
-        
-        //[HttpPost, ActionName("Delete")]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    var category = _categoryService.GetCategoryById(id);
-        //    _categoryService.DeleteCategory(category);
-        //    return RedirectToAction("List");
-        //}
+            return RedirectToAction("Edit", customer.Id);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var customer = _customerService.GetCustomerById(id);
+            if (customer == null) 
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            _customerService.DeleteCustomer(customer);
+            return RedirectToAction("List");
+        }
         
         #endregion
     }

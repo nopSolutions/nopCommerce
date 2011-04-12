@@ -37,7 +37,7 @@
                              .Width("100px")
                              .Template(x => x.Active.ToString().ToLower())
                              .Centered();
-                        columns.Bound(x => x.CreatedOnUtc).Width(100);
+                        columns.Bound(x => x.CreatedOnStr).Width(100);
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()

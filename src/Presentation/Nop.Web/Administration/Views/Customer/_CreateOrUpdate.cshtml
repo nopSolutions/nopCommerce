@@ -1,0 +1,114 @@
+﻿@model Nop.Admin.Models.CustomerModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@{
+    var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures).ToList();
+}
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Gender):
+        </td>
+        <td class="adminData">
+            @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
+            <label class="forcheckbox" for="Gender_Male">@T("Admin.Common.Gender.Male")</label>
+            
+            @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+            <label class="forcheckbox" for="Gender_Female">@T("Admin.Common.Gender.Female")</label>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.FirstName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.FirstName)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.LastName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.LastName)
+            @Html.ValidationMessageFor(model => model.LastName)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DateOfBirth):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DateOfBirth)
+            @Html.ValidationMessageFor(model => model.DateOfBirth)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AdminComment):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AdminComment)
+            @Html.ValidationMessageFor(model => model.AdminComment)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsTaxExempt):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.IsTaxExempt)
+            @Html.ValidationMessageFor(model => model.IsTaxExempt)
+        </td>
+    </tr>
+    @if (Model.AllowCustomersToSetTimeZone)
+    {
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.TimeZoneId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+            @Html.ValidationMessageFor(model => model.TimeZoneId)
+        </td>
+    </tr>
+    }
+    @if (Model.DisplayVatNumber)
+    {
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.VatNumber):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.VatNumber) 
+            (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote)) 
+            <button type="submit" name="markVatNumberAsValid" value="markVatNumberAsValid" class="t-button">@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")</button>
+            <button type="submit" name="markVatNumberAsInvalid" value="markVatNumberAsInvalid" class="t-button">@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")</button>
+            @Html.ValidationMessageFor(model => model.VatNumber)
+        </td>
+    </tr>
+    }
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Active):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Active)
+            @Html.ValidationMessageFor(model => model.Active)
+        </td>
+    </tr>
+    @if (!String.IsNullOrEmpty(Model.CreatedOnStr))
+    {
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CreatedOnStr):
+        </td>
+        <td class="adminData">
+            @Model.CreatedOnStr
+        </td>
+    </tr>
+    }
+</table>

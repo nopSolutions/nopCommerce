@@ -22,7 +22,6 @@ namespace Nop.Admin.Infrastructure
         public void Execute()
         {
             //address
-            //queued email
             Mapper.CreateMap<Address, AddressModel>();
             Mapper.CreateMap<AddressModel, Address>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
@@ -86,7 +85,10 @@ namespace Nop.Admin.Infrastructure
             //customer roles
             ViceVersa<CustomerRole, CustomerRoleModel>();
             //customers
-            ViceVersa<Customer, CustomerModel>();
+            Mapper.CreateMap<Customer, CustomerModel>();
+            Mapper.CreateMap<CustomerModel, Customer>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.LastActivityDateUtc, dt => dt.Ignore());
         }
 
         public static void ViceVersa<T1, T2>()

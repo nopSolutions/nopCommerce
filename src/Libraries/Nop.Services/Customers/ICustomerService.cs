@@ -73,6 +73,12 @@ namespace Nop.Services.Customers
         Customer RegisterCustomer(int customerId);
 
         /// <summary>
+        /// Insert a customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        void InsertCustomer(Customer customer);
+
+        /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>

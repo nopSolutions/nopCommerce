@@ -9,18 +9,23 @@ namespace Nop.Web.Framework.Controllers
 {
     public class FormValueRequiredAttribute : ActionMethodSelectorAttribute
     {
-        private readonly string _submitButtonName;
+        private readonly string[] _submitButtonNames;
 
-        public FormValueRequiredAttribute(string submitButtonName)
+        public FormValueRequiredAttribute(params string[] submitButtonNames)
         {
-            _submitButtonName = submitButtonName;
+            //at least one submit button should be found
+            this._submitButtonNames = submitButtonNames;
         }
+
         public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
         {
-            var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
-
-            return !string.IsNullOrEmpty(value);
-
+            foreach (string buttonName in _submitButtonNames)
+            {
+                var value = controllerContext.HttpContext.Request.Form[buttonName];
+                if (!String.IsNullOrEmpty(value))
+                    return true;
+            }
+            return false;
         }
     }
 }

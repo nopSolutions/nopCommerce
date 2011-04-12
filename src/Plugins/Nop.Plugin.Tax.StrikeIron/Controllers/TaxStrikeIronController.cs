@@ -17,14 +17,12 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
     [AdminAuthorize]
     public class TaxStrikeIronController : Controller
     {
-        private readonly ITaxService _taxService;
         private readonly StrikeIronTaxSettings _strikeIronTaxSettings;
         private readonly ISettingService _settingService;
 
-        public TaxStrikeIronController(ITaxService taxService,
+        public TaxStrikeIronController(
             StrikeIronTaxSettings strikeIronTaxSettings, ISettingService settingService)
         {
-            this._taxService = taxService;
             this._strikeIronTaxSettings = strikeIronTaxSettings;
             this._settingService = settingService;
         }
@@ -79,8 +77,8 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
             {
                 var strikeIronTaxProvider = new StrikeIronTaxProvider(_settingService, _strikeIronTaxSettings);
                 string zip = model.TestingUsaZip;
-                string userId = model.UserId.Trim();
-                string password = model.Password.Trim();
+                string userId = model.UserId;
+                string password = model.Password;
                 string error = "";
                 decimal taxRate = strikeIronTaxProvider.GetTaxRateUsa(zip, userId, password, ref error);
                 if (!String.IsNullOrEmpty(error))
@@ -114,8 +112,8 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
             {
                 var strikeIronTaxProvider = new StrikeIronTaxProvider(_settingService, _strikeIronTaxSettings);
                 string province = model.TestingCanadaProvinceCode;
-                string userId = model.UserId.Trim();
-                string password = model.Password.Trim();
+                string userId = model.UserId;
+                string password = model.Password;
                 string error = "";
                 decimal taxRate = strikeIronTaxProvider.GetTaxRateCanada(province, userId, password, ref error);
                 if (!String.IsNullOrEmpty(error))

@@ -1,0 +1,15 @@
+﻿@model Nop.Admin.Models.CustomerModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
+            @T("Admin.Customers.Customers.AddNew") - @Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")
+        </div>
+        <div class="options">
+            <input type="submit" value="@T("Admin.Common.Save")" class="t-button" />
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}

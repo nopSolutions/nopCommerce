@@ -319,12 +319,38 @@
             </LocaleResource>
             <LocaleResource Name="Common">
                 <Children>
+                    <LocaleResource Name="Gender">
+                      <Children>
+                        <LocaleResource Name="Male">
+                          <Value>Male</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Female">
+                          <Value>Female</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Validation">
                         <Children>
                             <LocaleResource Name="Required">
                                 <Value>This field is required.</Value>
                             </LocaleResource>
                         </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="VatNumberStatus">
+                      <Children>
+                        <LocaleResource Name="Unknown">
+                          <Value>Unknown</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Empty">
+                          <Value>Empty</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Valid">
+                          <Value>Valid</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Invalid">
+                          <Value>Invalid</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
                     <LocaleResource Name="DeleteConfirmationParam">
                         <Value>Are you sure you want to delete "{0}"?</Value>
@@ -1567,6 +1593,17 @@
                     </LocaleResource>
                     <LocaleResource Name="Fields">
                       <Children>
+                        <LocaleResource Name="Gender">
+                          <Value>Gender</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The customer's gender.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Validation">
+                              <Value>Please provide a first name.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                         <LocaleResource Name="FirstName">
                           <Value>First name</Value>
                           <Children>
@@ -1630,7 +1667,16 @@
                             <LocaleResource Name="Hint">
                               <Value>Enter company VAT number (NOTE: Enter VAT number without country code)</Value>
                             </LocaleResource>
+                            <LocaleResource Name="MarkAsValid">
+                              <Value>Mark VAT number as valid</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="MarkAsInvalid">
+                              <Value>Mark VAT number as invalid</Value>
+                            </LocaleResource>
                           </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="VatNumberStatus">
+                          <Value>status: {0}</Value>
                         </LocaleResource>
                         <LocaleResource Name="TimeZoneId">
                           <Value>Time zone</Value>
@@ -1649,7 +1695,7 @@
                           </Children>
                         </LocaleResource>
                         <LocaleResource Name="RegistrationDate">
-                          <Value>Registration date:</Value>
+                          <Value>Registration date</Value>
                           <Children>
                             <LocaleResource Name="Hint">
                               <Value>The date the customer registered.</Value>

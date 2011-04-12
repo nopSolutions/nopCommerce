@@ -198,7 +198,6 @@ namespace Nop.Services.Customers
             var customer = new Customer()
             {
                 CustomerGuid = Guid.NewGuid(),
-                AdminComment = string.Empty,
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
             };
@@ -258,6 +257,20 @@ namespace Nop.Services.Customers
 
             return customer;
         }
+
+        /// <summary>
+        /// Insert a customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        public void InsertCustomer(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            //TODO save current language, currency, tax display type, etc
+            _customerRepository.Insert(customer);
+        }
+
 
         /// <summary>
         /// Updates the customer

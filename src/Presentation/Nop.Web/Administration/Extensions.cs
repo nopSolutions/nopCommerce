@@ -24,6 +24,7 @@ using Nop.Web.Framework;
 
 namespace Nop.Admin
 {
+    //separate MappingExtensions and HtmlExtensions to two distinct .cs files
     public static class MappingExtensions
     {
         #region Category
