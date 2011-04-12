@@ -137,6 +137,10 @@ namespace Nop.Admin.Controllers
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
             model.DisplayVatNumber = false;
             model.VatNumberStatusNote = GetVatNumberStatusName(VatNumberStatus.Empty);
+            //customer roles
+            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            model.AvailableCustomerRoles = customerRoles.ToList();
+            model.SelectedCustomerRoleIds = new int[0];
 
             return View(model);
         }
@@ -157,7 +161,15 @@ namespace Nop.Admin.Controllers
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
-            
+            //customer roles
+            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var customerRole in allCustomerRoles)
+            {
+                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                    customer.CustomerRoles.Add(customerRole);
+            }
+            _customerService.UpdateCustomer(customer);
+
             return RedirectToAction("Edit", new { id = customer.Id });
         }
 
@@ -178,6 +190,10 @@ namespace Nop.Admin.Controllers
             model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
             model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
             model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            //customer roles
+            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            model.AvailableCustomerRoles = customerRoles.ToList();
+            model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
 
             return View(model);
         }
@@ -208,11 +224,29 @@ namespace Nop.Admin.Controllers
             //}
 
             _customerService.UpdateCustomer(customer);
+            //customer attributes
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
-
+            //customer roles
+            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var customerRole in allCustomerRoles)
+            {
+                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                {
+                    //new role
+                    if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() == 0)
+                        customer.CustomerRoles.Add(customerRole);
+                }
+                else
+                {
+                    //removed role
+                    if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() > 0)
+                        customer.CustomerRoles.Remove(customerRole);
+                }
+            }
+            _customerService.UpdateCustomer(customer);
 
             return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
         }

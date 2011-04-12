@@ -1585,6 +1585,12 @@
                     <LocaleResource Name="AddNew">
                       <Value>Add a new customer</Value>
                     </LocaleResource>
+                    <LocaleResource Name="Info">
+                      <Value>Customer Info</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="CustomerRoles">
+                      <Value>Customer Roles</Value>
+                    </LocaleResource>
                     <LocaleResource Name="BackToList">
                       <Value>back to customer list</Value>
                     </LocaleResource>
