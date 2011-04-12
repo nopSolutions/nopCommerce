@@ -85,6 +85,8 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<Forum, ForumModel>();
             //customer roles
             ViceVersa<CustomerRole, CustomerRoleModel>();
+            //customers
+            ViceVersa<Customer, CustomerModel>();
         }
 
         public static void ViceVersa<T1, T2>()

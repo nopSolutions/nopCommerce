@@ -476,12 +476,22 @@ namespace Nop.Services.Installation
                                         {
                                             CustomerGuid = Guid.NewGuid(),
                                             AssociatedUserId = user.Id,
-                                            AdminComment = string.Empty,
                                             Active = true,
                                             CreatedOnUtc = DateTime.UtcNow,
                                         }
                                 };
             customers.ForEach(c => _customerRepository.Insert(c));
+
+
+            var testGuests = new List<Customer>();
+            for (int i = 0; i < 100; i++)
+                testGuests.Add(new Customer
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Active = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                });
+            testGuests.ForEach(c => _customerRepository.Insert(c));
 
             var customerRoles = new List<CustomerRole>
                                 {
@@ -513,6 +523,7 @@ namespace Nop.Services.Installation
                                             Active = true,
                                             IsSystemRole = true,
                                             SystemName = SystemCustomerRoleNames.Guests,
+                                            Customers = testGuests
                                         }
                                 };
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
@@ -701,7 +712,7 @@ namespace Nop.Services.Installation
 
             #endregion
 
-            #region Countries & states
+            #region Shipping methods
 
             var shippingMethods = new List<ShippingMethod>
                                 {
@@ -757,22 +768,22 @@ namespace Nop.Services.Installation
                 {
                     GenderEnabled = true,
                     DateOfBirthEnabled = true,
-                    CompanyEnabled = true,
-                    CompanyRequired = false,
-                    StreetAddressEnabled = true,
-                    StreetAddressRequired = true,
-                    StreetAddress2Enabled = true,
-                    StreetAddress2Required = false,
-                    PostCodeEnabled = true,
-                    PostCodeRequired = true,
-                    CityEnabled = true,
-                    CityRequired = true,
-                    CountryEnabled = true,
-                    StateEnabled = true,
-                    PhoneEnabled = true,
-                    PhoneRequired = true,
-                    FaxEnabled = true,
-                    FaxRequired = false,
+                    //CompanyEnabled = true,
+                    //CompanyRequired = false,
+                    //StreetAddressEnabled = true,
+                    //StreetAddressRequired = true,
+                    //StreetAddress2Enabled = true,
+                    //StreetAddress2Required = false,
+                    //PostCodeEnabled = true,
+                    //PostCodeRequired = true,
+                    //CityEnabled = true,
+                    //CityRequired = true,
+                    //CountryEnabled = true,
+                    //StateEnabled = true,
+                    //PhoneEnabled = true,
+                    //PhoneRequired = true,
+                    //FaxEnabled = true,
+                    //FaxRequired = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()

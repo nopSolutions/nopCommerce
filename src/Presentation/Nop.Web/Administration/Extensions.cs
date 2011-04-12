@@ -468,6 +468,22 @@ namespace Nop.Admin
         {
             return AutoMapper.Mapper.Map(model, destination);
         }
+
+        //customers
+        public static CustomerModel ToModel(this Customer entity)
+        {
+            return AutoMapper.Mapper.Map<Customer, CustomerModel>(entity);
+        }
+
+        public static Customer ToEntity(this CustomerModel model)
+        {
+            return AutoMapper.Mapper.Map<CustomerModel, Customer>(model);
+        }
+
+        public static Customer ToEntity(this CustomerModel model, Customer destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
         #endregion
     }
 

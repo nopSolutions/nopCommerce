@@ -1481,7 +1481,7 @@
           </LocaleResource>
             <LocaleResource Name="Customers">
             <Value>Customers</Value>
-            <Children>
+              <Children>
               <LocaleResource Name="CustomerRoles">
                 <Value>Customer roles</Value>
                 <Children>
@@ -1552,6 +1552,118 @@
                 </Children>
               </LocaleResource>
             </Children>
+              <Children>
+                <LocaleResource Name="Customers">
+                  <Value>Customers</Value>
+                  <Children>
+                    <LocaleResource Name="AddNew">
+                      <Value>Add a new customer</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="BackToList">
+                      <Value>back to customer list</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="EditCustomerDetails">
+                      <Value>Edit customer details</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Fields">
+                      <Children>
+                        <LocaleResource Name="FirstName">
+                          <Value>First name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The customer's first name.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Validation">
+                              <Value>Please provide a first name.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="LastName">
+                          <Value>Last name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The customer's last name.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Validation">
+                              <Value>Please provide a last name.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="FullName">
+                          <Value>Name</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="DateOfBirth">
+                          <Value>Date of birth</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The customer's date of birth.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="AdminComment">
+                          <Value>Admin comment</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Admin comment. For internal use.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="IsTaxExempt">
+                          <Value>Is tax exempt</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Determines whether the customer is tax exempt.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="SystemName">
+                          <Value>System name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The system name of the customer role.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="VatNumber">
+                          <Value>VAT number</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter company VAT number (NOTE: Enter VAT number without country code)</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="TimeZoneId">
+                          <Value>Time zone</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The time zone.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Active">
+                          <Value>Active</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Is this customer's account active. To disable/suspend a customer's account, uncheck this.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="RegistrationDate">
+                          <Value>Registration date:</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The date the customer registered.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="CustomerRoles">
+                          <Value>Customer roles</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+              </Children>
             </LocaleResource>
             <LocaleResource Name="Promotions">
             <Value>Promotions</Value>
