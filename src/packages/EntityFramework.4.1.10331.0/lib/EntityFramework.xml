@@ -21,32 +21,32 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_SimilarRelationshipEnd(System.Object,System.Object,System.Object,System.Object,System.Object)">
             <summary>
-            A string like "Role '{0}' in '{1}' and '{2}' AssociationSet refers to the same EntitySet '{3}' in EntityContainer '{4}'. Make sure that if two or more AssociationSet refer to the same AssociationType, the ends must not refer to the same EntitySet."
+            A string like "Role '{0}' in AssociationSets ‘{1}’ and ‘{2}’ refers to the same EntitySet '{3}' in EntityContainer '{4}'. Make sure that if two or more AssociationSets refer to the same AssociationType, the ends do not refer to the same EntitySet."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidEntitySetNameReference(System.Object,System.Object)">
             <summary>
-            A string like "The referenced EntitySet {0} for End {1} could not be found in the containing EntityContainer."
+            A string like "The referenced EntitySet ‘{0}’ for End ‘{1}’ could not be found in the containing EntityContainer."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_ConcurrencyRedefinedOnSubTypeOfEntitySetType(System.Object,System.Object,System.Object)">
             <summary>
-            A string like "Type '{0}' is derived from the type '{1}' that is the type for EntitySet '{2}'. Type '{0}' defines new concurrency requirements that are not allowed for sub types of base EntitySet types."
+            A string like "Type '{0}' is derived from type '{1}' that is the type for EntitySet '{2}'. Type '{0}' defines new concurrency requirements that are not allowed for subtypes of base EntitySet types."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_EntitySetTypeHasNoKeys(System.Object,System.Object)">
             <summary>
-            A string like "The EntitySet {0} is based on type {1} that has no keys defined."
+            A string like "EntitySet ‘{0}’ is based on type ‘{1}’ that has no keys defined."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_DuplicateEndName(System.Object)">
             <summary>
-            A string like "The End Name {0} is already defined."
+            A string like "The end name  ‘{0}’ is already defined."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_DuplicatePropertyNameSpecifiedInEntityKey(System.Object,System.Object)">
             <summary>
-            A string like "Key specified in EntityType '{0}' is not valid. Property '{1}' is referenced more than once in the Key element."
+            A string like "The key specified in EntityType '{0}' is not valid. Property '{1}' is referenced more than once in the Key element."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidCollectionKindNotCollection(System.Object)">
@@ -71,7 +71,7 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidKeyNullablePart(System.Object,System.Object)">
             <summary>
-            A string like "Key Part: '{0}' for type {1} is not valid. All parts of the key must be non nullable."
+            A string like "Key part '{0}' for type ‘{1}’ is not valid. All parts of the key must be non-nullable."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_EntityKeyMustBeScalar(System.Object,System.Object)">
@@ -81,7 +81,7 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(System.Object,System.Object)">
             <summary>
-            A string like "Key usage is not valid. {0} cannot define keys because one of its base classes ({1}) defines keys."
+            A string like "Key usage is not valid. The {0} class  cannot define keys because one of its base classes (‘{1}’) defines keys."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_KeyMissingOnEntityType(System.Object)">
@@ -91,27 +91,27 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_BadNavigationPropertyUndefinedRole(System.Object,System.Object,System.Object)">
             <summary>
-            A string like "NavigationProperty is not valid. The role {0} or the role {1} is not defined in Relationship {2}."
+            A string like "NavigationProperty is not valid. Role ‘{0}’ or Role ‘{1}’ is not defined in Relationship ‘{2}’."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_EndWithManyMultiplicityCannotHaveOperationsSpecified(System.Object,System.Object)">
             <summary>
-            A string like "End '{0}' on relationship '{1}' cannot have operation specified since its multiplicity is '*'. Operations cannot be specified on ends with multiplicity '*'."
+            A string like "End '{0}' on relationship '{1}' cannot have an operation specified because its multiplicity is '*'. Operations cannot be specified on ends with multiplicity '*'."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_EndNameAlreadyDefinedDuplicate(System.Object)">
             <summary>
-            A string like "Each Name and PluralName in a relationship must be unique. '{0}' was already defined."
+            A string like "Each Name and PluralName in a relationship must be unique. '{0}' is already defined."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_SameRoleReferredInReferentialConstraint(System.Object)">
             <summary>
-            A string like "In relationship '{0}', the Principal and Dependent Role of the referential constraint refers to the same Role in the relationship type."
+            A string like "In relationship '{0}', the Principal and Dependent Role of the referential constraint refer to the same Role in the relationship type."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidMultiplicityFromRoleUpperBoundMustBeOne(System.Object,System.Object)">
             <summary>
-            A string like "Multiplicity is not valid in role '{0}' in relationship '{1}'. Valid values for multiplicity for Principal Role are '0..1' or '1'."
+            A string like "Multiplicity is not valid in Role '{0}' in relationship '{1}'. Valid values for multiplicity for the Principal Role are '0..1' or '1'."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidMultiplicityFromRoleToPropertyNullableV1(System.Object,System.Object)">
@@ -121,7 +121,7 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidMultiplicityFromRoleToPropertyNonNullableV1(System.Object,System.Object)">
             <summary>
-            A string like "Multiplicity conflicts with the referential constraint in Role '{0}' in relationship '{1}'. Because one/all of the properties in the Dependent Role is non-nullable, multiplicity of the Principal Role must be '1'."
+            A string like "Multiplicity conflicts with the referential constraint in Role '{0}' in relationship '{1}'. Because at least one  of the properties in the Dependent Role is non-nullable, multiplicity of the Principal Role must be '1'."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidMultiplicityFromRoleToPropertyNonNullableV2(System.Object,System.Object)">
@@ -131,17 +131,17 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidToPropertyInRelationshipConstraint(System.Object,System.Object,System.Object)">
             <summary>
-            A string like "Properties referred by the Dependent Role {0} must be a subset of the key of the EntityType {1} referred to by the Dependent Role in the referential constraint for Relationship {2}."
+            A string like "Properties referred by the Dependent Role ‘{0}’ must be a subset of the key of the EntityType ‘{1}’ referred to by the Dependent Role in the referential constraint for relationship ‘{2}’."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidMultiplicityToRoleUpperBoundMustBeOne(System.Object,System.Object)">
             <summary>
-            A string like "Multiplicity is not valid in Role '{0}' in relationship '{1}'. Because the Dependent Role refers to the key properties, the upper bound of the multiplicity of the Dependent Role must be 1."
+            A string like "Multiplicity is not valid in Role '{0}' in relationship '{1}'. Because the Dependent Role refers to the key properties, the upper bound of the multiplicity of the Dependent Role must be ‘1’."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidMultiplicityToRoleUpperBoundMustBeMany(System.Object,System.Object)">
             <summary>
-            A string like "Multiplicity is not valid in Role '{0}' in relationship '{1}'. Because the Dependent Role properties are not the key properties, the upper bound of the multiplicity of the Dependent Role must be *."
+            A string like "Multiplicity is not valid in Role '{0}' in relationship '{1}'. Because the Dependent Role properties are not the key properties, the upper bound of the multiplicity of the Dependent Role must be ‘*’."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(System.Object,System.Object,System.Object,System.Object,System.Object)">
@@ -156,12 +156,12 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_NullableComplexType(System.Object)">
             <summary>
-            A string like "Nullable ComplexType is not supported. Property '{0}' must not allow nulls."
+            A string like "A nullable ComplexType is not supported. Property '{0}' must not allow nulls."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidPropertyType(System.Object)">
             <summary>
-            A string like "A property cannot be of type {0}. The property type must be a ComplexType or a PrimitiveType."
+            A string like "A property cannot be of type ‘{0}’. The property type must be a ComplexType or a PrimitiveType."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName(System.Object)">
@@ -171,17 +171,17 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_TypeNameAlreadyDefinedDuplicate(System.Object)">
             <summary>
-            A string like "Each type name in a schema must be unique. Type name '{0}' was already defined."
+            A string like "Each type name in a schema must be unique. Type name '{0}' is already defined."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName(System.Object,System.Object)">
             <summary>
-            A string like "Name {0} cannot be used in type {1}. Member names cannot be the same as their enclosing type."
+            A string like "Name ‘{0}’ cannot be used in type ‘{1}’. Member names cannot be the same as their enclosing type."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate(System.Object)">
             <summary>
-            A string like "Each property name in a type must be unique. Property name '{0}' was already defined."
+            A string like "Each property name in a type must be unique. Property name '{0}' is already defined."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_CycleInTypeHierarchy(System.Object)">
@@ -191,7 +191,7 @@
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Semantic_InvalidPropertyType_V1_1(System.Object)">
             <summary>
-            A string like "A property cannot be of type {0}. The property type must be a ComplexType, a PrimitiveType or a CollectionType."
+            A string like "A property cannot be of type ‘{0}’. The property type must be a ComplexType, a PrimitiveType, or a CollectionType."
             </summary>
         </member>
         <member name="M:System.Data.Edm.Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong(System.Object)">
@@ -216,7 +216,7 @@
         </member>
         <member name="P:System.Data.Edm.Strings.EdmModel_Validator_Semantic_MismatchNumberOfPropertiesinRelationshipConstraint">
             <summary>
-            A string like "Number of Properties in the Dependent and Principal Role in a relationship constraint must be exactly identical."
+            A string like "The number of properties in the Dependent and Principal Roles in a relationship constraint must be identical."
             </summary>
         </member>
         <member name="P:System.Data.Edm.Strings.EdmModel_Validator_Syntactic_MissingName">
@@ -281,7 +281,7 @@
         </member>
         <member name="P:System.Data.Edm.Strings.Serializer_OneNamespaceAndOneContainer">
             <summary>
-            A string like "Serializer can only serialize EdmModel that has one EdmNamespace and one EdmEntityContainer."
+            A string like "Serializer can only serialize an EdmModel that has one EdmNamespace and one EdmEntityContainer."
             </summary>
         </member>
         <member name="T:System.Data.Edm.Error">
@@ -2651,6 +2651,11 @@
             A string like "The abstract type '{0}' has no mapped descendents and so cannot be mapped. Either remove '{0}' from the model or add one or more types deriving from '{0}' to the model. "
             </summary>
         </member>
+        <member name="M:System.Data.Entity.ModelConfiguration.Resources.Strings.UnsupportedHybridInheritanceMapping(System.Object)">
+            <summary>
+            A string like "The type '{0}' cannot be mapped as defined because it maps inherited properties from types that use entity splitting or another form of inheritance. Either choose a different inheritance mapping strategy so as to not map inherited properties, or change all types in the hierarchy to map inherited properties and to not use splitting. "
+            </summary>
+        </member>
         <member name="P:System.Data.Entity.ModelConfiguration.Resources.Strings.ValidationHeader">
             <summary>
             A string like "One or more validation errors were detected during model generation:"
@@ -2930,6 +2935,11 @@
         <member name="M:System.Data.Entity.ModelConfiguration.Resources.Error.UnmappedAbstractType(System.Object)">
             <summary>
             InvalidOperationException with message like "The abstract type '{0}' has no mapped descendents and so cannot be mapped. Either remove '{0}' from the model or add one or more types deriving from '{0}' to the model. "
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.ModelConfiguration.Resources.Error.UnsupportedHybridInheritanceMapping(System.Object)">
+            <summary>
+            NotSupportedException with message like "The type '{0}' cannot be mapped as defined because it maps inherited properties from types that use entity splitting or another form of inheritance. Either choose a different inheritance mapping strategy so as to not map inherited properties, or change all types in the hierarchy to map inherited properties and to not use splitting. "
             </summary>
         </member>
         <member name="M:System.Data.Entity.ModelConfiguration.Resources.Error.ArgumentNull(System.String)">
@@ -3927,6 +3937,11 @@
             <summary>
               Base class for configuring a property on an entity type or complex type.
               This configuration functionality is available via the Code First Fluent API, see <see cref="T:System.Data.Entity.DbModelBuilder"/>.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.ModelConfiguration.Conventions.SqlCePropertyMaxLengthConvention">
+            <summary>
+              Convention to set a default maximum length of 4000 for properties whose type supports length facets when SqlCe is the provider.
             </summary>
         </member>
         <member name="T:System.Data.Entity.ModelConfiguration.Conventions.ForeignKeyNavigationPropertyAttributeConvention">
@@ -7581,6 +7596,12 @@
             <param name="entity">The entity.</param>
             <returns><c>true</c> if the entity is in the context and not deleted; otherwise <c>false</c>.</returns>
         </member>
+        <member name="M:System.Data.Entity.Internal.InternalContext.SaveChanges">
+            <summary>
+            Saves all changes made in this context to the underlying database.
+            </summary>
+            <returns>The number of objects written to the underlying database.</returns>
+        </member>
         <member name="M:System.Data.Entity.Internal.InternalContext.CreateModelBuilderForEdmx">
             <summary>
             Runs the Code First pipeline to create a <see cref="T:System.Data.Entity.DbModelBuilder"/> that can then be used to create
@@ -8226,6 +8247,15 @@
             This is used to get a context that can then be used for database creation/initialization.
             </summary>
         </member>
+        <member name="M:System.Data.Entity.Internal.LazyInternalContext.SaveChanges">
+            <summary>
+            Saves all changes made in this context to the underlying database, but only if the
+            context has been initialized. If the context has not been initialized, then this
+            method does nothing because there is nothing to do; in particular, it does not
+            cause the context to be initialized.
+            </summary>
+            <returns>The number of objects written to the underlying database.</returns>
+        </member>
         <member name="M:System.Data.Entity.Internal.LazyInternalContext.DisposeContext">
             <summary>
             Disposes the context. The underlying <see cref="P:System.Data.Entity.Internal.LazyInternalContext.ObjectContext"/> is also disposed.
@@ -8292,6 +8322,12 @@
             <summary>
               An SHA256 hash of the store model (SSDL) that can be used later to check if the model has changed or not.
               Note that this is currently only supported for Code First.
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Internal.LazyInternalContext.ObjectContextInUse">
+            <summary>
+            The <see cref="P:System.Data.Entity.Internal.LazyInternalContext.ObjectContext"/> actually being used, which may be the
+            temp context for initialization or the real context.
             </summary>
         </member>
         <member name="P:System.Data.Entity.Internal.LazyInternalContext.Connection">
@@ -11769,6 +11805,11 @@
         <member name="T:System.Data.Entity.ModelConfiguration.Conventions.ManyToManyCascadeDeleteConvention">
             <summary>
               Convention to add a cascade delete to the join table from both tables involved in a many to many relationship.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.ModelConfiguration.Conventions.MappingInheritedPropertiesSupportConvention">
+            <summary>
+              Convention to ensure an invalid/unsupported mapping is not created when mapping inherited properties
             </summary>
         </member>
         <member name="T:System.Data.Entity.ModelConfiguration.Conventions.DecimalPropertyConvention">

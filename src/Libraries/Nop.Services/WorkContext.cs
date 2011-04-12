@@ -59,7 +59,7 @@ namespace Nop.Services
                     customer = _customerService.GetCustomerByAssociatedUserId(user.Id);
                 
                 //guest customer
-                if (customer == null)
+                if (customer == null || customer.Deleted || !customer.Active)
                 {
                     var customerCookie = GetCustomerCookie();
                     if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
@@ -71,7 +71,7 @@ namespace Nop.Services
                 }
 
                 //create guest if not exists
-                if (customer == null)
+                if (customer == null || customer.Deleted || !customer.Active)
                 {
                     //TODO we should not create guest customer if request is made by search engine
                     customer = _customerService.InsertGuestCustomer();

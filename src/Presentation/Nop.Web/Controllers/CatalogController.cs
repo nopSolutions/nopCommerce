@@ -40,8 +40,6 @@ namespace Nop.Web.Controllers
 
 		#region Methods 
 
-		#region Public Methods 
-
         public ActionResult Category(int categoryId, PagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
@@ -85,8 +83,6 @@ namespace Nop.Web.Controllers
         {
             return RedirectToAction("Index", "Home");
         }
-
-		#endregion Public Methods 
 
 		#endregion Methods 
 

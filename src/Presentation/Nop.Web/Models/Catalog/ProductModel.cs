@@ -32,12 +32,9 @@ namespace Nop.Web.Models
 		#endregion Properties 
 
 		#region Nested Classes 
-
-
+        
         public class ProductPriceModel
         {
-		#region Properties 
-
             public bool CallForPrice { get; set; }
 
             public bool CustomerEntersPrice { get; set; }
@@ -47,9 +44,8 @@ namespace Nop.Web.Models
             public decimal? OldPrice {get;set;}
 
             public decimal? Price {get;set;}
-
-		#endregion Properties 
         }
+
 		#endregion Nested Classes 
     }
 }

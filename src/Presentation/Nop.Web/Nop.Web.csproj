@@ -53,8 +53,8 @@
     <Reference Include="MvcContrib">
       <HintPath>..\..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
     </Reference>
-    <Reference Include="RouteDebug">
-      <HintPath>..\..\packages\routedebugger.1.0.0\lib\RouteDebug.dll</HintPath>
+    <Reference Include="RouteDebugger">
+      <HintPath>..\..\packages\routedebugger.1.0.0.1\lib\net35\RouteDebugger.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -102,6 +102,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\defaultResources.public.nopres.xml" />
+    <Content Include="App_Readme\RouteDebugger.Readme.txt" />
     <Content Include="Content\2011.1.315\Black\editor.png" />
     <Content Include="Content\2011.1.315\Black\imagebrowser.png" />
     <Content Include="Content\2011.1.315\Black\loading.gif" />
@@ -706,6 +707,7 @@
     <Content Include="Content\Images\ui-icons_454545_256x240.png" />
     <Content Include="Content\Images\ui-icons_888888_256x240.png" />
     <Content Include="Content\Images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="license.txt" />
     <Content Include="Plugins\bin\placeholder.txt" />
     <Content Include="Plugins\placeholder.txt" />
     <Content Include="Scripts\2011.1.315\jquery-1.5.1.min.js" />
