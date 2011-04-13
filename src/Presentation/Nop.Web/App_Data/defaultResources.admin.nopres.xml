@@ -1588,9 +1588,6 @@
                     <LocaleResource Name="Info">
                       <Value>Customer Info</Value>
                     </LocaleResource>
-                    <LocaleResource Name="CustomerRoles">
-                      <Value>Customer Roles</Value>
-                    </LocaleResource>
                     <LocaleResource Name="BackToList">
                       <Value>back to customer list</Value>
                     </LocaleResource>
@@ -1713,6 +1710,9 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="CustomerRoles">
+                      <Value>Customer Roles</Value>
+                    </LocaleResource>
                     <LocaleResource Name="RewardPoints">
                       <Value>Reward points</Value>
                       <Children>
@@ -1753,8 +1753,11 @@
                               </Children>
                             </LocaleResource>
                           </Children>
-                        </LocaleResource>                        
+                        </LocaleResource>
                       </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Addresses">
+                      <Value>Addresses</Value>
                     </LocaleResource>
                   </Children>
                 </LocaleResource>

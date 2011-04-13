@@ -361,14 +361,20 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
-            var model = new GridModel();
             var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize);
-            model.Data = categories.Select(x =>
-                new { Id = Url.Action("Edit", new { x.Id }), x.Name, x.DisplayOrder, Breadcrumb = GetCategoryBreadCrumb(x), x.Published });
-            model.Total = categories.TotalCount;
+            var gridModel = new GridModel<CategoryModel>
+            {
+                Data = categories.Select(x =>
+                {
+                    var model = x.ToModel();
+                    model.Breadcrumb = GetCategoryBreadCrumb(x);
+                    return model;
+                }),
+                Total = categories.TotalCount
+            };
             return new JsonResult
             {
-                Data = model
+                Data = gridModel
             };
         }
 

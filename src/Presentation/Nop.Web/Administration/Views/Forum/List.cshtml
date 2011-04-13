@@ -26,7 +26,7 @@
                             .Width(50)
                             .Centered()
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "EditForumGroup", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .ClientTemplate("<a href=\"EditForumGroup/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                 })
                 .DetailView(detailView => detailView.Template(
@@ -42,7 +42,7 @@
                                         .Width(50)
                                         .Centered()
                                         .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "EditForum", new { id = x.Id }))
-                                        .ClientTemplate("<a href=\"<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                                        .ClientTemplate("<a href=\"EditForum/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                                         .Title(T("Admin.Common.Edit").Text);
                             })
                         )

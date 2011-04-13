@@ -24,7 +24,8 @@ namespace Nop.Admin.Controllers
             _currencySettings = currencySettings;
         }
 
-        #region Methods
+        #region List
+
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -33,13 +34,27 @@ namespace Nop.Admin.Controllers
         public ActionResult List()
         {
             var currencies = _currencyService.GetAllCurrencies(true);
-            //var rates = _currencyService.GetCurrencyLiveRates(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
             var gridModel = new GridModel<CurrencyModel>
             {
                 Data = currencies.Select(x => x.ToModel()),
                 Total = currencies.Count()
             };
             return View(gridModel);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult List(GridCommand command)
+        {
+            var currencies = _currencyService.GetAllCurrencies(true);
+            var gridModel = new GridModel<CurrencyModel>
+            {
+                Data = currencies.Select(x => x.ToModel()),
+                Total = currencies.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
         }
 
         #endregion

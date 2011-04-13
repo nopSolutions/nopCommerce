@@ -10,6 +10,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -32,6 +33,7 @@ namespace Nop.Admin.Controllers
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly ICountryService _countryService;
         
         #endregion Fields
 
@@ -39,7 +41,8 @@ namespace Nop.Admin.Controllers
 
         public CustomerController(ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
-            TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings)
+            TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
+            ICountryService countryService)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -47,6 +50,7 @@ namespace Nop.Admin.Controllers
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._countryService = countryService;
         }
 
         #endregion Constructors
@@ -337,6 +341,46 @@ namespace Nop.Admin.Controllers
             _customerService.UpdateCustomer(customer);
 
             return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+        }
+
+        //Addresses
+        [GridAction]
+        public ActionResult AddressesSelect(int customerId)
+        {
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            var addresses = customer.Addresses.OrderByDescending(a => a.CreatedOnUtc).ThenByDescending(a => a.Id).ToList();
+            var gridModel = new GridModel<AddressModel>
+            {
+                Data = addresses.Select(x =>
+                {
+                    var model = x.ToModel();
+                    if (x.Country != null)
+                        model.CountryName = x.Country.Name;
+                    if (x.StateProvince != null)
+                        model.StateProvinceName = x.StateProvince.Name;
+                    //countries
+                    //model.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+                    //foreach (var c in _countryService.GetAllCountries(true))
+                    //    model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == x.CountryId) });
+                    //states
+                    //if (x.Country != null && x.Country.StateProvinces.Count > 0)
+                    //{
+                    //    foreach (var s in x.Country.StateProvinces)
+                    //        model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == x.StateProvinceId) });
+                    //}
+                    //else
+                    //    model.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+                    return model;
+                }),
+                Total = addresses.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
         }
 
         #endregion

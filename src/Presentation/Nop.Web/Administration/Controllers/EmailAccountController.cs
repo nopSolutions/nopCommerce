@@ -58,12 +58,17 @@ namespace Nop.Admin.Controllers
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult List(GridCommand command)
 		{
-			var emailAccounts = _emailAccountService.GetAllEmailAccounts();
-			var gridModel = new GridModel<EmailAccountModel>
-			{
-				Data = emailAccounts.Select(x=>x.ToModel()),
-				Total = emailAccounts.Count()
-			};
+            var emailAccountModels = _emailAccountService.GetAllEmailAccounts()
+                                    .Select(x => x.ToModel())
+                                    .ToList();
+            foreach (var eam in emailAccountModels)
+                eam.IsDefaultEmailAccount = eam.Id == _emailAccountSettings.DefaultEmailAccountId;
+
+            var gridModel = new GridModel<EmailAccountModel>
+            {
+                Data = emailAccountModels,
+                Total = emailAccountModels.Count()
+            };
 
 			return new JsonResult
 			{

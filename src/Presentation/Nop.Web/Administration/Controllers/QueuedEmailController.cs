@@ -40,7 +40,7 @@ namespace Nop.Admin.Controllers
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult List(GridCommand command)
 		{
-			var emails = _queuedEmailService.GetAllQueuedEmails(0, false, 0);
+			var emails = _queuedEmailService.GetAllQueuedEmails(0, false, 10);
 			var gridModel = new GridModel<QueuedEmailModel>
 			{
 				Data = emails.Select(x => x.ToModel()),

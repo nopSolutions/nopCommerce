@@ -12,6 +12,10 @@
     if (Model.DisplayRewardPointsHistory)
     {
         x.Add().Text(T("Admin.Customers.Customers.RewardPoints").Text).Content(TabRewardPoints().ToHtmlString());
+    } 
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Customers.Customers.Addresses").Text).Content(TabAddresses().ToHtmlString());
     }
 })
 
@@ -215,4 +219,33 @@
             });
         });
     </script>
+}
+@helper TabAddresses()
+{
+    @(Html.Telerik().Grid<Nop.Admin.Models.AddressModel>().Name("customer-addresses-grid")
+    .DataKeys(keys =>
+    {
+        keys.Add(x => x.Id).RouteKey("addressId");
+    })
+    .DataBinding(binding =>
+    {
+        binding.Ajax().Select("AddressesSelect", "Customer", new { customerId = Model.Id });
+    })
+    .Columns(columns =>
+    {       
+        columns.Bound(x => x.FirstName);
+        columns.Bound(x => x.LastName);
+        columns.Bound(x => x.Email);
+        columns.Bound(x => x.PhoneNumber);
+        columns.Bound(x => x.FaxNumber);
+        columns.Bound(x => x.Id)
+            .ClientTemplate("<div>"
+                    + "<#= Company #><br />"
+                    + "<#= Address1 #><br />"
+                    + "<#= Address2 #><br />"
+                    + "<#= City #>, <#= StateProvinceName #>, <#= ZipPostalCode #><br />"
+                    + "<#= CountryName #><br />"
+                    + "</div>")
+            .Title("Address");
+    }))
 }

@@ -27,8 +27,12 @@ namespace Nop.Admin.Models
         public string Company { get; set; }
         [NopResourceDisplayName("Admin.Common.Address.Fields.Country")]
         public int? CountryId { get; set; }
+        [NopResourceDisplayName("Admin.Common.Address.Fields.Country")]
+        public string CountryName { get; set; }
         [NopResourceDisplayName("Admin.Common.Address.Fields.StateProvince")]
         public int? StateProvinceId { get; set; }
+        [NopResourceDisplayName("Admin.Common.Address.Fields.StateProvince")]
+        public string StateProvinceName { get; set; }
         [NopResourceDisplayName("Admin.Common.Address.Fields.City")]
         public string City { get; set; }
         [NopResourceDisplayName("Admin.Common.Address.Fields.Address1")]

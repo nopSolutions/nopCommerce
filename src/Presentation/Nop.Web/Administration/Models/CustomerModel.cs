@@ -70,8 +70,7 @@ namespace Nop.Admin.Models
         public int AddRewardPointsValue { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
         public string AddRewardPointsMessage { get; set; }
-
-
+        
         #region Nested classes
         public class RewardPointsHistoryModel : BaseNopEntityModel
         {

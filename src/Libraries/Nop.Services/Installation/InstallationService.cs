@@ -12,6 +12,7 @@ using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -57,6 +58,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
         private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly IRepository<Country> _countryRepository;
+        private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly ISettingService _settingService;
 
@@ -85,6 +87,7 @@ namespace Nop.Services.Installation
             IRepository<PrivateMessage> forumPrivateMessageRepository,
             IRepository<ForumSubscription> forumSubscriptionRepository,
             IRepository<Country> countryRepository,
+            IRepository<StateProvince> stateProvinceRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             ISettingService settingService)
         {
@@ -111,8 +114,9 @@ namespace Nop.Services.Installation
             this._forumPostRepository = forumPostRepository;
             this._forumPrivateMessageRepository = forumPrivateMessageRepository;
             this._forumSubscriptionRepository = forumSubscriptionRepository;
-            
+
             this._countryRepository = countryRepository;
+            this._stateProvinceRepository = stateProvinceRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
 
@@ -452,6 +456,119 @@ namespace Nop.Services.Installation
 
             #endregion
 
+            #region Countries & states
+
+            var countries = new List<Country>
+                                {
+                                    new Country
+                                        {
+                                            Name = "United States",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "US",
+                                            ThreeLetterIsoCode = "USA",
+                                            NumericIsoCode = 840,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 1,
+                                            Published = true,
+                                            StateProvinces = new List<StateProvince>()
+                                            {
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alabama",
+                                                    Abbreviation = "AL",
+                                                    DisplayOrder = 1,
+                                                },
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alaska",
+                                                    Abbreviation = "AK",
+                                                    DisplayOrder = 1,
+                                                },
+                                                //UNDONE insert other states
+                                                new StateProvince()
+                                                {
+                                                    Name = "New York",
+                                                    Abbreviation = "NY",
+                                                    DisplayOrder = 1,
+                                                },
+                                            }
+                                        },
+                                    new Country
+                                        {
+                                            Name = "Canada",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "CA",
+                                            ThreeLetterIsoCode = "CAN",
+                                            NumericIsoCode = 124,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 2,
+                                            Published = true,
+                                            StateProvinces = new List<StateProvince>()
+                                            {
+                                                new StateProvince()
+                                                {
+                                                    Name = "Alberta",
+                                                    Abbreviation = "AB",
+                                                    DisplayOrder = 1,
+                                                },
+                                                new StateProvince()
+                                                {
+                                                    Name = "British Columbia",
+                                                    Abbreviation = "BC",
+                                                    DisplayOrder = 1,
+                                                },
+                                                //UNDONE insert other states
+                                            }
+                                        },
+                                    new Country
+                                        {
+                                            Name = "Russia",
+                                            AllowsBilling = true,
+                                            AllowsShipping = true,
+                                            AllowsRegistration = true,
+                                            TwoLetterIsoCode = "RU",
+                                            ThreeLetterIsoCode = "RUS",
+                                            NumericIsoCode = 643,
+                                            SubjectToVat = false,
+                                            DisplayOrder = 100,
+                                            Published = true,
+                                        },
+                                };
+            countries.ForEach(c => _countryRepository.Insert(c));
+
+            #endregion
+
+            #region Shipping methods
+
+            var shippingMethods = new List<ShippingMethod>
+                                {
+                                    new ShippingMethod
+                                        {
+                                            Name = "In-Store Pickup",
+                                            Description ="Pick up your items at the store",
+                                            DisplayOrder = 0
+                                        },
+                                    new ShippingMethod
+                                        {
+                                            Name = "By Ground",
+                                            Description ="Compared to other shipping methods, like by flight or over seas, ground shipping is carried out closer to the earth",
+                                            DisplayOrder = 1
+                                        },
+                                    new ShippingMethod
+                                        {
+                                            Name = "By Air",
+                                            Description ="The one day air shipping",
+                                            DisplayOrder = 3
+                                        },
+                                };
+            shippingMethods.ForEach(sm => _shippingMethodRepository.Insert(sm));
+
+            #endregion
+
             #region Customers & Users
 
             var user = new User()
@@ -480,11 +597,26 @@ namespace Nop.Services.Installation
                                             CreatedOnUtc = DateTime.UtcNow,
                                         }
                                 };
+            customers.FirstOrDefault().AddAddress(new Address()
+            {
+                FirstName = "John",
+                LastName = "Smith",
+                PhoneNumber = "12345678",
+                Email = "admin@yourStore.com",
+                FaxNumber = "",
+                Company = "Nop Solutions",
+                Address1 = "21 West 52nd Street",
+                Address2 = "",
+                City = "New York",
+                StateProvince = _stateProvinceRepository.Table.Where(sp => sp.Name == "New York").FirstOrDefault(),
+                Country = _countryRepository.Table.Where(c => c.ThreeLetterIsoCode == "USA").FirstOrDefault(),
+                ZipPostalCode = "10021",
+                CreatedOnUtc = DateTime.UtcNow
+            });
             customers.ForEach(c => _customerRepository.Insert(c));
 
-
             var testGuests = new List<Customer>();
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 15; i++)
                 testGuests.Add(new Customer
                 {
                     CustomerGuid = Guid.NewGuid(),
@@ -631,114 +763,7 @@ namespace Nop.Services.Installation
 
 
             #endregion
-
-            #region Countries & states
-
-            var countries = new List<Country>
-                                {
-                                    new Country
-                                        {
-                                            Name = "United States",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            AllowsRegistration = true,
-                                            TwoLetterIsoCode = "US",
-                                            ThreeLetterIsoCode = "USA",
-                                            NumericIsoCode = 840,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 1,
-                                            Published = true,
-                                            StateProvinces = new List<StateProvince>()
-                                            {
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alabama",
-                                                    Abbreviation = "AL",
-                                                    DisplayOrder = 1,
-                                                },
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alaska",
-                                                    Abbreviation = "AK",
-                                                    DisplayOrder = 1,
-                                                },
-                                                //UNDONE insert other states
-                                            }
-                                        },
-                                    new Country
-                                        {
-                                            Name = "Canada",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            AllowsRegistration = true,
-                                            TwoLetterIsoCode = "CA",
-                                            ThreeLetterIsoCode = "CAN",
-                                            NumericIsoCode = 124,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 2,
-                                            Published = true,
-                                            StateProvinces = new List<StateProvince>()
-                                            {
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alberta",
-                                                    Abbreviation = "AB",
-                                                    DisplayOrder = 1,
-                                                },
-                                                new StateProvince()
-                                                {
-                                                    Name = "British Columbia",
-                                                    Abbreviation = "BC",
-                                                    DisplayOrder = 1,
-                                                },
-                                                //UNDONE insert other states
-                                            }
-                                        },
-                                    new Country
-                                        {
-                                            Name = "Russia",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            AllowsRegistration = true,
-                                            TwoLetterIsoCode = "RU",
-                                            ThreeLetterIsoCode = "RUS",
-                                            NumericIsoCode = 643,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 100,
-                                            Published = true,
-                                        },
-                                };
-            countries.ForEach(c => _countryRepository.Insert(c));
-
-            #endregion
-
-            #region Shipping methods
-
-            var shippingMethods = new List<ShippingMethod>
-                                {
-                                    new ShippingMethod
-                                        {
-                                            Name = "In-Store Pickup",
-                                            Description ="Pick up your items at the store",
-                                            DisplayOrder = 0
-                                        },
-                                    new ShippingMethod
-                                        {
-                                            Name = "By Ground",
-                                            Description ="Compared to other shipping methods, like by flight or over seas, ground shipping is carried out closer to the earth",
-                                            DisplayOrder = 1
-                                        },
-                                    new ShippingMethod
-                                        {
-                                            Name = "By Air",
-                                            Description ="The one day air shipping",
-                                            DisplayOrder = 3
-                                        },
-                                };
-            shippingMethods.ForEach(sm => _shippingMethodRepository.Insert(sm));
-
-            #endregion
-
+            
             #region Settings
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
