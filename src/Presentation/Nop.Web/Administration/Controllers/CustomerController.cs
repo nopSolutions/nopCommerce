@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport;
@@ -34,6 +35,7 @@ namespace Nop.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ICountryService _countryService;
+        private readonly IAddressService _addressService;
         
         #endregion Fields
 
@@ -42,7 +44,7 @@ namespace Nop.Admin.Controllers
         public CustomerController(ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
-            ICountryService countryService)
+            ICountryService countryService, IAddressService addressService)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -51,6 +53,7 @@ namespace Nop.Admin.Controllers
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._countryService = countryService;
+            this._addressService = addressService;
         }
 
         #endregion Constructors
@@ -361,18 +364,6 @@ namespace Nop.Admin.Controllers
                         model.CountryName = x.Country.Name;
                     if (x.StateProvince != null)
                         model.StateProvinceName = x.StateProvince.Name;
-                    //countries
-                    //model.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-                    //foreach (var c in _countryService.GetAllCountries(true))
-                    //    model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == x.CountryId) });
-                    //states
-                    //if (x.Country != null && x.Country.StateProvinces.Count > 0)
-                    //{
-                    //    foreach (var s in x.Country.StateProvinces)
-                    //        model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == x.StateProvinceId) });
-                    //}
-                    //else
-                    //    model.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
                     return model;
                 }),
                 Total = addresses.Count
@@ -383,6 +374,120 @@ namespace Nop.Admin.Controllers
             };
         }
 
+        [GridAction]
+        public ActionResult AddressDelete(int customerId, int addressId)
+        {
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            customer.RemoveAddress(address);
+            _customerService.UpdateCustomer(customer);
+            //TODO should we delete the address record?
+
+            var addresses = customer.Addresses.OrderByDescending(a => a.CreatedOnUtc).ThenByDescending(a => a.Id).ToList();
+            var gridModel = new GridModel<AddressModel>
+            {
+                Data = addresses.Select(x =>
+                {
+                    var model = x.ToModel();
+                    if (x.Country != null)
+                        model.CountryName = x.Country.Name;
+                    if (x.StateProvince != null)
+                        model.StateProvinceName = x.StateProvince.Name;
+                    return model;
+                }),
+                Total = addresses.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+        
+        public ActionResult AddressCreate(int customerId)
+        {
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "customerId");
+
+            var model = new CustomerAddressModel();
+            model.Address = new AddressModel();
+            model.CustomerId = customerId;
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+            model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddressCreate(CustomerAddressModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var customer = _customerService.GetCustomerById(model.CustomerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id");
+
+            var address = model.Address.ToEntity();
+            address.CreatedOnUtc = DateTime.UtcNow;
+            //some validation
+            if (address.CountryId == 0)
+                address.CountryId = null;
+            if (address.StateProvinceId == 0)
+                address.StateProvinceId = null;
+            customer.AddAddress(address);
+            _customerService.UpdateCustomer(customer);
+
+            return RedirectToAction("AddressEdit", new { addressId = address.Id, customerId = model.CustomerId });
+        }
+
+        public ActionResult AddressEdit(int addressId, int customerId)
+        {
+            var address = _addressService.GetAddressById(addressId);
+            if (address == null)
+                throw new ArgumentException("No address found with the specified id", "addressId");
+
+            var model = new CustomerAddressModel();
+            model.CustomerId = customerId;
+            model.Address = address.ToModel();
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
+            //states
+            if (address.Country != null && address.Country.StateProvinces.Count > 0)
+            {
+                foreach (var s in address.Country.StateProvinces)
+                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddressEdit(CustomerAddressModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var address = _addressService.GetAddressById(model.Address.Id);
+            address = model.Address.ToEntity(address);
+            _addressService.UpdateAddress(address);
+
+            return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });
+        }
+           
         #endregion
     }
 }

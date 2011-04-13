@@ -61,7 +61,11 @@
                 <b>@Html.LabelFor(model => model.ShippingOriginAddress):</b>
             </td>
         </tr>
-        @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
+        <tr>
+            <td colspan="2">
+                @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
+            </td>
+        </tr>        
         <tr class="adminSeparator">
             <td colspan="2">
                 <hr />

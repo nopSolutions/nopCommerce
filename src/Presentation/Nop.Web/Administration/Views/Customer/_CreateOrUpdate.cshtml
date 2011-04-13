@@ -229,7 +229,9 @@
     })
     .DataBinding(binding =>
     {
-        binding.Ajax().Select("AddressesSelect", "Customer", new { customerId = Model.Id });
+        binding.Ajax()
+            .Select("AddressesSelect", "Customer", new { customerId = Model.Id })
+            .Delete("AddressDelete", "Customer", new { customerId = Model.Id });
     })
     .Columns(columns =>
     {       
@@ -247,5 +249,20 @@
                     + "<#= CountryName #><br />"
                     + "</div>")
             .Title("Address");
+        columns.Bound(x => x.Id)
+            .ClientTemplate("<a href=\"/Admin/Customer/AddressEdit?customerId=" + @Model.Id + "&addressid=<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+            .Title("Edit");
+        columns.Command(commands =>
+        {
+            commands.Delete();
+        })
+            .Title("Delete");
     }))
+    <div class="clear">
+    </div>
+    <p>
+        <strong>
+            <input type="button" class="t-button" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")'>
+        </strong>
+    </p>
 }

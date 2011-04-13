@@ -461,7 +461,7 @@
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="Address 1">
+                                    <LocaleResource Name="Address1">
                                       <Value>Address 1</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
@@ -469,7 +469,7 @@
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="Address 2">
+                                    <LocaleResource Name="Address2">
                                       <Value>Address 2</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
@@ -1758,6 +1758,20 @@
                     </LocaleResource>
                     <LocaleResource Name="Addresses">
                       <Value>Addresses</Value>
+                        <Children>
+                          <LocaleResource Name="AddButton">
+                            <Value>Add new address</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="AddNew">
+                            <Value>Add a new address</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="BackToCustomer">
+                            <Value>back to customer details</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="EditAddress">
+                            <Value>Edit address details</Value>
+                          </LocaleResource>
+                        </Children>
                     </LocaleResource>
                   </Children>
                 </LocaleResource>

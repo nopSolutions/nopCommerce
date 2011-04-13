@@ -613,6 +613,22 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             });
+            customers.FirstOrDefault().AddAddress(new Address()
+            {
+                FirstName = "test 1",
+                LastName = "test 2",
+                PhoneNumber = "test 3",
+                Email = "admin@yourStore.com",
+                FaxNumber = "",
+                Company = "test 4",
+                Address1 = "test 5",
+                Address2 = "",
+                City = "New York",
+                StateProvince = _stateProvinceRepository.Table.Where(sp => sp.Name == "New York").FirstOrDefault(),
+                Country = _countryRepository.Table.Where(c => c.ThreeLetterIsoCode == "USA").FirstOrDefault(),
+                ZipPostalCode = "10021",
+                CreatedOnUtc = DateTime.UtcNow
+            });
             customers.ForEach(c => _customerRepository.Insert(c));
 
             var testGuests = new List<Customer>();

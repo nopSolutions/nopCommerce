@@ -157,7 +157,11 @@
                 <b>@Html.LabelFor(model => model.DefaultTaxAddress):</b>
             </td>
         </tr>
-        @Html.EditorFor(x => x.DefaultTaxAddress,"Address")
+        <tr>
+            <td colspan="2">
+                @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
+            </td>
+        </tr>
         <tr class="adminSeparator">
             <td colspan="2">
                 <hr />
