@@ -9,6 +9,10 @@
 {
     x.Add().Text(T("Admin.Customers.Customers.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Customers.Customers.CustomerRoles").Text).Content(TabCustomerRoles().ToHtmlString());
+    if (Model.DisplayRewardPointsHistory)
+    {
+        x.Add().Text(T("Admin.Customers.Customers.RewardPoints").Text).Content(TabRewardPoints().ToHtmlString());
+    }
 })
 
 @helper TabInfo()
@@ -132,4 +136,80 @@
         />@customerRole.Name
         <br />
     }
+}
+@helper TabRewardPoints()
+{
+    @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel.RewardPointsHistoryModel>().Name("customer-rewardpoints-grid")
+    .DataKeys(keys =>
+    {
+        keys.Add(x => x.Id).RouteKey("rewardPointsHistoryId");
+    })
+    .DataBinding(binding =>
+    {
+        binding.Ajax().Select("RewardPointsHistorySelect", "Customer", new { customerId = Model.Id })
+            .Insert("RewardPointsHistoryAdd", "Customer", new { customerId = Model.Id });
+    })
+    .Columns(columns =>
+    {
+        columns.Bound(x => x.Points);
+        columns.Bound(x => x.PointsBalance).ReadOnly();
+        columns.Bound(x => x.Message);
+        columns.Bound(x => x.CreatedOnStr).ReadOnly();
+    }))
+    <div class="clear">
+    </div>
+    
+    <p>
+        <strong>
+            @T("Admin.Customers.Customers.RewardPoints.AddTitle")
+        </strong>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddRewardPointsValue)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddRewardPointsValue)
+                @Html.ValidationMessageFor(model => model.AddRewardPointsValue)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddRewardPointsMessage)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddRewardPointsMessage)
+                @Html.ValidationMessageFor(model => model.AddRewardPointsMessage)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <button type="button" name="addRewardPoints" id="addRewardPoints" class="t-button">
+                    @T("Admin.Customers.Customers.RewardPoints.AddButton")</button>
+            </td>
+        </tr>
+    </table>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#addRewardPoints').click(function () {
+                var rewardPointsValue = $("#@Html.FieldIdFor(model => model.AddRewardPointsValue)").val();
+                var rewardPointsMessage = $("#@Html.FieldIdFor(model => model.AddRewardPointsMessage)").val();
+                $.ajax({
+                    type: "GET",
+                    url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
+                    data: "addRewardPointsValue=" + rewardPointsValue + "&addRewardPointsMessage=" + rewardPointsMessage + "&customerId=" + @Model.Id,
+                    success: function (data) {
+                         alert('Reward points are added')
+                         var rewardPointsGrid = $("#customer-rewardpoints-grid");
+                         rewardPointsGrid.data('tGrid').ajaxRequest();
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to add reward points.')
+                    }  
+                });
+            });
+        });
+    </script>
 }

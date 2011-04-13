@@ -63,5 +63,30 @@ namespace Nop.Admin.Models
         public string CustomerRoleNames { get; set; }
         public List<CustomerRole> AvailableCustomerRoles { get; set; }
         public int[] SelectedCustomerRoleIds { get; set; }
+
+        //reward points history
+        public bool DisplayRewardPointsHistory { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue")]
+        public int AddRewardPointsValue { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
+        public string AddRewardPointsMessage { get; set; }
+
+
+        #region Nested classes
+        public class RewardPointsHistoryModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Points")]
+            public int Points { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")]
+            public int PointsBalance { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
+            public string Message { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Date")]
+            public string CreatedOnStr { get; set; }
+        }
+        #endregion
     }
 }

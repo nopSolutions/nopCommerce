@@ -1713,6 +1713,49 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="RewardPoints">
+                      <Value>Reward points</Value>
+                      <Children>
+                        <LocaleResource Name="AddTitle">
+                          <Value>Add points</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="AddButton">
+                          <Value>Add reward points</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Points">
+                              <Value>Points</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="PointsBalance">
+                              <Value>Points balance</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Message">
+                              <Value>Message</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Date">
+                              <Value>Date</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="AddRewardPointsValue">
+                              <Value>Value</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Enter points to add.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="AddRewardPointsMessage">
+                              <Value>Message</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Enter message (comment)</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>                        
+                      </Children>
+                    </LocaleResource>
                   </Children>
                 </LocaleResource>
               </Children>

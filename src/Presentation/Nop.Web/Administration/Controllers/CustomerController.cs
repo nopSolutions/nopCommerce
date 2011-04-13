@@ -31,20 +31,22 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly TaxSettings _taxSettings;
-
+        private readonly RewardPointsSettings _rewardPointsSettings;
+        
         #endregion Fields
 
         #region Constructors
 
         public CustomerController(ICustomerService customerService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, DateTimeSettings dateTimeSettings, 
-            TaxSettings taxSettings)
+            ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
+            TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
         }
 
         #endregion Constructors
@@ -178,7 +180,7 @@ namespace Nop.Admin.Controllers
             var customer = _customerService.GetCustomerById(id);
             if (customer == null) 
                 throw new ArgumentException("No customer found with the specified id", "id");
-
+            
             var model = customer.ToModel();
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
@@ -194,6 +196,10 @@ namespace Nop.Admin.Controllers
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();
             model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
+            //reward points gistory
+            model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
+            model.AddRewardPointsValue = 0;
+            model.AddRewardPointsMessage = "Some comment here...";
 
             return View(model);
         }
@@ -290,6 +296,49 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
         
+        //Reward points history
+        [GridAction]
+        public ActionResult RewardPointsHistorySelect(int customerId)
+        {
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            var model = new List<CustomerModel.RewardPointsHistoryModel>();
+            foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
+            {
+                model.Add(new CustomerModel.RewardPointsHistoryModel()
+                    {
+                        Points = rph.Points,
+                        PointsBalance = rph.PointsBalance,
+                        Message = rph.Message,
+                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                    });
+            } 
+            var gridModel = new GridModel<CustomerModel.RewardPointsHistoryModel>
+            {
+                Data = model,
+                Total = model.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult RewardPointsHistoryAdd(int customerId, int addRewardPointsValue, string addRewardPointsMessage)
+        {
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            customer.AddRewardPointsHistoryEntry(addRewardPointsValue, addRewardPointsMessage);
+            _customerService.UpdateCustomer(customer);
+
+            return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
     }
 }
