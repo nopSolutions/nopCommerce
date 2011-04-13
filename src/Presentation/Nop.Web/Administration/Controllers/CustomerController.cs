@@ -154,8 +154,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Create(CustomerModel model)
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        [FormValueRequired("save", "save-continue")]
+        public ActionResult Create(CustomerModel model, bool continueEditing)
         {
             if (!ModelState.IsValid)
             {
@@ -179,7 +180,7 @@ namespace Nop.Admin.Controllers
             }
             _customerService.UpdateCustomer(customer);
 
-            return RedirectToAction("Edit", new { id = customer.Id });
+            return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
         }
 
         public ActionResult Edit(int id)

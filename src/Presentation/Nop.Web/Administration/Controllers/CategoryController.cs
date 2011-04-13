@@ -244,13 +244,14 @@ namespace Nop.Admin.Controllers
             return View(new CategoryModel());
         }
 
-        [HttpPost]
-        public ActionResult Create(CategoryModel model)
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Create(CategoryModel model, bool continueEditing)
         {
             var category = model.ToEntity();
             _categoryService.InsertCategory(category);
             UpdateLocales(category, model);
-            return RedirectToAction("Edit", new { id = category.Id });
+
+            return continueEditing ? RedirectToAction("Edit", new { id = category.Id }) : RedirectToAction("List");
         }
 
         #endregion

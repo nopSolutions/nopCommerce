@@ -38,8 +38,6 @@ namespace Nop.Admin.Controllers
 
 		#region Languages
 
-		#region List
-
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -70,20 +68,16 @@ namespace Nop.Admin.Controllers
 				Data = gridModel
 			};
 		}
-
-		#endregion
-
-		#region Edit
-
+        
 		public ActionResult Edit(int id)
 		{
 			var language = _languageService.GetLanguageById(id);
 			if (language == null) throw new ArgumentException("No language found with the specified id", "id");
 			return View(language.ToModel());
 		}
-
-		[HttpPost]
-		public ActionResult Edit(LanguageModel languageModel)
+        
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+		public ActionResult Edit(LanguageModel languageModel, bool continueEditing)
 		{
             if (!ModelState.IsValid)
             {
@@ -91,13 +85,9 @@ namespace Nop.Admin.Controllers
             }
 			var language = _languageService.GetLanguageById(languageModel.Id);
 		    language = languageModel.ToEntity(language);
-			_languageService.UpdateLanguage(language);
-			return Edit(language.Id);
+            _languageService.UpdateLanguage(language);
+            return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
 		}
-
-		#endregion
-
-		#region Delete
 
 		[HttpPost, ActionName("Delete")]
 		public ActionResult DeleteConfirmed(int id)
@@ -107,24 +97,18 @@ namespace Nop.Admin.Controllers
 			return RedirectToAction("List");
 		}
 
-		#endregion
-
-		#region Create
-
 		public ActionResult Create()
 		{
 			return View(new LanguageModel());
 		}
 
-		[HttpPost]
-		public ActionResult Create(LanguageModel model)
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+		public ActionResult Create(LanguageModel model, bool continueEditing)
 		{
 		    var language = model.ToEntity();
-			_languageService.InsertLanguage(language);
-			return RedirectToAction("Edit", new { id = language.Id });
+            _languageService.InsertLanguage(language);
+            return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
 		}
-
-		#endregion
 
 		#endregion
 

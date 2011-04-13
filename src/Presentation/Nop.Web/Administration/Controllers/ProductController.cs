@@ -135,7 +135,7 @@ namespace Nop.Admin.Controllers
 
             UpdateLocales(product, productModel);
 
-            return continueEditing ? RedirectToAction("Edit", product.Id) : RedirectToAction("List");
+            return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
         }
 
         #endregion
@@ -148,14 +148,15 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             return View(model);
         }
-
-        [HttpPost]
-        public ActionResult Create(ProductModel model)
+        
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Create(ProductModel model, bool continueEditing)
         {
             var product = model.ToEntity();
             _productService.InsertProduct(product);
             UpdateLocales(product, model);
-            return RedirectToAction("Edit", new { product.Id });
+
+            return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
         }
 
         #endregion

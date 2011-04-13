@@ -76,24 +76,18 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
-		#region Create
-
 		public ActionResult Create()
 		{
 			return View(new EmailAccountModel());
 		}
-
-		[HttpPost]
-		public ActionResult Create(EmailAccountModel model)
+        
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+		public ActionResult Create(EmailAccountModel model, bool continueEditing)
 		{
 			var emailAccount = model.ToEntity();
-			_emailAccountService.InsertEmailAccount(emailAccount);
-			return RedirectToAction("Edit", new { id = emailAccount.Id });
+            _emailAccountService.InsertEmailAccount(emailAccount);
+            return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
 		}
-
-		#endregion
-
-		#region Edit
 
 		public ActionResult Edit(int id)
 		{
@@ -101,9 +95,9 @@ namespace Nop.Admin.Controllers
 			if (emailAccount == null) throw new ArgumentException("No email account found with the specified id", "id");
 			return View(emailAccount.ToModel());
 		}
-
-		[HttpPost]
-		public ActionResult Edit(EmailAccountModel emailAccountModel)
+        
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Edit(EmailAccountModel emailAccountModel, bool continueEditing)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -112,9 +106,18 @@ namespace Nop.Admin.Controllers
 			var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountModel.Id);
 			emailAccount = emailAccountModel.ToEntity(emailAccount);
 			_emailAccountService.UpdateEmailAccount(emailAccount);
-			return Edit(emailAccount.Id);
+            return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
 		}
 
-		#endregion
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var emailAccount = _emailAccountService.GetEmailAccountById(id);
+            if (emailAccount == null)
+                throw new ArgumentException("No email account found with the specified id", "id");
+
+            _emailAccountService.DeleteEmailAccount(emailAccount);
+            return RedirectToAction("List");
+        }
 	}
 }

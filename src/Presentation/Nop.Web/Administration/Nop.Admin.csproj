@@ -215,7 +215,6 @@
   <ItemGroup>
     <Content Include="Views\Category\Create.cshtml" />
     <Content Include="Views\Category\Edit.cshtml" />
-    <Content Include="Views\Category\EditCategoryProducts.cshtml" />
     <Content Include="Views\Category\List.cshtml" />
     <Content Include="Views\Category\Products.cshtml" />
     <Content Include="Views\Category\Tree.cshtml" />

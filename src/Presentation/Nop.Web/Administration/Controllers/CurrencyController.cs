@@ -67,9 +67,9 @@ namespace Nop.Admin.Controllers
             var model = currency.ToModel();
             return View(model);
         }
-
-        [HttpPost]
-        public ActionResult Edit(CurrencyModel currencyModel)
+        
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Edit(CurrencyModel currencyModel, bool continueEditing)
         {
             if (!ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace Nop.Admin.Controllers
             currency = currencyModel.ToEntity(currency);
             currency.UpdatedOnUtc = DateTime.UtcNow;
             _currencyService.UpdateCurrency(currency);
-            return Edit(currency.Id);
+            return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
         }
         #endregion
 
@@ -93,14 +93,14 @@ namespace Nop.Admin.Controllers
             return View(currencyModel);
         }
 
-        [HttpPost]
-        public ActionResult Create(CurrencyModel model)
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Create(CurrencyModel model, bool continueEditing)
         {
             model.CreatedOnUtc = DateTime.UtcNow;
             model.UpdatedOnUtc = DateTime.UtcNow;
             var currency = model.ToEntity();
             _currencyService.InsertCurrency(currency);
-            return RedirectToAction("List");
+            return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
         }
 
         #endregion

@@ -100,13 +100,13 @@ namespace Nop.Admin.Controllers
 		{
             return View(new CustomerRoleModel());
 		}
-
-		[HttpPost]
-        public ActionResult Create(CustomerRoleModel model)
+        
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Create(CustomerRoleModel model, bool continueEditing)
 		{
             var customerRole = model.ToEntity();
             _customerService.InsertCustomerRole(customerRole);
-            return RedirectToAction("Edit", new { id = customerRole.Id });
+            return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
 		}
 
 		#endregion

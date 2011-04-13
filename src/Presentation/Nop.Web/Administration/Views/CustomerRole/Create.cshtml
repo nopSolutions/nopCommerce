@@ -8,7 +8,8 @@
             @T("Admin.Customers.CustomerRoles.AddNew") - @Html.ActionLink("(" + T("Admin.Customers.CustomerRoles.BackToList") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="@T("Admin.Common.Save")" class="t-button" />
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
