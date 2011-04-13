@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Security.Permissions;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
-using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Controllers
 {
@@ -58,7 +51,7 @@ namespace Nop.Admin.Controllers
 
         #endregion Constructors
 
-        #region Utities
+        #region Utilities
 
         [NonAction]
         private string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
@@ -99,7 +92,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            //TODO add filtering by customer role, registration date
+            //TODO add filtering by customer role, registration date, email, etc
             var customers = _customerService.GetAllCustomers(null,null, 0, 10);
             var gridModel = new GridModel<CustomerModel>
             {

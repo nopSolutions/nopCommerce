@@ -53,9 +53,9 @@ namespace Nop.Admin.Models
         public bool DisplayVatNumber { get; set; }
 
         //registration date
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.RegistrationDate")]
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
         public DateTime CreatedOnUtc { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.RegistrationDate")]
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
         public string CreatedOnStr { get; set; }
         
         //customer roles

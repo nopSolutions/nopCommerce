@@ -52,33 +52,49 @@ namespace Nop.Services.Security
             return user;
         }
 
-        public IPagedList<User> GetUsers(int pageIndex, int pageSize)
+        public IPagedList<User> GetUsers(string email, string username, int pageIndex, int pageSize)
         {
-            return new PagedList<User>(_userRepository.Table, pageIndex, pageSize);
+            var query = _userRepository.Table;
+            if (!String.IsNullOrWhiteSpace(email))
+                query = query.Where(u => u.Email.Contains(email));
+            if (!String.IsNullOrWhiteSpace(username))
+                query = query.Where(u => u.Username.Contains(username));
+
+            query = query.OrderByDescending(u => u.CreatedOnUtc);
+
+            var users = new PagedList<User>(query, pageIndex, pageSize);
+            return users;
         }
 
         public void InsertUser(User user)
         {
+            if (user == null)
+                throw new ArgumentNullException("user");
+
             _userRepository.Insert(user);
         }
 
         public void UpdateUser(User user)
         {
+            if (user == null)
+                throw new ArgumentNullException("user");
+
             _userRepository.Update(user);
         }
 
-        public void DeleteUser(int id)
+        public void DeleteUser(User user)
         {
-            var userToDelete = GetUserById(id);
-            if (userToDelete != null)
-                _userRepository.Delete(userToDelete);
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            _userRepository.Delete(user);
         }
 
         public bool ValidateUser(string username, string password)
         {
             var user = GetUserByUsername(username);
 
-            if (user == null || user.IsLockedOut)
+            if (user == null || user.IsLockedOut || !user.IsApproved)
                 return false;
 
             string pwd = string.Empty;
@@ -114,6 +130,26 @@ namespace Nop.Services.Security
             {
                 result.AddError("The registration request was not valid.");
                 return result;
+            }
+
+            //validation
+            if (String.IsNullOrEmpty(request.Email))
+            {
+                result.AddError("Email is not provided");
+                return result;
+            }
+            if (!CommonHelper.IsValidEmail(request.Email))
+            {
+                result.AddError("Invalid email");
+                return result;
+            }
+            if (_userSettings.UsernamesEnabled)
+            {
+                if (String.IsNullOrEmpty(request.Username))
+                {
+                    result.AddError("Username is not provided");
+                    return result;
+                }
             }
 
             //validate unique user
@@ -164,6 +200,7 @@ namespace Nop.Services.Security
                     break;
             }
 
+            user.UserGuid = Guid.NewGuid();
             user.IsApproved = request.IsApproved;
             user.CreatedOnUtc = DateTime.UtcNow;
 
@@ -185,7 +222,7 @@ namespace Nop.Services.Security
             var user = GetUserByEmail(request.Email);
             if (user == null)
             {
-                result.AddError("The specified username or email could not be found");
+                result.AddError("The specified email could not be found");
                 return result;
             }
 

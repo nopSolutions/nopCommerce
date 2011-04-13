@@ -8,10 +8,10 @@ namespace Nop.Services.Security
         User GetUserById(int id);
         User GetUserByUsername(string username);
         User GetUserByEmail(string email);
-        IPagedList<User> GetUsers(int pageIndex, int pageSize);
+        IPagedList<User> GetUsers(string email, string username, int pageIndex, int pageSize);
         void InsertUser(User user);
         void UpdateUser(User user);
-        void DeleteUser(int id);
+        void DeleteUser(User user);
 
         bool ValidateUser(string username, string password);
         UserRegistrationResult RegisterUser(UserRegistrationRequest request);

@@ -14,6 +14,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Payments;
@@ -24,7 +25,7 @@ using Nop.Web.Framework;
 
 namespace Nop.Admin
 {
-    //separate MappingExtensions and HtmlExtensions to two distinct .cs files
+    //TODO separate MappingExtensions and HtmlExtensions to two distinct .cs files
     public static class MappingExtensions
     {
         #region Category
@@ -485,6 +486,7 @@ namespace Nop.Admin
         {
             return AutoMapper.Mapper.Map(model, destination);
         }
+        
         #endregion
     }
 

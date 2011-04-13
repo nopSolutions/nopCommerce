@@ -29,10 +29,12 @@ namespace Nop.Services.Tests.Security
             };
             _encryptionService = new EncryptionService(_securitySettings);
             _userRepo = MockRepository.GenerateMock<IRepository<User>>();
-            var user = new User() {
+            var user = new User() 
+            {
                 Username = "a@b.com",
                 Email = "a@b.com",
                 PasswordFormat = PasswordFormat.Hashed,
+                IsApproved = true
             };
 
             string saltKey = _encryptionService.CreateSaltKey(5);
@@ -45,7 +47,8 @@ namespace Nop.Services.Tests.Security
                 Username = "test@test.com",
                 Email = "test@test.com",
                 PasswordFormat = PasswordFormat.Clear,
-                Password = "password"
+                Password = "password",
+                IsApproved = true
             };
 
             var user3 = new User() 
@@ -53,7 +56,8 @@ namespace Nop.Services.Tests.Security
                 Username = "user@test.com",
                 Email = "user@test.com",
                 PasswordFormat = PasswordFormat.Encrypted,
-                Password = _encryptionService.EncryptText("password")
+                Password = _encryptionService.EncryptText("password"),
+                IsApproved = true
             };
 
             _userRepo.Expect(x => x.Table).Return(new List<User>() { user, user2, user3 }.AsQueryable());
@@ -113,7 +117,7 @@ namespace Nop.Services.Tests.Security
         private UserRegistrationRequest CreateUserRegistrationRequest() 
         {
             return new UserRegistrationRequest("test.user@domain.com", "test.user@domain.com", 
-                "password", PasswordFormat.Encrypted, "", "", "Some question", "Some Answer");
+                "password", PasswordFormat.Encrypted, "Some question", "Some Answer");
         }
     }
 }

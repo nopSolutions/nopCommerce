@@ -1,0 +1,43 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.UserModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
+        @T("Admin.Users")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.UserModel>(Model.Data)
+                    .Name("users-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id).Width(50);
+                        columns.Bound(x => x.Email).Width(200);
+                        columns.Bound(x => x.IsLockedOut)
+                             .Width(100)
+                             .Template(x => x.IsLockedOut.ToString().ToLower())
+                             .Centered();
+                        columns.Bound(x => x.IsApproved)
+                             .Width(100)
+                             .Template(x => x.IsApproved.ToString().ToLower())
+                             .Centered();
+                        columns.Bound(x => x.CreatedOnStr).Width(100);
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "User"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

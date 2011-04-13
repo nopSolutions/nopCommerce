@@ -16,7 +16,7 @@ namespace Nop.Core.Domain.Security
         public bool AllowUsersToChangeUsernames { get; set; }
         
         /// <summary>
-        /// Gets or sets a customer password format (SHA1, MD5)
+        /// Gets or sets a customer password format (SHA1, MD5) when passwords are hashed
         /// </summary>
         public string HashedPasswordFormat { get; set; }
     }

@@ -14,6 +14,7 @@
           <siteMapNode title="NewsletterSubscriptions" nopResource="Admin.Promotions.NewsletterSubscriptions" controller="NewsLetterSubscription" action="List" />
         </siteMapNode>
         <siteMapNode title="Customers" nopResource="Admin.Customers">
+            <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />
             <siteMapNode title="Customers" nopResource="Admin.Customers.Customers" controller="Customer" action="List" />
             <siteMapNode title="Customer roles" nopResource="Admin.Customers.CustomerRoles" controller="CustomerRole" action="List" />
         </siteMapNode>

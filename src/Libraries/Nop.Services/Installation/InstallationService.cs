@@ -676,24 +676,6 @@ namespace Nop.Services.Installation
                                 };
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
 
-            var users = new List<User>
-                                {
-                                    new User
-                                        {
-                                            Username = "admin@yourStore.com",
-                                            Password = "admin",
-                                            PasswordFormat = PasswordFormat.Clear,
-                                            PasswordSalt = "",
-                                            Email = "admin@yourStore.com",
-                                            SecurityQuestion = "",
-                                            SecurityAnswer = "",
-                                            IsApproved = true,
-                                            IsLockedOut = false,
-                                            CreatedOnUtc = DateTime.UtcNow
-                                        }
-                                };
-            users.ForEach(u => _userRepository.Insert(u));
-
             #endregion
             
             #region Email accounts

@@ -56,7 +56,13 @@ namespace Nop.Services
                 //registered user
                 var user = _authenticationService.GetAuthenticatedUser();
                 if (user != null)
+                {
                     customer = _customerService.GetCustomerByAssociatedUserId(user.Id);
+                    if (customer == null)
+                    {
+                        //TODO create a registed customer record
+                    }
+                }
                 
                 //guest customer
                 if (customer == null || customer.Deleted || !customer.Active)

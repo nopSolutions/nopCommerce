@@ -88,7 +88,9 @@ namespace Nop.Services
             var username = userData;
             if (String.IsNullOrWhiteSpace(username))
                 return null;
-            _cachedUser = _userService.GetUserByUsername(username);
+            var user = _userService.GetUserByUsername(username);
+            if (user != null && user.IsApproved && !user.IsLockedOut)
+                _cachedUser = user;
             return _cachedUser;
         }
     }

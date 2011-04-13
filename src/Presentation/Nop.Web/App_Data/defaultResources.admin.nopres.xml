@@ -1697,11 +1697,11 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
-                        <LocaleResource Name="RegistrationDate">
-                          <Value>Registration date</Value>
+                        <LocaleResource Name="CreatedOn">
+                          <Value>Created on</Value>
                           <Children>
                             <LocaleResource Name="Hint">
-                              <Value>The date the customer registered.</Value>
+                              <Value>The date the customer record is created.</Value>
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
@@ -2198,6 +2198,102 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="Users">
+                <Value>User accounts</Value>
+                <Children>
+                  <LocaleResource Name="AddNew">
+                    <Value>Add a new user</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to user list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="EditUserDetails">
+                    <Value>Edit user details</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="Username">
+                        <Value>Username</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The user's username.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Validation">
+                            <Value>Please provide a username.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Email">
+                        <Value>Email</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The user's email.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Validation">
+                            <Value>Please provide a email.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Password">
+                        <Value>Password</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The user's password.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="SecurityQuestion">
+                        <Value>Security question</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The security question.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="SecurityAnswer">
+                        <Value>Security answer</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The security answer.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Comments">
+                        <Value>Comments</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The customer's comments. For internal use</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="IsApproved">
+                        <Value>Is approved</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether a user is approved</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="IsLockedOut">
+                        <Value>Is locked out</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether a user is locked out</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CreatedOn">
+                        <Value>Registartion date</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The user's registartion date.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
         </Children>
     </LocaleResource>
 </Language>

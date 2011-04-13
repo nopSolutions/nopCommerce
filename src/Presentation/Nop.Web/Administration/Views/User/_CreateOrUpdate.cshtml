@@ -1,0 +1,116 @@
+﻿@model Nop.Admin.Models.UserModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+
+<table class="adminContent">
+    @if (Model.UsernamesEnabled)
+    {
+        if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
+        {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Username):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Username)
+                @Html.ValidationMessageFor(model => model.Username)
+            </td>
+        </tr>
+        }
+        else
+        {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Username):
+            </td>
+            <td class="adminData">
+                @Model.Username
+                @Html.HiddenFor(model => model.Username)
+            </td>
+        </tr>
+        }
+    }
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Email):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Password):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Password)
+            @Html.ValidationMessageFor(model => model.Password)
+            @if (Model.Id > 0)
+            {
+                <button type="submit" name="changepassword" value="changepassword" class="t-button">
+                    Change password</button>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SecurityQuestion):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SecurityQuestion)
+            @Html.ValidationMessageFor(model => model.SecurityQuestion)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SecurityAnswer):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SecurityAnswer)
+            @Html.ValidationMessageFor(model => model.SecurityAnswer)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Comments):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Comments)
+            @Html.ValidationMessageFor(model => model.Comments)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsApproved):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.IsApproved)
+            @Html.ValidationMessageFor(model => model.IsApproved)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsLockedOut):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.IsLockedOut)
+            @Html.ValidationMessageFor(model => model.IsLockedOut)
+        </td>
+    </tr>
+    @if (!String.IsNullOrEmpty(Model.CreatedOnStr))
+    {
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CreatedOnStr):
+        </td>
+        <td class="adminData">
+            @Model.CreatedOnStr
+        </td>
+    </tr>
+    }
+</table>

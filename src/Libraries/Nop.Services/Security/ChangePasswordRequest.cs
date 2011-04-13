@@ -21,11 +21,14 @@ namespace Nop.Services.Security
             this.SecurityAnswer = securityAnswer;
         }
 
-        public bool IsValid  
+        public bool IsValid
         {
-            get 
-            { 
-                return true;
+            get
+            {
+                return (!CommonHelper.AreNullOrEmpty(
+                            this.Email,
+                            this.NewPassword
+                            ));
             }
         }
     }
