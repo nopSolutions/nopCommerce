@@ -9,7 +9,7 @@ using Nop.Web.Models;
 
 namespace Nop.Web.Controllers
 {
-    public class CatalogController : Controller
+    public class CatalogController : BaseNopController
     {
 		#region Fields 
 

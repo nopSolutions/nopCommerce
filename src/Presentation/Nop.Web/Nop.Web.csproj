@@ -83,6 +83,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BaseNopController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions.cs" />
