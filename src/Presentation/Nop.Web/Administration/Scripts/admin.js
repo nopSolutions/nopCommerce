@@ -47,3 +47,26 @@ function OpenWindow(query, w, h, scroll) {
     if (scroll) winprops += ',scrollbars=1';
     var f = window.open(query, "_blank", winprops);
 }
+
+$(document).ready(function () {
+    //Setup the ajax indicator
+    $('body').append('<div id="ajaxBusy"><p><img src="/administration/content/images/ajax-loading.gif"></p></div>');
+    $('#ajaxBusy').css({
+        display: "none",
+        margin: "0px",
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        paddingTop: "0px",
+        paddingBottom: "0px",
+        position: "absolute",
+        right: "3px",
+        top: "3px",
+        width: "auto"
+    });
+});
+// Ajax activity indicator bound to ajax start/stop document events
+$(document).ajaxStart(function () {
+    $('#ajaxBusy').show();
+}).ajaxStop(function () {
+    $('#ajaxBusy').hide();
+});

@@ -3,37 +3,6 @@
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
-
-    <script type="text/javascript">
-        //TODO move to admin.js file (used to display laoding indicator)
-        //prepare the form when the DOM is ready 
-        $(document).ready(function () {
-
-            //Setup the ajax indicator
-            $('body').append('<div id="ajaxBusy"><p><img src="/administration/content/images/ajax-loading.gif"></p></div>');
-
-            $('#ajaxBusy').css({
-                display: "none",
-                margin: "0px",
-                paddingLeft: "0px",
-                paddingRight: "0px",
-                paddingTop: "0px",
-                paddingBottom: "0px",
-                position: "absolute",
-                right: "3px",
-                top: "3px",
-                width: "auto"
-            });
-        });
-
-        // Ajax activity indicator bound to ajax start/stop document events
-        $(document).ajaxStart(function () {
-            $('#ajaxBusy').show();
-        }).ajaxStop(function () {
-            $('#ajaxBusy').hide();
-        });
-
-    </script>
     
 <script type="text/javascript">
     $(document).ready(function () {

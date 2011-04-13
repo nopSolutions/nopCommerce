@@ -196,6 +196,7 @@
             $('#addRewardPoints').click(function () {
                 var rewardPointsValue = $("#@Html.FieldIdFor(model => model.AddRewardPointsValue)").val();
                 var rewardPointsMessage = $("#@Html.FieldIdFor(model => model.AddRewardPointsMessage)").val();
+                $('#addRewardPoints').attr('disabled', true);
                 $.ajax({
                     type: "GET",
                     url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
@@ -204,9 +205,11 @@
                          alert('Reward points are added')
                          var rewardPointsGrid = $("#customer-rewardpoints-grid");
                          rewardPointsGrid.data('tGrid').ajaxRequest();
+                         $('#addRewardPoints').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to add reward points.')
+                        $('#addRewardPoints').attr('disabled', false);
                     }  
                 });
             });
