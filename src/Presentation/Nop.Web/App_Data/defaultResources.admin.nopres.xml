@@ -319,38 +319,12 @@
             </LocaleResource>
             <LocaleResource Name="Common">
                 <Children>
-                    <LocaleResource Name="Gender">
-                      <Children>
-                        <LocaleResource Name="Male">
-                          <Value>Male</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="Female">
-                          <Value>Female</Value>
-                        </LocaleResource>
-                      </Children>
-                    </LocaleResource>
                     <LocaleResource Name="Validation">
                         <Children>
                             <LocaleResource Name="Required">
                                 <Value>This field is required.</Value>
                             </LocaleResource>
                         </Children>
-                    </LocaleResource>
-                    <LocaleResource Name="VatNumberStatus">
-                      <Children>
-                        <LocaleResource Name="Unknown">
-                          <Value>Unknown</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="Empty">
-                          <Value>Empty</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="Valid">
-                          <Value>Valid</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="Invalid">
-                          <Value>Invalid</Value>
-                        </LocaleResource>
-                      </Children>
                     </LocaleResource>
                     <LocaleResource Name="DeleteConfirmationParam">
                         <Value>Are you sure you want to delete "{0}"?</Value>
@@ -375,6 +349,9 @@
                     </LocaleResource>
                     <LocaleResource Name="List">
                         <Value>List</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="View">
+                      <Value>View</Value>
                     </LocaleResource>
                     <LocaleResource Name="Save">
                         <Value>Save</Value>
@@ -1605,6 +1582,12 @@
                             <LocaleResource Name="Validation">
                               <Value>Please provide a first name.</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Male">
+                              <Value>Male</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Female">
+                              <Value>Female</Value>
+                            </LocaleResource>
                           </Children>
                         </LocaleResource>
                         <LocaleResource Name="FirstName">
@@ -1679,7 +1662,21 @@
                           </Children>
                         </LocaleResource>
                         <LocaleResource Name="VatNumberStatus">
-                          <Value>status: {0}</Value>
+                            <Value>status: {0}</Value>
+                            <Children>
+                              <LocaleResource Name="Unknown">
+                                <Value>Unknown</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Empty">
+                                <Value>Empty</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Valid">
+                                <Value>Valid</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Invalid">
+                                <Value>Invalid</Value>
+                              </LocaleResource>
+                            </Children>
                         </LocaleResource>
                         <LocaleResource Name="TimeZoneId">
                           <Value>Time zone</Value>
@@ -1707,6 +1704,23 @@
                         </LocaleResource>
                         <LocaleResource Name="CustomerRoles">
                           <Value>Customer roles</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Addresses">
+                      <Value>Addresses</Value>
+                      <Children>
+                        <LocaleResource Name="AddButton">
+                          <Value>Add new address</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="AddNew">
+                          <Value>Add a new address</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="BackToCustomer">
+                          <Value>back to customer details</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="EditAddress">
+                          <Value>Edit address details</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
@@ -1756,22 +1770,48 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
-                    <LocaleResource Name="Addresses">
-                      <Value>Addresses</Value>
-                        <Children>
-                          <LocaleResource Name="AddButton">
-                            <Value>Add new address</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="AddNew">
-                            <Value>Add a new address</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="BackToCustomer">
-                            <Value>back to customer details</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="EditAddress">
-                            <Value>Edit address details</Value>
-                          </LocaleResource>
-                        </Children>
+                    <LocaleResource Name="UserAccount">
+                      <Value>User account</Value>
+                      <Children>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Email">
+                              <Value>Email</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="IsApproved">
+                              <Value>Is approved</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="IsLockedOut">
+                              <Value>Is locked out</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="CreatedOn">
+                              <Value>Registartion date</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="AssociatedUser">
+                          <Value>Associated user</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The user account associated with this customer.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="AssociateTitle">
+                          <Value>Associate the customer with a user account</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The user account associated with this customer.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="DetachUser">
+                          <Value>Detach the user from this customer</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="NoAssociatedUser">
+                          <Value>The customer doesn't have associated user account</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
                   </Children>
                 </LocaleResource>

@@ -70,6 +70,13 @@ namespace Nop.Admin.Models
         public int AddRewardPointsValue { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
         public string AddRewardPointsMessage { get; set; }
+
+        //user accounts
+        public string UserEmailStartsWith { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.AssociatedUser")]
+        public int? AssociatedUserId { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.AssociatedUser")]
+        public string AssociatedUserEmail { get; set; }
         
         #region Nested classes
         public class RewardPointsHistoryModel : BaseNopEntityModel
@@ -85,6 +92,19 @@ namespace Nop.Admin.Models
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Date")]
             public string CreatedOnStr { get; set; }
+        }
+
+        public class UserAccountModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.Email")]
+            public string Email { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.IsApproved")]
+            public bool IsApproved { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.IsLockedOut")]
+            public bool IsLockedOut { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.CreatedOn")]
+            public string CreatedOnStr { get; set; }
+
         }
         #endregion
     }

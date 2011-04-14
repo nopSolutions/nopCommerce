@@ -114,8 +114,6 @@ namespace Nop.Admin.Controllers
 
 		#region Resources
 
-		#region List
-
 		public ActionResult Resources(int languageId)
 		{
 			ViewBag.AllLanguages = _languageService.GetAllLanguages(true).Select(x => new DropDownItem
@@ -155,9 +153,6 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
-		#endregion
-
-        #region Edit
 
         [GridAction(EnableCustomBinding=true)]
         public ActionResult ResourceUpdate(LanguageResourceModel model, GridCommand command)
@@ -189,9 +184,7 @@ namespace Nop.Admin.Controllers
             #endregion
         }
 
-        #endregion
 
-        #region Add
 
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ResourceAdd(int id, LanguageResourceModel resourceModel, GridCommand command)
@@ -221,9 +214,6 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        #endregion
-
-        #region Delete
 
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ResourceDelete(int id, int languageId, GridCommand command)
@@ -251,8 +241,6 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-
-        #endregion
 
         #endregion
     }

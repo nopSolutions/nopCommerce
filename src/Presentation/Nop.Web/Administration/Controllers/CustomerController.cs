@@ -5,12 +5,14 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -29,6 +31,7 @@ namespace Nop.Admin.Controllers
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ICountryService _countryService;
         private readonly IAddressService _addressService;
+        private readonly IUserService _userService;
         
         #endregion Fields
 
@@ -37,7 +40,8 @@ namespace Nop.Admin.Controllers
         public CustomerController(ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
-            ICountryService countryService, IAddressService addressService)
+            ICountryService countryService, IAddressService addressService,
+            IUserService userService)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -47,6 +51,7 @@ namespace Nop.Admin.Controllers
             this._rewardPointsSettings = rewardPointsSettings;
             this._countryService = countryService;
             this._addressService = addressService;
+            this._userService = userService;
         }
 
         #endregion Constructors
@@ -78,13 +83,59 @@ namespace Nop.Admin.Controllers
         [NonAction]
         private string GetVatNumberStatusName(VatNumberStatus status)
         {
-            return _localizationService.GetResource(string.Format("Admin.Common.VatNumberStatus.{0}", status.ToString()));
+            return _localizationService.GetResource(string.Format("Admin.Customers.Customers.Fields.VatNumberStatus.{0}", status.ToString()));
+        }
+
+        [NonAction]
+        private string GetUserEmailFromAppliedFilter(IFilterDescriptor filter)
+        {
+            if (filter is CompositeFilterDescriptor)
+            {
+                foreach (FilterDescriptor childFilter in ((CompositeFilterDescriptor)filter).FilterDescriptors)
+                {
+                    var email = GetUserEmailFromAppliedFilter(childFilter);
+                    if (!String.IsNullOrEmpty(email))
+                        return email;
+                }
+            }
+            else
+            {
+                var filterDescriptor = (FilterDescriptor)filter;
+                if (filterDescriptor != null)
+                {
+                    switch (filterDescriptor.Member.ToLowerInvariant())
+                    {
+                        case "email":
+                            switch (filterDescriptor.Operator)
+                            {
+                                case FilterOperator.Contains:
+                                    return Convert.ToString(filterDescriptor.Value);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            return "";
+        }
+
+        [NonAction]
+        private string GetUserEmailFromAppliedFilters(IList<IFilterDescriptor> filters)
+        {
+            foreach (var filter in filters)
+            {
+                var email = GetUserEmailFromAppliedFilter(filter);
+                if (!String.IsNullOrEmpty(email))
+                    return email;
+            }
+            return "";
         }
 
         #endregion
 
         #region Methods
 
+        //Customers
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -187,6 +238,7 @@ namespace Nop.Admin.Controllers
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == customer.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.VatNumber = customer.VatNumber;
             model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
             model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
             model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
@@ -201,6 +253,14 @@ namespace Nop.Admin.Controllers
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
             model.AddRewardPointsMessage = "Some comment here...";
+            //user account
+            model.AssociatedUserId = customer.AssociatedUserId;
+            if (customer.AssociatedUserId.HasValue)
+            {
+                User associatedUser = _userService.GetUserById(customer.AssociatedUserId.Value);
+                if (associatedUser != null)
+                    model.AssociatedUserEmail = associatedUser.Email;
+            }
 
             return View(model);
         }
@@ -327,7 +387,6 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult RewardPointsHistoryAdd(int customerId, int addRewardPointsValue, string addRewardPointsMessage)
         {
             var customer = _customerService.GetCustomerById(customerId);
@@ -482,6 +541,117 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });
         }
            
+        //User accounts
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult UserSelect(GridCommand command)
+        {
+            //filter by email
+            string email = GetUserEmailFromAppliedFilters(command.FilterDescriptors);
+
+            var users = _userService.GetUsers(email, null, command.Page - 1, command.PageSize);
+            var gridModel = new GridModel<CustomerModel.UserAccountModel>
+            {
+                Data = users.Select(x =>
+                {
+                    var model = new CustomerModel.UserAccountModel()
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        IsApproved = x.IsApproved,
+                        IsLockedOut = x.IsLockedOut,
+                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                    };
+                    return model;
+                }),
+                Total = users.TotalCount
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("search-users")]
+        public ActionResult UserSelectApplyFilter(CustomerModel model)
+        {
+            ViewData["userEmailStartsWith"] = model.UserEmailStartsWith;
+            ViewData["selectedTab"] = "useraccount";
+
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
+            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
+            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            //customer roles
+            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            model.AvailableCustomerRoles = customerRoles.ToList();
+            //reward points gistory
+            model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
+            //user account
+            model.AssociatedUserId = customer.AssociatedUserId;
+            if (customer.AssociatedUserId.HasValue)
+            {
+                User associatedUser = _userService.GetUserById(customer.AssociatedUserId.Value);
+                if (associatedUser != null)
+                    model.AssociatedUserEmail = associatedUser.Email;
+            }
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("detach-associated-user")]
+        public ActionResult DetachAssociatedUser(CustomerModel model)
+        {
+            ViewData["selectedTab"] = "useraccount";
+
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            customer.AssociatedUserId = null;
+            _customerService.UpdateCustomer(customer);
+
+
+            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
+            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
+            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            //customer roles
+            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            model.AvailableCustomerRoles = customerRoles.ToList();
+            //reward points gistory
+            model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
+            //user account
+            model.AssociatedUserEmail = null;
+            model.AssociatedUserId = null;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AssociateNewUserAccount(int userId, int customerId)
+        {
+            var user = _userService.GetUserById(userId);
+            if (user == null)
+                throw new ArgumentException("No user found with the specified id", "id");
+
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
+
+            customer.AssociatedUserId = userId;
+            _customerService.UpdateCustomer(customer);
+
+            return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+        }
         #endregion
     }
 }

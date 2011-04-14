@@ -571,7 +571,7 @@ namespace Nop.Services.Installation
 
             #region Customers & Users
 
-            var user = new User()
+            var adminUser = new User()
             {
                 UserGuid = Guid.NewGuid(),
                 Email = "admin@yourStore.com",
@@ -585,14 +585,14 @@ namespace Nop.Services.Installation
                 IsLockedOut = false,
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            _userRepository.Insert(user);
+            _userRepository.Insert(adminUser);
 
             var customers = new List<Customer>
                                 {
                                     new Customer
                                         {
                                             CustomerGuid = Guid.NewGuid(),
-                                            AssociatedUserId = user.Id,
+                                            AssociatedUserId = adminUser.Id,
                                             Active = true,
                                             CreatedOnUtc = DateTime.UtcNow,
                                         }
@@ -676,6 +676,22 @@ namespace Nop.Services.Installation
                                 };
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
 
+            //test users
+            for (int i = 1; i <= 30; i++)
+            {
+                var testUser = new User()
+                {
+                    UserGuid = Guid.NewGuid(),
+                    Email = string.Format("admin{0}@yourStore.com", i),
+                    Username = "admin@yourStore.com",
+                    Password = "admin",
+                    PasswordFormat = PasswordFormat.Clear,
+                    IsApproved = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                };
+
+                _userRepository.Insert(testUser);
+            }
             #endregion
             
             #region Email accounts
