@@ -1852,7 +1852,10 @@
                             <LocaleResource Name="EditQueuedEmailDetails">
                                 <Value>Edit message queue item</Value>
                             </LocaleResource>
-                            <LocaleResource Name="Fields">
+                          <LocaleResource Name="Requeue">
+                            <Value>Requeue</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
                                 <Children>
                                     <LocaleResource Name="Id">
                                         <Value>Queued email ID</Value>
@@ -1868,7 +1871,10 @@
                                     <LocaleResource Name="From">
                                         <Value>From</Value>
                                         <Children>
-                                            <LocaleResource Name="Hint">
+                                          <LocaleResource Name="Validation">
+                                            <Value>From is required.</Value>
+                                          </LocaleResource>
+                                          <LocaleResource Name="Hint">
                                                 <Value>From address.</Value>
                                             </LocaleResource>
                                         </Children>
@@ -1884,7 +1890,10 @@
                                     <LocaleResource Name="To">
                                         <Value>To</Value>
                                         <Children>
-                                            <LocaleResource Name="Hint">
+                                          <LocaleResource Name="Validation">
+                                            <Value>To is required.</Value>
+                                          </LocaleResource>
+                                          <LocaleResource Name="Hint">
                                                 <Value>To address.</Value>
                                             </LocaleResource>
                                         </Children>

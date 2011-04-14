@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Nop.Web.Framework.Mvc;
-using Nop.Web.Framework;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
+using FluentValidation.Attributes;
+
+using Nop.Admin.Validators;
+using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
+
 namespace Nop.Admin.Models
 {
+    [Validator(typeof(QueuedEmailValidator))]
     public class QueuedEmailModel: BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Id")]

@@ -13,13 +13,13 @@ namespace Nop.Data.Mapping.Messages
             this.HasKey(qe => qe.Id);
 
             this.Property(qe => qe.From).IsRequired().HasMaxLength(500);
-            this.Property(qe => qe.FromName).IsRequired().HasMaxLength(500);
+            this.Property(qe => qe.FromName).HasMaxLength(500);
             this.Property(qe => qe.To).IsRequired().HasMaxLength(500);
-            this.Property(qe => qe.ToName).IsRequired().HasMaxLength(500);
-            this.Property(qe => qe.CC).IsRequired().HasMaxLength(500);
-            this.Property(qe => qe.Bcc).IsRequired().HasMaxLength(500);
-            this.Property(qe => qe.Subject).IsRequired().HasMaxLength(500);
-            this.Property(qe => qe.Body).IsRequired().IsMaxLength();
+            this.Property(qe => qe.ToName).HasMaxLength(500);
+            this.Property(qe => qe.CC).HasMaxLength(500);
+            this.Property(qe => qe.Bcc).HasMaxLength(500);
+            this.Property(qe => qe.Subject).HasMaxLength(500);
+            this.Property(qe => qe.Body).IsMaxLength();
 
 
             this.HasRequired(qe => qe.EmailAccount)

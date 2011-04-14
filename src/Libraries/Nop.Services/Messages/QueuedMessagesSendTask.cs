@@ -34,8 +34,12 @@ namespace Nop.Services.Messages
             var queuedEmails = _queuedEmailService.GetAllQueuedEmails(10000, true, _maxTries);
             foreach (var queuedEmail in queuedEmails)
             {
-                var bcc = queuedEmail.Bcc.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                var cc = queuedEmail.CC.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                var bcc = String.IsNullOrWhiteSpace(queuedEmail.Bcc) 
+                            ? null 
+                            : queuedEmail.Bcc.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                var cc = String.IsNullOrWhiteSpace(queuedEmail.CC) 
+                            ? null 
+                            : queuedEmail.CC.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
                 try
                 {

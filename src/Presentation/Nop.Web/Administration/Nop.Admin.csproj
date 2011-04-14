@@ -132,6 +132,7 @@
     <Compile Include="Validators\CategoryProductValidator.cs" />
     <Compile Include="Validators\CategoryValidator.cs" />
     <Compile Include="Validators\AddressValidator.cs" />
+    <Compile Include="Validators\QueuedEmailValidator.cs" />
     <Compile Include="Validators\CustomerValidator.cs" />
     <Compile Include="Validators\CustomerRoleValidator.cs" />
     <Compile Include="Validators\ForumGroupValidator.cs" />
