@@ -14,14 +14,9 @@ namespace Nop.Web.Framework.ViewEngines.Razor
 {
     public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel>
     {
-        #region Fields (2)
 
         private ILocalizationService _localizationService;
         private Localizer _localizer;
-
-        #endregion Fields
-
-        #region Properties (1)
 
         public Localizer T
         {
@@ -50,18 +45,12 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             }
         }
 
-        #endregion Properties
-
-        #region Methods (1)
-
         public override void InitHelpers()
         {
             base.InitHelpers();
 
             _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
         }
-
-        #endregion Methods
 
         public HelperResult RenderWrappedSection(string name, object wrapperHtmlAttributes)
         {

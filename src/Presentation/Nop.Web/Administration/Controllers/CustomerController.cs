@@ -14,6 +14,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -73,8 +74,7 @@ namespace Nop.Admin.Controllers
             }
             return sb.ToString();
         }
-
-
+        
         /// <summary>
         /// Gets VAT Number status name
         /// </summary>
@@ -84,51 +84,6 @@ namespace Nop.Admin.Controllers
         private string GetVatNumberStatusName(VatNumberStatus status)
         {
             return _localizationService.GetResource(string.Format("Admin.Customers.Customers.Fields.VatNumberStatus.{0}", status.ToString()));
-        }
-
-        [NonAction]
-        private string GetUserEmailFromAppliedFilter(IFilterDescriptor filter)
-        {
-            if (filter is CompositeFilterDescriptor)
-            {
-                foreach (FilterDescriptor childFilter in ((CompositeFilterDescriptor)filter).FilterDescriptors)
-                {
-                    var email = GetUserEmailFromAppliedFilter(childFilter);
-                    if (!String.IsNullOrEmpty(email))
-                        return email;
-                }
-            }
-            else
-            {
-                var filterDescriptor = (FilterDescriptor)filter;
-                if (filterDescriptor != null)
-                {
-                    switch (filterDescriptor.Member.ToLowerInvariant())
-                    {
-                        case "email":
-                            switch (filterDescriptor.Operator)
-                            {
-                                case FilterOperator.Contains:
-                                    return Convert.ToString(filterDescriptor.Value);
-                            }
-                            break;
-                    }
-                }
-            }
-
-            return "";
-        }
-
-        [NonAction]
-        private string GetUserEmailFromAppliedFilters(IList<IFilterDescriptor> filters)
-        {
-            foreach (var filter in filters)
-            {
-                var email = GetUserEmailFromAppliedFilter(filter);
-                if (!String.IsNullOrEmpty(email))
-                    return email;
-            }
-            return "";
         }
 
         #endregion
@@ -546,7 +501,7 @@ namespace Nop.Admin.Controllers
         public ActionResult UserSelect(GridCommand command)
         {
             //filter by email
-            string email = GetUserEmailFromAppliedFilters(command.FilterDescriptors);
+            string email = command.FilterDescriptors.GetValueFromAppliedFilters("email", FilterOperator.Contains);
 
             var users = _userService.GetUsers(email, null, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel.UserAccountModel>

@@ -59,6 +59,10 @@ namespace Nop.Admin.Models
         public IList<ProductLocalizedModel> Locales { get; set; }
 
         public IList<ProductVariantModel> ProductVariants { get; set; }
+
+        //properties used for filtering
+        public int SearchCategoryId { get; set; }
+        public int SearchManufacturerId { get; set; }
     }
     public class ProductLocalizedModel : ILocalizedModelLocal
     {

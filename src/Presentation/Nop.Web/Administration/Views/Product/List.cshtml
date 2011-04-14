@@ -1,49 +1,101 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.ProductModel>
+﻿@model Nop.Admin.Models.ProductListModel
 @using Telerik.Web.Mvc.UI
 @using Nop.Web.Framework
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
-        @T("Admin.Catalog.Products.Manage")
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+            @T("Admin.Catalog.Products.Manage")
+        </div>
+        <div class="options">
+            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a> @*<a href="@Url.Action("Export")" class="t-button">@T("Admin.Common.ExportToXml")</a>*@
+        </div>
     </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-        <a href="@Url.Action("Export")" class="t-button">@T("Admin.Common.ExportToXml")</a>
-    </div>
-</div>
-<table style="margin-bottom:10px;" class="adminContent">
-        <tbody><tr>
+
+    <table width="100%">
+        <tr>
             <td class="adminTitle">
-                Name
+                @Html.NopLabelFor(model => model.SearchProductName):
             </td>
             <td class="adminData">
-                <div id="select-language" class="t-widget t-combobox t-header"><div class="t-dropdown-wrap t-state-default"><input type="text" value="English" name="select-language-input" id="select-language-input" class="t-input" autocomplete="off"><span class="t-select t-header"><span class="t-icon t-arrow-down">select</span></span></div><input type="text" value="1" style="display:none" name="select-language" id="select-language-value"></div>
-                <script type="text/javascript">
-                    function onLanguageSelected(e) {
-                        window.location = "/Admin/Language/Resources?languageId=" + e.value;
-                    }
-                </script>
+                @Html.EditorFor(model => Model.SearchProductName)
             </td>
         </tr>
-    </tbody></table>
-<table class="adminContent">
-    <tr>
-        <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel>(Model.Data)
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchCategoryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchCategoryId", Model.AvailableCategories)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchManufacturerId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GoDirectlyToSku):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.GoDirectlyToSku)
+                <button type="submit" name="go-to-product-by-sku" value="go-to-product-by-sku" class="t-button">@T("Admin.Common.Go")</button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="search-products" value="search-products" class="t-button">@T("Admin.Common.Search")</button>
+            </td>
+        </tr>
+    </table>
+    <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel>(Model.Products.Data)
                     .Name("products-grid")
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Name).Filterable(false);
+                        //little hack to allow filtering by category and manufacturer
+                        columns.Bound(x => x.SearchCategoryId).Filterable(false).Hidden(true);
+                        columns.Bound(x => x.SearchManufacturerId).Filterable(false).Hidden(true);
                         columns.Bound(x => x.Id)
                             .Width(50)
+                            .Filterable(false)
                             .Centered()
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Product"))
+                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
+                    .Filterable(filtering => filtering.Filters(filters =>
+                    {
+                        //product name
+                        if (!String.IsNullOrEmpty(ViewData["searchProductName"] as string))
+                        {
+                            filters.Add(x => x.Name).Contains((string)ViewData["searchProductName"]);
+                        }
+                        //category id
+                        if (ViewData["searchCategoryId"] != null)
+                        {
+                            filters.Add(x => x.SearchCategoryId).IsEqualTo((int)ViewData["searchCategoryId"]);
+                        }
+                        //manufacturer id
+                        if (ViewData["searchManufacturerId"] != null)
+                        {
+                            filters.Add(x => x.SearchManufacturerId).IsEqualTo((int)ViewData["searchManufacturerId"]);
+                        }
+                    }))
                     .EnableCustomBinding(true))
-        </td>
-    </tr>
-</table>
+            </td>
+        </tr>
+    </table>
+}

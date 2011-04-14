@@ -133,5 +133,41 @@ namespace Nop.Web.Framework
                          select new { ID = Convert.ToInt32(enumValue), Name = CommonHelper.ConvertEnum(enumValue.ToString()) };
             return new SelectList(values, "ID", "Name", Convert.ToInt32(enumObj));
         }
+
+        public static string GetValueFromAppliedFilter(this IFilterDescriptor filter, string valueName, FilterOperator? filterOperator = null)
+        {
+            if (filter is CompositeFilterDescriptor)
+            {
+                foreach (IFilterDescriptor childFilter in ((CompositeFilterDescriptor)filter).FilterDescriptors)
+                {
+                    var val1 = GetValueFromAppliedFilter(childFilter, valueName, filterOperator);
+                    if (!String.IsNullOrEmpty(val1))
+                        return val1;
+                }
+            }
+            else
+            {
+                var filterDescriptor = (FilterDescriptor)filter;
+                if (filterDescriptor != null &&
+                    filterDescriptor.Member.Equals(valueName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (!filterOperator.HasValue || filterDescriptor.Operator == filterOperator.Value)
+                        return Convert.ToString(filterDescriptor.Value);
+                }
+            }
+
+            return "";
+        }
+
+        public static string GetValueFromAppliedFilters(this IList<IFilterDescriptor> filters, string valueName, FilterOperator? filterOperator = null)
+        {
+            foreach (var filter in filters)
+            {
+                var val1 = GetValueFromAppliedFilter(filter, valueName, filterOperator);
+                if (!String.IsNullOrEmpty(val1))
+                    return val1;
+            }
+            return "";
+        }
     }
 }

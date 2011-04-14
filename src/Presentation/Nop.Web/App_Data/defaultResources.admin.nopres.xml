@@ -202,7 +202,7 @@
                                 <Value>Product Info</Value>
                             </LocaleResource>
                             <LocaleResource Name="Manage">
-                                <Value>Manage</Value>
+                                <Value>Manage products</Value>
                             </LocaleResource>
                             <LocaleResource Name="BackToList">
                                 <Value>back to product list</Value>
@@ -313,175 +313,220 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                          <LocaleResource Name="List">
+                            <Children>
+                              <LocaleResource Name="SearchProductName">
+                                <Value>Product name</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A product name.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="SearchCategory">
+                                <Value>Category</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Search by a specific category.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="SearchManufacturer">
+                                <Value>Manufacturer</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Search by a specific manufacturer.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="GoDirectlyToSku">
+                                <Value>Go directly to product SKU</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Enter product SKU and click Go.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
                     </LocaleResource>
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Common">
                 <Children>
-                    <LocaleResource Name="Validation">
+                  <LocaleResource Name="Address">
+                    <Value>Address</Value>
+                    <Children>
+                      <LocaleResource Name="Fields">
                         <Children>
-                            <LocaleResource Name="Required">
-                                <Value>This field is required.</Value>
-                            </LocaleResource>
+                          <LocaleResource Name="FirstName">
+                            <Value>First name</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter first name</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="LastName">
+                            <Value>Last name</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter last name</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Email">
+                            <Value>Email</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter email</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Company">
+                            <Value>Company</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter company</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Country">
+                            <Value>Country</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Select country</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="StateProvince">
+                            <Value>State / province</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Select state / province</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="City">
+                            <Value>City</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter city</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Address1">
+                            <Value>Address 1</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter address 1</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Address2">
+                            <Value>Address 2</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter address 2</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="ZipPostalCode">
+                            <Value>Zip / postal code</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter zip / postal code</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="PhoneNumber">
+                            <Value>Phone number</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter phone number</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="FaxNumber">
+                            <Value>Fax number</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Enter fax number</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
-                    </LocaleResource>
-                    <LocaleResource Name="DeleteConfirmationParam">
-                        <Value>Are you sure you want to delete "{0}"?</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="DeleteConfirmation">
-                        <Value>Are you sure you want to delete this item?</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="AreYouSure">
-                        <Value>Are you sure?</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="SEO">
-                        <Value>SEO</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="AddNew">
-                        <Value>Add new</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Edit">
-                        <Value>Edit</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Delete">
-                        <Value>Delete</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="List">
-                        <Value>List</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="View">
-                      <Value>View</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Save">
-                        <Value>Save</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Cancel">
-                        <Value>Cancel</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Standard">
-                        <Value>Standard</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="No">
-                        <Value>No</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="NoCancel">
-                        <Value>No, cancel</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="SaveContinue">
-                        <Value>Save and Continue Edit</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Treeview">
-                        <Value>Tree view</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="ExportToXml">
-                        <Value>Export to XML</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="Address">
-                        <Value>Address</Value>
-                        <Children>
-                            <LocaleResource Name="Fields">
-                                <Children>
-                                    <LocaleResource Name="FirstName">
-                                      <Value>First name</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter first name</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="LastName">
-                                      <Value>Last name</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter last name</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Email">
-                                      <Value>Email</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter email</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Company">
-                                      <Value>Company</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter company</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Country">
-                                      <Value>Country</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Select country</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="StateProvince">
-                                        <Value>State / province</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Select state / province</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="City">
-                                      <Value>City</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter city</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Address1">
-                                      <Value>Address 1</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter address 1</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Address2">
-                                      <Value>Address 2</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter address 2</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="ZipPostalCode">
-                                      <Value>Zip / postal code</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter zip / postal code</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="PhoneNumber">
-                                      <Value>Phone number</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter phone number</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="FaxNumber">
-                                      <Value>Fax number</Value>
-                                      <Children>
-                                        <LocaleResource Name="Hint">
-                                          <Value>Enter fax number</Value>
-                                        </LocaleResource>
-                                      </Children>
-                                    </LocaleResource>
-                                </Children>
-                            </LocaleResource>
-                        </Children>
-                    </LocaleResource>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="AddNew">
+                    <Value>Add new</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="All">
+                    <Value>All</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="AreYouSure">
+                    <Value>Are you sure?</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Cancel">
+                    <Value>Cancel</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="DeleteConfirmationParam">
+                    <Value>Are you sure you want to delete "{0}"?</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="DeleteConfirmation">
+                    <Value>Are you sure you want to delete this item?</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Delete">
+                    <Value>Delete</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Edit">
+                    <Value>Edit</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="ExportToXml">
+                    <Value>Export to XML</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Go">
+                    <Value>Go</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="List">
+                    <Value>List</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="No">
+                    <Value>No</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NoCancel">
+                    <Value>No, cancel</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Save">
+                    <Value>Save</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Search">
+                    <Value>Search</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="SEO">
+                    <Value>SEO</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="View">
+                    <Value>View</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Standard">
+                    <Value>Standard</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="SaveContinue">
+                    <Value>Save and Continue Edit</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Treeview">
+                    <Value>Tree view</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Validation">
+                    <Children>
+                      <LocaleResource Name="Required">
+                        <Value>This field is required.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Configuration">

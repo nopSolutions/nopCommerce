@@ -8,17 +8,11 @@ namespace Nop.Web.Framework.Mvc
 {
     public class XmlDownloadResult : ActionResult
     {
-        #region Constructors (2)
-
         public XmlDownloadResult(string xml, string fileDownloadName)
         {
             Xml = xml;
             FileDownloadName = fileDownloadName;
         }
-
-        #endregion Constructors
-
-        #region Properties (2)
 
         public string FileDownloadName
         {
@@ -31,12 +25,6 @@ namespace Nop.Web.Framework.Mvc
             get;
             set;
         }
-
-        #endregion Properties
-
-        #region Methods (1)
-
-        // Public Methods (1) 
 
         public override void ExecuteResult(ControllerContext context)
         {
@@ -56,7 +44,5 @@ namespace Nop.Web.Framework.Mvc
             context.HttpContext.Response.BinaryWrite(Encoding.UTF8.GetBytes(document.InnerXml));
             context.HttpContext.Response.End();
         }
-
-        #endregion Methods
     }
 }
