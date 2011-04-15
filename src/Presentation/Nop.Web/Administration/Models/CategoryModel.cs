@@ -54,9 +54,6 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Parent")]
         public int ParentCategoryId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Parent")]
-        public Category ParentCategory {get;set;}
-
         [UIHint("Picture")]
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Picture")]
         public int PictureId { get; set; }
@@ -86,19 +83,7 @@ namespace Nop.Admin.Models
 
         #endregion
 
-        public IList<DropDownItem> ParentCategories
-        {
-            get
-            {
-                var parentCategories = new List<DropDownItem> {new DropDownItem {Text = "[None]", Value = "0"}};
-                if (ParentCategory != null)
-                {
-                    parentCategories.Add(new DropDownItem
-                                             {Text = ParentCategory.Name, Value = ParentCategory.Id.ToString()});
-                }
-                return parentCategories;
-            }
-        }
+        public IList<DropDownItem> ParentCategories { get; set; }
     }
 
     public class CategoryLocalizedModel : ILocalizedModelLocal
