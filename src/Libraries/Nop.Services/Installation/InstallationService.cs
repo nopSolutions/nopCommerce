@@ -683,7 +683,7 @@ namespace Nop.Services.Installation
                 {
                     UserGuid = Guid.NewGuid(),
                     Email = string.Format("admin{0}@yourStore.com", i),
-                    Username = "admin@yourStore.com",
+                    Username = string.Format("admin{0}@yourStore.com", i),
                     Password = "admin",
                     PasswordFormat = PasswordFormat.Clear,
                     IsApproved = true,

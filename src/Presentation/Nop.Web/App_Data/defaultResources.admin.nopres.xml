@@ -313,7 +313,7 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
-                          <LocaleResource Name="List">
+                            <LocaleResource Name="List">
                             <Children>
                               <LocaleResource Name="SearchProductName">
                                 <Value>Product name</Value>
@@ -2381,6 +2381,26 @@
                         <Children>
                           <LocaleResource Name="Hint">
                             <Value>The user's registartion date.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="List">
+                    <Children>
+                      <LocaleResource Name="SearchEmail">
+                        <Value>Email</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Search by a specific email</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="SearchUsername">
+                        <Value>Username</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Search by a specific username.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

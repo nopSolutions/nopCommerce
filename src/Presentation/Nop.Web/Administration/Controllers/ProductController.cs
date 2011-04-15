@@ -139,7 +139,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductList(GridCommand command)
         {
-            //filter by product name
+            //filtering
             string productName = command.FilterDescriptors.GetValueFromAppliedFilters("Name", FilterOperator.Contains);
             string selectedCategoryId = command.FilterDescriptors.GetValueFromAppliedFilters("SearchCategoryId");
             string selectedManufacturerId = command.FilterDescriptors.GetValueFromAppliedFilters("SearchManufacturerId");

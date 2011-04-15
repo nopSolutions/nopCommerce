@@ -1,43 +1,104 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.UserModel>
+﻿@model Nop.Admin.Models.UserListModel
 @using Telerik.Web.Mvc.UI
 @using Nop.Web.Framework
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
-        @T("Admin.Users")
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
+            @T("Admin.Users")
+        </div>
+        <div class="options">
+            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        </div>
     </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-    </div>
-</div>
-<table class="adminContent">
-    <tr>
-        <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.UserModel>(Model.Data)
+
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.SearchEmail)
+            </td>
+        </tr>
+        @if (Model.UsernamesEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SearchUsername):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => Model.SearchUsername)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="search-users" value="search-users" class="t-button">@T("Admin.Common.Search")</button>
+            </td>
+        </tr>
+    </table>
+    <p>
+    </p>
+
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<Nop.Admin.Models.UserModel>(Model.Users.Data)
                     .Name("users-grid")
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Id).Width(50);
-                        columns.Bound(x => x.Email).Width(200);
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Filterable(false);
+                        columns.Bound(x => x.Email)
+                            .Width(200)
+                            .Filterable(false);
+                        var usernameColumn = columns.Bound(x => x.Username)
+                            .Width(200)
+                            .Filterable(false);
+                        //Weird!!! We can't pass Model.UsernamesEnabled to Hidden method
+                        if (!Model.UsernamesEnabled)
+                            usernameColumn.Hidden(true);
                         columns.Bound(x => x.IsLockedOut)
                              .Width(100)
                              .Template(x => x.IsLockedOut.ToString().ToLower())
-                             .Centered();
+                             .Centered()
+                             .Filterable(false);
                         columns.Bound(x => x.IsApproved)
                              .Width(100)
                              .Template(x => x.IsApproved.ToString().ToLower())
-                             .Centered();
-                        columns.Bound(x => x.CreatedOnStr).Width(100);
+                             .Centered()
+                             .Filterable(false);
+                        columns.Bound(x => x.CreatedOnStr)
+                            .Width(100)
+                            .Filterable(false);
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
+                            .Title(T("Admin.Common.Edit").Text)
+                            .Filterable(false);
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "User"))
+                    .Pageable(settings => settings.Total(Model.Users.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("UserList", "User"))
+                    .Filterable(filtering => filtering.Filters(filters =>
+                    {
+                        //email
+                        if (!String.IsNullOrEmpty(ViewData["searchEmail"] as string))
+                        {
+                            filters.Add(x => x.Email).Contains((string)ViewData["searchEmail"]);
+                        }
+                        //username
+                        if (!String.IsNullOrEmpty(ViewData["searchUsername"] as string))
+                        {
+                            filters.Add(x => x.Username).Contains((string)ViewData["searchUsername"]);
+                        }
+                    }))
                     .EnableCustomBinding(true))
-        </td>
-    </tr>
-</table>
+            </td>
+        </tr>
+    </table>
+}
