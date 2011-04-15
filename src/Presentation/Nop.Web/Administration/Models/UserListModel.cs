@@ -17,8 +17,10 @@ namespace Nop.Admin.Models
         public GridModel<UserModel> Users { get; set; }
 
         [NopResourceDisplayName("Admin.Users.List.SearchEmail")]
+        [AllowHtml]
         public string SearchEmail { get; set; }
         [NopResourceDisplayName("Admin.Users.List.SearchUsername")]
+        [AllowHtml]
         public string SearchUsername { get; set; }
         
         public bool UsernamesEnabled { get; set; }

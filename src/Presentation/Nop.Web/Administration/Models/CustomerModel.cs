@@ -77,7 +77,11 @@ namespace Nop.Admin.Models
         public int? AssociatedUserId { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.AssociatedUser")]
         public string AssociatedUserEmail { get; set; }
-        
+
+
+        //properties used for filtering (customer list page)
+        public string SearchCustomerRoleIds { get; set; }
+
         #region Nested classes
         public class RewardPointsHistoryModel : BaseNopEntityModel
         {

@@ -1530,7 +1530,7 @@
             <LocaleResource Name="Customers">
             <Value>Customers</Value>
               <Children>
-              <LocaleResource Name="CustomerRoles">
+                <LocaleResource Name="CustomerRoles">
                 <Value>Customer roles</Value>
                 <Children>
                   <LocaleResource Name="AddNew">
@@ -1599,19 +1599,36 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
-            </Children>
+              </Children>
               <Children>
                 <LocaleResource Name="Customers">
                   <Value>Customers</Value>
                   <Children>
+                    <LocaleResource Name="Addresses">
+                      <Value>Addresses</Value>
+                      <Children>
+                        <LocaleResource Name="AddButton">
+                          <Value>Add new address</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="AddNew">
+                          <Value>Add a new address</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="BackToCustomer">
+                          <Value>back to customer details</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="EditAddress">
+                          <Value>Edit address details</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="AddNew">
                       <Value>Add a new customer</Value>
                     </LocaleResource>
-                    <LocaleResource Name="Info">
-                      <Value>Customer Info</Value>
-                    </LocaleResource>
                     <LocaleResource Name="BackToList">
                       <Value>back to customer list</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="CustomerRoles">
+                      <Value>Customer Roles</Value>
                     </LocaleResource>
                     <LocaleResource Name="EditCustomerDetails">
                       <Value>Edit customer details</Value>
@@ -1707,21 +1724,21 @@
                           </Children>
                         </LocaleResource>
                         <LocaleResource Name="VatNumberStatus">
-                            <Value>status: {0}</Value>
-                            <Children>
-                              <LocaleResource Name="Unknown">
-                                <Value>Unknown</Value>
-                              </LocaleResource>
-                              <LocaleResource Name="Empty">
-                                <Value>Empty</Value>
-                              </LocaleResource>
-                              <LocaleResource Name="Valid">
-                                <Value>Valid</Value>
-                              </LocaleResource>
-                              <LocaleResource Name="Invalid">
-                                <Value>Invalid</Value>
-                              </LocaleResource>
-                            </Children>
+                          <Value>status: {0}</Value>
+                          <Children>
+                            <LocaleResource Name="Unknown">
+                              <Value>Unknown</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Empty">
+                              <Value>Empty</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Valid">
+                              <Value>Valid</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Invalid">
+                              <Value>Invalid</Value>
+                            </LocaleResource>
+                          </Children>
                         </LocaleResource>
                         <LocaleResource Name="TimeZoneId">
                           <Value>Time zone</Value>
@@ -1752,25 +1769,20 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
-                    <LocaleResource Name="Addresses">
-                      <Value>Addresses</Value>
+                    <LocaleResource Name="Info">
+                      <Value>Customer Info</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="List">
                       <Children>
-                        <LocaleResource Name="AddButton">
-                          <Value>Add new address</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="AddNew">
-                          <Value>Add a new address</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="BackToCustomer">
-                          <Value>back to customer details</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="EditAddress">
-                          <Value>Edit address details</Value>
+                        <LocaleResource Name="CustomerRoles">
+                          <Value>Customer roles</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Filter by customer role.</Value>
+                            </LocaleResource>
+                          </Children>
                         </LocaleResource>
                       </Children>
-                    </LocaleResource>
-                    <LocaleResource Name="CustomerRoles">
-                      <Value>Customer Roles</Value>
                     </LocaleResource>
                     <LocaleResource Name="RewardPoints">
                       <Value>Reward points</Value>

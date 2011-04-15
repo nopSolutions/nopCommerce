@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -98,27 +99,42 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            //TODO add filtering by customer role, registration date, email, etc
-            var customers = _customerService.GetAllCustomers(null,null, 0, 10);
-            var gridModel = new GridModel<CustomerModel>
+            var customers = _customerService.GetAllCustomers(null,null, null, 0, 10);
+            var model = new CustomerListModel();
+            //customer roles
+            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            model.AvailableCustomerRoles = customerRoles.ToList();
+            //customer list
+            model.Customers = new GridModel<CustomerModel>
             {
                 Data = customers.Select(x =>
                 {
-                    var model = x.ToModel();
-                    model.FullName = string.Format("{0} {1}", x.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), x.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
-                    model.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
-                    model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
-                    return model;
+                    var model1 = x.ToModel();
+                    model1.FullName = string.Format("{0} {1}", x.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), x.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                    model1.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
+                    model1.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
+                    return model1;
                 }),
                 Total = customers.TotalCount
             };
-            return View(gridModel);
+            return View(model);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        public ActionResult CustomerList(GridCommand command)
         {
-            var customers = _customerService.GetAllCustomers(null, null, command.Page - 1, command.PageSize);
+            //filtering
+            //convert to string because passing int[] to grid is no possible
+            string searchCustomerRoleIdsStr = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerRoleIds");
+            var searchCustomerRoleIds = new List<int>();
+            foreach (var str1 in searchCustomerRoleIdsStr.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                searchCustomerRoleIds.Add(Convert.ToInt32(str1));
+            //List<int> converter should be registered
+            //var searchCustomerRoleIds = TypeDescriptor.GetConverter(typeof(List<int>)).ConvertFrom(searchCustomerRoleIdsStr) as List<int>;
+            
+
+            var customers = _customerService.GetAllCustomers(null, null, 
+                searchCustomerRoleIds.ToArray(), command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
                 Data = customers.Select(x =>
@@ -135,6 +151,44 @@ namespace Nop.Admin.Controllers
             {
                 Data = gridModel
             };
+        }
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("search-customers")]
+        public ActionResult Search(CustomerListModel model)
+        {
+            //convert to string because passing int[] to grid is no possible
+            string searchCustomerRoleIdsStr = "";
+            if (model.SearchCustomerRoleIds != null)
+                foreach (var i in model.SearchCustomerRoleIds)
+                    searchCustomerRoleIdsStr+= i + ",";
+            ViewData["searchCustomerRoleIds"] = searchCustomerRoleIdsStr;
+            //if (model.SearchCustomerRoleIds != null)
+                //List<int> converter should be registered
+                //ViewData["searchCustomerRoleIds"] = TypeDescriptor.GetConverter(typeof(List<int>)).ConvertTo(model.SearchCustomerRoleIds, typeof(string)) as string;
+            
+
+            //customer roles
+            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            model.AvailableCustomerRoles = customerRoles.ToList();
+
+            //laod customers
+            var customers = _customerService.GetAllCustomers(null, null,
+               model.SearchCustomerRoleIds, 0, 10);
+            //customer list
+            model.Customers = new GridModel<CustomerModel>
+            {
+                Data = customers.Select(x =>
+                {
+                    var model1 = x.ToModel();
+                    model1.FullName = string.Format("{0} {1}", x.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), x.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                    model1.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
+                    model1.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
+                    return model1;
+                }),
+                Total = customers.TotalCount
+            };
+            return View(model);
         }
 
         public ActionResult Create()

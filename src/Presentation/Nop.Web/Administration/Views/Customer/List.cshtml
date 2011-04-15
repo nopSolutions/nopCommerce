@@ -1,53 +1,91 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.CustomerModel>
+﻿@model Nop.Admin.Models.CustomerListModel
 @using Telerik.Web.Mvc.UI
 @using Nop.Web.Framework
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
-        @T("Admin.Customers.Customers")
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
+            @T("Admin.Customers.Customers")
+        </div>
+        <div class="options">
+            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        </div>
     </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-    </div>
-</div>
-<table class="adminContent">
-    <tr>
-        <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel>(Model.Data)
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchCustomerRoleIds):
+            </td>
+            <td class="adminData">
+                @foreach (var customerRole in Model.AvailableCustomerRoles) {
+                    <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
+                @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id))
+                {
+                    <text>checked="checked"</text>
+                }
+                />@customerRole.Name
+                    <br />
+                }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="search-customers" value="search-customers" class="t-button">@T("Admin.Common.Search")</button>
+            </td>
+        </tr>
+    </table>
+    <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel>(Model.Customers.Data)
                     .Name("customers-grid")
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Id).Width(50);
-                        columns.Bound(x => x.FullName).Width(200);
-                        columns.Bound(x => x.CustomerRoleNames).Width(200);
-                        @*columns.Template(
-                            @<div>
-                            @for (int i=0;i< @item.CustomerRoleNames.Count;i++)
-                            {
-                                @item.CustomerRoleNames[i]
-                                if (i != @item.CustomerRoleNames.Count - 1)
-                                {
-                                    <text>,</text>
-                                }
-                            }
-                            </div>
-                        )
-                        .ClientTemplate("<#= CustomerRoleNames #>");*@
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Filterable(false);
+                        columns.Bound(x => x.FullName)
+                            .Width(200)
+                            .Filterable(false);
+                        columns.Bound(x => x.CustomerRoleNames)
+                            .Width(200)
+                            .Filterable(false);
+                        //hidden column used for filtering
+                        columns.Bound(x => x.SearchCustomerRoleIds)
+                            .Width(200)
+                            .Filterable(false)
+                            .Hidden(true);
                         columns.Bound(x => x.Active)
                              .Width("100px")
                              .Template(x => x.Active.ToString().ToLower())
-                             .Centered();
-                        columns.Bound(x => x.CreatedOnStr).Width(100);
+                             .Centered()
+                             .Filterable(false);
+                        columns.Bound(x => x.CreatedOnStr)
+                            .Width(100)
+                            .Filterable(false);
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
+                            .Title(T("Admin.Common.Edit").Text)
+                            .Filterable(false);
                     })
-                                            .Pageable(settings => settings.Total(Model.Total).PageSize(10))
-                                            .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Customer"))
-                                            .EnableCustomBinding(true))
-        </td>
-    </tr>
-</table>
+                    .Pageable(settings => settings.Total(Model.Customers.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("CustomerList", "Customer"))
+                    .Filterable(filtering => filtering.Filters(filters =>
+                    {
+                        //customer role ids
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerRoleIds"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerRoleIds).Contains((string)ViewData["searchCustomerRoleIds"]);
+                        }
+                    }))
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+}

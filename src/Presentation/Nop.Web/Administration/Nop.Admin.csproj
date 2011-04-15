@@ -103,6 +103,7 @@
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CategoryProductModel.cs" />
     <Compile Include="Models\CategoryProductsAttribute.cs" />
+    <Compile Include="Models\CustomerListModel.cs" />
     <Compile Include="Models\UserListModel.cs" />
     <Compile Include="Models\ProductListModel.cs" />
     <Compile Include="Models\CustomerAddressModel.cs" />
