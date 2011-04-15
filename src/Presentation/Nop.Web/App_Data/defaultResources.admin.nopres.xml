@@ -723,7 +723,6 @@
                       <LocaleResource Name="Select">
                         <Value>Select a currency</Value>
                       </LocaleResource>
-
                       <LocaleResource Name="AddNew">
                         <Value>Add a new currency</Value>
                       </LocaleResource>
@@ -732,6 +731,12 @@
                       </LocaleResource>
                       <LocaleResource Name="EditCurrencyDetails">
                         <Value>Edit currency details</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="GetLiveRates">
+                        <Value>Get live rates</Value>
+                      </LocaleResource>                                  
+                      <LocaleResource Name="ApplyRate">
+                        <Value>Apply rate</Value>
                       </LocaleResource>
                       <LocaleResource Name="Resources">
                         <Value>Currency resources</Value>
@@ -812,6 +817,18 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
+                          <LocaleResource Name="IsPrimaryExchangeRateCurrency">
+                            <Value>Is primary exchange rate currency</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="MarkAsPrimaryExchangeRateCurrency">
+                            <Value>Mark as primary exchange rate currency</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="IsPrimaryStoreCurrency">
+                            <Value>Is primary store currency</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="MarkAsPrimaryStoreCurrency">
+                            <Value>Mark as primary store currency</Value>
+                          </LocaleResource>
                           <LocaleResource Name="CreatedOn">
                             <Value>Created on</Value>
                             <Children>
@@ -828,6 +845,18 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
+                          <LocaleResource Name="ExchangeRateProvider">
+                            <Value>Current exchange rate provider:</Value>
+                            <LocaleResource Name="Hint">
+                              <Value>Select an exchange rate provider that will be used to get live rates.</Value>
+                            </LocaleResource>
+                          </LocaleResource>
+                          <LocaleResource Name="CurrencyRateAutoUpdateEnabled">
+                            <Value>Auto update enabled:</Value>
+                            <LocaleResource Name="Hint">
+                              <Value>Click to enable auto update of currency rates each one hour.</Value>
+                            </LocaleResource>
+                          </LocaleResource>                          
                         </Children>
                       </LocaleResource>
                     </Children>

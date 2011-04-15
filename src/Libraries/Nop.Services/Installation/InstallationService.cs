@@ -849,7 +849,7 @@ namespace Nop.Services.Installation
                                   {
                                       PrimaryStoreCurrencyId = currencyUSD.Id,
                                       PrimaryExchangeRateCurrencyId = currencyUSD.Id,
-                                      ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
+                                      ActiveExchangeRateProviderSystemName = "CurrencyExchange.McExchange",
                                       AutoUpdateEnabled = true,
                                       LastUpdateTime = 0
                                   });
