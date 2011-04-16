@@ -77,8 +77,6 @@
     <Compile Include="AdminAreaRegistration.cs" />
     <Compile Include="Controllers\BaseNopController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\CustomerRoleController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
@@ -103,10 +101,10 @@
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CategoryProductModel.cs" />
     <Compile Include="Models\CategoryProductsAttribute.cs" />
-    <Compile Include="Models\CustomerAddressModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\CustomerRoleModel.cs" />
     <Compile Include="Models\PaymentMethodModel.cs" />
+    <Compile Include="Models\ProductListModel.cs" />
     <Compile Include="Models\ShippingSettingsModel.cs" />
     <Compile Include="Models\ForumGroupModel.cs" />
     <Compile Include="Models\ForumModel.cs" />
@@ -127,16 +125,15 @@
     <Compile Include="Models\ProductVariantModel.cs" />
     <Compile Include="Models\QueuedEmailModel.cs" />
     <Compile Include="Models\TaxSettingsModel.cs" />
-    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\CategoryProductValidator.cs" />
     <Compile Include="Validators\CategoryValidator.cs" />
     <Compile Include="Validators\AddressValidator.cs" />
-    <Compile Include="Validators\QueuedEmailValidator.cs" />
-    <Compile Include="Validators\CustomerValidator.cs" />
     <Compile Include="Validators\CustomerRoleValidator.cs" />
+    <Compile Include="Validators\CustomerValidator.cs" />
     <Compile Include="Validators\ForumGroupValidator.cs" />
     <Compile Include="Validators\ForumValidator.cs" />
+    <Compile Include="Validators\QueuedEmailValidator.cs" />
     <Compile Include="Validators\ShippingMethodValidator.cs" />
     <Compile Include="Validators\TaxCategoryValidator.cs" />
     <Compile Include="Validators\MeasureDimensionValidator.cs" />
@@ -145,7 +142,6 @@
     <Compile Include="Validators\LanguageResourceValidator.cs" />
     <Compile Include="Validators\LanguageValidator.cs" />
     <Compile Include="Validators\ProductValidator.cs" />
-    <Compile Include="Validators\UserValidator.cs" />
     <Compile Include="Views\Shared\TestMenuPlugin1.cs" />
     <Compile Include="Views\Shared\TestMenuPlugin2.cs" />
   </ItemGroup>
@@ -219,6 +215,7 @@
   <ItemGroup>
     <Content Include="Views\Category\Create.cshtml" />
     <Content Include="Views\Category\Edit.cshtml" />
+    <Content Include="Views\Category\EditCategoryProducts.cshtml" />
     <Content Include="Views\Category\List.cshtml" />
     <Content Include="Views\Category\Products.cshtml" />
     <Content Include="Views\Category\Tree.cshtml" />
@@ -371,42 +368,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CustomerRole\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Customer\List.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Customer\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Customer\_CreateOrUpdate.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Customer\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Customer\AddressEdit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Customer\_CreateOrUpdateAddress.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Customer\AddressCreate.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\List.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\_CreateOrUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />

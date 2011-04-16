@@ -20,17 +20,22 @@ namespace Nop.Admin.Models
         public bool UsernamesEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Users.Fields.Username")]
+        [AllowHtml]
         public string Username { get; set; }
         [NopResourceDisplayName("Admin.Users.Fields.Email")]
+        [AllowHtml]
         public string Email { get; set; }
         [NopResourceDisplayName("Admin.Users.Fields.Password")]
         [AllowHtml]
         public string Password { get; set; }
         [NopResourceDisplayName("Admin.Users.Fields.SecurityQuestion")]
+        [AllowHtml]
         public string SecurityQuestion { get; set; }
         [NopResourceDisplayName("Admin.Users.Fields.SecurityAnswer")]
+        [AllowHtml]
         public string SecurityAnswer { get; set; }
         [NopResourceDisplayName("Admin.Users.Fields.Comments")]
+        [AllowHtml]
         public string Comments { get; set; }
         [NopResourceDisplayName("Admin.Users.Fields.IsApproved")]
         public bool IsApproved { get; set; }

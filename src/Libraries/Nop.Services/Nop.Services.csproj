@@ -65,6 +65,7 @@
     <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Customers\CustomerExtentions.cs" />
     <Compile Include="Directory\IExchangeRateProvider.cs" />
+    <Compile Include="Directory\UpdateExchangeRateTask.cs" />
     <Compile Include="Discounts\CheckDiscountRequirementRequest.cs" />
     <Compile Include="Discounts\DiscountExtentions.cs" />
     <Compile Include="Discounts\DiscountService.cs" />

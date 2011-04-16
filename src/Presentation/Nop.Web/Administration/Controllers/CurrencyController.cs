@@ -7,6 +7,7 @@ using Nop.Admin;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Configuration;
 using Nop.Web.Framework.Controllers;
 using Nop.Services.Directory;
 using Telerik.Web.Mvc;
@@ -18,28 +19,57 @@ namespace Nop.Admin.Controllers
     {
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
-        public CurrencyController(ICurrencyService currencyService, CurrencySettings currencySettings)
+        private ISettingService _settingService;
+        public CurrencyController(ICurrencyService currencyService, CurrencySettings currencySettings, ISettingService settingService)
         {
             _currencyService = currencyService;
             _currencySettings = currencySettings;
+            _settingService = settingService;
         }
 
-        #region List
-
+        #region Methods
         public ActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public ActionResult List(bool liveRates=false)
         {
-            var currencies = _currencyService.GetAllCurrencies(true);
+            var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList(); ;
+            foreach (var currency in currenciesModel)
+                currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
+            foreach (var currency in currenciesModel)
+                currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId ? true : false;
+            if (liveRates) ViewBag.Rates = _currencyService.GetCurrencyLiveRates("EUR");//_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
+            ViewBag.ExchangeRateProviders = new SelectList(_currencyService.LoadAllExchangeRateProviders(), "SystemName", "FriendlyName", _currencySettings.ActiveExchangeRateProviderSystemName); ;
+            ViewBag.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
             var gridModel = new GridModel<CurrencyModel>
             {
-                Data = currencies.Select(x => x.ToModel()),
-                Total = currencies.Count()
+                Data = currenciesModel,
+                Total = currenciesModel.Count()
             };
             return View(gridModel);
+        }
+
+        public ActionResult ApplyRate(string currencyCode, decimal rate)
+        {
+            Currency currency = _currencyService.GetCurrencyByCode(currencyCode);
+            if (currency != null)
+            {
+                currency.Rate = rate;
+                currency.UpdatedOnUtc = DateTime.UtcNow;
+                _currencyService.UpdateCurrency(currency);
+            }
+            return RedirectToAction("List","Currency", new { liveRates=true });
+        }
+
+        [HttpPost]
+        public ActionResult Save(FormCollection formValues)
+        {
+            _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
+            _currencySettings.AutoUpdateEnabled = formValues["autoUpdateEnabled"].Equals("false")?false:true;
+            _settingService.SaveSetting(_currencySettings);
+            return RedirectToAction("List","Currency");
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -57,6 +87,21 @@ namespace Nop.Admin.Controllers
             };
         }
 
+
+        public ActionResult MarkAsPrimaryExchangeRateCurrency(int id)
+        {
+            _currencySettings.PrimaryExchangeRateCurrencyId = id;
+            _settingService.SaveSetting(_currencySettings);
+            return RedirectToAction("List");
+        }
+
+        public ActionResult MarkAsPrimaryStoreCurrency(int id)
+        {
+            _currencySettings.PrimaryStoreCurrencyId = id;
+            _settingService.SaveSetting(_currencySettings);
+            return RedirectToAction("List");
+        }
+
         #endregion
 
         #region Edit
@@ -67,7 +112,7 @@ namespace Nop.Admin.Controllers
             var model = currency.ToModel();
             return View(model);
         }
-        
+
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(CurrencyModel currencyModel, bool continueEditing)
         {
@@ -76,11 +121,13 @@ namespace Nop.Admin.Controllers
                 return View();
             }
             var currency = _currencyService.GetCurrencyById(currencyModel.Id);
+            currencyModel.CreatedOnUtc = currency.CreatedOnUtc;
             currency = currencyModel.ToEntity(currency);
             currency.UpdatedOnUtc = DateTime.UtcNow;
             _currencyService.UpdateCurrency(currency);
             return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
         }
+
         #endregion
 
         #region Create
@@ -88,8 +135,6 @@ namespace Nop.Admin.Controllers
         public ActionResult Create()
         {
             var currencyModel = new CurrencyModel();
-            currencyModel.CreatedOnUtc = DateTime.UtcNow;
-            currencyModel.UpdatedOnUtc = DateTime.UtcNow;
             return View(currencyModel);
         }
 

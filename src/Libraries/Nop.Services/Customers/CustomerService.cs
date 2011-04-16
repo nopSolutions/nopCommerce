@@ -72,21 +72,27 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
         /// <param name="registrationTo">Customer registration to; null to load all customers</param>
+        /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         public PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, int pageIndex, int pageSize)
+            DateTime? registrationTo, int[] customerRoleIds, int pageIndex, int pageSize)
         {
-            var query = from c in _customerRepository.Table
-                        where
-                        (!registrationFrom.HasValue || registrationFrom.Value <= c.CreatedOnUtc) &&
-                        (!registrationTo.HasValue || registrationTo.Value >= c.CreatedOnUtc) &&
-                        (!c.Deleted)
-                        orderby c.CreatedOnUtc descending
-                        select c;
-            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
+            var query = _customerRepository.Table;
+            if (registrationFrom.HasValue)
+                query = query.Where(c => registrationFrom.Value <= c.CreatedOnUtc);
+            if (registrationTo.HasValue)
+                query = query.Where(c => registrationTo.Value >= c.CreatedOnUtc);
+            query = query.Where(c => !c.Deleted);
+            if (customerRoleIds != null && customerRoleIds.Length > 0)
+            {
+                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Count() > 0);
+            }
+            
+            query = query.OrderByDescending(c => c.CreatedOnUtc);
 
+            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
             return customers;
         }
 

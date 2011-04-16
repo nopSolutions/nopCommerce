@@ -683,7 +683,7 @@ namespace Nop.Services.Installation
                 {
                     UserGuid = Guid.NewGuid(),
                     Email = string.Format("admin{0}@yourStore.com", i),
-                    Username = "admin@yourStore.com",
+                    Username = string.Format("admin{0}@yourStore.com", i),
                     Password = "admin",
                     PasswordFormat = PasswordFormat.Clear,
                     IsApproved = true,
@@ -849,7 +849,7 @@ namespace Nop.Services.Installation
                                   {
                                       PrimaryStoreCurrencyId = currencyUSD.Id,
                                       PrimaryExchangeRateCurrencyId = currencyUSD.Id,
-                                      ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
+                                      ActiveExchangeRateProviderSystemName = "CurrencyExchange.McExchange",
                                       AutoUpdateEnabled = true,
                                       LastUpdateTime = 0
                                   });

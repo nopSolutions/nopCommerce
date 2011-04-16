@@ -12,6 +12,24 @@ namespace Nop.Admin.Models
 {
     public class CurrencyModel : BaseNopEntityModel
     {
+        public CurrencyModel()
+        {
+        }
+
+        public CurrencyModel(Currency currency)
+            : this()
+        {
+            Id = currency.Id;
+            Name = currency.Name;
+            CurrencyCode = currency.CurrencyCode;
+            DisplayLocale = currency.DisplayLocale;
+            Rate = currency.Rate;
+            CustomFormatting = currency.CustomFormatting;
+            Published = currency.Published;
+            DisplayOrder = currency.DisplayOrder;
+            CreatedOnUtc = currency.CreatedOnUtc;
+            UpdatedOnUtc = currency.UpdatedOnUtc;
+        }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.Name")]
         public string Name { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.CurrencyCode")]
@@ -30,5 +48,9 @@ namespace Nop.Admin.Models
         public DateTime CreatedOnUtc { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.UpdatedOn")]
         public DateTime UpdatedOnUtc { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.IsPrimaryExchangeRateCurrency")]
+        public bool IsPrimaryExchangeRateCurrency { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.IsPrimaryStoreCurrency")]
+        public bool IsPrimaryStoreCurrency { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
@@ -20,26 +21,90 @@ namespace Nop.Admin.Controllers
     {
 		#region Fields
 
-        private IProductService _productService;
-        private IWorkContext _workContext;
-        private ILanguageService _languageService;
-        private ILocalizedEntityService _localizedEntityService;
+        private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IWorkContext _workContext;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
 
         #endregion Fields 
 
 		#region Constructors
 
-        public ProductController(IProductService productService, IWorkContext workContext, ILanguageService languageService, ILocalizedEntityService localizedEntityService)
+        public ProductController(IProductService productService, 
+            ICategoryService categoryService, IManufacturerService manufacturerService,
+            IWorkContext workContext, ILanguageService languageService, 
+            ILocalizationService localizationService, ILocalizedEntityService localizedEntityService)
         {
-            this._localizedEntityService = localizedEntityService;
-            this._languageService = languageService;
-            this._workContext = workContext;
             this._productService = productService;
+            this._categoryService = categoryService;
+            this._manufacturerService = manufacturerService;
+            this._workContext = workContext;
+            this._languageService = languageService;
+            this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
         }
 
         #endregion Constructors 
 
-        #region List
+        #region Utitilies
+
+        [NonAction]
+        private void UpdateLocales(Product product, ProductModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.ShortDescription,
+                                                               localized.ShortDescription,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.FullDescription,
+                                                               localized.FullDescription,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.MetaKeywords,
+                                                               localized.MetaKeywords,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.MetaDescription,
+                                                               localized.MetaDescription,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.MetaTitle,
+                                                               localized.MetaTitle,
+                                                               localized.Language.Id);
+                _localizedEntityService.SaveLocalizedValue(product,
+                                                               x => x.SeName,
+                                                               localized.SeName,
+                                                               localized.Language.Id);
+            }
+        }
+
+        [NonAction]
+        private string GetCategoryFullName(Category category)
+        {
+            string result = string.Empty;
+
+            while (category != null)
+            {
+                if (String.IsNullOrEmpty(result))
+                    result = category.Name;
+                else
+                    result = "--" + result;
+                category = _categoryService.GetCategoryById(category.ParentCategoryId);
+            }
+            return result;
+        }
+        #endregion
+
+        #region Methods
 
         public ActionResult Index()
         {
@@ -49,24 +114,42 @@ namespace Nop.Admin.Controllers
         public ActionResult List()
         {
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
-                                                            _workContext.WorkingLanguage.Id, new List<int>(),
-                                                            Core.Domain.Catalog.ProductSortingEnum.Position, 0, 10, true);
-            var gridModel = new GridModel<ProductModel>
-                                {
-                                    Data = products.Select(x => x.ToModel()),
-                                    Total = products.TotalCount
-                                };
-            return View(gridModel);
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            var model = new ProductListModel();
+            model.Products = new GridModel<ProductModel>
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryFullName(c), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+
+            return View(model);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        public ActionResult ProductList(GridCommand command)
         {
+            //filtering
+            string productName = command.FilterDescriptors.GetValueFromAppliedFilters("Name", FilterOperator.Contains);
+            string selectedCategoryId = command.FilterDescriptors.GetValueFromAppliedFilters("SearchCategoryId");
+            string selectedManufacturerId = command.FilterDescriptors.GetValueFromAppliedFilters("SearchManufacturerId");
+            
             var model = new GridModel();
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
-                                                          _workContext.WorkingLanguage.Id, new List<int>(),
-                                                          Core.Domain.Catalog.ProductSortingEnum.Position,
-                                                          command.Page - 1, command.PageSize, true);
+            var products = _productService.SearchProducts(!String.IsNullOrEmpty(selectedCategoryId) ? Convert.ToInt32(selectedCategoryId) : 0,
+                !String.IsNullOrEmpty(selectedManufacturerId) ? Convert.ToInt32(selectedManufacturerId) : 0
+                , null, null, null, 0, 0, productName, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
             model.Data = products.Select(x => x.ToModel());
             model.Total = products.TotalCount;
             return new JsonResult
@@ -75,9 +158,68 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        #endregion
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("search-products")]
+        public ActionResult Search(ProductListModel model)
+        {
+            ViewData["searchProductName"] = model.SearchProductName;
+            ViewData["searchCategoryId"] = model.SearchCategoryId;
+            ViewData["searchManufacturerId"] = model.SearchManufacturerId;
 
-        #region Delete
+            var products = _productService.SearchProducts(model.SearchCategoryId, 
+                model.SearchManufacturerId, null, null, null, 0, 0, model.SearchProductName, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            model.Products = new GridModel<ProductModel>
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryFullName(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString(), Selected = m.Id == model.SearchManufacturerId });
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("go-to-product-by-sku")]
+        public ActionResult GoToSku(ProductListModel model)
+        {
+            string sku = model.GoDirectlyToSku;
+            var pv = _productService.GetProductVariantBySku(sku);
+            if (pv != null)
+                return RedirectToAction("Edit", "ProductVariant", new { id = pv.Id });
+            
+            var products = _productService.SearchProducts(0,
+                0, null, null, null, 0, 0, string.Empty, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            model.Products = new GridModel<ProductModel>
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryFullName(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString(), Selected = m.Id == model.SearchManufacturerId });
+
+            return View(model);
+        }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
@@ -86,10 +228,6 @@ namespace Nop.Admin.Controllers
             _productService.DeleteProduct(product);
             return RedirectToAction("List");
         }
-
-        #endregion
-
-        #region Edit
 
         public ActionResult Edit(int id)
         {
@@ -138,10 +276,6 @@ namespace Nop.Admin.Controllers
             return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
         }
 
-        #endregion
-
-        #region Create
-
         public ActionResult Create()
         {
             var model = new ProductModel();
@@ -158,50 +292,7 @@ namespace Nop.Admin.Controllers
 
             return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
         }
-
-        #endregion
-
-        #region Saving/Updating/Inserting
-
-        public void UpdateLocales(Product product, ProductModel model)
-        {
-            foreach (var localized in model.Locales)
-            {
-                _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.Language.Id);
-                _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.ShortDescription,
-                                                               localized.ShortDescription,
-                                                               localized.Language.Id);
-                _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.FullDescription,
-                                                               localized.FullDescription,
-                                                               localized.Language.Id);
-                _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.MetaKeywords,
-                                                               localized.MetaKeywords,
-                                                               localized.Language.Id);
-                _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.MetaDescription,
-                                                               localized.MetaDescription,
-                                                               localized.Language.Id);
-                _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.MetaTitle,
-                                                               localized.MetaTitle,
-                                                               localized.Language.Id);
-                _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.SeName,
-                                                               localized.SeName,
-                                                               localized.Language.Id);
-            }
-        }
-
-        #endregion
-
-		#region Methods 
-
+        
         [HttpPost]
         public ActionResult _AjaxComboBo(string text)
         {
@@ -214,6 +305,6 @@ namespace Nop.Admin.Controllers
             };
         }
         
-		#endregion Methods 
+		#endregion
     }
 }

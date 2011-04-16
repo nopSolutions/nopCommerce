@@ -1,15 +1,45 @@
 ﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.CurrencyModel>
 @using Telerik.Web.Mvc.UI
 @using Nop.Web.Framework
+@{
+    List<Nop.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
+    bool autoUpdateEnabled=ViewBag.AutoUpdateEnabled??false;
+}
 <div class="section-header">
     <div class="title">
-        <img src="@Url.Content("~/Areas/Admin/Content/images/ico-configuration.png")" />
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
         @T("Admin.Configuration.Location.Currencies")
     </div>
     <div class="options">
+        <a href="JAVASCRIPT:CurrencySettings.submit()" class="t-button">@T("Admin.Common.Save")</a>
+        <a href="@Url.Action("List","Currency", new { liveRates=true })" class="t-button">@T("Admin.Configuration.Location.Currencies.GetLiveRates")</a>
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
     </div>
+
 </div>
+@using (Html.BeginForm("Save","Currency", FormMethod.Post, new { name = "CurrencySettings" }))
+{  
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @T("Admin.Configuration.Location.Currencies.Fields.ExchangeRateProvider")
+            </td>
+            <td class="adminData">
+                @(Html.DropDownList("exchangeRateProvider",ViewBag.ExchangeRateProviders as SelectList)
+                )
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @T("Admin.Configuration.Location.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
+            </td>
+            <td class="adminData">
+                @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled)
+                )
+            </td>
+        </tr>
+    </table>
+}
 <table class="adminContent">
     <tr>
         <td>
@@ -20,31 +50,73 @@
                     {
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.CurrencyCode)
-                            .Width(150)
                             .Centered();
                         columns.Bound(x => x.DisplayLocale)
-                            .Width(100)
                             .Centered();
                         columns.Bound(x => x.Rate)
-                            .Width(100)
                             .Centered();
                         columns.Bound(x => x.DisplayOrder)
-                            .Width(100)
                             .Centered();
-                        columns.Bound(x => x.Published)
-                            .Width(100)
+                        columns.Bound(x => x.IsPrimaryExchangeRateCurrency)
+                            .Centered();        
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryExchangeRateCurrency", new { id = x.Id }, new { @class = "t-button" }))
                             .Centered()
-                            .Template(x => x.Published.ToString().ToLower());
+                            .HeaderTemplate(T("Admin.Configuration.Location.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
+                            .Filterable(false);
+                        columns.Bound(x => x.IsPrimaryStoreCurrency)
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryStoreCurrency", new { id = x.Id }, new { @class = "t-button" }))
+                            .Centered()
+                            .HeaderTemplate(T("Admin.Configuration.Location.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
+                            .Filterable(false);
+                        columns.Bound(x => x.Published)
+                            .Centered();
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Width(50)
                             .Centered()
                             .HeaderTemplate("Edit")
                             .Filterable(false);
                     })
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Currency"))
-                    .EnableCustomBinding(true))
+                    .EnableCustomBinding(true)
+                    )
         </td>
     </tr>
 </table>
+<p></p>
+@if (rates != null)
+{
+<h4>Live currency rates</h4>
+    <table class="adminContent" style="width:300px">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<Nop.Core.Domain.Directory.ExchangeRate>()
+                        .Name("rate-grid")
+                        .DataKeys(x =>
+                        {
+                            x.Add(y => y.CurrencyCode).RouteKey("CurrencyCode");
+                        })
+                        .BindTo(rates)
+                        .Columns(columns =>
+                        {
+                            columns.Bound(x => x.CurrencyCode)
+                                .Centered();
+                            columns.Bound(x => x.Rate)
+                                .Centered();
+                            columns.Bound(x => x)
+                                .Template(x => Html.ActionLink(T("Admin.Configuration.Location.Currencies.ApplyRate").Text, "ApplyRate", new { rate = x.Rate, currencyCode = x.CurrencyCode }))
+                                .Centered()
+                                .HeaderTemplate(T("Admin.Configuration.Location.Currencies.ApplyRate").Text)
+                                .Filterable(false);
+
+                        })
+                        .EnableCustomBinding(true)
+                        )
+            </td>
+        </tr>
+    </table>
+}
+

@@ -262,6 +262,17 @@ namespace Nop.Admin.Controllers
             var category = _categoryService.GetCategoryById(id);
             if (category == null) throw new ArgumentException("No category found with the specified id", "id");
             var model = category.ToModel();
+            //parent categories
+            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
+            if (model.ParentCategoryId > 0)
+            {
+                var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
+                if (parentCategory != null && !parentCategory.Deleted)
+                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.Name, Value = parentCategory.Id.ToString() });
+                else
+                    model.ParentCategoryId = 0;
+            }
+            //locales
             foreach (var language in _languageService.GetAllLanguages(true))
             {
                 var localizedModel = new CategoryLocalizedModel
@@ -388,8 +399,7 @@ namespace Nop.Admin.Controllers
             return View(rootCategories);
         }
 
-        #region Ajax
-
+        //ajax
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult TreeLoadChildren(TreeViewItem node)
         {
@@ -408,6 +418,7 @@ namespace Nop.Admin.Controllers
             return new JsonResult { Data = children };
         }
 
+        //ajax
         public ActionResult TreeDrop(int item, int destinationitem, string position)
         {
             var categoryItem = _categoryService.GetCategoryById(item);
@@ -432,8 +443,6 @@ namespace Nop.Admin.Controllers
 
             return Json(new { success = true });
         }
-
-        #endregion
 
         #endregion
     }

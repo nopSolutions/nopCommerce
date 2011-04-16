@@ -8,8 +8,6 @@ namespace Nop.Web.Framework.Themes
 {
     public class ThemeConfiguration
     {
-		#region Constructors (1) 
-
         public ThemeConfiguration(string themeName, string path, XmlDocument doc)
         {
             ThemeName = themeName;
@@ -28,10 +26,6 @@ namespace Nop.Web.Framework.Themes
             }
         }
 
-		#endregion Constructors 
-
-		#region Properties (5) 
-
         public string Path { get; protected set; }
 
         public string PreviewImageUrl { get; protected set; }
@@ -44,6 +38,5 @@ namespace Nop.Web.Framework.Themes
 
         public bool IsDefault { get; protected set; }
 
-		#endregion Properties 
     }
 }
