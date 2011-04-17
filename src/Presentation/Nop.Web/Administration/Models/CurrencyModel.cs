@@ -12,24 +12,6 @@ namespace Nop.Admin.Models
 {
     public class CurrencyModel : BaseNopEntityModel
     {
-        public CurrencyModel()
-        {
-        }
-
-        public CurrencyModel(Currency currency)
-            : this()
-        {
-            Id = currency.Id;
-            Name = currency.Name;
-            CurrencyCode = currency.CurrencyCode;
-            DisplayLocale = currency.DisplayLocale;
-            Rate = currency.Rate;
-            CustomFormatting = currency.CustomFormatting;
-            Published = currency.Published;
-            DisplayOrder = currency.DisplayOrder;
-            CreatedOnUtc = currency.CreatedOnUtc;
-            UpdatedOnUtc = currency.UpdatedOnUtc;
-        }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.Name")]
         public string Name { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.CurrencyCode")]
