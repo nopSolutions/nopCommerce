@@ -13,7 +13,7 @@ namespace Nop.Services.Security
         void UpdateUser(User user);
         void DeleteUser(User user);
 
-        bool ValidateUser(string username, string password);
+        bool ValidateUser(string usernameOrEmail, string password);
         UserRegistrationResult RegisterUser(UserRegistrationRequest request);
         PasswordChangeResult ChangePassword(ChangePasswordRequest request);
         void SetEmail(User user, string newEmail);

@@ -1,0 +1,102 @@
+﻿@model Nop.Web.Models.Customer.LoginModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+
+<div class="login-page">
+    <div class="page-title">
+        <h1>@T("Account.Login.Welcome")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="wrapper">
+        @*TODO Support CheckoutAsGuestQuestion*@
+        <div class="new-wrapper">
+            <span class="register-title">@T("Account.Login.NewCustomer")</span>
+            <div class="register-block" runat="server" id="pnlRegisterBlock">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @T("Account.Login.NewCustomerText")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="padding-right: 20px; padding-top: 20px;">
+                             <input type="submit" class="registerbutton" id="register-button" onclick="location.href='@Url.Action("register")'" value="@T("Account.Register")" name="register-button" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>        
+        <div class="returning-wrapper">
+            <span class="login-title">@T("Account.Login.ReturningCustomer")</span>
+            <div class="login-block">
+                @Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)
+                @using (Html.BeginForm(Url.Action("login", new { ReturnUrl = Request.QueryString["ReturnUrl"] })))
+                {
+                    <table class="login-table-container">
+                        <tbody>
+                            @if (Model.UsernamesEnabled)
+                            {
+                                <tr class="row">
+                                    <td class="item-name">
+                                        @Html.LabelFor(m => m.UserName):
+                                    </td>
+                                    <td class="item-value">
+                                        @Html.TextBoxFor(m => m.UserName) 
+                                        @Html.ValidationMessageFor(m => m.UserName)
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr class="row">
+                                    <td class="item-name">
+                                        @Html.LabelFor(m => m.Email):
+                                    </td>
+                                    <td class="item-value">
+                                        @Html.TextBoxFor(m => m.Email) 
+                                        @Html.ValidationMessageFor(m => m.Email)
+                                    </td>
+                                </tr>
+                            }
+                            <tr class="row">
+                                <td class="item-name">
+                                    @Html.LabelFor(m => m.Password):
+                                </td>
+                                <td class="item-value">
+                                    @Html.PasswordFor(m => m.Password)
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="item-value" colspan="2">
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    @Html.LabelFor(m => m.RememberMe)
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="forgot-password" colspan="2">
+                                    @Html.ActionLink(T("Account.Login.ForgotPassword").Text, "passwordrecovery")
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td colspan="2">
+                                    <div class="buttons">
+                                        <button class="loginbutton" type="submit">@T("Account.Login.LoginButton")</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    @*TODO add Captcha support*@
+    @*TODO LoginRegistrationInfoText topic*@
+</div>

@@ -4,7 +4,9 @@ using System;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.WebPages;
+using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Services;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 
@@ -17,6 +19,8 @@ namespace Nop.Web.Framework.ViewEngines.Razor
 
         private ILocalizationService _localizationService;
         private Localizer _localizer;
+        private IWorkContext _workContext;
+        private IAuthenticationService _authenticationService;
 
         public Localizer T
         {
@@ -45,11 +49,29 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             }
         }
 
+        public IWorkContext WorkContext
+        {
+            get
+            {
+                return _workContext;
+            }
+        }
+
+        public IAuthenticationService AuthenticationService
+        {
+            get
+            {
+                return _authenticationService;
+            }
+        }
+
         public override void InitHelpers()
         {
             base.InitHelpers();
 
             _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            _workContext = EngineContext.Current.Resolve<IWorkContext>();
+            _authenticationService = EngineContext.Current.Resolve<IAuthenticationService>();
         }
 
         public HelperResult RenderWrappedSection(string name, object wrapperHtmlAttributes)

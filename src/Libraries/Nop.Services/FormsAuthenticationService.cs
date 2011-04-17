@@ -14,6 +14,7 @@ namespace Nop.Services
     {
         private readonly HttpContextBase _httpContext;
         private readonly IUserService _userService;
+        private readonly UserSettings _userSettings;
 
         private User _cachedUser;
 
@@ -22,12 +23,13 @@ namespace Nop.Services
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <param name="userService">User service</param>
+        /// <param name="userSettings">User settings</param>
         public FormsAuthenticationService(HttpContextBase httpContext,
-            IUserService userService)
+            IUserService userService, UserSettings userSettings)
         {
             this._httpContext = httpContext;
             this._userService = userService;
-
+            this._userSettings = userSettings;
             //TODO set correct timespan
             ExpirationTimeSpan = TimeSpan.FromHours(6);
         }
@@ -37,15 +39,14 @@ namespace Nop.Services
         public void SignIn(User user, bool createPersistentCookie)
         {
             var now = DateTime.Now.ToLocalTime();
-            var userData = Convert.ToString(user.Username);
 
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,
-                user.Username,
+                _userSettings.UsernamesEnabled ? user.Username : user.Email,
                 now,
                 now.Add(ExpirationTimeSpan),
                 createPersistentCookie,
-                userData,
+                _userSettings.UsernamesEnabled ? user.Username : user.Email,
                 FormsAuthentication.FormsCookiePath);
 
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
@@ -83,12 +84,13 @@ namespace Nop.Services
             }
 
             var formsIdentity = (FormsIdentity)_httpContext.User.Identity;
-            var userData = formsIdentity.Ticket.UserData;
+            var usernameOrEmail = formsIdentity.Ticket.UserData;
 
-            var username = userData;
-            if (String.IsNullOrWhiteSpace(username))
+            if (String.IsNullOrWhiteSpace(usernameOrEmail))
                 return null;
-            var user = _userService.GetUserByUsername(username);
+            var user =_userSettings.UsernamesEnabled 
+                ? _userService.GetUserByUsername(usernameOrEmail)
+                : _userService.GetUserByEmail(usernameOrEmail);
             if (user != null && user.IsApproved && !user.IsLockedOut)
                 _cachedUser = user;
             return _cachedUser;

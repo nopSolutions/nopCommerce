@@ -16,90 +16,149 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
-  
-  
-  
-  <LocaleResource Name="Account.Administration">
-    <Value>Administration</Value>
+
+
+
+  <LocaleResource Name="Account">
+    <Children>
+      <LocaleResource Name="Administration">
+        <Value>Administration</Value>
+      </LocaleResource>
+      <LocaleResource Name="Login">
+        <Value>Log in</Value>
+        <Children>
+          <LocaleResource Name="ForgotPassword">
+            <Value>Forgot password?</Value>
+          </LocaleResource>
+          <LocaleResource Name="LoginButton">
+            <Value>Log in</Value>
+          </LocaleResource>
+          <LocaleResource Name="NewCustomer">
+            <Value>New Customer</Value>
+          </LocaleResource>
+          <LocaleResource Name="NewCustomerText">
+            <Value>By creating an account at nopCommerce you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously m</Value>
+          </LocaleResource>
+          <LocaleResource Name="ReturningCustomer">
+            <Value>Returning Customer</Value>
+          </LocaleResource>
+          <LocaleResource Name="Unsuccessful">
+            <Value>Login was unsuccessful. Please correct the errors and try again.</Value>
+          </LocaleResource>
+          <LocaleResource Name="Welcome">
+            <Value>Welcome, Please Sign In!</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Register">
+        <Value>Register</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShoppingCart">
+        <Value>Shopping Cart</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
-  <LocaleResource Name="Account.Login">
-    <Value>Log in</Value>
+  <LocaleResource Name="Content">
+    <Children>
+      <LocaleResource Name="CopyrightNotice">
+        <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
-  <LocaleResource Name="Account.Register">
-    <Value>Register</Value>
+  <LocaleResource Name="GiftCardAttribute">
+    <Children>
+      <LocaleResource Name="From">
+        <Value>From: {0}</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
-  <LocaleResource Name="Account.ShoppingCart">
-    <Value>Shopping Cart</Value>
+  <LocaleResource Name="Plugins">
+    <Children>
+      <LocaleResource Name="Title">
+        <Value>Plugins</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
-  <LocaleResource Name="Content.CopyrightNotice">
-    <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
+  <LocaleResource Name="Products">
+    <Children>
+      <LocaleResource Name="CallForPrice">
+        <Value>Call for pricing</Value>
+      </LocaleResource>
+      <LocaleResource Name="ExclTaxSuffix">
+        <Value>{0} excl tax</Value>
+      </LocaleResource>
+      <LocaleResource Name="InclTaxSuffix">
+        <Value>{0} incl tax</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
-  <LocaleResource Name="GiftCardAttribute.From">
-    <Value>From: {0}</Value>
+  <LocaleResource Name="RewardPoints">
+    <Children>
+      <LocaleResource Name="Message">
+        <Children>
+          <LocaleResource Name="EarnedForOrder">
+            <Value>Earned promotion for order #{0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="ReducedForOrder">
+            <Value>Reduced promotion for order #{0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="RedeemedForOrder">
+            <Value>Redeemed for order #{0}</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
-  <LocaleResource Name="Plugins.Title">
-    <Value>Plugins</Value>
+  <LocaleResource Name="ShoppingCart">
+    <Children>
+      <LocaleResource Name="CannotMixStandardAndAutoshipProducts">
+        <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
+      </LocaleResource>
+      <LocaleResource Name="CustomerEnteredPrice.RangeError">
+        <Value>The price must be from {0} to {1}</Value>
+      </LocaleResource>
+      <LocaleResource Name="MaximumQuantity">
+        <Value>The maximum quantity allowed for purchase is {0}.</Value>
+      </LocaleResource>
+      <LocaleResource Name="MinimumQuantity">
+        <Value>The minimum quantity allowed for purchase is {0}.</Value>
+      </LocaleResource>
+      <LocaleResource Name="OutOfStock">
+        <Value>Out of stock</Value>
+      </LocaleResource>
+      <LocaleResource Name="QuantityExceedsStock">
+        <Value>Your quantity exceeds stock on hand. The maximum quantity that can be added is {0}.</Value>
+      </LocaleResource>
+      <LocaleResource Name="SelectAttribute">
+        <Value>Please select {0}</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
-  <LocaleResource Name="Products.CallForPrice">
-    <Value>Call for pricing</Value>
+  <LocaleResource Name="ShoppingCartWarning">
+    <Children>
+      <LocaleResource Name="RecipientEmailError">
+        <Value>Enter valid recipient email</Value>
+      </LocaleResource>
+      <LocaleResource Name="RecipientNameError">
+        <Value>Enter valid recipient name</Value>
+      </LocaleResource>
+      <LocaleResource Name="SenderEmailError">
+        <Value>Enter valid sender email</Value>
+      </LocaleResource>
+      <LocaleResource Name="SenderNameError">
+        <Value>Enter valid sender name</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
-  <LocaleResource Name="Products.ExclTaxSuffix">
-    <Value>{0} excl tax</Value>
-  </LocaleResource>
-  <LocaleResource Name="Products.InclTaxSuffix">
-    <Value>{0} incl tax</Value>
+  <LocaleResource Name="Wishlist">
+    <Children>
+      <LocaleResource Name="Wishlist">
+        <Value>Wishlist</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
 
 
 
 
-
-  <LocaleResource Name="RewardPoints.Message.EarnedForOrder">
-    <Value>Earned promotion for order #{0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="RewardPoints.Message.ReducedForOrder">
-    <Value>Reduced promotion for order #{0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="RewardPoints.Message.RedeemedForOrder">
-    <Value>Redeemed for order #{0}</Value>
-  </LocaleResource>
-  
-
-
-  <LocaleResource Name="ShoppingCart.CannotMixStandardAndAutoshipProducts">
-    <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.CustomerEnteredPrice.RangeError">
-    <Value>The price must be from {0} to {1}</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.MaximumQuantity">
-    <Value>The maximum quantity allowed for purchase is {0}.</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.MinimumQuantity">
-    <Value>The minimum quantity allowed for purchase is {0}.</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.OutOfStock">
-    <Value>Out of stock</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.QuantityExceedsStock">
-    <Value>Your quantity exceeds stock on hand. The maximum quantity that can be added is {0}.</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.SelectAttribute">
-    <Value>Please select {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCartWarning.RecipientEmailError">
-    <Value>Enter valid recipient email</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCartWarning.RecipientNameError">
-    <Value>Enter valid recipient name</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCartWarning.SenderEmailError">
-    <Value>Enter valid sender email</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCartWarning.SenderNameError">
-    <Value>Enter valid sender name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Wishlist.Wishlist">
-    <Value>Wishlist</Value>
-  </LocaleResource>
 </Language>

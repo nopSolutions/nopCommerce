@@ -90,9 +90,13 @@ namespace Nop.Services.Security
             _userRepository.Delete(user);
         }
 
-        public bool ValidateUser(string username, string password)
+        public bool ValidateUser(string usernameOrEmail, string password)
         {
-            var user = GetUserByUsername(username);
+            User user = null;
+            if (_userSettings.UsernamesEnabled)
+                user = GetUserByUsername(usernameOrEmail);
+            else
+                user = GetUserByEmail(usernameOrEmail);
 
             if (user == null || user.IsLockedOut || !user.IsApproved)
                 return false;
