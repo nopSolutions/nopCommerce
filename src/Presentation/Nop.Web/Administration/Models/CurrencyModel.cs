@@ -30,6 +30,10 @@ namespace Nop.Admin.Models
         public DateTime CreatedOnUtc { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.UpdatedOn")]
         public DateTime UpdatedOnUtc { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.CreatedOn")]
+        public string CreatedOnStr { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.UpdatedOn")]
+        public string UpdatedOnStr { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.IsPrimaryExchangeRateCurrency")]
         public bool IsPrimaryExchangeRateCurrency { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.IsPrimaryStoreCurrency")]

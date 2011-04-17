@@ -8,6 +8,7 @@ using Nop.Admin.Models;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Controllers;
 using Nop.Services.Directory;
 using Telerik.Web.Mvc;
@@ -20,11 +21,13 @@ namespace Nop.Admin.Controllers
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
         private ISettingService _settingService;
-        public CurrencyController(ICurrencyService currencyService, CurrencySettings currencySettings, ISettingService settingService)
+        private readonly IDateTimeHelper _dateTimeHelper;
+        public CurrencyController(ICurrencyService currencyService, CurrencySettings currencySettings, ISettingService settingService, IDateTimeHelper dateTimeHelper)
         {
             _currencyService = currencyService;
             _currencySettings = currencySettings;
             _settingService = settingService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #region Methods
@@ -40,7 +43,7 @@ namespace Nop.Admin.Controllers
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId ? true : false;
-            if (liveRates) ViewBag.Rates = _currencyService.GetCurrencyLiveRates("EUR");//_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
+            if (liveRates) ViewBag.Rates = _currencyService.GetCurrencyLiveRates(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
             ViewBag.ExchangeRateProviders = new SelectList(_currencyService.LoadAllExchangeRateProviders(), "SystemName", "FriendlyName", _currencySettings.ActiveExchangeRateProviderSystemName); ;
             ViewBag.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
             var gridModel = new GridModel<CurrencyModel>
@@ -110,6 +113,8 @@ namespace Nop.Admin.Controllers
             var currency = _currencyService.GetCurrencyById(id);
             if (currency == null) throw new ArgumentException("No currency found with the specified id", "id");
             var model = currency.ToModel();
+            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(model.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.UpdatedOnStr = _dateTimeHelper.ConvertToUserTime(model.UpdatedOnUtc, DateTimeKind.Utc).ToString();
             return View(model);
         }
 
