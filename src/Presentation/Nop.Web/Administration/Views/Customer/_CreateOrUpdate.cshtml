@@ -46,6 +46,8 @@
 @helper TabInfo()
     { 
 <table class="adminContent">
+    @if (Model.GenderEnabled)
+    {
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.Gender):
@@ -58,6 +60,7 @@
             <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
         </td>
     </tr>
+    }
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.FirstName):
@@ -76,6 +79,8 @@
             @Html.ValidationMessageFor(model => model.LastName)
         </td>
     </tr>
+    @if (Model.DateOfBirthEnabled)
+    {
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.DateOfBirth):
@@ -85,6 +90,7 @@
             @Html.ValidationMessageFor(model => model.DateOfBirth)
         </td>
     </tr>
+    }
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.AdminComment):

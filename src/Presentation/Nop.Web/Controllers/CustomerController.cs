@@ -15,16 +15,13 @@ namespace Nop.Web.Controllers
 {
     public class CustomerController : BaseNopController
     {
-        private IWorkContext _workContext;
         private IAuthenticationService _authenticationService;
         private IUserService _userService;
         private UserSettings _userSettings;
 
-        public CustomerController(IWorkContext workContext,
-            IAuthenticationService authenticationService,
+        public CustomerController(IAuthenticationService authenticationService,
             IUserService userService, UserSettings userSettings)
         {
-            this._workContext = workContext;
             this._authenticationService = authenticationService;
             this._userService = userService;
             this._userSettings = userSettings;

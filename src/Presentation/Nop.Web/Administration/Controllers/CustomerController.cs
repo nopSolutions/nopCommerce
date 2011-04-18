@@ -34,6 +34,7 @@ namespace Nop.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly IAddressService _addressService;
         private readonly IUserService _userService;
+        private readonly FormFieldSettings _formFieldSettings;
         
         #endregion Fields
 
@@ -43,7 +44,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
             ICountryService countryService, IAddressService addressService,
-            IUserService userService)
+            IUserService userService, FormFieldSettings formFieldSettings)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -54,6 +55,7 @@ namespace Nop.Admin.Controllers
             this._countryService = countryService;
             this._addressService = addressService;
             this._userService = userService;
+            this._formFieldSettings = formFieldSettings;
         }
 
         #endregion Constructors
@@ -203,6 +205,9 @@ namespace Nop.Admin.Controllers
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();
             model.SelectedCustomerRoleIds = new int[0];
+            //form fields
+            model.GenderEnabled = _formFieldSettings.GenderEnabled;
+            model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
 
             return View(model);
         }
@@ -220,10 +225,12 @@ namespace Nop.Admin.Controllers
             customer.CustomerGuid = Guid.NewGuid();
             customer.CreatedOnUtc = DateTime.UtcNow;
             _customerService.InsertCustomer(customer);
-            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+            if (_formFieldSettings.GenderEnabled)
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+            if (_formFieldSettings.DateOfBirthEnabled)
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
             //customer roles
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             foreach (var customerRole in allCustomerRoles)
@@ -254,6 +261,9 @@ namespace Nop.Admin.Controllers
             model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
             model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
             model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            //form fields
+            model.GenderEnabled = _formFieldSettings.GenderEnabled;
+            model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();
@@ -301,10 +311,12 @@ namespace Nop.Admin.Controllers
 
             _customerService.UpdateCustomer(customer);
             //customer attributes
-            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+            if (_formFieldSettings.GenderEnabled)
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+            if (_formFieldSettings.DateOfBirthEnabled)
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
             //customer roles
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             foreach (var customerRole in allCustomerRoles)
@@ -597,6 +609,9 @@ namespace Nop.Admin.Controllers
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
             model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            //form fields
+            model.GenderEnabled = _formFieldSettings.GenderEnabled;
+            model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();
@@ -633,6 +648,9 @@ namespace Nop.Admin.Controllers
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
             model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            //form fields
+            model.GenderEnabled = _formFieldSettings.GenderEnabled;
+            model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();

@@ -807,6 +807,7 @@ namespace Nop.Services.Installation
                 {
                     GenderEnabled = true,
                     DateOfBirthEnabled = true,
+                    NewsletterEnabled = true
                     //CompanyEnabled = true,
                     //CompanyRequired = false,
                     //StreetAddressEnabled = true,

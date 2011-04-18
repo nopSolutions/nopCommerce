@@ -21,19 +21,26 @@ namespace Nop.Admin.Models
         }
 
         //form fields & properties
+        public bool GenderEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Gender")]
         public string Gender { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
         public string FirstName { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastName")]
         public string LastName { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FullName")]
         public string FullName { get; set; }
+
+
+        public bool DateOfBirthEnabled { get; set; }
         [UIHint("Date")]
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.DateOfBirth")]
         public DateTime? DateOfBirth { get; set; }
+        
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
         public string AdminComment { get; set; }
+        
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
 
