@@ -351,9 +351,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List()
         {
             if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
-            {
-                //TODO redirect to access denied page
-            }
+                return AccessDeniedView();
 
             var categories = _categoryService.GetAllCategories(0, 10, true);
             var gridModel = new GridModel<CategoryModel>

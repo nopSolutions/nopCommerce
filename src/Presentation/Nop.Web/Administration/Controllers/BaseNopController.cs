@@ -28,5 +28,11 @@ namespace Nop.Admin.Controllers
                 locales.Add(locale);
             }
         }
+
+        protected ActionResult AccessDeniedView()
+        {
+            //return new HttpUnauthorizedResult();
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
+        }
     }
 }

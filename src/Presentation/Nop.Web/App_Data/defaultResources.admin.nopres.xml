@@ -19,6 +19,16 @@
     <LocaleResource Name="Admin">
         <Value>Admin</Value>
         <Children>
+            <LocaleResource Name="AccessDenied">
+              <Children>
+                <LocaleResource Name="Description">
+                  <Value>You do not have permission to perform the selected operation.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Title">
+                  <Value>Access denied.</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
             <LocaleResource Name="Catalog">
                 <Value>Catalog</Value>
                 <Children>

@@ -50,6 +50,9 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Logout">
+        <Value>Log out</Value>
+      </LocaleResource>
       <LocaleResource Name="Register">
         <Value>Register</Value>
       </LocaleResource>
