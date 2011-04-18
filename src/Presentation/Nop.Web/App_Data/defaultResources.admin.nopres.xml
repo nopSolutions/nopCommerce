@@ -1680,9 +1680,6 @@
                             <LocaleResource Name="Hint">
                               <Value>The customer's gender.</Value>
                             </LocaleResource>
-                            <LocaleResource Name="Validation">
-                              <Value>Please provide a first name.</Value>
-                            </LocaleResource>
                             <LocaleResource Name="Male">
                               <Value>Male</Value>
                             </LocaleResource>

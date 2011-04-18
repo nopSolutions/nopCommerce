@@ -899,7 +899,8 @@ namespace Nop.Services.Installation
                 {
                     UsernamesEnabled = false,
                     AllowUsersToChangeUsernames = false,
-                    HashedPasswordFormat = "SHA1"
+                    HashedPasswordFormat = "SHA1",
+                    UserRegistrationType = UserRegistrationType.Standard
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()

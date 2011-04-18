@@ -1,0 +1,18 @@
+﻿@model Nop.Web.Models.Customer.RegisterResultModel
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+}
+<div class="registration-page">
+    <div class="page-title">
+        <h1>@T("Account.Register")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div class="section-body">
+            <p>
+                @Model.Result
+            </p>
+        </div>
+    </div>
+</div>

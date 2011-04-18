@@ -299,6 +299,7 @@ namespace Nop.Admin.Controllers
             customer = model.ToEntity(customer);
 
             //UNDONE set VAT number after country is saved
+            //TODO maybe, make customer to enter VAT number with country code
             //TODO get country from default address (can this be "hacked" during checkout? for example, selecting a new address with new country)
             //if (_taxSettings.EuVatEnabled)
             //{

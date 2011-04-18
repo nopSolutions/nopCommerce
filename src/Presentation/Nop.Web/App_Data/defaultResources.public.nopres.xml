@@ -24,6 +24,21 @@
       <LocaleResource Name="Administration">
         <Value>Administration</Value>
       </LocaleResource>
+      <LocaleResource Name="Fields">
+        <Children>
+          <LocaleResource Name="Gender">
+            <Value>Gender</Value>
+            <Children>
+              <LocaleResource Name="Male">
+                <Value>Male</Value>
+              </LocaleResource>
+              <LocaleResource Name="Female">
+                <Value>Female</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Login">
         <Value>Log in</Value>
         <Children>
@@ -53,11 +68,44 @@
       <LocaleResource Name="Logout">
         <Value>Log out</Value>
       </LocaleResource>
+      <LocaleResource Name="Preferences">
+        <Value>Preferences</Value>
+      </LocaleResource>
       <LocaleResource Name="Register">
         <Value>Register</Value>
+        <LocaleResource Name="Unsuccessful">
+          <Value>Registration was not complete. Please correct the errors and try again.</Value>
+        </LocaleResource>
+        <Children>
+          <LocaleResource Name="Button">
+            <Value>Register</Value>
+          </LocaleResource>
+          <LocaleResource Name="Result">
+            <Children>
+              <LocaleResource Name="AdminApproval">
+                <Value>Your account will be activated after approving by administrator.</Value>
+              </LocaleResource>
+              <LocaleResource Name="Disabled">
+                <Value>Registration not allowed. You can edit this in the admin area.</Value>
+              </LocaleResource>
+              <LocaleResource Name="EmailValidation">
+                <Value>Your registration has been successfully completed. <br /> You have just been sent an email containing membership activation instructions.</Value>
+              </LocaleResource>
+              <LocaleResource Name="Standard">
+                <Value>Your registration completed</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="ShoppingCart">
         <Value>Shopping Cart</Value>
+      </LocaleResource>
+      <LocaleResource Name="YourPassword">
+        <Value>Your Password</Value>
+      </LocaleResource>
+      <LocaleResource Name="YourPersonalDetails">
+        <Value>Your Personal Details</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

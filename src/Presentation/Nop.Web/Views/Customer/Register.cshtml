@@ -1,0 +1,153 @@
+﻿@model Nop.Web.Models.Customer.RegisterModel
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+}
+@using (Html.BeginForm(Url.Action("register", new { ReturnUrl = Request.QueryString["ReturnUrl"] })))
+{
+    <div class="registration-page">
+        <div class="page-title">
+            <h1>@T("Account.Register")</h1>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="body">
+            <div class="message-error">
+                <div>
+                    @Html.ValidationSummary(true, T("Account.Register.Unsuccessful").Text)
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="section-title">
+                @T("Account.YourPersonalDetails")
+            </div>
+            <div class="clear">
+            </div>
+            <div class="section-body">
+                <table class="table-container">
+                    <tbody>
+                        @if (Model.GenderEnabled)
+                        {
+                            <tr class="row">
+                                <td class="item-name">
+                                    @Html.LabelFor(model => model.Gender):
+                                </td>
+                                <td class="item-value">
+                                    @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
+                                    <label class="forcheckbox" for="Gender_Male">@T("Account.Fields.Gender.Male")</label>
+                                    @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+                                    <label class="forcheckbox" for="Gender_Female">@T("Account.Fields.Gender.Female")</label>
+                                </td>
+                            </tr>
+                        }
+                        <tr class="row">
+                            <td class="item-name">
+                                @Html.LabelFor(model => model.FirstName):
+                            </td>
+                            <td class="item-value">
+                                @Html.EditorFor(model => model.FirstName)
+                                @Html.ValidationMessageFor(model => model.FirstName)
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="item-name">
+                                @Html.LabelFor(model => model.LastName):
+                            </td>
+                            <td class="item-value">
+                                @Html.EditorFor(model => model.LastName)
+                                @Html.ValidationMessageFor(model => model.LastName)
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="item-name">
+                                @Html.LabelFor(model => model.Email):
+                            </td>
+                            <td class="item-value">
+                                @Html.EditorFor(model => model.Email)
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </td>
+                        </tr>
+                        @if (Model.UsernamesEnabled)
+                        {
+                            <tr class="row">
+                                <td class="item-name">
+                                    @Html.LabelFor(model => model.Username):
+                                </td>
+                                <td class="item-value">
+                                    @Html.EditorFor(model => model.Username)
+                                    @Html.ValidationMessageFor(model => model.Username)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear">
+            </div>
+            @if (Model.AllowCustomersToSetTimeZone)
+            {
+                <div class="section-title">
+                    @T("Account.Preferences")
+                </div>
+                <div class="clear">
+                </div>
+                <div class="section-body">
+                    <table class="table-container">
+                        <tbody>
+                            <tr class="row">
+                                <td class="item-name">
+                                    @Html.LabelFor(model => model.TimeZoneId):
+                                </td>
+                                <td class="item-value">
+                                    @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+                                    @Html.ValidationMessageFor(model => model.TimeZoneId)
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="clear">
+                </div>
+            }
+            <div class="section-title">
+                @T("Account.YourPassword")
+            </div>
+            <div class="clear">
+            </div>
+            <div class="section-body">
+                <table class="table-container">
+                    <tbody>
+                        <tr class="row">
+                            <td class="item-name">
+                                @Html.LabelFor(model => model.Password):
+                            </td>
+                            <td class="item-value">
+                                @Html.EditorFor(model => model.Password)
+                                @Html.ValidationMessageFor(model => model.Password)
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="item-name">
+                                @Html.LabelFor(model => model.ConfirmPassword):
+                            </td>
+                            <td class="item-value">
+                                @Html.EditorFor(model => model.ConfirmPassword)
+                                @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                            </td>
+                        </tr>
+                        @*<tr class="row">
+                                        <td colspan="2">
+                                            TODO add Captcha (if enabled)
+                                        </td>
+                                    </tr>*@
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="button">
+                <input type="submit" class="registernextstepbutton" id="register-button" value="@T("Account.Register.Button")" name="register-button" />
+            </div>
+        </div>
+    </div>
+}

@@ -19,5 +19,10 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a customer password format (SHA1, MD5) when passwords are hashed
         /// </summary>
         public string HashedPasswordFormat { get; set; }
+        
+        /// <summary>
+        /// User registration type
+        /// </summary>
+        public UserRegistrationType UserRegistrationType { get; set; }
     }
 }
