@@ -41,6 +41,10 @@ namespace Nop.Web.Models.Customer
         public string FirstName { get; set; }
         [DisplayName("Last name")]
         public string LastName { get; set; }
+
+        public bool CompanyEnabled { get; set; }
+        [DisplayName("Company name")]
+        public string Company { get; set; }
         
         //time zone
         [DisplayName("Time zone")]
@@ -49,8 +53,8 @@ namespace Nop.Web.Models.Customer
         public IList<SelectListItem> AvailableTimeZones { get; set; }
 
         //EU VAT
-        //[DisplayName("Vat number")]
-        //public string VatNumber { get; set; }
-        //public bool DisplayVatNumber { get; set; }
+        [DisplayName("Vat number")]
+        public string VatNumber { get; set; }
+        public bool DisplayVatNumber { get; set; }
     }
 }

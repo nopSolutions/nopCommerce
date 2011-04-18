@@ -12,6 +12,7 @@ using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Tax;
 using Nop.Web.Models;
 using Nop.Web.Models.Customer;
 
@@ -29,12 +30,14 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
+        private readonly ITaxService _taxService;
 
         public CustomerController(IAuthenticationService authenticationService,
             IUserService userService, UserSettings userSettings, IDateTimeHelper dateTimeHelper,
             DateTimeSettings dateTimeSettings, TaxSettings taxSettings,
             FormFieldSettings formFieldSettings, ILocalizationService localizationService,
-            IWorkContext workContext, ICustomerService customerService)
+            IWorkContext workContext, ICustomerService customerService,
+            ITaxService taxService)
         {
             this._authenticationService = authenticationService;
             this._userService = userService;
@@ -46,6 +49,7 @@ namespace Nop.Web.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._customerService = customerService;
+            this._taxService = taxService;
         }
 
         public ActionResult Login()
@@ -91,15 +95,16 @@ namespace Nop.Web.Controllers
 
             //TODO Get and save DateOfBirth (if enabled)
             //TODO Get and save VAT number (if enabled)
-            //TODO mark register button as default one
+            //TODO mark register button as default one (pressing 'Enter' button should cause appropriate form submit)
 
             var model = new RegisterModel();
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
-            //model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
+            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
             //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
 
@@ -132,6 +137,15 @@ namespace Nop.Web.Controllers
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                         customer.TimeZoneId = model.TimeZoneId;
+                    //VAT number
+                    if (_taxSettings.EuVatEnabled)
+                    {
+                        customer.VatNumber = model.VatNumber;
+                        customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber);
+                        //TODO send VAT number admin notification
+                        //if (!String.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                        //    _messageWorkflowService.SendNewVATSubmittedStoreOwnerNotification(customer, vatName, vatAddress, _localizationService.DefaultAdminLanguage.LanguageId);
+                    }
                     //save
                     _customerService.UpdateCustomer(customer);
 
@@ -142,6 +156,9 @@ namespace Nop.Web.Controllers
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
                     //if (_formFieldSettings.DateOfBirthEnabled)
                     //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+                    if (_formFieldSettings.CompanyEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+
 
                     //TODO migrate shopping cart
 
@@ -158,7 +175,7 @@ namespace Nop.Web.Controllers
                         case UserRegistrationType.EmailValidation:
                             {
                                 //UNDONE send email validation email to a user (not a customer)
-                                return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+                                return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
                             }
                             break;
                         case UserRegistrationType.AdminApproval:
@@ -190,9 +207,10 @@ namespace Nop.Web.Controllers
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
-            //model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
+            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
             //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             return View(model);

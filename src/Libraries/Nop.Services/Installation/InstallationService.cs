@@ -807,23 +807,8 @@ namespace Nop.Services.Installation
                 {
                     GenderEnabled = true,
                     DateOfBirthEnabled = true,
-                    NewsletterEnabled = true
-                    //CompanyEnabled = true,
-                    //CompanyRequired = false,
-                    //StreetAddressEnabled = true,
-                    //StreetAddressRequired = true,
-                    //StreetAddress2Enabled = true,
-                    //StreetAddress2Required = false,
-                    //PostCodeEnabled = true,
-                    //PostCodeRequired = true,
-                    //CityEnabled = true,
-                    //CityRequired = true,
-                    //CountryEnabled = true,
-                    //StateEnabled = true,
-                    //PhoneEnabled = true,
-                    //PhoneRequired = true,
-                    //FaxEnabled = true,
-                    //FaxRequired = false,
+                    NewsletterEnabled = true,
+                    CompanyEnabled = true
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()

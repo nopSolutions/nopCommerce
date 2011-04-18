@@ -14,6 +14,7 @@ using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework;
 using Telerik.Web.Mvc;
@@ -35,6 +36,7 @@ namespace Nop.Admin.Controllers
         private readonly IAddressService _addressService;
         private readonly IUserService _userService;
         private readonly FormFieldSettings _formFieldSettings;
+        private readonly ITaxService _taxService;
         
         #endregion Fields
 
@@ -44,7 +46,8 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
             ICountryService countryService, IAddressService addressService,
-            IUserService userService, FormFieldSettings formFieldSettings)
+            IUserService userService, FormFieldSettings formFieldSettings,
+            ITaxService taxService)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -56,6 +59,7 @@ namespace Nop.Admin.Controllers
             this._addressService = addressService;
             this._userService = userService;
             this._formFieldSettings = formFieldSettings;
+            this._taxService = taxService;
         }
 
         #endregion Constructors
@@ -208,6 +212,7 @@ namespace Nop.Admin.Controllers
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
             model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
 
             return View(model);
         }
@@ -231,6 +236,9 @@ namespace Nop.Admin.Controllers
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
             if (_formFieldSettings.DateOfBirthEnabled)
                 _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+            if (_formFieldSettings.CompanyEnabled)
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+
             //customer roles
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             foreach (var customerRole in allCustomerRoles)
@@ -260,10 +268,12 @@ namespace Nop.Admin.Controllers
             model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
             model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
             model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+            model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
             model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
             model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();
@@ -296,21 +306,25 @@ namespace Nop.Admin.Controllers
             if (customer == null) 
                 throw new ArgumentException("No customer found with the specified id", "id");
 
+            string prevVatNumber = customer.VatNumber;
+
             customer = model.ToEntity(customer);
 
-            //UNDONE set VAT number after country is saved
-            //TODO maybe, make customer to enter VAT number with country code
-            //TODO get country from default address (can this be "hacked" during checkout? for example, selecting a new address with new country)
-            //if (_taxSettings.EuVatEnabled)
-            //{
-            //    string prevVatNumber = customer.VatNumber;
-            //    customer.VatNumber = txtVatNumber.Text;
-            //    //set VAT number status
-            //    if (!txtVatNumber.Text.Trim().Equals(prevVatNumber))
-            //        customer.VatNumberStatus = _taxService.GetVatNumberStatus(_countryService.GetCountryById(_countryId), customer.VatNumber);
-            //}
-
+            //VAT number
+            if (_taxSettings.EuVatEnabled)
+            {
+                customer.VatNumber = model.VatNumber;
+                //set VAT number status
+                if (!String.IsNullOrEmpty(customer.VatNumber))
+                {
+                    if (!customer.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
+                        customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber);
+                }
+                else
+                    customer.VatNumberStatus = VatNumberStatus.Empty;
+            }
             _customerService.UpdateCustomer(customer);
+
             //customer attributes
             if (_formFieldSettings.GenderEnabled)
                 _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
@@ -318,6 +332,9 @@ namespace Nop.Admin.Controllers
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
             if (_formFieldSettings.DateOfBirthEnabled)
                 _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+            if (_formFieldSettings.CompanyEnabled)
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+
             //customer roles
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             foreach (var customerRole in allCustomerRoles)
@@ -613,6 +630,7 @@ namespace Nop.Admin.Controllers
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
             model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();
@@ -652,6 +670,7 @@ namespace Nop.Admin.Controllers
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
             model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();

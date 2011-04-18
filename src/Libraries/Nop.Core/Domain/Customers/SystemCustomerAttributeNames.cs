@@ -12,6 +12,8 @@ namespace Nop.Core.Domain.Customers
         public static string Gender { get { return "Gender"; } }
 
         public static string DateOfBirth { get { return "DateOfBirth"; } }
+
+        public static string Company { get { return "Company"; } }
         
         //Other attributes
         public static string LastShippingOption { get { return "LastShippingOption  "; } }

@@ -14,6 +14,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether 'Date of Birth' is enabled
         /// </summary>
         public bool DateOfBirthEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Company' is enabled
+        /// </summary>
+        public bool CompanyEnabled { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether 'Newsletter' is enabled

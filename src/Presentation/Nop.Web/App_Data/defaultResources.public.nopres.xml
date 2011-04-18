@@ -24,6 +24,9 @@
       <LocaleResource Name="Administration">
         <Value>Administration</Value>
       </LocaleResource>
+      <LocaleResource Name="CompanyDetails">
+        <Value>Company Details</Value>
+      </LocaleResource>
       <LocaleResource Name="Fields">
         <Children>
           <LocaleResource Name="Gender">
@@ -34,6 +37,14 @@
               </LocaleResource>
               <LocaleResource Name="Female">
                 <Value>Female</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="VatNumber">
+            <Value>VAT number</Value>
+            <Children>
+              <LocaleResource Name="Note">
+                <Value>NOTE: Enter VAT number with country code (e.g. GB 111 111 11)</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
@@ -89,7 +100,7 @@
                 <Value>Registration not allowed. You can edit this in the admin area.</Value>
               </LocaleResource>
               <LocaleResource Name="EmailValidation">
-                <Value>Your registration has been successfully completed. <br /> You have just been sent an email containing membership activation instructions.</Value>
+                <Value>Your registration has been successfully completed. You have just been sent an email containing membership activation instructions.</Value>
               </LocaleResource>
               <LocaleResource Name="Standard">
                 <Value>Your registration completed</Value>

@@ -84,6 +84,51 @@
             </div>
             <div class="clear">
             </div>
+            @if (Model.CompanyEnabled || Model.DisplayVatNumber)
+            {
+                <div class="section-title">
+                    @T("Account.CompanyDetails")
+                </div>
+                <div class="clear">
+                </div>
+                <div class="section-body">
+                    <table class="table-container">
+                        <tbody>
+                            @if (Model.CompanyEnabled)
+                            {
+                                <tr class="row">
+                                    <td class="item-name">
+                                        @Html.LabelFor(model => model.Company):
+                                    </td>
+                                    <td class="item-value">
+                                        @Html.EditorFor(model => model.Company)
+                                        @Html.ValidationMessageFor(model => model.Company)
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.DisplayVatNumber)
+                            {
+                                <tr class="row">
+                                    <td class="item-name">
+                                        @Html.LabelFor(model => model.VatNumber):
+                                    </td>
+                                    <td class="item-value">
+                                        @Html.EditorFor(model => model.VatNumber)
+                                        @Html.ValidationMessageFor(model => model.VatNumber)
+                                    </td>
+                                </tr>
+                                <tr class="row">
+                                    <td colspan="2">
+                                        <i>@T("Account.Fields.VatNumber.Note")</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>                       
+                <div class="clear">
+                </div>
+            }
             @if (Model.AllowCustomersToSetTimeZone)
             {
                 <div class="section-title">

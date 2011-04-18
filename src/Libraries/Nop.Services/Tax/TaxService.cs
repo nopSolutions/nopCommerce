@@ -545,27 +545,68 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
-        /// <param name="country">Country</param>
-        /// <param name="vatNumber">VAT number</param>
+        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
         /// <returns>VAT Number status</returns>
-        public VatNumberStatus GetVatNumberStatus(Country country,
-            string vatNumber)
+        public VatNumberStatus GetVatNumberStatus(string fullVatNumber)
         {
             string name = string.Empty;
             string address = string.Empty;
-            return GetVatNumberStatus(country, vatNumber, out name, out address);
+            return GetVatNumberStatus(fullVatNumber, out name, out address);
+        }
+
+        /// <summary>
+        /// Gets VAT Number status
+        /// </summary>
+        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
+        /// <param name="name">Name (if received)</param>
+        /// <param name="address">Address (if received)</param>
+        /// <returns>VAT Number status</returns>
+        public VatNumberStatus GetVatNumberStatus(string fullVatNumber,
+            out string name, out string address)
+        {
+            name = string.Empty;
+            address = string.Empty;
+
+            if (String.IsNullOrWhiteSpace(fullVatNumber))
+                return VatNumberStatus.Empty;
+            fullVatNumber = fullVatNumber.Trim();
+            
+            //GB 111 1111 111 or GB 1111111111
+            string twoLetterIsoCode = "", vatNumber = "";
+            //should be refactored
+            var fullVatNumberArray = fullVatNumber.Split(new char[] {' '},  StringSplitOptions.RemoveEmptyEntries);
+            if (fullVatNumberArray.Length < 2)
+                return VatNumberStatus.Empty;
+            twoLetterIsoCode = fullVatNumberArray[0];
+            for (var i = 1; i < fullVatNumberArray.Length; i++)
+                vatNumber+=fullVatNumberArray[i];
+
+            return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
         }
         
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
-        /// <param name="country">Country</param>
+        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
+        /// <param name="vatNumber">VAT number</param>
+        /// <returns>VAT Number status</returns>
+        public VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber)
+        {
+            string name = string.Empty;
+            string address = string.Empty;
+            return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
+        }
+        
+        /// <summary>
+        /// Gets VAT Number status
+        /// </summary>
+        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
         /// <param name="vatNumber">VAT number</param>
         /// <param name="name">Name (if received)</param>
         /// <param name="address">Address (if received)</param>
         /// <returns>VAT Number status</returns>
-        public VatNumberStatus GetVatNumberStatus(Country country,
-            string vatNumber, out string name, out string address)
+        public VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber,
+            out string name, out string address)
         {
             name = string.Empty;
             address = string.Empty;
@@ -574,34 +615,29 @@ namespace Nop.Services.Tax
                 vatNumber = string.Empty;
             vatNumber = vatNumber.Trim();
 
+            if (String.IsNullOrEmpty(twoLetterIsoCode))
+                return VatNumberStatus.Empty;
+
             if (String.IsNullOrEmpty(vatNumber))
                 return VatNumberStatus.Empty;
 
-
-            if (country == null)
-                return VatNumberStatus.Unknown;
-
             if (!_taxSettings.EuVatUseWebService)
                 return VatNumberStatus.Unknown;
-            
-            try
-            {
-                Exception exception = null;
-                return DoVatCheck(country.TwoLetterIsoCode, vatNumber, out name, out address, out exception);
-            }
-            catch (Exception exc)
-            {
-                Debug.WriteLine(exc.ToString());
-                return VatNumberStatus.Unknown;
-            }
+
+            Exception exception = null;
+            return DoVatCheck(twoLetterIsoCode, vatNumber, out name, out address, out exception);
         }
 
         /// <summary>
         /// Performs a basic check of a VAT number for validity
         /// </summary>
-        /// <remarks>Doesn't check the name and address</remarks>
-        /// <returns>A value from the VatNumberStatusEnum enumeration</returns>
-        public VatNumberStatus DoVatCheck(string countryCode, string vatNumber,
+        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
+        /// <param name="vatNumber">VAT number</param>
+        /// <param name="name">Company name</param>
+        /// <param name="address">Address</param>
+        /// <param name="exception">Exception</param>
+        /// <returns>VAT number status</returns>
+        public VatNumberStatus DoVatCheck(string twoLetterIsoCode, string vatNumber,
             out string name, out string address, out Exception exception)
         {
             name = string.Empty;
@@ -615,7 +651,7 @@ namespace Nop.Services.Tax
                 vatNumber = vatNumber.Trim().Replace(" ", "");
 
                 s = new EuropaCheckVatService.checkVatService();
-                s.checkVat(ref countryCode, ref vatNumber, out valid, out name, out address);
+                s.checkVat(ref twoLetterIsoCode, ref vatNumber, out valid, out name, out address);
                 exception = null;
                 return valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid;
             }

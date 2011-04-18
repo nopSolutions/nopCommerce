@@ -66,7 +66,7 @@ namespace Nop.Core.Domain.Customers
         public bool IsTaxExempt { get; set; }
 
         /// <summary>
-        /// Gets or sets a VAT number
+        /// Gets or sets a VAT number (including counry code)
         /// </summary>
         public string VatNumber { get; set; }
 

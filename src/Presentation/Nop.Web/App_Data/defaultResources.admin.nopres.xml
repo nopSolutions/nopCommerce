@@ -1721,6 +1721,14 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="Company">
+                          <Value>Company name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The company name.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                         <LocaleResource Name="AdminComment">
                           <Value>Admin comment</Value>
                           <Children>
@@ -1749,7 +1757,7 @@
                           <Value>VAT number</Value>
                           <Children>
                             <LocaleResource Name="Hint">
-                              <Value>Enter company VAT number (NOTE: Enter VAT number without country code)</Value>
+                              <Value>Enter company VAT number. NOTE: Enter VAT number with country code (e.g. GB 111 111 11)</Value>
                             </LocaleResource>
                             <LocaleResource Name="MarkAsValid">
                               <Value>Mark VAT number as valid</Value>

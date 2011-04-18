@@ -91,6 +91,18 @@
         </td>
     </tr>
     }
+    @if (Model.CompanyEnabled)
+    {
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Company):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Company)
+            @Html.ValidationMessageFor(model => model.Company)
+        </td>
+    </tr>
+    }
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.AdminComment):
@@ -160,8 +172,8 @@
     }
 @helper TabCustomerRoles()
     {
-    foreach (var customerRole in Model.AvailableCustomerRoles)
-    {
+        foreach (var customerRole in Model.AvailableCustomerRoles)
+        {
         <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
         @if (Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))
         {
@@ -169,7 +181,7 @@
         }
         />@customerRole.Name
         <br />
-    }
+        }
 }
 @helper TabRewardPoints()
     {

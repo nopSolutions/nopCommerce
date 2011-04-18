@@ -37,7 +37,11 @@ namespace Nop.Admin.Models
         [UIHint("Date")]
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.DateOfBirth")]
         public DateTime? DateOfBirth { get; set; }
-        
+
+        public bool CompanyEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Company")]
+        public string Company { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
         public string AdminComment { get; set; }
         

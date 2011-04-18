@@ -219,33 +219,53 @@ namespace Nop.Services.Tax
 
 
 
+        
 
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
-        /// <param name="country">Country</param>
+        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
+        /// <returns>VAT Number status</returns>
+        VatNumberStatus GetVatNumberStatus(string fullVatNumber);
+
+        /// <summary>
+        /// Gets VAT Number status
+        /// </summary>
+        /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
+        /// <param name="name">Name (if received)</param>
+        /// <param name="address">Address (if received)</param>
+        /// <returns>VAT Number status</returns>
+        VatNumberStatus GetVatNumberStatus(string fullVatNumber,
+            out string name, out string address);
+        /// <summary>
+        /// Gets VAT Number status
+        /// </summary>
+        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
         /// <param name="vatNumber">VAT number</param>
         /// <returns>VAT Number status</returns>
-        VatNumberStatus GetVatNumberStatus(Country country,
-            string vatNumber);
+        VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber);
         
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
-        /// <param name="country">Country</param>
+        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
         /// <param name="vatNumber">VAT number</param>
         /// <param name="name">Name (if received)</param>
         /// <param name="address">Address (if received)</param>
         /// <returns>VAT Number status</returns>
-        VatNumberStatus GetVatNumberStatus(Country country,
-            string vatNumber, out string name, out string address);
+        VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber, 
+            out string name, out string address);
 
         /// <summary>
         /// Performs a basic check of a VAT number for validity
         /// </summary>
-        /// <remarks>Doesn't check the name and address</remarks>
-        /// <returns>A value from the VatNumberStatusEnum enumeration</returns>
-        VatNumberStatus DoVatCheck(string countryCode, string vatNumber, 
+        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
+        /// <param name="vatNumber">VAT number</param>
+        /// <param name="name">Company name</param>
+        /// <param name="address">Address</param>
+        /// <param name="exception">Exception</param>
+        /// <returns>VAT number status</returns>
+        VatNumberStatus DoVatCheck(string twoLetterIsoCode, string vatNumber, 
             out string name, out string address, out Exception exception);
 
 
