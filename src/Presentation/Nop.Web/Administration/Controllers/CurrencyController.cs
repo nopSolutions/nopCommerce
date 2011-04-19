@@ -125,6 +125,7 @@ namespace Nop.Admin.Controllers
             {
                 return View();
             }
+            //UNDONE support custom formatting input field
             var currency = _currencyService.GetCurrencyById(currencyModel.Id);
             currencyModel.CreatedOnUtc = currency.CreatedOnUtc;
             currency = currencyModel.ToEntity(currency);
@@ -146,6 +147,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(CurrencyModel model, bool continueEditing)
         {
+            //UNDONE support custom formatting input field
             model.CreatedOnUtc = DateTime.UtcNow;
             model.UpdatedOnUtc = DateTime.UtcNow;
             var currency = model.ToEntity();

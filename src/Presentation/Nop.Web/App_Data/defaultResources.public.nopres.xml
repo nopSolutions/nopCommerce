@@ -369,6 +369,28 @@
   </LocaleResource>
   <LocaleResource Name="RewardPoints">
     <Children>
+      <LocaleResource Name="CurrentBalance">
+        <Value>Your current balance is {0} reward points ({1}).</Value>
+      </LocaleResource>
+      <LocaleResource Name="Fields">
+        <Children>
+          <LocaleResource Name="Points">
+            <Value>Points</Value>
+          </LocaleResource>
+          <LocaleResource Name="PointsBalance">
+            <Value>Points balance</Value>
+          </LocaleResource>
+          <LocaleResource Name="Message">
+            <Value>Message</Value>
+          </LocaleResource>
+          <LocaleResource Name="Date">
+            <Value>Date</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="History">
+        <Value>History</Value>
+      </LocaleResource>
       <LocaleResource Name="Message">
         <Children>
           <LocaleResource Name="EarnedForOrder">
@@ -381,6 +403,9 @@
             <Value>Redeemed for order #{0}</Value>
           </LocaleResource>
         </Children>
+      </LocaleResource>
+      <LocaleResource Name="NoHistory">
+        <Value>There is no balance history yet</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

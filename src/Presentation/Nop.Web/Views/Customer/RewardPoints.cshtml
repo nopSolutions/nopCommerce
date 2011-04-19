@@ -1,0 +1,50 @@
+﻿@model Nop.Web.Models.Customer.CustomerRewardPointsModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+@using Nop.Web.Framework;
+@using MvcContrib.UI.Grid
+@section left
+{
+    @Html.Partial("~/Views/Customer/MyAccountNavigation.cshtml", Model.NavigationModel, new ViewDataDictionary())
+}
+<div class="account-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div class="customer-rewardpoints">
+            <div class="reward-points-overview">
+                @Model.RewardPointsBalance
+            </div>
+            <div class="clear">
+            </div>
+            <div class="section-title">
+                @T("RewardPoints.History")
+            </div>
+            <div class="clear">
+            </div>
+            <div class="reward-points-history">                
+                @if (Model.RewardPoints.Count > 0)
+                {
+                    @Html.Grid(Model.RewardPoints).Columns(column => {
+                       column.For(rph => rph.CreatedOnStr).Named(T("RewardPoints.Fields.Date").Text).Attributes(style => "width:20%;");
+                       column.For(rph => rph.Points).Named(T("RewardPoints.Fields.Points").Text).Attributes(style => "width:20%;");
+                       column.For(rph => rph.PointsBalance).Named(T("RewardPoints.Fields.PointsBalance").Text).Attributes(style => "width:20%;");
+                       column.For(rph => rph.Message).Named(T("RewardPoints.Fields.Message").Text).Attributes(style => "width:40%;");
+                   }).Attributes(style => "width: 100%; border: 0px").RowStart((row) =>
+                   {
+                       if (row.IsAlternate) { return "<tr style='background-color: #F4FAFF;'>"; }
+                       else { return "<tr>"; }
+                   })
+                }
+                else
+                {
+                    @T("RewardPoints.NoHistory")
+                }
+            </div>
+        </div>
+    </div>
+</div>

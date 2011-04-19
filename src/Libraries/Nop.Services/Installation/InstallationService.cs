@@ -446,7 +446,7 @@ namespace Nop.Services.Installation
                 CurrencyCode = "USD",
                 Rate = 1,
                 DisplayLocale = "en-US",
-                CustomFormatting = "CustomFormatting 1",
+                CustomFormatting = "",
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = new DateTime(2010, 01, 01),

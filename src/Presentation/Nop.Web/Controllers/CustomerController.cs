@@ -10,11 +10,13 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
@@ -45,6 +47,9 @@ namespace Nop.Web.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IPriceFormatter _priceFormatter;
         #endregion
 
         #region Ctor
@@ -57,7 +62,8 @@ namespace Nop.Web.Controllers
             ITaxService taxService, RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings, ForumSettings forumSettings,
             OrderSettings orderSettings, IAddressService addressService,
-            ICountryService countryService)
+            ICountryService countryService, IOrderTotalCalculationService orderTotalCalculationService,
+            ICurrencyService currencyService, IPriceFormatter priceFormatter)
         {
             this._authenticationService = authenticationService;
             this._userService = userService;
@@ -76,6 +82,9 @@ namespace Nop.Web.Controllers
             this._orderSettings = orderSettings;
             this._addressService = addressService;
             this._countryService = countryService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
+            this._currencyService = currencyService;
+            this._priceFormatter = priceFormatter;
         }
 
         #endregion
@@ -617,6 +626,38 @@ namespace Nop.Web.Controllers
             return RedirectToAction("Addresses");
         }
            
+        #endregion
+
+        #region Addresses
+
+        public ActionResult RewardPoints()
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new CustomerRewardPointsModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.RewardPoints;
+            foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
+            {
+                model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel()
+                {
+                    Points = rph.Points,
+                    PointsBalance = rph.PointsBalance,
+                    Message = rph.Message,
+                    CreatedOnStr = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                });
+            }
+            int rewardPointsBalance = customer.GetRewardPointsBalance();
+            decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
+            decimal rewardPointsAmount =_currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase,_workContext.WorkingCurrency);
+            model.RewardPointsBalance = string.Format(_localizationService.GetResource("RewardPoints.CurrentBalance"), rewardPointsBalance, _priceFormatter.FormatPrice(rewardPointsAmount, true, false));
+            
+            return View(model);
+        }
+
         #endregion
 
         #endregion
