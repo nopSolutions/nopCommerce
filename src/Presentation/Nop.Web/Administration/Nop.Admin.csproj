@@ -104,6 +104,7 @@
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CategoryProductModel.cs" />
     <Compile Include="Models\CategoryProductsAttribute.cs" />
+    <Compile Include="Models\QueuedEmailListModel.cs" />
     <Compile Include="Models\CustomerAddressModel.cs" />
     <Compile Include="Models\CustomerListModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
