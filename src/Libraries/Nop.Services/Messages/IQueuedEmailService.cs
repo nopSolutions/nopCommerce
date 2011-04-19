@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Nop.Core.Domain.Messages;
+using Nop.Core;
 
 namespace Nop.Services.Messages
 {
@@ -43,7 +44,7 @@ namespace Nop.Services.Messages
             bool loadNotSentItemsOnly, int maxSendTries);
 
         /// <summary>
-        /// Gets all queued emails
+        /// Search queued emails
         /// </summary>
         /// <param name="fromEmail">From Email</param>
         /// <param name="toEmail">To Email</param>
@@ -52,9 +53,11 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmailCount">Email item count. 0 if you want to get all items</param>
         /// <param name="loadNotSentItemsOnly">A value indicating whether to load only not sent emails</param>
         /// <param name="maxSendTries">Maximum send tries</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Email item collection</returns>
-        IList<QueuedEmail> GetAllQueuedEmails(string fromEmail,
+        IPagedList<QueuedEmail> SearchEmails(string fromEmail,
             string toEmail, DateTime? startTime, DateTime? endTime,
-            int queuedEmailCount, bool loadNotSentItemsOnly, int maxSendTries);
+            int queuedEmailCount, bool loadNotSentItemsOnly, int maxSendTries, int pageIndex, int pageSize);
     }
 }

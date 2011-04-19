@@ -1947,14 +1947,14 @@
                     <LocaleResource Name="QueuedEmails">
                         <Value>Message Queue</Value>
                         <Children>
-                            <LocaleResource Name="BackToList">
+                          <LocaleResource Name="BackToList">
                                 <Value>back to message queue</Value>
                             </LocaleResource>
-                            <LocaleResource Name="EditQueuedEmailDetails">
+                          <LocaleResource Name="EditQueuedEmailDetails">
                                 <Value>Edit message queue item</Value>
                             </LocaleResource>
                           <LocaleResource Name="Requeue">
-                            <Value>Requeue</Value>
+                              <Value>Requeue</Value>
                           </LocaleResource>
                           <LocaleResource Name="Fields">
                                 <Children>
@@ -2073,6 +2073,67 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                          <LocaleResource Name="List">
+                            <Children>
+                              <LocaleResource Name="StartDate">
+                                <Value>Start date</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The start date for the search.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="EndDate">
+                                <Value>End date</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The end date for the search.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="FromEmail">
+                                <Value>From address</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>From address.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="ToEmail">
+                                <Value>To address</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>To address.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="LoadNotSent">
+                                <Value>Load not sent emails only</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Only load emails into queue that have not yet been sent.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="MaxSentTries">
+                                <Value>Maximum send attempts</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The maximum number of attempts to send a message.</Value>
+                                  </LocaleResource>
+                                </Children>                                
+                              </LocaleResource>
+                              <LocaleResource Name="GoDirectlyToNumber">
+                                <Value>Go directly to email #</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Go directly to email #.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+
                         </Children>
                     </LocaleResource>
                 </Children>
