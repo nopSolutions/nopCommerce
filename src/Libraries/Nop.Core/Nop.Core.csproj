@@ -80,6 +80,7 @@
     <Compile Include="Configuration\NopConfig.cs" />
     <Compile Include="Domain\Catalog\ProductExtensions.cs" />
     <Compile Include="Domain\Catalog\SpecificationAttributeOptionFilter.cs" />
+    <Compile Include="Domain\Media\MediaSettings.cs" />
     <Compile Include="Domain\Security\UserRegistrationType.cs" />
     <Compile Include="Domain\Customers\FormFieldSettings.cs" />
     <Compile Include="Domain\Customers\CustomerNameFormat.cs" />

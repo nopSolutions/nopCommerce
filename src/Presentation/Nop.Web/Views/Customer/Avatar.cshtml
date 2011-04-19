@@ -1,0 +1,51 @@
+﻿@model Nop.Web.Models.Customer.CustomerAvatarModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+@using Nop.Web.Framework;
+@section left
+{
+    @Html.Partial("~/Views/Customer/MyAccountNavigation.cshtml", Model.NavigationModel, new ViewDataDictionary())
+}
+@using (Html.BeginForm("Avatar", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="account-page">
+        <div class="page-title">
+            <h1>@T("Account.MyAccount") - @T("Account.Avatar")</h1>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="body">
+            <div class="customer-avatar">
+                <div class="error-block">
+                    <div class="message-error">
+                        @Html.ValidationSummary(true)
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+                <div class="section-body">
+                    @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                    {
+                        <img src="@(Model.AvatarUrl)" alt="avatar" />
+                        <br />
+                    }
+                    <input name="uploadedFile" type="file" />
+                </div>
+                <div class="clear">
+                </div>
+                <div class="button">
+                    <button type="submit" name="upload-avatar" value="upload-avatar" class="uploadavatarbutton">@T("Common.Upload")</button>
+                    @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                    {
+                    <button type="submit" name="remove-avatar" value="remove-avatar" class="removeavatarbutton">@T("Account.Avatar.RemoveAvatar")</button>
+                    }
+                </div>
+                <div class="clear">
+                </div>
+                <div>
+                    @T("Account.Avatar.UploadRules")</div>
+            </div>
+        </div>
+    </div>
+}

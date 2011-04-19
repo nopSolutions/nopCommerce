@@ -18,6 +18,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -791,6 +792,7 @@ namespace Nop.Services.Installation
                 {
                     AnonymousCheckoutAllowed = false,
                     AllowCustomersToUploadAvatars = false,
+                    AvatarMaximumSizeBytes = 20000,
                     DefaultAvatarEnabled = true,
                     AllowAnonymousUsersToReviewProduct = false,
                     AllowAnonymousUsersToSetProductRatings = false,
@@ -802,6 +804,16 @@ namespace Nop.Services.Installation
                     CustomerNameFormat = CustomerNameFormat.ShowEmails
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<MediaSettings>>()
+                .SaveSettings(new MediaSettings()
+                {
+                    AvatarPictureSize = 85,
+                    ProductThumbPictureSize = 125,
+                    ProductDetailsPictureSize = 300,
+                    ProductVariantPictureSize = 125,
+                    CategoryThumbPictureSize = 125,
+                    ManufacturerThumbPictureSize = 125,
+                });
             EngineContext.Current.Resolve<IConfigurationProvider<FormFieldSettings>>()
                 .SaveSettings(new FormFieldSettings()
                 {

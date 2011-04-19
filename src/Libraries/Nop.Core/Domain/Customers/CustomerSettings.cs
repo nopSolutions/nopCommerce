@@ -16,6 +16,11 @@ namespace Nop.Core.Domain.Customers
         public bool AllowCustomersToUploadAvatars { get; set; }
 
         /// <summary>
+        /// Gets or sets a maximum avatar size (in bytes)
+        /// </summary>
+        public int AvatarMaximumSizeBytes { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to display default user avatar.
         /// </summary>
         public bool DefaultAvatarEnabled { get; set; }

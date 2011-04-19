@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
@@ -23,6 +24,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+using Nop.Services.Media;
 
 namespace Nop.Web.Controllers
 {
@@ -50,6 +52,8 @@ namespace Nop.Web.Controllers
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IPictureService _pictureService;
+        private readonly MediaSettings _mediaSettings;
         #endregion
 
         #region Ctor
@@ -63,7 +67,8 @@ namespace Nop.Web.Controllers
             CustomerSettings customerSettings, ForumSettings forumSettings,
             OrderSettings orderSettings, IAddressService addressService,
             ICountryService countryService, IOrderTotalCalculationService orderTotalCalculationService,
-            ICurrencyService currencyService, IPriceFormatter priceFormatter)
+            ICurrencyService currencyService, IPriceFormatter priceFormatter,
+            IPictureService pictureService, MediaSettings mediaSettings)
         {
             this._authenticationService = authenticationService;
             this._userService = userService;
@@ -85,11 +90,13 @@ namespace Nop.Web.Controllers
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._currencyService = currencyService;
             this._priceFormatter = priceFormatter;
+            this._pictureService = pictureService;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion
 
-        #region Utitlies
+        #region Utilities
 
         [NonAction]
         private bool IsCurrentUserRegistered()
@@ -710,6 +717,114 @@ namespace Nop.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        #endregion
+
+        #region Avatar
+
+        public ActionResult Avatar()
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+            
+            if (!_customerSettings.AllowCustomersToUploadAvatars)
+                return RedirectToAction("MyAccount");
+
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new CustomerAvatarModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
+            model.AvatarUrl = _pictureService.GetPictureUrl(
+                customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                _mediaSettings.AvatarPictureSize,
+                false);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Avatar")]
+        [FormValueRequired("upload-avatar")]
+        public ActionResult UploadAvatar(CustomerAvatarModel model, HttpPostedFileBase uploadedFile)
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+            
+            if (!_customerSettings.AllowCustomersToUploadAvatars)
+                return RedirectToAction("MyAccount");
+
+            var customer = _workContext.CurrentCustomer;
+
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
+
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId));
+                    if ((uploadedFile != null) && (!String.IsNullOrEmpty(uploadedFile.FileName)))
+                    {
+                        int avatarMaxSize = _customerSettings.AvatarMaximumSizeBytes;
+                        if (uploadedFile.ContentLength > avatarMaxSize)
+                            throw new NopException(string.Format("Maximum avatar size is {0} bytes", avatarMaxSize));
+
+                        byte[] customerPictureBinary = uploadedFile.GetPictureBits();
+                        if (customerAvatar != null)
+                            customerAvatar = _pictureService.UpdatePicture(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, true);
+                        else
+                            customerAvatar = _pictureService.InsertPicture(customerPictureBinary, uploadedFile.ContentType, true);
+                    }
+
+                    int customerAvatarId = 0;
+                    if (customerAvatar != null)
+                        customerAvatarId = customerAvatar.Id;
+
+                    _customerService.SaveCustomerAttribute<int>(customer, SystemCustomerAttributeNames.AvatarPictureId, customerAvatarId);
+
+                    model.AvatarUrl = _pictureService.GetPictureUrl(
+                        customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                        _mediaSettings.AvatarPictureSize,
+                        false);
+                    return View(model);
+                }
+                catch (Exception exc)
+                {
+                    ModelState.AddModelError("", exc.Message);
+                }
+            }
+
+
+            // If we got this far, something failed, redisplay form
+            model.AvatarUrl = _pictureService.GetPictureUrl(
+                customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
+                _mediaSettings.AvatarPictureSize, 
+                false);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Avatar")]
+        [FormValueRequired("remove-avatar")]
+        public ActionResult RemoveAvatar(CustomerAvatarModel model, HttpPostedFileBase uploadedFile)
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            if (!_customerSettings.AllowCustomersToUploadAvatars)
+                return RedirectToAction("MyAccount");
+
+            var customer = _workContext.CurrentCustomer;
+
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
+            
+            var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId));
+            if (customerAvatar != null)
+                _pictureService.DeletePicture(customerAvatar);
+            _customerService.SaveCustomerAttribute<int>(customer, SystemCustomerAttributeNames.AvatarPictureId, 0);
+
+            return RedirectToAction("Avatar");
         }
 
         #endregion

@@ -26,6 +26,14 @@
       </LocaleResource>
       <LocaleResource Name="Avatar">
         <Value>Avatar</Value>
+        <Children>
+          <LocaleResource Name="RemoveAvatar">
+            <Value>Remove avatar</Value>
+          </LocaleResource>
+          <LocaleResource Name="UploadRules">
+            <Value>Avatar must be in GIF or JPEG format with the maximum size of 20 KB</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="ChangePassword">
         <Value>Change password</Value>
@@ -359,6 +367,9 @@
       </LocaleResource>
       <LocaleResource Name="Search">
         <Value>Search</Value>
+      </LocaleResource>
+      <LocaleResource Name="Upload">
+        <Value>Upload</Value>
       </LocaleResource>
       <LocaleResource Name="View">
         <Value>View</Value>

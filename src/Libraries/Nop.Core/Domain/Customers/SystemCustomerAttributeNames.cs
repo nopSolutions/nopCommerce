@@ -14,7 +14,9 @@ namespace Nop.Core.Domain.Customers
         public static string DateOfBirth { get { return "DateOfBirth"; } }
 
         public static string Company { get { return "Company"; } }
-        
+
+        public static string AvatarPictureId { get { return "AvatarPictureId"; } }
+
         //Other attributes
         public static string LastShippingOption { get { return "LastShippingOption  "; } }
     }
