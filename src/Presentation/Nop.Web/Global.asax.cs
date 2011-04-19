@@ -97,9 +97,13 @@ namespace Nop.Web
             var embeddedProvider = new EmbeddedViewVirtualPathProvider(embeddedViewResolver.GetEmbeddedViews());
             HostingEnvironment.RegisterVirtualPathProvider(embeddedProvider);
         }
-
+        
         protected void Application_BeginRequest(object sender, EventArgs e)
-        {
+        { 
+        }
+        protected void Application_AuthenticateRequest(object sender, EventArgs e)
+        { 
+            //we don't do it in Application_BeginRequest because a user is not authenticated yet
             SetWorkingTheme();
             SetWorkingCulture();
         }

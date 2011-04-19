@@ -215,9 +215,11 @@ namespace Nop.Admin.Controllers
                 if (String.IsNullOrEmpty(model.Username))
                     throw new ArgumentException("Username is not provided");
                 if (!user.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                    //TODO handle an error if an exception is thrown
                     _userService.SetUsername(user, model.Username);
             }
             if (!user.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                //TODO handle an error if an exception is thrown
                 _userService.SetEmail(user, model.Email);
             user.SecurityQuestion = model.SecurityQuestion;
             user.SecurityAnswer = model.SecurityAnswer;

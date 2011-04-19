@@ -790,7 +790,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new CustomerSettings()
                 {
                     AnonymousCheckoutAllowed = false,
-                    AllowUsersToUploadAvatars = false,
+                    AllowCustomersToUploadAvatars = false,
                     DefaultAvatarEnabled = true,
                     AllowAnonymousUsersToReviewProduct = false,
                     AllowAnonymousUsersToSetProductRatings = false,

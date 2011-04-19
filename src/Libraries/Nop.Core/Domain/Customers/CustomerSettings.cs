@@ -11,9 +11,9 @@ namespace Nop.Core.Domain.Customers
         public bool AnonymousCheckoutAllowed { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether users are allowed to upload avatars.
+        /// Gets or sets a value indicating whether customers are allowed to upload avatars.
         /// </summary>
-        public bool AllowUsersToUploadAvatars { get; set; }
+        public bool AllowCustomersToUploadAvatars { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display default user avatar.

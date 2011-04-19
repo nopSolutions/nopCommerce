@@ -821,7 +821,7 @@ textarea
 
 .searchbutton, .contactusbutton, .newsitemaddcommentbutton, .blogpostaddcommentbutton,
 .productvariantaddtocartbutton, .productwritereviewbutton, .loginbutton, .registerbutton,
-.checkoutasguestbutton, .savecustomerinfobutton, .addbillingaddressbutton, .addshippingaddressbutton,
+.checkoutasguestbutton, .savecustomerinfobutton, .addaddressbutton,
 .changepasswordbutton, .registernextstepbutton, .completeregistrationbutton, .passwordrecoverybutton,
 .newpasswordbutton, .saveaddressbutton, .sendemailafriendbutton, .checkoutbutton, .selectshippingaddressbutton,
 .newaddressnextstepbutton, .selectbillingaddressbutton, .sameasshippingaddressbutton, 
@@ -951,7 +951,7 @@ ul.languagelist li .selected
 
 .block-category-navigation, .block-manufacturer-navigation, .block-recently-viewed-products, 
 .block-info, .block-shoppingcart, .block-newsletter, .block-livechat, .block-popular-tags,
-.block-popular-blogtags, .block-blog-archive, .block-poll
+.block-popular-blogtags, .block-blog-archive, .block-poll, .block-account-navigation
 {
 	
 }
@@ -995,6 +995,15 @@ ul.languagelist li .selected
 }
 
 .block-manufacturer-navigation a.inactive
+{
+}
+
+.block-account-navigation a.active
+{
+	font-weight:bold;
+}
+
+.block-account-navigation a.inactive
 {
 }
 

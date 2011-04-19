@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
@@ -7,30 +6,22 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Customer
 {
-    public class RegisterModel : BaseNopModel
+    public class CustomerInfoModel : BaseNopModel
     {
-        public RegisterModel()
+        public CustomerInfoModel()
         {
             this.AvailableTimeZones = new List<SelectListItem>();
         }
         //TODO localize attribute
         //TODO add validation rules
-        
+
         [DisplayName("Email")]
         public string Email { get; set; }
 
+        public bool AllowUsersToChangeUsernames { get; set; }
         public bool UsernamesEnabled { get; set; }
         [DisplayName("User name")]
         public string Username { get; set; }
-
-        [DataType(DataType.Password)]
-        [DisplayName("Password")]
-        public string Password { get; set; }
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        //UNDONE compare passwords [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
 
         //form fields & properties
         public bool GenderEnabled { get; set; }
@@ -57,5 +48,7 @@ namespace Nop.Web.Models.Customer
         public string VatNumber { get; set; }
         public string VatNumberStatusNote { get; set; }
         public bool DisplayVatNumber { get; set; }
+
+        public CustomerNavigationModel NavigationModel { get; set; }
     }
 }
