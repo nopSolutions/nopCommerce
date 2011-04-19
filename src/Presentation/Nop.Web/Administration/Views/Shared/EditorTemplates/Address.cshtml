@@ -79,7 +79,7 @@
         @Html.NopLabelFor(model => model.CountryId):
     </td>
     <td class="adminData">
-        @Html.DropDownList("CountryId", Model.AvailableCountries)
+        @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
         @Html.ValidationMessageFor(model => model.CountryId)
         @*TODO display validation message from 'AddressValidator' (country should be selected)*@
     </td>
@@ -92,7 +92,7 @@
         @Html.NopLabelFor(model => model.StateProvinceId):
     </td>
     <td class="adminData">
-        @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+        @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
         @Html.ValidationMessageFor(model => model.StateProvinceId)
     </td>
 </tr>

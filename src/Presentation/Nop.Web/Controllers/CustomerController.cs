@@ -12,6 +12,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Services;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -43,7 +44,7 @@ namespace Nop.Web.Controllers
         private readonly ForumSettings _forumSettings;
         private readonly OrderSettings _orderSettings;
         private readonly IAddressService _addressService;
-        
+        private readonly ICountryService _countryService;
         #endregion
 
         #region Ctor
@@ -55,7 +56,8 @@ namespace Nop.Web.Controllers
             IWorkContext workContext, ICustomerService customerService,
             ITaxService taxService, RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings, ForumSettings forumSettings,
-            OrderSettings orderSettings, IAddressService addressService)
+            OrderSettings orderSettings, IAddressService addressService,
+            ICountryService countryService)
         {
             this._authenticationService = authenticationService;
             this._userService = userService;
@@ -73,6 +75,7 @@ namespace Nop.Web.Controllers
             this._forumSettings = forumSettings;
             this._orderSettings = orderSettings;
             this._addressService = addressService;
+            this._countryService = countryService;
         }
 
         #endregion
@@ -466,28 +469,13 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            var model = new CustomerAddressesModel();
+            var model = new CustomerAddressListModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
             foreach (var address in customer.Addresses)
             {
                 //use auto-mapper
-                var addressModel = new AddressModel()
-                {
-                    Id = address.Id,
-                    FirstName = address.FirstName,
-                    LastName = address.LastName,
-                    Email = address.Email,
-                    Company = address.Company,
-                    CountryId = address.CountryId,
-                    StateProvinceId = address.StateProvinceId,
-                    City = address.City,
-                    Address1 = address.Address1,
-                    Address2 = address.Address2,
-                    ZipPostalCode = address.ZipPostalCode,
-                    PhoneNumber = address.PhoneNumber,
-                    FaxNumber = address.FaxNumber,
-                };
+                var addressModel = address.ToModel();
                 if (address.Country != null)
                     addressModel.CountryName = address.Country.Name;
                 if (address.StateProvince != null)
@@ -517,6 +505,118 @@ namespace Nop.Web.Controllers
             return RedirectToAction("Addresses");
         }
 
+        public ActionResult AddressAdd()
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new CustomerAddressEditModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
+
+            model.Address = new AddressModel();
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+            model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddressAdd(CustomerAddressEditModel model)
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
+
+            var address = model.Address.ToEntity();
+            address.CreatedOnUtc = DateTime.UtcNow;
+            //some validation
+            if (address.CountryId == 0)
+                address.CountryId = null;
+            if (address.StateProvinceId == 0)
+                address.StateProvinceId = null;
+            customer.AddAddress(address);
+            _customerService.UpdateCustomer(customer);
+
+            return RedirectToAction("Addresses");
+        }
+
+        public ActionResult AddressEdit(int addressId)
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new CustomerAddressEditModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
+
+            //find address (ensure that it belongs to the current customer)
+            var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            if (address == null)
+                //address is not found
+                return RedirectToAction("Addresses");
+
+            model.Address = address.ToModel();
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
+            //states
+            if (address.Country != null && address.Country.StateProvinces.Count > 0)
+            {
+                foreach (var s in address.Country.StateProvinces)
+                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddressEdit(CustomerAddressEditModel model, int addressId)
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
+
+            //find address (ensure that it belongs to the current customer)
+            var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            if (address == null)
+                //address is not found
+                return RedirectToAction("Addresses");
+
+            address = model.Address.ToEntity(address);
+            _addressService.UpdateAddress(address);
+
+            return RedirectToAction("Addresses");
+        }
+           
         #endregion
 
         #endregion

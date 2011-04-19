@@ -1,0 +1,31 @@
+﻿@model Nop.Web.Models.Customer.CustomerAddressEditModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+@using Nop.Web.Framework;
+@section left
+{
+    @Html.Partial("~/Views/Customer/MyAccountNavigation.cshtml", Model.NavigationModel, new ViewDataDictionary())
+}
+@using (Html.BeginForm())
+{
+    <div class="account-page">
+        <div class="page-title">
+            <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses.AddNew")</h1>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="body">
+            @Html.Partial("_CreateOrUpdateAddress", Model)
+            <table width="100%" cellspacing="0" cellpadding="2" border="0">
+                <tbody>
+                    <tr>
+                        <td align="left">
+                            <input type="submit" class="saveaddressbutton" value="@T("Common.Save")" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

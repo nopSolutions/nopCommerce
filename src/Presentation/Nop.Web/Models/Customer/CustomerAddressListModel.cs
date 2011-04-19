@@ -7,9 +7,9 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Customer
 {
-    public class CustomerAddressesModel : BaseNopModel
+    public class CustomerAddressListModel : BaseNopModel
     {
-        public CustomerAddressesModel()
+        public CustomerAddressListModel()
         {
             Addresses = new List<AddressModel>();
         }

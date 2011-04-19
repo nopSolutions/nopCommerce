@@ -1,0 +1,172 @@
+﻿@model Nop.Web.Models.Customer.CustomerAddressEditModel
+@using Nop.Web.Framework;
+<script type="text/javascript">
+     $(function() {
+            $("#@Html.FieldIdFor(model => model.Address.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.Address.StateProvinceId)")
+                $.ajax({
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: "countryId=" + selectedItem + "&addEmptyStateIfRequired=true",
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve states.')
+                    }  
+                });
+            });
+        });
+</script>
+@Html.HiddenFor(model => model.Address.Id)
+<table>
+    @if (!Model.Address.FirstNameDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.FirstName):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.FirstName)
+                @Html.ValidationMessageFor(model => model.Address.FirstName)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.LastNameDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.LastName):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.LastName)
+                @Html.ValidationMessageFor(model => model.Address.LastName)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.EmailDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.Email):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.Email)
+                @Html.ValidationMessageFor(model => model.Address.Email)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.CompanyDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.Company):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.Company)
+                @Html.ValidationMessageFor(model => model.Address.Company)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.CountryDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.CountryId):
+            </td>
+            <td>
+                @Html.DropDownListFor(model => model.Address.CountryId, Model.Address.AvailableCountries)
+                @Html.ValidationMessageFor(model => model.Address.CountryId)
+                @*TODO display validation message from 'AddressValidator' (country should be selected)*@
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.StateProvinceDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.StateProvinceId):
+            </td>
+            <td>
+                @Html.DropDownListFor(model => model.Address.StateProvinceId, Model.Address.AvailableStates)
+                @Html.ValidationMessageFor(model => model.Address.StateProvinceId)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.CityDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.City):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.City)
+                @Html.ValidationMessageFor(model => model.Address.City)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.Address1Disabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.Address1):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.Address1)
+                @Html.ValidationMessageFor(model => model.Address.Address1)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.Address2Disabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.Address2):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.Address2)
+                @Html.ValidationMessageFor(model => model.Address.Address2)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.ZipPostalCodeDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.ZipPostalCode):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.ZipPostalCode)
+                @Html.ValidationMessageFor(model => model.Address.ZipPostalCode)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.PhoneNumberDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.PhoneNumber):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.PhoneNumber)
+                @Html.ValidationMessageFor(model => model.Address.PhoneNumber)
+            </td>
+        </tr>
+    }
+    @if (!Model.Address.FaxNumberDisabled)
+    {
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Address.FaxNumber):
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Address.FaxNumber)
+                @Html.ValidationMessageFor(model => model.Address.FaxNumber)
+            </td>
+        </tr>
+    }
+</table>

@@ -1,4 +1,4 @@
-﻿@model Nop.Web.Models.Customer.CustomerAddressesModel
+﻿@model Nop.Web.Models.Customer.CustomerAddressListModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 }
@@ -29,7 +29,7 @@
                                         <b>@address.FirstName @address.LastName</b>
                                     </td>
                                     <td align="right" style="padding: 5px 5px 5px 0px;">
-                                        <input type="button" class="editaddressbutton" onclick="location.href='@Url.Action("addressedit")'" value='@T("Common.Edit")' />
+                                        <input type="button" class="editaddressbutton" onclick="location.href='@Url.Action("addressedit", new { addressId = address.Id })'" value='@T("Common.Edit")' />
                                         <input type="submit"  class="deleteaddressbutton" onclick="location.href='@Url.Action("addressdelete", new { addressId = address.Id })'" value="@T("Common.Delete")" />
                                     </td>
                                 </tr>

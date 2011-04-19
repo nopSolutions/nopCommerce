@@ -35,6 +35,14 @@
       </LocaleResource>
       <LocaleResource Name="CustomerAddresses">
         <Value>Addresses</Value>
+        <Children>
+          <LocaleResource Name="AddNew">
+            <Value>Add new address</Value>
+          </LocaleResource>
+          <LocaleResource Name="Edit">
+            <Value>Edit address</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="CustomerInfo">
         <Value>Customer info</Value>

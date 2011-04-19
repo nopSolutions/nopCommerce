@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Tasks;
 using Nop.Services.Localization;
 using Nop.Web.Models;
+using Nop.Web.Models.Common;
 using Nop.Web.Models.Home;
 namespace Nop.Web.Infrastructure
 {
@@ -36,6 +38,12 @@ namespace Nop.Web.Infrastructure
             Mapper.CreateMap<Category, CategoryModel.SubCategoryModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
                 .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
+
+            //address
+            Mapper.CreateMap<Address, AddressModel>();
+            Mapper.CreateMap<AddressModel, Address>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+
         }
 
         public static void ViceVersa<T1, T2>()
