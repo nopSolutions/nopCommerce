@@ -628,12 +628,15 @@ namespace Nop.Web.Controllers
            
         #endregion
 
-        #region Addresses
+        #region Reward points
 
         public ActionResult RewardPoints()
         {
             if (!IsCurrentUserRegistered())
                 return new HttpUnauthorizedResult();
+
+            if (!_rewardPointsSettings.Enabled)
+                return RedirectToAction("MyAccount");
 
             var customer = _workContext.CurrentCustomer;
 
@@ -655,6 +658,57 @@ namespace Nop.Web.Controllers
             decimal rewardPointsAmount =_currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase,_workContext.WorkingCurrency);
             model.RewardPointsBalance = string.Format(_localizationService.GetResource("RewardPoints.CurrentBalance"), rewardPointsBalance, _priceFormatter.FormatPrice(rewardPointsAmount, true, false));
             
+            return View(model);
+        }
+
+        #endregion
+
+        #region Change password
+
+        public ActionResult ChangePassword()
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+            var user = _authenticationService.GetAuthenticatedUser();
+
+            var model = new ChangePasswordModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.ChangePassword;
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(ChangePasswordModel model)
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+            var user = _authenticationService.GetAuthenticatedUser();
+
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.ChangePassword;
+
+            if (ModelState.IsValid)
+            {
+                var changePasswordRequest = new ChangePasswordRequest(user.Email, true, model.NewPassword, model.OldPassword);
+                var changePasswordResult = _userService.ChangePassword(changePasswordRequest);
+                if (changePasswordResult.Success)
+                {
+                    model.Result = _localizationService.GetResource("Account.ChangePassword.Success");
+                    return View(model);
+                }
+                else
+                {
+                    foreach (var error in changePasswordResult.Errors)
+                        ModelState.AddModelError("", error);
+                }
+            }
+
+
+            // If we got this far, something failed, redisplay form
             return View(model);
         }
 

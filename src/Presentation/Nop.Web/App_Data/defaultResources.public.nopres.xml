@@ -29,6 +29,45 @@
       </LocaleResource>
       <LocaleResource Name="ChangePassword">
         <Value>Change password</Value>
+        <Children>
+          <LocaleResource Name="Button">
+            <Value>Change password</Value>
+          </LocaleResource>
+          <LocaleResource Name="Fields">
+            <Children>
+              <LocaleResource Name="OldPassword">
+                <Value>Old password</Value>
+                <Children>
+                  <LocaleResource Name="Required">
+                    <Value>Old password is required.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="NewPassword">
+                <Value>New password</Value>
+                <Children>
+                  <LocaleResource Name="EnteredPasswordsDoNotMatch">
+                    <Value>The new password and confirmation password do not match.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Required">
+                    <Value>New password is required.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="ConfirmNewPassword">
+                <Value>Confirm password</Value>
+                <Children>
+                  <LocaleResource Name="Required">
+                    <Value>Password is required.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="Success">
+            <Value>Password was changed</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="CompanyDetails">
         <Value>Company Details</Value>
