@@ -64,7 +64,7 @@
                                     <LocaleResource Name="Name">
                                         <Value>Name</Value>
                                         <Children>
-                                            <LocaleResource Name="Validation">
+                                            <LocaleResource Name="Required">
                                                 <Value>Please provide a name.</Value>
                                             </LocaleResource>
                                             <LocaleResource Name="Hint">
@@ -228,13 +228,13 @@
                                             <LocaleResource Name="Hint">
                                                 <Value>The name of the product.</Value>
                                             </LocaleResource>
-                                            <LocaleResource Name="Validation">
+                                            <LocaleResource Name="Required">
                                                 <Value>Please provide a name.</Value>
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="ShortDescription">
-                                        <Value>Short description:</Value>
+                                        <Value>Short description</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">
                                                 <Value>A short description of the product. This is the text that displays in product lists i.e. category / manufacturer pages</Value>
@@ -376,6 +376,9 @@
                               <LocaleResource Name="Hint">
                                 <Value>Enter first name</Value>
                               </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>First name is required.</Value>
+                              </LocaleResource>
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="LastName">
@@ -383,6 +386,9 @@
                             <Children>
                               <LocaleResource Name="Hint">
                                 <Value>Enter last name</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Last name is required.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -392,6 +398,9 @@
                               <LocaleResource Name="Hint">
                                 <Value>Enter email</Value>
                               </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Email is required.</Value>
+                              </LocaleResource>
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="Company">
@@ -399,6 +408,9 @@
                             <Children>
                               <LocaleResource Name="Hint">
                                 <Value>Enter company</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Company is required.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -408,6 +420,9 @@
                               <LocaleResource Name="Hint">
                                 <Value>Select country</Value>
                               </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Country is required.</Value>
+                              </LocaleResource>
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="StateProvince">
@@ -415,6 +430,9 @@
                             <Children>
                               <LocaleResource Name="Hint">
                                 <Value>Select state / province</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>State / province is required.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -424,6 +442,9 @@
                               <LocaleResource Name="Hint">
                                 <Value>Enter city</Value>
                               </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>City is required.</Value>
+                              </LocaleResource>
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="Address1">
@@ -431,6 +452,9 @@
                             <Children>
                               <LocaleResource Name="Hint">
                                 <Value>Enter address 1</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Address 1 is required.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -440,6 +464,9 @@
                               <LocaleResource Name="Hint">
                                 <Value>Enter address 2</Value>
                               </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Address 2 is required.</Value>
+                              </LocaleResource>
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="ZipPostalCode">
@@ -447,6 +474,9 @@
                             <Children>
                               <LocaleResource Name="Hint">
                                 <Value>Enter zip / postal code</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Zip / postal code is required.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -456,6 +486,9 @@
                               <LocaleResource Name="Hint">
                                 <Value>Enter phone number</Value>
                               </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Phone number is required.</Value>
+                              </LocaleResource>
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="FaxNumber">
@@ -463,6 +496,9 @@
                             <Children>
                               <LocaleResource Name="Hint">
                                 <Value>Enter fax number</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Fax number is required.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -529,13 +565,6 @@
                   </LocaleResource>
                   <LocaleResource Name="Treeview">
                     <Value>Tree view</Value>
-                  </LocaleResource>
-                  <LocaleResource Name="Validation">
-                    <Children>
-                      <LocaleResource Name="Required">
-                        <Value>This field is required.</Value>
-                      </LocaleResource>
-                    </Children>
                   </LocaleResource>
                 </Children>
             </LocaleResource>
@@ -660,7 +689,7 @@
                               <LocaleResource Name="Name">
                                 <Value>Resource name</Value>
                                 <Children>
-                                  <LocaleResource Name="Validation">
+                                  <LocaleResource Name="Required">
                                     <Value>Please provide a resource name.</Value>
                                   </LocaleResource>
                                 </Children>
@@ -683,7 +712,7 @@
                               <LocaleResource Name="Hint">
                                 <Value>The name of the language.</Value>
                               </LocaleResource>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a name.</Value>
                               </LocaleResource>
                             </Children>
@@ -759,7 +788,7 @@
                               <LocaleResource Name="Hint">
                                 <Value>The name of the currency.</Value>
                               </LocaleResource>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a name.</Value>
                               </LocaleResource>
                             </Children>
@@ -789,7 +818,7 @@
                               <LocaleResource Name="Hint">
                                 <Value>The currency code. For a list of currency codes, go to: http://www.iso.org/iso/support/currency_codes_list-1.htm</Value>
                               </LocaleResource>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a currency code.</Value>
                               </LocaleResource>
                             </Children>
@@ -875,7 +904,7 @@
                           <LocaleResource Name="Name">
                             <Value>Name</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a name.</Value>
                               </LocaleResource>
                             </Children>
@@ -883,7 +912,7 @@
                           <LocaleResource Name="SystemKeyword">
                             <Value>System keyword</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a system keyword.</Value>
                               </LocaleResource>
                             </Children>
@@ -911,7 +940,7 @@
                           <LocaleResource Name="Name">
                             <Value>Name</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a name.</Value>
                               </LocaleResource>
                             </Children>
@@ -919,7 +948,7 @@
                           <LocaleResource Name="SystemKeyword">
                             <Value>System keyword</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a system keyword.</Value>
                               </LocaleResource>
                             </Children>
@@ -1003,7 +1032,7 @@
                           <LocaleResource Name="Name">
                             <Value>Name</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a name.</Value>
                               </LocaleResource>
                             </Children>
@@ -1105,7 +1134,7 @@
                           <LocaleResource Name="Name">
                             <Value>Name</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Please provide a name.</Value>
                               </LocaleResource>
                             </Children>
@@ -1439,7 +1468,7 @@
                           <LocaleResource Name="Name">
                             <Value>Name</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
+                              <LocaleResource Name="Required">
                                 <Value>Forum Group Name is required.</Value>
                               </LocaleResource>
                               <LocaleResource Name="Hint">
@@ -1458,9 +1487,6 @@
                           <LocaleResource Name="DisplayOrder">
                             <Value>Display Order</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
-                                <Value>Display Order is required.</Value>
-                              </LocaleResource>
                               <LocaleResource Name="Hint">
                                 <Value>The display order of the forum group. 1 represents the top of the list.</Value>
                               </LocaleResource>
@@ -1493,8 +1519,8 @@
                           <LocaleResource Name="ForumGroupId">
                             <Value>Forum Group</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
-                                <Value>Forum Group is required.</Value>
+                              <LocaleResource Name="Required">
+                                <Value>Forum group is required.</Value>
                               </LocaleResource>
                               <LocaleResource Name="Hint">
                                 <Value>Choose a forum group.</Value>
@@ -1504,8 +1530,8 @@
                           <LocaleResource Name="Name">
                             <Value>Name</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
-                                <Value>Forum Group Name is required.</Value>
+                              <LocaleResource Name="Required">
+                                <Value>Forum group name is required.</Value>
                               </LocaleResource>
                               <LocaleResource Name="Hint">
                                 <Value>The name of this forum. This is the name that the customer will see.</Value>
@@ -1523,9 +1549,6 @@
                           <LocaleResource Name="DisplayOrder">
                             <Value>Display Order</Value>
                             <Children>
-                              <LocaleResource Name="Validation">
-                                <Value>Display Order is required.</Value>
-                              </LocaleResource>
                               <LocaleResource Name="Hint">
                                 <Value>The display order of the forum. 1 represents the top of the list.</Value>
                               </LocaleResource>
@@ -1580,7 +1603,7 @@
                           <LocaleResource Name="Hint">
                             <Value>The name of the customer role.</Value>
                           </LocaleResource>
-                          <LocaleResource Name="Validation">
+                          <LocaleResource Name="Required">
                             <Value>Please provide a name.</Value>
                           </LocaleResource>
                         </Children>
@@ -1629,8 +1652,6 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
-              </Children>
-              <Children>
                 <LocaleResource Name="Customers">
                   <Value>Customers</Value>
                   <Children>
@@ -1685,7 +1706,7 @@
                             <LocaleResource Name="Hint">
                               <Value>The customer's first name.</Value>
                             </LocaleResource>
-                            <LocaleResource Name="Validation">
+                            <LocaleResource Name="Required">
                               <Value>Please provide a first name.</Value>
                             </LocaleResource>
                           </Children>
@@ -1696,7 +1717,7 @@
                             <LocaleResource Name="Hint">
                               <Value>The customer's last name.</Value>
                             </LocaleResource>
-                            <LocaleResource Name="Validation">
+                            <LocaleResource Name="Required">
                               <Value>Please provide a last name.</Value>
                             </LocaleResource>
                           </Children>
@@ -1963,7 +1984,7 @@
                                     <LocaleResource Name="From">
                                         <Value>From</Value>
                                         <Children>
-                                          <LocaleResource Name="Validation">
+                                          <LocaleResource Name="Required">
                                             <Value>From is required.</Value>
                                           </LocaleResource>
                                           <LocaleResource Name="Hint">
@@ -1982,7 +2003,7 @@
                                     <LocaleResource Name="To">
                                         <Value>To</Value>
                                         <Children>
-                                          <LocaleResource Name="Validation">
+                                          <LocaleResource Name="Required">
                                             <Value>To is required.</Value>
                                           </LocaleResource>
                                           <LocaleResource Name="Hint">
@@ -2420,7 +2441,7 @@
                           <LocaleResource Name="Hint">
                             <Value>The user's username.</Value>
                           </LocaleResource>
-                          <LocaleResource Name="Validation">
+                          <LocaleResource Name="Required">
                             <Value>Please provide a username.</Value>
                           </LocaleResource>
                         </Children>
@@ -2431,8 +2452,8 @@
                           <LocaleResource Name="Hint">
                             <Value>The user's email.</Value>
                           </LocaleResource>
-                          <LocaleResource Name="Validation">
-                            <Value>Please provide a email.</Value>
+                          <LocaleResource Name="Required">
+                            <Value>Please provide an email.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

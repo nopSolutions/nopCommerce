@@ -221,6 +221,68 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        public ActionResult Create()
+        {
+            var model = new ProductModel();
+            AddLocales(_languageService, model.Locales);
+            return View(model);
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Create(ProductModel model, bool continueEditing)
+        {
+            if (ModelState.IsValid)
+            {
+                var product = model.ToEntity();
+                _productService.InsertProduct(product);
+                UpdateLocales(product, model);
+
+                return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var product = _productService.GetProductById(id);
+            if (product == null)
+                throw new ArgumentException("No category found with the specified id", "id");
+
+            var model = product.ToModel();
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+                {
+                    locale.Name = product.GetLocalized(x => x.Name, languageId, false);
+                    locale.ShortDescription = product.GetLocalized(x => x.ShortDescription, languageId, false);
+                    locale.FullDescription = product.GetLocalized(x => x.FullDescription, languageId, false);
+                    locale.MetaKeywords = product.GetLocalized(x => x.MetaKeywords, languageId, false);
+                    locale.MetaDescription = product.GetLocalized(x => x.MetaDescription, languageId, false);
+                    locale.MetaTitle = product.GetLocalized(x => x.MetaTitle, languageId, false);
+                    locale.SeName = product.GetLocalized(x => x.SeName, languageId, false);
+                });
+            return View(model);
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Edit(ProductModel model, bool continueEditing)
+        {
+            var product = _productService.GetProductById(model.Id);
+            if (product == null) 
+                throw new ArgumentException("No category found with the specified id");
+            
+            if (ModelState.IsValid)
+            {
+                product = model.ToEntity(product);
+                _productService.UpdateProduct(product);
+                UpdateLocales(product, model);
+                return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -229,70 +291,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult Edit(int id)
-        {
-            var product = _productService.GetProductById(id);
-            if (product == null) throw new ArgumentException("No category found with the specified id", "id");
-            var model = product.ToModel();
-            AddLocales(_languageService, model.Locales, (locale, languageId) =>
-                                                            {
-                                                                locale.Name = 
-                                                                    product.GetLocalized(x => x.Name,
-                                                                                                   languageId, false);
-                                                                locale.ShortDescription =
-                                                                    product.GetLocalized(x => x.ShortDescription,
-                                                                                         languageId, false);
-                                                                locale.FullDescription =
-                                                                    product.GetLocalized(x => x.FullDescription,
-                                                                                         languageId, false);
-                                                                locale.MetaKeywords =
-                                                                    product.GetLocalized(x => x.MetaKeywords, languageId,
-                                                                                         false);
-                                                                locale.MetaDescription =
-                                                                    product.GetLocalized(x => x.MetaDescription,
-                                                                                         languageId, false);
-                                                                locale.MetaTitle = 
-                                                                    product.GetLocalized(x => x.MetaTitle, languageId, false);
-                                                                locale.SeName = product.GetLocalized(x => x.SeName,
-                                                                                                     languageId, false);
-                                                            });
-            return View(model);
-        }
-
-        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
-        public ActionResult Edit(ProductModel productModel, bool continueEditing)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("Edit", productModel);
-            }
-
-            var product = _productService.GetProductById(productModel.Id);
-            product = productModel.ToEntity(product);
-            _productService.UpdateProduct(product);
-
-            UpdateLocales(product, productModel);
-
-            return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
-        }
-
-        public ActionResult Create()
-        {
-            var model = new ProductModel();
-            AddLocales(_languageService, model.Locales);
-            return View(model);
-        }
-        
-        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
-        public ActionResult Create(ProductModel model, bool continueEditing)
-        {
-            var product = model.ToEntity();
-            _productService.InsertProduct(product);
-            UpdateLocales(product, model);
-
-            return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
-        }
-        
         [HttpPost]
         public ActionResult _AjaxComboBo(string text)
         {

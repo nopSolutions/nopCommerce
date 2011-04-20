@@ -1,59 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using FluentValidation.Attributes;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer
 {
+    [Validator(typeof(RegisterValidator))]
     public class RegisterModel : BaseNopModel
     {
         public RegisterModel()
         {
             this.AvailableTimeZones = new List<SelectListItem>();
         }
-        //TODO localize attribute
-        //TODO add validation rules
-        
-        [DisplayName("Email")]
+
+        [NopResourceDisplayName("Account.Fields.Email")]
         public string Email { get; set; }
 
         public bool UsernamesEnabled { get; set; }
-        [DisplayName("User name")]
+        [NopResourceDisplayName("Account.Fields.Username")]
         public string Username { get; set; }
 
         [DataType(DataType.Password)]
-        [DisplayName("Password")]
+        [NopResourceDisplayName("Account.Fields.Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        //UNDONE compare passwords [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [NopResourceDisplayName("Account.Fields.ConfirmPassword")]
         public string ConfirmPassword { get; set; }
 
         //form fields & properties
         public bool GenderEnabled { get; set; }
-        [DisplayName("Gender")]
+        [NopResourceDisplayName("Account.Fields.Gender")]
         public string Gender { get; set; }
 
-        [DisplayName("First name")]
+        [NopResourceDisplayName("Account.Fields.FirstName")]
         public string FirstName { get; set; }
-        [DisplayName("Last name")]
+        [NopResourceDisplayName("Account.Fields.LastName")]
         public string LastName { get; set; }
 
         public bool CompanyEnabled { get; set; }
-        [DisplayName("Company name")]
+        [NopResourceDisplayName("Account.Fields.Company")]
         public string Company { get; set; }
         
         //time zone
-        [DisplayName("Time zone")]
+        [NopResourceDisplayName("Account.Fields.TimeZone")]
         public string TimeZoneId { get; set; }
         public bool AllowCustomersToSetTimeZone { get; set; }
         public IList<SelectListItem> AvailableTimeZones { get; set; }
 
         //EU VAT
-        [DisplayName("Vat number")]
+        [NopResourceDisplayName("Account.Fields.VatNumber")]
         public string VatNumber { get; set; }
         public string VatNumberStatusNote { get; set; }
         public bool DisplayVatNumber { get; set; }

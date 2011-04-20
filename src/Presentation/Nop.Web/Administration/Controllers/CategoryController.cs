@@ -135,8 +135,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-
-
+        
         #region List / tree
 
         public ActionResult Index()
@@ -381,8 +380,7 @@ namespace Nop.Admin.Controllers
             return PartialView(id);
         }
 
-        #region Ajax
-
+        //ajax
         [GridAction]
         public ActionResult ProductsSelect(int id)
         {
@@ -454,8 +452,6 @@ namespace Nop.Admin.Controllers
                 Data = new GridModel(products)
             };
         }
-
-        #endregion
 
         #endregion
     }

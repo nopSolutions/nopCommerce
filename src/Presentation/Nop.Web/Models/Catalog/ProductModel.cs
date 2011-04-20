@@ -4,20 +4,14 @@ using System.Linq;
 using System.Web;
 using Nop.Web.Framework.Mvc;
 
-namespace Nop.Web.Models
+namespace Nop.Web.Models.Catalog
 {
     public class ProductModel : BaseNopEntityModel
     {
-		#region Constructors 
-
         public ProductModel()
         {
             ProductPrice = new ProductPriceModel();
         }
-
-		#endregion Constructors 
-
-		#region Properties 
 
         public string ImageUrl { get; set; }
 
@@ -29,7 +23,6 @@ namespace Nop.Web.Models
 
         public string ShortDescription { get; set; }
 
-		#endregion Properties 
 
 		#region Nested Classes 
         

@@ -13,7 +13,7 @@ namespace Nop.Admin.Validators
     {
         public ShippingMethodValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.Name.Validation"));
+            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.Name.Required"));
         }
     }
 }

@@ -22,7 +22,19 @@
             });
         });
 </script>
-@Html.HiddenFor(model =>model.Id)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.FirstNameDisabled)
+@Html.HiddenFor(model => model.LastNameDisabled)
+@Html.HiddenFor(model => model.EmailDisabled)
+@Html.HiddenFor(model => model.CompanyDisabled)
+@Html.HiddenFor(model => model.CountryDisabled)
+@Html.HiddenFor(model => model.StateProvinceDisabled)
+@Html.HiddenFor(model => model.CityDisabled)
+@Html.HiddenFor(model => model.Address1Disabled)
+@Html.HiddenFor(model => model.Address2Disabled)
+@Html.HiddenFor(model => model.ZipPostalCodeDisabled)
+@Html.HiddenFor(model => model.PhoneNumberDisabled)
+@Html.HiddenFor(model => model.FaxNumberDisabled)
 <table>
 @if (!Model.FirstNameDisabled)
 {

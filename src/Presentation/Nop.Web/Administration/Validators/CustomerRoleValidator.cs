@@ -12,7 +12,7 @@ namespace Nop.Admin.Validators
     {
         public CustomerRoleValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Name.Validation"));
+            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Name.Required"));
         }
     }
 }

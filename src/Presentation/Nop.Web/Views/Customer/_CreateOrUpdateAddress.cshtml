@@ -23,6 +23,19 @@
         });
 </script>
 @Html.HiddenFor(model => model.Address.Id)
+@Html.HiddenFor(model => model.Address.FirstNameDisabled)
+@Html.HiddenFor(model => model.Address.LastNameDisabled)
+@Html.HiddenFor(model => model.Address.EmailDisabled)
+@Html.HiddenFor(model => model.Address.CompanyDisabled)
+@Html.HiddenFor(model => model.Address.CountryDisabled)
+@Html.HiddenFor(model => model.Address.StateProvinceDisabled)
+@Html.HiddenFor(model => model.Address.CityDisabled)
+@Html.HiddenFor(model => model.Address.Address1Disabled)
+@Html.HiddenFor(model => model.Address.Address2Disabled)
+@Html.HiddenFor(model => model.Address.ZipPostalCodeDisabled)
+@Html.HiddenFor(model => model.Address.PhoneNumberDisabled)
+@Html.HiddenFor(model => model.Address.FaxNumberDisabled)
+
 <table>
     @if (!Model.Address.FirstNameDisabled)
     {

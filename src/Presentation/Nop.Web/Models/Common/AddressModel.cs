@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Validators.Common;
 
 namespace Nop.Web.Models.Common
 {
+    [Validator(typeof(AddressValidator))]
     public class AddressModel : BaseNopEntityModel
     {
         public AddressModel()
@@ -13,7 +16,6 @@ namespace Nop.Web.Models.Common
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
         }
-        //TODO add validation rules
 
         [NopResourceDisplayName("Address.Fields.FirstName")]
         public string FirstName { get; set; }

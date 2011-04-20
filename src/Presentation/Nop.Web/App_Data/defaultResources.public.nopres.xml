@@ -105,6 +105,25 @@
       </LocaleResource>
       <LocaleResource Name="Fields">
         <Children>
+          <LocaleResource Name="Company">
+            <Value>Company name</Value>
+          </LocaleResource>
+          <LocaleResource Name="Email">
+            <Value>Email</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Email is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="FirstName">
+            <Value>First name</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>First name is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
           <LocaleResource Name="Gender">
             <Value>Gender</Value>
             <Children>
@@ -115,6 +134,39 @@
                 <Value>Female</Value>
               </LocaleResource>
             </Children>
+          </LocaleResource>
+          <LocaleResource Name="LastName">
+            <Value>Last name</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Last is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="Password">
+            <Value>Password</Value>
+            <Children>
+              <LocaleResource Name="EnteredPasswordsDoNotMatch">
+                <Value>The password and confirmation password do not match.</Value>
+              </LocaleResource>
+              <LocaleResource Name="Required">
+                <Value>Password is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="ConfirmPassword">
+            <Value>Confirm password</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Password is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="Timezone">
+            <Value>Time zone</Value>
+          </LocaleResource>
+          <LocaleResource Name="Username">
+            <Value>Username</Value>
           </LocaleResource>
           <LocaleResource Name="VatNumber">
             <Value>VAT number</Value>
@@ -170,6 +222,22 @@
           <LocaleResource Name="Welcome">
             <Value>Welcome, Please Sign In!</Value>
           </LocaleResource>
+          <LocaleResource Name="Fields">
+            <Children>
+              <LocaleResource Name="Email">
+                <Value>Email</Value>
+              </LocaleResource>
+              <LocaleResource Name="UserName">
+                <Value>Username</Value>
+              </LocaleResource>
+              <LocaleResource Name="Password">
+                <Value>Password</Value>
+              </LocaleResource>
+              <LocaleResource Name="RememberMe">
+                <Value>Remember me?</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
         </Children>
       </LocaleResource>
       <LocaleResource Name="Logout">
@@ -186,9 +254,7 @@
       </LocaleResource>
       <LocaleResource Name="Register">
         <Value>Register</Value>
-        <LocaleResource Name="Unsuccessful">
-          <Value>Registration was not complete. Please correct the errors and try again.</Value>
-        </LocaleResource>
+        
         <Children>
           <LocaleResource Name="Button">
             <Value>Register</Value>
@@ -208,6 +274,9 @@
                 <Value>Your registration completed</Value>
               </LocaleResource>
             </Children>
+          </LocaleResource>
+          <LocaleResource Name="Unsuccessful">
+            <Value>Registration was not complete. Please correct the errors and try again.</Value>
           </LocaleResource>
         </Children>
       </LocaleResource>
@@ -233,96 +302,96 @@
           <LocaleResource Name="FirstName">
             <Value>First name</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter first name</Value>
+              <LocaleResource Name="Required">
+                <Value>First name is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="LastName">
             <Value>Last name</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter last name</Value>
+              <LocaleResource Name="Required">
+                <Value>Last name is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Email">
             <Value>Email</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter email</Value>
+              <LocaleResource Name="Required">
+                <Value>Email is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Company">
             <Value>Company</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter company</Value>
+              <LocaleResource Name="Required">
+                <Value>Company is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Country">
             <Value>Country</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Select country</Value>
+              <LocaleResource Name="Required">
+                <Value>Country is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="StateProvince">
             <Value>State / province</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Select state / province</Value>
+              <LocaleResource Name="Required">
+                <Value>State / province is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="City">
             <Value>City</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter city</Value>
+              <LocaleResource Name="Required">
+                <Value>City is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Address1">
             <Value>Address 1</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter address 1</Value>
+              <LocaleResource Name="Required">
+                <Value>Address 1 is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Address2">
             <Value>Address 2</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter address 2</Value>
+              <LocaleResource Name="Required">
+                <Value>Address 2 is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="ZipPostalCode">
             <Value>Zip / postal code</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter zip / postal code</Value>
+              <LocaleResource Name="Required">
+                <Value>Zip / postal code is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="PhoneNumber">
             <Value>Phone number</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter phone number</Value>
+              <LocaleResource Name="Required">
+                <Value>Phone number is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="FaxNumber">
             <Value>Fax number</Value>
             <Children>
-              <LocaleResource Name="Hint">
-                <Value>Enter fax number</Value>
+              <LocaleResource Name="Required">
+                <Value>Fax number is required.</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
@@ -373,13 +442,6 @@
       </LocaleResource>
       <LocaleResource Name="View">
         <Value>View</Value>
-      </LocaleResource>
-      <LocaleResource Name="Validation">
-        <Children>
-          <LocaleResource Name="Required">
-            <Value>This field is required.</Value>
-          </LocaleResource>
-        </Children>
       </LocaleResource>
     </Children>
   </LocaleResource>

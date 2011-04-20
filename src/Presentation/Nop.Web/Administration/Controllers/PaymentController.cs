@@ -93,7 +93,7 @@ namespace Nop.Admin.Controllers
             }
 
             //TODO an issue: when a store owner clicks on 'Update' button and then 'Cancel' button,
-            //the 'Configure method' hyperlink disappers
+            //the 'Configure method' hyperlink disappears
             
             //UNDONE allow store owner to edit display order of payment methods
 

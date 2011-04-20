@@ -108,34 +108,35 @@ namespace Nop.Admin.Controllers
 		public ActionResult Edit(int id)
 		{
 			var email = _queuedEmailService.GetQueuedEmailById(id);
-			if (email == null) throw new ArgumentException("No email found with the specified id", "id");
+			if (email == null) 
+                throw new ArgumentException("No email found with the specified id", "id");
 			return View(email.ToModel());
 		}
 
         [HttpPost, ActionName("Edit"), FormValueRequired("save")]
-        public ActionResult Save(QueuedEmailModel queuedEmailModel)
+        public ActionResult Save(QueuedEmailModel model)
 		{
-			if (!ModelState.IsValid)
-			{
-				return View(queuedEmailModel);
-			}
+            if (ModelState.IsValid)
+            {
+                Update(model);
+                return RedirectToAction("List");
+            }
 
-            Update(queuedEmailModel);
-
-            return RedirectToAction("List");
+            //If we got this far, something failed, redisplay form
+            return View(model);
 		}
 
         [HttpPost, ActionName("Edit"), FormValueRequired("save-continue")]
-        public ActionResult SaveAndContinue(QueuedEmailModel queuedEmailModel)
+        public ActionResult SaveAndContinue(QueuedEmailModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(queuedEmailModel);
+                Update(model);
+                return RedirectToAction("Edit", model.Id);
             }
 
-            Update(queuedEmailModel);
-
-            return RedirectToAction("Edit", queuedEmailModel.Id);
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]

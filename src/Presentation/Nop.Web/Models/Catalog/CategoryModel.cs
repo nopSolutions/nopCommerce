@@ -4,23 +4,17 @@ using System.Linq;
 using System.Web;
 using Nop.Web.Framework.Mvc;
 
-namespace Nop.Web.Models
+namespace Nop.Web.Models.Catalog
 {
     public class CategoryModel : BaseNopEntityModel
     {
-		#region Constructors 
-
         public CategoryModel()
         {
             Products = new List<ProductModel>();
             PagingFilteringContext = new PagingFilteringModel();
             SubCategories = new List<SubCategoryModel>();
         }
-
-		#endregion Constructors 
-
-		#region Properties 
-
+        
         public string Name { get; set; }
 
         public PagingFilteringModel PagingFilteringContext { get; set; }
@@ -28,8 +22,6 @@ namespace Nop.Web.Models
         public IList<ProductModel> Products { get; set; }
 
         public IList<SubCategoryModel> SubCategories { get; set; }
-
-		#endregion Properties 
 
 		#region Nested Classes 
         

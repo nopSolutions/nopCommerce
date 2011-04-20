@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(c => c.MetaKeywords).HasMaxLength(400);
             this.Property(c => c.MetaDescription);
             this.Property(c => c.MetaTitle).HasMaxLength(400);
-            this.Property(c => c.SeName).HasMaxLength(100);
+            this.Property(c => c.SeName).HasMaxLength(200);
             this.Property(c => c.PriceRanges).HasMaxLength(400);
         }
     }

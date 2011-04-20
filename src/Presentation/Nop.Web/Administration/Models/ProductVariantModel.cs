@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using FluentValidation.Attributes;
+using Nop.Admin.Validators;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -9,6 +11,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models
 {
+    [Validator(typeof(ProductVariantValidator))]
     public class ProductVariantModel : BaseNopEntityModel, ILocalizedModel<ProductVariantLocalizedModel>
     {
         public ProductVariantModel()

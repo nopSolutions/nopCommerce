@@ -92,6 +92,7 @@ namespace Nop.Web.Controllers
             this._priceFormatter = priceFormatter;
             this._pictureService = pictureService;
             this._mediaSettings = mediaSettings;
+
         }
 
         #endregion
@@ -550,25 +551,41 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
 
-            var address = model.Address.ToEntity();
-            address.CreatedOnUtc = DateTime.UtcNow;
-            //some validation
-            if (address.CountryId == 0)
-                address.CountryId = null;
-            if (address.StateProvinceId == 0)
-                address.StateProvinceId = null;
-            customer.AddAddress(address);
-            _customerService.UpdateCustomer(customer);
+            if (ModelState.IsValid)
+            {
+                var address = model.Address.ToEntity();
+                address.CreatedOnUtc = DateTime.UtcNow;
+                //some validation
+                if (address.CountryId == 0)
+                    address.CountryId = null;
+                if (address.StateProvinceId == 0)
+                    address.StateProvinceId = null;
+                customer.AddAddress(address);
+                _customerService.UpdateCustomer(customer);
 
-            return RedirectToAction("Addresses");
+                return RedirectToAction("Addresses");
+            }
+            
+
+            //If we got this far, something failed, redisplay form
+            //countries
+            var country = _countryService.GetCountryById(model.Address.Id);
+            model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
+            //states
+            if (country != null && country.StateProvinces.Count > 0)
+            {
+                foreach (var s in country.StateProvinces)
+                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+
+            return View(model);
         }
 
         public ActionResult AddressEdit(int addressId)
@@ -613,24 +630,42 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
 
-            //find address (ensure that it belongs to the current customer)
-            var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
-            if (address == null)
-                //address is not found
+            if (ModelState.IsValid)
+            {
+                model.NavigationModel = GetCustomerNavigationModel(customer);
+                model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
+
+                //find address (ensure that it belongs to the current customer)
+                var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+                if (address == null)
+                    //address is not found
+                    return RedirectToAction("Addresses");
+
+                address = model.Address.ToEntity(address);
+                _addressService.UpdateAddress(address);
+
                 return RedirectToAction("Addresses");
+            }
 
-            address = model.Address.ToEntity(address);
-            _addressService.UpdateAddress(address);
+            //If we got this far, something failed, redisplay form
+            //countries
+            var country = _countryService.GetCountryById(model.Address.Id);
+            model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
+            //states
+            if (country != null && country.StateProvinces.Count > 0)
+            {
+                foreach (var s in country.StateProvinces)
+                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
 
-            return RedirectToAction("Addresses");
+            return View(model);
         }
            
         #endregion

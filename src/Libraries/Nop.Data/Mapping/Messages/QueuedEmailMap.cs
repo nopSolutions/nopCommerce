@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Messages
             this.Property(qe => qe.ToName).HasMaxLength(500);
             this.Property(qe => qe.CC).HasMaxLength(500);
             this.Property(qe => qe.Bcc).HasMaxLength(500);
-            this.Property(qe => qe.Subject).HasMaxLength(500);
+            this.Property(qe => qe.Subject).HasMaxLength(1000);
             this.Property(qe => qe.Body).IsMaxLength();
 
 

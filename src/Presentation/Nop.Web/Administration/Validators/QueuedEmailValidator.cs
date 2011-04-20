@@ -8,8 +8,8 @@ namespace Nop.Admin.Validators
     {
         public QueuedEmailValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.From).NotNull().WithMessage(localizationService.GetResource("Admin.System.QueuedEmails.Fields.From.Validation"));
-            RuleFor(x => x.To).NotNull().WithMessage(localizationService.GetResource("Admin.System.QueuedEmails.Fields.To.Validation"));
+            RuleFor(x => x.From).NotNull().WithMessage(localizationService.GetResource("Admin.System.QueuedEmails.Fields.From.Required"));
+            RuleFor(x => x.To).NotNull().WithMessage(localizationService.GetResource("Admin.System.QueuedEmails.Fields.To.Required"));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Nop.Data.Mapping.Media
             this.ToTable("Picture");
             this.HasKey(p => p.Id);
             this.Property(p => p.PictureBinary).IsMaxLength();
-            this.Property(p => p.MimeType).IsRequired().HasMaxLength(20);
+            this.Property(p => p.MimeType).IsRequired().HasMaxLength(40);
         }
     }
 }

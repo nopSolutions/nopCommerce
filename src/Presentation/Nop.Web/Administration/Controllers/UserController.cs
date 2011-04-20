@@ -145,28 +145,35 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Create(UserModel model, bool continueEditing)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
-            //UNDONE set password format
-            var registrationRequest = new UserRegistrationRequest(model.Email,
-                model.Username, model.Password, PasswordFormat.Clear, model.SecurityQuestion,
-                model.SecurityAnswer, model.IsApproved);
+                //UNDONE set password format
+                var registrationRequest = new UserRegistrationRequest(model.Email,
+                    model.Username, model.Password, PasswordFormat.Clear, model.SecurityQuestion,
+                    model.SecurityAnswer, model.IsApproved);
 
-            var registrationResult = _userService.RegisterUser(registrationRequest);
+                var registrationResult = _userService.RegisterUser(registrationRequest);
 
-            if (!registrationResult.Success)
-            {
-                //TODO display errors
-                throw new NopException(registrationResult.Errors.First());
+                if (registrationResult.Success)
+                {
+
+                    var user = registrationResult.User;
+                    user.Comments = model.Comments;
+                    user.IsLockedOut = model.IsLockedOut;
+                    _userService.UpdateUser(user);
+
+                    return continueEditing ? RedirectToAction("Edit", new { id = user.Id }) : RedirectToAction("List");
+                }
+                else
+                {
+                    registrationResult.Errors.ToList().ForEach(e => ModelState.AddModelError("", e));
+                }
             }
-            var user = registrationResult.User;
-            user.Comments = model.Comments;
-            user.IsLockedOut = model.IsLockedOut;
-            _userService.UpdateUser(user);
-            
-            return continueEditing ? RedirectToAction("Edit", new { id = user.Id }) : RedirectToAction("List");
+
+            //If we got this far, something failed, redisplay form
+            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
+            return View(model);
         }
 
         public ActionResult Edit(int id)
@@ -197,39 +204,43 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(UserModel model, bool continueEditing)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
             var user = _userService.GetUserById(model.Id);
             if (user == null)
                 throw new ArgumentException("No user found with the specified id", "id");
 
-            //email
-            if (String.IsNullOrEmpty(model.Email))
-                throw new ArgumentException("Email is not provided");
-            //username 
-            if (_userSettings.UsernamesEnabled &&
-                this._userSettings.AllowUsersToChangeUsernames)
+            if (ModelState.IsValid)
             {
-                if (String.IsNullOrEmpty(model.Username))
-                    throw new ArgumentException("Username is not provided");
-                if (!user.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                //email
+                if (String.IsNullOrEmpty(model.Email))
+                    throw new ArgumentException("Email is not provided");
+                //username 
+                if (_userSettings.UsernamesEnabled &&
+                    this._userSettings.AllowUsersToChangeUsernames)
+                {
+                    if (String.IsNullOrEmpty(model.Username))
+                        throw new ArgumentException("Username is not provided");
+                    if (!user.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                        //TODO handle an error if an exception is thrown
+                        _userService.SetUsername(user, model.Username);
+                }
+                if (!user.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
                     //TODO handle an error if an exception is thrown
-                    _userService.SetUsername(user, model.Username);
+                    _userService.SetEmail(user, model.Email);
+                user.SecurityQuestion = model.SecurityQuestion;
+                user.SecurityAnswer = model.SecurityAnswer;
+                user.Comments = model.Comments;
+                user.IsApproved = model.IsApproved;
+                user.IsLockedOut = model.IsLockedOut;
+
+                _userService.UpdateUser(user);
+
+                return continueEditing ? RedirectToAction("Edit", user.Id) : RedirectToAction("List");
             }
-            if (!user.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
-                //TODO handle an error if an exception is thrown
-                _userService.SetEmail(user, model.Email);
-            user.SecurityQuestion = model.SecurityQuestion;
-            user.SecurityAnswer = model.SecurityAnswer;
-            user.Comments = model.Comments;
-            user.IsApproved = model.IsApproved;
-            user.IsLockedOut = model.IsLockedOut;
 
-            _userService.UpdateUser(user);
-
-            return continueEditing ? RedirectToAction("Edit", user.Id) : RedirectToAction("List");
+            //If we got this far, something failed, redisplay form
+            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
+            return View(model);
         }
 
 
@@ -240,17 +251,26 @@ namespace Nop.Admin.Controllers
             var user = _userService.GetUserById(model.Id);
             if (user == null)
                 throw new ArgumentException("No user found with the specified id");
-
-            var changePassRequest = new ChangePasswordRequest(model.Email, false, model.Password);
-            var changePassResult = _userService.ChangePassword(changePassRequest);
-            if (!changePassResult.Success)
+            if (ModelState.IsValid)
             {
-                //TODO display errors
-                throw new NopException(changePassResult.Errors.First());
+                var changePassRequest = new ChangePasswordRequest(model.Email, false, model.Password);
+                var changePassResult = _userService.ChangePassword(changePassRequest);
+                if (changePassResult.Success)
+                {
+                    //UNDONE show message that password is changed
+                    return Edit(model.Id);
+                }
+                else
+                {
+                    changePassResult.Errors.ToList().ForEach(e => ModelState.AddModelError("", e));
+                }
             }
-            
-            //UNDONE show message that password is changed
-            return Edit(model.Id);
+
+
+            //If we got this far, something failed, redisplay form
+            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
+            return View(model);
         }
 
 

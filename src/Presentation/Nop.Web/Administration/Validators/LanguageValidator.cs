@@ -9,7 +9,7 @@ namespace Nop.Admin.Validators
     {
         public LanguageValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Location.Languages.Fields.Name.Validation"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Location.Languages.Fields.Name.Required"));
             RuleFor(x => x.LanguageCulture)
                 .Must(x =>
                           {

@@ -19,7 +19,7 @@
                 @<table class="adminContent">
                     <tr>
                         <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                            @Html.NopLabelFor(model => model.Locales[item].Name):
                         </td>
                         <td class="adminData">
                             @Html.EditorFor(model => Model.Locales[item].Name)
@@ -84,7 +84,7 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AdminComment)
+                @Html.NopLabelFor(model => model.AdminComment):
             </td>
             <td class="adminData">
                 @Html.TextAreaFor(model => model.AdminComment)
@@ -93,7 +93,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShowOnHomePage)
+                @Html.NopLabelFor(model => model.ShowOnHomePage):
             </td>
             <td class="adminData">
                 @Html.CheckBoxFor(model => model.ShowOnHomePage)
@@ -102,7 +102,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Published)
+                @Html.NopLabelFor(model => model.Published):
             </td>
             <td class="adminData">
                 @Html.CheckBoxFor(model => model.Published)
@@ -111,7 +111,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowCustomerReviews)
+                @Html.NopLabelFor(model => model.AllowCustomerReviews):
             </td>
             <td class="adminData">
                 @Html.CheckBoxFor(model => model.AllowCustomerReviews)
@@ -120,7 +120,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowCustomerRatings)
+                @Html.NopLabelFor(model => model.AllowCustomerRatings):
             </td>
             <td class="adminData">
                 @Html.CheckBoxFor(model => model.AllowCustomerRatings)

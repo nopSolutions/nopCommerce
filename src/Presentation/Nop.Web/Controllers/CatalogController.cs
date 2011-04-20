@@ -6,6 +6,7 @@ using System.Linq;
 using Nop.Services.Directory;
 using Nop.Services.Tax;
 using Nop.Web.Models;
+using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
 {
@@ -88,6 +89,7 @@ namespace Nop.Web.Controllers
 
         #region NonActions
 
+        [NonAction]
         private ProductModel.ProductPriceModel BuildProductPriceModel(Product product)
         {
             var productPrice = new ProductModel.ProductPriceModel();

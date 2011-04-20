@@ -6,8 +6,8 @@ using System.Web;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Infrastructure;
 using Nop.Web.Models;
+using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Home;
 

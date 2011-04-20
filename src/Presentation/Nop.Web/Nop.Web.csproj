@@ -110,13 +110,18 @@
     <Compile Include="Models\Home\LanguageSelectorModel.cs" />
     <Compile Include="Models\PagingFilteringModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\Common\AddressValidator.cs" />
     <Compile Include="Validators\Customer\ChangePasswordValidator.cs" />
+    <Compile Include="Validators\Customer\RegisterValidator.cs" />
+    <Compile Include="Validators\Customer\CustomerInfoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\defaultResources.admin.nopres.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\defaultResources.public.nopres.xml" />
+    <Content Include="App_Data\defaultResources.public.nopres.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Readme\RouteDebugger.Readme.txt" />
     <Content Include="Content\2011.1.315\Black\editor.png" />
     <Content Include="Content\2011.1.315\Black\imagebrowser.png" />

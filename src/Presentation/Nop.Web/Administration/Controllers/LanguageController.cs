@@ -69,24 +69,46 @@ namespace Nop.Admin.Controllers
 			};
 		}
         
+        public ActionResult Create()
+        {
+            return View(new LanguageModel());
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Create(LanguageModel model, bool continueEditing)
+        {
+            if (ModelState.IsValid)
+            {
+                var language = model.ToEntity();
+                _languageService.InsertLanguage(language);
+                return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
 		public ActionResult Edit(int id)
 		{
 			var language = _languageService.GetLanguageById(id);
-			if (language == null) throw new ArgumentException("No language found with the specified id", "id");
+			if (language == null) 
+                throw new ArgumentException("No language found with the specified id", "id");
 			return View(language.ToModel());
 		}
         
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
-		public ActionResult Edit(LanguageModel languageModel, bool continueEditing)
-		{
-            if (!ModelState.IsValid)
+		public ActionResult Edit(LanguageModel model, bool continueEditing)
+        {
+            var language = _languageService.GetLanguageById(model.Id);
+            if (ModelState.IsValid)
             {
-                return View(languageModel);
+                language = model.ToEntity(language);
+                _languageService.UpdateLanguage(language);
+                return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
             }
-			var language = _languageService.GetLanguageById(languageModel.Id);
-		    language = languageModel.ToEntity(language);
-            _languageService.UpdateLanguage(language);
-            return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
 		}
 
 		[HttpPost, ActionName("Delete")]
@@ -95,19 +117,6 @@ namespace Nop.Admin.Controllers
 			var language = _languageService.GetLanguageById(id);
 			_languageService.DeleteLanguage(language);
 			return RedirectToAction("List");
-		}
-
-		public ActionResult Create()
-		{
-			return View(new LanguageModel());
-		}
-
-        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
-		public ActionResult Create(LanguageModel model, bool continueEditing)
-		{
-		    var language = model.ToEntity();
-            _languageService.InsertLanguage(language);
-            return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
 		}
 
 		#endregion

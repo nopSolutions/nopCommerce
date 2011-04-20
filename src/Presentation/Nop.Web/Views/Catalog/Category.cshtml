@@ -1,4 +1,4 @@
-﻿@model Nop.Web.Models.CategoryModel
+﻿@model Nop.Web.Models.Catalog.CategoryModel
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
 }
@@ -19,7 +19,7 @@
                         <div class="picture">
                             <a href="@Url.RouteUrl("Category", new { categoryId = subCategory.Id, subCategory.SeName })" title="Show products in category @subCategory.Name">
                                 <img style="border-width: 0px;" alt="Picture for category @subCategory.Name" src="@subCategory.ImageUrl"
-                                    title="Show products in category @subCategory.Name"></a>
+                                    title="Show products in category @subCategory.Name" /></a>
                         </div>
                     </div>
                 </li> 
