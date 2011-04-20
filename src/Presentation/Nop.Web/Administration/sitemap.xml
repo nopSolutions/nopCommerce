@@ -11,6 +11,7 @@
             </siteMapNode>
             <siteMapNode title="Attributes" nopResource="Admin.Catalog.Attributes">
               <siteMapNode title="Products Attributes" nopResource="Admin.Catalog.Attributes.ProductAttributes" controller="ProductAttribute" action="List"/>
+              <siteMapNode title="Specification Attributes" nopResource="Admin.Catalog.Attributes.SpecificationAttributes" controller="SpecificationAttribute" action="List"/>
             </siteMapNode>
         </siteMapNode>
         <siteMapNode title="Promotions" nopResource="Admin.Promotions">

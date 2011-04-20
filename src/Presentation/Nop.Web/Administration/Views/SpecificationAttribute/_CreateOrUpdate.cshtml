@@ -1,0 +1,66 @@
+﻿@model Nop.Admin.Models.SpecificationAttributeModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("specificationattribute-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Catalog.Attributes.SpecificationAttributes.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Attributes.SpecificationAttributes.Options").Text).Content(TabOptions().ToHtmlString());
+})
+@helper TabInfo()
+    { 
+    @(Html.LocalizedEditor<SpecificationAttributeModel, SpecificationAttributeLocalizedModel>("specificationattribute-localized",
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.Locales[item].Name)
+                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            </td>
+        </tr>
+    </table>
+    ,
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+    </table>
+    ))
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().NumericTextBoxFor(model => model.DisplayOrder).DecimalDigits(0)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+    </table>
+    }
+@helper TabOptions()
+    { 
+        if (Model.Id > 0)
+        {
+            <text>UNDONE options go here</text>
+        }
+        else
+        {
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit")   
+        }
+    }

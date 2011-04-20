@@ -1,0 +1,33 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.SpecificationAttributeModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+        @T("Admin.Catalog.Attributes.SpecificationAttributes")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.SpecificationAttributeModel>(Model.Data)
+                    .Name("specificationattributes-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name)
+                            .Width(300);
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "SpecificationAttribute"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

@@ -34,13 +34,10 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
         [AllowHtml]
         public string Description {get;set;}
-
-
+        
         public IList<ProductAttributeLocalizedModel> Locales { get; set; }
 
         #endregion
-
-        public IList<DropDownItem> ParentCategories { get; set; }
     }
 
     public class ProductAttributeLocalizedModel : ILocalizedModelLocal

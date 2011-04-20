@@ -401,6 +401,54 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="SpecificationAttributes">
+                          <Value>Specification Attributes</Value>
+                          <Children>
+                            <LocaleResource Name="AddNew">
+                              <Value>Add a new specification attribute</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="BackToList">
+                              <Value>back to specification attribute list</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="EditAttributeDetails">
+                              <Value>Edit specification attribute details</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Info">
+                              <Value>Attribute info</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Fields">
+                              <Children>
+                                <LocaleResource Name="Name">
+                                  <Value>Name</Value>
+                                  <Children>
+                                    <LocaleResource Name="Required">
+                                      <Value>Please provide a name.</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A name of the specification attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="DisplayOrder">
+                                  <Value>Display order</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A display order of the specification attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Options">
+                              <Value>Options</Value>
+                              <Children>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the specification attribute before you can add options for this specification attribute page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                       </Children>
                     </LocaleResource>
                 </Children>
