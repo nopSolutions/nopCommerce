@@ -6,7 +6,6 @@ using Nop.Admin.Models;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Messages;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 using Telerik.Web.Mvc;
@@ -47,14 +46,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("List")]
         [FormValueRequired("search-emails")]
         public ActionResult Search(QueuedEmailListModel model)
-        {
-            ViewData["SearchStartDate"] = model.SearchStartDate;
-            ViewData["SearchEndDate"] = model.SearchEndDate;
-            ViewData["SearchFromEmail"] = model.SearchFromEmail;
-            ViewData["SearchToEmail"] = model.SearchToEmail;
-            ViewData["SearchLoadNotSent"] = model.SearchLoadNotSent;
-            ViewData["SearchMaxSentTries"] = model.SearchMaxSentTries;
-
+        {            
             var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail,
                 model.SearchStartDate, model.SearchEndDate, 0, model.SearchLoadNotSent, model.SearchMaxSentTries, 0, 10);
 
@@ -68,32 +60,18 @@ namespace Nop.Admin.Controllers
         }
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult QueuedEmailList(GridCommand command)
+		public ActionResult QueuedEmailList(GridCommand command, QueuedEmailListModel model)
 		{
-            //filtering
-            string startDate = command.FilterDescriptors.GetValueFromAppliedFilters("SearchStartDate");
-            string endDate = command.FilterDescriptors.GetValueFromAppliedFilters("SearchEndDate");
-            string fromEmail = command.FilterDescriptors.GetValueFromAppliedFilters("From");
-            string toEmail = command.FilterDescriptors.GetValueFromAppliedFilters("To");
-            string loadNotSent = command.FilterDescriptors.GetValueFromAppliedFilters("SearchNotSentOnly");
-            string maxSentTries = command.FilterDescriptors.GetValueFromAppliedFilters("SentTries");
+            DateTime? startDateValue = (model.SearchStartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? startDateValue = null;
-            if(String.IsNullOrEmpty(startDate))
-                startDateValue = null;
-            else
-                startDateValue = _dateTimeHelper.ConvertToUtcTime(Convert.ToDateTime(startDate), _dateTimeHelper.CurrentTimeZone);
+            DateTime? endDateValue = (model.SearchEndDate == null) ? null 
+                            :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = null;
-            if(String.IsNullOrEmpty(endDate))
-                endDateValue = null;
-            else
-                endDateValue = _dateTimeHelper.ConvertToUtcTime(Convert.ToDateTime(endDate), _dateTimeHelper.CurrentTimeZone);
+            var newModel = new GridModel();
 
-            var model = new GridModel();
-
-            var queuedEmails = _queuedEmailService.SearchEmails(fromEmail, toEmail, startDateValue, endDateValue,
-               0, Convert.ToBoolean(loadNotSent),Convert.ToInt32(maxSentTries), 0, 10);
+            var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, startDateValue, endDateValue,
+               0, model.SearchLoadNotSent, model.SearchMaxSentTries, 0, 10);
 			var gridModel = new GridModel<QueuedEmailModel>
 			{
 				Data = queuedEmails.Select(x => x.ToModel()),

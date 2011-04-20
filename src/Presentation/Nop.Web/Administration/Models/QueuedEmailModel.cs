@@ -56,11 +56,5 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccountName")]
         public string EmailAccountName { get; set; }
-
-        //properties used for filtering
-        public DateTime? SearchStartDate { get; set; }
-        public DateTime? SearchEndDate { get; set; }
-        public bool SearchNotSentOnly { get; set; }
-        public int MaxSentTries { get; set; }
     }
 }

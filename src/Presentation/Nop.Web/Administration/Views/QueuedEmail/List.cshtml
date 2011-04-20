@@ -97,51 +97,10 @@
                                 .Width(50)
                                 .Centered()
                                 .HeaderTemplate("Edit")
-                                .Filterable(false);
-
-                            //little hack to allow filtering
-                            columns.Bound(x => x.SearchStartDate).Filterable(false).Hidden(true);
-                            columns.Bound(x => x.SearchEndDate).Filterable(false).Hidden(true);
-                            columns.Bound(x => x.To).Filterable(false).Hidden(true);
-                            columns.Bound(x => x.SearchNotSentOnly).Filterable(false).Hidden(true);
-                            columns.Bound(x => x.SentTries).Filterable(false).Hidden(true);
-                            
+                                .Filterable(false);                           
                         })
                         .Pageable(settings => settings.Total(Model.QueuedEmails.Total).PageSize(10))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("QueuedEmailList", "QueuedEmail"))
-                        .Filterable(filtering => filtering.Filters(filters =>
-                        {
-                            //startDate
-                            if (ViewData["SearchStartDate"] != null)
-                            {
-                                filters.Add(x => x.SearchStartDate).IsEqualTo((DateTime?)ViewData["SearchStartDate"]);
-                            }
-                            //endDate
-                            if (ViewData["SearchEndDate"] != null)
-                            {
-                                filters.Add(x => x.SearchStartDate).IsEqualTo((DateTime?)ViewData["SearchEndDate"]);
-                            }
-                            //fromEmail
-                            if (!String.IsNullOrEmpty(ViewData["SearchFromEmail"] as string))
-                            {
-                                filters.Add(x => x.From).Contains((string)ViewData["SearchFromEmail"]);
-                            }
-                            //toEmail
-                            if (!String.IsNullOrEmpty(ViewData["SearchToEmail"] as string))
-                            {
-                                filters.Add(x => x.To).Contains((string)ViewData["SearchToEmail"]);
-                            }
-                            //loadSentOnly
-                            if (ViewData["SearchLoadNotSent"] != null)
-                            {
-                                filters.Add(x => x.SearchNotSentOnly).IsEqualTo((bool)ViewData["SearchLoadNotSent"]);
-                            }                                                       
-                            //max sent tries
-                            if (ViewData["SearchMaxSentTries"] != null)
-                            {
-                                filters.Add(x => x.SentTries).IsEqualTo((int)ViewData["SearchMaxSentTries"]);
-                            }
-                        }))                                      
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("QueuedEmailList", "QueuedEmail", Model))            
                         .EnableCustomBinding(true))
             </td>
         </tr>
