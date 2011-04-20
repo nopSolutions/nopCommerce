@@ -45,7 +45,6 @@ namespace Nop.Admin.Models
         public string PhoneNumber { get; set; }
         [NopResourceDisplayName("Admin.Common.Address.Fields.FaxNumber")]
         public string FaxNumber { get; set; }
-        [NopResourceDisplayName("Admin.Common.Address.Fields.CreatedOnUtc")]
         public DateTime CreatedOnUtc { get; set; }
 
         public IList<SelectListItem> AvailableCountries { get; set; }

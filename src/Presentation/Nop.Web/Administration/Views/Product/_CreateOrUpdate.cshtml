@@ -8,7 +8,7 @@
 {
     x.Add().Text(T("Admin.Catalog.Products.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
-    if (ViewContext.RouteData.GetRequiredString("action").Equals("edit", StringComparison.InvariantCultureIgnoreCase))
+    if (Model.Id > 0)
     {
         x.Add().Text(T("Admin.Catalog.Products.Variants").Text).Content(TabVariants().ToHtmlString());
     }
@@ -46,7 +46,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            @Html.HiddenFor(model => model.Locales[item].Language.Id)
+                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
                         </td>
                     </tr>
                 </table>
@@ -171,7 +171,7 @@
                    </tr>
                    <tr>
                        <td colspan="2">
-                           @Html.HiddenFor(model => model.Locales[item].Language.Id)
+                           @Html.HiddenFor(model => model.Locales[item].LanguageId)
                        </td>
                    </tr>
                </table>

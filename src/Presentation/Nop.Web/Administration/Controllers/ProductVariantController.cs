@@ -70,11 +70,11 @@ namespace Nop.Admin.Controllers
                 _localizedEntityService.SaveLocalizedValue(variant,
                                                                x => x.Name,
                                                                localized.Name,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(variant,
                                                                x => x.Description,
                                                                localized.Description,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
             }
         }
 

@@ -44,7 +44,7 @@ namespace Nop.Admin.Models
         [AllowHtml]
         public string Body { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOnUtc")]
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOn")]
         public DateTime CreatedOnUtc { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentTries")]

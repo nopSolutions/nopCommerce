@@ -661,7 +661,7 @@
                                 <Value>Resource name</Value>
                                 <Children>
                                   <LocaleResource Name="Validation">
-                                    <Value>Resource name must be valid.</Value>
+                                    <Value>Please provide a resource name.</Value>
                                   </LocaleResource>
                                 </Children>
                               </LocaleResource>
@@ -683,6 +683,9 @@
                               <LocaleResource Name="Hint">
                                 <Value>The name of the language.</Value>
                               </LocaleResource>
+                              <LocaleResource Name="Validation">
+                                <Value>Please provide a name.</Value>
+                              </LocaleResource>
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="LanguageCulture">
@@ -692,7 +695,7 @@
                                 <Value>The language specific culture code.</Value>
                               </LocaleResource>
                               <LocaleResource Name="Validation">
-                                <Value>Resource name must be valid.</Value>
+                                <Value>Language culture must be valid.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -748,32 +751,6 @@
                       <LocaleResource Name="ApplyRate">
                         <Value>Apply rate</Value>
                       </LocaleResource>
-                      <LocaleResource Name="Resources">
-                        <Value>Currency resources</Value>
-                        <Children>
-                          <LocaleResource Name="View">
-                            <Value>View string resources</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Fields">
-                            <Children>
-                              <LocaleResource Name="Name">
-                                <Value>Resource name</Value>
-                                <Children>
-                                  <LocaleResource Name="Validation">
-                                    <Value>Resource name must be valid.</Value>
-                                  </LocaleResource>
-                                </Children>
-                              </LocaleResource>
-                              <LocaleResource Name="Value">
-                                <Value>Value</Value>
-                              </LocaleResource>
-                              <LocaleResource Name="CurrencyName">
-                                <Value>Currency</Value>
-                              </LocaleResource>
-                            </Children>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
                       <LocaleResource Name="Fields">
                         <Children>
                           <LocaleResource Name="Name">
@@ -782,16 +759,19 @@
                               <LocaleResource Name="Hint">
                                 <Value>The name of the currency.</Value>
                               </LocaleResource>
+                              <LocaleResource Name="Validation">
+                                <Value>Please provide a name.</Value>
+                              </LocaleResource>
                             </Children>
                           </LocaleResource>
-                          <LocaleResource Name="CurrencyCulture">
+                          <LocaleResource Name="DisplayLocale">
                             <Value>Display locale</Value>
                             <Children>
                               <LocaleResource Name="Hint">
                                 <Value>The currency specific culture code.</Value>
                               </LocaleResource>
                               <LocaleResource Name="Validation">
-                                <Value>Resource name must be valid.</Value>
+                                <Value>Currency culture must be valid.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -808,6 +788,17 @@
                             <Children>
                               <LocaleResource Name="Hint">
                                 <Value>The currency code. For a list of currency codes, go to: http://www.iso.org/iso/support/currency_codes_list-1.htm</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Validation">
+                                <Value>Please provide a currency code.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="CustomFormatting">
+                            <Value>Custom formatting</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Custom formatting to be applied to the currency values.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -1932,7 +1923,7 @@
                       <LocaleResource Name="Active">
                         <Value>Active</Value>
                       </LocaleResource>
-                      <LocaleResource Name="CreatedOnUTC">
+                      <LocaleResource Name="CreatedOn">
                         <Value>Subscribed on</Value>
                       </LocaleResource>
                     </Children>
@@ -2039,7 +2030,7 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="CreatedOnUtc">
+                                    <LocaleResource Name="CreatedOn">
                                         <Value>Created on</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">

@@ -84,29 +84,40 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
 		public ActionResult Create(EmailAccountModel model, bool continueEditing)
 		{
-			var emailAccount = model.ToEntity();
-            _emailAccountService.InsertEmailAccount(emailAccount);
-            return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                var emailAccount = model.ToEntity();
+                _emailAccountService.InsertEmailAccount(emailAccount);
+                return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
 		}
 
 		public ActionResult Edit(int id)
 		{
 			var emailAccount = _emailAccountService.GetEmailAccountById(id);
-			if (emailAccount == null) throw new ArgumentException("No email account found with the specified id", "id");
+			if (emailAccount == null) 
+                throw new ArgumentException("No email account found with the specified id", "id");
 			return View(emailAccount.ToModel());
 		}
         
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
-        public ActionResult Edit(EmailAccountModel emailAccountModel, bool continueEditing)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(emailAccountModel);
-			}
-			var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountModel.Id);
-			emailAccount = emailAccountModel.ToEntity(emailAccount);
-			_emailAccountService.UpdateEmailAccount(emailAccount);
-            return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
+        public ActionResult Edit(EmailAccountModel model, bool continueEditing)
+        {
+            var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
+            if (emailAccount == null)
+                throw new ArgumentException("No email account found with the specified id", "id");
+            if (ModelState.IsValid)
+            {
+                emailAccount = model.ToEntity(emailAccount);
+                _emailAccountService.UpdateEmailAccount(emailAccount);
+                return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
 		}
 
         [HttpPost, ActionName("Delete")]

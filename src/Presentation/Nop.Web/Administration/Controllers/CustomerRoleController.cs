@@ -66,6 +66,25 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
+        public ActionResult Create()
+        {
+            return View(new CustomerRoleModel());
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Create(CustomerRoleModel model, bool continueEditing)
+        {
+            if (ModelState.IsValid)
+            {
+                var customerRole = model.ToEntity();
+                _customerService.InsertCustomerRole(customerRole);
+                return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
 		public ActionResult Edit(int id)
 		{
             var customerRole = _customerService.GetCustomerRoleById(id);
@@ -75,16 +94,17 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(CustomerRoleModel model, bool continueEditing)
-		{
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+        {
             var customerRole = _customerService.GetCustomerRoleById(model.Id);
-            customerRole = model.ToEntity(customerRole);
-            _customerService.UpdateCustomerRole(customerRole);
+            if (ModelState.IsValid)
+            {
+                customerRole = model.ToEntity(customerRole);
+                _customerService.UpdateCustomerRole(customerRole);
+                return continueEditing ? RedirectToAction("Edit", customerRole.Id) : RedirectToAction("List");
+            }
 
-            return continueEditing ? RedirectToAction("Edit", customerRole.Id) : RedirectToAction("List");
+            //If we got this far, something failed, redisplay form
+            return View(model);
 		}
 
         [HttpPost, ActionName("Delete")]
@@ -94,19 +114,6 @@ namespace Nop.Admin.Controllers
             var customerRole = _customerService.GetCustomerRoleById(id);
             _customerService.DeleteCustomerRole(customerRole);
 			return RedirectToAction("List");
-		}
-
-		public ActionResult Create()
-		{
-            return View(new CustomerRoleModel());
-		}
-        
-        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
-        public ActionResult Create(CustomerRoleModel model, bool continueEditing)
-		{
-            var customerRole = model.ToEntity();
-            _customerService.InsertCustomerRole(customerRole);
-            return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
 		}
 
 		#endregion

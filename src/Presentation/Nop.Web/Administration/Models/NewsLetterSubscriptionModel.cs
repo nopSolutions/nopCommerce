@@ -12,7 +12,7 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")]
         public bool Active { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOnUTC")]
+        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")]
         public DateTime CreatedOnUTC { get; set; }
     }
 }

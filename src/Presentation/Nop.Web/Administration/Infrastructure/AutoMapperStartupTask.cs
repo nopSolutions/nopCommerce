@@ -89,7 +89,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<Customer, CustomerModel>();
             Mapper.CreateMap<CustomerModel, Customer>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
-                .ForMember(dest => dest.LastActivityDateUtc, dt => dt.Ignore());
+                .ForMember(dest => dest.LastActivityDateUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.AssociatedUserId, dt => dt.Ignore());
         }
 
         public static void ViceVersa<T1, T2>()

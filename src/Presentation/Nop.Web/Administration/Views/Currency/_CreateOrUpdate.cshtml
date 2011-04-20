@@ -67,6 +67,15 @@
             @Html.ValidationMessageFor(model => model.DisplayOrder)
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CustomFormatting):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CustomFormatting)
+            @Html.ValidationMessageFor(model => model.CustomFormatting)
+        </td>
+    </tr>
     @if (Model.CreatedOnUtc > DateTime.MinValue)
     {
         <tr>

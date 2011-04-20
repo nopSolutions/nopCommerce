@@ -8,6 +8,6 @@ namespace Nop.Web.Framework.Localization
 {
     public interface ILocalizedModelLocal
     {
-        Language Language { get; set; }
+        int LanguageId { get; set; }
     }
 }

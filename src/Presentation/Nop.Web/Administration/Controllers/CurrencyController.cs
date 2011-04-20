@@ -18,17 +18,26 @@ namespace Nop.Admin.Controllers
     [AdminAuthorize]
     public class CurrencyController : Controller
     {
-        private ICurrencyService _currencyService;
-        private CurrencySettings _currencySettings;
-        private ISettingService _settingService;
+        #region Fields
+
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
+        private readonly ISettingService _settingService;
         private readonly IDateTimeHelper _dateTimeHelper;
+
+        #endregion
+
+        #region Constructors
+
         public CurrencyController(ICurrencyService currencyService, CurrencySettings currencySettings, ISettingService settingService, IDateTimeHelper dateTimeHelper)
         {
-            _currencyService = currencyService;
-            _currencySettings = currencySettings;
-            _settingService = settingService;
-            _dateTimeHelper = dateTimeHelper;
+            this._currencyService = currencyService;
+            this._currencySettings = currencySettings;
+            this._settingService = settingService;
+            this._dateTimeHelper = dateTimeHelper;
         }
+        
+        #endregion
 
         #region Methods
         public ActionResult Index()
@@ -36,14 +45,15 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult List(bool liveRates=false)
+        public ActionResult List(bool liveRates = false)
         {
             var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList(); ;
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId ? true : false;
-            if (liveRates) ViewBag.Rates = _currencyService.GetCurrencyLiveRates(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
+            if (liveRates) 
+                ViewBag.Rates = _currencyService.GetCurrencyLiveRates(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
             ViewBag.ExchangeRateProviders = new SelectList(_currencyService.LoadAllExchangeRateProviders(), "SystemName", "FriendlyName", _currencySettings.ActiveExchangeRateProviderSystemName); ;
             ViewBag.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
             var gridModel = new GridModel<CurrencyModel>
@@ -107,36 +117,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Edit
-        public ActionResult Edit(int id)
-        {
-            var currency = _currencyService.GetCurrencyById(id);
-            if (currency == null) throw new ArgumentException("No currency found with the specified id", "id");
-            var model = currency.ToModel();
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(model.CreatedOnUtc, DateTimeKind.Utc).ToString();
-            model.UpdatedOnStr = _dateTimeHelper.ConvertToUserTime(model.UpdatedOnUtc, DateTimeKind.Utc).ToString();
-            return View(model);
-        }
-
-        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
-        public ActionResult Edit(CurrencyModel currencyModel, bool continueEditing)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-            //UNDONE support custom formatting input field
-            var currency = _currencyService.GetCurrencyById(currencyModel.Id);
-            currencyModel.CreatedOnUtc = currency.CreatedOnUtc;
-            currency = currencyModel.ToEntity(currency);
-            currency.UpdatedOnUtc = DateTime.UtcNow;
-            _currencyService.UpdateCurrency(currency);
-            return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
-        }
-
-        #endregion
-
-        #region Create
+        #region Create / Edit / Delete
 
         public ActionResult Create()
         {
@@ -147,19 +128,47 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(CurrencyModel model, bool continueEditing)
         {
-            //UNDONE support custom formatting input field
-            model.CreatedOnUtc = DateTime.UtcNow;
-            model.UpdatedOnUtc = DateTime.UtcNow;
-            var currency = model.ToEntity();
-            _currencyService.InsertCurrency(currency);
-            return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                model.CreatedOnUtc = DateTime.UtcNow;
+                model.UpdatedOnUtc = DateTime.UtcNow;
+                var currency = model.ToEntity();
+                _currencyService.InsertCurrency(currency);
+                return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+        
+        public ActionResult Edit(int id)
+        {
+            var currency = _currencyService.GetCurrencyById(id);
+            if (currency == null) 
+                throw new ArgumentException("No currency found with the specified id", "id");
+            var model = currency.ToModel();
+            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(model.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.UpdatedOnStr = _dateTimeHelper.ConvertToUserTime(model.UpdatedOnUtc, DateTimeKind.Utc).ToString();
+            return View(model);
         }
 
-        #endregion
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Edit(CurrencyModel model, bool continueEditing)
+        {
+            if (ModelState.IsValid)
+            {
+                var currency = _currencyService.GetCurrencyById(model.Id);
+                model.CreatedOnUtc = currency.CreatedOnUtc;
+                currency = model.ToEntity(currency);
+                currency.UpdatedOnUtc = DateTime.UtcNow;
+                _currencyService.UpdateCurrency(currency);
+                return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
+            }
 
-        #region Delete
-
-
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+        
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {

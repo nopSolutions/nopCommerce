@@ -156,7 +156,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+            //If we got this far, something failed, redisplay form
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             return View(model);
         }
@@ -276,7 +276,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+            //If we got this far, something failed, redisplay form
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
@@ -417,7 +417,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            // If we got this far, something failed, redisplay form
+            //If we got this far, something failed, redisplay form
             PrepareCustomerInfoModel(model, customer, user, true);
             return View(model);
         }
@@ -715,7 +715,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            // If we got this far, something failed, redisplay form
+            //If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -796,7 +796,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            // If we got this far, something failed, redisplay form
+            //If we got this far, something failed, redisplay form
             model.AvatarUrl = _pictureService.GetPictureUrl(
                 customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
                 _mediaSettings.AvatarPictureSize, 

@@ -52,19 +52,20 @@ namespace Nop.Web.Framework
                 if (helper.ViewData.Model.Locales.Count > 1)
                 {
                     var tabStrip = helper.Telerik().TabStrip().Name(name).Items(x =>
-                                                                                                  {
-                                                                                                      x.Add().Text("Standard").Content(standardTemplate(helper.ViewData.Model).ToHtmlString()).Selected(true);
-                                                                                                      for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
-                                                                                                      {
-                                                                                                          var locale = helper.ViewData.Model.Locales[i];
-                                                                                                          x.Add().Text(locale.Language.Name)
-                                                                                                             .Content(localizedTemplate
-                                                                                                                  (i).
-                                                                                                                  ToHtmlString
-                                                                                                                  ())
-                                                                                                             .ImageUrl("~/Content/images/flags/" + locale.Language.FlagImageFileName);
-                                                                                                      }
-                                                                                                  }).ToHtmlString();
+                    {
+                        x.Add().Text("Standard").Content(standardTemplate(helper.ViewData.Model).ToHtmlString()).Selected(true);
+                        for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
+                        {
+                            var locale = helper.ViewData.Model.Locales[i];
+                            var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
+                            x.Add().Text(language.Name)
+                                .Content(localizedTemplate
+                                    (i).
+                                    ToHtmlString
+                                    ())
+                                .ImageUrl("~/Content/images/flags/" + language.FlagImageFileName);
+                        }
+                    }).ToHtmlString();
                     writer.Write(tabStrip);
                 }
                 else

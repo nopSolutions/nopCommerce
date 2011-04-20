@@ -8,7 +8,10 @@
 {
     x.Add().Text(T("Admin.Catalog.Categories.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
+    }
 })
 
 @helper TabInfo()
@@ -35,7 +38,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            @Html.HiddenFor(model => model.Locales[item].Language.Id)
+                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
                         </td>
                     </tr>
                 </table>
@@ -161,7 +164,7 @@
                    </tr>
                    <tr>
                        <td colspan="2">
-                           @Html.HiddenFor(model => model.Locales[item].Language.Id)
+                           @Html.HiddenFor(model => model.Locales[item].LanguageId)
                        </td>
                    </tr>
                </table>

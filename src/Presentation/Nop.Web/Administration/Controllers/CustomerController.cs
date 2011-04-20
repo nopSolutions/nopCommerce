@@ -6,6 +6,7 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
@@ -204,7 +205,6 @@ namespace Nop.Admin.Controllers
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
             model.DisplayVatNumber = false;
-            model.VatNumberStatusNote = GetVatNumberStatusName(VatNumberStatus.Empty);
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();
@@ -221,34 +221,47 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Create(CustomerModel model, bool continueEditing)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
+                var customer = model.ToEntity();
+                customer.CustomerGuid = Guid.NewGuid();
+                customer.CreatedOnUtc = DateTime.UtcNow;
+                _customerService.InsertCustomer(customer);
+                if (_formFieldSettings.GenderEnabled)
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
+                if (_formFieldSettings.DateOfBirthEnabled)
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+                if (_formFieldSettings.CompanyEnabled)
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+
+                //customer roles
+                var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+                foreach (var customerRole in allCustomerRoles)
+                {
+                    if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                        customer.CustomerRoles.Add(customerRole);
+                }
+                _customerService.UpdateCustomer(customer);
+
+                return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
             }
 
-            var customer = model.ToEntity();
-            customer.CustomerGuid = Guid.NewGuid();
-            customer.CreatedOnUtc = DateTime.UtcNow;
-            _customerService.InsertCustomer(customer);
-            if (_formFieldSettings.GenderEnabled)
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
-            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
-            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-            if (_formFieldSettings.DateOfBirthEnabled)
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
-            if (_formFieldSettings.CompanyEnabled)
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
-
+            //If we got this far, something failed, redisplay form
+            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
+            model.DisplayVatNumber = false;
             //customer roles
-            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
-            foreach (var customerRole in allCustomerRoles)
-            {
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
-                    customer.CustomerRoles.Add(customerRole);
-            }
-            _customerService.UpdateCustomer(customer);
+            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            model.AvailableCustomerRoles = customerRoles.ToList();
+            //form fields
+            model.GenderEnabled = _formFieldSettings.GenderEnabled;
+            model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
+            return View(model);
 
-            return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
         }
 
         public ActionResult Edit(int id)
@@ -298,63 +311,91 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(CustomerModel model, bool continueEditing)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
             var customer = _customerService.GetCustomerById(model.Id);
-            if (customer == null) 
+            if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "id");
 
-            string prevVatNumber = customer.VatNumber;
-
-            customer = model.ToEntity(customer);
-
-            //VAT number
-            if (_taxSettings.EuVatEnabled)
+            if (ModelState.IsValid)
             {
-                customer.VatNumber = model.VatNumber;
-                //set VAT number status
-                if (!String.IsNullOrEmpty(customer.VatNumber))
+                string prevVatNumber = customer.VatNumber;
+                customer = model.ToEntity(customer);
+
+
+                //VAT number
+                if (_taxSettings.EuVatEnabled)
                 {
-                    if (!customer.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
-                        customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber);
+                    customer.VatNumber = model.VatNumber;
+                    //set VAT number status
+                    if (!String.IsNullOrEmpty(customer.VatNumber))
+                    {
+                        if (!customer.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
+                            customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber);
+                    }
+                    else
+                        customer.VatNumberStatus = VatNumberStatus.Empty;
                 }
-                else
-                    customer.VatNumberStatus = VatNumberStatus.Empty;
+                _customerService.UpdateCustomer(customer);
+
+                //customer attributes
+                if (_formFieldSettings.GenderEnabled)
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
+                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
+                if (_formFieldSettings.DateOfBirthEnabled)
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+                if (_formFieldSettings.CompanyEnabled)
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+
+                //customer roles
+                var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+                foreach (var customerRole in allCustomerRoles)
+                {
+                    if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                    {
+                        //new role
+                        if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() == 0)
+                            customer.CustomerRoles.Add(customerRole);
+                    }
+                    else
+                    {
+                        //removed role
+                        if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() > 0)
+                            customer.CustomerRoles.Remove(customerRole);
+                    }
+                }
+                _customerService.UpdateCustomer(customer);
+
+                return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
             }
-            _customerService.UpdateCustomer(customer);
 
-            //customer attributes
-            if (_formFieldSettings.GenderEnabled)
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
-            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
-            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-            if (_formFieldSettings.DateOfBirthEnabled)
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
-            if (_formFieldSettings.CompanyEnabled)
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
 
+            //If we got this far, something failed, redisplay form
+            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
+            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
+            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            //form fields
+            model.GenderEnabled = _formFieldSettings.GenderEnabled;
+            model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
             //customer roles
-            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
-            foreach (var customerRole in allCustomerRoles)
+            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            model.AvailableCustomerRoles = customerRoles.ToList();
+            //reward points gistory
+            model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
+            model.AddRewardPointsValue = 0;
+            model.AddRewardPointsMessage = "Some comment here...";
+            //user account
+            model.AssociatedUserId = customer.AssociatedUserId;
+            if (customer.AssociatedUserId.HasValue)
             {
-                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
-                {
-                    //new role
-                    if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() == 0)
-                        customer.CustomerRoles.Add(customerRole);
-                }
-                else
-                {
-                    //removed role
-                    if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() > 0)
-                        customer.CustomerRoles.Remove(customerRole);
-                }
+                User associatedUser = _userService.GetUserById(customer.AssociatedUserId.Value);
+                if (associatedUser != null)
+                    model.AssociatedUserEmail = associatedUser.Email;
             }
-            _customerService.UpdateCustomer(customer);
-
-            return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
+            return View(model);
         }
         
         [HttpPost, ActionName("Edit")]
@@ -519,30 +560,49 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult AddressCreate(CustomerAddressModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
 
-            var address = model.Address.ToEntity();
-            address.CreatedOnUtc = DateTime.UtcNow;
-            //some validation
-            if (address.CountryId == 0)
-                address.CountryId = null;
-            if (address.StateProvinceId == 0)
-                address.StateProvinceId = null;
-            customer.AddAddress(address);
-            _customerService.UpdateCustomer(customer);
+            if (ModelState.IsValid)
+            {
+                var address = model.Address.ToEntity();
+                address.CreatedOnUtc = DateTime.UtcNow;
+                //some validation
+                if (address.CountryId == 0)
+                    address.CountryId = null;
+                if (address.StateProvinceId == 0)
+                    address.StateProvinceId = null;
+                customer.AddAddress(address);
+                _customerService.UpdateCustomer(customer);
 
-            return RedirectToAction("AddressEdit", new { addressId = address.Id, customerId = model.CustomerId });
+                return RedirectToAction("AddressEdit", new { addressId = address.Id, customerId = model.CustomerId });
+            }
+
+            //If we got this far, something failed, redisplay form
+            model.CustomerId = customer.Id;
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
+            //states
+            Country country = model.Address.CountryId.HasValue ? _countryService.GetCountryById(model.Address.CountryId.Value) : null;
+            if (country != null && country.StateProvinces.Count > 0)
+            {
+                foreach (var s in country.StateProvinces)
+                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+            return View(model);
         }
 
         public ActionResult AddressEdit(int addressId, int customerId)
         {
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id");
+
             var address = _addressService.GetAddressById(addressId);
             if (address == null)
                 throw new ArgumentException("No address found with the specified id", "addressId");
@@ -569,15 +629,39 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult AddressEdit(CustomerAddressModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var address = _addressService.GetAddressById(model.Address.Id);
-            address = model.Address.ToEntity(address);
-            _addressService.UpdateAddress(address);
+            var customer = _customerService.GetCustomerById(model.CustomerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id");
 
-            return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });
+            var address = _addressService.GetAddressById(model.Address.Id);
+            if (address == null)
+                throw new ArgumentException("No address found with the specified id", "addressId");
+
+            if (ModelState.IsValid)
+            {
+                address = model.Address.ToEntity(address);
+                _addressService.UpdateAddress(address);
+
+                return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });
+            }
+
+            //If we got this far, something failed, redisplay form
+            model.CustomerId = customer.Id;
+            model.Address = address.ToModel();
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
+            //states
+            if (address.Country != null && address.Country.StateProvinces.Count > 0)
+            {
+                foreach (var s in address.Country.StateProvinces)
+                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+
+            return View(model);
         }
            
         //User accounts

@@ -10,13 +10,14 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Admin.Models
 {
+    [Validator(typeof(CurrencyValidator))]
     public class CurrencyModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.Name")]
         public string Name { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.CurrencyCode")]
         public string CurrencyCode { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.CurrencyCulture")]
+        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.DisplayLocale")]
         public string DisplayLocale { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.Rate")]
         public decimal Rate { get; set; }

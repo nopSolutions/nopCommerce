@@ -205,7 +205,7 @@ namespace Nop.Admin.Models
     }
     public class ProductVariantLocalizedModel : ILocalizedModelLocal
     {
-        public Core.Domain.Localization.Language Language { get; set; }
+        public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Name")]
         public string Name { get; set; }

@@ -59,31 +59,31 @@ namespace Nop.Admin.Controllers
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.Name,
                                                                localized.Name,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.ShortDescription,
                                                                localized.ShortDescription,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.FullDescription,
                                                                localized.FullDescription,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.MetaKeywords,
                                                                localized.MetaKeywords,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.MetaDescription,
                                                                localized.MetaDescription,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.MetaTitle,
                                                                localized.MetaTitle,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.SeName,
                                                                localized.SeName,
-                                                               localized.Language.Id);
+                                                               localized.LanguageId);
             }
         }
 

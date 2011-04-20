@@ -88,7 +88,7 @@ namespace Nop.Admin.Models
 
     public class CategoryLocalizedModel : ILocalizedModelLocal
     {
-        public Core.Domain.Localization.Language Language { get; set; }
+        public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
         [AllowHtml]

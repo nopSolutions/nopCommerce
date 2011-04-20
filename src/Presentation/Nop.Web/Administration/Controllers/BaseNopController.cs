@@ -20,10 +20,10 @@ namespace Nop.Admin.Controllers
             foreach (var language in languageService.GetAllLanguages(true))
             {
                 var locale = Activator.CreateInstance<TLocalizedModelLocal>();
-                locale.Language = language;
+                locale.LanguageId = language.Id;
                 if (configure != null)
                 {
-                    configure.Invoke(locale, locale.Language.Id);
+                    configure.Invoke(locale, locale.LanguageId);
                 }
                 locales.Add(locale);
             }

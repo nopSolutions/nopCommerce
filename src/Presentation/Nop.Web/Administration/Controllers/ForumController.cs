@@ -66,11 +66,17 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult CreateForumGroup(ForumGroupModel model, bool continueEditing)
         {
-            model.CreatedOnUtc = DateTime.UtcNow;
-            model.UpdatedOnUtc = DateTime.UtcNow;
-            var forumGroup = model.ToEntity();
-            _forumService.InsertForumGroup(forumGroup);
-            return continueEditing ? RedirectToAction("EditForumGroup", new { forumGroup.Id }) : RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                model.CreatedOnUtc = DateTime.UtcNow;
+                model.UpdatedOnUtc = DateTime.UtcNow;
+                var forumGroup = model.ToEntity();
+                _forumService.InsertForumGroup(forumGroup);
+                return continueEditing ? RedirectToAction("EditForumGroup", new { forumGroup.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
         public ActionResult CreateForum()
@@ -84,16 +90,18 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult CreateForum(ForumModel model, bool continueEditing)
         {
-            model.CreatedOnUtc = DateTime.UtcNow;
-            model.UpdatedOnUtc = DateTime.UtcNow;
-            var forum = model.ToEntity();
-            _forumService.InsertForum(forum);
-            if (continueEditing)
+            if (ModelState.IsValid)
             {
-                model.ForumGroups = _forumService.GetAllForumGroups().ToList();
-                return RedirectToAction("EditForum", new { forum.Id });
+                model.CreatedOnUtc = DateTime.UtcNow;
+                model.UpdatedOnUtc = DateTime.UtcNow;
+                var forum = model.ToEntity();
+                _forumService.InsertForum(forum);
+                return continueEditing ? RedirectToAction("EditForum", new { forum.Id }) : RedirectToAction("List");
             }
-            return RedirectToAction("List");
+
+            //If we got this far, something failed, redisplay form
+            model.ForumGroups = _forumService.GetAllForumGroups().ToList();
+            return View(model);
         }
         #endregion
 
@@ -101,7 +109,8 @@ namespace Nop.Admin.Controllers
         public ActionResult EditForumGroup(int id)
         {
             var forumGroup = _forumService.GetForumGroupById(id);
-            if (forumGroup == null) throw new ArgumentException("No Forum Group found with the specified id", "id");
+            if (forumGroup == null) 
+                throw new ArgumentException("No Forum Group found with the specified id", "id");
             var model = forumGroup.ToModel();
             return View(model);
         }
@@ -109,17 +118,25 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult EditForumGroup(ForumGroupModel model, bool continueEditing)
         {
-            model.UpdatedOnUtc = DateTime.UtcNow;
             var forumGroup = _forumService.GetForumGroupById(model.Id);
-            forumGroup = model.ToEntity(forumGroup);
-            _forumService.UpdateForumGroup(forumGroup);
-            return continueEditing ? RedirectToAction("EditForumGroup", forumGroup.Id) : RedirectToAction("List");
+
+            if (ModelState.IsValid)
+            {
+                model.UpdatedOnUtc = DateTime.UtcNow;
+                forumGroup = model.ToEntity(forumGroup);
+                _forumService.UpdateForumGroup(forumGroup);
+                return continueEditing ? RedirectToAction("EditForumGroup", forumGroup.Id) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
         public ActionResult EditForum(int id)
         {
             var forum = _forumService.GetForumById(id);
-            if (forum == null) throw new ArgumentException("No Forum found with the specified id", "id");
+            if (forum == null) 
+                throw new ArgumentException("No Forum found with the specified id", "id");
             var model = forum.ToModel();
             model.ForumGroups = _forumService.GetAllForumGroups().ToList();
             return View(model);
@@ -128,17 +145,19 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult EditForum(ForumModel model, bool continueEditing)
         {
-            model.UpdatedOnUtc = DateTime.UtcNow;
             var forum = _forumService.GetForumById(model.Id);
-            forum = model.ToEntity(forum);
-            _forumService.UpdateForum(forum);
-
-            if (continueEditing)
+            if (ModelState.IsValid)
             {
-                model.ForumGroups = _forumService.GetAllForumGroups().ToList();
-                return RedirectToAction("EditForum", forum.Id);
+                model.UpdatedOnUtc = DateTime.UtcNow;
+                forum = model.ToEntity(forum);
+                _forumService.UpdateForum(forum);
+
+                return continueEditing ? RedirectToAction("EditForum", forum.Id) : RedirectToAction("List");
             }
-            return RedirectToAction("List");
+
+            //If we got this far, something failed, redisplay form
+            model.ForumGroups = _forumService.GetAllForumGroups().ToList();
+            return View(model);
         }
         #endregion
 

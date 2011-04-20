@@ -3,7 +3,8 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models
 {
-    //[Validator(typeof(LanguageValidator))]
+    //TODO add validator
+    //[Validator(typeof(EmailAccountValidator))]
     public class EmailAccountModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Email")]
