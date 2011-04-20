@@ -178,6 +178,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            //TODO display associated user
             var user = _userService.GetUserById(id);
             if (user == null)
                 throw new ArgumentException("No user found with the specified id", "id");

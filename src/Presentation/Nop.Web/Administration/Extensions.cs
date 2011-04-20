@@ -99,6 +99,24 @@ namespace Nop.Admin
 
         #endregion
 
+        #region Product attributes
+
+        public static ProductAttributeModel ToModel(this ProductAttribute entity)
+        {
+            return AutoMapper.Mapper.Map<ProductAttribute, ProductAttributeModel>(entity);
+        }
+
+        public static ProductAttribute ToEntity(this ProductAttributeModel model)
+        {
+            return AutoMapper.Mapper.Map<ProductAttributeModel, ProductAttribute>(model);
+        }
+
+        public static ProductAttribute ToEntity(this ProductAttributeModel model, ProductAttribute destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
         #region Languages
 
         public static LanguageModel ToModel(this Language entity)
@@ -193,22 +211,7 @@ namespace Nop.Admin
         }
 
         #endregion
-
-        #region Catalog
-
-        public static TDestination To<TDestination>(this Product entity)
-        {
-            return AutoMapper.Mapper.Map<Product, TDestination>(entity);
-        }
-
-        //TODO:Make all mapping use To<T>()
-        public static TDestination To<TDestination>(this Category category)
-        {
-            return AutoMapper.Mapper.Map<Category, TDestination>(category);
-        }
-
-        #endregion
-
+        
         #region Currencies
 
         public static CurrencyModel ToModel(this Currency entity)

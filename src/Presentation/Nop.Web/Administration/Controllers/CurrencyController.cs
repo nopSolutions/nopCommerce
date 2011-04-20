@@ -47,7 +47,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List(bool liveRates = false)
         {
-            var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList(); ;
+            var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
             foreach (var currency in currenciesModel)

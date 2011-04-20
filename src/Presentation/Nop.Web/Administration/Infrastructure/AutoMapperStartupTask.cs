@@ -91,6 +91,9 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.LastActivityDateUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.AssociatedUserId, dt => dt.Ignore());
+
+            //product attributes
+            ViceVersa<ProductAttribute, ProductAttributeModel>();
         }
 
         public static void ViceVersa<T1, T2>()

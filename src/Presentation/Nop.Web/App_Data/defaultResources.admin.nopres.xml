@@ -361,6 +361,48 @@
                           </LocaleResource>
                         </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Attributes">
+                      <Value>Attributes</Value>
+                      <Children>
+                        <LocaleResource Name="ProductAttributes">
+                          <Value>Product Attributes</Value>
+                          <Children>
+                            <LocaleResource Name="AddNew">
+                              <Value>Add a new product attribute</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="BackToList">
+                              <Value>back to product attribute list</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="EditAttributeDetails">
+                              <Value>Edit product attribute details</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Fields">
+                              <Children>
+                                <LocaleResource Name="Name">
+                                  <Value>Name</Value>
+                                  <Children>
+                                    <LocaleResource Name="Required">
+                                      <Value>Please provide a name.</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A name of the product attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="Description">
+                                  <Value>Description</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A description of the product attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Common">
