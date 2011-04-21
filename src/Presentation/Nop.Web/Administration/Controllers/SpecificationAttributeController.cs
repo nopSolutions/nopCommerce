@@ -39,7 +39,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateLocales(SpecificationAttribute specificationAttribute, SpecificationAttributeModel model)
+        public void UpdateAttributeLocales(SpecificationAttribute specificationAttribute, SpecificationAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -50,10 +50,21 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        public void UpdateOptionLocales(SpecificationAttributeOption specificationAttributeOption, SpecificationAttributeOptionModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(specificationAttributeOption,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
 
         #endregion
         
-        #region Methods
+        #region Specification attributes
 
         //list
         public ActionResult Index()
@@ -103,7 +114,7 @@ namespace Nop.Admin.Controllers
             {
                 var specificationAttribute = model.ToEntity();
                 _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
-                UpdateLocales(specificationAttribute, model);
+                UpdateAttributeLocales(specificationAttribute, model);
 
                 return continueEditing ? RedirectToAction("Edit", new { id = specificationAttribute.Id }) : RedirectToAction("List");
             }
@@ -139,7 +150,7 @@ namespace Nop.Admin.Controllers
                 specificationAttribute = model.ToEntity(specificationAttribute);
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
-                UpdateLocales(specificationAttribute, model);
+                UpdateAttributeLocales(specificationAttribute, model);
 
                 return continueEditing ? RedirectToAction("Edit", specificationAttribute.Id) : RedirectToAction("List");
             }
@@ -157,6 +168,139 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        #endregion
+
+        #region Specification attribute options
+
+        //list
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult OptionList(int specificationAttributeId, GridCommand command)
+        {
+            var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttributeId);
+            var gridModel = new GridModel<SpecificationAttributeOptionModel>
+            {
+                Data = options.Select(x => 
+                    {
+                        var model = x.ToModel();
+                        //locales
+                        //AddLocales(_languageService, model.Locales, (locale, languageId) =>
+                        //{
+                        //    locale.Name = x.GetLocalized(y => y.Name, languageId, false);
+                        //});
+                        return model;
+                    }),
+                Total = options.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        //create
+        public ActionResult OptionCreatePopup(int specificationAttributeId)
+        {
+            var model = new SpecificationAttributeOptionModel();
+            model.SpecificationAttributeId = specificationAttributeId;
+            //locales
+            AddLocales(_languageService, model.Locales);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult OptionCreatePopup(string btnId, SpecificationAttributeOptionModel model)
+        {
+            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
+            if (specificationAttribute == null)
+                throw new ArgumentException("No specification attribute found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                var sao = model.ToEntity();
+
+                _specificationAttributeService.InsertSpecificationAttributeOption(sao);
+                UpdateOptionLocales(sao, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //edit
+        public ActionResult OptionEditPopup(int id)
+        {
+            var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(id);
+            if (sao == null)
+                throw new ArgumentException("No specification attribute option found with the specified id", "id");
+            var model = sao.ToModel();
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = sao.GetLocalized(x => x.Name, languageId, false);
+            });
+
+            return View(model);
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult OptionEditPopup(string btnId, SpecificationAttributeOptionModel model)
+        {
+            var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(model.Id);
+            if (sao == null)
+                throw new ArgumentException("No specification attribute option found with the specified id");
+            if (ModelState.IsValid)
+            {
+                sao = model.ToEntity(sao);
+                _specificationAttributeService.UpdateSpecificationAttributeOptions(sao);
+
+                UpdateOptionLocales(sao, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //delete
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult OptionDelete(int optionId, int specificationAttributeId, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(optionId);
+            _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
+
+            var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttributeId);
+            var gridModel = new GridModel<SpecificationAttributeOptionModel>
+            {
+                Data = options.Select(x =>
+                {
+                    var model = x.ToModel();
+                    //locales
+                    //AddLocales(_languageService, model.Locales, (locale, languageId) =>
+                    //{
+                    //    locale.Name = x.GetLocalized(y => y.Name, languageId, false);
+                    //});
+                    return model;
+                }),
+                Total = options.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
         #endregion
     }
 }

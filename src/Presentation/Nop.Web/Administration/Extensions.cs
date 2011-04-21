@@ -120,6 +120,7 @@ namespace Nop.Admin
 
         #region Specification attributes
 
+        //attributes
         public static SpecificationAttributeModel ToModel(this SpecificationAttribute entity)
         {
             return AutoMapper.Mapper.Map<SpecificationAttribute, SpecificationAttributeModel>(entity);
@@ -135,6 +136,21 @@ namespace Nop.Admin
             return AutoMapper.Mapper.Map(model, destination);
         }
 
+        //attribute options
+        public static SpecificationAttributeOptionModel ToModel(this SpecificationAttributeOption entity)
+        {
+            return AutoMapper.Mapper.Map<SpecificationAttributeOption, SpecificationAttributeOptionModel>(entity);
+        }
+
+        public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionModel model)
+        {
+            return AutoMapper.Mapper.Map<SpecificationAttributeOptionModel, SpecificationAttributeOption>(model);
+        }
+
+        public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionModel model, SpecificationAttributeOption destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
         #endregion
 
         #region Languages

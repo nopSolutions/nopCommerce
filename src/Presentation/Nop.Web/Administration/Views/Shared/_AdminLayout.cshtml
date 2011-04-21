@@ -25,14 +25,20 @@
 <body>
     <div class="master-wrapper-page">
         <div class="master-wrapper-content">
-            <div class="header">
+            @if (IsSectionDefined("header"))
+            {
+                @RenderSection("header")
+            }
+            else
+            {
+                <div class="header">
                 <div class="logo">
                 </div>
                 <div class="languageselector">
                     <!--TODO language selector here-->
                 </div>
                 <div class="links">
-                    @Html.ActionLink("Public store", "Index", "Home", new { area = ""}, null)
+                    @Html.ActionLink("Public store", "Index", "Home", new { area = "" }, null)
                     <span class="separator">|</span>
                     <!--TODO clear cache button here-->
                     <a href="#">Clear Cache</a>
@@ -41,7 +47,10 @@
                     @if (currentUser != null)
                     {
                     <text>Logged in as:</text> 
-                    if (usernamesEnabled) { @currentUser.Username } else { @currentUser.Email }
+                        if (usernamesEnabled)
+                        { @currentUser.Username }
+                        else
+                        { @currentUser.Email }
                     <text>, <a href="/admin/logout/">Logout?</a></text> 
                     }
                 </div>
@@ -50,21 +59,36 @@
                     <span>nopCommerce 2.00</span>
                 </div>
             </div>
-            <div class="clear">
-            </div>
-            <div class="header-menu">
-                @Html.Partial("Menu")
-            </div>
-            <div class="status-bar">
-                <div class="help">
-                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
+                <div class="clear">
                 </div>
-                <div class="breadcrumb">
-                    <!-- TODO SiteMapPath here-->
+            }
+            @if (IsSectionDefined("headermenu"))
+            {
+                @RenderSection("headermenu")
+            }
+            else
+            {
+                <div class="header-menu">
+                    @Html.Partial("Menu")
                 </div>
-            </div>
-            <div class="clear">
-            </div>
+            }
+            @if (IsSectionDefined("statusbar"))
+            {
+                @RenderSection("statusbar")
+            }
+            else
+            {
+                <div class="status-bar">
+                    <div class="help">
+                        @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
+                    </div>
+                    <div class="breadcrumb">
+                        <!-- TODO SiteMapPath here-->
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+            }
             <div class="content">
                 <!-- TODO notifications, warnings, errors should be here-->
                 <div class="cph">

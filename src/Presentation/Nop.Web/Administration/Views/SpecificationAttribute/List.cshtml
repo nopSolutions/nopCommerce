@@ -19,6 +19,9 @@
                     {
                         columns.Bound(x => x.Name)
                             .Width(300);
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100)
+                            .Centered();
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()
@@ -26,8 +29,8 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "SpecificationAttribute"))
-                    .EnableCustomBinding(true))
+                            .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "SpecificationAttribute"))
+                            .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

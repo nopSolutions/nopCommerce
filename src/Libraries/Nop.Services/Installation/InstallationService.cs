@@ -28,6 +28,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Core.IO;
 using Nop.Data;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Helpers;
 
@@ -46,6 +47,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
@@ -75,6 +77,7 @@ namespace Nop.Services.Installation
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<User> userRepository,
+            IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
@@ -101,6 +104,7 @@ namespace Nop.Services.Installation
             this._customerRoleRepository = customerRoleRepository;
             this._userRepository = userRepository;
 
+            this._specificationAttributeRepository = specificationAttributeRepository;
             this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
@@ -997,6 +1001,102 @@ namespace Nop.Services.Installation
 
             if (installSampleData)
             {
+                #region Specification Atteributes
+
+                var specificationAttributes = new List<SpecificationAttribute>
+                                {
+                                    new SpecificationAttribute
+                                        {
+                                            Name = "Screensize",
+                                            DisplayOrder = 1,
+                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
+                                            {
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "10.0''",
+                                                    DisplayOrder = 3,
+                                                },
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "14.1''",
+                                                    DisplayOrder = 4,
+                                                },
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "15.4''",
+                                                    DisplayOrder = 5,
+                                                },
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "16.0''",
+                                                    DisplayOrder = 6,
+                                                },
+                                            }
+                                        },
+                                    new SpecificationAttribute
+                                        {
+                                            Name = "CPU Type",
+                                            DisplayOrder = 2,
+                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
+                                            {
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "AMD",
+                                                    DisplayOrder = 1,
+                                                },
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "Intel",
+                                                    DisplayOrder = 2,
+                                                },
+                                            }
+                                        },
+                                    new SpecificationAttribute
+                                        {
+                                            Name = "Memory",
+                                            DisplayOrder = 3,
+                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
+                                            {
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "1 GB",
+                                                    DisplayOrder = 1,
+                                                },
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "3 GB",
+                                                    DisplayOrder = 2,
+                                                },
+                                            }
+                                        },
+                                    new SpecificationAttribute
+                                        {
+                                            Name = "Hardrive",
+                                            DisplayOrder = 5,
+                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
+                                            {
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "160 GB",
+                                                    DisplayOrder = 3,
+                                                },
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "250 GB",
+                                                    DisplayOrder = 4,
+                                                },
+                                                new SpecificationAttributeOption()
+                                                {
+                                                    Name = "320 GB",
+                                                    DisplayOrder = 7,
+                                                },
+                                            }
+                                        },
+                                };
+                specificationAttributes.ForEach(sa => _specificationAttributeRepository.Insert(sa));
+
+                #endregion
+
                 #region Categories
 
                 for (int i = 1; i <= 30; i++)

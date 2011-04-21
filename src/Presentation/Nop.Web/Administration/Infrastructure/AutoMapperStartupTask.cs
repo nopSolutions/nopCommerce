@@ -96,6 +96,7 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<ProductAttribute, ProductAttributeModel>();
             //specification attributes
             ViceVersa<SpecificationAttribute, SpecificationAttributeModel>();
+            ViceVersa<SpecificationAttributeOption, SpecificationAttributeOptionModel>();
         }
 
         public static void ViceVersa<T1, T2>()
