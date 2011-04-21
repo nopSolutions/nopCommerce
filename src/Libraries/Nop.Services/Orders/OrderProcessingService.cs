@@ -2407,7 +2407,6 @@ namespace Nop.Services.Orders
             if (cart == null)
                 throw new ArgumentNullException("cart");
 
-            bool result = true;
             //min order amount sub-total validation
             if (cart.Count > 0 && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
             {

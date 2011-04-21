@@ -1,16 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators;
-using Nop.Core.Domain.Catalog;
-using Nop.Services.Catalog;
-using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
-using Nop.Admin.Validators;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc.UI;
 
