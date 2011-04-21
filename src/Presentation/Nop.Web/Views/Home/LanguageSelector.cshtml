@@ -1,22 +1,25 @@
 ﻿@model Nop.Web.Models.LanguageSelectorModel
-@using (Ajax.BeginForm("LanguageSelected", "Home", new AjaxOptions { OnComplete = "onLanguageChangedRequestCompleted();" }, new { id = "form-languageselector" }))
+@if (Model.AvaibleLanguages.Count > 1)
 {
-    var languages = Model.AvaibleLanguages.Select(x => new SelectListItem
+    using (Ajax.BeginForm("LanguageSelected", "Home", new AjaxOptions { OnComplete = "onLanguageChangedRequestCompleted();" }, new { id = "form-languageselector" }))
     {
-        Text = x.Name,
-        Value = x.Id.ToString(),
-        Selected = x.Id.Equals(Model.CurrentLanguage.Id)
-    });
+        var languages = Model.AvaibleLanguages.Select(x => new SelectListItem
+        {
+            Text = x.Name,
+            Value = x.Id.ToString(),
+            Selected = x.Id.Equals(Model.CurrentLanguage.Id)
+        });
     
-    @(Html.DropDownList("id",
+        @Html.DropDownList("id",
             languages,
-            new { onChange = "onLanguageChanged();" }))
+            new { onChange = "onLanguageChanged();" })
+    }
+    <script type="text/javascript">
+        function onLanguageChanged() {
+            $("#form-languageselector").submit();
+        }
+        function onLanguageChangedRequestCompleted() {
+            location.reload();
+        }
+    </script>
 }
-<script type="text/javascript">
-    function onLanguageChanged() {
-        $("#form-languageselector").submit();
-    }
-    function onLanguageChangedRequestCompleted() {
-        location.reload();
-    }
-</script>
