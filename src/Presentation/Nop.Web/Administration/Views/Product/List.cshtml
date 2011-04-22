@@ -66,6 +66,10 @@
                         //little hack to allow filtering by category and manufacturer
                         columns.Bound(x => x.SearchCategoryId).Filterable(false).Hidden(true);
                         columns.Bound(x => x.SearchManufacturerId).Filterable(false).Hidden(true);
+                        columns.Bound(x => x.Published).Filterable(false)
+                            .Width("100px")
+                            .Template(x => x.Published.ToString().ToLower())
+                            .Centered();
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Filterable(false)

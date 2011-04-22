@@ -208,120 +208,120 @@
                     <LocaleResource Name="Products">
                         <Value>Products</Value>
                         <Children>
-                            <LocaleResource Name="Info">
-                                <Value>Product Info</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Manage">
-                                <Value>Manage products</Value>
+                            <LocaleResource Name="AddNew">
+                              <Value>Add a new category</Value>
                             </LocaleResource>
                             <LocaleResource Name="BackToList">
-                                <Value>back to product list</Value>
+                              <Value>back to product list</Value>
                             </LocaleResource>
                             <LocaleResource Name="EditProductDetails">
-                                <Value>Edit product details</Value>
+                              <Value>Edit product details</Value>
                             </LocaleResource>
                             <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Name">
+                                <Value>Product name</Value>
                                 <Children>
-                                    <LocaleResource Name="Name">
-                                        <Value>Product name</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>The name of the product.</Value>
-                                            </LocaleResource>
-                                            <LocaleResource Name="Required">
-                                                <Value>Please provide a name.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="ShortDescription">
-                                        <Value>Short description</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>A short description of the product. This is the text that displays in product lists i.e. category / manufacturer pages</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="FullDescription">
-                                        <Value>Full description</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>A full description of the product.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="AdminComment">
-                                        <Value>Admin comment</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Admin comment. For internal use.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="ShowOnHomePage">
-                                        <Value>Show on home page</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Check to display this product on your store's home page. Recommended for your most popular products.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="MetaKeywords">
-                                        <Value>Meta keywords</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Meta keywords to be added to product page header</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="MetaDescription">
-                                        <Value>Meta description</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Meta description to be added to product page header</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="MetaTitle">
-                                        <Value>Meta title</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Override the page title. The default is the name of the product.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="SeName">
-                                        <Value>Search engine friendly page name</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Set a search engine friendly page name e.g. 'The Best Product' to make your page name '##\the-best-product' (## represents the product ID). The default is the name of the product.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="AllowCustomerReviews">
-                                        <Value>Allow customer reviews</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Check to allow customers to review this product.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="AllowCustomerRatings">
-                                        <Value>Allow customer ratings</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Check to allow customers to rate this product.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Published">
-                                        <Value>Published</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Check to publish this product (visible in store). Uncheck to unpublish (product not available in store).</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The name of the product.</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Required">
+                                    <Value>Please provide a name.</Value>
+                                  </LocaleResource>
                                 </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="ShortDescription">
+                                <Value>Short description</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A short description of the product. This is the text that displays in product lists i.e. category / manufacturer pages</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="FullDescription">
+                                <Value>Full description</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>A full description of the product.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="AdminComment">
+                                <Value>Admin comment</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Admin comment. For internal use.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="ShowOnHomePage">
+                                <Value>Show on home page</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check to display this product on your store's home page. Recommended for your most popular products.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="MetaKeywords">
+                                <Value>Meta keywords</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Meta keywords to be added to product page header</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="MetaDescription">
+                                <Value>Meta description</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Meta description to be added to product page header</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="MetaTitle">
+                                <Value>Meta title</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Override the page title. The default is the name of the product.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="SeName">
+                                <Value>Search engine friendly page name</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Set a search engine friendly page name e.g. 'The Best Product' to make your page name '##\the-best-product' (## represents the product ID). The default is the name of the product.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="AllowCustomerReviews">
+                                <Value>Allow customer reviews</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check to allow customers to review this product.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="AllowCustomerRatings">
+                                <Value>Allow customer ratings</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check to allow customers to rate this product.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Published">
+                                <Value>Published</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Check to publish this product (visible in store). Uncheck to unpublish (product not available in store).</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                            <LocaleResource Name="Info">
+                                <Value>Product Info</Value>
                             </LocaleResource>
                             <LocaleResource Name="List">
                             <Children>
@@ -358,6 +358,70 @@
                                 </Children>
                               </LocaleResource>
                             </Children>
+                          </LocaleResource>
+                            <LocaleResource Name="Manage">
+                            <Value>Manage products</Value>
+                          </LocaleResource>
+                            <LocaleResource Name="SpecificationAttributes">
+                              <Value>Specification attributes</Value>
+                              <Children>
+                                <LocaleResource Name="AddButton">
+                                  <Value>Add attribute</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="AddNew">
+                                  <Value>Add a new product specification attribute</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Fields">
+                                  <Children>
+                                    <LocaleResource Name="SpecificationAttribute">
+                                      <Value>Attribute</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Choose a product specification attribute. You can manage specification attributes from Catalog : Attributes : Product Specifications.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SpecificationAttributeOption">
+                                      <Value>Attribute option</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The value of the specification attribute.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AllowFiltering">
+                                      <Value>Allow filtering</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Allow product filtering by this attribute.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="ShowOnProductPage">
+                                      <Value>Show on product page</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The value of the specification attribute. Be visible on the product page</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                      <Value>Display order</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Display order of the specification attribute. 1 represents the top of the list.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the product before you can add product specification attributes for this product page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Variants">
+                            <Value>Product variants</Value>
                           </LocaleResource>
                         </Children>
                     </LocaleResource>

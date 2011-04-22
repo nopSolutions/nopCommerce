@@ -301,6 +301,22 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
+
+
+        //ajax
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult GetOptionsByAttributeId(string attributeId)
+        {
+            // This action method gets called via an ajax request
+            if (String.IsNullOrEmpty(attributeId))
+                throw new ArgumentNullException("attributeId");
+
+            var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(Convert.ToInt32(attributeId));
+            var result = (from o in options
+                          select new { id = o.Id, name = o.Name }).ToList();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
     }
 }

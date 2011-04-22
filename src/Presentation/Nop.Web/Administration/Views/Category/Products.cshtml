@@ -28,7 +28,7 @@
         x.OnEdit("onEdit");
     })
     .Pageable(x => x.PageSize(10)))
-
+    //TODO doesn't work after upfdate of Telerik MVC extensions
     <script type="text/javascript">
         function onRow(e) {
             $(e.row).find("td.product-id").html(e.dataItem.ProductName);

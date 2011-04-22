@@ -28,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
 
         #endregion Fields 
 
@@ -36,7 +37,8 @@ namespace Nop.Admin.Controllers
         public ProductController(IProductService productService, 
             ICategoryService categoryService, IManufacturerService manufacturerService,
             IWorkContext workContext, ILanguageService languageService, 
-            ILocalizationService localizationService, ILocalizedEntityService localizedEntityService)
+            ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
+            ISpecificationAttributeService specificationAttributeService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -45,6 +47,7 @@ namespace Nop.Admin.Controllers
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
+            this._specificationAttributeService = specificationAttributeService;
         }
 
         #endregion Constructors 
@@ -102,10 +105,36 @@ namespace Nop.Admin.Controllers
             }
             return result;
         }
+
+        private void PrepareAddSpecificationAttributeModel(ProductModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (model.AddSpecificationAttributeModel == null)
+                model.AddSpecificationAttributeModel = new ProductModel.AddProductSpecificationAttributeModel();
+            
+            //attributes
+            var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
+            for (int i = 0; i < specificationAttributes.Count; i++)
+            {
+                var sa = specificationAttributes[i];
+                model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem() { Text = sa.Name, Value = sa.Id.ToString() });
+                if (i == 0)
+                {
+                    //attribute options
+                    foreach (var sao in sa.SpecificationAttributeOptions)
+                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem() { Text = sao.Name, Value = sao.Id.ToString() });
+                }
+            }
+            //UNDONE: display specification attributes without options?
+
+        }
         #endregion
 
         #region Methods
 
+        //list products
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -188,7 +217,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-
+        
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-product-by-sku")]
         public ActionResult GoToSku(ProductListModel model)
@@ -221,10 +250,24 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult _AjaxComboBo(string text)
+        {
+            var products = _productService.GetAllProducts(true).Where(x => x.Name.ToLower().Contains(text.ToLower()));
+
+            return new JsonResult
+            {
+                Data = new SelectList(products.ToList(), "Id",
+                    "Name")
+            };
+        }
+
+        //create product
         public ActionResult Create()
         {
             var model = new ProductModel();
             AddLocales(_languageService, model.Locales);
+            PrepareAddSpecificationAttributeModel(model);
             return View(model);
         }
 
@@ -241,9 +284,11 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            PrepareAddSpecificationAttributeModel(model);
             return View(model);
         }
 
+        //edit product
         public ActionResult Edit(int id)
         {
             var product = _productService.GetProductById(id);
@@ -261,6 +306,7 @@ namespace Nop.Admin.Controllers
                     locale.MetaTitle = product.GetLocalized(x => x.MetaTitle, languageId, false);
                     locale.SeName = product.GetLocalized(x => x.SeName, languageId, false);
                 });
+            PrepareAddSpecificationAttributeModel(model);
             return View(model);
         }
 
@@ -280,9 +326,11 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            PrepareAddSpecificationAttributeModel(model);
             return View(model);
         }
 
+        //delete product
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -290,19 +338,95 @@ namespace Nop.Admin.Controllers
             _productService.DeleteProduct(product);
             return RedirectToAction("List");
         }
+        
 
-        [HttpPost]
-        public ActionResult _AjaxComboBo(string text)
+        //product specification attributes
+        public ActionResult ProductSpecificationAttributeAdd(int specificationAttributeOptionId, 
+            bool allowFiltering, bool showOnProductPage, int displayOrder, int productId)
         {
-            var products = _productService.GetAllProducts(true).Where(x => x.Name.ToLower().Contains(text.ToLower()));
+            var psa = new ProductSpecificationAttribute()
+            {
+                SpecificationAttributeOptionId = specificationAttributeOptionId,
+                ProductId = productId,
+                AllowFiltering = allowFiltering,
+                ShowOnProductPage = showOnProductPage,
+                DisplayOrder = displayOrder,
+            };
+            _specificationAttributeService.InsertProductSpecificationAttribute(psa);
+
+            return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductSpecAttrList(GridCommand command, int productId)
+        {
+            var productrSpecs = _specificationAttributeService.GetProductSpecificationAttributesByProductId(productId);
+
+            var productrSpecsModel = productrSpecs
+                .Select(x =>
+                {
+                    var psaModel = new ProductSpecificationAttributeModel()
+                    {
+                        Id = x.Id,
+                        SpecificationAttributeName = x.SpecificationAttributeOption.SpecificationAttribute.Name,
+                        SpecificationAttributeOptionName = x.SpecificationAttributeOption.Name,
+                        AllowFiltering = x.AllowFiltering,
+                        ShowOnProductPage = x.ShowOnProductPage,
+                        DisplayOrder = x.DisplayOrder
+                    };
+                    return psaModel;
+                })
+                .ToList();
+
+            var model = new GridModel<ProductSpecificationAttributeModel>
+            {
+                Data = productrSpecsModel,
+                Total = productrSpecsModel.Count
+            };
 
             return new JsonResult
             {
-                Data = new SelectList(products.ToList(), "Id",
-                    "Name")
+                Data = model
             };
         }
-        
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductSpecAttrUpdate(int psaId, ProductSpecificationAttributeModel model,
+            GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
+            psa.AllowFiltering = model.AllowFiltering;
+            psa.ShowOnProductPage = model.ShowOnProductPage;
+            psa.DisplayOrder = model.DisplayOrder;
+            _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
+
+            return ProductSpecAttrList(command, psa.ProductId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductSpecAttrDelete(int psaId, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
+            var productId = psa.ProductId;
+            _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
+
+            return ProductSpecAttrList(command, productId);
+        }
+
+
 		#endregion
     }
 }

@@ -63,6 +63,40 @@ namespace Nop.Admin.Models
         //properties used for filtering
         public int SearchCategoryId { get; set; }
         public int SearchManufacturerId { get; set; }
+
+        //add specification attribute model
+        public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
+
+        #region Nested classes
+        
+        public class AddProductSpecificationAttributeModel : BaseNopEntityModel
+        {
+            public AddProductSpecificationAttributeModel()
+            {
+                AvailableAttributes = new List<SelectListItem>();
+                AvailableOptions = new List<SelectListItem>();
+            }
+            
+            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
+            public int SpecificationAttributeId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
+            public int SpecificationAttributeOptionId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")]
+            public bool AllowFiltering { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")]
+            public bool ShowOnProductPage { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+
+            public IList<SelectListItem> AvailableAttributes { get; set; }
+            public IList<SelectListItem> AvailableOptions { get; set; }
+        }
+
+        #endregion
     }
     public class ProductLocalizedModel : ILocalizedModelLocal
     {

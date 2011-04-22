@@ -93,7 +93,6 @@
     <td class="adminData">
         @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
         @Html.ValidationMessageFor(model => model.CountryId)
-        @*TODO display validation message from 'AddressValidator' (country should be selected)*@
     </td>
 </tr>
 }

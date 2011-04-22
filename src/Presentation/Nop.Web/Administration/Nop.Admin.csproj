@@ -106,6 +106,7 @@
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CategoryProductModel.cs" />
     <Compile Include="Models\CategoryProductsAttribute.cs" />
+    <Compile Include="Models\ProductSpecificationAttributeModel.cs" />
     <Compile Include="Models\SpecificationAttributeOptionModel.cs" />
     <Compile Include="Models\SpecificationAttributeModel.cs" />
     <Compile Include="Models\ProductAttributeModel.cs" />
