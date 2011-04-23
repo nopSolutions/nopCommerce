@@ -817,6 +817,7 @@ namespace Nop.Services.Installation
                     ProductVariantPictureSize = 125,
                     CategoryThumbPictureSize = 125,
                     ManufacturerThumbPictureSize = 125,
+                    MaximumImageSize = 1280
                 });
             EngineContext.Current.Resolve<IConfigurationProvider<FormFieldSettings>>()
                 .SaveSettings(new FormFieldSettings()

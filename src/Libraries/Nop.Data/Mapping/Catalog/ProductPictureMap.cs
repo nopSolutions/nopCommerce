@@ -1,4 +1,3 @@
-
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Catalog;
 

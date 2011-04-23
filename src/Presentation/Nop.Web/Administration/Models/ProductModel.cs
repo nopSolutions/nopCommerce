@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,6 +19,7 @@ namespace Nop.Admin.Models
         {
             Locales = new List<ProductLocalizedModel>();
             ProductVariants = new List<ProductVariantModel>();
+            ProductPictureModels = new List<ProductPictureModel>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
@@ -64,9 +66,13 @@ namespace Nop.Admin.Models
         public int SearchCategoryId { get; set; }
         public int SearchManufacturerId { get; set; }
 
+        //pictures
+        public ProductPictureModel AddPictureModel { get; set; }
+        public IList<ProductPictureModel> ProductPictureModels { get; set; }
+
         //add specification attribute model
         public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
-
+        
         #region Nested classes
         
         public class AddProductSpecificationAttributeModel : BaseNopEntityModel
@@ -95,9 +101,25 @@ namespace Nop.Admin.Models
             public IList<SelectListItem> AvailableAttributes { get; set; }
             public IList<SelectListItem> AvailableOptions { get; set; }
         }
+        
+        public class ProductPictureModel : BaseNopEntityModel
+        {
+            public int ProductId { get; set; }
+
+            [UIHint("Picture")]
+            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
+            public int PictureId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
+            public string PictureUrl { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+        }
 
         #endregion
     }
+
     public class ProductLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }

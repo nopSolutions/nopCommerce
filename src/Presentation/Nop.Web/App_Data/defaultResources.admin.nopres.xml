@@ -362,6 +362,40 @@
                             <LocaleResource Name="Manage">
                             <Value>Manage products</Value>
                           </LocaleResource>
+                            <LocaleResource Name="Pictures">
+                              <Value>Pictures</Value>
+                              <Children>
+                                <LocaleResource Name="AddButton">
+                                  <Value>Add product picture</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="AddNew">
+                                  <Value>Add a new picture</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Fields">
+                                  <Children>
+                                    <LocaleResource Name="Picture">
+                                      <Value>Picture</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Choose a picture to upload. If the picture size exceeds your stores max image size setting, it will be automatically resized.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                      <Value>Display order</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Display order of the picture. 1 represents the top of the list.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the product before you can upload pictures for this product page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
                             <LocaleResource Name="SpecificationAttributes">
                               <Value>Specification attributes</Value>
                               <Children>

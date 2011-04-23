@@ -34,10 +34,10 @@ namespace Nop.Services.Catalog
         private readonly IRepository<RelatedProduct> _relatedProductRepository;
         private readonly IRepository<CrossSellProduct> _crossSellProductRepository;
         private readonly IRepository<TierPrice> _tierPriceRepository;
+        private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICacheManager _cacheManager;
-        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -54,9 +54,9 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProductRepository">Related product repository</param>
         /// <param name="crossSellProductRepository">Cross-sell product repository</param>
         /// <param name="tierPriceRepository">Tier price repository</param>
+        /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
-        /// <param name="localizationSettings">Localization settings</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductCategory> productCategoryRepository,
@@ -65,9 +65,9 @@ namespace Nop.Services.Catalog
             IRepository<RelatedProduct> relatedProductRepository,
             IRepository<CrossSellProduct> crossSellProductRepository,
             IRepository<TierPrice> tierPriceRepository,
+            IRepository<ProductPicture> productPictureRepository,
             IProductAttributeService productAttributeService,
-            IProductAttributeParser productAttributeParser,
-            LocalizationSettings localizationSettings)
+            IProductAttributeParser productAttributeParser)
         {
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
@@ -77,9 +77,9 @@ namespace Nop.Services.Catalog
             this._relatedProductRepository = relatedProductRepository;
             this._crossSellProductRepository = crossSellProductRepository;
             this._tierPriceRepository = tierPriceRepository;
+            this._productPictureRepository = productPictureRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
-            this._localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -759,7 +759,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Deletes a cross-sell product
         /// </summary>
-        /// <param name="crossSellProduct">Cross-sell intifer</param>
+        /// <param name="crossSellProduct">Cross-sell identifer</param>
         public void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
@@ -911,6 +911,75 @@ namespace Nop.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+        }
+
+        #endregion
+
+        #region Product pictures
+
+        /// <summary>
+        /// Deletes a product picture
+        /// </summary>
+        /// <param name="productPicture">Product picture</param>
+        public void DeleteProductPicture(ProductPicture productPicture)
+        {
+            if (productPicture == null)
+                throw new ArgumentNullException("productPicture");
+
+            _productPictureRepository.Delete(productPicture);
+        }
+
+        /// <summary>
+        /// Gets a product pictures by product identifier
+        /// </summary>
+        /// <param name="productId">The product identifier</param>
+        /// <returns>Product pictures</returns>
+        public IList<ProductPicture> GetProductPicturesByProductId(int productId)
+        {
+            var query = from pp in _productPictureRepository.Table
+                        where pp.ProductId == productId
+                        orderby pp.DisplayOrder
+                        select pp;
+            var productPictures = query.ToList();
+            return productPictures;
+        }
+
+        /// <summary>
+        /// Gets a product picture
+        /// </summary>
+        /// <param name="productPictureId">Product picture identifer</param>
+        /// <returns>Product picture</returns>
+        public ProductPicture GetProductPictureById(int productPictureId)
+        {
+            if (productPictureId == 0)
+                return null;
+
+            var pp = _productPictureRepository.GetById(productPictureId);
+            return pp;
+        }
+
+        /// <summary>
+        /// Inserts a product picture
+        /// </summary>
+        /// <param name="productPicture">Product picture</param>
+        public void InsertProductPicture(ProductPicture productPicture)
+        {
+            if (productPicture == null)
+                throw new ArgumentNullException("productPicture");
+
+            _productPictureRepository.Insert(productPicture);
+        }
+
+        /// <summary>
+        /// Updates a product picture
+        /// </summary>
+        /// <param name="productPicture">Product picture</param>
+        public void UpdateProductPicture(ProductPicture productPicture)
+        {
+            if (productPicture == null)
+                throw new ArgumentNullException("productPicture");
+
+            _productPictureRepository.Update(productPicture);
         }
 
         #endregion

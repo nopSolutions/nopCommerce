@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -29,6 +30,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IPictureService _pictureService;
 
         #endregion Fields 
 
@@ -38,7 +40,7 @@ namespace Nop.Admin.Controllers
             ICategoryService categoryService, IManufacturerService manufacturerService,
             IWorkContext workContext, ILanguageService languageService, 
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
-            ISpecificationAttributeService specificationAttributeService)
+            ISpecificationAttributeService specificationAttributeService, IPictureService pictureService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -48,6 +50,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._specificationAttributeService = specificationAttributeService;
+            this._pictureService = pictureService;
         }
 
         #endregion Constructors 
@@ -128,6 +131,16 @@ namespace Nop.Admin.Controllers
                 }
             }
             //UNDONE: display specification attributes without options?
+
+        }
+
+        private void PrepareAddProductPictureModel(ProductModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (model.AddPictureModel == null)
+                model.AddPictureModel = new ProductModel.ProductPictureModel();
 
         }
         #endregion
@@ -268,6 +281,7 @@ namespace Nop.Admin.Controllers
             var model = new ProductModel();
             AddLocales(_languageService, model.Locales);
             PrepareAddSpecificationAttributeModel(model);
+            PrepareAddProductPictureModel(model);
             return View(model);
         }
 
@@ -285,6 +299,7 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             PrepareAddSpecificationAttributeModel(model);
+            PrepareAddProductPictureModel(model);
             return View(model);
         }
 
@@ -293,7 +308,7 @@ namespace Nop.Admin.Controllers
         {
             var product = _productService.GetProductById(id);
             if (product == null)
-                throw new ArgumentException("No category found with the specified id", "id");
+                throw new ArgumentException("No product found with the specified id", "id");
 
             var model = product.ToModel();
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -307,6 +322,7 @@ namespace Nop.Admin.Controllers
                     locale.SeName = product.GetLocalized(x => x.SeName, languageId, false);
                 });
             PrepareAddSpecificationAttributeModel(model);
+            PrepareAddProductPictureModel(model);
             return View(model);
         }
 
@@ -314,8 +330,8 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(ProductModel model, bool continueEditing)
         {
             var product = _productService.GetProductById(model.Id);
-            if (product == null) 
-                throw new ArgumentException("No category found with the specified id");
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
             
             if (ModelState.IsValid)
             {
@@ -327,6 +343,7 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             PrepareAddSpecificationAttributeModel(model);
+            PrepareAddProductPictureModel(model);
             return View(model);
         }
 
@@ -338,7 +355,93 @@ namespace Nop.Admin.Controllers
             _productService.DeleteProduct(product);
             return RedirectToAction("List");
         }
-        
+
+
+
+        //product pictures
+        public ActionResult ProductPictureAdd(int pictureId, int displayOrder, int productId)
+        {
+            if (productId == 0)
+                throw new ArgumentException();
+
+            if (pictureId == 0)
+                throw new ArgumentException();
+
+            _productService.InsertProductPicture(new ProductPicture()
+            {
+                PictureId = pictureId,
+                ProductId = productId,
+                DisplayOrder = displayOrder,
+            });
+
+            return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductPictureList(GridCommand command, int productId)
+        {
+            var productPictures = _productService.GetProductPicturesByProductId(productId);
+            var productPicturesModel = productPictures
+                .Select(x =>
+                {
+                    return new ProductModel.ProductPictureModel()
+                    {
+                        Id = x.Id,
+                        ProductId = x.ProductId,
+                        PictureId = x.PictureId,
+                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                        DisplayOrder = x.DisplayOrder
+                    };
+                })
+                .ToList();
+
+            var model = new GridModel<ProductModel.ProductPictureModel>
+            {
+                Data = productPicturesModel,
+                Total = productPicturesModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductPictureUpdate(ProductModel.ProductPictureModel model, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var productPicture = _productService.GetProductPictureById(model.Id);
+            if (productPicture == null)
+                throw new ArgumentException("No product picture found with the specified id");
+
+            productPicture.DisplayOrder = model.DisplayOrder;
+            _productService.UpdateProductPicture(productPicture);
+
+            return ProductPictureList(command, productPicture.ProductId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductPictureDelete(int productPictureId, GridCommand command)
+        {
+            var productPicture = _productService.GetProductPictureById(productPictureId);
+            if (productPicture == null)
+                throw new ArgumentException("No product picture found with the specified id");
+
+            var productId = productPicture.ProductId;
+            _productService.DeleteProductPicture(productPicture);
+            
+            return ProductPictureList(command, productId);
+        }
+
+
+
+
 
         //product specification attributes
         public ActionResult ProductSpecificationAttributeAdd(int specificationAttributeOptionId, 

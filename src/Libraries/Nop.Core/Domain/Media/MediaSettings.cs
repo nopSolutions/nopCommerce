@@ -11,5 +11,7 @@ namespace Nop.Core.Domain.Media
         public int ProductVariantPictureSize { get; set; }
         public int CategoryThumbPictureSize { get; set; }
         public int ManufacturerThumbPictureSize { get; set; }
+
+        public int MaximumImageSize { get; set; }
     }
 }

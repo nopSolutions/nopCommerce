@@ -12,6 +12,7 @@
     {
         x.Add().Text(T("Admin.Catalog.Products.Variants").Text).Content(TabVariants().ToHtmlString());
     }
+    x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.SpecificationAttributes").Text).Content(TabSpecificationAttributes().ToHtmlString());
 })
 @helper TabInfo()
@@ -229,6 +230,110 @@
         columns.Template((x) => Html.ActionLink(T("Admin.Common.View").ToString(), "Edit", "ProductVariant", new { id = x.Id }, new { })).Title(T("Admin.Common.View").ToString());
     }))
 }
+@helper TabPictures()
+    {
+        if (Model.Id > 0)
+        {
+    <div>
+        @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductPictureModel>()
+                    .Name("productpictures-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("productPictureId");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.PictureUrl)
+                            .Width(400)
+                            .ClientTemplate("<img alt='<#= Id #>' src='<#= PictureUrl #>' />")
+                            .ReadOnly();
+                        columns.Bound(x => x.DisplayOrder).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        }).Width(180);
+
+                    })
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("ProductPictureList", "Product", new { productId = Model.Id })
+                            .Update("ProductPictureUpdate", "Product")
+                            .Delete("ProductPictureDelete", "Product");
+                    })
+                    .EnableCustomBinding(true))
+    </div>
+    <p>
+        <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
+    </p>
+    <script type="text/javascript">
+     
+        $(document).ready(function () {
+            $('#addProductPicture').click(function () {
+                var pictureId = $("#@Html.FieldIdFor(model => model.AddPictureModel.PictureId)").val();
+                var displayOrder = $("#@Html.FieldIdFor(model => model.AddPictureModel.DisplayOrder)").val();
+                
+                if (pictureId == 0) {
+                    alert('Upload picture first');
+                    return;
+                }
+
+                $('#addProductPicture').attr('disabled', true);
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("ProductPictureAdd", "Product"))",
+                    data: "pictureId=" + pictureId + "&displayOrder=" + displayOrder + "&productId=" + @Model.Id,
+                    success: function (data) {
+                         var productpicturesGrid = $("#productpictures-grid");
+                         productpicturesGrid.data('tGrid').ajaxRequest();
+                         $('#addProductPicture').attr('disabled', false);
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to add product picture.')
+                        $('#addProductPicture').attr('disabled', false);
+                    }  
+                });
+            });
+        });
+    </script>
+        
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPictureModel.PictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddPictureModel.PictureId)
+                @Html.ValidationMessageFor(model => model.AddPictureModel.PictureId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPictureModel.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().NumericTextBoxFor(model => model.AddPictureModel.DisplayOrder).DecimalDigits(0)
+                @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <button type="button" name="addProductPicture" id="addProductPicture" class="t-button">
+                    @T("Admin.Catalog.Products.Pictures.AddButton")</button>
+            </td>
+        </tr>
+    </table>
+        }
+        else
+        {
+            @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+        }
+}
+
 @helper TabSpecificationAttributes()
     {
         if (Model.Id > 0)
@@ -290,9 +395,7 @@
                 });
             });
         });
-    </script>
-        
-        <script type="text/javascript">
+
         $(document).ready(function () {
             $('#addProductSpec').click(function () {
                 var specificationAttributeOptionId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();

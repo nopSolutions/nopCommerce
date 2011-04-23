@@ -27,6 +27,7 @@ namespace Nop.Services.Media
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
+        private readonly MediaSettings _mediaSettings;
         
 
         #endregion
@@ -40,15 +41,17 @@ namespace Nop.Services.Media
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
+        /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
-            ISettingService settingService, 
-            IWebHelper webHelper)
+            ISettingService settingService, IWebHelper webHelper, 
+            MediaSettings mediaSettings)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
             this._settingService = settingService;
             this._webHelper = webHelper;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -481,10 +484,10 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using (MemoryStream stream = new MemoryStream(pictureBinary))
+            using (var stream = new MemoryStream(pictureBinary))
             {
                 var b = new Bitmap(stream);
-                int maxSize = _settingService.GetSettingByKey<int>("Media.MaximumImageSize", 1280);
+                int maxSize = _mediaSettings.MaximumImageSize;
 
                 if ((b.Height > maxSize) || (b.Width > maxSize))
                 {
