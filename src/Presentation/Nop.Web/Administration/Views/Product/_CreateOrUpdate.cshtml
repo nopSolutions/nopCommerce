@@ -12,6 +12,8 @@
     {
         x.Add().Text(T("Admin.Catalog.Products.Variants").Text).Content(TabVariants().ToHtmlString());
     }
+    x.Add().Text(T("Admin.Catalog.Products.Categories").Text).Content(TabCategories().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.Manufacturers").Text).Content(TabManufacturers().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.SpecificationAttributes").Text).Content(TabSpecificationAttributes().ToHtmlString());
 })
@@ -230,12 +232,133 @@
         columns.Template((x) => Html.ActionLink(T("Admin.Common.View").ToString(), "Edit", "ProductVariant", new { id = x.Id }, new { })).Title(T("Admin.Common.View").ToString());
     }))
 }
-@helper TabPictures()
-    {
+@helper TabCategories()
+{
         if (Model.Id > 0)
         {
-    <div>
-        @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductPictureModel>()
+            if (Model.NumberOfAvailableCategories > 0)
+            {
+                @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductCategoryModel>()
+                    .Name("productcategories-grid")
+                       .DataKeys(keys =>
+                       {
+                           keys.Add(x => x.Id);
+                       })
+                       .DataBinding(dataBinding =>
+                       {
+                           dataBinding.Ajax()
+                               .Select("ProductCategoryList", "Product", new { productId = Model.Id })
+                               .Insert("ProductCategoryInsert", "Product", new { productId = Model.Id })
+                               .Update("ProductCategoryUpdate", "Product")
+                               .Delete("ProductCategoryDelete", "Product");
+                       })
+                       .Columns(columns =>
+                       {
+                           columns.Bound(x => x.Category)
+                               .Width(500)
+                               .Centered();
+                           columns.Bound(x => x.IsFeaturedProduct)
+                               .Width(100)
+                               .Centered();
+                           columns.Bound(x => x.DisplayOrder)
+                               .Width(100);
+                           columns.Command(commands =>
+                           {
+                               commands.Edit();
+                               commands.Delete();
+                           })
+                           .Width(180);
+                       })
+                       .ToolBar(commands => commands.Insert())
+                       .ClientEvents(events=>events.OnEdit("onProductCategoryEdit"))
+                       .EnableCustomBinding(true))
+    
+                <script type="text/javascript">
+                    function onProductCategoryEdit(e) {
+                        $(e.form).find('#Category').data('tDropDownList').select(function (dataItem) {
+                            return dataItem.Value == e.dataItem['CategoryId'];
+                        });
+                    }
+                </script>
+            }
+            else
+            {
+                    @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
+            }
+        }
+        else
+        {
+            @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
+        }
+        
+}
+@helper TabManufacturers()
+{
+        if (Model.Id > 0)
+        {
+            if (Model.NumberOfAvailableManufacturers > 0)
+            {
+                @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductManufacturerModel>()
+                    .Name("productmanufacturers-grid")
+                       .DataKeys(keys =>
+                       {
+                           keys.Add(x => x.Id);
+                       })
+                       .DataBinding(dataBinding =>
+                       {
+                           dataBinding.Ajax()
+                               .Select("ProductManufacturerList", "Product", new { productId = Model.Id })
+                               .Insert("ProductManufacturerInsert", "Product", new { productId = Model.Id })
+                               .Update("ProductManufacturerUpdate", "Product")
+                               .Delete("ProductManufacturerDelete", "Product");
+                       })
+                       .Columns(columns =>
+                       {
+                           columns.Bound(x => x.Manufacturer)
+                               .Width(500)
+                               .Centered();
+                           columns.Bound(x => x.IsFeaturedProduct)
+                               .Width(100)
+                               .Centered();
+                           columns.Bound(x => x.DisplayOrder)
+                               .Width(100);
+                           columns.Command(commands =>
+                           {
+                               commands.Edit();
+                               commands.Delete();
+                           })
+                           .Width(180);
+                       })
+                       .ToolBar(commands => commands.Insert())
+                       .ClientEvents(events => events.OnEdit("onProductManufacturerEdit"))
+                       .EnableCustomBinding(true))
+    
+                <script type="text/javascript">
+                    function onProductManufacturerEdit(e) {
+                        $(e.form).find('#Manufacturer').data('tDropDownList').select(function (dataItem) {
+                            return dataItem.Value == e.dataItem['ManufacturerId'];
+                        });
+                    }
+                </script>
+            }
+            else
+            {
+                @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
+            }
+        }
+        else
+        {
+            @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+        }
+        
+}
+
+    @helper TabPictures()
+        {
+        if (Model.Id > 0)
+        {
+        <div>
+            @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductPictureModel>()
                     .Name("productpictures-grid")
                     .DataKeys(x =>
                     {
@@ -266,11 +389,11 @@
                             .Delete("ProductPictureDelete", "Product");
                     })
                     .EnableCustomBinding(true))
-    </div>
-    <p>
-        <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
-    </p>
-    <script type="text/javascript">
+        </div>
+        <p>
+            <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
+        </p>
+        <script type="text/javascript">
      
         $(document).ready(function () {
             $('#addProductPicture').click(function () {
@@ -299,40 +422,40 @@
                 });
             });
         });
-    </script>
+        </script>
         
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddPictureModel.PictureId):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddPictureModel.PictureId)
-                @Html.ValidationMessageFor(model => model.AddPictureModel.PictureId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddPictureModel.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.Telerik().NumericTextBoxFor(model => model.AddPictureModel.DisplayOrder).DecimalDigits(0)
-                @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="left">
-                <button type="button" name="addProductPicture" id="addProductPicture" class="t-button">
-                    @T("Admin.Catalog.Products.Pictures.AddButton")</button>
-            </td>
-        </tr>
-    </table>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AddPictureModel.PictureId):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.AddPictureModel.PictureId)
+                    @Html.ValidationMessageFor(model => model.AddPictureModel.PictureId)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AddPictureModel.DisplayOrder):
+                </td>
+                <td class="adminData">
+                    @Html.Telerik().NumericTextBoxFor(model => model.AddPictureModel.DisplayOrder).DecimalDigits(0)
+                    @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="left">
+                    <button type="button" name="addProductPicture" id="addProductPicture" class="t-button">
+                        @T("Admin.Catalog.Products.Pictures.AddButton")</button>
+                </td>
+            </tr>
+        </table>
         }
         else
         {
-            @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+        @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
         }
-}
+    }
 
 @helper TabSpecificationAttributes()
     {
@@ -422,7 +545,7 @@
         });
     </script>
         
-    //TODO hide "add spec" table if no attributes are defined
+                                                                                                                                                                                                                              //TODO hide "add spec" table if no attributes are defined
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -479,6 +602,6 @@
         }
         else
         {
-            @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
+    @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
         }
 }

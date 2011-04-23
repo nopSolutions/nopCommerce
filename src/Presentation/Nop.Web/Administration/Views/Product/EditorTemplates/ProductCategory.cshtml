@@ -1,0 +1,25 @@
+﻿@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services.Catalog;
+
+@{    
+    var _categoryService = EngineContext.Current.Resolve<ICategoryService>();
+    var allCategories = _categoryService.GetAllCategories(true);
+    
+
+    var categoryList = new List<SelectListItem>();
+    foreach (var c in allCategories)
+    {
+        var item = new SelectListItem()
+        {
+            /*UNDONE display breadcrumb*/
+            Text = c.Name,
+            Value = c.Id.ToString()
+        };
+        categoryList.Add(item);
+    }
+    
+}
+
+@Html.Telerik().DropDownList().Name("Category").BindTo(categoryList)

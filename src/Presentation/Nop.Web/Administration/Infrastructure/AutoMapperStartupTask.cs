@@ -41,7 +41,7 @@ namespace Nop.Admin.Infrastructure
             //category
             ViceVersa<Category, CategoryModel>();
             //category product
-            ViceVersa<ProductCategory, CategoryProductModel>();
+            ViceVersa<ProductCategory, CategoryModel.CategoryProductModel>();
             //products
             ViceVersa<Product, ProductModel>();
             //product variants

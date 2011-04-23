@@ -104,8 +104,6 @@
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\AddressModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
-    <Compile Include="Models\CategoryProductModel.cs" />
-    <Compile Include="Models\CategoryProductsAttribute.cs" />
     <Compile Include="Models\ProductSpecificationAttributeModel.cs" />
     <Compile Include="Models\SpecificationAttributeOptionModel.cs" />
     <Compile Include="Models\SpecificationAttributeModel.cs" />
@@ -446,6 +444,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_AdminPopupLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\EditorTemplates\ProductCategory.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\EditorTemplates\ProductManufacturer.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

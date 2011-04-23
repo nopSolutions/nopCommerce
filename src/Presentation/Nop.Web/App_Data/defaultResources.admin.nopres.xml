@@ -214,6 +214,30 @@
                             <LocaleResource Name="BackToList">
                               <Value>back to product list</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Categories">
+                              <Value>Category mappings</Value>
+                              <Children>
+                                <LocaleResource Name="Fields">
+                                  <Children>
+                                    <LocaleResource Name="Category">
+                                      <Value>Category</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsFeaturedProduct">
+                                      <Value>Is featured product?</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                      <Value>Display order</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="NoCategoriesAvailable">
+                                  <Value>No categories available. Create at least one category before mapping.</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the product before you can map categories for this product page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
                             <LocaleResource Name="EditProductDetails">
                               <Value>Edit product details</Value>
                             </LocaleResource>
@@ -362,6 +386,30 @@
                             <LocaleResource Name="Manage">
                             <Value>Manage products</Value>
                           </LocaleResource>
+                            <LocaleResource Name="Manufacturers">
+                              <Value>Manufacturer mappings</Value>
+                              <Children>
+                                <LocaleResource Name="Fields">
+                                  <Children>
+                                    <LocaleResource Name="Manufacturer">
+                                      <Value>Manufacturer</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsFeaturedProduct">
+                                      <Value>Is featured product?</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                      <Value>Display order</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="NoManufacturersAvailable">
+                                  <Value>No manufacturers available. Create at least one manufacturer before mapping.</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the product before you can map manufacturers for this product page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
                             <LocaleResource Name="Pictures">
                               <Value>Pictures</Value>
                               <Children>

@@ -8,7 +8,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Admin.Validators
 {
-    public class CategoryProductValidator : AbstractValidator<CategoryProductModel>
+    public class CategoryProductValidator : AbstractValidator<CategoryModel.CategoryProductModel>
     {
         public CategoryProductValidator(ILocalizationService localizationService)
         {

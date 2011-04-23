@@ -31,7 +31,6 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IPictureService _pictureService;
-
         #endregion Fields 
 
 		#region Constructors
@@ -94,7 +93,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private string GetCategoryFullName(Category category)
+        private string GetCategoryWithPrefix(Category category)
         {
             string result = string.Empty;
 
@@ -105,6 +104,24 @@ namespace Nop.Admin.Controllers
                 else
                     result = "--" + result;
                 category = _categoryService.GetCategoryById(category.ParentCategoryId);
+            }
+            return result;
+        }
+
+        [NonAction]
+        private string GetCategoryBreadCrumb(Category category)
+        {
+            string result = string.Empty;
+
+            while (category != null && !category.Deleted)
+            {
+                if (String.IsNullOrEmpty(result))
+                    result = category.Name;
+                else
+                    result = category.Name + " >> " + result;
+
+                category = _categoryService.GetCategoryById(category.ParentCategoryId);
+
             }
             return result;
         }
@@ -143,9 +160,28 @@ namespace Nop.Admin.Controllers
                 model.AddPictureModel = new ProductModel.ProductPictureModel();
 
         }
+
+        private void PrepareCategoryMapping(ProductModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.NumberOfAvailableCategories = _categoryService.GetAllCategories(true).Count;
+        }
+
+        private void PrepareManufacturerMapping(ProductModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.NumberOfAvailableManufacturers = _manufacturerService.GetAllManufacturers(true).Count;
+        }
+
         #endregion
 
         #region Methods
+
+        #region Product list / create / edit / delete
 
         //list products
         public ActionResult Index()
@@ -168,7 +204,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryFullName(c), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -221,7 +257,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryFullName(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -253,7 +289,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryFullName(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -282,6 +318,8 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
+            PrepareCategoryMapping(model);
+            PrepareManufacturerMapping(model);
             return View(model);
         }
 
@@ -300,6 +338,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
+            PrepareCategoryMapping(model);
+            PrepareManufacturerMapping(model);
             return View(model);
         }
 
@@ -323,6 +363,8 @@ namespace Nop.Admin.Controllers
                 });
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
+            PrepareCategoryMapping(model);
+            PrepareManufacturerMapping(model);
             return View(model);
         }
 
@@ -344,6 +386,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
+            PrepareCategoryMapping(model);
+            PrepareManufacturerMapping(model);
             return View(model);
         }
 
@@ -356,9 +400,168 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        #endregion
 
+        #region Product categories
 
-        //product pictures
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductCategoryList(GridCommand command, int productId)
+        {
+            var productCategories = _categoryService.GetProductCategoriesByProductId(productId, true);
+            var productCategoriesModel = productCategories
+                .Select(x =>
+                {
+                    return new ProductModel.ProductCategoryModel()
+                    {
+                        Id = x.Id,
+                        Category = GetCategoryBreadCrumb(_categoryService.GetCategoryById(x.CategoryId)),
+                        ProductId = x.ProductId,
+                        CategoryId = x.CategoryId,
+                        IsFeaturedProduct = x.IsFeaturedProduct,
+                        DisplayOrder  = x.DisplayOrder
+                    };
+                })
+                .ToList();
+
+            var model = new GridModel<ProductModel.ProductCategoryModel>
+            {
+                Data = productCategoriesModel,
+                Total = productCategoriesModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductCategoryInsert(GridCommand command, ProductModel.ProductCategoryModel model)
+        {
+            var productCategory = new ProductCategory()
+            {
+                ProductId = model.ProductId,
+                CategoryId = Int32.Parse(model.Category), //use Category property (not CategoryId) because appropriate property is stored in it
+                IsFeaturedProduct = model.IsFeaturedProduct,
+                DisplayOrder = model.DisplayOrder
+            };
+            _categoryService.InsertProductCategory(productCategory);
+
+            return ProductCategoryList(command, model.ProductId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductCategoryUpdate(GridCommand command, ProductModel.ProductCategoryModel model)
+        {
+            var productCategory = _categoryService.GetProductCategoryById(model.Id);
+            if (productCategory == null)
+                throw new ArgumentException("No product category mapping found with the specified id");
+
+            //use Category property (not CategoryId) because appropriate property is stored in it
+            productCategory.CategoryId = Int32.Parse(model.Category);
+            productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
+            productCategory.DisplayOrder = model.DisplayOrder;
+            _categoryService.UpdateProductCategory(productCategory);
+
+            return ProductCategoryList(command, model.ProductId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductCategoryDelete(GridCommand command, ProductModel.ProductCategoryModel model)
+        {
+            var productCategory = _categoryService.GetProductCategoryById(model.Id);
+            if (productCategory == null)
+                throw new ArgumentException("No product category mapping found with the specified id");
+
+            var productId = model.ProductId;
+            _categoryService.DeleteProductCategory(productCategory);
+
+            return ProductCategoryList(command, productId);
+        }
+
+        #endregion
+
+        #region Product manufacturers
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductManufacturerList(GridCommand command, int productId)
+        {
+            var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(productId, true);
+            var productManufacturersModel = productManufacturers
+                .Select(x =>
+                {
+                    return new ProductModel.ProductManufacturerModel()
+                    {
+                        Id = x.Id,
+                        Manufacturer = _manufacturerService.GetManufacturerById(x.ManufacturerId).Name,
+                        ProductId = x.ProductId,
+                        ManufacturerId = x.ManufacturerId,
+                        IsFeaturedProduct = x.IsFeaturedProduct,
+                        DisplayOrder = x.DisplayOrder
+                    };
+                })
+                .ToList();
+
+            var model = new GridModel<ProductModel.ProductManufacturerModel>
+            {
+                Data = productManufacturersModel,
+                Total = productManufacturersModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductManufacturerInsert(GridCommand command, ProductModel.ProductManufacturerModel model)
+        {
+            var productManufacturer = new ProductManufacturer()
+            {
+                ProductId = model.ProductId,
+                ManufacturerId = Int32.Parse(model.Manufacturer), //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
+                IsFeaturedProduct = model.IsFeaturedProduct,
+                DisplayOrder = model.DisplayOrder
+            };
+            _manufacturerService.InsertProductManufacturer(productManufacturer);
+
+            return ProductManufacturerList(command, model.ProductId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductManufacturerUpdate(GridCommand command, ProductModel.ProductManufacturerModel model)
+        {
+            var productManufacturer = _manufacturerService.GetProductManufacturerById(model.Id);
+            if (productManufacturer == null)
+                throw new ArgumentException("No product manufacturer mapping found with the specified id");
+
+            //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
+            productManufacturer.ManufacturerId = Int32.Parse(model.Manufacturer);
+            productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
+            productManufacturer.DisplayOrder = model.DisplayOrder;
+            _manufacturerService.UpdateProductManufacturer(productManufacturer);
+
+            return ProductManufacturerList(command, model.ProductId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductManufacturerDelete(GridCommand command, ProductModel.ProductManufacturerModel model)
+        {
+            var productManufacturer = _manufacturerService.GetProductManufacturerById(model.Id);
+            if (productManufacturer == null)
+                throw new ArgumentException("No product manufacturer mapping found with the specified id");
+
+            var productId = model.ProductId;
+            _manufacturerService.DeleteProductManufacturer(productManufacturer);
+
+            return ProductManufacturerList(command, productId);
+        }
+        
+        #endregion
+
+        #region Product pictures
+
         public ActionResult ProductPictureAdd(int pictureId, int displayOrder, int productId)
         {
             if (productId == 0)
@@ -439,11 +642,10 @@ namespace Nop.Admin.Controllers
             return ProductPictureList(command, productId);
         }
 
+        #endregion
 
+        #region Product specification attributes
 
-
-
-        //product specification attributes
         public ActionResult ProductSpecificationAttributeAdd(int specificationAttributeOptionId, 
             bool allowFiltering, bool showOnProductPage, int displayOrder, int productId)
         {
@@ -529,7 +731,8 @@ namespace Nop.Admin.Controllers
             return ProductSpecAttrList(command, productId);
         }
 
+        #endregion
 
-		#endregion
+        #endregion
     }
 }

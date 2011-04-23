@@ -2,7 +2,7 @@
 @using Telerik.Web.Mvc.UI;
 @using Telerik.Web.Mvc;
 @model int
-@(Html.Telerik().Grid<CategoryProductModel>().Name("category-products-grid")
+@(Html.Telerik().Grid<CategoryModel.CategoryProductModel>().Name("category-products-grid")
     .DataKeys(keys =>
     {
         keys.Add(x => x.ProductId).RouteKey("productId");

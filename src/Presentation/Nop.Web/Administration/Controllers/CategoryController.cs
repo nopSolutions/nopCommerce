@@ -85,7 +85,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        public void UpdateCategoryProducts(Category category, IList<CategoryProductModel> addedCategoryProducts, IList<CategoryProductModel> removedCategoryProducts)
+        public void UpdateCategoryProducts(Category category, IList<CategoryModel.CategoryProductModel> addedCategoryProducts, IList<CategoryModel.CategoryProductModel> removedCategoryProducts)
         {
             var currentProductCategories = category.ProductCategories;
             foreach (var added in addedCategoryProducts)
@@ -309,14 +309,14 @@ namespace Nop.Admin.Controllers
                 locale.SeName = category.GetLocalized(x => x.SeName, languageId, false);
             });
 
-            CategoryProductsAttribute.Clear();
+            CategoryModel.CategoryProductsAttribute.Clear();
             return View(model);
         }
 
-        [HttpPost, CategoryProducts, FormValueExists("save", "save-continue", "continueEditing")]
+        [HttpPost, CategoryModel.CategoryProductsAttribute, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(CategoryModel model,
-            IList<CategoryProductModel> addedCategoryProducts,
-            IList<CategoryProductModel> removedCategoryProducts,
+            IList<CategoryModel.CategoryProductModel> addedCategoryProducts,
+            IList<CategoryModel.CategoryProductModel> removedCategoryProducts,
             bool continueEditing)
         {
             var category = _categoryService.GetCategoryById(model.Id);
@@ -331,7 +331,7 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(category, model);
                 UpdateCategoryProducts(category, addedCategoryProducts, removedCategoryProducts);
 
-                CategoryProductsAttribute.Clear();
+                CategoryModel.CategoryProductsAttribute.Clear();
 
                 return continueEditing ? RedirectToAction("Edit", category.Id) : RedirectToAction("List");
             }
@@ -376,7 +376,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Products(int id)
         {
-            CategoryProductsAttribute.Clear();
+            CategoryModel.CategoryProductsAttribute.Clear();
             return PartialView(id);
         }
 
@@ -385,7 +385,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductsSelect(int id)
         {
             var products = _categoryService.GetProductCategoriesByCategoryId(id).Select(x => x.ToModel()).ToList();
-            products = CategoryProductsAttribute.MakeStateful(products);
+            products = CategoryModel.CategoryProductsAttribute.MakeStateful(products);
 
             return new JsonResult
             {
@@ -394,12 +394,12 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction]
-        public ActionResult ProductsRemove(int id, CategoryProductModel categoryProduct)
+        public ActionResult ProductsRemove(int id, CategoryModel.CategoryProductModel categoryProduct)
         {
             categoryProduct.CategoryId = id;
             var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => x.ToModel()).ToList();
-            CategoryProductsAttribute.Remove(categoryProduct);
-            products = CategoryProductsAttribute.MakeStateful(products);
+            CategoryModel.CategoryProductsAttribute.Remove(categoryProduct);
+            products = CategoryModel.CategoryProductsAttribute.MakeStateful(products);
 
             return new JsonResult
             {
@@ -408,7 +408,7 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction]
-        public ActionResult ProductsAdd(int id, CategoryProductModel categoryProduct)
+        public ActionResult ProductsAdd(int id, CategoryModel.CategoryProductModel categoryProduct)
         {
             if (!ModelState.IsValid)
             {
@@ -423,9 +423,9 @@ namespace Nop.Admin.Controllers
                 categoryProduct.ProductName = _productService.GetProductById(categoryProduct.ProductId).Name;
             }
 
-            CategoryProductsAttribute.Add(categoryProduct);
+            CategoryModel.CategoryProductsAttribute.Add(categoryProduct);
             var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => x.ToModel()).ToList();
-            products = CategoryProductsAttribute.MakeStateful(products);
+            products = CategoryModel.CategoryProductsAttribute.MakeStateful(products);
 
             return new JsonResult
             {
@@ -434,7 +434,7 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction]
-        public ActionResult ProductsEdit(int id, CategoryProductModel categoryProduct)
+        public ActionResult ProductsEdit(int id, CategoryModel.CategoryProductModel categoryProduct)
         {
             if (!ModelState.IsValid)
             {
@@ -444,8 +444,8 @@ namespace Nop.Admin.Controllers
 
             categoryProduct.CategoryId = id;
             var products = _categoryService.GetProductCategoriesByCategoryId(categoryProduct.CategoryId).Select(x => x.ToModel()).ToList();
-            CategoryProductsAttribute.Add(categoryProduct);
-            products = CategoryProductsAttribute.MakeStateful(products);
+            CategoryModel.CategoryProductsAttribute.Add(categoryProduct);
+            products = CategoryModel.CategoryProductsAttribute.MakeStateful(products);
 
             return new JsonResult
             {

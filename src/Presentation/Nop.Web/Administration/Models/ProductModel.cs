@@ -66,13 +66,20 @@ namespace Nop.Admin.Models
         public int SearchCategoryId { get; set; }
         public int SearchManufacturerId { get; set; }
 
+
+        //categories
+        public int NumberOfAvailableCategories { get; set; }
+
+        //manufacturers
+        public int NumberOfAvailableManufacturers { get; set; }
+        
         //pictures
         public ProductPictureModel AddPictureModel { get; set; }
         public IList<ProductPictureModel> ProductPictureModels { get; set; }
 
         //add specification attribute model
         public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
-        
+
         #region Nested classes
         
         public class AddProductSpecificationAttributeModel : BaseNopEntityModel
@@ -116,7 +123,41 @@ namespace Nop.Admin.Models
             [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
+        
+        public class ProductCategoryModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
+            [UIHint("ProductCategory")]
+            public string Category { get; set; }
 
+            public int ProductId { get; set; }
+
+            public int CategoryId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")]
+            public bool IsFeaturedProduct { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+        }
+
+        public class ProductManufacturerModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
+            [UIHint("ProductManufacturer")]
+            public string Manufacturer { get; set; }
+
+            public int ProductId { get; set; }
+
+            public int ManufacturerId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")]
+            public bool IsFeaturedProduct { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+        }
+        
         #endregion
     }
 

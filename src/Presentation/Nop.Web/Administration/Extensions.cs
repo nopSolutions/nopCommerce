@@ -49,14 +49,14 @@ namespace Nop.Admin
 
         #region Category product
 
-        public static CategoryProductModel ToModel(this ProductCategory entity)
+        public static CategoryModel.CategoryProductModel ToModel(this ProductCategory entity)
         {
-            return AutoMapper.Mapper.Map<ProductCategory, CategoryProductModel>(entity);
+            return AutoMapper.Mapper.Map<ProductCategory, CategoryModel.CategoryProductModel>(entity);
         }
 
-        public static ProductCategory ToEntity(this CategoryProductModel model)
+        public static ProductCategory ToEntity(this CategoryModel.CategoryProductModel model)
         {
-            return AutoMapper.Mapper.Map<CategoryProductModel, ProductCategory>(model);
+            return AutoMapper.Mapper.Map<CategoryModel.CategoryProductModel, ProductCategory>(model);
         }
 
         #endregion
