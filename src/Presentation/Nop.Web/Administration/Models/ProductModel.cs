@@ -9,6 +9,7 @@ using Nop.Admin.Validators;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models
 {
@@ -157,7 +158,80 @@ namespace Nop.Admin.Models
             [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-        
+
+        public class RelatedProductModel : BaseNopEntityModel
+        {
+            public int ProductId1 { get; set; }
+
+            public int ProductId2 { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
+            public string Product2Name { get; set; }
+            
+            [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+        }
+
+        public class AddRelatedProductModel : BaseNopModel
+        {
+            public AddRelatedProductModel()
+            {
+                AvailableCategories = new List<SelectListItem>();
+                AvailableManufacturers = new List<SelectListItem>();
+            }
+            public GridModel<ProductModel> Products { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [AllowHtml]
+            public string SearchProductName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            public int SearchCategoryId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            public int SearchManufacturerId { get; set; }
+
+            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableManufacturers { get; set; }
+
+            public int ProductId { get; set; }
+
+            public int[] SelectedProductIds { get; set; }
+        }
+
+        public class CrossSellProductModel : BaseNopEntityModel
+        {
+            public int ProductId1 { get; set; }
+
+            public int ProductId2 { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
+            public string Product2Name { get; set; }
+        }
+
+        public class AddCrossSellProductModel : BaseNopModel
+        {
+            public AddCrossSellProductModel()
+            {
+                AvailableCategories = new List<SelectListItem>();
+                AvailableManufacturers = new List<SelectListItem>();
+            }
+            public GridModel<ProductModel> Products { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [AllowHtml]
+            public string SearchProductName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            public int SearchCategoryId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            public int SearchManufacturerId { get; set; }
+
+            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableManufacturers { get; set; }
+
+            public int ProductId { get; set; }
+
+            public int[] SelectedProductIds { get; set; }
+        }
+
         #endregion
     }
 

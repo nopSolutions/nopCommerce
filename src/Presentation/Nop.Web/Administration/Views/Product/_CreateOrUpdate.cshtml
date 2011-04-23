@@ -14,6 +14,8 @@
     }
     x.Add().Text(T("Admin.Catalog.Products.Categories").Text).Content(TabCategories().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Manufacturers").Text).Content(TabManufacturers().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.RelatedProducts").Text).Content(TabRelatedProducts().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.CrossSells").Text).Content(TabCrossSells().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.SpecificationAttributes").Text).Content(TabSpecificationAttributes().ToHtmlString());
 })
@@ -352,12 +354,136 @@
         }
         
 }
-
-    @helper TabPictures()
-        {
+@helper TabRelatedProducts()
+{
         if (Model.Id > 0)
         {
-        <div>
+            
+            <table class="adminContent">
+                <tr>
+                    <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.RelatedProductModel>()
+                .Name("relatedpoducts-grid")
+                    .DataKeys(keys =>
+                    {
+                        keys.Add(x => x.Id);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("RelatedProductList", "Product", new { productId = Model.Id })
+                            .Update("RelatedProductUpdate", "Product")
+                            .Delete("RelatedProductDelete", "Product");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Product2Name)
+                            .Width(500)
+                            .ReadOnly();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100)
+                            .Centered();
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        })
+                        .Width(180);
+                    })
+                    .EnableCustomBinding(true))
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%">
+                        <input type="submit" id="btnAddNewRelatedProduct" name="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts" }))', 800, 600, true); return false;" class="t-button" />
+                        <input type="submit" id="btnRefreshRelatedProducts" name="btnRefreshRelatedProducts" style="display: none" />
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#btnRefreshRelatedProducts').click(function () {
+                                    //refresh grid
+                                    var optionsGrid = $("#relatedpoducts-grid");
+                                    optionsGrid.data('tGrid').ajaxRequest();
+
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            @T("Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit")
+        }
+        
+}
+@helper TabCrossSells()
+{
+        if (Model.Id > 0)
+        {
+            
+            <table class="adminContent">
+                <tr>
+                    <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.CrossSellProductModel>()
+                .Name("crosssellpoducts-grid")
+                    .DataKeys(keys =>
+                    {
+                        keys.Add(x => x.Id);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("CrossSellProductList", "Product", new { productId = Model.Id })
+                            .Delete("CrossSellProductDelete", "Product");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Product2Name)
+                            .Width(500)
+                            .ReadOnly();
+                        columns.Command(commands =>
+                        {
+                            commands.Delete();
+                        })
+                        .Width(180);
+                    })
+                    .EnableCustomBinding(true))
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%">
+                        <input type="submit" id="btnAddNewCrossSellProduct" name="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts" }))', 800, 600, true); return false;" class="t-button" />
+                        <input type="submit" id="btnRefreshCrossSellProducts" name="btnRefreshCrossSellProducts" style="display: none" />
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#btnRefreshCrossSellProducts').click(function () {
+                                    //refresh grid
+                                    var optionsGrid = $("#crosssellpoducts-grid");
+                                    optionsGrid.data('tGrid').ajaxRequest();
+
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
+        }
+        
+}
+@helper TabPictures()
+    {
+        if (Model.Id > 0)
+        {
+            <div>
             @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductPictureModel>()
                     .Name("productpictures-grid")
                     .DataKeys(x =>
@@ -390,10 +516,10 @@
                     })
                     .EnableCustomBinding(true))
         </div>
-        <p>
-            <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
-        </p>
-        <script type="text/javascript">
+            <p>
+                <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
+            </p>
+            <script type="text/javascript">
      
         $(document).ready(function () {
             $('#addProductPicture').click(function () {
@@ -422,9 +548,8 @@
                 });
             });
         });
-        </script>
-        
-        <table class="adminContent">
+        </script>        
+            <table class="adminContent">
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.AddPictureModel.PictureId):
@@ -453,7 +578,7 @@
         }
         else
         {
-        @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+            @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
         }
     }
 
@@ -461,7 +586,7 @@
     {
         if (Model.Id > 0)
         {
-    <div>
+            <div>
         @(Html.Telerik().Grid<Nop.Admin.Models.ProductSpecificationAttributeModel>()
                     .Name("specificationattributes-grid")
                     .DataKeys(x =>
@@ -494,10 +619,10 @@
                     })
                     .EnableCustomBinding(true))
     </div>
-    <p>
-        <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
-    </p>
-    <script type="text/javascript">
+            <p>
+                <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
+            </p>
+            <script type="text/javascript">
      $(function() {
             $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
                 var selectedItem = $(this).val();
@@ -543,10 +668,8 @@
                 });
             });
         });
-    </script>
-        
-                                                                                                                                                                                                                              //TODO hide "add spec" table if no attributes are defined
-    <table class="adminContent">
+    </script>                                                                                                                                                                                                //TODO hide "add spec" table if no attributes are defined
+            <table class="adminContent">
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId):
@@ -602,6 +725,6 @@
         }
         else
         {
-    @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
+            @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
         }
 }

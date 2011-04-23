@@ -467,13 +467,13 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductCategoryDelete(GridCommand command, ProductModel.ProductCategoryModel model)
+        public ActionResult ProductCategoryDelete(int id, GridCommand command)
         {
-            var productCategory = _categoryService.GetProductCategoryById(model.Id);
+            var productCategory = _categoryService.GetProductCategoryById(id);
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
 
-            var productId = model.ProductId;
+            var productId = productCategory.ProductId;
             _categoryService.DeleteProductCategory(productCategory);
 
             return ProductCategoryList(command, productId);
@@ -546,18 +546,343 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductManufacturerDelete(GridCommand command, ProductModel.ProductManufacturerModel model)
+        public ActionResult ProductManufacturerDelete(int id, GridCommand command)
         {
-            var productManufacturer = _manufacturerService.GetProductManufacturerById(model.Id);
+            var productManufacturer = _manufacturerService.GetProductManufacturerById(id);
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
-            var productId = model.ProductId;
+            var productId = productManufacturer.ProductId;
             _manufacturerService.DeleteProductManufacturer(productManufacturer);
 
             return ProductManufacturerList(command, productId);
         }
         
+        #endregion
+
+        #region Related products
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult RelatedProductList(GridCommand command, int productId)
+        {
+            var relatedProducts = _productService.GetRelatedProductsByProductId1(productId, true);
+            var relatedProductsModel = relatedProducts
+                .Select(x =>
+                {
+                    return new ProductModel.RelatedProductModel()
+                    {
+                        Id = x.Id,
+                        ProductId1 = x.ProductId1,
+                        ProductId2 = x.ProductId2,
+                        Product2Name = _productService.GetProductById(x.ProductId2).Name,
+                        DisplayOrder = x.DisplayOrder
+                    };
+                })
+                .ToList();
+
+            var model = new GridModel<ProductModel.RelatedProductModel>
+            {
+                Data = relatedProductsModel,
+                Total = relatedProductsModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+        
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult RelatedProductUpdate(GridCommand command, ProductModel.RelatedProductModel model)
+        {
+            var relatedProduct = _productService.GetRelatedProductById(model.Id);
+            if (relatedProduct == null)
+                throw new ArgumentException("No related product found with the specified id");
+
+            relatedProduct.DisplayOrder = model.DisplayOrder;
+            _productService.UpdateRelatedProduct(relatedProduct);
+
+            return RelatedProductList(command, model.ProductId1);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult RelatedProductDelete(int id, GridCommand command)
+        {
+            var relatedProduct = _productService.GetRelatedProductById(id);
+            if (relatedProduct == null)
+                throw new ArgumentException("No related product found with the specified id");
+
+            var productId = relatedProduct.ProductId1;
+            _productService.DeleteRelatedProduct(relatedProduct);
+
+            return RelatedProductList(command, productId);
+        }
+        
+        public ActionResult RelatedProductAddPopup(int productId)
+        {
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            var model = new ProductModel.AddRelatedProductModel();
+            model.Products = new GridModel<ProductModel>
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+
+            return View(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult RelatedProductAddPopupList(GridCommand command)
+        {
+            //filtering
+            string productName = command.FilterDescriptors.GetValueFromAppliedFilters("Name", FilterOperator.Contains);
+            string selectedCategoryId = command.FilterDescriptors.GetValueFromAppliedFilters("SearchCategoryId");
+            string selectedManufacturerId = command.FilterDescriptors.GetValueFromAppliedFilters("SearchManufacturerId");
+
+            var model = new GridModel();
+            var products = _productService.SearchProducts(!String.IsNullOrEmpty(selectedCategoryId) ? Convert.ToInt32(selectedCategoryId) : 0,
+                !String.IsNullOrEmpty(selectedManufacturerId) ? Convert.ToInt32(selectedManufacturerId) : 0
+                , null, null, null, 0, 0, productName, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
+            model.Data = products.Select(x => x.ToModel());
+            model.Total = products.TotalCount;
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [HttpPost, ActionName("RelatedProductAddPopup")]
+        [FormValueRequired("search-products")]
+        public ActionResult SearchRelatedProducts(ProductModel.AddRelatedProductModel model)
+        {
+            ViewData["searchProductName"] = model.SearchProductName;
+            ViewData["searchCategoryId"] = model.SearchCategoryId;
+            ViewData["searchManufacturerId"] = model.SearchManufacturerId;
+
+            var products = _productService.SearchProducts(model.SearchCategoryId,
+                model.SearchManufacturerId, null, null, null, 0, 0, model.SearchProductName, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            model.Products = new GridModel<ProductModel>
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString(), Selected = m.Id == model.SearchManufacturerId });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult RelatedProductAddPopup(string btnId, ProductModel.AddRelatedProductModel model)
+        {
+            if (model.SelectedProductIds != null)
+            {
+                foreach (int id in model.SelectedProductIds)
+                {
+                    var product = _productService.GetProductById(id);
+                    if (product != null)
+                    {
+                        var existingRelatedProducts = _productService.GetRelatedProductsByProductId1(model.ProductId);
+                        if (existingRelatedProducts.FindRelatedProduct(model.ProductId, id) == null)
+                        {
+                            _productService.InsertRelatedProduct(
+                                new RelatedProduct()
+                                {
+                                    ProductId1 = model.ProductId,
+                                    ProductId2 = id,
+                                    DisplayOrder = 1
+                                });
+                        }
+                    }
+                }
+            }
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            model.Products = new GridModel<ProductModel>();
+            return View(model);
+        }
+        
+        #endregion
+
+        #region Cross-sell products
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult CrossSellProductList(GridCommand command, int productId)
+        {
+            var crossSellProducts = _productService.GetCrossSellProductsByProductId1(productId, true);
+            var crossSellProductsModel = crossSellProducts
+                .Select(x =>
+                {
+                    return new ProductModel.CrossSellProductModel()
+                    {
+                        Id = x.Id,
+                        ProductId1 = x.ProductId1,
+                        ProductId2 = x.ProductId2,
+                        Product2Name = _productService.GetProductById(x.ProductId2).Name,
+                    };
+                })
+                .ToList();
+
+            var model = new GridModel<ProductModel.CrossSellProductModel>
+            {
+                Data = crossSellProductsModel,
+                Total = crossSellProductsModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult CrossSellProductDelete(int id, GridCommand command)
+        {
+            var crossSellProduct = _productService.GetCrossSellProductById(id);
+            if (crossSellProduct == null)
+                throw new ArgumentException("No cross-sell product found with the specified id");
+
+            var productId = crossSellProduct.ProductId1;
+            _productService.DeleteCrossSellProduct(crossSellProduct);
+
+            return CrossSellProductList(command, productId);
+        }
+
+        public ActionResult CrossSellProductAddPopup(int productId)
+        {
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            var model = new ProductModel.AddCrossSellProductModel();
+            model.Products = new GridModel<ProductModel>
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+
+            return View(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult CrossSellProductAddPopupList(GridCommand command)
+        {
+            //filtering
+            string productName = command.FilterDescriptors.GetValueFromAppliedFilters("Name", FilterOperator.Contains);
+            string selectedCategoryId = command.FilterDescriptors.GetValueFromAppliedFilters("SearchCategoryId");
+            string selectedManufacturerId = command.FilterDescriptors.GetValueFromAppliedFilters("SearchManufacturerId");
+
+            var model = new GridModel();
+            var products = _productService.SearchProducts(!String.IsNullOrEmpty(selectedCategoryId) ? Convert.ToInt32(selectedCategoryId) : 0,
+                !String.IsNullOrEmpty(selectedManufacturerId) ? Convert.ToInt32(selectedManufacturerId) : 0
+                , null, null, null, 0, 0, productName, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
+            model.Data = products.Select(x => x.ToModel());
+            model.Total = products.TotalCount;
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [HttpPost, ActionName("CrossSellProductAddPopup")]
+        [FormValueRequired("search-products")]
+        public ActionResult SearchCrossSellProducts(ProductModel.AddCrossSellProductModel model)
+        {
+            ViewData["searchProductName"] = model.SearchProductName;
+            ViewData["searchCategoryId"] = model.SearchCategoryId;
+            ViewData["searchManufacturerId"] = model.SearchManufacturerId;
+
+            var products = _productService.SearchProducts(model.SearchCategoryId,
+                model.SearchManufacturerId, null, null, null, 0, 0, model.SearchProductName, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            model.Products = new GridModel<ProductModel>
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString(), Selected = m.Id == model.SearchManufacturerId });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult CrossSellProductAddPopup(string btnId, ProductModel.AddCrossSellProductModel model)
+        {
+            if (model.SelectedProductIds != null)
+            {
+                foreach (int id in model.SelectedProductIds)
+                {
+                    var product = _productService.GetProductById(id);
+                    if (product != null)
+                    {
+                        var existingCrossSellProducts = _productService.GetCrossSellProductsByProductId1(model.ProductId);
+                        if (existingCrossSellProducts.FindCrossSellProduct(model.ProductId, id) == null)
+                        {
+                            _productService.InsertCrossSellProduct(
+                                new CrossSellProduct()
+                                {
+                                    ProductId1 = model.ProductId,
+                                    ProductId2 = id,
+                                });
+                        }
+                    }
+                }
+            }
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            model.Products = new GridModel<ProductModel>();
+            return View(model);
+        }
+
         #endregion
 
         #region Product pictures

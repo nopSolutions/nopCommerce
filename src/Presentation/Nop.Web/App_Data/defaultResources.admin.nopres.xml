@@ -238,6 +238,24 @@
                                 </LocaleResource>
                               </Children>
                             </LocaleResource>
+                            <LocaleResource Name="CrossSells">
+                              <Value>Cross-sells</Value>
+                              <Children>
+                                <LocaleResource Name="AddNew">
+                                  <Value>Add new cross-sell product</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Fields">
+                                  <Children>
+                                    <LocaleResource Name="Product">
+                                      <Value>Product</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the product before you can add cross-sell products for this product page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
                             <LocaleResource Name="EditProductDetails">
                               <Value>Edit product details</Value>
                             </LocaleResource>
@@ -441,6 +459,27 @@
                                 </LocaleResource>
                                 <LocaleResource Name="SaveBeforeEdit">
                                   <Value>You need to save the product before you can upload pictures for this product page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="RelatedProducts">
+                              <Value>Related products</Value>
+                              <Children>
+                                <LocaleResource Name="AddNew">
+                                  <Value>Add new related product</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Fields">
+                                  <Children>
+                                    <LocaleResource Name="Product">
+                                      <Value>Product</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                      <Value>Display order</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the product before you can add related products for this product page.</Value>
                                 </LocaleResource>
                               </Children>
                             </LocaleResource>
