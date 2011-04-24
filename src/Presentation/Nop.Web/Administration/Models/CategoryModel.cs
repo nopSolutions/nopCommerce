@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
 
 
@@ -81,125 +82,49 @@ namespace Nop.Admin.Models
         #endregion
 
         #region Nested classes
-        
-        [Validator(typeof(CategoryProductValidator))]
-        public class CategoryProductModel : IEquatable<CategoryProductModel>
+
+        public class CategoryProductModel : BaseNopEntityModel
         {
-            [UIHint("ProductSelector")]
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Product")]
+            public int CategoryId { get; set; }
+
             public int ProductId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.ProductName")]
+            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Product")]
             public string ProductName { get; set; }
-
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Category")]
-            public int CategoryId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")]
             public bool IsFeaturedProduct { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
-
-            public override bool Equals(object obj)
-            {
-                var productCategory = obj as ProductCategory;
-                if (productCategory != null)
-                {
-                    return Equals(productCategory);
-                }
-                return false;
-            }
-
-            public bool Equals(CategoryProductModel other)
-            {
-                return other.ProductId.Equals(ProductId);
-            }
+            //we don't name it DisplayOrder because Telerik has a small bug 
+            //"if we have one more editor with the same name on a page, it doesn't allow editing"
+            //in our case it's category.DisplayOrder
+            public int DisplayOrder1 { get; set; }
         }
-        
-        public class CategoryProductsAttribute : FilterAttribute, IActionFilter
+
+        public class AddCategoryProductModel : BaseNopModel
         {
-            public void OnActionExecuted(ActionExecutedContext filterContext)
+            public AddCategoryProductModel()
             {
-
+                AvailableCategories = new List<SelectListItem>();
+                AvailableManufacturers = new List<SelectListItem>();
             }
+            public GridModel<ProductModel> Products { get; set; }
 
-            public void OnActionExecuting(ActionExecutingContext filterContext)
-            {
-                IStatefulStorage storage = StatefulStorage.PerSession;
-                filterContext.ActionParameters["addedCategoryProducts"] = Added();
-                filterContext.ActionParameters["removedCategoryProducts"] = Removed();
-            }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [AllowHtml]
+            public string SearchProductName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            public int SearchCategoryId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            public int SearchManufacturerId { get; set; }
 
-            public static IList<CategoryModel.CategoryProductModel> Added()
-            {
-                return StatefulStorage.PerSession.GetOrAdd<IList<CategoryModel.CategoryProductModel>>("category-products-added",
-                                                                                        () =>
-                                                                                        new List<CategoryModel.CategoryProductModel>());
-            }
+            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableManufacturers { get; set; }
 
-            public static IList<CategoryModel.CategoryProductModel> Removed()
-            {
-                return StatefulStorage.PerSession.GetOrAdd<IList<CategoryModel.CategoryProductModel>>("category-products-removed",
-                                                                                        () =>
-                                                                                        new List<CategoryModel.CategoryProductModel>());
-            }
+            public int CategoryId { get; set; }
 
-            public static void Add(CategoryModel.CategoryProductModel categoryProduct)
-            {
-                Removed().Remove(categoryProduct);
-                var added = Added();
-                var current = added.SingleOrDefault(x => x.ProductId.Equals(categoryProduct.ProductId));
-                if (current == null)
-                {
-                    added.Add(categoryProduct);
-                }
-                else
-                {
-                    current.DisplayOrder = categoryProduct.DisplayOrder;
-                    current.IsFeaturedProduct = categoryProduct.IsFeaturedProduct;
-                }
-            }
-
-            public static void Remove(CategoryModel.CategoryProductModel categoryProduct)
-            {
-                var removed = Removed();
-                if (!removed.Contains(categoryProduct)) removed.Add(categoryProduct);
-                Added().Remove(categoryProduct);
-            }
-
-            public static void Clear()
-            {
-                Added().Clear();
-                Removed().Clear();
-            }
-
-            public static List<CategoryModel.CategoryProductModel> MakeStateful(List<CategoryModel.CategoryProductModel> categoryProducts)
-            {
-                var added = Added();
-                var removed = Removed();
-
-                foreach (var categoryProduct in categoryProducts)
-                {
-                    var productId = categoryProduct.ProductId;
-                    //If the products exist in the added list, then it was updated and we should update the existing category product
-                    var updated = added.SingleOrDefault(x => x.ProductId.Equals(productId));
-                    if (updated != null)
-                    {
-                        categoryProduct.DisplayOrder = updated.DisplayOrder;
-                        categoryProduct.IsFeaturedProduct = updated.IsFeaturedProduct;
-                    }
-                }
-                foreach (var toAdd in added)
-                {
-                    if (!categoryProducts.Contains(toAdd)) categoryProducts.Add(toAdd);
-                }
-                foreach (var toRemove in removed)
-                {
-                    categoryProducts.Remove(toRemove);
-                }
-                return categoryProducts.OrderBy(x => x.DisplayOrder).ToList();
-            }
+            public int[] SelectedProductIds { get; set; }
         }
 
         #endregion

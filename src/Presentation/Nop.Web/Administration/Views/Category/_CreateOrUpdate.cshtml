@@ -8,10 +8,7 @@
 {
     x.Add().Text(T("Admin.Catalog.Categories.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
-    if (Model.Id > 0)
-    {
-        x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
-    }
+    x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
 })
 
 @helper TabInfo()
@@ -116,7 +113,7 @@
                 @Html.NopLabelFor(model => model.DisplayOrder):
             </td>
             <td class="adminData">
-                @Html.Telerik().NumericTextBoxFor(x => x.DisplayOrder).DecimalDigits(0)
+                @Html.Telerik().NumericTextBoxFor(model => model.DisplayOrder).DecimalDigits(0)
                 @Html.ValidationMessageFor(model => model.DisplayOrder)
             </td>
         </tr>
@@ -220,6 +217,69 @@
     </table>
 }
 @helper TabProducts()
-{
-      @Html.Action("Products", new { id = Model.Id })
+    {
+    if (Model.Id > 0)
+    {
+            
+            <table class="adminContent">
+                <tr>
+                    <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.CategoryModel.CategoryProductModel>()
+                .Name("products-grid")
+                    .DataKeys(keys =>
+                    {
+                        keys.Add(x => x.Id);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("ProductList", "Category", new { categoryId = Model.Id })
+                            .Update("ProductUpdate", "Category")
+                            .Delete("ProductDelete", "Category");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.ProductName)
+                            .Width(500)
+                            .ReadOnly();
+                        columns.Bound(x => x.IsFeaturedProduct)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.DisplayOrder1)
+                            .Width(100)
+                            .Centered();
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        })
+                        .Width(180);
+                    })
+                    .EnableCustomBinding(true))
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%">
+                        <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Catalog.Categories.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new { categoryId = Model.Id, btnId = "btnRefreshProducts" }))', 800, 600, true); return false;" class="t-button" />
+                        <input type="submit" id="btnRefreshProducts" name="btnRefreshProducts" style="display: none" />
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#btnRefreshProducts').click(function () {
+                                    //refresh grid
+                                    var optionsGrid = $("#products-grid");
+                                    optionsGrid.data('tGrid').ajaxRequest();
+
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                            });
+                        </script>
+                    </td>
+                </tr>
+            </table>
+    }
+    else
+    {
+            @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+    }
 }

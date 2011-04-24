@@ -182,24 +182,24 @@
                             <LocaleResource Name="Products">
                                 <Value>Products</Value>
                                 <Children>
+                                    <LocaleResource Name="AddNew">
+                                      <Value>Add a new product</Value>
+                                    </LocaleResource>
                                     <LocaleResource Name="Fields">
                                         <Children>
                                             <LocaleResource Name="Product">
                                                 <Value>Product</Value>
                                             </LocaleResource>
-                                            <LocaleResource Name="ProductName">
-                                                <Value>Product</Value>
-                                            </LocaleResource>
-                                            <LocaleResource Name="Category">
-                                                <Value>Category</Value>
-                                            </LocaleResource>
                                             <LocaleResource Name="IsFeaturedProduct">
-                                                <Value>Featured Product</Value>
+                                                <Value>Is featured product?</Value>
                                             </LocaleResource>
                                             <LocaleResource Name="DisplayOrder">
                                                 <Value>Display order</Value>
                                             </LocaleResource>
                                         </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SaveBeforeEdit">
+                                      <Value>You need to save the category before you can add products for this category page.</Value>
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>

@@ -15,7 +15,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId1">The first product identifier</param>
         /// <param name="productId2">The second product identifier</param>
         /// <returns>Related product</returns>
-        public static RelatedProduct FindRelatedProduct(this ICollection<RelatedProduct> source,
+        public static RelatedProduct FindRelatedProduct(this IList<RelatedProduct> source,
             int productId1, int productId2)
         {
             foreach (RelatedProduct relatedProduct in source)
@@ -31,7 +31,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId1">The first product identifier</param>
         /// <param name="productId2">The second product identifier</param>
         /// <returns>Cross-sell product</returns>
-        public static CrossSellProduct FindCrossSellProduct(this ICollection<CrossSellProduct> source,
+        public static CrossSellProduct FindCrossSellProduct(this IList<CrossSellProduct> source,
             int productId1, int productId2)
         {
             foreach (CrossSellProduct crossSellProduct in source)

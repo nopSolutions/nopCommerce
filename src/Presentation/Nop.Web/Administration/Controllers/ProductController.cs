@@ -93,39 +93,6 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private string GetCategoryWithPrefix(Category category)
-        {
-            string result = string.Empty;
-
-            while (category != null)
-            {
-                if (String.IsNullOrEmpty(result))
-                    result = category.Name;
-                else
-                    result = "--" + result;
-                category = _categoryService.GetCategoryById(category.ParentCategoryId);
-            }
-            return result;
-        }
-
-        [NonAction]
-        private string GetCategoryBreadCrumb(Category category)
-        {
-            string result = string.Empty;
-
-            while (category != null && !category.Deleted)
-            {
-                if (String.IsNullOrEmpty(result))
-                    result = category.Name;
-                else
-                    result = category.Name + " >> " + result;
-
-                category = _categoryService.GetCategoryById(category.ParentCategoryId);
-
-            }
-            return result;
-        }
-
         private void PrepareAddSpecificationAttributeModel(ProductModel model)
         {
             if (model == null)
@@ -151,6 +118,7 @@ namespace Nop.Admin.Controllers
 
         }
 
+        [NonAction]
         private void PrepareAddProductPictureModel(ProductModel model)
         {
             if (model == null)
@@ -158,9 +126,9 @@ namespace Nop.Admin.Controllers
 
             if (model.AddPictureModel == null)
                 model.AddPictureModel = new ProductModel.ProductPictureModel();
-
         }
 
+        [NonAction]
         private void PrepareCategoryMapping(ProductModel model)
         {
             if (model == null)
@@ -169,6 +137,7 @@ namespace Nop.Admin.Controllers
             model.NumberOfAvailableCategories = _categoryService.GetAllCategories(true).Count;
         }
 
+        [NonAction]
         private void PrepareManufacturerMapping(ProductModel model)
         {
             if (model == null)
@@ -204,7 +173,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -257,7 +226,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -289,7 +258,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -297,18 +266,6 @@ namespace Nop.Admin.Controllers
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString(), Selected = m.Id == model.SearchManufacturerId });
 
             return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult _AjaxComboBo(string text)
-        {
-            var products = _productService.GetAllProducts(true).Where(x => x.Name.ToLower().Contains(text.ToLower()));
-
-            return new JsonResult
-            {
-                Data = new SelectList(products.ToList(), "Id",
-                    "Name")
-            };
         }
 
         //create product
@@ -414,7 +371,7 @@ namespace Nop.Admin.Controllers
                     return new ProductModel.ProductCategoryModel()
                     {
                         Id = x.Id,
-                        Category = GetCategoryBreadCrumb(_categoryService.GetCategoryById(x.CategoryId)),
+                        Category = _categoryService.GetCategoryById(x.CategoryId).GetCategoryBreadCrumb(_categoryService),
                         ProductId = x.ProductId,
                         CategoryId = x.CategoryId,
                         IsFeaturedProduct = x.IsFeaturedProduct,
@@ -633,7 +590,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -686,7 +643,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -789,7 +746,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -842,7 +799,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = GetCategoryWithPrefix(c), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });

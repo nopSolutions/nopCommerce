@@ -40,8 +40,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.SentOnUtc, dt => dt.Ignore());
             //category
             ViceVersa<Category, CategoryModel>();
-            //category product
-            ViceVersa<ProductCategory, CategoryModel.CategoryProductModel>();
             //products
             ViceVersa<Product, ProductModel>();
             //product variants

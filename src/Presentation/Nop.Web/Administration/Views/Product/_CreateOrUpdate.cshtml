@@ -363,7 +363,7 @@
                 <tr>
                     <td>
             @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.RelatedProductModel>()
-                .Name("relatedpoducts-grid")
+                .Name("relatedproducts-grid")
                     .DataKeys(keys =>
                     {
                         keys.Add(x => x.Id);
@@ -401,7 +401,7 @@
                             $(document).ready(function () {
                                 $('#btnRefreshRelatedProducts').click(function () {
                                     //refresh grid
-                                    var optionsGrid = $("#relatedpoducts-grid");
+                                    var optionsGrid = $("#relatedproducts-grid");
                                     optionsGrid.data('tGrid').ajaxRequest();
 
                                     //return false to don't reload a page
@@ -428,7 +428,7 @@
                 <tr>
                     <td>
             @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.CrossSellProductModel>()
-                .Name("crosssellpoducts-grid")
+                .Name("crosssellproducts-grid")
                     .DataKeys(keys =>
                     {
                         keys.Add(x => x.Id);
@@ -461,7 +461,7 @@
                             $(document).ready(function () {
                                 $('#btnRefreshCrossSellProducts').click(function () {
                                     //refresh grid
-                                    var optionsGrid = $("#crosssellpoducts-grid");
+                                    var optionsGrid = $("#crosssellproducts-grid");
                                     optionsGrid.data('tGrid').ajaxRequest();
 
                                     //return false to don't reload a page
