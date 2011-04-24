@@ -9,6 +9,7 @@
     x.Add().Text(T("Admin.Catalog.Categories.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Categories.Discounts").Text).Content(TabDiscounts().ToHtmlString());
 })
 
 @helper TabInfo()
@@ -282,4 +283,25 @@
     {
             @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
     }
+}
+
+@helper TabDiscounts()
+    {
+        if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
+        {
+            foreach (var discount in Model.AvailableDiscounts)
+            {
+            <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
+            @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id))
+            {
+                <text>checked="checked"</text>
+            }
+            />@discount.Name
+            <br />
+            }
+        }
+        else
+        {
+            @T("Admin.Catalog.Categories.Discounts.NoDiscounts")
+        }
 }

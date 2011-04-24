@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
@@ -78,6 +79,12 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Breadcrumb")]
         public string Breadcrumb { get; set; }
+
+
+        //dicounts
+        public List<Discount> AvailableDiscounts { get; set; }
+        public int[] SelectedDiscountIds { get; set; }
+
 
         #endregion
 

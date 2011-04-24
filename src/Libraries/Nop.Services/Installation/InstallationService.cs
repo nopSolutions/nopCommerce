@@ -16,6 +16,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
@@ -62,6 +63,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
+        private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly ISettingService _settingService;
 
@@ -92,6 +94,7 @@ namespace Nop.Services.Installation
             IRepository<ForumSubscription> forumSubscriptionRepository,
             IRepository<Country> countryRepository,
             IRepository<StateProvince> stateProvinceRepository,
+            IRepository<Discount> discountRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             ISettingService settingService)
         {
@@ -122,6 +125,8 @@ namespace Nop.Services.Installation
 
             this._countryRepository = countryRepository;
             this._stateProvinceRepository = stateProvinceRepository;
+
+            this._discountRepository = discountRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
 
@@ -1304,6 +1309,69 @@ namespace Nop.Services.Installation
                         forum.NumTopics = topicCount;
                     }
                 }
+                #endregion
+
+                #region Discounts
+
+                var disounts = new List<Discount>
+                                {
+                                    new Discount
+                                        {
+                                            Name = "Sample discount with coupon code",
+                                            DiscountType = DiscountType.AssignedToSkus,
+                                            DiscountLimitation = DiscountLimitationType.Unlimited,
+                                            UsePercentage = false,
+                                            DiscountAmount = 10,
+                                            StartDateUtc = new DateTime(2010,1,1),
+                                            EndDateUtc = new DateTime(2020,1,1),
+                                            RequiresCouponCode = true,
+                                            CouponCode = "123",
+                                        },
+                                    new Discount
+                                        {
+                                            Name = "'20% order total' discount",
+                                            DiscountType = DiscountType.AssignedToOrderTotal,
+                                            DiscountLimitation = DiscountLimitationType.Unlimited,
+                                            UsePercentage = true,
+                                            DiscountPercentage = 20,
+                                            StartDateUtc = new DateTime(2010,1,1),
+                                            EndDateUtc = new DateTime(2020,1,1),
+                                            RequiresCouponCode = true,
+                                            CouponCode = "456",
+                                        },
+                                    new Discount
+                                        {
+                                            Name = "test discount 1. TODO remove",
+                                            DiscountType = DiscountType.AssignedToCategories,
+                                            DiscountLimitation = DiscountLimitationType.Unlimited,
+                                            UsePercentage = false,
+                                            DiscountAmount = 10,
+                                            StartDateUtc = new DateTime(2010,1,1),
+                                            EndDateUtc = new DateTime(2020,1,1),
+                                        },
+                                    new Discount
+                                        {
+                                            Name = "test discount 2. TODO remove",
+                                            DiscountType = DiscountType.AssignedToCategories,
+                                            DiscountLimitation = DiscountLimitationType.Unlimited,
+                                            UsePercentage = false,
+                                            DiscountAmount = 10,
+                                            StartDateUtc = new DateTime(2010,1,1),
+                                            EndDateUtc = new DateTime(2020,1,1),
+                                        },
+                                    new Discount
+                                        {
+                                            Name = "test discount 3. TODO remove",
+                                            DiscountType = DiscountType.AssignedToCategories,
+                                            DiscountLimitation = DiscountLimitationType.Unlimited,
+                                            UsePercentage = false,
+                                            DiscountAmount = 10,
+                                            StartDateUtc = new DateTime(2010,1,1),
+                                            EndDateUtc = new DateTime(2020,1,1),
+                                        },
+                                };
+                disounts.ForEach(d => _discountRepository.Insert(d));
+
                 #endregion
             }
         }

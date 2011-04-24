@@ -6,7 +6,9 @@ using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
+using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Security.Permissions;
@@ -29,6 +31,7 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly IDiscountService _discountService;
         private readonly IPermissionService _permissionService;
         private readonly IExportManager _exportManager;
         private readonly IWorkContext _workContext;
@@ -37,17 +40,19 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public CategoryController(ICategoryService categoryService, IManufacturerService manufacturerService,
-            IPermissionService permissionService, ILanguageService languageService,
-            ILocalizationService localizationService, ILocalizedEntityService localizedEntityService, 
-            IProductService productService, IExportManager exportManager, IWorkContext workContext)
+            IProductService productService,  ILanguageService languageService,
+            ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
+            IDiscountService discountService, IPermissionService permissionService,
+            IExportManager exportManager, IWorkContext workContext)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
-            this._permissionService = permissionService;
+            this._productService = productService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
-            this._productService = productService;
+            this._discountService = discountService;
+            this._permissionService = permissionService;
             this._exportManager = exportManager;
             this._workContext = workContext;
         }
@@ -212,6 +217,8 @@ namespace Nop.Admin.Controllers
             model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
             //locales
             AddLocales(_languageService, model.Locales);
+            //discounts
+            PrepareDiscountModel(model, null, true);
             return View(model);
         }
 
@@ -222,7 +229,17 @@ namespace Nop.Admin.Controllers
             {
                 var category = model.ToEntity();
                 _categoryService.InsertCategory(category);
+                //locales
                 UpdateLocales(category, model);
+                //disounts
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, true);
+                foreach (var discount in allDiscounts)
+                {
+                    if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                        category.AppliedDiscounts.Add(discount);
+                }
+                _categoryService.UpdateCategory(category);
+
 
                 return continueEditing ? RedirectToAction("Edit", new { id = category.Id }) : RedirectToAction("List");
             }
@@ -238,6 +255,8 @@ namespace Nop.Admin.Controllers
                 else
                     model.ParentCategoryId = 0;
             }
+            //discounts
+            PrepareDiscountModel(model, null, true);
             return View(model);
         }
 
@@ -267,6 +286,8 @@ namespace Nop.Admin.Controllers
                 locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false);
                 locale.SeName = category.GetLocalized(x => x.SeName, languageId, false);
             });
+            //discounts
+            PrepareDiscountModel(model, category, false);
 
             return View(model);
         }
@@ -282,9 +303,27 @@ namespace Nop.Admin.Controllers
             {
                 category = model.ToEntity(category);
                 _categoryService.UpdateCategory(category);
-
+                //locales
                 UpdateLocales(category, model);
-                
+                //discounts
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, true);
+                foreach (var discount in allDiscounts)
+                {
+                    if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                    {
+                        //new role
+                        if (category.AppliedDiscounts.Where(d => d.Id == discount.Id).Count() == 0)
+                            category.AppliedDiscounts.Add(discount);
+                    }
+                    else
+                    {
+                        //removed role
+                        if (category.AppliedDiscounts.Where(d => d.Id == discount.Id).Count() > 0)
+                            category.AppliedDiscounts.Remove(discount);
+                    }
+                }
+                _categoryService.UpdateCategory(category);
+
                 return continueEditing ? RedirectToAction("Edit", category.Id) : RedirectToAction("List");
             }
 
@@ -300,6 +339,8 @@ namespace Nop.Admin.Controllers
                 else
                     model.ParentCategoryId = 0;
             }
+            //discounts
+            PrepareDiscountModel(model, category, true);
             return View(model);
         }
 
@@ -309,6 +350,21 @@ namespace Nop.Admin.Controllers
             var category = _categoryService.GetCategoryById(id);
             _categoryService.DeleteCategory(category);
             return RedirectToAction("List");
+        }
+        
+        [NonAction]
+        private void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+            
+            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, true);
+            model.AvailableDiscounts = discounts.ToList();
+
+            if (!excludeProperties)
+            {
+                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
+            }
         }
 
         #endregion

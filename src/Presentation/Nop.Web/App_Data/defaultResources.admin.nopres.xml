@@ -47,6 +47,14 @@
                             <LocaleResource Name="Breadcrumb">
                                 <Value>Breadcrumb</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Discounts">
+                              <Value>Discounts</Value>
+                              <Children>
+                                <LocaleResource Name="NoDiscounts">
+                                  <Value>No discounts available. Create at least one discount before mapping.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
                             <LocaleResource Name="EditCategoryDetails">
                                 <Value>Edit category details</Value>
                             </LocaleResource>
@@ -1984,6 +1992,11 @@
                     </LocaleResource>
                     <LocaleResource Name="CustomerRoles">
                       <Value>Customer Roles</Value>
+                      <Children>
+                        <LocaleResource Name="NoRoles">
+                          <Value>No customer roles available. Create at least one customer role before mapping.</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
                     <LocaleResource Name="EditCustomerDetails">
                       <Value>Edit customer details</Value>
