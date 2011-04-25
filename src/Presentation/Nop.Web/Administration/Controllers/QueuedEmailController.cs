@@ -31,35 +31,12 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult List()
 		{
-            var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null, 0, false, 10, 0, 10);
-
             var model = new QueuedEmailListModel();
-            model.QueuedEmails = new GridModel<QueuedEmailModel>
-            {
-                Data = queuedEmails.Select(x => x.ToModel()),
-                Total = queuedEmails.TotalCount
-            };
 
             return View(model);
 		}
 
-        [HttpPost, ActionName("List")]
-        [FormValueRequired("search-emails")]
-        public ActionResult Search(QueuedEmailListModel model)
-        {            
-            var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail,
-                model.SearchStartDate, model.SearchEndDate, 0, model.SearchLoadNotSent, model.SearchMaxSentTries, 0, 10);
-
-            model.QueuedEmails = new GridModel<QueuedEmailModel>
-            {
-                Data = queuedEmails.Select(x => x.ToModel()),
-                Total = queuedEmails.TotalCount
-            };
-
-            return View(model);
-        }
-
-		[HttpPost, GridAction(EnableCustomBinding = true)]
+		[GridAction(EnableCustomBinding = true)]
 		public ActionResult QueuedEmailList(GridCommand command, QueuedEmailListModel model)
 		{
             DateTime? startDateValue = (model.SearchStartDate == null) ? null
@@ -71,7 +48,7 @@ namespace Nop.Admin.Controllers
             var newModel = new GridModel();
 
             var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, startDateValue, endDateValue,
-               0, model.SearchLoadNotSent, model.SearchMaxSentTries, 0, 10);
+               0, model.SearchLoadNotSent, model.SearchMaxSentTries, command.Page - 1, command.PageSize);
 			var gridModel = new GridModel<QueuedEmailModel>
 			{
 				Data = queuedEmails.Select(x => x.ToModel()),
