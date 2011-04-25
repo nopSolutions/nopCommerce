@@ -71,7 +71,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" name="search-emails" value="search-emails" class="t-button">@T("Admin.Common.Search")</button>
+                <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
             </td>
         </tr>
     </table>
@@ -82,7 +82,7 @@
             <td>
                 @(Html.Telerik().Grid<Nop.Admin.Models.QueuedEmailModel>()
                         .Name("queuedEmails-grid")
-                        .BindTo(Model.QueuedEmails.Data)
+                        .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                         .Columns(columns =>
                         {
                             columns.Bound(x => x.Id);
@@ -99,10 +99,34 @@
                                 .HeaderTemplate("Edit")
                                 .Filterable(false);                           
                         })
-                        .Pageable(settings => settings.Total(Model.QueuedEmails.Total).PageSize(10))
+                        .Pageable(settings => settings.PageSize(10))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("QueuedEmailList", "QueuedEmail", Model))            
                         .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnSearch').click(function () {
+                var grid = $('#queuedEmails-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+    function onDataBinding(e) {
+        
+        var searchModel = {
+                    SearchStartDate: $('#SearchStartDate').val(),
+                    SearchEndtDate: $('#SearchEndDate').val(),
+                    SearchFromEmail: $('#SearchFromEmail').val(),
+                    SearchToEmail: $('#SearchToEmail').val(),
+                    SearchLoadNotSent: $('#SearchLoadNotSent').is(':checked'),
+                    SearchMaxSentTries: $('#SearchMaxSentTries').val()
+                };
+        e.data = searchModel;
+    }
+   </script>
+    
 }

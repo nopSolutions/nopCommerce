@@ -783,6 +783,28 @@ namespace Nop.Services.Installation
                     SentOnUtc = DateTime.UtcNow
                 }
             };
+            for (var i = 1; i <= 50; i++)
+            {
+                queuedEmail.Add(
+                    new QueuedEmail()
+                    {
+                        EmailAccountId = 1,
+                        Priority = i,
+                        From = "admin@test.com",
+                        FromName = "Adminstrator",
+                        To = "cust@test.com",
+                        ToName = "Customer",
+                        CC = "admincc@test.com",
+                        Bcc = "adminbcc@test.com",
+                        Body = "Body" + i,
+                        Subject = "Subject" + i,
+                        CreatedOnUtc = DateTime.UtcNow,
+                        SentTries = i,
+                        SentOnUtc = null
+                    }
+                );
+            }
+
             queuedEmail.ForEach(qe => _queuedEmailRepository.Insert(qe));
 
 

@@ -11,7 +11,13 @@ namespace Nop.Admin.Models
 {
     public class QueuedEmailListModel : BaseNopModel
     {
-        public GridModel<QueuedEmailModel> QueuedEmails { get; set; }
+        public QueuedEmailListModel()
+        {
+            SearchLoadNotSent = true;
+            SearchMaxSentTries = 10;
+        }
+
+        public int QueuedEmailsCount { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.List.StartDate")]
         [UIHint("Date")]
