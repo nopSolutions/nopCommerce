@@ -246,7 +246,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        [HttpPost]
         public ActionResult OptionEditPopup(string btnId, SpecificationAttributeOptionModel model)
         {
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(model.Id);
@@ -255,7 +255,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sao = model.ToEntity(sao);
-                _specificationAttributeService.UpdateSpecificationAttributeOptions(sao);
+                _specificationAttributeService.UpdateSpecificationAttributeOption(sao);
 
                 UpdateOptionLocales(sao, model);
 

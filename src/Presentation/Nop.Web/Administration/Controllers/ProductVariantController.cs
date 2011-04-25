@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -25,6 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        private readonly IProductAttributeService _productAttributeService;
 
         #endregion
 
@@ -33,7 +35,7 @@ namespace Nop.Admin.Controllers
         public ProductVariantController(IProductService productService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, ICustomerService customerService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, IProductAttributeService productAttributeService)
         {
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
@@ -41,6 +43,7 @@ namespace Nop.Admin.Controllers
             this._discountService = discountService;
             this._customerService = customerService;
             this._localizationService = localizationService;
+            this._productAttributeService = productAttributeService;
         }
         
         #endregion
@@ -63,6 +66,36 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        private void UpdateAttributeValueLocales(ProductVariantAttributeValue pvav, ProductVariantModel.ProductVariantAttributeValueModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(pvav,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
+
+        [NonAction]
+        private void PrepareProductModel(ProductVariantModel model, Product product)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.ProductName = product.Name;
+        }
+
+        [NonAction]
+        private void PrepareProductAttributesMapping(ProductVariantModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.NumberOfAvailableProductAttributes = _productAttributeService.GetAllProductAttributes().Count;
+        }
+
         #endregion
 
         #region List / Create / Edit / Delete
@@ -75,10 +108,13 @@ namespace Nop.Admin.Controllers
             var model = new ProductVariantModel()
             {
                 ProductId = productId,
-                ProductName = product.Name
             };
             //locales
             AddLocales(_languageService, model.Locales);
+            //common
+            PrepareProductModel(model, product);
+            //attributes
+            PrepareProductAttributesMapping(model);
             //discounts
             PrepareDiscountModel(model, null, true);
             return View(model);
@@ -96,7 +132,7 @@ namespace Nop.Admin.Controllers
                 _productService.InsertProductVariant(variant);
                 //locales
                 UpdateLocales(variant, model);
-                //disounts
+                //discounts
                 var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, true);
                 foreach (var discount in allDiscounts)
                 {
@@ -113,7 +149,10 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
-            model.ProductName = product.Name;
+            //common
+            PrepareProductModel(model, product);
+            //attributes
+            PrepareProductAttributesMapping(model);
             //discounts
             PrepareDiscountModel(model, null, true);
             return View(model);
@@ -125,13 +164,16 @@ namespace Nop.Admin.Controllers
             if (variant == null) 
                 throw new ArgumentException("No product variant found with the specified id", "id");
             var model = variant.ToModel();
-            model.ProductName = variant.Product.Name;
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = variant.GetLocalized(x => x.Name, languageId, false);
                 locale.Description = variant.GetLocalized(x => x.Description, languageId, false);
             });
+            //common
+            PrepareProductModel(model, variant.Product);
+            //attributes
+            PrepareProductAttributesMapping(model);
             //discounts
             PrepareDiscountModel(model, variant, false);
             return View(model);
@@ -175,7 +217,10 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.ProductName = variant.Product.Name;
+            //common
+            PrepareProductModel(model, variant.Product);
+            //attributes
+            PrepareProductAttributesMapping(model);
             //discounts
             PrepareDiscountModel(model, variant, true);
             return View(model);
@@ -284,6 +329,277 @@ namespace Nop.Admin.Controllers
             _productService.DeleteTierPrice(tierPrice);
 
             return TierPriceList(command, productVariantId);
+        }
+
+        #endregion
+
+        #region Product variant attributes
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductVariantAttributeList(GridCommand command, int productVariantId)
+        {
+            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariantId);
+            var productVariantAttributesModel = productVariantAttributes
+                .Select(x =>
+                {
+                    var pvaModel =  new ProductVariantModel.ProductVariantAttributeModel()
+                    {
+                        Id = x.Id,
+                        ProductVariantId = x.ProductVariantId,
+                        ProductAttribute = _productAttributeService.GetProductAttributeById(x.ProductAttributeId).Name,
+                        ProductAttributeId = x.ProductAttributeId,
+                        TextPrompt = x.TextPrompt,
+                        IsRequired = x.IsRequired,
+                        AttributeControlType = CommonHelper.ConvertEnum(x.AttributeControlType.ToString()),
+                        AttributeControlTypeId = x.AttributeControlTypeId,
+                        DisplayOrder = x.DisplayOrder
+                    };
+
+                    if (x.ShouldHaveValues())
+                    {
+                        pvaModel.ViewEditUrl = Url.Action("EditAttributeValues", "ProductVariant", new { productVariantAttributeId = x.Id });
+                        pvaModel.ViewEditText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.ViewLink"), x.ProductVariantAttributeValues != null ? x.ProductVariantAttributeValues.Count : 0);
+                    }
+                    return pvaModel;
+                })
+                .ToList();
+
+            var model = new GridModel<ProductVariantModel.ProductVariantAttributeModel>
+            {
+                Data = productVariantAttributesModel,
+                Total = productVariantAttributesModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductVariantAttributeInsert(GridCommand command, ProductVariantModel.ProductVariantAttributeModel model)
+        {
+            var pva = new ProductVariantAttribute()
+            {
+                ProductVariantId = model.ProductVariantId,
+                ProductAttributeId = Int32.Parse(model.ProductAttribute), //use ProductAttribute property (not ProductAttributeId) because appropriate property is stored in it
+                TextPrompt = model.TextPrompt,
+                IsRequired = model.IsRequired,
+                AttributeControlTypeId = Int32.Parse(model.AttributeControlType), //use AttributeControlType property (not AttributeControlTypeId) because appropriate property is stored in it
+                DisplayOrder = model.DisplayOrder
+            };
+            _productAttributeService.InsertProductVariantAttribute(pva);
+
+            return ProductVariantAttributeList(command, model.ProductVariantId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductVariantAttrbiuteUpdate(GridCommand command, ProductVariantModel.ProductVariantAttributeModel model)
+        {
+            var pva = _productAttributeService.GetProductVariantAttributeById(model.Id);
+            if (pva == null)
+                throw new ArgumentException("No product variant attribute found with the specified id");
+
+            //use ProductAttribute property (not ProductAttributeId) because appropriate property is stored in it
+            pva.ProductAttributeId = Int32.Parse(model.ProductAttribute);
+            pva.TextPrompt = model.TextPrompt;
+            pva.IsRequired = model.IsRequired;
+            //use AttributeControlType property (not AttributeControlTypeId) because appropriate property is stored in it
+            pva.AttributeControlTypeId = Int32.Parse(model.AttributeControlType);
+            pva.DisplayOrder = model.DisplayOrder;
+            _productAttributeService.UpdateProductVariantAttribute(pva);
+
+            return ProductVariantAttributeList(command, model.ProductVariantId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductVariantAttributeDelete(int id, GridCommand command)
+        {
+            var pva = _productAttributeService.GetProductVariantAttributeById(id);
+            if (pva == null)
+                throw new ArgumentException("No product variant attribute found with the specified id");
+
+            var productVariantId = pva.ProductVariantId;
+            _productAttributeService.DeleteProductVariantAttribute(pva);
+
+            return ProductVariantAttributeList(command, productVariantId);
+        }
+
+        #endregion
+
+        #region Product variant attribute values
+
+        //list
+        public ActionResult EditAttributeValues(int productVariantAttributeId)
+        {
+            var pva = _productAttributeService.GetProductVariantAttributeById(productVariantAttributeId);
+            var model = new ProductVariantModel.ProductVariantAttributeValueListModel()
+            {
+                ProductVariantName = pva.ProductVariant.Product.Name + " " + pva.ProductVariant.Name,
+                ProductVariantId = pva.ProductVariantId,
+                ProductVariantAttributeName = pva.ProductAttribute.Name,
+                ProductVariantAttributeId = pva.Id,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductAttributeValueList(int productVariantAttributeId, GridCommand command)
+        {
+            var values = _productAttributeService.GetProductVariantAttributeValues(productVariantAttributeId);
+
+
+            var gridModel = new GridModel<ProductVariantModel.ProductVariantAttributeValueModel>
+            {
+                Data = values.Select(x =>
+                {
+                    return new ProductVariantModel.ProductVariantAttributeValueModel()
+                    {
+                        Id = x.Id,
+                        ProductVariantAttributeId = x.ProductVariantAttributeId,
+                        Name = x.Name,
+                        PriceAdjustment = x.PriceAdjustment,
+                        WeightAdjustment = x.WeightAdjustment,
+                        IsPreSelected = x.IsPreSelected,
+                        DisplayOrder = x.DisplayOrder,
+                    };
+                }),
+                Total = values.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        //delete
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductAttributeValueDelete(int pvavId, int productVariantAttributeId, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var pvav = _productAttributeService.GetProductVariantAttributeValueById(pvavId);
+            _productAttributeService.DeleteProductVariantAttributeValue(pvav);
+
+            var values = _productAttributeService.GetProductVariantAttributeValues(productVariantAttributeId);
+            var gridModel = new GridModel<ProductVariantModel.ProductVariantAttributeValueModel>
+            {
+                Data = values.Select(x =>
+                {
+                    return new ProductVariantModel.ProductVariantAttributeValueModel()
+                    {
+                        Id = x.Id,
+                        ProductVariantAttributeId = x.ProductVariantAttributeId,
+                        Name = x.Name,
+                        PriceAdjustment = x.PriceAdjustment,
+                        WeightAdjustment = x.WeightAdjustment,
+                        IsPreSelected = x.IsPreSelected,
+                        DisplayOrder = x.DisplayOrder,
+                    };
+                }),
+                Total = values.Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+
+        //create
+        public ActionResult ProductAttributeValueCreatePopup(int productAttributeAttributeId)
+        {
+            var model = new ProductVariantModel.ProductVariantAttributeValueModel();
+            model.ProductVariantAttributeId = productAttributeAttributeId;
+            //locales
+            AddLocales(_languageService, model.Locales);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ProductAttributeValueCreatePopup(string btnId, ProductVariantModel.ProductVariantAttributeValueModel model)
+        {
+            var pva = _productAttributeService.GetProductVariantAttributeById(model.ProductVariantAttributeId);
+            if (pva == null)
+                throw new ArgumentException("No product variant attribute found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                var pvav = new ProductVariantAttributeValue()
+                {
+                    ProductVariantAttributeId = model.ProductVariantAttributeId,
+                    Name = model.Name,
+                    PriceAdjustment = model.PriceAdjustment,
+                    WeightAdjustment = model.WeightAdjustment,
+                    IsPreSelected = model.IsPreSelected,
+                    DisplayOrder = model.DisplayOrder
+                };
+
+                _productAttributeService.InsertProductVariantAttributeValue(pvav);
+                UpdateAttributeValueLocales(pvav, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //edit
+        public ActionResult ProductAttributeValueEditPopup(int id)
+        {
+            var pvav = _productAttributeService.GetProductVariantAttributeValueById(id);
+            if (pvav == null)
+                throw new ArgumentException("No attribute value found with the specified id", "id");
+            var model = new ProductVariantModel.ProductVariantAttributeValueModel()
+            {
+                ProductVariantAttributeId = pvav.ProductVariantAttributeId,
+                Name= pvav.Name,
+                PriceAdjustment = pvav.PriceAdjustment,
+                WeightAdjustment = pvav.WeightAdjustment,
+                IsPreSelected = pvav.IsPreSelected,
+                DisplayOrder = pvav.DisplayOrder
+            };
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = pvav.GetLocalized(x => x.Name, languageId, false);
+            });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ProductAttributeValueEditPopup(string btnId, ProductVariantModel.ProductVariantAttributeValueModel model)
+        {
+            var pvav = _productAttributeService.GetProductVariantAttributeValueById(model.Id);
+            if (pvav == null)
+                throw new ArgumentException("No attribute value found with the specified id");
+            if (ModelState.IsValid)
+            {
+                pvav.Name = model.Name;
+                pvav.PriceAdjustment = model.PriceAdjustment;
+                pvav.WeightAdjustment = model.WeightAdjustment;
+                pvav.IsPreSelected = model.IsPreSelected;
+                pvav.DisplayOrder = model.DisplayOrder;
+                _productAttributeService.UpdateProductVariantAttributeValue(pvav);
+
+                UpdateAttributeValueLocales(pvav, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
         #endregion

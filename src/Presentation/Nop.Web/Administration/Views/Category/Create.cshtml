@@ -5,7 +5,7 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
-            @T("Admin.Catalog.Categories.AddNew") - @Html.ActionLink("(" + T("Admin.Catalog.Categories.BackToList") + ")", "List")
+            @T("Admin.Catalog.Categories.AddNew") @Html.ActionLink("(" + T("Admin.Catalog.Categories.BackToList") + ")", "List")
         </div>
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>

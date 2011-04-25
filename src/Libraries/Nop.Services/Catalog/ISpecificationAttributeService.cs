@@ -77,7 +77,7 @@ namespace Nop.Services.Catalog
         /// Updates the specification attribute
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        void UpdateSpecificationAttributeOptions(SpecificationAttributeOption specificationAttributeOption);
+        void UpdateSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption);
 
         #endregion
 

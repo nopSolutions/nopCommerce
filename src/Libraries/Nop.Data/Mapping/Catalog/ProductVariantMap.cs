@@ -11,7 +11,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             this.ToTable("ProductVariant");
             this.HasKey(pv => pv.Id);
-            this.Property(pv => pv.Name).IsRequired().HasMaxLength(400);
+            this.Property(pv => pv.Name).HasMaxLength(400);
             this.Property(pv => pv.Sku).HasMaxLength(400);
             this.Property(pv => pv.Description).IsMaxLength();
             this.Property(pv => pv.AdminComment).IsMaxLength();

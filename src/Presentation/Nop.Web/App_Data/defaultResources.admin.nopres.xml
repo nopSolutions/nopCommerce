@@ -677,6 +677,115 @@
                                 <LocaleResource Name="AddNewForProduct">
                                   <Value>Add a new variant for product: {0}</Value>
                                 </LocaleResource>
+                                <LocaleResource Name="ProductVariantAttributes">
+                                  <Value>Product variant attributes</Value>
+                                  <Children>
+                                    <LocaleResource Name="Attributes">
+                                      <Value>Attributes</Value>
+                                      <Children>
+                                        <LocaleResource Name="Fields">
+                                          <Children>
+                                            <LocaleResource Name="Attribute">
+                                              <Value>Attribute</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="TextPrompt">
+                                              <Value>Text prompt</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="IsRequired">
+                                              <Value>Is Required</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="AttributeControlType">
+                                              <Value>Control type</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="DisplayOrder">
+                                              <Value>Display order</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="Values">
+                                          <Value>Values</Value>
+                                          <Children>
+                                            <LocaleResource Name="AddNew">
+                                              <Value>Add a new value</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="BackToProductVariant">
+                                              <Value>back to product variant details</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="EditValueDetails">
+                                              <Value>Edit value</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="Fields">
+                                              <Children>
+                                                <LocaleResource Name="Name">
+                                                  <Value>Name</Value>
+                                                  <Children>
+                                                    <LocaleResource Name="Hint">
+                                                      <Value>The attribute value name e.g. 'Blue' for Color attributes.</Value>
+                                                    </LocaleResource>
+                                                    <LocaleResource Name="Required">
+                                                      <Value>Please provide a name.</Value>
+                                                    </LocaleResource>
+                                                  </Children>
+                                                </LocaleResource>
+                                                <LocaleResource Name="PriceAdjustment">
+                                                  <Value>Price adjustment</Value>
+                                                  <Children>
+                                                    <LocaleResource Name="Hint">
+                                                      <Value>The price adjustment applied when choosing this attribute value e.g. '10' to add 10 dollars.</Value>
+                                                    </LocaleResource>
+                                                  </Children>
+                                                </LocaleResource>
+                                                <LocaleResource Name="WeightAdjustment">
+                                                  <Value>Weight adjustment</Value>
+                                                  <Children>
+                                                    <LocaleResource Name="Hint">
+                                                      <Value>The weight adjustment applied when choosing this attribute value</Value>
+                                                    </LocaleResource>
+                                                  </Children>
+                                                </LocaleResource>
+                                                <LocaleResource Name="IsPreSelected">
+                                                  <Value>Is pre-selected</Value>
+                                                  <Children>
+                                                    <LocaleResource Name="Hint">
+                                                      <Value>Determines whether this attribute value is pre selected for the customer</Value>
+                                                    </LocaleResource>
+                                                  </Children>
+                                                </LocaleResource>
+                                                <LocaleResource Name="DisplayOrder">
+                                                  <Value>Display order</Value>
+                                                  <Children>
+                                                    <LocaleResource Name="Hint">
+                                                      <Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+                                                    </LocaleResource>
+                                                  </Children>
+                                                </LocaleResource>
+                                              </Children>
+                                            </LocaleResource>
+                                            <LocaleResource Name="EditAttributeDetails">
+                                              <Value>Add/Edit values for [{0}] attribute. Product: {1}</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="ViewLink">
+                                              <Value>View/Edit value (Total: {0})</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AttributeCombinations">
+                                      <Value>Attribute combinations</Value>
+                                      <Children>
+                                        <LocaleResource Name="Fields">
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="NoAttributesAvailable">
+                                      <Value>No product attributes available. Create at least one product attribute before mapping.</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SaveBeforeEdit">
+                                      <Value>You need to save the product variant before you can add attributes for this product variant page.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
                                 <LocaleResource Name="BackToProduct">
                                   <Value>back to product details</Value>
                                 </LocaleResource>

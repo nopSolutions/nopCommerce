@@ -7,10 +7,11 @@
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.HiddenFor(model => model.ProductId)
-@Html.Telerik().TabStrip().Name("product-edit").Items(x =>
+@Html.Telerik().TabStrip().Name("productvariant-edit").Items(x =>
 {
     x.Add().Text(T("Admin.Catalog.Products.Variants.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Catalog.Products.Variants.TierPrices").Text).Content(TabTierPrices().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes").Text).Content(TabProductVariantAttributes().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Variants.Discounts").Text).Content(TabDiscounts().ToHtmlString());
 })
 @helper TabInfo()
@@ -35,7 +36,7 @@
 
 
 @helper TabTierPrices()
-    {
+{
     if (Model.Id > 0)
     {
         @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.TierPriceModel>()
@@ -87,6 +88,28 @@
     }
         
 }
+@helper TabProductVariantAttributes()
+    {
+        if (Model.Id > 0)
+        {
+            if (Model.NumberOfAvailableProductAttributes > 0)
+            {
+                @Html.Telerik().TabStrip().Name("productattribute-edit").Items(x =>
+                {
+                   x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes").Text).Content(TabAttributes().ToHtmlString()).Selected(true);
+                   x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations").Text).Content(TabAttributeCombinations().ToHtmlString());
+                })
+            }
+            else
+            {
+                @T("Admin.Catalog.Products.Variants.ProductVariantAttributes.NoAttributesAvailable")
+            }
+        }
+        else
+        {
+            @T("Admin.Catalog.Products.Variants.ProductVariantAttributes.SaveBeforeEdit")
+        }
+}
 
 @helper TabDiscounts()
     {
@@ -107,4 +130,70 @@
         {
             @T("Admin.Catalog.Products.Variants.Discounts.NoDiscounts")
         }
+}
+
+
+@helper TabAttributes()
+    {
+        @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.ProductVariantAttributeModel>()
+                .Name("productvariantattributes-grid")
+                .DataKeys(keys =>
+                {
+                    keys.Add(x => x.Id);
+                })
+                .DataBinding(dataBinding =>
+                {
+                    dataBinding.Ajax()
+                        .Select("ProductVariantAttributeList", "ProductVariant", new { productVariantId = Model.Id })
+                        .Insert("ProductVariantAttributeInsert", "ProductVariant", new { productVariantId = Model.Id })
+                        .Update("ProductVariantAttrbiuteUpdate", "ProductVariant")
+                        .Delete("ProductVariantAttributeDelete", "ProductVariant");
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.ProductAttribute)
+                        .Width(150)
+                        .Centered();
+                    columns.Bound(x => x.TextPrompt)
+                        .Width(150)
+                        .Centered();
+                    columns.Bound(x => x.IsRequired)
+                        .Width(100);
+                    columns.Bound(x => x.AttributeControlType)
+                        .Width(150)
+                        .Centered();
+                    columns.Bound(x => x.DisplayOrder)
+                        .Width(150)
+                        .Centered();
+                    columns.Bound(x => x.ViewEditUrl)
+                        .Width(200)
+                        .ClientTemplate("<a href=\"<#= ViewEditUrl #>\"><#= ViewEditText #></a>")
+                        .ReadOnly()
+                        .Title(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values").Text);
+                    columns.Command(commands =>
+                    {
+                        commands.Edit();
+                        commands.Delete();
+                    })
+                    .Width(180);
+                })
+                .ToolBar(commands => commands.Insert())
+                .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
+                .EnableCustomBinding(true))
+    
+        <script type="text/javascript">
+            function onProductVariantAttributeEdit(e) {
+                $(e.form).find('#ProductAttribute').data('tDropDownList').select(function (dataItem) {
+                    return dataItem.Value == e.dataItem['ProductAttributeId'];
+                });
+
+                $(e.form).find('#AttributeControlType').data('tDropDownList').select(function (dataItem) {
+                    return dataItem.Value == e.dataItem['AttributeControlTypeId'];
+                });
+            }
+        </script>
+}
+@helper TabAttributeCombinations()
+    {
+        <text>UNDONE attribute combinations</text>
 }

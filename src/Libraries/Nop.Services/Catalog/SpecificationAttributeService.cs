@@ -216,7 +216,7 @@ namespace Nop.Services.Catalog
         /// Updates the specification attribute
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public void UpdateSpecificationAttributeOptions(SpecificationAttributeOption specificationAttributeOption)
+        public void UpdateSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");

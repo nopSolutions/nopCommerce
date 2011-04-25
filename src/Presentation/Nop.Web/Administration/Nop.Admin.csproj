@@ -140,6 +140,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\CategoryValidator.cs" />
     <Compile Include="Validators\AddressValidator.cs" />
+    <Compile Include="Validators\ProductVariantAttributeValueModelValidator.cs" />
     <Compile Include="Validators\SpecificationAttributeOptionValidator.cs" />
     <Compile Include="Validators\SpecificationAttributeValidator.cs" />
     <Compile Include="Validators\ProductAttributeValidator.cs" />
@@ -462,6 +463,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ProductVariant\EditorTemplates\TierPriceCustomer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\EditorTemplates\ProductAttribute.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\EditorTemplates\AttributeControlType.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\EditAttributeValues.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\ProductAttributeValueCreatePopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\ProductAttributeValueEditPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\_CreateOrUpdateProductAttributeValue.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

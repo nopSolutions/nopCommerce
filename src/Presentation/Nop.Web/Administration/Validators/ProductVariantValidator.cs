@@ -12,7 +12,7 @@ namespace Nop.Admin.Validators
     {
         public ProductVariantValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Products.Variants.Fields.Name.Required"));
+            //TODO add required rules
         }
     }
 }

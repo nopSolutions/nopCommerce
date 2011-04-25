@@ -1,16 +1,19 @@
-﻿@model Nop.Admin.Models.ProductAttributeModel
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+
+@model Nop.Admin.Models.ProductVariantModel.ProductVariantAttributeValueModel
 @using Nop.Web.Framework;
 @using (Html.BeginForm())
 {
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
-            @T("Admin.Catalog.Attributes.ProductAttributes.AddNew") @Html.ActionLink("(" + T("Admin.Catalog.Attributes.ProductAttributes.BackToList") + ")", "List")
+            @T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.AddNew")
         </div>
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
-            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+    @Html.Partial("_CreateOrUpdateProductAttributeValue", Model)
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators;
 using Nop.Core.Domain.Catalog;
@@ -196,16 +197,16 @@ namespace Nop.Admin.Models
         #endregion
 
         #region Nested classes
-        
+
         public class TierPriceModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.CustomerRole")]
-            [UIHint("TierPriceCustomer")]
-            public string CustomerRole { get; set; }
 
             public int ProductVariantId { get; set; }
 
             public int CustomerRoleId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.CustomerRole")]
+            [UIHint("TierPriceCustomer")]
+            public string CustomerRole { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Quantity")]
             public int Quantity { get; set; }
@@ -214,13 +215,92 @@ namespace Nop.Admin.Models
             public decimal Price { get; set; }
         }
 
+        public class ProductVariantAttributeModel : BaseNopEntityModel
+        {
+            public int ProductVariantId { get; set; }
+
+            public int ProductAttributeId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.Attribute")]
+            [UIHint("ProductAttribute")]
+            public string ProductAttribute { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.TextPrompt")]
+            public string TextPrompt { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.IsRequired")]
+            public bool IsRequired { get; set; }
+
+            public int AttributeControlTypeId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.AttributeControlType")]
+            [UIHint("AttributeControlType")]
+            public string AttributeControlType { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+
+            public string ViewEditUrl { get; set; }
+            public string ViewEditText { get; set; }
+        }
+
+        public class ProductVariantAttributeValueListModel : BaseNopModel
+        {
+            public int ProductVariantId { get; set; }
+
+            public string ProductVariantName { get; set; }
+
+            public int ProductVariantAttributeId { get; set; }
+
+            public string ProductVariantAttributeName { get; set; }
+        }
+
+        [Validator(typeof(ProductVariantAttributeValueModelValidator))]
+        public class ProductVariantAttributeValueModel : BaseNopEntityModel, ILocalizedModel<ProductVariantAttributeValueLocalizedModel>
+        {
+            public ProductVariantAttributeValueModel()
+            {
+                Locales = new List<ProductVariantAttributeValueLocalizedModel>();
+            }
+
+            public int ProductVariantAttributeId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.Name")]
+            [AllowHtml]
+            public string Name { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.PriceAdjustment")]
+            public decimal PriceAdjustment { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.WeightAdjustment")]
+            public decimal WeightAdjustment { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.IsPreSelected")]
+            public bool IsPreSelected { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+
+            public IList<ProductVariantAttributeValueLocalizedModel> Locales { get; set; }
+        }
+        
+        public class ProductVariantAttributeValueLocalizedModel : ILocalizedModelLocal
+        {
+            public int LanguageId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.Name")]
+            [AllowHtml]
+            public string Name { get; set; }
+        }
+
         #endregion
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ProductName")]
         public string ProductName { get; set; }
 
+        //product attributes
+        public int NumberOfAvailableProductAttributes { get; set; }
+
         public IList<ProductVariantLocalizedModel> Locales { get; set; }
-        
+
         //dicounts
         public List<Discount> AvailableDiscounts { get; set; }
         public int[] SelectedDiscountIds { get; set; }
