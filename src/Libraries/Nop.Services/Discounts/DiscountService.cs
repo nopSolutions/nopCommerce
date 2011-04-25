@@ -155,9 +155,12 @@ namespace Nop.Services.Discounts
                 var query = _discountRepository.Table;
                 if (!showHidden)
                 {
-                    query = query.Where(d => 
-                        (!d.StartDateUtc.HasValue || d.StartDateUtc <= DateTime.UtcNow)
-                        && (!d.EndDateUtc.HasValue || d.EndDateUtc >= DateTime.UtcNow)
+                    //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                    //That's why we pass the date value
+                    var nowUtc = DateTime.UtcNow;
+                    query = query.Where(d =>
+                        (!d.StartDateUtc.HasValue || d.StartDateUtc <= nowUtc)
+                        && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc)
                         );
                 }
                 if (discountTypeId.HasValue && discountTypeId.Value > 0)

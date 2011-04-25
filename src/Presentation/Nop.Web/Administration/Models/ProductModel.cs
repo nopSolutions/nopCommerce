@@ -19,7 +19,7 @@ namespace Nop.Admin.Models
         public ProductModel()
         {
             Locales = new List<ProductLocalizedModel>();
-            ProductVariants = new List<ProductVariantModel>();
+            ProductVariantModels = new List<ProductVariantModel>();
             ProductPictureModels = new List<ProductPictureModel>();
         }
 
@@ -59,9 +59,12 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
 
+        public DateTime CreatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
+
         public IList<ProductLocalizedModel> Locales { get; set; }
 
-        public IList<ProductVariantModel> ProductVariants { get; set; }
+        public IList<ProductVariantModel> ProductVariantModels { get; set; }
 
         //properties used for filtering
         public int SearchCategoryId { get; set; }

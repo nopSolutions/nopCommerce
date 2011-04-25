@@ -39,11 +39,20 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest=> dest.CreatedOnUtc, dt=> dt.Ignore())
                 .ForMember(dest => dest.SentOnUtc, dt => dt.Ignore());
             //category
-            ViceVersa<Category, CategoryModel>();
+            Mapper.CreateMap<Category, CategoryModel>();
+            Mapper.CreateMap<CategoryModel, Category>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
             //products
-            ViceVersa<Product, ProductModel>();
+            Mapper.CreateMap<Product, ProductModel>();
+            Mapper.CreateMap<ProductModel, Product>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
             //product variants
-            ViceVersa<ProductVariant, ProductVariantModel>();
+            Mapper.CreateMap<ProductVariant, ProductVariantModel>();
+            Mapper.CreateMap<ProductVariantModel, ProductVariant>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
             //logs
             ViceVersa<Log, LogModel>();
             //currencies

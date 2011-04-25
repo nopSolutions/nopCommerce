@@ -102,7 +102,7 @@
                 @Html.NopLabelFor(model => model.ShowOnHomePage):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.ShowOnHomePage)
+                @Html.EditorFor(model => model.ShowOnHomePage)
                 @Html.ValidationMessageFor(model => model.ShowOnHomePage)
             </td>
         </tr>
@@ -111,7 +111,7 @@
                 @Html.NopLabelFor(model => model.Published):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.Published)
+                @Html.EditorFor(model => model.Published)
                 @Html.ValidationMessageFor(model => model.Published)
             </td>
         </tr>
@@ -120,7 +120,7 @@
                 @Html.NopLabelFor(model => model.AllowCustomerReviews):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.AllowCustomerReviews)
+                @Html.EditorFor(model => model.AllowCustomerReviews)
                 @Html.ValidationMessageFor(model => model.AllowCustomerReviews)
             </td>
         </tr>
@@ -129,7 +129,7 @@
                 @Html.NopLabelFor(model => model.AllowCustomerRatings):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.AllowCustomerRatings)
+                @Html.EditorFor(model => model.AllowCustomerRatings)
                 @Html.ValidationMessageFor(model => model.AllowCustomerRatings)
             </td>
         </tr>
@@ -223,23 +223,31 @@
 }
 @helper TabVariants()
     {
-    @(Html.Telerik().Grid(Model.ProductVariants).Name("product-variants")
+    @(Html.Telerik().Grid(Model.ProductVariantModels).Name("product-variants")
     .Columns(columns =>
     {
         columns.Bound(x => x.Name);
         columns.Bound(x => x.Sku);
         columns.Bound(x => x.Price);
-        columns.Bound(x => x.DisplayOrder);
-        columns.Bound(x => x.Published);
+        columns.Bound(x => x.DisplayOrder)
+            .Centered(); 
+        columns.Bound(x => x.Published)
+            .Filterable(false)
+            .Template(x => x.Published.ToString().ToLower())
+            .Centered();
         columns.Template((x) => Html.ActionLink(T("Admin.Common.View").ToString(), "Edit", "ProductVariant", new { id = x.Id }, new { })).Title(T("Admin.Common.View").ToString());
-    }))
+    })
+    .Footer(false))
+    <div class="clear">
+    </div>
+    <a href="@Url.Action("Create", "ProductVariant", new { productId= Model.Id })" class="t-button">@T("Admin.Catalog.Products.Variants.AddNew")</a>
 }
 @helper TabCategories()
-{
-        if (Model.Id > 0)
+    {
+    if (Model.Id > 0)
+    {
+        if (Model.NumberOfAvailableCategories > 0)
         {
-            if (Model.NumberOfAvailableCategories > 0)
-            {
                 @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductCategoryModel>()
                     .Name("productcategories-grid")
                        .DataKeys(keys =>
@@ -272,7 +280,7 @@
                            .Width(180);
                        })
                        .ToolBar(commands => commands.Insert())
-                       .ClientEvents(events=>events.OnEdit("onProductCategoryEdit"))
+                       .ClientEvents(events => events.OnEdit("onProductCategoryEdit"))
                        .EnableCustomBinding(true))
     
                 <script type="text/javascript">
@@ -282,24 +290,24 @@
                         });
                     }
                 </script>
-            }
-            else
-            {
-                    @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
-            }
         }
         else
         {
-            @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
+                    @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
         }
+    }
+    else
+    {
+            @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
+    }
         
 }
 @helper TabManufacturers()
-{
-        if (Model.Id > 0)
+    {
+    if (Model.Id > 0)
+    {
+        if (Model.NumberOfAvailableManufacturers > 0)
         {
-            if (Model.NumberOfAvailableManufacturers > 0)
-            {
                 @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductManufacturerModel>()
                     .Name("productmanufacturers-grid")
                        .DataKeys(keys =>
@@ -342,22 +350,22 @@
                         });
                     }
                 </script>
-            }
-            else
-            {
-                @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
-            }
         }
         else
         {
-            @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+                @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
         }
+    }
+    else
+    {
+            @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+    }
         
 }
 @helper TabRelatedProducts()
-{
-        if (Model.Id > 0)
-        {
+    {
+    if (Model.Id > 0)
+    {
             
             <table class="adminContent">
                 <tr>
@@ -412,17 +420,17 @@
                     </td>
                 </tr>
             </table>
-        }
-        else
-        {
+    }
+    else
+    {
             @T("Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit")
-        }
+    }
         
 }
 @helper TabCrossSells()
-{
-        if (Model.Id > 0)
-        {
+    {
+    if (Model.Id > 0)
+    {
             
             <table class="adminContent">
                 <tr>
@@ -472,11 +480,11 @@
                     </td>
                 </tr>
             </table>
-        }
-        else
-        {
+    }
+    else
+    {
             @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
-        }
+    }
         
 }
 @helper TabPictures()

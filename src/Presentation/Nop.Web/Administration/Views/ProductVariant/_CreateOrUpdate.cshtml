@@ -10,6 +10,8 @@
 @Html.Telerik().TabStrip().Name("product-edit").Items(x =>
 {
     x.Add().Text(T("Admin.Catalog.Products.Variants.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Products.Variants.TierPrices").Text).Content(TabTierPrices().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.Variants.Discounts").Text).Content(TabDiscounts().ToHtmlString());
 })
 @helper TabInfo()
     { 
@@ -29,4 +31,80 @@
                     @Html.NopField(model => model.Description)
                 </table>
             ))
+}
+
+
+@helper TabTierPrices()
+    {
+    if (Model.Id > 0)
+    {
+        @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.TierPriceModel>()
+            .Name("tierprices-grid")
+                .DataKeys(keys =>
+                {
+                    keys.Add(x => x.Id);
+                })
+                .DataBinding(dataBinding =>
+                {
+                    dataBinding.Ajax()
+                        .Select("TierPriceList", "ProductVariant", new { productVariantId = Model.Id })
+                        .Insert("TierPriceInsert", "ProductVariant", new { productVariantId = Model.Id })
+                        .Update("TierPriceUpdate", "ProductVariant")
+                        .Delete("TierPriceDelete", "ProductVariant");
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.CustomerRole)
+                        .Width(400)
+                        .Centered();
+                    columns.Bound(x => x.Quantity)
+                        .Width(200)
+                        .Centered();
+                    columns.Bound(x => x.Price)
+                        .Width(100);
+                    columns.Command(commands =>
+                    {
+                        commands.Edit();
+                        commands.Delete();
+                    })
+                    .Width(180);
+                })
+                .ToolBar(commands => commands.Insert())
+                .ClientEvents(events => events.OnEdit("onTierPriceEdit"))
+                .EnableCustomBinding(true))
+    
+        <script type="text/javascript">
+            function onTierPriceEdit(e) {
+                $(e.form).find('#CustomerRole').data('tDropDownList').select(function (dataItem) {
+                    return dataItem.Value == e.dataItem['CustomerRoleId'];
+                });
+            }
+        </script>
+    }
+    else
+    {
+            @T("Admin.Catalog.Products.Variants.TierPrices.SaveBeforeEdit")
+    }
+        
+}
+
+@helper TabDiscounts()
+    {
+        if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
+        {
+            foreach (var discount in Model.AvailableDiscounts)
+            {
+            <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
+            @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id))
+            {
+                <text>checked="checked"</text>
+            }
+            />@discount.Name
+            <br />
+            }
+        }
+        else
+        {
+            @T("Admin.Catalog.Products.Variants.Discounts.NoDiscounts")
+        }
 }

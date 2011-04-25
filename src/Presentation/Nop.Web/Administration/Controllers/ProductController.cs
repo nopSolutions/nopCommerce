@@ -146,6 +146,23 @@ namespace Nop.Admin.Controllers
             model.NumberOfAvailableManufacturers = _manufacturerService.GetAllManufacturers(true).Count;
         }
 
+        [NonAction]
+        private void PrepareVariantsModel(ProductModel model, Product product)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (product != null)
+            {
+                var variants = _productService.GetProductVariantsByProductId(product.Id, true);
+                foreach (var variant in variants)
+                {
+                    var variantModel = variant.ToModel();
+                    model.ProductVariantModels.Add(variantModel);
+                }
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -286,6 +303,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var product = model.ToEntity();
+                product.CreatedOnUtc = DateTime.UtcNow;
+                product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.InsertProduct(product);
                 UpdateLocales(product, model);
 
@@ -318,6 +337,7 @@ namespace Nop.Admin.Controllers
                     locale.MetaTitle = product.GetLocalized(x => x.MetaTitle, languageId, false);
                     locale.SeName = product.GetLocalized(x => x.SeName, languageId, false);
                 });
+            PrepareVariantsModel(model, product);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
@@ -335,12 +355,14 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 product = model.ToEntity(product);
+                product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.UpdateProduct(product);
                 UpdateLocales(product, model);
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            PrepareVariantsModel(model, product);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
@@ -356,9 +378,9 @@ namespace Nop.Admin.Controllers
             _productService.DeleteProduct(product);
             return RedirectToAction("List");
         }
-
+        
         #endregion
-
+        
         #region Product categories
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

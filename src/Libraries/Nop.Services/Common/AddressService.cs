@@ -82,7 +82,6 @@ namespace Nop.Services.Common
             if (address == null)
                 throw new ArgumentNullException("address");
             
-            //TODO:Make sure other entities are doing this
             address.CreatedOnUtc = DateTime.UtcNow;
 
             //some validation

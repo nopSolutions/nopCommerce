@@ -75,6 +75,9 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
+        public DateTime CreatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
+
         public IList<CategoryLocalizedModel> Locales { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Breadcrumb")]

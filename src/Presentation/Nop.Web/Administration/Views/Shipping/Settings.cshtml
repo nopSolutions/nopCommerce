@@ -5,6 +5,8 @@
     
 <script type="text/javascript">
     $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
+            
         toggleFreeShippingOverX();
     });
 
@@ -34,7 +36,7 @@
                 @Html.NopLabelFor(model => model.FreeShippingOverXEnabled):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.FreeShippingOverXEnabled, new { onclick = "toggleFreeShippingOverX();" })
+                @Html.EditorFor(model => model.FreeShippingOverXEnabled)
                 @Html.ValidationMessageFor(model => model.FreeShippingOverXEnabled)
             </td>
         </tr>
@@ -52,7 +54,7 @@
                 @Html.NopLabelFor(model => model.EstimateShippingEnabled):
             </td>
             <td class="adminData">
-                @Html.CheckBoxFor(model => model.EstimateShippingEnabled)
+                @Html.EditorFor(model => model.EstimateShippingEnabled)
                 @Html.ValidationMessageFor(model => model.EstimateShippingEnabled)
             </td>
         </tr>

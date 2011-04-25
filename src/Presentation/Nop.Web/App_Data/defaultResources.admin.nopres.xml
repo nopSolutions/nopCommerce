@@ -32,6 +32,125 @@
             <LocaleResource Name="Catalog">
                 <Value>Catalog</Value>
                 <Children>
+                    <LocaleResource Name="Attributes">
+                      <Value>Attributes</Value>
+                      <Children>
+                        <LocaleResource Name="ProductAttributes">
+                          <Value>Product Attributes</Value>
+                          <Children>
+                            <LocaleResource Name="AddNew">
+                              <Value>Add a new product attribute</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="BackToList">
+                              <Value>back to product attribute list</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="EditAttributeDetails">
+                              <Value>Edit product attribute details</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Fields">
+                              <Children>
+                                <LocaleResource Name="Name">
+                                  <Value>Name</Value>
+                                  <Children>
+                                    <LocaleResource Name="Required">
+                                      <Value>Please provide a name.</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A name of the product attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="Description">
+                                  <Value>Description</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A description of the product attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="SpecificationAttributes">
+                          <Value>Specification Attributes</Value>
+                          <Children>
+                            <LocaleResource Name="AddNew">
+                              <Value>Add a new specification attribute</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="BackToList">
+                              <Value>back to specification attribute list</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="EditAttributeDetails">
+                              <Value>Edit specification attribute details</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Info">
+                              <Value>Attribute info</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Fields">
+                              <Children>
+                                <LocaleResource Name="Name">
+                                  <Value>Name</Value>
+                                  <Children>
+                                    <LocaleResource Name="Required">
+                                      <Value>Please provide a name.</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A name of the specification attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="DisplayOrder">
+                                  <Value>Display order</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A display order of the specification attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Options">
+                              <Value>Options</Value>
+                              <Children>
+                                <LocaleResource Name="AddNew">
+                                  <Value>Add a new option</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="EditOptionDetails">
+                                  <Value>Edit option details</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Fields">
+                                  <Children>
+                                    <LocaleResource Name="Name">
+                                      <Value>Name</Value>
+                                      <Children>
+                                        <LocaleResource Name="Required">
+                                          <Value>Please provide a name.</Value>
+                                        </LocaleResource>
+                                        <LocaleResource Name="Hint">
+                                          <Value>A name of the option.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                      <Value>Display order</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>A display order of the option.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the specification attribute before you can add options for this specification attribute page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Categories">
                         <Value>Categories</Value>
                         <Children>
@@ -551,106 +670,64 @@
                             </LocaleResource>
                             <LocaleResource Name="Variants">
                             <Value>Product variants</Value>
-                          </LocaleResource>
-                        </Children>
-                    </LocaleResource>
-                    <LocaleResource Name="Attributes">
-                      <Value>Attributes</Value>
-                      <Children>
-                        <LocaleResource Name="ProductAttributes">
-                          <Value>Product Attributes</Value>
-                          <Children>
-                            <LocaleResource Name="AddNew">
-                              <Value>Add a new product attribute</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="BackToList">
-                              <Value>back to product attribute list</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="EditAttributeDetails">
-                              <Value>Edit product attribute details</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Fields">
-                              <Children>
-                                <LocaleResource Name="Name">
-                                  <Value>Name</Value>
-                                  <Children>
-                                    <LocaleResource Name="Required">
-                                      <Value>Please provide a name.</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Hint">
-                                      <Value>A name of the product attribute.</Value>
-                                    </LocaleResource>
-                                  </Children>
-                                </LocaleResource>
-                                <LocaleResource Name="Description">
-                                  <Value>Description</Value>
-                                  <Children>
-                                    <LocaleResource Name="Hint">
-                                      <Value>A description of the product attribute.</Value>
-                                    </LocaleResource>
-                                  </Children>
-                                </LocaleResource>
-                              </Children>
-                            </LocaleResource>
-                          </Children>
-                        </LocaleResource>
-                        <LocaleResource Name="SpecificationAttributes">
-                          <Value>Specification Attributes</Value>
-                          <Children>
-                            <LocaleResource Name="AddNew">
-                              <Value>Add a new specification attribute</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="BackToList">
-                              <Value>back to specification attribute list</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="EditAttributeDetails">
-                              <Value>Edit specification attribute details</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Info">
-                              <Value>Attribute info</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="Fields">
-                              <Children>
-                                <LocaleResource Name="Name">
-                                  <Value>Name</Value>
-                                  <Children>
-                                    <LocaleResource Name="Required">
-                                      <Value>Please provide a name.</Value>
-                                    </LocaleResource>
-                                    <LocaleResource Name="Hint">
-                                      <Value>A name of the specification attribute.</Value>
-                                    </LocaleResource>
-                                  </Children>
-                                </LocaleResource>
-                                <LocaleResource Name="DisplayOrder">
-                                  <Value>Display order</Value>
-                                  <Children>
-                                    <LocaleResource Name="Hint">
-                                      <Value>A display order of the specification attribute.</Value>
-                                    </LocaleResource>
-                                  </Children>
-                                </LocaleResource>
-                              </Children>
-                            </LocaleResource>
-                            <LocaleResource Name="Options">
-                              <Value>Options</Value>
                               <Children>
                                 <LocaleResource Name="AddNew">
-                                  <Value>Add a new option</Value>
+                                  <Value>Add a new product variant</Value>
                                 </LocaleResource>
-                                <LocaleResource Name="EditOptionDetails">
-                                  <Value>Edit option details</Value>
+                                <LocaleResource Name="AddNewForProduct">
+                                  <Value>Add a new variant for product: {0}</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="BackToProduct">
+                                  <Value>back to product details</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Discounts">
+                                  <Value>Discounts</Value>
+                                  <Children>
+                                    <LocaleResource Name="NoDiscounts">
+                                      <Value>No discounts available. Create at least one discount before mapping.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="Info">
+                                  <Value>Product variant Info</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="EditProductVariantDetails">
+                                  <Value>Edit product variant for product: {0}</Value>
                                 </LocaleResource>
                                 <LocaleResource Name="Fields">
                                   <Children>
-                                    <LocaleResource Name="Name">
-                                      <Value>Name</Value>
+                                    <LocaleResource Name="ProductName">
+                                      <Value>Product name</Value>
                                       <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The name of the product.</Value>
+                                        </LocaleResource>
                                         <LocaleResource Name="Required">
                                           <Value>Please provide a name.</Value>
                                         </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Name">
+                                      <Value>Name</Value>
+                                      <Children>
                                         <LocaleResource Name="Hint">
-                                          <Value>A name of the option.</Value>
+                                          <Value>The name of the product variant (optional).</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Sku">
+                                      <Value>Sku</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this product variant.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Price">
+                                      <Value>Price</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The price of the product.</Value>
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
@@ -658,20 +735,49 @@
                                       <Value>Display order</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
-                                          <Value>A display order of the option.</Value>
+                                          <Value>Set the display order of this product variant. 1 represents the first item in the collection of variants for this product.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Published">
+                                      <Value>Published</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check to publish this product variant (visible in store). Uncheck to unpublish (product not available in store)</Value>
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
                                   </Children>
                                 </LocaleResource>
-                                <LocaleResource Name="SaveBeforeEdit">
-                                  <Value>You need to save the specification attribute before you can add options for this specification attribute page.</Value>
+                                <LocaleResource Name="TierPrices">
+                                  <Value>Tier prices</Value>
+                                  <Children>
+                                    <LocaleResource Name="Fields">
+                                      <Children>
+                                        <LocaleResource Name="CustomerRole">
+                                          <Value>Customer role</Value>
+                                          <Children>
+                                            <LocaleResource Name="AllRoles">
+                                              <Value>All customer roles</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="Quantity">
+                                          <Value>Quantity</Value>
+                                        </LocaleResource>
+                                        <LocaleResource Name="Price">
+                                          <Value>Price</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SaveBeforeEdit">
+                                      <Value>You need to save the product variant before you can add tier prices for this product variant page.</Value>
+                                    </LocaleResource>
+                                  </Children>
                                 </LocaleResource>
                               </Children>
-                            </LocaleResource>
-                          </Children>
-                        </LocaleResource>
-                      </Children>
+                          </LocaleResource>
+                        </Children>
                     </LocaleResource>
                 </Children>
             </LocaleResource>

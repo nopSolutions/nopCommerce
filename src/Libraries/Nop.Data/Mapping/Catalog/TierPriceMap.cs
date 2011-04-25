@@ -19,7 +19,8 @@ namespace Nop.Data.Mapping.Catalog
 
             this.HasOptional(tp => tp.CustomerRole)
                 .WithMany()
-                .HasForeignKey(tp => tp.CustomerRoleId);
+                .HasForeignKey(tp => tp.CustomerRoleId)
+                .WillCascadeOnDelete(true);
         }
     }
 }

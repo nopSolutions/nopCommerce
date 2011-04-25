@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
@@ -18,6 +20,8 @@ namespace Nop.Admin.Models
         {
             Locales = new List<ProductVariantLocalizedModel>();
         }
+
+        #region Standard properties
 
         public int ProductId { get; set; }
 
@@ -186,25 +190,41 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.BackorderMode")]
-        public BackorderMode BackorderMode {get;set;}
+        public DateTime CreatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DownloadActivationType")]
-        public DownloadActivationType DownloadActivationType { get; set; }
+        #endregion
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.GiftCardType")]
-        public GiftCardType GiftCardType { get; set; }
+        #region Nested classes
+        
+        public class TierPriceModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.CustomerRole")]
+            [UIHint("TierPriceCustomer")]
+            public string CustomerRole { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.LowStockActivity")]
-        public LowStockActivity LowStockActivity { get; set; }
+            public int ProductVariantId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ManageInventoryMethod")]
-        public ManageInventoryMethod ManageInventoryMethod { get; set; }
+            public int CustomerRoleId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RecurringCyclePeriod")]
-        public RecurringProductCyclePeriod RecurringCyclePeriod { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Quantity")]
+            public int Quantity { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Price")]
+            public decimal Price { get; set; }
+        }
+
+        #endregion
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ProductName")]
+        public string ProductName { get; set; }
 
         public IList<ProductVariantLocalizedModel> Locales { get; set; }
+        
+        //dicounts
+        public List<Discount> AvailableDiscounts { get; set; }
+        public int[] SelectedDiscountIds { get; set; }
+
     }
     public class ProductVariantLocalizedModel : ILocalizedModelLocal
     {

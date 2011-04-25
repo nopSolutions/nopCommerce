@@ -228,6 +228,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var category = model.ToEntity();
+                category.CreatedOnUtc = DateTime.UtcNow;
+                category.UpdatedOnUtc = DateTime.UtcNow;
                 _categoryService.InsertCategory(category);
                 //locales
                 UpdateLocales(category, model);
@@ -302,6 +304,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 category = model.ToEntity(category);
+                category.UpdatedOnUtc = DateTime.UtcNow;
                 _categoryService.UpdateCategory(category);
                 //locales
                 UpdateLocales(category, model);

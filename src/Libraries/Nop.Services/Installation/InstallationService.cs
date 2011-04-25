@@ -1369,6 +1369,26 @@ namespace Nop.Services.Installation
                                             StartDateUtc = new DateTime(2010,1,1),
                                             EndDateUtc = new DateTime(2020,1,1),
                                         },
+                                    new Discount
+                                        {
+                                            Name = "test discount 4. TODO remove",
+                                            DiscountType = DiscountType.AssignedToSkus,
+                                            DiscountLimitation = DiscountLimitationType.Unlimited,
+                                            UsePercentage = false,
+                                            DiscountAmount = 10,
+                                            StartDateUtc = new DateTime(2010,1,1),
+                                            EndDateUtc = new DateTime(2020,1,1),
+                                        },
+                                    new Discount
+                                        {
+                                            Name = "test discount 5. TODO remove",
+                                            DiscountType = DiscountType.AssignedToSkus,
+                                            DiscountLimitation = DiscountLimitationType.Unlimited,
+                                            UsePercentage = false,
+                                            DiscountAmount = 10,
+                                            StartDateUtc = new DateTime(2010,1,1),
+                                            EndDateUtc = new DateTime(2020,1,1),
+                                        },
                                 };
                 disounts.ForEach(d => _discountRepository.Insert(d));
 
