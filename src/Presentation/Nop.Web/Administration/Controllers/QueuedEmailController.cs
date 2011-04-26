@@ -60,6 +60,17 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("go-to-email-by-number")]
+        public ActionResult GoToSku(QueuedEmailListModel model)
+        {
+            var queuedEmail = _queuedEmailService.GetQueuedEmailById(model.GoDirectlyToNumber);
+            if (queuedEmail != null)
+                return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
+            else
+                return View(model);
+        }
+
 		public ActionResult Edit(int id)
 		{
 			var email = _queuedEmailService.GetQueuedEmailById(id);

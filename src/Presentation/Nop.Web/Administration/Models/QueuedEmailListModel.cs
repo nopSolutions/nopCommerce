@@ -40,6 +40,6 @@ namespace Nop.Admin.Models
         public int SearchMaxSentTries { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.List.GoDirectlyToNumber")]
-        public string GoDirectlyToNumber { get; set; }
+        public int GoDirectlyToNumber { get; set; }
     }
 }
