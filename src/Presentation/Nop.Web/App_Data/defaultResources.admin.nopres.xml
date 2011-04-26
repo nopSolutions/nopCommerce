@@ -529,8 +529,8 @@
                             </Children>
                           </LocaleResource>
                             <LocaleResource Name="Manage">
-                            <Value>Manage products</Value>
-                          </LocaleResource>
+                              <Value>Manage products</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Manufacturers">
                               <Value>Manufacturer mappings</Value>
                               <Children>
@@ -805,38 +805,75 @@
                                 </LocaleResource>
                                 <LocaleResource Name="Fields">
                                   <Children>
-                                    <LocaleResource Name="ProductName">
-                                      <Value>Product name</Value>
+                                    <LocaleResource Name="AdditionalShippingCharge">
+                                      <Value>Additional shipping charge</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
-                                          <Value>The name of the product.</Value>
-                                        </LocaleResource>
-                                        <LocaleResource Name="Required">
-                                          <Value>Please provide a name.</Value>
+                                          <Value>The additional shipping charge.</Value>
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="Name">
-                                      <Value>Name</Value>
+                                    <LocaleResource Name="AdminComment">
+                                      <Value>Admin comment</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
-                                          <Value>The name of the product variant (optional).</Value>
+                                          <Value>Admin comment. For internal use.</Value>
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="Sku">
-                                      <Value>Sku</Value>
+                                    <LocaleResource Name="AvailableEndDateTime">
+                                      <Value>Available end date</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
-                                          <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this product variant.</Value>
+                                          <Value>The end of the product availability in Coordinated Universal Time (UTC).</Value>
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="Price">
-                                      <Value>Price</Value>
+                                    <LocaleResource Name="AvailableStartDateTime">
+                                      <Value>Available start date</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
-                                          <Value>The price of the product.</Value>
+                                          <Value>The start of the product availability in Coordinated Universal Time (UTC).</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="BackorderMode">
+                                      <Value>Backorders</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select backorder mode.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="CallForPrice">
+                                      <Value>Call for price</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check to show "Call for Pricing" or "Call for quote" instead of price</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="CustomerEntersPrice">
+                                      <Value>Customer enters price</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>An option indicating whether customer should enter price.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Description">
+                                      <Value>Description</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>A description of the product variant.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisableBuyButton">
+                                      <Value>Disable buy button</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check to disable the buy button for this product. This may be necessary for products that are 'available upon request'.</Value>
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
@@ -848,11 +885,374 @@
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="DisplayStockAvailability">
+                                      <Value>Display stock availability</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check to display stock availability. When enabled, customers will see stock availability.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayStockQuantity">
+                                      <Value>Display stock quantity</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check to display stock quantity. When enabled, customers will see stock quantity.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DownloadActivationType">
+                                      <Value>Download activation type</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>A value indicating when download links will be enabled.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DownloadExpirationDays">
+                                      <Value>Number of days</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The number of days during customers keeps access to the file (e.g. 14). Leave this field blank to allow continuous downloads.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Download">
+                                      <Value>Download file</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The additional shipping charge.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="GiftCardType">
+                                      <Value>Gift card type</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select gift card type. WARNING: not recommended to change in production environment.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="HasSampleDownload">
+                                      <Value>Has sample download file</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check if this product has a sample download file that can be downloaded before checkout.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="HasUserAgreement">
+                                      <Value>Has user agreement</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check if the product has an user agreement.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Height">
+                                      <Value>Height</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The height of the product.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="ID">
+                                      <Value>ID</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The product variant identifier.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsDownload">
+                                      <Value>Downloadable product</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check if this product variant is a downloadable product. When a customer purchases a download product, they can download the item direct from your store by viewing their completed order.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsFreeShipping">
+                                      <Value>Free shipping</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check if this product comes with FREE shipping.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsGiftCard">
+                                      <Value>Is gift card</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check if it is a gift card</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsRecurring">
+                                      <Value>Recurring product</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check if this product is a recurring product.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsShipEnabled">
+                                      <Value>Shipping enabled</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the product can be shipped.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsTaxExempt">
+                                      <Value>Tax exempt</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether this product is tax exempt (tax will not be applied to this product at checkout).</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Length">
+                                      <Value>Length</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The length of the product.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="LowStockActivity">
+                                      <Value>Low stock activity</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Action to be taken when your current stock quantity falls below the 'Minimum stock quantity'.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="ManageInventoryMethod">
+                                      <Value>Manage inventory method</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select manage inventory method. When enabled, stock quantities are automatically adjusted when a customer makes a purchase. You can also set low stock activity actions and receive notifications.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="ManufacturerPartNumber">
+                                      <Value>Manufacturer part number</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The manufacturer's part number for this product variant.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="MaximumCustomerEnteredPrice">
+                                      <Value>Maximum amount</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter a maximum amount.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="MaxNumberOfDownloads">
+                                      <Value>Max. downloads</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The maximum number of downloads.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="MinimumCustomerEnteredPrice">
+                                      <Value>Minimum amount</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter a minimum amount.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="MinStockQuantity">
+                                      <Value>Minimum stock quantity</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>If you have enabled 'Manage Stock' you can perform a number of different actions when the current stock quantity falls below your minimum stock quantity.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Name">
+                                      <Value>Name</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The name of the product variant. It's useful when you have more than one variant.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="NotifyAdminForQuantityBelow">
+                                      <Value>Notify admin for quantity below</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>When the current stock quantity falls below this quantity, the storekeeper (admin) will receive a notification.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="OldPrice">
+                                      <Value>Old price</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The old price of the product. If you set an old price, this will display alongside the current price on the product page to show the difference in price.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="OrderMaximumQuantity">
+                                      <Value>Maximum cart quantity</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Set the maximum quantity allowed in a customers shopping cart e.g. set to 5 to only allow customers to purchase 5 of this product.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="OrderMinimumQuantity">
+                                      <Value>Minimum cart quantity</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Set the minimum quantity allowed in a customers shopping cart e.g. set to 3 to only allow customers to purchase 3 or more of this product.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Picture">
+                                      <Value>Picture</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Product variant image. It's useful when you have more than one variant.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Price">
+                                      <Value>Price</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The price of the product.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="ProductCost">
+                                      <Value>Product cost</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The product cost is the cost of all the different components which make up the product. This may either be the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="ProductName">
+                                      <Value>Product name</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The name of the product.</Value>
+                                        </LocaleResource>
+                                        <LocaleResource Name="Required">
+                                          <Value>Please provide a name.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="Published">
                                       <Value>Published</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
                                           <Value>Check to publish this product variant (visible in store). Uncheck to unpublish (product not available in store)</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SampleDownload">
+                                      <Value>Sample download file</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The sample download file.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Sku">
+                                      <Value>Sku</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this product variant.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="StockQuantity">
+                                      <Value>Stock quantity</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The current stock quantity of this product.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="RecurringTotalCycles">
+                                      <Value>Total cycles</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter total cycles.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="RecurringCycleLength">
+                                      <Value>Cycle length</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Enter cycle length.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="RecurringCyclePeriod">
+                                      <Value>Cycle period</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select cycle period.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="TaxCategory">
+                                      <Value>Tax category</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The tax classification for this product. You can manage product tax classifications from Configuration : Tax : Tax Classes</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="UserAgreementText">
+                                      <Value>User agreement text</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The text of the user agreement</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="UnlimitedDownloads">
+                                      <Value>Unlimited downloads</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>When a customer purchases a download product, they can download the item unlimited number of times.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Warehouse">
+                                      <Value>Warehouse</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select the warehouse where this product is stored / to be shipped from.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Weight">
+                                      <Value>Weight</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The weight of the product. Can be used in shipping calculations.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Width">
+                                      <Value>Width</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The width of the product.</Value>
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
@@ -2459,6 +2859,32 @@
                       </Children>
                     </LocaleResource>
                   </Children>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
+            <LocaleResource Name="Download">
+              <Children>
+                <LocaleResource Name="DownloadUploadedFile">
+                  <Value>Download uploaded file</Value>
+                </LocaleResource>
+                <LocaleResource Name="DownloadURL">
+                  <Value>Download URL</Value>
+                </LocaleResource>
+                <LocaleResource Name="RemoveDownload">
+                  <Value>Remove download</Value>
+                </LocaleResource>
+                <LocaleResource Name="UploadFile">
+                  <Value>Upload file</Value>
+                </LocaleResource>
+                <LocaleResource Name="UseDownloadURL">
+                  <Value>Use download URL</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
+            <LocaleResource Name="Picture">
+              <Children>
+                <LocaleResource Name="RemovePicture">
+                  <Value>Remove picture</Value>
                 </LocaleResource>
               </Children>
             </LocaleResource>

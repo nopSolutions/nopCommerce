@@ -94,7 +94,7 @@
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\FormValueExistsAttribute.cs" />
     <Compile Include="DependencyRegistar.cs" />
-    <Compile Include="Mvc\DownloadResult.cs" />
+    <Compile Include="Mvc\XmlDownloadResult.cs" />
     <Compile Include="EngineExtensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HtmlExtensions.cs" />

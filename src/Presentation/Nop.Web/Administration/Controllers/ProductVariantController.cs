@@ -7,10 +7,12 @@ using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Media;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -27,6 +29,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly ITaxCategoryService _taxCategoryService;
 
         #endregion
 
@@ -35,7 +38,8 @@ namespace Nop.Admin.Controllers
         public ProductVariantController(IProductService productService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, ICustomerService customerService,
-            ILocalizationService localizationService, IProductAttributeService productAttributeService)
+            ILocalizationService localizationService, IProductAttributeService productAttributeService,
+            ITaxCategoryService taxCategoryService)
         {
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
@@ -44,6 +48,7 @@ namespace Nop.Admin.Controllers
             this._customerService = customerService;
             this._localizationService = localizationService;
             this._productAttributeService = productAttributeService;
+            this._taxCategoryService = taxCategoryService;
         }
         
         #endregion
@@ -88,6 +93,58 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        private void PrepareProductVariantModel(ProductVariantModel model, ProductVariant variant, bool setPredefinedValues)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            //tax categories
+            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            model.AvailableTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+            foreach (var tc in taxCategories)
+                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = variant != null && !setPredefinedValues && tc.Id == variant.TaxCategoryId });
+
+            //warehouses
+            //TODO finish when warehouses are ready
+            //var warehouses = _warehouseService.GetAllWarehouses();
+            model.AvailableWarehouses.Add(new SelectListItem() { Text = "---", Value = "0" });
+            //foreach (var wh in warehouses)
+            //    model.AvailableWarehouses.Add(new SelectListItem() { Text = wh.Name, Value = wh.Id.ToString(), Selected = variant != null && !setPredefinedValues && wh.Id == variant.WarehouseId });
+
+            if (setPredefinedValues)
+            {
+                model.MaximumCustomerEnteredPrice = 1000;
+                model.MaxNumberOfDownloads = 10;
+                model.RecurringCycleLength = 100;
+                model.RecurringTotalCycles = 10;
+                model.StockQuantity = 10000;
+                model.NotifyAdminForQuantityBelow = 1;
+                model.OrderMinimumQuantity = 1;
+                model.OrderMaximumQuantity = 10000;
+                model.DisplayOrder = 1;
+
+                model.UnlimitedDownloads = true;
+                model.IsShipEnabled = true;
+                model.Published = true;
+            }
+        }
+
+        [NonAction]
+        private void PrepareDiscountModel(ProductVariantModel model, ProductVariant variant, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, true);
+            model.AvailableDiscounts = discounts.ToList();
+
+            if (!excludeProperties)
+            {
+                model.SelectedDiscountIds = variant.AppliedDiscounts.Select(d => d.Id).ToArray();
+            }
+        }
+
+        [NonAction]
         private void PrepareProductAttributesMapping(ProductVariantModel model)
         {
             if (model == null)
@@ -95,7 +152,7 @@ namespace Nop.Admin.Controllers
 
             model.NumberOfAvailableProductAttributes = _productAttributeService.GetAllProductAttributes().Count;
         }
-
+        
         #endregion
 
         #region List / Create / Edit / Delete
@@ -113,6 +170,7 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             //common
             PrepareProductModel(model, product);
+            PrepareProductVariantModel(model, null, true);
             //attributes
             PrepareProductAttributesMapping(model);
             //discounts
@@ -151,6 +209,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product found with the specified id");
             //common
             PrepareProductModel(model, product);
+            PrepareProductVariantModel(model, null, false);
             //attributes
             PrepareProductAttributesMapping(model);
             //discounts
@@ -172,6 +231,7 @@ namespace Nop.Admin.Controllers
             });
             //common
             PrepareProductModel(model, variant.Product);
+            PrepareProductVariantModel(model, variant, false);
             //attributes
             PrepareProductAttributesMapping(model);
             //discounts
@@ -187,7 +247,6 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product variant found with the specified id");
             if (ModelState.IsValid)
             {
-                //UNDONE update
                 variant = model.ToEntity(variant);
                 variant.UpdatedOnUtc = DateTime.UtcNow;
                 //save variant
@@ -219,6 +278,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //common
             PrepareProductModel(model, variant.Product);
+            PrepareProductVariantModel(model, variant, false);
             //attributes
             PrepareProductAttributesMapping(model);
             //discounts
@@ -237,21 +297,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit", "Product", new { id = productId });
         }
         
-        [NonAction]
-        private void PrepareDiscountModel(ProductVariantModel model, ProductVariant variant, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, true);
-            model.AvailableDiscounts = discounts.ToList();
-
-            if (!excludeProperties)
-            {
-                model.SelectedDiscountIds = variant.AppliedDiscounts.Select(d => d.Id).ToArray();
-            }
-        }
-
         #endregion
 
         #region Tier prices
@@ -270,7 +315,7 @@ namespace Nop.Admin.Controllers
                         ProductVariantId = x.ProductVariantId,
                         CustomerRoleId = x.CustomerRoleId.HasValue ? x.CustomerRoleId.Value : 0,
                         Quantity = x.Quantity,
-                        Price = x.Price
+                        Price1 = x.Price
                     };
                 })
                 .ToList();
@@ -295,7 +340,7 @@ namespace Nop.Admin.Controllers
                 ProductVariantId = model.ProductVariantId,
                 CustomerRoleId = Int32.Parse(model.CustomerRole) != 0 ? Int32.Parse(model.CustomerRole) : (int?)null, //use CustomerRole property (not CustomerRoleId) because appropriate property is stored in it
                 Quantity = model.Quantity,
-                Price = model.Price
+                Price = model.Price1
             };
             _productService.InsertTierPrice(tierPrice);
 
@@ -312,7 +357,7 @@ namespace Nop.Admin.Controllers
             //use CustomerRole property (not CustomerRoleId) because appropriate property is stored in it
             tierPrice.CustomerRoleId = Int32.Parse(model.CustomerRole) != 0 ? Int32.Parse(model.CustomerRole) : (int?)null;
             tierPrice.Quantity = model.Quantity;
-            tierPrice.Price = model.Price;
+            tierPrice.Price = model.Price1;
             _productService.UpdateTierPrice(tierPrice);
 
             return TierPriceList(command, model.ProductVariantId);
@@ -352,7 +397,7 @@ namespace Nop.Admin.Controllers
                         IsRequired = x.IsRequired,
                         AttributeControlType = CommonHelper.ConvertEnum(x.AttributeControlType.ToString()),
                         AttributeControlTypeId = x.AttributeControlTypeId,
-                        DisplayOrder = x.DisplayOrder
+                        DisplayOrder1 = x.DisplayOrder
                     };
 
                     if (x.ShouldHaveValues())
@@ -386,7 +431,7 @@ namespace Nop.Admin.Controllers
                 TextPrompt = model.TextPrompt,
                 IsRequired = model.IsRequired,
                 AttributeControlTypeId = Int32.Parse(model.AttributeControlType), //use AttributeControlType property (not AttributeControlTypeId) because appropriate property is stored in it
-                DisplayOrder = model.DisplayOrder
+                DisplayOrder = model.DisplayOrder1
             };
             _productAttributeService.InsertProductVariantAttribute(pva);
 
@@ -406,7 +451,7 @@ namespace Nop.Admin.Controllers
             pva.IsRequired = model.IsRequired;
             //use AttributeControlType property (not AttributeControlTypeId) because appropriate property is stored in it
             pva.AttributeControlTypeId = Int32.Parse(model.AttributeControlType);
-            pva.DisplayOrder = model.DisplayOrder;
+            pva.DisplayOrder = model.DisplayOrder1;
             _productAttributeService.UpdateProductVariantAttribute(pva);
 
             return ProductVariantAttributeList(command, model.ProductVariantId);

@@ -11,11 +11,11 @@
     <img src="@(pictureService.GetPictureUrl(Model, 100, true))" />
 </div>
 @if(picture != null){
-    <span id="@(clientId + "remove")" class="t-button">Remove picture</span>
+    <span id="@(clientId + "remove")" class="t-button">@T("Admin.Picture.RemovePicture")</span>
 }
 else
 {
-    <span id="@(clientId + "remove")" class="t-button" style="display:none;">Remove picture</span>
+    <span id="@(clientId + "remove")" class="t-button" style="display:none;">@T("Admin.Picture.RemovePicture")</span>
 }
 <br />
 <input type="file" id="@clientId"/>
@@ -28,7 +28,7 @@ else
                 "multi": "false",
                 "auto": true,
                 "buttonText": "Upload",
-                "cancelImg": "http://www.uploadify.com/uploadify/cancel.png",
+                "cancelImg": "@Url.Content("~/Administration/Content/images/cancel-uploading.png")",
                 "onComplete": function (event, ID, fileObj, response, data) {
                     var json = jQuery.parseJSON(response);
                     $("#@(clientId + "image")").html("<img src='" + json.imageUrl + "'/>");

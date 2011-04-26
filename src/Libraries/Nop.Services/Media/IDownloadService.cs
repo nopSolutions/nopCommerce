@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Media
 {
@@ -12,13 +13,6 @@ namespace Nop.Services.Media
     /// </summary>
     public partial interface IDownloadService
     {
-        /// <summary>
-        /// Gets a sample download url for a product variant
-        /// </summary>
-        /// <param name="productVariant">Product variant instance</param>
-        /// <returns>Download url</returns>
-        string GetSampleDownloadUrl(ProductVariant productVariant);
-
         /// <summary>
         /// Gets a download
         /// </summary>

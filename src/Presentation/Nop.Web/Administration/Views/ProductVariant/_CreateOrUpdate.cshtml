@@ -15,31 +15,755 @@
     x.Add().Text(T("Admin.Catalog.Products.Variants.Discounts").Text).Content(TabDiscounts().ToHtmlString());
 })
 @helper TabInfo()
-    { 
-    @(Html.LocalizedEditor<ProductVariantModel, ProductVariantLocalizedModel>("productvariant-info-localized",
-                @<table class="adminContent">
-                    @Html.NopField(model => model.Locales[item].Name)
-                    @Html.NopField(model => model.Locales[item].Description)
-                    <tr>
-                        <td colspan="2">
-                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                        </td>
-                    </tr>
-                </table>
-                ,
-                @<table class="adminContent">
-                    @Html.NopField(model => model.Name)
-                    @Html.NopField(model => model.Description)
-                </table>
-            ))
-}
-
-
-@helper TabTierPrices()
-{
-    if (Model.Id > 0)
     {
-        @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.TierPriceModel>()
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#@Html.FieldIdFor(model => model.IsGiftCard)").click(toggleGiftCard);
+                $("#@Html.FieldIdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
+                $("#@Html.FieldIdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
+                $("#@Html.FieldIdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
+                $("#@Html.FieldIdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
+                $("#@Html.FieldIdFor(model => model.HasUserAgreement)").click(toggleDownloadableProduct);
+                $("#@Html.FieldIdFor(model => model.IsRecurring)").click(toggleRecurring);
+                $("#@Html.FieldIdFor(model => model.IsShipEnabled)").click(toggleShipping);
+                $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
+                $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
+                $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
+          
+                toggleGiftCard();
+                toggleCustomerEntersPrice();
+                toggleDownloadableProduct();
+                toggleRecurring();
+                toggleShipping();
+                toggleTax();
+                toggleManageStock();
+            });
+
+            function toggleGiftCard() {
+                if (getE('@Html.FieldIdFor(model => model.IsGiftCard)').checked) {
+                    $('#pnlGiftCardType').show();
+                }
+                else {
+                    $('#pnlGiftCardType').hide();
+                }
+            }
+
+            function toggleCustomerEntersPrice() {
+                if (getE('@Html.FieldIdFor(model => model.CustomerEntersPrice)').checked) {
+                    $('#pnlMinimumCustomerEnteredPrice').show();
+                    $('#pnlMaximumCustomerEnteredPrice').show();
+                }
+                else {
+                    $('#pnlMinimumCustomerEnteredPrice').hide();
+                    $('#pnlMaximumCustomerEnteredPrice').hide();
+                }
+            }
+
+            function toggleDownloadableProduct() {
+                if (getE('@Html.FieldIdFor(model => model.IsDownload)').checked) {
+
+                    $('#pnlDownloadFile').show();
+                    $('#pnlUnlimitedDownloads').show();
+                    if (getE('@Html.FieldIdFor(model => model.UnlimitedDownloads)').checked) {
+                        $('#pnlMaxNumberOfDownloads').hide();
+                    }
+                    else {
+                        $('#pnlMaxNumberOfDownloads').show();
+                    }
+                    $('#pnlDownloadExpirationDays').show();
+                    $('#pnlDownloadActivationType').show();
+
+                    $('#pnlHasUserAgreement').show();
+                    if (getE('@Html.FieldIdFor(model => model.HasUserAgreement)').checked) {
+                        $('#pnlUserAgreementText').show();
+                    }
+                    else {
+                        $('#pnlUserAgreementText').hide();
+                    }
+
+                    $('#pnlHasSampleDownload').show();
+
+                    if (getE('@Html.FieldIdFor(model => model.HasSampleDownload)').checked) {
+                        $('#pnlSampleDownloadFile').show();
+                    }
+                    else {
+                        $('#pnlSampleDownloadFile').hide();
+                    }
+                }
+                else {
+                    $('#pnlDownloadFile').hide();
+                    $('#pnlUnlimitedDownloads').hide();
+                    $('#pnlMaxNumberOfDownloads').hide();
+                    $('#pnlDownloadExpirationDays').hide();
+                    $('#pnlDownloadActivationType').hide();
+                    $('#pnlHasUserAgreement').hide();
+                    $('#pnlUserAgreementText').hide();
+                    $('#pnlHasSampleDownload').hide();
+                    $('#pnlSampleDownloadFile').hide();
+                }
+            }
+
+            function toggleShipping() {
+                if (getE('@Html.FieldIdFor(model => model.IsShipEnabled)').checked) {
+                    $('#pnlFreeShipping').show();
+                    $('#pnlAdditionalShippingCharge').show();
+                    $('#pnlWeight').show();
+                    $('#pnlLength').show();
+                    $('#pnlWidth').show();
+                    $('#pnlHeight').show();
+                }
+                else {
+                    $('#pnlFreeShipping').hide();
+                    $('#pnlAdditionalShippingCharge').hide();
+                    $('#pnlWeight').hide();
+                    $('#pnlLength').hide();
+                    $('#pnlWidth').hide();
+                    $('#pnlHeight').hide();
+                }
+            }
+
+            function toggleRecurring() {
+                if (getE('@Html.FieldIdFor(model => model.IsRecurring)').checked) {
+                    $('#pnlCycleLength').show();
+                    $('#pnlCyclePeriod').show();
+                    $('#pnlTotalCycles').show();
+                }
+                else {
+                    $('#pnlCycleLength').hide();
+                    $('#pnlCyclePeriod').hide();
+                    $('#pnlTotalCycles').hide();
+                }
+            }
+
+            function toggleTax() {
+                if (getE('@Html.FieldIdFor(model => model.IsTaxExempt)').checked) {
+                    $('#pnlTaxCategory').show();
+                }
+                else {
+                    $('#pnlTaxCategory').hide();
+                }
+            }
+            
+            function toggleManageStock() {
+                var selectedManageInventoryMethod = document.getElementById('@Html.FieldIdFor(model => model.ManageInventoryMethodId)');
+                var selectedManageInventoryMethodId = selectedManageInventoryMethod.options[selectedManageInventoryMethod.selectedIndex].value;
+                if (selectedManageInventoryMethodId == 0) {
+                    $('#pnlStockQuantity').hide();
+                    $('#pnlDisplayStockAvailability').hide();
+                    $('#pnlDisplayStockQuantity').hide();
+                    $('#pnlMinStockQuantity').hide();
+                    $('#pnlLowStockActivity').hide();
+                    $('#pnlNotifyForQuantityBelow').hide();
+                    $('#pnlBackorders').hide();
+                }
+                else if (selectedManageInventoryMethodId == 1) {
+                    $('#pnlStockQuantity').show();
+                    $('#pnlDisplayStockAvailability').show();
+
+                    if (getE('@Html.FieldIdFor(model => model.DisplayStockAvailability)').checked) {
+                        $('#pnlDisplayStockQuantity').show();
+                    }
+                    else {
+                        $('#pnlDisplayStockQuantity').hide();
+                    }
+
+                    $('#pnlMinStockQuantity').show();
+                    $('#pnlLowStockActivity').show();
+                    $('#pnlNotifyForQuantityBelow').show();
+                    $('#pnlBackorders').show();
+                }
+                else {
+                    $('#pnlStockQuantity').hide();
+                    $('#pnlDisplayStockAvailability').hide();
+                    $('#pnlDisplayStockQuantity').hide();
+                    $('#pnlMinStockQuantity').hide();
+                    $('#pnlLowStockActivity').hide();
+                    $('#pnlNotifyForQuantityBelow').hide();
+                    $('#pnlBackorders').hide();
+                }
+            }
+</script>
+        
+        if (Model.Id > 0)
+        {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Id):
+            </td>
+            <td class="adminData">
+                @Model.Id.ToString()
+                @Html.ValidationMessageFor(model => model.Id)
+            </td>
+        </tr>
+    </table>
+        }
+    @(Html.LocalizedEditor<ProductVariantModel, ProductVariantLocalizedModel>("productvariant-info-localized",
+            @<table class="adminContent">
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Locales[item].Name):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => Model.Locales[item].Name)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Locales[item].Description):
+                    </td>
+                    <td class="adminData">
+                        @Html.TextAreaFor(model => model.Locales[item].Description)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                    </td>
+                </tr>
+            </table>
+            ,
+            @<table class="adminContent">
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Name):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => Model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Description):
+                    </td>
+                    <td class="adminData">
+                        @Html.TextAreaFor(model => model.Description)
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </td>
+                </tr>
+            </table>
+        ))
+        
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Sku):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Sku)
+                @Html.ValidationMessageFor(model => model.Sku)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PictureId)
+                @Html.ValidationMessageFor(model => model.PictureId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdminComment):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AdminComment)
+                @Html.ValidationMessageFor(model => model.AdminComment)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ManufacturerPartNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ManufacturerPartNumber)
+                @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Price):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Price)
+                @Html.ValidationMessageFor(model => model.Price)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OldPrice):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.OldPrice)
+                @Html.ValidationMessageFor(model => model.OldPrice)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductCost):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductCost)
+                @Html.ValidationMessageFor(model => model.ProductCost)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisableBuyButton):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisableBuyButton)
+                @Html.ValidationMessageFor(model => model.DisableBuyButton)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CallForPrice):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CallForPrice)
+                @Html.ValidationMessageFor(model => model.CallForPrice)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerEntersPrice):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerEntersPrice)
+                @Html.ValidationMessageFor(model => model.CustomerEntersPrice)
+            </td>
+        </tr>
+        <tr id="pnlMinimumCustomerEnteredPrice">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MinimumCustomerEnteredPrice):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MinimumCustomerEnteredPrice)
+                @Html.ValidationMessageFor(model => model.MinimumCustomerEnteredPrice)
+            </td>
+        </tr>
+        <tr id="pnlMaximumCustomerEnteredPrice">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MaximumCustomerEnteredPrice):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MaximumCustomerEnteredPrice)
+                @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvailableStartDateTimeUtc):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AvailableStartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.AvailableStartDateTimeUtc)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvailableEndDateTimeUtc):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AvailableEndDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.AvailableEndDateTimeUtc)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsGiftCard):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsGiftCard)
+                @Html.ValidationMessageFor(model => model.IsGiftCard)
+            </td>
+        </tr>
+        <tr id="pnlGiftCardType">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GiftCardTypeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsDownload):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsDownload)
+                @Html.ValidationMessageFor(model => model.IsDownload)
+            </td>
+        </tr>
+        <tr id="pnlDownloadFile">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DownloadId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DownloadId)
+                @Html.ValidationMessageFor(model => model.DownloadId)
+            </td>
+        </tr>
+        <tr id="pnlUnlimitedDownloads">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UnlimitedDownloads):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UnlimitedDownloads)
+                @Html.ValidationMessageFor(model => model.UnlimitedDownloads)
+            </td>
+        </tr>
+        <tr id="pnlMaxNumberOfDownloads">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MaxNumberOfDownloads):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MaxNumberOfDownloads)
+                @Html.ValidationMessageFor(model => model.MaxNumberOfDownloads)
+            </td>
+        </tr>
+        <tr id="pnlDownloadExpirationDays">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DownloadExpirationDays):
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.DownloadExpirationDays)
+                @Html.ValidationMessageFor(model => model.DownloadExpirationDays)
+            </td>
+        </tr>
+        <tr id="pnlDownloadActivationType">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DownloadActivationTypeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DownloadActivationTypeId, ((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.DownloadActivationTypeId)
+            </td>
+        </tr>
+        <tr id="pnlHasUserAgreement">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.HasUserAgreement):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.HasUserAgreement)
+                @Html.ValidationMessageFor(model => model.HasUserAgreement)
+            </td>
+        </tr>
+        <tr id="pnlUserAgreementText">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UserAgreementText):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.UserAgreementText)
+                @Html.ValidationMessageFor(model => model.UserAgreementText)
+            </td>
+        </tr>
+        <tr id="pnlHasSampleDownload">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.HasSampleDownload):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.HasSampleDownload)
+                @Html.ValidationMessageFor(model => model.HasSampleDownload)
+            </td>
+        </tr>
+        <tr id="pnlSampleDownloadFile">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SampleDownloadId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SampleDownloadId)
+                @Html.ValidationMessageFor(model => model.SampleDownloadId)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsRecurring):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsRecurring)
+                @Html.ValidationMessageFor(model => model.IsRecurring)
+            </td>
+        </tr>
+        <tr id="pnlCycleLength">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecurringCycleLength):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecurringCycleLength)
+                @Html.ValidationMessageFor(model => model.RecurringCycleLength)
+            </td>
+        </tr>
+        <tr id="pnlCyclePeriod">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecurringCyclePeriodId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.RecurringCyclePeriodId, ((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.RecurringCyclePeriodId)
+            </td>
+        </tr>
+        <tr id="pnlTotalCycles">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecurringTotalCycles):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecurringTotalCycles)
+                @Html.ValidationMessageFor(model => model.RecurringTotalCycles)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsShipEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsShipEnabled)
+                @Html.ValidationMessageFor(model => model.IsShipEnabled)
+            </td>
+        </tr>
+        <tr id="pnlFreeShipping">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsFreeShipping):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsFreeShipping)
+                @Html.ValidationMessageFor(model => model.IsFreeShipping)
+            </td>
+        </tr>
+        <tr id="pnlAdditionalShippingCharge">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdditionalShippingCharge):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AdditionalShippingCharge)
+                @Html.ValidationMessageFor(model => model.AdditionalShippingCharge)
+            </td>
+        </tr>
+        <tr id="pnlWeight">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Weight):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Weight)
+                @Html.ValidationMessageFor(model => model.Weight)
+            </td>
+        </tr>
+        <tr id="pnlLength">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Length):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Length)
+                @Html.ValidationMessageFor(model => model.Length)
+            </td>
+        </tr>
+        <tr id="pnlWidth">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Width):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Width)
+                @Html.ValidationMessageFor(model => model.Width)
+            </td>
+        </tr>
+        <tr id="pnlHeight">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Height):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Height)
+                @Html.ValidationMessageFor(model => model.Height)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsTaxExempt):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsTaxExempt)
+                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+            </td>
+        </tr>
+        <tr id="pnlTaxCategory">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TaxCategoryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
+                @Html.ValidationMessageFor(model => model.TaxCategoryId)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ManageInventoryMethodId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.ManageInventoryMethodId, ((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ManageInventoryMethodId)
+            </td>
+        </tr>
+        <tr id="pnlStockQuantity">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StockQuantity):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StockQuantity)
+                @Html.ValidationMessageFor(model => model.StockQuantity)
+            </td>
+        </tr>
+        <tr id="pnlDisplayStockAvailability">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayStockAvailability):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayStockAvailability)
+                @Html.ValidationMessageFor(model => model.DisplayStockAvailability)
+            </td>
+        </tr>
+        <tr id="pnlDisplayStockQuantity">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayStockQuantity):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayStockQuantity)
+                @Html.ValidationMessageFor(model => model.DisplayStockQuantity)
+            </td>
+        </tr>
+        <tr id="pnlMinStockQuantity">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MinStockQuantity):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MinStockQuantity)
+                @Html.ValidationMessageFor(model => model.MinStockQuantity)
+            </td>
+        </tr>
+        <tr id="pnlLowStockActivity">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LowStockActivityId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.LowStockActivityId, ((LowStockActivity)Model.LowStockActivityId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.LowStockActivityId)
+            </td>
+        </tr>
+        <tr id="pnlNotifyForQuantityBelow">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NotifyAdminForQuantityBelow):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NotifyAdminForQuantityBelow)
+                @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
+            </td>
+        </tr>
+        <tr id="pnlBackorders">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BackorderModeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.BackorderModeId, ((BackorderMode)Model.BackorderModeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.BackorderModeId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderMinimumQuantity):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.OrderMinimumQuantity)
+                @Html.ValidationMessageFor(model => model.OrderMinimumQuantity)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderMaximumQuantity):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.OrderMaximumQuantity)
+                @Html.ValidationMessageFor(model => model.OrderMaximumQuantity)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.WarehouseId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
+                @Html.ValidationMessageFor(model => model.WarehouseId)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Published):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Published)
+                @Html.ValidationMessageFor(model => model.Published)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabTierPrices()
+    {
+        if (Model.Id > 0)
+        {
+    @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.TierPriceModel>()
             .Name("tierprices-grid")
                 .DataKeys(keys =>
                 {
@@ -61,7 +785,7 @@
                     columns.Bound(x => x.Quantity)
                         .Width(200)
                         .Centered();
-                    columns.Bound(x => x.Price)
+                    columns.Bound(x => x.Price1)
                         .Width(100);
                     columns.Command(commands =>
                     {
@@ -74,18 +798,18 @@
                 .ClientEvents(events => events.OnEdit("onTierPriceEdit"))
                 .EnableCustomBinding(true))
     
-        <script type="text/javascript">
-            function onTierPriceEdit(e) {
-                $(e.form).find('#CustomerRole').data('tDropDownList').select(function (dataItem) {
-                    return dataItem.Value == e.dataItem['CustomerRoleId'];
-                });
-            }
-        </script>
-    }
-    else
-    {
-            @T("Admin.Catalog.Products.Variants.TierPrices.SaveBeforeEdit")
-    }
+    <script type="text/javascript">
+        function onTierPriceEdit(e) {
+            $(e.form).find('#CustomerRole').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['CustomerRoleId'];
+            });
+        }
+    </script>
+        }
+        else
+        {
+    @T("Admin.Catalog.Products.Variants.TierPrices.SaveBeforeEdit")
+        }
         
 }
 @helper TabProductVariantAttributes()
@@ -94,48 +818,45 @@
         {
             if (Model.NumberOfAvailableProductAttributes > 0)
             {
-                @Html.Telerik().TabStrip().Name("productattribute-edit").Items(x =>
-                {
-                   x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes").Text).Content(TabAttributes().ToHtmlString()).Selected(true);
-                   x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations").Text).Content(TabAttributeCombinations().ToHtmlString());
-                })
+    @Html.Telerik().TabStrip().Name("productattribute-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes").Text).Content(TabAttributes().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations").Text).Content(TabAttributeCombinations().ToHtmlString());
+})
             }
             else
             {
-                @T("Admin.Catalog.Products.Variants.ProductVariantAttributes.NoAttributesAvailable")
+    @T("Admin.Catalog.Products.Variants.ProductVariantAttributes.NoAttributesAvailable")
             }
         }
         else
         {
-            @T("Admin.Catalog.Products.Variants.ProductVariantAttributes.SaveBeforeEdit")
+    @T("Admin.Catalog.Products.Variants.ProductVariantAttributes.SaveBeforeEdit")
         }
 }
-
 @helper TabDiscounts()
     {
         if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
         {
             foreach (var discount in Model.AvailableDiscounts)
             {
-            <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
+    <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
             @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id))
             {
                 <text>checked="checked"</text>
             }
             />@discount.Name
-            <br />
+    <br />
             }
         }
         else
         {
-            @T("Admin.Catalog.Products.Variants.Discounts.NoDiscounts")
+    @T("Admin.Catalog.Products.Variants.Discounts.NoDiscounts")
         }
 }
-
-
 @helper TabAttributes()
     {
-        @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.ProductVariantAttributeModel>()
+    @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.ProductVariantAttributeModel>()
                 .Name("productvariantattributes-grid")
                 .DataKeys(keys =>
                 {
@@ -162,7 +883,7 @@
                     columns.Bound(x => x.AttributeControlType)
                         .Width(150)
                         .Centered();
-                    columns.Bound(x => x.DisplayOrder)
+                    columns.Bound(x => x.DisplayOrder1)
                         .Width(150)
                         .Centered();
                     columns.Bound(x => x.ViewEditUrl)
@@ -181,19 +902,19 @@
                 .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
                 .EnableCustomBinding(true))
     
-        <script type="text/javascript">
-            function onProductVariantAttributeEdit(e) {
-                $(e.form).find('#ProductAttribute').data('tDropDownList').select(function (dataItem) {
-                    return dataItem.Value == e.dataItem['ProductAttributeId'];
-                });
+    <script type="text/javascript">
+        function onProductVariantAttributeEdit(e) {
+            $(e.form).find('#ProductAttribute').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['ProductAttributeId'];
+            });
 
-                $(e.form).find('#AttributeControlType').data('tDropDownList').select(function (dataItem) {
-                    return dataItem.Value == e.dataItem['AttributeControlTypeId'];
-                });
-            }
-        </script>
+            $(e.form).find('#AttributeControlType').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['AttributeControlTypeId'];
+            });
+        }
+    </script>
 }
 @helper TabAttributeCombinations()
     {
-        <text>UNDONE attribute combinations</text>
+    <text>UNDONE attribute combinations</text>
 }

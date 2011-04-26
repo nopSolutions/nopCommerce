@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Services.Configuration;
 
@@ -17,7 +18,6 @@ namespace Nop.Services.Media
         #region Fields
 
         private readonly IRepository<Download> _downloadRepository;
-        private readonly IWebHelper _webHelper;
         #endregion
 
         #region Ctor
@@ -27,35 +27,14 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadRepository">Download repository</param>
         /// <param name="webHelper">Web helper</param>
-        public DownloadService(IRepository<Download> downloadRepository,
-            IWebHelper webHelper)
+        public DownloadService(IRepository<Download> downloadRepository)
         {
             this._downloadRepository = downloadRepository;
-            this._webHelper = webHelper;
         }
 
         #endregion
 
         #region Methods
-        
-        /// <summary>
-        /// Gets a sample download url for a product variant
-        /// </summary>
-        /// <param name="productVariant">Product variant instance</param>
-        /// <returns>Download url</returns>
-        public string GetSampleDownloadUrl(ProductVariant productVariant)
-        {
-            if (productVariant == null)
-                throw new ArgumentNullException("productVariant");
-
-            string url = string.Empty;
-            if (productVariant.IsDownload && productVariant.HasSampleDownload)
-            {
-                //TODO Implement GetDownload.ashx
-                url = string.Format("{0}GetDownload.ashx?SampleDownloadProductVariantID={1}", _webHelper.GetStoreLocation(), productVariant.Id);
-            }
-            return url.ToLowerInvariant();
-        }
 
         /// <summary>
         /// Gets a download

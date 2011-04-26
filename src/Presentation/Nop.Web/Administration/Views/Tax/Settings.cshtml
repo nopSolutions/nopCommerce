@@ -20,7 +20,7 @@
     });
 
     function toggleTaxDisplayType() {
-        if (getE('AllowCustomersToSelectTaxDisplayType').checked) {
+        if (getE('@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)').checked) {
             $('#pnlTaxDisplayType').hide();
         }
         else {
@@ -29,7 +29,7 @@
     }
 
     function toggleShipping() {
-        if (getE('ShippingIsTaxable').checked) {
+        if (getE('@Html.FieldIdFor(model => model.ShippingIsTaxable)').checked) {
             $('#pnlShippingPriceIncludesTax').show();
             $('#pnlShippingTaxClass').show();
         }
@@ -40,7 +40,7 @@
     }
 
     function togglePayment() {
-        if (getE('PaymentMethodAdditionalFeeIsTaxable').checked) {
+        if (getE('@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').checked) {
             $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
             $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
         }
@@ -51,7 +51,7 @@
     }
 
     function toggleEUVAT() {
-        if (getE('EuVatEnabled').checked) {
+        if (getE('@Html.FieldIdFor(model => model.EuVatEnabled)').checked) {
             $('#pnlEuVatShopCountry').show();
             $('#pnlEuVatAllowVATExemption').show();
             $('#pnlEuVatUseWebService').show();

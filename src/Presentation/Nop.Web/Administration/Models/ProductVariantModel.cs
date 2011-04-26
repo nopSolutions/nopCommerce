@@ -20,37 +20,48 @@ namespace Nop.Admin.Models
         public ProductVariantModel()
         {
             Locales = new List<ProductVariantLocalizedModel>();
+            AvailableTaxCategories = new List<SelectListItem>();
+            AvailableWarehouses = new List<SelectListItem>();
         }
 
         #region Standard properties
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ID")]
+        public override int Id { get; set; }
+
         public int ProductId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Sku")]
+        [AllowHtml]
         public string Sku { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Description")]
+        [AllowHtml]
         public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AdminComment")]
+        [AllowHtml]
         public string AdminComment { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ManufacturerPartNumber")]
+        [AllowHtml]
         public string ManufacturerPartNumber { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsGiftCard")]
         public bool IsGiftCard { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.GiftCardTypeId")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsDownload")]
         public bool IsDownload { get; set; }
-
+        
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Download")]
+        [UIHint("Download")]
         public int DownloadId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.UnlimitedDownloads")]
@@ -68,13 +79,22 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.HasSampleDownload")]
         public bool HasSampleDownload { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SampleDownloadI")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.UseSampleDownloadURL")]
+        public bool UseSampleDownloadUrl { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SampleDownloadURL")]
+        [AllowHtml]
+        public string SampleDownloadUrl { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SampleDownload")]
+        [UIHint("Download")]
         public int SampleDownloadId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.HasUserAgreement")]
         public bool HasUserAgreement { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.UserAgreementText")]
+        [AllowHtml]
         public string UserAgreementText { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsRecurring")]
@@ -83,7 +103,7 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RecurringCycleLength")]
         public int RecurringCycleLength { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RecurringCyclePeriodId")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RecurringCyclePeriod")]
         public int RecurringCyclePeriodId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RecurringTotalCycles")]
@@ -103,6 +123,7 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.TaxCategory")]
         public int TaxCategoryId { get; set; }
+        public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
@@ -136,6 +157,8 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Warehouse")]
         public int WarehouseId { get; set; }
+        public IList<SelectListItem> AvailableWarehouses { get; set; }
+
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
@@ -174,12 +197,15 @@ namespace Nop.Admin.Models
         public decimal Height { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Picture")]
+        [UIHint("Picture")]
         public int PictureId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableStartDateTime")]
+        [UIHint("Date")]
         public DateTime? AvailableStartDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableEndDateTime")]
+        [UIHint("Date")]
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Published")]
@@ -200,7 +226,6 @@ namespace Nop.Admin.Models
 
         public class TierPriceModel : BaseNopEntityModel
         {
-
             public int ProductVariantId { get; set; }
 
             public int CustomerRoleId { get; set; }
@@ -212,7 +237,10 @@ namespace Nop.Admin.Models
             public int Quantity { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Price")]
-            public decimal Price { get; set; }
+            //we don't name it Price because Telerik has a small bug 
+            //"if we have one more editor with the same name on a page, it doesn't allow editing"
+            //in our case it's productVariant.Price1
+            public decimal Price1 { get; set; }
         }
 
         public class ProductVariantAttributeModel : BaseNopEntityModel
@@ -236,7 +264,10 @@ namespace Nop.Admin.Models
             public string AttributeControlType { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.DisplayOrder")]
-            public int DisplayOrder { get; set; }
+            //we don't name it DisplayOrder because Telerik has a small bug 
+            //"if we have one more editor with the same name on a page, it doesn't allow editing"
+            //in our case it's category.DisplayOrder
+            public int DisplayOrder1 { get; set; }
 
             public string ViewEditUrl { get; set; }
             public string ViewEditText { get; set; }
