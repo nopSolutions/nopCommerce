@@ -2,7 +2,7 @@
 namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
-    /// Represents a discount limitation
+    /// Represents a discount limitation type
     /// </summary>
     public enum DiscountLimitationType
     {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Security;
@@ -38,7 +39,8 @@ namespace Nop.Admin.Controllers
         private readonly IUserService _userService;
         private readonly FormFieldSettings _formFieldSettings;
         private readonly ITaxService _taxService;
-        
+        private readonly IWorkContext _workContext;
+
         #endregion Fields
 
         #region Constructors
@@ -48,7 +50,7 @@ namespace Nop.Admin.Controllers
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
             ICountryService countryService, IAddressService addressService,
             IUserService userService, FormFieldSettings formFieldSettings,
-            ITaxService taxService)
+            ITaxService taxService, IWorkContext workContext)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -61,6 +63,7 @@ namespace Nop.Admin.Controllers
             this._userService = userService;
             this._formFieldSettings = formFieldSettings;
             this._taxService = taxService;
+            this._workContext = workContext;
         }
 
         #endregion Constructors
@@ -83,17 +86,6 @@ namespace Nop.Admin.Controllers
             return sb.ToString();
         }
         
-        /// <summary>
-        /// Gets VAT Number status name
-        /// </summary>
-        /// <param name="status">VAT Number status</param>
-        /// <returns>VAT Number status name</returns>
-        [NonAction]
-        private string GetVatNumberStatusName(VatNumberStatus status)
-        {
-            return _localizationService.GetResource(string.Format("Admin.Customers.Customers.Fields.VatNumberStatus.{0}", status.ToString()));
-        }
-
         #endregion
 
         #region Methods
@@ -276,7 +268,7 @@ namespace Nop.Admin.Controllers
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == customer.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumber = customer.VatNumber;
-            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
+            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
             model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
             model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
@@ -374,7 +366,7 @@ namespace Nop.Admin.Controllers
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
+            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
@@ -692,7 +684,7 @@ namespace Nop.Admin.Controllers
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
+            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;

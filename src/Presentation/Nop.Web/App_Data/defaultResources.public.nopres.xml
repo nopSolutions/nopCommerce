@@ -178,20 +178,6 @@
           </LocaleResource>
           <LocaleResource Name="VatNumberStatus">
             <Value>status: {0}</Value>
-            <Children>
-              <LocaleResource Name="Unknown">
-                <Value>Unknown</Value>
-              </LocaleResource>
-              <LocaleResource Name="Empty">
-                <Value>Empty</Value>
-              </LocaleResource>
-              <LocaleResource Name="Valid">
-                <Value>Valid</Value>
-              </LocaleResource>
-              <LocaleResource Name="Invalid">
-                <Value>Invalid</Value>
-              </LocaleResource>
-            </Children>
           </LocaleResource>
         </Children>
       </LocaleResource>
@@ -449,6 +435,335 @@
     <Children>
       <LocaleResource Name="CopyrightNotice">
         <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="Enums">
+    <Children>
+      <LocaleResource Name="Nop.Core.Domain.Catalog.AttributeControlType">
+        <Children>
+          <LocaleResource Name="DropdownList">
+            <Value>Drop-down list</Value>
+          </LocaleResource>
+          <LocaleResource Name="RadioList">
+            <Value>Radio button list</Value>
+          </LocaleResource>
+          <LocaleResource Name="Checkboxes">
+            <Value>Checkboxes</Value>
+          </LocaleResource>
+          <LocaleResource Name="TextBox">
+            <Value>Textbox</Value>
+          </LocaleResource>
+          <LocaleResource Name="MultilineTextbox">
+            <Value>Multiline textbox</Value>
+          </LocaleResource>
+          <LocaleResource Name="Datepicker">
+            <Value>Date picker</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Catalog.BackorderMode">
+        <Children>
+          <LocaleResource Name="NoBackorders">
+            <Value>No backorders</Value>
+          </LocaleResource>
+          <LocaleResource Name="AllowQtyBelow0">
+            <Value>Allow qty below 0</Value>
+          </LocaleResource>
+          <LocaleResource Name="AllowQtyBelow0AndNotifyCustomer">
+            <Value>Allow qty below 0 and notify customer</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Catalog.DownloadActivationType">
+        <Children>
+          <LocaleResource Name="WhenOrderIsPaid">
+            <Value>When order is paid</Value>
+          </LocaleResource>
+          <LocaleResource Name="Manually">
+            <Value>Manually</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Catalog.GiftCardType">
+        <Children>
+          <LocaleResource Name="Virtual">
+            <Value>Virtual</Value>
+          </LocaleResource>
+          <LocaleResource Name="Physical">
+            <Value>Physical</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Catalog.LowStockActivity">
+        <Children>
+          <LocaleResource Name="Nothing">
+            <Value>Nothing</Value>
+          </LocaleResource>
+          <LocaleResource Name="DisableBuyButton">
+            <Value>Disable buy button</Value>
+          </LocaleResource>
+          <LocaleResource Name="Unpublish">
+            <Value>Unpublish</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Catalog.ManageInventoryMethod">
+        <Children>
+          <LocaleResource Name="DontManageStock">
+            <Value>Don't track inventory</Value>
+          </LocaleResource>
+          <LocaleResource Name="ManageStock">
+            <Value>Track inventory</Value>
+          </LocaleResource>
+          <LocaleResource Name="ManageStockByAttributes">
+            <Value>Track inventory by product attributes</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Catalog.RecurringProductCyclePeriod">
+        <Children>
+          <LocaleResource Name="Days">
+            <Value>Days</Value>
+          </LocaleResource>
+          <LocaleResource Name="Weeks">
+            <Value>Weeks</Value>
+          </LocaleResource>
+          <LocaleResource Name="Months">
+            <Value>Months</Value>
+          </LocaleResource>
+          <LocaleResource Name="Years">
+            <Value>Years</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Customers.ShowEmails">
+        <Children>
+          <LocaleResource Name="ShowEmails">
+            <Value>Show emails</Value>
+          </LocaleResource>
+          <LocaleResource Name="ShowUsernames">
+            <Value>Show usernames</Value>
+          </LocaleResource>
+          <LocaleResource Name="ShowFullNames">
+            <Value>Show full names</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Discounts.DiscountLimitationType">
+        <Children>
+          <LocaleResource Name="Unlimited">
+            <Value>Unlimited</Value>
+          </LocaleResource>
+          <LocaleResource Name="NTimesOnly">
+            <Value>N times only</Value>
+          </LocaleResource>
+          <LocaleResource Name="NTimesPerCustomer">
+            <Value>N times per customer</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Discounts.DiscountType">
+        <Children>
+          <LocaleResource Name="AssignedToOrderTotal">
+            <Value>Assigned to order total</Value>
+          </LocaleResource>
+          <LocaleResource Name="AssignedToSkus">
+            <Value>Assigned to product variants (SKUs)</Value>
+          </LocaleResource>
+          <LocaleResource Name="AssignedToCategories">
+            <Value>Assigned to categories</Value>
+          </LocaleResource>
+          <LocaleResource Name="AssignedToShipping">
+            <Value>Assigned to shipping</Value>
+          </LocaleResource>
+          <LocaleResource Name="AssignedToOrderSubTotal">
+            <Value>Assigned to order subtotal</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Forums.EditorType">
+        <Children>
+          <LocaleResource Name="SimpleTextBox">
+            <Value>Simple textbox</Value>
+          </LocaleResource>
+          <LocaleResource Name="BBCodeEditor">
+            <Value>BBCode editor</Value>
+          </LocaleResource>
+          <LocaleResource Name="HtmlEditor">
+            <Value>Html editor</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Forums.ForumSearchType">
+        <Children>
+          <LocaleResource Name="All">
+            <Value>Topic titles and post text</Value>
+          </LocaleResource>
+          <LocaleResource Name="TopicTitlesOnly">
+            <Value>Topic titles only</Value>
+          </LocaleResource>
+          <LocaleResource Name="PostTextOnly">
+            <Value>Post text only</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Forums.ForumTopicType">
+        <Children>
+          <LocaleResource Name="Normal">
+            <Value>Normal</Value>
+          </LocaleResource>
+          <LocaleResource Name="Sticky">
+            <Value>Sticky</Value>
+          </LocaleResource>
+          <LocaleResource Name="Announcement">
+            <Value>Announcement</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Logging.LogLevel">
+        <Children>
+          <LocaleResource Name="Debug">
+            <Value>Debug</Value>
+          </LocaleResource>
+          <LocaleResource Name="Information">
+            <Value>Information</Value>
+          </LocaleResource>
+          <LocaleResource Name="Warning">
+            <Value>Warning</Value>
+          </LocaleResource>
+          <LocaleResource Name="Error">
+            <Value>Error</Value>
+          </LocaleResource>
+          <LocaleResource Name="Fatal">
+            <Value>Fatal</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Orders.OrderStatus">
+        <Children>
+          <LocaleResource Name="Pending">
+            <Value>Pending</Value>
+          </LocaleResource>
+          <LocaleResource Name="Processing">
+            <Value>Processing</Value>
+          </LocaleResource>
+          <LocaleResource Name="Complete">
+            <Value>Complete</Value>
+          </LocaleResource>
+          <LocaleResource Name="Cancelled">
+            <Value>Cancelled</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Orders.ReturnRequestStatus">
+        <Children>
+          <LocaleResource Name="Pending">
+            <Value>Pending</Value>
+          </LocaleResource>
+          <LocaleResource Name="Received">
+            <Value>Received</Value>
+          </LocaleResource>
+          <LocaleResource Name="ReturnAuthorized">
+            <Value>Return authorized</Value>
+          </LocaleResource>
+          <LocaleResource Name="ItemsRepaired">
+            <Value>Item(s) repaired</Value>
+          </LocaleResource>
+          <LocaleResource Name="ItemsRefunded">
+            <Value>Item(s) refunded</Value>
+          </LocaleResource>
+          <LocaleResource Name="RequestRejected">
+            <Value>Request rejected</Value>
+          </LocaleResource>
+          <LocaleResource Name="Cancelled">
+            <Value>Cancelled</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Security.PasswordFormat">
+        <Children>
+          <LocaleResource Name="Clear">
+            <Value>Clear</Value>
+          </LocaleResource>
+          <LocaleResource Name="Hashed">
+            <Value>Hashed</Value>
+          </LocaleResource>
+          <LocaleResource Name="Encrypted">
+            <Value>Encrypted</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Security.UserRegistrationType">
+        <Children>
+          <LocaleResource Name="Standard">
+            <Value>Standard account creation</Value>
+          </LocaleResource>
+          <LocaleResource Name="EmailValidation">
+            <Value>Email validation is required after registration</Value>
+          </LocaleResource>
+          <LocaleResource Name="AdminApproval">
+            <Value>A customer should be approved by administrator</Value>
+          </LocaleResource>
+          <LocaleResource Name="Disabled">
+            <Value>Registration is disabled</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Shipping.ShippingStatus">
+        <Children>
+          <LocaleResource Name="ShippingNotRequired">
+            <Value>Shipping not required</Value>
+          </LocaleResource>
+          <LocaleResource Name="NotYetShipped">
+            <Value>Not yet shipped</Value>
+          </LocaleResource>
+          <LocaleResource Name="Shipped">
+            <Value>Shipped</Value>
+          </LocaleResource>
+          <LocaleResource Name="Delivered">
+            <Value>Delivered</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Tax.TaxBasedOn">
+        <Children>
+          <LocaleResource Name="BillingAddress">
+            <Value>Billing address</Value>
+          </LocaleResource>
+          <LocaleResource Name="ShippingAddress">
+            <Value>Shipping address</Value>
+          </LocaleResource>
+          <LocaleResource Name="DefaultAddress">
+            <Value>Default address</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Tax.TaxDisplayType">
+        <Children>
+          <LocaleResource Name="IncludingTax">
+            <Value>Including tax</Value>
+          </LocaleResource>
+          <LocaleResource Name="ExcludingTax">
+            <Value>Excluding tax</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Tax.VatNumberStatus">
+        <Children>
+          <LocaleResource Name="Unknown">
+            <Value>Unknown</Value>
+          </LocaleResource>
+          <LocaleResource Name="Empty">
+            <Value>Empty</Value>
+          </LocaleResource>
+          <LocaleResource Name="Valid">
+            <Value>Valid</Value>
+          </LocaleResource>
+          <LocaleResource Name="Invalid">
+            <Value>Invalid</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
     </Children>
   </LocaleResource>

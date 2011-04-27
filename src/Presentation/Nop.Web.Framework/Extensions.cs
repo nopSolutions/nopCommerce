@@ -6,6 +6,7 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
 using Telerik.Web.Mvc.UI.Fluent;
@@ -129,8 +130,11 @@ namespace Nop.Web.Framework
         {
             if (!typeof(TEnum).IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");
 
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+
             var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))
-                         select new { ID = Convert.ToInt32(enumValue), Name = CommonHelper.ConvertEnum(enumValue.ToString()) };
+                         select new { ID = Convert.ToInt32(enumValue), Name = enumValue.GetLocalizedEnum(localizationService, workContext) };
             return new SelectList(values, "ID", "Name", Convert.ToInt32(enumObj));
         }
 

@@ -422,13 +422,7 @@ namespace Nop.Web.Controllers
             PrepareCustomerInfoModel(model, customer, user, true);
             return View(model);
         }
-
-        [NonAction]
-        private string GetVatNumberStatusName(VatNumberStatus status)
-        {
-            return _localizationService.GetResource(string.Format("Account.Fields.VatNumberStatus.{0}", status.ToString()));
-        }
-
+        
         [NonAction]
         private void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, User user, bool excludeProperties)
         {
@@ -464,7 +458,7 @@ namespace Nop.Web.Controllers
                     model.Username = user.Username;
             }
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
+            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
             //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _formFieldSettings.CompanyEnabled;

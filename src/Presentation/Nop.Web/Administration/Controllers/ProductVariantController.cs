@@ -30,7 +30,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly ITaxCategoryService _taxCategoryService;
-
+        private readonly IWorkContext _workContext;
         #endregion
 
         #region Constructors
@@ -39,7 +39,7 @@ namespace Nop.Admin.Controllers
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, ICustomerService customerService,
             ILocalizationService localizationService, IProductAttributeService productAttributeService,
-            ITaxCategoryService taxCategoryService)
+            ITaxCategoryService taxCategoryService, IWorkContext workContext)
         {
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
@@ -49,6 +49,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._productAttributeService = productAttributeService;
             this._taxCategoryService = taxCategoryService;
+            this._workContext = workContext;
         }
         
         #endregion
@@ -395,7 +396,7 @@ namespace Nop.Admin.Controllers
                         ProductAttributeId = x.ProductAttributeId,
                         TextPrompt = x.TextPrompt,
                         IsRequired = x.IsRequired,
-                        AttributeControlType = CommonHelper.ConvertEnum(x.AttributeControlType.ToString()),
+                        AttributeControlType = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext),
                         AttributeControlTypeId = x.AttributeControlTypeId,
                         DisplayOrder1 = x.DisplayOrder
                     };

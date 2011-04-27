@@ -153,9 +153,10 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <param name="defaultValue">Default value</param>
+        /// <param name="returnEmptyIfNotNotFound">A value indicating whether to empty string will be returned if a resource is not found and default value is set to empty string</param>
         /// <returns>A string representing the requested resource string.</returns>
         public string GetResource(string resourceKey, int languageId,
-            bool logIfNotFound = true, string defaultValue = "")
+            bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotNotFound = false)
         {
             string result = string.Empty;
             var resourceKeyValue = resourceKey;
@@ -175,7 +176,15 @@ namespace Nop.Services.Localization
                 if (logIfNotFound)
                     _logger.Warning(string.Format("Resource string ({0}) is not found. Language ID = {1}", resourceKey, languageId));
                 
-                result = !String.IsNullOrEmpty(defaultValue) ? defaultValue : resourceKey;
+                if (!String.IsNullOrEmpty(defaultValue))
+                {
+                    result = defaultValue;
+                }
+                else
+                {
+                    if (!returnEmptyIfNotNotFound)
+                        result = resourceKey;
+                }
             }
             return result;
         }
