@@ -18,8 +18,6 @@ namespace Nop.Admin.Models
             Locales = new List<SpecificationAttributeOptionLocalizedModel>();
         }
 
-        #region Model
-
         public int SpecificationAttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")]
@@ -31,7 +29,6 @@ namespace Nop.Admin.Models
         
         public IList<SpecificationAttributeOptionLocalizedModel> Locales { get; set; }
 
-        #endregion
     }
 
     public class SpecificationAttributeOptionLocalizedModel : ILocalizedModelLocal

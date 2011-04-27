@@ -19,7 +19,7 @@
                     url: "@(Url.Action("SaveDownloadUrl", "Download"))",
                     data: "downloadUrl=" + downloadUrl,
                     success: function (data) {
-                         alert('Download object is saved')
+                         $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
                          $("#@(clientId + "value") input").val(data.downloadId);
                          $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
 
@@ -51,8 +51,7 @@
 <div id="@(clientId + "value")">
     @Html.HiddenFor(x => x)
 </div>
-
-<table class="adminContent">
+<table class="adminContent" border="1" style="width:500px">
         <tr>
             <td class="adminTitle">
                 @T("Admin.Download.UseDownloadURL"):
@@ -77,31 +76,18 @@
                     <text>value="@(download.DownloadUrl)"</text>
                 }
                 />
-                <button type="button" name="saveDownloadUrl@(randomNumber)" id="saveDownloadUrl@(randomNumber)" class="t-button">Save download</button>
+                <button type="button" name="saveDownloadUrl@(randomNumber)" id="saveDownloadUrl@(randomNumber)" class="t-button">@T("Admin.Download.SaveDownloadURL")</button>
+                <div id="pnlDownloadURLResult@(randomNumber)" style="display:none;">@T("Admin.Download.DownloadURLSaved")</div>
             </td>
         </tr>
         <tr id="pnlDownloadFile@(randomNumber)">
             <td class="adminTitle">
                 @T("Admin.Download.UploadFile"):
             </td>
-            <td class="adminData">                
-                <div id="@(clientId + "downloadurl")">
-                    @if (download != null)
-                    {
-                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadId = Model }))">@T("Admin.Download.DownloadUploadedFile")</a>
-                    }
-                </div>
-                @if (download != null)
-                {
-                    <span id="@(clientId + "remove")" class="t-button">@T("Admin.Download.RemoveDownload")</span>
-                }
-                else
-                {
-                    <span id="@(clientId + "remove")" class="t-button" style="display:none;">@T("Admin.Download.RemoveDownload")</span>
-                }
-                <br />
-                <input type="file" id="@clientId"/>
-                <script type="text/javascript">
+            <td class="adminData">
+                <div>
+                    <input type="file" id="@clientId"/>
+                    <script type="text/javascript">
                     $(function () {
                         $(function () {
                             $("#@clientId").uploadify({
@@ -128,6 +114,23 @@
                         });
                     });
                 </script>
+                </div>
+                <div id="@(clientId + "downloadurl")">
+                    @if (download != null)
+                    {
+                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadId = Model }))">@T("Admin.Download.DownloadUploadedFile")</a>
+                    }
+                </div>
+                <div>
+                @if (download != null)
+                {
+                    <span id="@(clientId + "remove")" class="t-button">@T("Admin.Download.RemoveDownload")</span>
+                }
+                else
+                {
+                    <span id="@(clientId + "remove")" class="t-button" style="display:none;">@T("Admin.Download.RemoveDownload")</span>
+                }
+                </div>
             </td>
         </tr>
 </table>

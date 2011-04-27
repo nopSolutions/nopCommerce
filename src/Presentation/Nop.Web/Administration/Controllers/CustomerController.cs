@@ -467,6 +467,7 @@ namespace Nop.Admin.Controllers
             };
         }
 
+        [ValidateInput(false)]
         public ActionResult RewardPointsHistoryAdd(int customerId, int addRewardPointsValue, string addRewardPointsMessage)
         {
             var customer = _customerService.GetCustomerById(customerId);

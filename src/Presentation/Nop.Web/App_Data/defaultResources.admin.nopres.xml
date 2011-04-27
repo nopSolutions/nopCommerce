@@ -2873,6 +2873,12 @@
                 <LocaleResource Name="RemoveDownload">
                   <Value>Remove download</Value>
                 </LocaleResource>
+                <LocaleResource Name="DownloadURLSaved">
+                  <Value>Download object is saved</Value>
+                </LocaleResource>
+                <LocaleResource Name="SaveDownloadURL">
+                  <Value>Save download</Value>
+                </LocaleResource>
                 <LocaleResource Name="UploadFile">
                   <Value>Upload file</Value>
                 </LocaleResource>

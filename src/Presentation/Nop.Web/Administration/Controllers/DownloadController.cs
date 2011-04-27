@@ -46,6 +46,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult SaveDownloadUrl(string downloadUrl)
         {
             //var download = _downloadService.GetDownloadById(downloadId);

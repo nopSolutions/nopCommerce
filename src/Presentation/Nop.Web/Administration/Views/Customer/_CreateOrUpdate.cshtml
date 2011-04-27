@@ -255,7 +255,6 @@
                     url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
                     data: "addRewardPointsValue=" + rewardPointsValue + "&addRewardPointsMessage=" + rewardPointsMessage + "&customerId=" + @Model.Id,
                     success: function (data) {
-                         alert('Reward points are added')
                          var rewardPointsGrid = $("#customer-rewardpoints-grid");
                          rewardPointsGrid.data('tGrid').ajaxRequest();
                          $('#addRewardPoints').attr('disabled', false);
