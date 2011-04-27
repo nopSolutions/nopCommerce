@@ -1,0 +1,208 @@
+﻿@model Nop.Admin.Models.CheckoutAttributeModel
+@using Nop.Web.Framework;
+@using Nop.Core.Domain.Catalog;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("checkoutattribute-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Catalog.Attributes.CheckoutAttributes.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Attributes.CheckoutAttributes.Values").Text).Content(TabValues().ToHtmlString());
+})
+@helper TabInfo()
+    { 
+        
+        
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
+
+                toggleTax();
+            });
+
+            function toggleTax() {
+                if (getE('@Html.FieldIdFor(model => model.IsTaxExempt)').checked) {
+                    $('#pnlTaxCategory').show();
+                }
+                else {
+                    $('#pnlTaxCategory').hide();
+                }
+            }
+</script>
+        
+    @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.Locales[item].Name)
+                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].TextPrompt):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.Locales[item].TextPrompt)
+                @Html.ValidationMessageFor(model => model.Locales[item].TextPrompt)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            </td>
+        </tr>
+    </table>
+    ,
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TextPrompt):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TextPrompt)
+                @Html.ValidationMessageFor(model => model.TextPrompt)
+            </td>
+        </tr>
+    </table>
+    ))
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsRequired)
+                @Html.ValidationMessageFor(model => model.IsRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippableProductRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShippableProductRequired)
+                @Html.ValidationMessageFor(model => model.ShippableProductRequired)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsTaxExempt):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsTaxExempt)
+                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+            </td>
+        </tr>
+        <tr id="pnlTaxCategory">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TaxCategoryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
+                @Html.ValidationMessageFor(model => model.TaxCategoryId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AttributeControlTypeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AttributeControlTypeId, ((AttributeControlType)Model.AttributeControlTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.AttributeControlTypeId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().NumericTextBoxFor(model => model.DisplayOrder).DecimalDigits(0)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+    </table>
+    }
+@helper TabValues()
+    { 
+        if (Model.Id > 0)
+        {
+            /*TODO display the following warning if values are not supported by selected attribute control type
+             'Values are not required for this attribute control type'
+             */
+            <table class="adminContent">
+                <tr>
+                    <td>
+                        @(Html.Telerik().Grid<Nop.Admin.Models.CheckoutAttributeValueModel>()
+                        .Name("checkoutattributevalues-grid")
+                            .DataKeys(x =>
+                            {
+                                x.Add(y => y.Id).RouteKey("valueId");
+                                x.Add(y => y.CheckoutAttributeId).RouteKey("checkoutAttributeId");
+                            })
+                            .Columns(columns =>
+                            {
+                                columns.Bound(x => x.Name)
+                                    .Width(300);
+                                //TODO display localized values here
+                                //.ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                                columns.Bound(x => x.DisplayOrder)
+                                    .Width(100)
+                                    .Centered();
+                                columns.Bound(x => x.Id)
+                                    .Width(50)
+                                    .Centered()
+                                    .ClientTemplate("<input type='submit' id='btnEditValue<#= Id #>' name='btnEditValue<#= Id #>' value='Edit' onclick=\"javascript:OpenWindow('/Admin/CheckoutAttribute/ValueEditPopup/<#= Id #>?btnId=btnRefresh', 800, 300, true); return false;\" class='t-button' />")
+                                    .Title(T("Admin.Common.Edit").Text);
+                                columns.Command(commands =>
+                                {
+                                    commands.Delete();
+                                })
+                                .Width(50)
+                                .Title(T("Admin.Common.Delete").Text);
+                            })
+                            .DataBinding(dataBinding =>
+                                dataBinding.Ajax().Select("ValueList", "CheckoutAttribute", new { checkoutAttributeId = Model.Id })
+                                .Delete("ValueDelete", "CheckoutAttribute"))
+                            .EnableCustomBinding(true))
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100%">
+                        <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh" }))', 800, 300, true); return false;" class="t-button" />
+                        <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#btnRefresh').click(function () {
+                                    //refresh grid
+                                    var valuesGrid = $("#checkoutattributevalues-grid");
+                                    valuesGrid.data('tGrid').ajaxRequest();
+
+                                    //return false to don't reload a page
+                                    return false;
+                                });                                
+                            });
+                        </script>
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.SaveBeforeEdit")
+        }
+    }

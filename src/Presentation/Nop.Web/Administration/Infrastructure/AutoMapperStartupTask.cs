@@ -8,6 +8,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -118,6 +119,9 @@ namespace Nop.Admin.Infrastructure
             //specification attributes
             ViceVersa<SpecificationAttribute, SpecificationAttributeModel>();
             ViceVersa<SpecificationAttributeOption, SpecificationAttributeOptionModel>();
+            //checkout attributes
+            ViceVersa<CheckoutAttribute, CheckoutAttributeModel>();
+            ViceVersa<CheckoutAttributeValue, CheckoutAttributeValueModel>();
         }
 
         public static void ViceVersa<T1, T2>()

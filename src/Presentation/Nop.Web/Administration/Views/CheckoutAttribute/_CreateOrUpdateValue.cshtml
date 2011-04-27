@@ -1,0 +1,87 @@
+﻿@model Nop.Admin.Models.CheckoutAttributeValueModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.CheckoutAttributeId)
+
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms[0].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+    </script>
+}
+
+@(Html.LocalizedEditor<CheckoutAttributeValueModel, CheckoutAttributeValueLocalizedModel>("checkoutattributevalue-localized",
+@<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Locales[item].Name):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => Model.Locales[item].Name)
+            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </td>
+    </tr>
+</table>
+,
+@<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+</table>
+))
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.PriceAdjustment):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.PriceAdjustment)
+            @Html.ValidationMessageFor(model => model.PriceAdjustment)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.WeightAdjustment):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.WeightAdjustment)
+            @Html.ValidationMessageFor(model => model.WeightAdjustment)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsPreSelected):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.IsPreSelected)
+            @Html.ValidationMessageFor(model => model.IsPreSelected)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayOrder):
+        </td>
+        <td class="adminData">
+            @Html.Telerik().NumericTextBoxFor(model => model.DisplayOrder).DecimalDigits(0)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
+        </td>
+    </tr>
+</table>
+

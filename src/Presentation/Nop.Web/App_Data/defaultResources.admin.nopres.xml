@@ -35,6 +35,163 @@
                     <LocaleResource Name="Attributes">
                       <Value>Attributes</Value>
                       <Children>
+                        <LocaleResource Name="CheckoutAttributes">
+                          <Value>Checkout Attributes</Value>
+                          <Children>
+                            <LocaleResource Name="AddNew">
+                              <Value>Add a new checkout attribute</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="BackToList">
+                              <Value>back to checkout attribute list</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="EditAttributeDetails">
+                              <Value>Edit checkout attribute details</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Info">
+                              <Value>Attribute info</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Fields">
+                              <Children>
+                                <LocaleResource Name="Name">
+                                  <Value>Name</Value>
+                                  <Children>
+                                    <LocaleResource Name="Required">
+                                      <Value>Please provide a name.</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A name of the checkout attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="TextPrompt">
+                                  <Value>Text prompt</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>Enter text prompt.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="IsRequired">
+                                  <Value>Required</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="ShippableProductRequired">
+                                  <Value>Shippable product required</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>An option indicating whether shippable products are required in order to display this attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="IsTaxExempt">
+                                  <Value>Tax exempt</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>Determines whether this option is tax exempt (tax will not be applied to this option at checkout).</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="TaxCategory">
+                                  <Value>Tax category</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>The tax classification for this option. You can manage tax classifications from Configuration : Tax : Tax Classes</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="AttributeControlType">
+                                  <Value>Control type</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>Choose how to display your attribute values.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="DisplayOrder">
+                                  <Value>Display order</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>The checkout attribute display order. 1 represents the first item in the list.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="DisplayOrder">
+                                  <Value>Display order</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>A display order of the checkout attribute.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Values">
+                              <Value>Attribute values</Value>
+                              <Children>
+                                <LocaleResource Name="AddNew">
+                                  <Value>Add a new checkout value</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="EditValueDetails">
+                                  <Value>Edit checkout value details</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Fields">
+                                  <Children>
+                                    <LocaleResource Name="Name">
+                                      <Value>Name</Value>
+                                      <Children>
+                                        <LocaleResource Name="Required">
+                                          <Value>Please provide a name.</Value>
+                                        </LocaleResource>
+                                        <LocaleResource Name="Hint">
+                                          <Value>A name of the checkout value.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="PriceAdjustment">
+                                      <Value>Price adjustment</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The price adjustment applied when choosing this attribute value e.g. '10' to add 10 dollars.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="WeightAdjustment">
+                                      <Value>Weight adjustment</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The weight adjustment applied when choosing this attribute value</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IsPreSelected">
+                                      <Value>Pre-selected</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether this attribute value is pre selected for the customer.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                      <Value>Display order</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="SaveBeforeEdit">
+                                  <Value>You need to save the checkout attribute before you can add values for this checkout attribute page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                         <LocaleResource Name="ProductAttributes">
                           <Value>Product Attributes</Value>
                           <Children>

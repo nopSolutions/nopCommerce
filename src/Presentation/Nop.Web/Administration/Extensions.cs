@@ -14,6 +14,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -134,6 +135,41 @@ namespace Nop.Admin
         }
 
         public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionModel model, SpecificationAttributeOption destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+        #endregion
+
+        #region Checkout attributes
+
+        //attributes
+        public static CheckoutAttributeModel ToModel(this CheckoutAttribute entity)
+        {
+            return AutoMapper.Mapper.Map<CheckoutAttribute, CheckoutAttributeModel>(entity);
+        }
+
+        public static CheckoutAttribute ToEntity(this CheckoutAttributeModel model)
+        {
+            return AutoMapper.Mapper.Map<CheckoutAttributeModel, CheckoutAttribute>(model);
+        }
+
+        public static CheckoutAttribute ToEntity(this CheckoutAttributeModel model, CheckoutAttribute destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        //checkout attribute values
+        public static CheckoutAttributeValueModel ToModel(this CheckoutAttributeValue entity)
+        {
+            return AutoMapper.Mapper.Map<CheckoutAttributeValue, CheckoutAttributeValueModel>(entity);
+        }
+
+        public static CheckoutAttributeValue ToEntity(this CheckoutAttributeValueModel model)
+        {
+            return AutoMapper.Mapper.Map<CheckoutAttributeValueModel, CheckoutAttributeValue>(model);
+        }
+
+        public static CheckoutAttributeValue ToEntity(this CheckoutAttributeValueModel model, CheckoutAttributeValue destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }
