@@ -20,7 +20,7 @@ namespace Nop.Data.Tests
             {
                 Email = "me@yourstore.com",
                 NewsLetterSubscriptionGuid = newGuid,
-                CreatedOnUTC = now,
+                CreatedOnUtc = now,
                 Active = true
             };
 
@@ -28,7 +28,7 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.Email.ShouldEqual("me@yourstore.com");
             fromDb.NewsLetterSubscriptionGuid.ShouldEqual(newGuid);
-            fromDb.CreatedOnUTC.ShouldEqual(now);
+            fromDb.CreatedOnUtc.ShouldEqual(now);
             fromDb.Active.ShouldBeTrue();
         }
     }

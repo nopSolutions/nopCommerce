@@ -223,12 +223,6 @@
     <Content Include="Content\jquery-ui-1.8.9.custom.css" />
     <Content Include="Content\styles.css" />
     <Content Include="Content\uploadify.css" />
-    <Content Include="EditorTemplates\Currency.ascx" />
-    <Content Include="EditorTemplates\Date.ascx" />
-    <Content Include="EditorTemplates\DateTime.ascx" />
-    <Content Include="EditorTemplates\Integer.ascx" />
-    <Content Include="EditorTemplates\Number.ascx" />
-    <Content Include="EditorTemplates\Time.ascx" />
     <Content Include="Scripts\admin.js" />
     <Content Include="sitemap.xml" />
   </ItemGroup>
@@ -487,6 +481,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\Download.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Currency.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Double.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\DateNullable.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\DateTimeNullable.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -17,6 +17,7 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
         [AllowHtml]
         public List<CustomerRole> AvailableCustomerRoles { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
         public int[] SearchCustomerRoleIds { get; set; }
     }

@@ -116,26 +116,8 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(_paymentSettings);
                 }
             }
-
-
-            var paymentMethodsModel = new List<PaymentMethodModel>();
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
-            foreach (var paymentMethod in paymentMethods)
-            {
-                var tmp1 = paymentMethod.ToModel();
-                tmp1.IsActive = paymentMethod.IsPaymentMethodActive(_paymentSettings);
-                paymentMethodsModel.Add(tmp1);
-            }
-            paymentMethodsModel = paymentMethodsModel.ForCommand(command).ToList();
-            var gridModel = new GridModel<PaymentMethodModel>
-            {
-                Data = paymentMethodsModel,
-                Total = paymentMethodsModel.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            
+            return Methods(command);
         }
 
         public ActionResult ConfigureMethod(string systemName)

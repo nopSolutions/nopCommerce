@@ -18,37 +18,67 @@ namespace Nop.Admin.Models
         }
 
         [NopResourceDisplayName("Admin.Common.Address.Fields.FirstName")]
+        [AllowHtml]
         public string FirstName { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.LastName")]
+        [AllowHtml]
         public string LastName { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.Email")]
+        [AllowHtml]
         public string Email { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.Company")]
+        [AllowHtml]
         public string Company { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.Country")]
         public int? CountryId { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.Country")]
+        [AllowHtml]
         public string CountryName { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.StateProvince")]
         public int? StateProvinceId { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.StateProvince")]
+        [AllowHtml]
         public string StateProvinceName { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.City")]
+        [AllowHtml]
         public string City { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.Address1")]
+        [AllowHtml]
         public string Address1 { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.Address2")]
+        [AllowHtml]
         public string Address2 { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.ZipPostalCode")]
+        [AllowHtml]
         public string ZipPostalCode { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.PhoneNumber")]
+        [AllowHtml]
         public string PhoneNumber { get; set; }
+
         [NopResourceDisplayName("Admin.Common.Address.Fields.FaxNumber")]
+        [AllowHtml]
         public string FaxNumber { get; set; }
+
         public DateTime CreatedOnUtc { get; set; }
+
+
 
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
+
+
 
         public bool FirstNameDisabled { get; set; }
         public bool LastNameDisabled { get; set; }

@@ -119,26 +119,9 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(_shippingSettings);
                 }
             }
-            
 
-            var shippingProvidersModel = new List<ShippingRateComputationMethodModel>();
-            var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
-            foreach (var shippingProvider in shippingProviders)
-            {
-                var tmp1 = shippingProvider.ToModel();
-                tmp1.IsActive = shippingProvider.IsShippingRateComputationMethodActive(_shippingSettings);
-                shippingProvidersModel.Add(tmp1);
-            }
-            shippingProvidersModel = shippingProvidersModel.ForCommand(command).ToList();
-            var gridModel = new GridModel<ShippingRateComputationMethodModel>
-            {
-                Data = shippingProvidersModel,
-                Total = shippingProvidersModel.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Providers(command);
         }
 
         public ActionResult ConfigureProvider(string systemName)
@@ -204,19 +187,7 @@ namespace Nop.Admin.Controllers
             shippingMethod = model.ToEntity(shippingMethod);
             _shippingService.UpdateShippingMethod(shippingMethod);
 
-            var shippingMethodsModel = _shippingService.GetAllShippingMethods()
-                 .Select(x => x.ToModel())
-                 .ForCommand(command)
-                 .ToList();
-            var gridModel = new GridModel<ShippingMethodModel>
-            {
-                Data = shippingMethodsModel,
-                Total = shippingMethodsModel.Count
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Methods(command);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -232,19 +203,7 @@ namespace Nop.Admin.Controllers
             shippingMethod = model.ToEntity(shippingMethod);
             _shippingService.InsertShippingMethod(shippingMethod);
 
-            var shippingMethodsModel = _shippingService.GetAllShippingMethods()
-                 .Select(x => x.ToModel())
-                 .ForCommand(command)
-                 .ToList();
-            var gridModel = new GridModel<ShippingMethodModel>
-            {
-                Data = shippingMethodsModel,
-                Total = shippingMethodsModel.Count
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Methods(command);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -259,19 +218,7 @@ namespace Nop.Admin.Controllers
             var shippingMethod = _shippingService.GetShippingMethodById(id);
             _shippingService.DeleteShippingMethod(shippingMethod);
 
-            var shippingMethodsModel = _shippingService.GetAllShippingMethods()
-                .Select(x => x.ToModel())
-                .ForCommand(command)
-                .ToList();
-            var gridModel = new GridModel<ShippingMethodModel>
-            {
-                Data = shippingMethodsModel,
-                Total = shippingMethodsModel.Count
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Methods(command);
         }
 
         #endregion

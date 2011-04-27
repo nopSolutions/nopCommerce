@@ -28,6 +28,6 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the date and time when subscription was created
         /// </summary>
-        public DateTime CreatedOnUTC { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
     }
 }

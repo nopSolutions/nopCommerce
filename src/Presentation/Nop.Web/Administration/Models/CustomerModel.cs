@@ -26,23 +26,30 @@ namespace Nop.Admin.Models
         public string Gender { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
+        [AllowHtml]
         public string FirstName { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastName")]
+        [AllowHtml]
         public string LastName { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FullName")]
         public string FullName { get; set; }
-
-
+        
         public bool DateOfBirthEnabled { get; set; }
-        [UIHint("Date")]
+
+        [UIHint("DateNullable")]
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.DateOfBirth")]
         public DateTime? DateOfBirth { get; set; }
 
         public bool CompanyEnabled { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Company")]
+        [AllowHtml]
         public string Company { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
+        [AllowHtml]
         public string AdminComment { get; set; }
         
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.IsTaxExempt")]
@@ -51,48 +58,98 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Active")]
         public bool Active { get; set; }
 
+
+
+
+
         //time zone
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.TimeZoneId")]
+        [AllowHtml]
         public string TimeZoneId { get; set; }
+
         public bool AllowCustomersToSetTimeZone { get; set; }
+
         public IList<SelectListItem> AvailableTimeZones { get; set; }
+
+
+
+
 
         //EU VAT
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.VatNumber")]
+        [AllowHtml]
         public string VatNumber { get; set; }
+
         public string VatNumberStatusNote { get; set; }
+
         public bool DisplayVatNumber { get; set; }
+
+
+
+
 
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
         public DateTime CreatedOnUtc { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
         public string CreatedOnStr { get; set; }
         
+
+
+
+
+
         //customer roles
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
         public string CustomerRoleNames { get; set; }
+
         public List<CustomerRole> AvailableCustomerRoles { get; set; }
+
         public int[] SelectedCustomerRoleIds { get; set; }
+
+
+
+
+
 
         //reward points history
         public bool DisplayRewardPointsHistory { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue")]
         public int AddRewardPointsValue { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
+        [AllowHtml]
         public string AddRewardPointsMessage { get; set; }
+
+
+
+
+
+
 
         //user accounts
         [AllowHtml]
         public string UserEmailStartsWith { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.AssociatedUser")]
         public int? AssociatedUserId { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.AssociatedUser")]
         public string AssociatedUserEmail { get; set; }
 
 
+
+
+
         //properties used for filtering (customer list page)
         public string SearchCustomerRoleIds { get; set; }
+
+
+
+
+
 
         #region Nested classes
         public class RewardPointsHistoryModel : BaseNopEntityModel
@@ -104,6 +161,7 @@ namespace Nop.Admin.Models
             public int PointsBalance { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
+            [AllowHtml]
             public string Message { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Date")]
@@ -114,10 +172,13 @@ namespace Nop.Admin.Models
         {
             [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.Email")]
             public string Email { get; set; }
+
             [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.IsApproved")]
             public bool IsApproved { get; set; }
+
             [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.IsLockedOut")]
             public bool IsLockedOut { get; set; }
+
             [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.CreatedOn")]
             public string CreatedOnStr { get; set; }
 

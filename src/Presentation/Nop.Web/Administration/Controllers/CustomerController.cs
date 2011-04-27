@@ -481,11 +481,11 @@ namespace Nop.Admin.Controllers
 
         //Addresses
         [GridAction]
-        public ActionResult AddressesSelect(int customerId)
+        public ActionResult AddressesSelect(int customerId, GridCommand command)
         {
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                throw new ArgumentException("No customer found with the specified id", "customerId");
 
             var addresses = customer.Addresses.OrderByDescending(a => a.CreatedOnUtc).ThenByDescending(a => a.Id).ToList();
             var gridModel = new GridModel<AddressModel>
@@ -508,35 +508,18 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction]
-        public ActionResult AddressDelete(int customerId, int addressId)
+        public ActionResult AddressDelete(int customerId, int addressId, GridCommand command)
         {
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                throw new ArgumentException("No customer found with the specified id", "customerId");
 
             var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
             customer.RemoveAddress(address);
             _customerService.UpdateCustomer(customer);
             //TODO should we delete the address record?
 
-            var addresses = customer.Addresses.OrderByDescending(a => a.CreatedOnUtc).ThenByDescending(a => a.Id).ToList();
-            var gridModel = new GridModel<AddressModel>
-            {
-                Data = addresses.Select(x =>
-                {
-                    var model = x.ToModel();
-                    if (x.Country != null)
-                        model.CountryName = x.Country.Name;
-                    if (x.StateProvince != null)
-                        model.StateProvinceName = x.StateProvince.Name;
-                    return model;
-                }),
-                Total = addresses.Count
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return AddressesSelect(customerId, command);
         }
         
         public ActionResult AddressCreate(int customerId)

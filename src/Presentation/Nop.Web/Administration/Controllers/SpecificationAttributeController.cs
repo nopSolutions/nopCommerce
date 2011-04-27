@@ -281,25 +281,7 @@ namespace Nop.Admin.Controllers
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(optionId);
             _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 
-            var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttributeId);
-            var gridModel = new GridModel<SpecificationAttributeOptionModel>
-            {
-                Data = options.Select(x =>
-                {
-                    var model = x.ToModel();
-                    //locales
-                    //AddLocales(_languageService, model.Locales, (locale, languageId) =>
-                    //{
-                    //    locale.Name = x.GetLocalized(y => y.Name, languageId, false);
-                    //});
-                    return model;
-                }),
-                Total = options.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return OptionList(specificationAttributeId, command);
         }
 
 

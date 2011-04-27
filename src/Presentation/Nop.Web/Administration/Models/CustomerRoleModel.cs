@@ -12,9 +12,11 @@ namespace Nop.Admin.Models
     public class CustomerRoleModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.FreeShipping")]
+        [AllowHtml]
         public bool FreeShipping { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.TaxExempt")]

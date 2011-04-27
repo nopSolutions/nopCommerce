@@ -42,19 +42,24 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<Category, CategoryModel>();
             Mapper.CreateMap<CategoryModel, Category>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
-                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.Deleted, dt => dt.Ignore());
             //products
             Mapper.CreateMap<Product, ProductModel>();
             Mapper.CreateMap<ProductModel, Product>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
-                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.Deleted, dt => dt.Ignore());
             //product variants
             Mapper.CreateMap<ProductVariant, ProductVariantModel>();
             Mapper.CreateMap<ProductVariantModel, ProductVariant>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
-                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.Deleted, dt => dt.Ignore());
             //logs
-            ViceVersa<Log, LogModel>();
+            Mapper.CreateMap<Log, LogModel>();
+            Mapper.CreateMap<LogModel, Log>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
             //currencies
             ViceVersa<Currency, CurrencyModel>();
             //locale resource
@@ -85,11 +90,19 @@ namespace Nop.Admin.Infrastructure
             //payment methods
             Mapper.CreateMap<IPaymentMethod, PaymentMethodModel>();
             //newsLetter subscriptions
-            ViceVersa<NewsLetterSubscription, NewsLetterSubscriptionModel>();
+            Mapper.CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>();
+            Mapper.CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
             //forums
             ViceVersa<ForumSettings, ForumSettingsModel>();
-            ViceVersa<ForumGroup, ForumGroupModel>();
-            ViceVersa<Forum, ForumModel>();
+            Mapper.CreateMap<ForumGroup, ForumGroupModel>();
+            Mapper.CreateMap<ForumGroupModel, ForumGroup>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
+            Mapper.CreateMap<Forum, ForumModel>();
+            Mapper.CreateMap<ForumModel, Forum>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
             //customer roles
             ViceVersa<CustomerRole, CustomerRoleModel>();
             //customers
@@ -97,7 +110,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<CustomerModel, Customer>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.LastActivityDateUtc, dt => dt.Ignore())
-                .ForMember(dest => dest.AssociatedUserId, dt => dt.Ignore());
+                .ForMember(dest => dest.AssociatedUserId, dt => dt.Ignore())
+                .ForMember(dest => dest.Deleted, dt => dt.Ignore());
 
             //product attributes
             ViceVersa<ProductAttribute, ProductAttributeModel>();

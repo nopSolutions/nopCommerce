@@ -18,7 +18,6 @@ namespace Nop.Admin.Models
             Locales = new List<ProductAttributeLocalizedModel>();
         }
 
-        #region Model
         
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
         [AllowHtml]
@@ -28,9 +27,10 @@ namespace Nop.Admin.Models
         [AllowHtml]
         public string Description {get;set;}
         
+
+
         public IList<ProductAttributeLocalizedModel> Locales { get; set; }
 
-        #endregion
     }
 
     public class ProductAttributeLocalizedModel : ILocalizedModelLocal

@@ -1,6 +1,7 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<DateTime?>" %>
+@model DateTime
+@using Telerik.Web.Mvc.UI
 
-<%= Html.Telerik().DatePicker()
+@(Html.Telerik().TimePicker()
         .Name(ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty))
         .Value(Model > DateTime.MinValue? Model : DateTime.Today)
-%>
+)

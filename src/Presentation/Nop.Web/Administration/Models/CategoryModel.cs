@@ -28,8 +28,6 @@ namespace Nop.Admin.Models
             Locales = new List<CategoryLocalizedModel>();
         }
 
-        #region Model
-
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -39,15 +37,19 @@ namespace Nop.Admin.Models
         public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
+        [AllowHtml]
         public string MetaKeywords { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaDescription")]
+        [AllowHtml]
         public string MetaDescription { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaTitle")]
+        [AllowHtml]
         public string MetaTitle { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.SeName")]
+        [AllowHtml]
         public string SeName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Parent")]
@@ -61,6 +63,7 @@ namespace Nop.Admin.Models
         public int PageSize { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.PriceRanges")]
+        [AllowHtml]
         public string PriceRanges { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomePage")]
@@ -76,6 +79,7 @@ namespace Nop.Admin.Models
         public int DisplayOrder { get; set; }
 
         public DateTime CreatedOnUtc { get; set; }
+
         public DateTime UpdatedOnUtc { get; set; }
 
         public IList<CategoryLocalizedModel> Locales { get; set; }
@@ -84,12 +88,15 @@ namespace Nop.Admin.Models
         public string Breadcrumb { get; set; }
 
 
-        //dicounts
+
+
+
+        //discounts
         public List<Discount> AvailableDiscounts { get; set; }
         public int[] SelectedDiscountIds { get; set; }
 
 
-        #endregion
+
 
         #region Nested classes
 
@@ -139,6 +146,8 @@ namespace Nop.Admin.Models
 
         #endregion
 
+
+
         public IList<DropDownItem> ParentCategories { get; set; }
     }
 
@@ -155,15 +164,19 @@ namespace Nop.Admin.Models
         public string Description {get;set;}
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
+        [AllowHtml]
         public string MetaKeywords { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaDescription")]
+        [AllowHtml]
         public string MetaDescription { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaTitle")]
+        [AllowHtml]
         public string MetaTitle { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.SeName")]
+        [AllowHtml]
         public string SeName { get; set; }
     }
 }

@@ -79,13 +79,6 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.HasSampleDownload")]
         public bool HasSampleDownload { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.UseSampleDownloadURL")]
-        public bool UseSampleDownloadUrl { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SampleDownloadURL")]
-        [AllowHtml]
-        public string SampleDownloadUrl { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SampleDownload")]
         [UIHint("Download")]
         public int SampleDownloadId { get; set; }
@@ -201,11 +194,11 @@ namespace Nop.Admin.Models
         public int PictureId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableStartDateTime")]
-        [UIHint("Date")]
+        [UIHint("DateNullable")]
         public DateTime? AvailableStartDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableEndDateTime")]
-        [UIHint("Date")]
+        [UIHint("DateNullable")]
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Published")]
@@ -253,6 +246,7 @@ namespace Nop.Admin.Models
             public string ProductAttribute { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.TextPrompt")]
+            [AllowHtml]
             public string TextPrompt { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.IsRequired")]
@@ -342,9 +336,11 @@ namespace Nop.Admin.Models
         public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Description")]
+        [AllowHtml]
         public string Description { get; set; }
     }
 }

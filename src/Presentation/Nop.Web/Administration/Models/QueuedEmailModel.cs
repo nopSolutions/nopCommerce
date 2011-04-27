@@ -21,24 +21,31 @@ namespace Nop.Admin.Models
         public int Priority { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.From")]
+        [AllowHtml]
         public string From { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.FromName")]
+        [AllowHtml]
         public string FromName { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.To")]
+        [AllowHtml]
         public string To { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.ToName")]
+        [AllowHtml]
         public string ToName { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CC")]
+        [AllowHtml]
         public string CC { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Bcc")]
+        [AllowHtml]
         public string Bcc { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Subject")]
+        [AllowHtml]
         public string Subject { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Body")]
@@ -56,6 +63,7 @@ namespace Nop.Admin.Models
         public DateTime? SentOnUtc { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccountName")]
+        [AllowHtml]
         public string EmailAccountName { get; set; }
     }
 }

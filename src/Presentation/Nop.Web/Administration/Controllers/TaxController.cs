@@ -158,19 +158,7 @@ namespace Nop.Admin.Controllers
             taxCategory = model.ToEntity(taxCategory);
             _taxCategoryService.UpdateTaxCategory(taxCategory);
 
-            var categoriesModel = _taxCategoryService.GetAllTaxCategories()
-                .Select(x => x.ToModel())
-                .ForCommand(command)
-                .ToList();
-            var gridModel = new GridModel<TaxCategoryModel>
-            {
-                Data = categoriesModel,
-                Total = categoriesModel.Count
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Categories(command);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -186,19 +174,7 @@ namespace Nop.Admin.Controllers
             taxCategory = model.ToEntity(taxCategory);
             _taxCategoryService.InsertTaxCategory(taxCategory);
 
-            var categoriesModel = _taxCategoryService.GetAllTaxCategories()
-                .Select(x => x.ToModel())
-                .ForCommand(command)
-                .ToList();
-            var gridModel = new GridModel<TaxCategoryModel>
-            {
-                Data = categoriesModel,
-                Total = categoriesModel.Count
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Categories(command);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -213,19 +189,7 @@ namespace Nop.Admin.Controllers
             var taxCategory = _taxCategoryService.GetTaxCategoryById(id);
             _taxCategoryService.DeleteTaxCategory(taxCategory);
 
-            var categoriesModel = _taxCategoryService.GetAllTaxCategories()
-                .Select(x => x.ToModel())
-                .ForCommand(command)
-                .ToList();
-            var gridModel = new GridModel<TaxCategoryModel>
-            {
-                Data = categoriesModel,
-                Total = categoriesModel.Count
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Categories(command);
         }
 
         #endregion

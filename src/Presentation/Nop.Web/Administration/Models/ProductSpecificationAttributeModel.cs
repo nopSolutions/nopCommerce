@@ -10,9 +10,11 @@ namespace Nop.Admin.Models
     public class ProductSpecificationAttributeModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
+        [AllowHtml]
         public string SpecificationAttributeName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
+        [AllowHtml]
         public string SpecificationAttributeOptionName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")]

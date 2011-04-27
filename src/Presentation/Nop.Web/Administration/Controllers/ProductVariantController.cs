@@ -531,28 +531,7 @@ namespace Nop.Admin.Controllers
             var pvav = _productAttributeService.GetProductVariantAttributeValueById(pvavId);
             _productAttributeService.DeleteProductVariantAttributeValue(pvav);
 
-            var values = _productAttributeService.GetProductVariantAttributeValues(productVariantAttributeId);
-            var gridModel = new GridModel<ProductVariantModel.ProductVariantAttributeValueModel>
-            {
-                Data = values.Select(x =>
-                {
-                    return new ProductVariantModel.ProductVariantAttributeValueModel()
-                    {
-                        Id = x.Id,
-                        ProductVariantAttributeId = x.ProductVariantAttributeId,
-                        Name = x.Name,
-                        PriceAdjustment = x.PriceAdjustment,
-                        WeightAdjustment = x.WeightAdjustment,
-                        IsPreSelected = x.IsPreSelected,
-                        DisplayOrder = x.DisplayOrder,
-                    };
-                }),
-                Total = values.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return ProductAttributeValueList(productVariantAttributeId, command);
         }
 
 

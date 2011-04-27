@@ -30,11 +30,19 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.HideTaxInOrderSummary")]
         public bool HideTaxInOrderSummary { get; set; }
 
+
+
+
+
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.TaxBasedOn")]
         public TaxBasedOn TaxBasedOn { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.DefaultTaxAddress")]
         public AddressModel DefaultTaxAddress { get; set; }
        
+
+
+
+
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.ShippingIsTaxable")]
         public bool ShippingIsTaxable { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.ShippingPriceIncludesTax")]
@@ -42,12 +50,19 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.ShippingTaxClass")]
         public int ShippingTaxClassId { get; set; }
 
+
+
+
+
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.PaymentMethodAdditionalFeeIsTaxable")]
         public bool PaymentMethodAdditionalFeeIsTaxable { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.PaymentMethodAdditionalFeeIncludesTax")]
         public bool PaymentMethodAdditionalFeeIncludesTax { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.PaymentMethodAdditionalFeeTaxClass")]
         public int PaymentMethodAdditionalFeeTaxClassId { get; set; }
+
+
+
 
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.EuVatEnabled")]
         public bool EuVatEnabled { get; set; }
@@ -59,6 +74,9 @@ namespace Nop.Admin.Models
         public bool EuVatUseWebService { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Tax.Settings.Fields.EuVatEmailAdminWhenNewVatSubmitted")]
         public bool EuVatEmailAdminWhenNewVatSubmitted { get; set; }
+
+
+
 
         public SelectList TaxDisplayTypeValues { get; set; }
         public SelectList TaxBasedOnValues { get; set; }

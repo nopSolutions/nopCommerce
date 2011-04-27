@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators;
 using Nop.Core.Domain.Localization;
@@ -14,12 +15,15 @@ namespace Nop.Admin.Models
     public class LanguageModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.LanguageCulture")]
+        [AllowHtml]
         public string LanguageCulture { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.FlagImageFileName")]
+        [AllowHtml]
         public string FlagImageFileName { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.Published")]

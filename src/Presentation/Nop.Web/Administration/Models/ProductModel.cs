@@ -24,30 +24,38 @@ namespace Nop.Admin.Models
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShortDescription")]
+        [AllowHtml]
         public string ShortDescription { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.FullDescription")]
+        [AllowHtml]
         public string FullDescription { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
+        [AllowHtml]
         public string AdminComment { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
+        [AllowHtml]
         public string MetaKeywords { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaDescription")]
+        [AllowHtml]
         public string MetaDescription { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaTitle")]
+        [AllowHtml]
         public string MetaTitle { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.SeName")]
+        [AllowHtml]
         public string SeName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowCustomerReviews")]
@@ -60,11 +68,21 @@ namespace Nop.Admin.Models
         public bool Published { get; set; }
 
         public DateTime CreatedOnUtc { get; set; }
+
         public DateTime UpdatedOnUtc { get; set; }
+
+
+
+
+
 
         public IList<ProductLocalizedModel> Locales { get; set; }
 
         public IList<ProductVariantModel> ProductVariantModels { get; set; }
+
+
+
+
 
         //categories
         public int NumberOfAvailableCategories { get; set; }
@@ -72,9 +90,17 @@ namespace Nop.Admin.Models
         //manufacturers
         public int NumberOfAvailableManufacturers { get; set; }
         
+
+
+
+
         //pictures
         public ProductPictureModel AddPictureModel { get; set; }
         public IList<ProductPictureModel> ProductPictureModels { get; set; }
+
+
+
+
 
         //add specification attribute model
         public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
@@ -182,8 +208,10 @@ namespace Nop.Admin.Models
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public int SearchCategoryId { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public int SearchManufacturerId { get; set; }
 
@@ -217,8 +245,10 @@ namespace Nop.Admin.Models
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public int SearchCategoryId { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public int SearchManufacturerId { get; set; }
 
@@ -238,24 +268,31 @@ namespace Nop.Admin.Models
         public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShortDescription")]
+        [AllowHtml]
         public string ShortDescription { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.FullDescription")]
+        [AllowHtml]
         public string FullDescription { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
+        [AllowHtml]
         public string MetaKeywords { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaDescription")]
+        [AllowHtml]
         public string MetaDescription { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaTitle")]
+        [AllowHtml]
         public string MetaTitle { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.SeName")]
+        [AllowHtml]
         public string SeName { get; set; }
     }
 }

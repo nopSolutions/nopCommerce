@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators;
 using Nop.Core.Domain.Forums;
@@ -20,9 +21,11 @@ namespace Nop.Admin.Models
         public int ForumGroupId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.Description")]
+        [AllowHtml]
         public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder")]

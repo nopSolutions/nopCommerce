@@ -1,0 +1,8 @@
+@model double
+@using Telerik.Web.Mvc.UI
+
+@(Html.Telerik().NumericTextBox()
+        .Name(ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty))
+        .Value(Model)
+)
+

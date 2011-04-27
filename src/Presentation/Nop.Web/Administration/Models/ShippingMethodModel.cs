@@ -10,6 +10,7 @@ namespace Nop.Admin.Models
     public class ShippingMethodModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Description")]

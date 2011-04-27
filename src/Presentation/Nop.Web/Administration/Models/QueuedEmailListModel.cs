@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
-
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
-
-using Telerik.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Admin.Models
@@ -18,11 +15,11 @@ namespace Nop.Admin.Models
         }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.List.StartDate")]
-        [UIHint("Date")]
+        [UIHint("DateNullable")]
         public DateTime? SearchStartDate { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.List.EndDate")]
-        [UIHint("Date")]
+        [UIHint("DateNullable")]
         public DateTime? SearchEndDate { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.List.FromEmail")]
