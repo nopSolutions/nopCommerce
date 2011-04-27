@@ -75,13 +75,9 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult UserList(GridCommand command)
+        public ActionResult UserList(GridCommand command, UserListModel model)
         {
-            //filtering
-            string email = command.FilterDescriptors.GetValueFromAppliedFilters("email", FilterOperator.Contains);
-            string username = command.FilterDescriptors.GetValueFromAppliedFilters("username");
-
-            var users = _userService.GetUsers(email, username, command.Page - 1, command.PageSize);
+            var users = _userService.GetUsers(model.SearchEmail, model.SearchUsername, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<UserModel>
             {
                 Data = users.Select(x =>
@@ -103,36 +99,7 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-
-        [HttpPost, ActionName("List")]
-        [FormValueRequired("search-users")]
-        public ActionResult Search(UserListModel model)
-        {
-            ViewData["searchEmail"] = model.SearchEmail;
-            ViewData["searchUsername"] = model.SearchUsername;
-
-            var users = _userService.GetUsers(model.SearchEmail, model.SearchUsername, 0, 10);
-
-            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
-            model.Users = new GridModel<UserModel>
-            {
-                Data = users.Select(x =>
-                {
-                    return new UserModel()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        Username = x.Username,
-                        IsApproved = x.IsApproved,
-                        IsLockedOut = x.IsLockedOut,
-                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
-                    };
-                }),
-                Total = users.TotalCount
-            };
-            return View(model);
-        }
-
+        
         public ActionResult Create()
         {
             var model = new UserModel();

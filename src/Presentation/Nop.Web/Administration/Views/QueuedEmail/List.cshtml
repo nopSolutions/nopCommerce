@@ -118,12 +118,12 @@
     function onDataBinding(e) {
         
         var searchModel = {
-                    SearchStartDate: $('#SearchStartDate').val(),
-                    SearchEndDate: $('#SearchEndDate').val(),
-                    SearchFromEmail: $('#SearchFromEmail').val(),
-                    SearchToEmail: $('#SearchToEmail').val(),
-                    SearchLoadNotSent: $('#SearchLoadNotSent').is(':checked'),
-                    SearchMaxSentTries: $('#SearchMaxSentTries').val()
+                SearchStartDate: $('#@Html.FieldIdFor(model => model.SearchStartDate)').val(),
+                SearchEndDate: $('#@Html.FieldIdFor(model => model.SearchEndDate)').val(),
+                SearchFromEmail: $('#@Html.FieldIdFor(model => model.SearchFromEmail)').val(),
+                SearchToEmail: $('#@Html.FieldIdFor(model => model.SearchToEmail)').val(),
+                SearchLoadNotSent: $('#@Html.FieldIdFor(model => model.SearchLoadNotSent)').is(':checked'),
+                SearchMaxSentTries: $('#@Html.FieldIdFor(model => model.SearchMaxSentTries)').val()
                 };
         e.data = searchModel;
     }

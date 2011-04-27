@@ -666,17 +666,14 @@ namespace Nop.Admin.Controllers
            
         //User accounts
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult UserSelect(GridCommand command)
+        public ActionResult UserSelect(GridCommand command, CustomerModel model)
         {
-            //filter by email
-            string email = command.FilterDescriptors.GetValueFromAppliedFilters("email", FilterOperator.Contains);
-
-            var users = _userService.GetUsers(email, null, command.Page - 1, command.PageSize);
+            var users = _userService.GetUsers(model.UserEmailStartsWith, null, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel.UserAccountModel>
             {
                 Data = users.Select(x =>
                 {
-                    var model = new CustomerModel.UserAccountModel()
+                    return new CustomerModel.UserAccountModel()
                     {
                         Id = x.Id,
                         Email = x.Email,
@@ -684,7 +681,6 @@ namespace Nop.Admin.Controllers
                         IsLockedOut = x.IsLockedOut,
                         CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
                     };
-                    return model;
                 }),
                 Total = users.TotalCount
             };
@@ -692,43 +688,6 @@ namespace Nop.Admin.Controllers
             {
                 Data = gridModel
             };
-        }
-
-        [HttpPost, ActionName("Edit")]
-        [FormValueRequired("search-users")]
-        public ActionResult UserSelectApplyFilter(CustomerModel model)
-        {
-            ViewData["userEmailStartsWith"] = model.UserEmailStartsWith;
-            ViewData["selectedTab"] = "useraccount";
-
-            var customer = _customerService.GetCustomerById(model.Id);
-            if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
-
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = GetVatNumberStatusName(customer.VatNumberStatus);
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
-            //form fields
-            model.GenderEnabled = _formFieldSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
-            //customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.ToList();
-            //reward points gistory
-            model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
-            //user account
-            model.AssociatedUserId = customer.AssociatedUserId;
-            if (customer.AssociatedUserId.HasValue)
-            {
-                User associatedUser = _userService.GetUserById(customer.AssociatedUserId.Value);
-                if (associatedUser != null)
-                    model.AssociatedUserEmail = associatedUser.Email;
-            }
-            return View(model);
         }
 
         [HttpPost, ActionName("Edit")]

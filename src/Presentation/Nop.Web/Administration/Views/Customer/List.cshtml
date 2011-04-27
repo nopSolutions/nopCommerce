@@ -88,4 +88,32 @@
             </td>
         </tr>
     </table>
+    
+    @*<script type="text/javascript">
+        $(document).ready(function () {
+            $('#search-customers').click(function () {
+                var grid = $('#customers-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+        function onDataBinding(e) {
+            //We need to use $.ajax({ data:{}, traditional:true });
+            //See the following forum topic to get more info: http://forum.jquery.com/topic/jquery-1-4-breaks-asp-net-mvc-parameter-posting
+            //But we don't have access to 'traditional' property passed by Telerik.
+
+            if ($('[name=SearchCustomerRoleIds]:checked').size() > 0) {
+                var customerRoleIds = [];
+            }
+            $('[name=SearchCustomerRoleIds]:checked').each(function () {
+                customerRoleIds.push($(this).val());
+            });
+
+            var searchModel = {
+                SearchCustomerRoleIds: customerRoleIds
+            };
+            e.data = searchModel;
+        }
+   </script>*@
 }

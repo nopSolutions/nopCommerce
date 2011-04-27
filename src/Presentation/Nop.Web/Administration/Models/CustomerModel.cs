@@ -83,6 +83,7 @@ namespace Nop.Admin.Models
         public string AddRewardPointsMessage { get; set; }
 
         //user accounts
+        [AllowHtml]
         public string UserEmailStartsWith { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.AssociatedUser")]
         public int? AssociatedUserId { get; set; }

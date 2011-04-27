@@ -1,4 +1,4 @@
-﻿@model Nop.Admin.Models.UserListModel
+﻿    @model Nop.Admin.Models.UserListModel
 @using Telerik.Web.Mvc.UI
 @using Nop.Web.Framework
 @using (Html.BeginForm())
@@ -35,7 +35,7 @@
         }
         <tr>
             <td colspan="2">
-                <button type="submit" name="search-users" value="search-users" class="t-button">@T("Admin.Common.Search")</button>
+                <button type="submit" id="search-users" value="search-users" class="t-button">@T("Admin.Common.Search")</button>
             </td>
         </tr>
     </table>
@@ -50,55 +50,54 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Id)
-                            .Width(50)
-                            .Filterable(false);
+                            .Width(50);
                         columns.Bound(x => x.Email)
-                            .Width(200)
-                            .Filterable(false);
+                            .Width(200);
                         var usernameColumn = columns.Bound(x => x.Username)
-                            .Width(200)
-                            .Filterable(false);
+                            .Width(200);
                         //Weird!!! We can't pass Model.UsernamesEnabled to Hidden method
                         if (!Model.UsernamesEnabled)
                             usernameColumn.Hidden(true);
                         columns.Bound(x => x.IsLockedOut)
                              .Width(100)
                              .Template(x => x.IsLockedOut.ToString().ToLower())
-                             .Centered()
-                             .Filterable(false);
+                             .Centered();
                         columns.Bound(x => x.IsApproved)
                              .Width(100)
                              .Template(x => x.IsApproved.ToString().ToLower())
-                             .Centered()
-                             .Filterable(false);
+                             .Centered();
                         columns.Bound(x => x.CreatedOnStr)
-                            .Width(100)
-                            .Filterable(false);
+                            .Width(100);
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text)
-                            .Filterable(false);
+                            .Title(T("Admin.Common.Edit").Text);
                     })
                     .Pageable(settings => settings.Total(Model.Users.Total).PageSize(10))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("UserList", "User"))
-                    .Filterable(filtering => filtering.Filters(filters =>
-                    {
-                        //email
-                        if (!String.IsNullOrEmpty(ViewData["searchEmail"] as string))
-                        {
-                            filters.Add(x => x.Email).Contains((string)ViewData["searchEmail"]);
-                        }
-                        //username
-                        if (!String.IsNullOrEmpty(ViewData["searchUsername"] as string))
-                        {
-                            filters.Add(x => x.Username).Contains((string)ViewData["searchUsername"]);
-                        }
-                    }))
+                    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                     .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search-users').click(function () {
+                var grid = $('#users-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+        function onDataBinding(e) {
+            var searchModel = {
+                SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
+                SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val()
+            };
+            e.data = searchModel;
+        }
+   </script>
 }

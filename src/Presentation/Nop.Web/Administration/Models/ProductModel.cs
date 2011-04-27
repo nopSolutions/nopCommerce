@@ -66,11 +66,6 @@ namespace Nop.Admin.Models
 
         public IList<ProductVariantModel> ProductVariantModels { get; set; }
 
-        //properties used for filtering
-        public int SearchCategoryId { get; set; }
-        public int SearchManufacturerId { get; set; }
-
-
         //categories
         public int NumberOfAvailableCategories { get; set; }
 

@@ -49,7 +49,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" name="search-products" value="search-products" class="t-button">@T("Admin.Common.Search")</button>
+                <button type="submit" id="search-products" value="search-products" class="t-button">@T("Admin.Common.Search")</button>
             </td>
         </tr>
     </table>
@@ -62,17 +62,13 @@
                     .Name("products-grid")
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Name).Filterable(false);
-                        //little hack to allow filtering by category and manufacturer
-                        columns.Bound(x => x.SearchCategoryId).Filterable(false).Hidden(true);
-                        columns.Bound(x => x.SearchManufacturerId).Filterable(false).Hidden(true);
-                        columns.Bound(x => x.Published).Filterable(false)
+                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Published)
                             .Width("100px")
                             .Template(x => x.Published.ToString().ToLower())
                             .Centered();
                         columns.Bound(x => x.Id)
                             .Width(50)
-                            .Filterable(false)
                             .Centered()
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
@@ -80,26 +76,28 @@
                     })
                     .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
-                    .Filterable(filtering => filtering.Filters(filters =>
-                    {
-                        //product name
-                        if (!String.IsNullOrEmpty(ViewData["searchProductName"] as string))
-                        {
-                            filters.Add(x => x.Name).Contains((string)ViewData["searchProductName"]);
-                        }
-                        //category id
-                        if (ViewData["searchCategoryId"] != null)
-                        {
-                            filters.Add(x => x.SearchCategoryId).IsEqualTo((int)ViewData["searchCategoryId"]);
-                        }
-                        //manufacturer id
-                        if (ViewData["searchManufacturerId"] != null)
-                        {
-                            filters.Add(x => x.SearchManufacturerId).IsEqualTo((int)ViewData["searchManufacturerId"]);
-                        }
-                    }))
+                    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                     .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search-products').click(function () {
+                var grid = $('#products-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+        function onDataBinding(e) {
+            var searchModel = {
+                SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                SearchCategoryId: $('#SearchCategoryId').val(),
+                SearchManufacturerId: $('#SearchManufacturerId').val()
+            };
+            e.data = searchModel;
+        }
+   </script>
 }

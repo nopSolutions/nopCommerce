@@ -347,7 +347,7 @@
     <div>
        <label for="userEmailStartsWith"><strong>Email</strong> contains:</label>
         @Html.TextBoxFor(model => model.UserEmailStartsWith)
-        <button type="submit" name="search-users" value="searchUsers" class="t-button">Search</button>
+        <button type="submit" id="search-users" value="searchUsers" class="t-button">Search</button>
     </div>
     <div class="clear"></div>
         <script type="text/javascript">
@@ -359,7 +359,7 @@
                         data: "userId=" + userId + "&customerId=" + @Model.Id,
                         success: function (data) {
                              alert('Successfully associated. Refresh the page to see the changes')
-                             //TODO reload page (stay on 'User account' page
+                             //TODO reload page (and stay on 'User account' tab)
                         },
                         error:function (xhr, ajaxOptions, thrownError){
                             alert('Failed to associate user.')
@@ -378,36 +378,42 @@
                 .Width(50)
                 .Centered();
             columns.Bound(x => x.Id)
-                .Filterable(false)
                 .Width(50);
             columns.Bound(x => x.Email)
-                .Filterable(false)
                 .Width(200);
             columns.Bound(x => x.IsLockedOut)
-                .Filterable(false)
                 .Width(100)
                 .Template(x => x.IsLockedOut.ToString().ToLower())
                 .Centered();
             columns.Bound(x => x.IsApproved)
-                .Filterable(false)
                 .Width(100)
                 .Template(x => x.IsApproved.ToString().ToLower())
                 .Centered();
             columns.Bound(x => x.CreatedOnStr)
-                .Filterable(false)
                 .Width(100);
         })
         .Pageable(settings => settings.PageSize(10))
-        .Filterable(filtering => filtering.Filters(filters =>
-        {
-            if (!String.IsNullOrEmpty(ViewData["userEmailStartsWith"] as string))
-            {
-                filters.Add(x => x.Email).Contains((string)ViewData["userEmailStartsWith"]);
-            }
-        }))
         .DataBinding(binding =>
         {
             binding.Ajax().Select("UserSelect", "Customer");
         })
+        .ClientEvents(events => events.OnDataBinding("onUserListDataBinding"))
         .EnableCustomBinding(true))
+        
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#search-users').click(function () {
+                    var grid = $('#customer-useraccounts-grid').data('tGrid');
+                    grid.ajaxRequest();
+                    return false;
+                });
+            });
+
+            function onUserListDataBinding(e) {
+                var searchModel = {
+                    UserEmailStartsWith: $('#@Html.FieldIdFor(model => model.UserEmailStartsWith)').val()
+                };
+                e.data = searchModel;
+            }
+   </script>
 }
