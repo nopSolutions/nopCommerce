@@ -78,7 +78,7 @@ namespace Nop.Web
             ModelMetadataProviders.Current = new NopMetadataProvider();
 
             //Registering some regular mvc stuf
-            ViewEngines.Engines.Add(new ThemableRazorViewEngine());
+            ViewEngines.Engines.Add(new ThemableRazorViewEngine()); //TODO dublicate
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);

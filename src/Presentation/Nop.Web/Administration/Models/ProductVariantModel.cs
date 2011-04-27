@@ -326,10 +326,14 @@ namespace Nop.Admin.Models
 
         public IList<ProductVariantLocalizedModel> Locales { get; set; }
 
-        //dicounts
+        //discounts
         public List<Discount> AvailableDiscounts { get; set; }
         public int[] SelectedDiscountIds { get; set; }
 
+
+        public bool HideNameAndDescriptionProperties { get; set; }
+        public bool HidePublishedProperty { get; set; }
+        public bool HideDisplayOrderProperty { get; set; }
     }
     public class ProductVariantLocalizedModel : ILocalizedModelLocal
     {

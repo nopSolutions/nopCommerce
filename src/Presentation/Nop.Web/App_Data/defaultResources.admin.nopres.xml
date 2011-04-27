@@ -386,6 +386,9 @@
                             <LocaleResource Name="EditProductDetails">
                               <Value>Edit product details</Value>
                             </LocaleResource>
+                            <LocaleResource Name="FirstVariant">
+                              <Value>Default product variant info</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Fields">
                             <Children>
                               <LocaleResource Name="Name">

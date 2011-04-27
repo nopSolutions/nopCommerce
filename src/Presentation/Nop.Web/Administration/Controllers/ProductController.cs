@@ -10,6 +10,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -31,6 +32,8 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IPictureService _pictureService;
+        private readonly ITaxCategoryService _taxCategoryService;
+
         #endregion Fields 
 
 		#region Constructors
@@ -39,7 +42,8 @@ namespace Nop.Admin.Controllers
             ICategoryService categoryService, IManufacturerService manufacturerService,
             IWorkContext workContext, ILanguageService languageService, 
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
-            ISpecificationAttributeService specificationAttributeService, IPictureService pictureService)
+            ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
+            ITaxCategoryService taxCategoryService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -50,6 +54,7 @@ namespace Nop.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._specificationAttributeService = specificationAttributeService;
             this._pictureService = pictureService;
+            this._taxCategoryService = taxCategoryService;
         }
 
         #endregion Constructors 
@@ -163,6 +168,67 @@ namespace Nop.Admin.Controllers
             }
         }
 
+
+
+        [NonAction]
+        private void FirstVariant_UpdateLocales(ProductVariant variant, ProductVariantModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(variant,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(variant,
+                                                               x => x.Description,
+                                                               localized.Description,
+                                                               localized.LanguageId);
+            }
+        }
+        
+        [NonAction]
+        private void FirstVariant_PrepareProductVariantModel(ProductVariantModel model, ProductVariant variant, bool setPredefinedValues)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            //tax categories
+            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            model.AvailableTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+            foreach (var tc in taxCategories)
+                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = variant != null && !setPredefinedValues && tc.Id == variant.TaxCategoryId });
+
+            //warehouses
+            //TODO finish when warehouses are ready
+            //var warehouses = _warehouseService.GetAllWarehouses();
+            model.AvailableWarehouses.Add(new SelectListItem() { Text = "---", Value = "0" });
+            //foreach (var wh in warehouses)
+            //    model.AvailableWarehouses.Add(new SelectListItem() { Text = wh.Name, Value = wh.Id.ToString(), Selected = variant != null && !setPredefinedValues && wh.Id == variant.WarehouseId });
+
+            if (setPredefinedValues)
+            {
+                model.MaximumCustomerEnteredPrice = 1000;
+                model.MaxNumberOfDownloads = 10;
+                model.RecurringCycleLength = 100;
+                model.RecurringTotalCycles = 10;
+                model.StockQuantity = 10000;
+                model.NotifyAdminForQuantityBelow = 1;
+                model.OrderMinimumQuantity = 1;
+                model.OrderMaximumQuantity = 10000;
+                model.DisplayOrder = 1;
+
+                model.UnlimitedDownloads = true;
+                model.IsShipEnabled = true;
+                model.Published = true;
+            }
+
+            //little hack here in order to hide some of properties of the first product variant
+            //we do it because they dublicate some properties of a product
+            model.HideNameAndDescriptionProperties = true;
+            model.HidePublishedProperty = true;
+            model.HideDisplayOrderProperty = true;
+        }
+
         #endregion
 
         #region Methods
@@ -252,11 +318,23 @@ namespace Nop.Admin.Controllers
         public ActionResult Create()
         {
             var model = new ProductModel();
+
+            //product
             AddLocales(_languageService, model.Locales);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
+            //default values
+            model.Published = true;
+            model.AllowCustomerRatings = true;
+            model.AllowCustomerReviews = true;
+
+
+            //first product variant
+            model.FirstProductVariantModel = new ProductVariantModel();
+            AddLocales(_languageService, model.FirstProductVariantModel.Locales);
+            FirstVariant_PrepareProductVariantModel(model.FirstProductVariantModel, null, true);
             return View(model);
         }
 
@@ -265,20 +343,35 @@ namespace Nop.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                //product
                 var product = model.ToEntity();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.InsertProduct(product);
                 UpdateLocales(product, model);
 
+                //default product variant
+                var variant = model.FirstProductVariantModel.ToEntity();
+                variant.ProductId = product.Id;
+                variant.Published = true;
+                variant.DisplayOrder = 1;
+                variant.CreatedOnUtc = DateTime.UtcNow;
+                variant.UpdatedOnUtc = DateTime.UtcNow;
+                _productService.InsertProductVariant(variant);
+                FirstVariant_UpdateLocales(variant, model.FirstProductVariantModel);
+
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+
+            //product
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
+            //first product variant
+            FirstVariant_PrepareProductVariantModel(model.FirstProductVariantModel, null, false);
             return View(model);
         }
 

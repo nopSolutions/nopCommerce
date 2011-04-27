@@ -12,6 +12,10 @@
     {
         x.Add().Text(T("Admin.Catalog.Products.Variants").Text).Content(TabVariants().ToHtmlString());
     }
+    else
+    {
+        x.Add().Text(T("Admin.Catalog.Products.FirstVariant").Text).Content(TabFirstVariantInfo().ToHtmlString());
+    }
     x.Add().Text(T("Admin.Catalog.Products.Categories").Text).Content(TabCategories().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Manufacturers").Text).Content(TabManufacturers().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.RelatedProducts").Text).Content(TabRelatedProducts().ToHtmlString());
@@ -134,6 +138,12 @@
             </td>
         </tr>
     </table>
+}
+@helper TabFirstVariantInfo()
+    {
+        var dataDict = new ViewDataDictionary();
+        dataDict.TemplateInfo.HtmlFieldPrefix = "FirstProductVariantModel"; /**/
+        @Html.Partial("_ProductVariantInfo", @Model.FirstProductVariantModel, dataDict)
 }
 @helper TabSeo()
     {

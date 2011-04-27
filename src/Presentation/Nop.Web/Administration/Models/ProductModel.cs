@@ -78,9 +78,12 @@ namespace Nop.Admin.Models
 
         public IList<ProductLocalizedModel> Locales { get; set; }
 
+
+
+        //existing product variants
         public IList<ProductVariantModel> ProductVariantModels { get; set; }
-
-
+        //default variant (the first one) 
+        public ProductVariantModel FirstProductVariantModel { get; set; }
 
 
 
