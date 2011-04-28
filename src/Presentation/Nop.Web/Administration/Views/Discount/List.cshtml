@@ -1,0 +1,49 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.DiscountModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
+        @T("Admin.Promotions.Discounts")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.DiscountModel>(Model.Data)
+                    .Name("discounts-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name)
+                            .Width(200);
+                        columns.Bound(x => x.UsePercentage)
+                            .Width(100)
+                            .Template(x => x.UsePercentage.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.DiscountPercentage)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.DiscountAmount)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.StartDateUtc)
+                            //.Format("{0:d}")
+                            .Width(100);
+                        columns.Bound(x => x.EndDateUtc)
+                            //.Format("{0:d}")
+                            .Width(100);
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Discount"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

@@ -15,13 +15,14 @@
               <siteMapNode title="Checkout Attributes" nopResource="Admin.Catalog.Attributes.CheckoutAttributes" controller="CheckoutAttribute" action="List"/>
             </siteMapNode>
         </siteMapNode>
+        <siteMapNode title="Customers" nopResource="Admin.Customers">
+          <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />
+          <siteMapNode title="Customers" nopResource="Admin.Customers.Customers" controller="Customer" action="List" />
+          <siteMapNode title="Customer roles" nopResource="Admin.Customers.CustomerRoles" controller="CustomerRole" action="List" />
+        </siteMapNode>
         <siteMapNode title="Promotions" nopResource="Admin.Promotions">
           <siteMapNode title="NewsletterSubscriptions" nopResource="Admin.Promotions.NewsletterSubscriptions" controller="NewsLetterSubscription" action="List" />
-        </siteMapNode>
-        <siteMapNode title="Customers" nopResource="Admin.Customers">
-            <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />
-            <siteMapNode title="Customers" nopResource="Admin.Customers.Customers" controller="Customer" action="List" />
-            <siteMapNode title="Customer roles" nopResource="Admin.Customers.CustomerRoles" controller="CustomerRole" action="List" />
+          <siteMapNode title="Discounts" nopResource="Admin.Promotions.Discounts" controller="Discount" action="List" />
         </siteMapNode>
         <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement">
             <siteMapNode title="Forums" nopResource="Admin.ContentManagement.Forums">

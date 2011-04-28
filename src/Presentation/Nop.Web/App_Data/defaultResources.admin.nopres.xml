@@ -119,14 +119,6 @@
                                     </LocaleResource>
                                   </Children>
                                 </LocaleResource>
-                                <LocaleResource Name="DisplayOrder">
-                                  <Value>Display order</Value>
-                                  <Children>
-                                    <LocaleResource Name="Hint">
-                                      <Value>A display order of the checkout attribute.</Value>
-                                    </LocaleResource>
-                                  </Children>
-                                </LocaleResource>
                               </Children>
                             </LocaleResource>
                             <LocaleResource Name="Values">
@@ -3043,6 +3035,124 @@
             <LocaleResource Name="Promotions">
             <Value>Promotions</Value>
             <Children>
+              <LocaleResource Name="Discounts">
+                <Value>Discounts</Value>
+                <Children>
+                  <LocaleResource Name="AddNew">
+                    <Value>Add a new discount</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to discount list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="EditDiscountDetails">
+                    <Value>Edit discount details</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Info">
+                    <Value>Discount info</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="Name">
+                        <Value>Name</Value>
+                        <Children>
+                          <LocaleResource Name="Required">
+                            <Value>Please provide a name.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>A name of the discount.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DiscountType">
+                        <Value>Discount type</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The type of discount. Choose from applying to whole order or to individual product variants (SKU's).</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="UsePercentage">
+                        <Value>Use percentage</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Determines whether to apply a percentage discount to the order/SKUs. If not enabled, a set value is discounted.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DiscountPercentage">
+                        <Value>Discount percentage</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The percentage discount to apply to order/SKUs.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DiscountAmount">
+                        <Value>Discount amount</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The discount amount to apply to the order/SKUs.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="StartDate">
+                        <Value>Start date</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The start of the discount period in Coordinated Universal Time (UTC).</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="EndDate">
+                        <Value>End date</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The end of the discount period in Coordinated Universal Time (UTC).</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="RequiresCouponCode">
+                        <Value>Requires coupon code</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>If checked, a customer supply a valid coupon code for the discount to be applied.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CouponCode">
+                        <Value>Coupon code</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The discount coupon code.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DiscountLimitation">
+                        <Value>Discount limitation</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Choose the limitation of discount.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="LimitationTimes">
+                        <Value>N times</Value>
+                        <Children>
+                          <LocaleResource Name="Times">
+                            <Value>times</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter the number of times that the discount is limited to</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="History">
+                    <Value>Usage history</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
               <LocaleResource Name="NewsLetterSubscriptions">
                 <Value>Newsletter Subscribers</Value>
                 <Children>

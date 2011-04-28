@@ -42,6 +42,9 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType")]
         public int AttributeControlTypeId { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType")]
+        [AllowHtml]
+        public string AttributeControlTypeName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }

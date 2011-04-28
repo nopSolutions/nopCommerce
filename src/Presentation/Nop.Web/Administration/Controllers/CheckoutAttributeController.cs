@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
@@ -24,7 +25,9 @@ namespace Nop.Admin.Controllers
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILocalizationService _localizationService;
         private readonly ITaxCategoryService _taxCategoryService;
+        private readonly IWorkContext _workContext;
 
         #endregion Fields
 
@@ -32,12 +35,15 @@ namespace Nop.Admin.Controllers
 
         public CheckoutAttributeController(ICheckoutAttributeService checkoutAttributeService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ITaxCategoryService taxCategoryService)
+            ILocalizationService localizationService, ITaxCategoryService taxCategoryService, 
+            IWorkContext workContext)
         {
             this._checkoutAttributeService = checkoutAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._localizationService = localizationService;
             this._taxCategoryService = taxCategoryService;
+            this._workContext = workContext;
         }
 
         #endregion Constructors
@@ -101,7 +107,12 @@ namespace Nop.Admin.Controllers
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(false);
             var gridModel = new GridModel<CheckoutAttributeModel>
             {
-                Data = checkoutAttributes.Select(x => x.ToModel()),
+                Data = checkoutAttributes.Select(x => 
+                {
+                    var caModel = x.ToModel();
+                    caModel.AttributeControlTypeName = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
+                    return caModel;
+                }),
                 Total = checkoutAttributes.Count()
             };
             return View(gridModel);
@@ -113,7 +124,12 @@ namespace Nop.Admin.Controllers
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(false);
             var gridModel = new GridModel<CheckoutAttributeModel>
             {
-                Data = checkoutAttributes.Select(x => x.ToModel()),
+                Data = checkoutAttributes.Select(x =>
+                {
+                    var caModel = x.ToModel();
+                    caModel.AttributeControlTypeName = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
+                    return caModel;
+                }),
                 Total = checkoutAttributes.Count()
             };
             return new JsonResult

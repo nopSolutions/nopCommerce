@@ -1,9 +1,8 @@
-@model decimal
+@model System.Decimal
 @using Telerik.Web.Mvc.UI
 
-@(Html.Telerik().CurrencyTextBox()
+@(Html.Telerik().NumericTextBox<decimal>()
         .Name(ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty))
-        //.MinValue(0)
         .Value(Model)
 )
 

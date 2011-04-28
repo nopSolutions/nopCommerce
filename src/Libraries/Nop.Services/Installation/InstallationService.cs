@@ -1344,8 +1344,6 @@ namespace Nop.Services.Installation
                                             DiscountLimitation = DiscountLimitationType.Unlimited,
                                             UsePercentage = false,
                                             DiscountAmount = 10,
-                                            StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
                                             RequiresCouponCode = true,
                                             CouponCode = "123",
                                         },

@@ -47,7 +47,7 @@ namespace Nop.Web.Infrastructure
 
         }
 
-        public static void ViceVersa<T1, T2>()
+        protected virtual void ViceVersa<T1, T2>()
         {
             Mapper.CreateMap<T1, T2>();
             Mapper.CreateMap<T2, T1>();

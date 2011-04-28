@@ -19,8 +19,11 @@
                     {
                         columns.Bound(x => x.Name)
                             .Width(300);
+                        columns.Bound(x => x.AttributeControlTypeName)
+                            .Width(150);
                         columns.Bound(x => x.IsRequired)
                             .Width(100)
+                            .Template(x => x.IsRequired.ToString().ToLower())
                             .Centered();
                         columns.Bound(x => x.DisplayOrder)
                             .Width(100)

@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
@@ -122,9 +123,11 @@ namespace Nop.Admin.Infrastructure
             //checkout attributes
             ViceVersa<CheckoutAttribute, CheckoutAttributeModel>();
             ViceVersa<CheckoutAttributeValue, CheckoutAttributeValueModel>();
+            //discounts
+            ViceVersa<Discount, DiscountModel>();
         }
 
-        public static void ViceVersa<T1, T2>()
+        protected virtual void ViceVersa<T1, T2>()
         {
             Mapper.CreateMap<T1, T2>();
             Mapper.CreateMap<T2, T1>();

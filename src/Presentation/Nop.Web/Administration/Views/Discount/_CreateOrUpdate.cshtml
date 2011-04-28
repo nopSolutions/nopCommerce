@@ -1,0 +1,168 @@
+﻿@model Nop.Admin.Models.DiscountModel
+@using Nop.Web.Framework;
+@using Nop.Core.Domain.Discounts;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("discount-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Promotions.Discounts.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Promotions.Discounts.History").Text).Content(TabHistory().ToHtmlString());
+})
+@helper TabInfo()
+    {
+        
+        
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);
+                $("#@Html.FieldIdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
+                $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
+
+                toggleLimitation();
+                toggleUsePercentage();
+                toggleRequiresCouponCode();
+            });
+
+
+            function toggleLimitation() {
+                var selectedDiscountLimitation = document.getElementById('@Html.FieldIdFor(model => model.DiscountLimitationId)');
+                var selectedDiscountLimitationId = selectedDiscountLimitation.options[selectedDiscountLimitation.selectedIndex].value;
+                if (selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesPerCustomer).ToString())) {
+                    //'N Times Only' or 'N Times Per Customer'
+                    $('#pnlLimitationTimes').show();
+                }
+                else {
+                    $('#pnlLimitationTimes').hide();
+
+                }
+            }
+
+            function toggleUsePercentage() {
+                if (getE('@Html.FieldIdFor(model => model.UsePercentage)').checked) {
+                    $('#pnlDiscountPercentage').show();
+                    $('#pnlDiscountAmount').hide();
+                }
+                else {
+                    $('#pnlDiscountPercentage').hide();
+                    $('#pnlDiscountAmount').show();
+                }
+            }
+
+            function toggleRequiresCouponCode() {
+                if (getE('@Html.FieldIdFor(model => model.RequiresCouponCode)').checked) {
+                    $('#pnlCouponCode').show();
+                }
+                else {
+                    $('#pnlCouponCode').hide();
+                }
+            }
+    </script>
+        
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DiscountTypeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.DiscountTypeId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UsePercentage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UsePercentage)
+                @Html.ValidationMessageFor(model => model.UsePercentage)
+            </td>
+        </tr>
+        <tr id="pnlDiscountAmount">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DiscountAmount):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DiscountAmount)
+                @Html.ValidationMessageFor(model => model.DiscountAmount)
+            </td>
+        </tr>
+        <tr id="pnlDiscountPercentage">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DiscountPercentage):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().NumericTextBoxFor(model => model.DiscountPercentage).MinValue(0).MaxValue(100)
+                @Html.ValidationMessageFor(model => model.DiscountPercentage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StartDateUtc):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StartDateUtc)
+                @Html.ValidationMessageFor(model => model.StartDateUtc)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EndDateUtc):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EndDateUtc)
+                @Html.ValidationMessageFor(model => model.EndDateUtc)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RequiresCouponCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RequiresCouponCode)
+                @Html.ValidationMessageFor(model => model.RequiresCouponCode)
+            </td>
+        </tr>
+        <tr id="pnlCouponCode">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CouponCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CouponCode)
+                @Html.ValidationMessageFor(model => model.CouponCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DiscountLimitationId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DiscountLimitationId, ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.DiscountLimitationId)
+            </td>
+        </tr>
+        <tr id="pnlLimitationTimes">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LimitationTimes):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LimitationTimes)
+                @Html.ValidationMessageFor(model => model.LimitationTimes) @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
+            </td>
+        </tr>
+    </table>
+}
+@helper TabHistory()
+    { 
+    /*TODO implement history*/
+}

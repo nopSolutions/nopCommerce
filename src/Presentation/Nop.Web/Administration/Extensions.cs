@@ -10,6 +10,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
@@ -461,6 +462,25 @@ namespace Nop.Admin
         }
 
         public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model, NewsLetterSubscription destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Discounts
+
+        public static DiscountModel ToModel(this Discount entity)
+        {
+            return AutoMapper.Mapper.Map<Discount, DiscountModel>(entity);
+        }
+
+        public static Discount ToEntity(this DiscountModel model)
+        {
+            return AutoMapper.Mapper.Map<DiscountModel, Discount>(model);
+        }
+
+        public static Discount ToEntity(this DiscountModel model, Discount destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }
