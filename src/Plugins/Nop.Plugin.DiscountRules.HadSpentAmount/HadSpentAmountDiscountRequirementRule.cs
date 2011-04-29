@@ -65,5 +65,20 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount
             decimal spentAmount = orders.Sum(o => o.OrderTotal);
             return spentAmount > request.DiscountRequirement.SpentAmount;
         }
+
+        /// <summary>
+        /// Get URL for rule configuration
+        /// </summary>
+        /// <param name="discountId">Discount identifier</param>
+        /// <param name="discountRequirementId">Discount requirement identifier (if editing)</param>
+        /// <returns>URL</returns>
+        public string GetConfigurationUrl(int discountId, int? discountRequirementId)
+        {
+            //configured in RouteProvider.cs
+            string result = "Plugins/DiscountRulesHadSpentAmount/Configure/?discountId=" + discountId;
+            if (discountRequirementId.HasValue)
+                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+            return result;
+        }
     }
 }

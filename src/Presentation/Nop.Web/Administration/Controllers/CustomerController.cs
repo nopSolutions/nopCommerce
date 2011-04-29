@@ -88,9 +88,8 @@ namespace Nop.Admin.Controllers
         
         #endregion
 
-        #region Methods
+        #region Customers
 
-        //Customers
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -429,7 +428,10 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
         
-        //Reward points history
+        #endregion
+        
+        #region Reward points history
+
         [GridAction]
         public ActionResult RewardPointsHistorySelect(int customerId)
         {
@@ -469,10 +471,14 @@ namespace Nop.Admin.Controllers
             customer.AddRewardPointsHistoryEntry(addRewardPointsValue, addRewardPointsMessage);
             _customerService.UpdateCustomer(customer);
 
-            return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
+        
+        #endregion
 
-        //Addresses
+        
+        #region Addresses
+
         [GridAction]
         public ActionResult AddressesSelect(int customerId, GridCommand command)
         {
@@ -639,8 +645,12 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-           
-        //User accounts
+
+        #endregion
+
+
+        #region User accounts
+
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult UserSelect(GridCommand command, CustomerModel model)
         {
@@ -716,8 +726,9 @@ namespace Nop.Admin.Controllers
             customer.AssociatedUserId = userId;
             _customerService.UpdateCustomer(customer);
 
-            return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
+
         #endregion
     }
 }

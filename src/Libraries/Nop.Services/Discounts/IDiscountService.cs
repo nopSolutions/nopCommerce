@@ -44,6 +44,12 @@ namespace Nop.Services.Discounts
         void UpdateDiscount(Discount discount);
 
         /// <summary>
+        /// Delete discount requirement
+        /// </summary>
+        /// <param name="discountRequirement">Discount requirement</param>
+        void DeleteDiscountRequirement(DiscountRequirement discountRequirement);
+
+        /// <summary>
         /// Load discount requirement rule by system name
         /// </summary>
         /// <param name="systemName">System name</param>

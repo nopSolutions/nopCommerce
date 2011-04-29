@@ -864,7 +864,7 @@ namespace Nop.Admin.Controllers
                 DisplayOrder = displayOrder,
             });
 
-            return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -946,7 +946,7 @@ namespace Nop.Admin.Controllers
             };
             _specificationAttributeService.InsertProductSpecificationAttribute(psa);
 
-            return Json(new { Result = "1" }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
 
 

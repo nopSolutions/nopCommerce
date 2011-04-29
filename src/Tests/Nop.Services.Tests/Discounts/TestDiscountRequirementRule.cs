@@ -53,5 +53,16 @@ namespace Nop.Services.Tests.Discounts
         {
             return true;
         }
+
+        /// <summary>
+        /// Get URL for rule configuration
+        /// </summary>
+        /// <param name="discountId">Discount identifier</param>
+        /// <param name="discountRequirementId">Discount requirement identifier (if editing)</param>
+        /// <returns>URL</returns>
+        public string GetConfigurationUrl(int discountId, int? discountRequirementId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

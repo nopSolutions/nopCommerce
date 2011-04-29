@@ -27,6 +27,7 @@ namespace Nop.Services.Discounts
         #region Fields
 
         private readonly IRepository<Discount> _discountRepository;
+        private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IPluginFinder _pluginFinder;
         #endregion
@@ -38,12 +39,15 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="discountRepository">Discount repository</param>
+        /// <param name="discountRequirementRepository">Discount requirement repository</param>
         /// <param name="pluginFinder">Plugin finder</param>
         public DiscountService(ICacheManager cacheManager,
             IRepository<Discount> discountRepository,
+            IRepository<DiscountRequirement> discountRequirementRepository,
             IPluginFinder pluginFinder)
         {
             this._cacheManager = cacheManager;
+            this._discountRequirementRepository = discountRequirementRepository;
             this._discountRepository = discountRepository;
             this._pluginFinder = pluginFinder;
         }
@@ -198,6 +202,20 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException("discount");
 
             _discountRepository.Update(discount);
+
+            _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+        }
+
+        /// <summary>
+        /// Delete discount requirement
+        /// </summary>
+        /// <param name="discountRequirement">Discount requirement</param>
+        public void DeleteDiscountRequirement(DiscountRequirement discountRequirement)
+        {
+            if (discountRequirement == null)
+                throw new ArgumentNullException("discountRequirement");
+
+            _discountRequirementRepository.Delete(discountRequirement);
 
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
         }

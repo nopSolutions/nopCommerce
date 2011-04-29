@@ -47,6 +47,7 @@
                 data.position = e.dropPosition;
 
                 $.ajax({
+                    cache:false,
                     url: "@Url.Action("TreeDrop")",
                     data: data,
                     type: "POST",

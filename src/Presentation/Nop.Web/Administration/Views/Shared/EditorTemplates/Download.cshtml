@@ -15,6 +15,7 @@
                 var downloadUrl = $("#downloadurl@(randomNumber)").val();
                 $('#saveDownloadUrl@(randomNumber)').attr('disabled', true);
                 $.ajax({
+                    cache:false,
                     type: "POST",
                     url: "@(Url.Action("SaveDownloadUrl", "Download"))",
                     data: "downloadUrl=" + downloadUrl,

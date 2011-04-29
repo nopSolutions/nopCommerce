@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
@@ -25,21 +26,67 @@ namespace Nop.Admin.Controllers
 
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        private readonly IWebHelper _webHelper;
 
         #endregion Fields
 
         #region Constructors
 
-        public DiscountController(IDiscountService discountService,
-            ILocalizationService localizationService, IWorkContext workContext)
+        public DiscountController(IDiscountService discountService, 
+            ILocalizationService localizationService, IWebHelper webHelper)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
-            this._workContext = workContext;
+            this._webHelper = webHelper;
         }
 
         #endregion Constructors
+
+        #region Utitlies
+
+        [NonAction]
+        public string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)
+        {   
+            if (discountRequirementRule == null)
+                throw new ArgumentNullException("discountRequirementRule");
+
+            if (discount == null)
+                throw new ArgumentNullException("discount");
+
+            string url = string.Format("{0}{1}", _webHelper.GetStoreLocation(), discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId));
+            return url;
+        }
+        
+        [NonAction]
+        private void PrepareDiscountModel(DiscountModel model, Discount discount)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableDiscountRequirementRules.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
+            var discountRules = _discountService.LoadAllDiscountRequirementRules();
+            foreach (var discountRule in discountRules)
+                model.AvailableDiscountRequirementRules.Add(new SelectListItem() { Text = discountRule.FriendlyName, Value = discountRule.SystemName });
+
+            if (discount != null)
+            {
+                foreach (var dr in discount.DiscountRequirements.OrderBy(dr=>dr.Id))
+                {
+                    var drr = _discountService.LoadDiscountRequirementRuleBySystemName(dr.DiscountRequirementRuleSystemName);
+                    if (drr != null)
+                    {
+                        model.DiscountRequirementMetaInfos.Add(new DiscountModel.DiscountRequirementMetaInfo()
+                        {
+                            DiscountRequirementId = dr.Id,
+                            RuleName = drr.FriendlyName,
+                            ConfigurationUrl = GetRequirementUrlInternal(drr, discount, dr.Id)
+                        });
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         #region Discounts
 
@@ -79,6 +126,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Create()
         {
             var model = new DiscountModel();
+            PrepareDiscountModel(model, null);
             //default values
             model.LimitationTimes = 1;
             return View(model);
@@ -96,6 +144,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            PrepareDiscountModel(model, null);
             return View(model);
         }
 
@@ -106,6 +155,7 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id", "id");
             var model = discount.ToModel();
+            PrepareDiscountModel(model, discount);
             return View(model);
         }
 
@@ -124,6 +174,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            PrepareDiscountModel(model, discount);
             return View(model);
         }
 
@@ -134,6 +185,62 @@ namespace Nop.Admin.Controllers
             var discount = _discountService.GetDiscountById(id);
             _discountService.DeleteDiscount(discount);
             return RedirectToAction("List");
+        }
+
+        #endregion
+
+        #region Discount requirements
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
+        {
+            if (String.IsNullOrEmpty(systemName))
+                throw new ArgumentNullException("systemName");
+            
+            var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(systemName);
+            if (discountRequirementRule == null)
+                throw new ArgumentException("Discount requirement rule could not be loaded");
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new ArgumentException("Discount could not be loaded");
+
+            string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
+            return Json(new { url = url }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetDiscountRequirementMetaInfo(int discountRequirementId, int discountId)
+        {
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new ArgumentException("Discount could not be loaded");
+
+            var discountRequirement = discount.DiscountRequirements.Where(dr => dr.Id == discountRequirementId).FirstOrDefault();
+            if (discountRequirement == null)
+                throw new ArgumentException("Discount requirement could not be loaded");
+
+            var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(discountRequirement.DiscountRequirementRuleSystemName);
+            if (discountRequirementRule == null)
+                throw new ArgumentException("Discount requirement rule could not be loaded");
+
+            string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
+            string ruleName = discountRequirementRule.FriendlyName;
+            return Json(new { url = url, ruleName = ruleName }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DeleteDiscountRequirement(int discountRequirementId, int discountId)
+        {
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new ArgumentException("Discount could not be loaded");
+
+            var discountRequirement = discount.DiscountRequirements.Where(dr => dr.Id == discountRequirementId).FirstOrDefault();
+            if (discountRequirement == null)
+                throw new ArgumentException("Discount requirement could not be loaded");
+
+            _discountService.DeleteDiscountRequirement(discountRequirement);
+
+            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

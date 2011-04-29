@@ -3047,9 +3047,6 @@
                   <LocaleResource Name="EditDiscountDetails">
                     <Value>Edit discount details</Value>
                   </LocaleResource>
-                  <LocaleResource Name="Info">
-                    <Value>Discount info</Value>
-                  </LocaleResource>
                   <LocaleResource Name="Fields">
                     <Children>
                       <LocaleResource Name="Name">
@@ -3148,8 +3145,33 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="Info">
+                    <Value>Discount info</Value>
+                  </LocaleResource>
                   <LocaleResource Name="History">
                     <Value>Usage history</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Requirements">
+                    <Value>Requirements</Value>
+                    <Children>
+                      <LocaleResource Name="AddNew">
+                        <Value>Add a new discount requirement</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="DiscountRequirementType">
+                        <Value>Discount requirement type</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Choose discount requirement type and configure it below.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Select">
+                            <Value>Select requirement type</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="SaveBeforeEdit">
+                        <Value>You need to save the discount before you can add requirements for this discount page.</Value>
+                      </LocaleResource>
+                    </Children>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

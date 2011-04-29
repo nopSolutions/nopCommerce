@@ -56,25 +56,29 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             if (request.Customer == null)
                 return false;
 
-            var customerRoles = request.Customer.CustomerRoles.Where(cr => cr.Active).ToList();
-            if (customerRoles.Count == 0)
+            if (!request.DiscountRequirement.RestrictedToCustomerRoleId.HasValue)
                 return false;
 
-            if (request.DiscountRequirement.RestrictedToCustomerRoles == null ||
-                request.DiscountRequirement.RestrictedToCustomerRoles.Count == 0)
-                return false;
+            foreach (var customerRole in request.Customer.CustomerRoles.Where(cr => cr.Active).ToList())
+                if (request.DiscountRequirement.RestrictedToCustomerRoleId == customerRole.Id)
+                    return true;
 
-            foreach (var restrCustomerRole in request.DiscountRequirement.RestrictedToCustomerRoles)
-            {
-                bool found = false;
-                foreach (var customerRole in customerRoles)
-                    if (restrCustomerRole == customerRole)
-                        found = true;
-                if (!found)
-                    return false;
-            }
+            return false;
+        }
 
-            return true;
+        /// <summary>
+        /// Get URL for rule configuration
+        /// </summary>
+        /// <param name="discountId">Discount identifier</param>
+        /// <param name="discountRequirementId">Discount requirement identifier (if editing)</param>
+        /// <returns>URL</returns>
+        public string GetConfigurationUrl(int discountId, int? discountRequirementId)
+        {
+            //configured in RouteProvider.cs
+            string result = "Plugins/DiscountRulesCustomerRoles/Configure/?discountId=" + discountId;
+            if (discountRequirementId.HasValue)
+                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+            return result;
         }
     }
 }

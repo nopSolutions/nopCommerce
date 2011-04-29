@@ -66,5 +66,20 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
             bool result = request.Customer.ShippingAddress.CountryId == request.DiscountRequirement.ShippingCountryId;
             return result;
         }
+
+        /// <summary>
+        /// Get URL for rule configuration
+        /// </summary>
+        /// <param name="discountId">Discount identifier</param>
+        /// <param name="discountRequirementId">Discount requirement identifier (if editing)</param>
+        /// <returns>URL</returns>
+        public string GetConfigurationUrl(int discountId, int? discountRequirementId)
+        {
+            //configured in RouteProvider.cs
+            string result = "Plugins/DiscountRulesShippingCountry/Configure/?discountId=" + discountId;
+            if (discountRequirementId.HasValue)
+                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+            return result;
+        }
     }
 }

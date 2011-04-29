@@ -116,6 +116,9 @@
     <Compile Include="Validators\Customer\CustomerInfoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\defaultResources.plugins.nopres.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\defaultResources.admin.nopres.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -763,6 +766,7 @@
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.jqGrid.min.js" />
     <Content Include="Scripts\jquery.superfishmenu.js" />
+    <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
     <Content Include="Scripts\public.js" />
     <Content Include="Scripts\swfobject.js" />
