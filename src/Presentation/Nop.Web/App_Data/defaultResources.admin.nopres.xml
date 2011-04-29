@@ -3188,6 +3188,9 @@
                           <LocaleResource Name="Requeue">
                               <Value>Requeue</Value>
                           </LocaleResource>
+                          <LocaleResource Name="DeleteSelected">
+                            <Value>Delete selected</Value>
+                          </LocaleResource>                          
                           <LocaleResource Name="Fields">
                                 <Children>
                                     <LocaleResource Name="Id">
