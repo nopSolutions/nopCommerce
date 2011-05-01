@@ -124,6 +124,7 @@
     <Compile Include="Themes\ThemeConfiguration.cs" />
     <Compile Include="Themes\ThemableRazorViewEngine.cs" />
     <Compile Include="Themes\ThemeProvider.cs" />
+    <Compile Include="UI\DataListExtensions.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
   </ItemGroup>
   <ItemGroup>

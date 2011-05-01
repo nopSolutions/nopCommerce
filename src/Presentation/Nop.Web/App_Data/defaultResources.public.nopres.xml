@@ -385,6 +385,18 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Categories">
+    <Value>Categories</Value>
+    <Children>
+      <LocaleResource Name="Breadcrumb">
+        <Children>
+          <LocaleResource Name="Top">
+            <Value>Top</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Common">
     <Children>
       <LocaleResource Name="AddNew">
@@ -783,8 +795,14 @@
   </LocaleResource>
   <LocaleResource Name="Products">
     <Children>
+      <LocaleResource Name="AddToCart">
+        <Value>Add to cart</Value>
+      </LocaleResource>
       <LocaleResource Name="CallForPrice">
         <Value>Call for pricing</Value>
+      </LocaleResource>
+      <LocaleResource Name="Details">
+        <Value>Details</Value>
       </LocaleResource>
       <LocaleResource Name="ExclTaxSuffix">
         <Value>{0} excl tax</Value>

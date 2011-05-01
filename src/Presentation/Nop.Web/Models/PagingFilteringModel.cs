@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using MvcContrib.Pagination;
 using Nop.Core;
@@ -8,7 +9,7 @@ namespace Nop.Web.Models
 {
     public class PagingFilteringModel : IPagination
     {
-		#region Constructors 
+        #region Constructors
 
         public PagingFilteringModel()
         {
@@ -16,77 +17,11 @@ namespace Nop.Web.Models
             ProductSorting = ProductSortingEnum.Position;
         }
 
-		#endregion Constructors 
+        #endregion
 
-		#region Properties 
+        #region Methods
 
-        public int CategoryId {get;set;}
-
-        public int FirstItem
-        {
-            get;
-            set;
-        }
-
-        public bool HasNextPage
-        {
-            get;
-            set;
-        }
-
-        public bool HasPreviousPage
-        {
-            get;
-            set;
-        }
-
-        public int LastItem
-        {
-            get;
-            set;
-        }
-
-        public int ManufacturerId {get;set;}
-
-        public int PageNumber
-        {
-            get;
-            set;
-        }
-
-        public int PageSize
-        {
-            get;
-            set;
-        }
-
-        public decimal? PriceMax {get;set;}
-
-        public decimal? PriceMin {get;set;}
-
-        public ProductSortingEnum ProductSorting {get;set;}
-
-        public IList<int> Specs {get;set;}
-
-        public int TotalItems
-        {
-            get;
-            set;
-        }
-
-        public int TotalPages
-        {
-            get;
-            set;
-        }
-
-		#endregion Properties 
-
-		#region Methods 
-
-		#region Public Methods 
-
-        public System.Collections.IEnumerator GetEnumerator()
+        public IEnumerator GetEnumerator()
         {
             return new List<string>().GetEnumerator();
         }
@@ -96,7 +31,7 @@ namespace Nop.Web.Models
             FirstItem = (pagedList.PageIndex * pagedList.PageSize) + 1;
             HasNextPage = pagedList.HasNextPage;
             HasPreviousPage = pagedList.HasPreviousPage;
-            var value1 = ((pagedList.PageIndex*pagedList.PageSize) + pagedList.PageSize);
+            var value1 = ((pagedList.PageIndex * pagedList.PageSize) + pagedList.PageSize);
             LastItem = Math.Min(pagedList.TotalCount, value1);
             PageNumber = pagedList.PageIndex + 1;
             PageSize = pagedList.PageSize;
@@ -104,8 +39,38 @@ namespace Nop.Web.Models
             TotalPages = pagedList.TotalPages;
         }
 
-		#endregion Public Methods 
+        #endregion
 
-		#endregion Methods 
+        #region Properties
+
+        public int CategoryId { get; set; }
+
+        public int FirstItem { get; set; }
+
+        public bool HasNextPage { get; set; }
+
+        public bool HasPreviousPage { get; set; }
+
+        public int LastItem { get; set; }
+
+        public int ManufacturerId { get; set; }
+
+        public int PageNumber { get; set; }
+
+        public int PageSize { get; set; }
+
+        public decimal? PriceMax { get; set; }
+
+        public decimal? PriceMin { get; set; }
+
+        public ProductSortingEnum ProductSorting { get; set; }
+
+        public IList<int> Specs { get; set; }
+
+        public int TotalItems { get; set; }
+
+        public int TotalPages { get; set; }
+
+        #endregion
     }
 }

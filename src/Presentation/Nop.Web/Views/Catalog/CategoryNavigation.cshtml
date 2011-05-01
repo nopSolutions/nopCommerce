@@ -1,0 +1,37 @@
+﻿@model IList<CategoryNavigationModel>
+
+@{
+    Layout = null;
+}
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Infrastructure
+@using Nop.Services.Catalog
+@using Nop.Web.Models.Catalog
+@if (Model.Count > 0)
+{
+    <div class="block block-category-navigation">
+        <div class="title">
+            @T("Categories")
+        </div>
+        <div class="clear">
+        </div>
+        <div class="listbox">
+            <ul>
+                @foreach (var category in Model)
+                {
+                    <li class="@(category.IsActive ? "active" : "inactive")" 
+                    @if (category.NumberOfParentCategories > 0)
+                    {
+                        <text>style="margin-left: @(category.NumberOfParentCategories * 15)px"</text>
+                    }
+                    ><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })">@category.Name
+                        @if (category.DisplayNumberOfProducts)
+                        {
+                            <text> (@(category.NumberOfProducts))</text>
+                        }
+                    </a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}

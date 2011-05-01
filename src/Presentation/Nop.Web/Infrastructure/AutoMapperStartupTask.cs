@@ -4,6 +4,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Tasks;
 using Nop.Services.Localization;
+using Nop.Web.Extensions;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
@@ -30,12 +31,13 @@ namespace Nop.Web.Infrastructure
             //catalog product
             Mapper.CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
-                .ForMember(dest => dest.ShortDescription,
-                           opt => opt.MapFrom(src => src.GetLocalized(x => x.ShortDescription)))
+                .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.GetLocalized(x => x.ShortDescription)))
                 .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
             //catalog category
             Mapper.CreateMap<Category, CategoryModel>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.GetLocalized(x => x.Description)))
+                .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
             Mapper.CreateMap<Category, CategoryModel.SubCategoryModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
                 .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));

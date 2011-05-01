@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Media;
+using Nop.Services.Media;
 
 namespace Nop.Services.Catalog
 {
@@ -38,6 +42,24 @@ namespace Nop.Services.Catalog
                 if (crossSellProduct.ProductId1 == productId1 && crossSellProduct.ProductId2 == productId2)
                     return crossSellProduct;
             return null;
+        }
+
+        /// <summary>
+        /// Get a default picture of a product 
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="pictureService">Picture service</param>
+        /// <returns>Product picture</returns>
+        public static Picture GetDefaultProductPicture(this Product source, IPictureService pictureService)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+
+            if (pictureService == null)
+                throw new ArgumentNullException("pictureService");
+
+            var picture = pictureService.GetPicturesByProductId(source.Id, 1).FirstOrDefault();
+            return picture;
         }
     }
 }

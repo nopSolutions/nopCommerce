@@ -1,13 +1,12 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
 <div class="product-item">
     <h2 class="product-title">
-        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })">
-            Build your own computer</a>
+        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })">@Model.Name</a>
     </h2>
     <div class="picture">
         <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" title="Show details for @Model.Name">
-            <img style="border-width: 0px;" alt="Picture of Build your own computer" src="@Model.ImageUrl"
-                title="Show details for Build your own computer"></a>
+            <img style="border-width: 0px;" alt="Picture of @Model.Name" src="@Model.ImageUrl" title="Show details for @Model.Name" />
+        </a>
     </div>
     <div class="description">
         @Model.ShortDescription
@@ -17,7 +16,10 @@
             @Html.Partial("_ProductPrice", Model.ProductPrice)
         </div>
         <div class="buttons">
-            <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" class="productlistproductdetailbutton">Details</a>
+            <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" class="productlistproductdetailbutton">@("Products.Details")</a>
+            @*UNDONE add to cart
+            <br />
+            <input type="submit" value="@("Products.AddToCart")" class="productgridproductdetailbutton">*@
         </div>
     </div>
 </div>

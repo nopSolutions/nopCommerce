@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Services.Localization;
+using Nop.Web.Extensions;
 using Nop.Web.Models;
 
 namespace Nop.Web.Controllers

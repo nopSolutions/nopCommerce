@@ -38,14 +38,6 @@ namespace Nop.Web
             var routePublisher = EngineContext.Current.Resolve<IRoutePublisher>();
             routePublisher.RegisterRoutes(routes);
             
-            routes.MapRoute("Product",
-                            "Product/{productId}/{SeName}",
-                            new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional});
-
-            routes.MapRoute("Category",
-                            "Category/{categoryId}/{SeName}",
-                            new { controller = "Catalog", action = "Category", SeName = UrlParameter.Optional });
-
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters

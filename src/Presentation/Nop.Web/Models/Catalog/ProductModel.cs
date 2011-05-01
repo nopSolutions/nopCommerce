@@ -13,15 +13,15 @@ namespace Nop.Web.Models.Catalog
             ProductPrice = new ProductPriceModel();
         }
 
-        public string ImageUrl { get; set; }
-
         public string Name { get; set; }
-
-        public ProductPriceModel ProductPrice { get; set; }
 
         public string SeName { get; set; }
 
         public string ShortDescription { get; set; }
+
+        public string ImageUrl { get; set; }
+
+        public ProductPriceModel ProductPrice { get; set; }
 
 
 		#region Nested Classes 

@@ -4,27 +4,56 @@
 }
 @using MvcContrib.UI.Pager;
 @using MvcContrib.Pagination;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@{
+    var storeUrl = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
+}
 <div class="category-page">
+    @if (Model.DisplayCategoryBreadcrumb)
+    {
+        <div class="breadcrumb">
+            <a href='@storeUrl'>@T("Categories.Breadcrumb.Top")</a> /
+            @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
+            {
+                var catBr = Model.CategoryBreadcrumb[i];
+                <a href="@Url.RouteUrl("Category", new { categoryId = catBr.Id, SeName = catBr.SeName })">@catBr.Name</a>
+                                                                                                     if (i != Model.CategoryBreadcrumb.Count - 1)
+                                                                                                     {
+                    <text>/</text>
+                                                                                                     }
+            }
+            <br />
+        </div>
+        <div class="clear">
+        </div>
+    }
+    <div class="category-description">
+        @Html.Raw(Model.Description)
+    </div>
+    <div class="clear">
+    </div>
     @if (Model.SubCategories.Count > 0)
     {
-        <ul class="sub-category-grid">
-            @foreach (var subCategory in Model.SubCategories)
-            {
-                <li class="item-box">
+        <div class="sub-category-grid">
+            @(Html.DataList<CategoryModel.SubCategoryModel>(Model.SubCategories, 3,
+                @<div class="item-box">
                     <div class="sub-category-item">
                         <h2 class="category-title">
-                            <a href="@Url.RouteUrl("Category", new { categoryId = subCategory.Id, subCategory.SeName })" title="Show products in category @subCategory.Name">
-                                @subCategory.Name</a>
+                            <a href="@Url.RouteUrl("Category", new { categoryId = item.Id, item.SeName })" title="Show products in category @item.Name">
+                                @item.Name</a>
                         </h2>
                         <div class="picture">
-                            <a href="@Url.RouteUrl("Category", new { categoryId = subCategory.Id, subCategory.SeName })" title="Show products in category @subCategory.Name">
-                                <img style="border-width: 0px;" alt="Picture for category @subCategory.Name" src="@subCategory.ImageUrl"
-                                    title="Show products in category @subCategory.Name" /></a>
+                            <a href="@Url.RouteUrl("Category", new { categoryId = item.Id, item.SeName })" title="Show products in category @item.Name">
+                                <img style="border-width: 0px;" alt="Picture for category @item.Name" src="@item.ImageUrl"
+                                    title="Show products in category @item.Name" /></a>
                         </div>
                     </div>
-                </li> 
-            }
-        </ul>
+                </div>
+            ))
+        </div>
         <div class="clear">
         </div>
     }

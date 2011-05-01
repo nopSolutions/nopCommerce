@@ -1,6 +1,14 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.cshtml";
 }
+@{
+    int currentCategoryId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    }
+}
 <div class="master-wrapper-leftside-3">
     @if (IsSectionDefined("left"))
     {
@@ -8,8 +16,7 @@
     }
     else
     {
-        <div>
-            Default content</div>
+        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId })
     }
 </div>
 <div class="master-wrapper-center-3">
