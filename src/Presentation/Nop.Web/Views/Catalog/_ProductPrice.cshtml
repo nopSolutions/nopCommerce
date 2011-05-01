@@ -1,27 +1,7 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel.ProductPriceModel
-@if (!Model.CustomerEntersPrice)
+@if (!String.IsNullOrEmpty(Model.OldPrice))
 {
-    if (Model.CallForPrice)
-    {
-        <span class="productPrice">@T("Products.CallForPrice")</span>
-    }
-    else
-    {
-        if (Model.HasMultipleVariants)
-        {
-            <span class="productPrice">@T("Products.PriceRangeFromText", Model.Price)</span>
-        }
-        else
-        {
-            if (Model.OldPrice.HasValue)
-            {
-                <span class="oldproductPrice">@Model.OldPrice.Value</span>
-            }
-            <br />
-            if (Model.Price.HasValue)
-            {
-                <span class="productPrice">@Model.Price.Value</span>
-            }
-        }
-    }
+    <span class="oldproductPrice">@Model.OldPrice</span>
+    <br />
 }
+<span class="productPrice">@Model.Price</span> 

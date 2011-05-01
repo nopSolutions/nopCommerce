@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MvcContrib.Pagination;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Web.Framework;
 
 namespace Nop.Web.Models
 {
@@ -14,7 +15,6 @@ namespace Nop.Web.Models
         public PagingFilteringModel()
         {
             Specs = new List<int>();
-            ProductSorting = ProductSortingEnum.Position;
         }
 
         #endregion
@@ -31,8 +31,7 @@ namespace Nop.Web.Models
             FirstItem = (pagedList.PageIndex * pagedList.PageSize) + 1;
             HasNextPage = pagedList.HasNextPage;
             HasPreviousPage = pagedList.HasPreviousPage;
-            var value1 = ((pagedList.PageIndex * pagedList.PageSize) + pagedList.PageSize);
-            LastItem = Math.Min(pagedList.TotalCount, value1);
+            LastItem = Math.Min(pagedList.TotalCount, ((pagedList.PageIndex * pagedList.PageSize) + pagedList.PageSize));
             PageNumber = pagedList.PageIndex + 1;
             PageSize = pagedList.PageSize;
             TotalItems = pagedList.TotalCount;
@@ -63,7 +62,11 @@ namespace Nop.Web.Models
 
         public decimal? PriceMin { get; set; }
 
-        public ProductSortingEnum ProductSorting { get; set; }
+        /// <summary>
+        /// Product sorting
+        /// </summary>
+        [NopResourceDisplayName("Categories.OrderBy")]
+        public int OrderBy { get; set; }
 
         public IList<int> Specs { get; set; }
 

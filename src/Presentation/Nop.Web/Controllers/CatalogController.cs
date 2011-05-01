@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Catalog;
-using System.Linq;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
+using Nop.Web.Framework;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 
@@ -26,18 +29,24 @@ namespace Nop.Web.Controllers
         private readonly ITaxService _taxService;
         private readonly ICurrencyService _currencyService;
         private readonly IPictureService _pictureService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IPriceFormatter _priceFormatter;
 
         private readonly MediaSettings _mediaSetting;
+        private readonly CatalogSettings _catalogSettings;
         
 
-        #endregion Fields 
+        #endregion
 
 		#region Constructors
 
         public CatalogController(ICategoryService categoryService, 
             IProductService productService, IWorkContext workContext, 
             ITaxService taxService, ICurrencyService currencyService,
-            IPictureService pictureService, MediaSettings mediaSetting)
+            IPictureService pictureService, ILocalizationService localizationService,
+            IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
+            MediaSettings mediaSetting, CatalogSettings catalogSettings)
         {
             this._currencyService = currencyService;
             this._taxService = taxService;
@@ -45,12 +54,31 @@ namespace Nop.Web.Controllers
             this._productService = productService;
             this._categoryService = categoryService;
             this._pictureService = pictureService;
+            this._localizationService = localizationService;
+            this._priceCalculationService = priceCalculationService;
+            this._priceFormatter = priceFormatter;
+
             this._mediaSetting = mediaSetting;
+            this._catalogSettings = catalogSettings;
         }
 
 		#endregion Constructors 
         
         #region Utilities
+
+        [NonAction]
+        private ProductVariant GetMinimalPriceProductVariant(IList<ProductVariant> variants)
+        {
+            if (variants == null)
+                throw new ArgumentNullException("variants");
+
+            if (variants.Count == 0)
+                return null;
+            
+            var tmp1= variants.ToList();
+            tmp1.Sort(new GenericComparer<ProductVariant>("Price", GenericComparer<ProductVariant>.SortOrder.Ascending));
+            return tmp1[0];
+        }
 
         /// <summary>
         /// Gets a category breadcrumb
@@ -77,97 +105,100 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private ProductModel.ProductPriceModel BuildProductPriceModel(Product product)
+        private ProductModel.ProductPriceModel PrepareProductPriceModel(Product product)
         {
-            var productPrice = new ProductModel.ProductPriceModel();
+            if (product == null)
+                throw new ArgumentNullException("product");
 
+            var model = new ProductModel.ProductPriceModel();
             var productVariants = _productService.GetProductVariantsByProductId(product.Id);
-            if (!(productVariants.Count > 1))
+            if (productVariants.Count > 0)
             {
-                //single product variant
-                var productVariant = productVariants.ElementAt(0);
-                //TODO:Support HidePricesForNonRegistered?
-                //if (!this.SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
-                //    (NopContext.Current.User != null &&
-                //    !NopContext.Current.User.IsGuest))
-                //{
-                if (productVariant.CustomerEntersPrice)
+                if (productVariants.Count == 1)
                 {
-                    productPrice.CustomerEntersPrice = true;
+                    var productVariant = productVariants[0];
+
+                    if (!_catalogSettings.HidePricesForNonRegistered ||
+                        (_workContext.CurrentCustomer != null &&
+                        !_workContext.CurrentCustomer.IsGuest()))
+                    {
+                        if (!productVariant.CustomerEntersPrice)
+                        {
+                            if (productVariant.CallForPrice)
+                            {
+                                model.OldPrice = null;
+                                model.Price = _localizationService.GetResource("Products.CallForPrice");
+                            }
+                            else
+                            {
+                                decimal taxRate = decimal.Zero;
+                                decimal oldPriceBase = _taxService.GetProductPrice(productVariant, productVariant.OldPrice, out taxRate);
+                                decimal finalPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, true), out taxRate);
+
+                                decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                                decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+
+                                if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                {
+                                    model.OldPrice = _priceFormatter.FormatPrice(oldPrice);
+                                    model.Price = _priceFormatter.FormatPrice(finalPrice);
+                                }
+                                else
+                                {
+                                    model.OldPrice = null;
+                                    model.Price = _priceFormatter.FormatPrice(finalPrice);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        model.OldPrice = null;
+                        model.Price = null;
+                    }
                 }
                 else
                 {
-                    if (productVariant.CallForPrice)
+                    var productVariant = GetMinimalPriceProductVariant(productVariants);
+                    if (productVariant != null)
                     {
-                        productPrice.CallForPrice = true;
-                    }
-                    else
-                    {
-                        var taxRate = decimal.Zero;
-                        var oldPriceBase = _taxService.GetProductPrice(productVariant, productVariant.OldPrice, out taxRate); //_taxService.GetPrice(productVariant, productVariant.OldPrice, out taxRate);
-                        var finalPriceBase = _taxService.GetProductPrice(productVariant, productVariant.Price, _workContext.CurrentCustomer, out taxRate);
-
-                        var oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase,
-                                                                                            _workContext.
-                                                                                                WorkingCurrency);
-                        var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase,
-                                                                                          _workContext.
-                                                                                              WorkingCurrency);
-
-                        if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                        if (!_catalogSettings.HidePricesForNonRegistered ||
+                            (_workContext.CurrentCustomer != null &&
+                            !_workContext.CurrentCustomer.IsGuest()))
                         {
-                            productPrice.OldPrice = oldPrice;
+                            if (!productVariant.CustomerEntersPrice)
+                            {
+                                if (productVariant.CallForPrice)
+                                {
+                                    model.OldPrice = null;
+                                    model.Price = _localizationService.GetResource("Products.CallForPrice");
+                                }
+                                else
+                                {
+                                    decimal taxRate = decimal.Zero;
+                                    decimal fromPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, false), out taxRate);
+                                    decimal fromPrice = _currencyService.ConvertFromPrimaryStoreCurrency(fromPriceBase, _workContext.WorkingCurrency);
+
+                                    model.OldPrice = null;
+                                    model.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFromText"), _priceFormatter.FormatPrice(fromPrice));
+                                }
+                            }
                         }
                         else
                         {
-                            productPrice.OldPrice = null;
+                            model.OldPrice = null;
+                            model.Price = null;
                         }
-                        productPrice.Price = finalPrice;
                     }
                 }
-                //}
             }
             else
             {
-                //multiple product variants
-                var productVariant = product.MinimalPriceProductVariant();
-                if (productVariant != null)
-                {
-                    //TODO:Support HidePricesForNonRegistered?
-                    //if (!this.SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
-                    //    (NopContext.Current.User != null &&
-                    //    !NopContext.Current.User.IsGuest))
-                    //{
-                    if (productVariant.CustomerEntersPrice)
-                    {
-                        productPrice.CustomerEntersPrice = true;
-                    }
-                    else
-                    {
-                        if (productVariant.CallForPrice)
-                        {
-                            productPrice.CallForPrice = true;
-                        }
-                        else
-                        {
-                            decimal taxRate;
-                            decimal fromPriceBase = _taxService.GetProductPrice(productVariant, productVariant.Price,
-                                                                                out taxRate);
-                            decimal fromPrice = _currencyService.ConvertFromPrimaryStoreCurrency(fromPriceBase,
-                                                                                                 _workContext.
-                                                                                                     WorkingCurrency);
-                            productPrice.Price = fromPrice;
-                        }
-                    }
-                    //}
-                    //else
-                    //{
-                    //    lblOldPrice.Visible = false;
-                    //    lblPrice.Visible = false;
-                    //}
-                }
+                model.OldPrice = null;
+                model.Price = null;
             }
-            return productPrice;
+            
+            return model;
         }
 
         [NonAction]
@@ -228,26 +259,64 @@ namespace Nop.Web.Controllers
 
         public ActionResult Category(int categoryId, PagingFilteringModel command)
         {
-            var ttt = this.RouteData;
             var category = _categoryService.GetCategoryById(categoryId);
-            if (category == null) return RedirectToAction("Index", "Home");
+            if (category == null)
+                return RedirectToAction("Index", "Home");
 
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
             var model = category.ToModel();
-            //products
-            var products = _productService.SearchProducts(categoryId, 0, false,
-                                                          command.PriceMin, command.PriceMax, 0, 0, string.Empty,
-                                                          false,
-                                                          _workContext.WorkingLanguage.Id, command.Specs,
-                                                          command.ProductSorting,
-                                                          command.PageNumber - 1, command.PageSize);
-            model.Products = products.Select(x =>
+            
+            //sorting
+            _catalogSettings.AllowProductSorting = true; //TODO remove test
+            model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
+            if (model.AllowProductFiltering)
+                model.AllowedSortOptions = ((ProductSortingEnum)command.OrderBy).ToSelectList();
+
+
+
+            //category breadcrumb
+            model.DisplayCategoryBreadcrumb = true; //UNDONE use "Media.CategoryBreadcrumbEnabled" setting
+            if (model.DisplayCategoryBreadcrumb)
+            {
+                foreach (var catBr in GetCategoryBreadCrumb(category))
+                {
+                    model.CategoryBreadcrumb.Add(new CategoryModel()
+                    {
+                        Id = catBr.Id,
+                        Name = catBr.GetLocalized(x => x.Name),
+                        SeName = catBr.GetSeName()
+                    });
+                }
+            }
+
+
+
+
+            //subcategories
+            model.SubCategories = _categoryService
+                .GetAllCategoriesByParentCategoryId(categoryId)
+                .Select(x =>
+                {
+                    var subCatModel = AutoMapper.Mapper.Map<Category, CategoryModel.SubCategoryModel>(x);
+                    subCatModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
+                    return subCatModel;
+                })
+                .ToList();
+
+
+
+
+            //featured products
+            var featuredProducts = _productService.SearchProducts(category.Id,
+                0, true, null, null, 0, 0, null, false, _workContext.WorkingLanguage.Id, null,
+                 ProductSortingEnum.Position, 0, int.MaxValue);
+            model.FeaturedProducts = featuredProducts.Select(x =>
             {
                 var m = x.ToModel();
                 //price
-                m.ProductPrice = BuildProductPriceModel(x);
+                m.ProductPrice = PrepareProductPriceModel(x);
                 //picture
                 var picture = x.GetDefaultProductPicture(_pictureService);
                 if (picture != null)
@@ -258,33 +327,42 @@ namespace Nop.Web.Controllers
             })
             .ToList();
 
-            //subcategories
-            model.SubCategories = _categoryService
-                .GetAllCategoriesByParentCategoryId(categoryId)
-                .Select(x => {
-                    var subCatModel = AutoMapper.Mapper.Map<Category, CategoryModel.SubCategoryModel>(x);
-                    subCatModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
-                    return subCatModel;
-                })
-                .ToList();
 
-            //category breadcrumb
-            model.DisplayCategoryBreadcrumb = true; //UNDONE use "Media.CategoryBreadcrumbEnabled" setting
-            if (model.DisplayCategoryBreadcrumb)
+
+            //products
+            //UNDONE convert min/max prices
+            var products = _productService.SearchProducts(categoryId, 0, false,
+                                                          command.PriceMin, command.PriceMax, 0, 0, string.Empty,
+                                                          false,
+                                                          _workContext.WorkingLanguage.Id, command.Specs,
+                                                          (ProductSortingEnum)command.OrderBy,
+                                                          command.PageNumber - 1, command.PageSize);
+            model.Products = products.Select(x =>
             {
-                foreach (var catBr in GetCategoryBreadCrumb(category))
-                {
-                    model.CategoryBreadcrumb.Add(new CategoryModel()
-                        {
-                            Id = catBr.Id,
-                            Name = catBr.GetLocalized(x => x.Name),
-                            SeName = catBr.GetSeName()
-                        });
-                }
-            }
-
+                var m = x.ToModel();
+                //price
+                m.ProductPrice = PrepareProductPriceModel(x);
+                //picture
+                var picture = x.GetDefaultProductPicture(_pictureService);
+                if (picture != null)
+                    m.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+                else
+                    m.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                return m;
+            })
+            .ToList();
             model.PagingFilteringContext.LoadPagedList(products);
             return View(model);
+        }
+
+        public ActionResult ChangeCategoryOrderBy(int categoryId, int orderBy)
+        {
+            var category = _categoryService.GetCategoryById(categoryId);
+            if (category == null) 
+                return RedirectToAction("Index", "Home");
+
+            return RedirectToRoute("Category", new { categoryId = category.Id, SeName = category.GetSeName(), orderBy = orderBy });
+            return RedirectToAction("Category", "Catalog", new { categoryId = category.Id,  orderBy = orderBy });
         }
 
         public ActionResult CategoryNavigation(int currentCategoryId)
@@ -299,9 +377,11 @@ namespace Nop.Web.Controllers
         public ActionResult Product(int productId)
         {
             var product = _productService.GetProductById(productId);
-            if (product == null) return RedirectToAction("Index", "Home");
+            if (product == null) 
+                return RedirectToAction("Index", "Home");
+
             var model = product.ToModel();
-            model.ProductPrice = BuildProductPriceModel(product);
+            model.ProductPrice = PrepareProductPriceModel(product);
             return View(model);
         }
 

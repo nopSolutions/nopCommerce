@@ -812,6 +812,13 @@ namespace Nop.Services.Installation
             
             #region Settings
 
+            EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
+                .SaveSettings(new CatalogSettings()
+                {
+                    HidePricesForNonRegistered = false,
+                    AllowProductSorting = true
+                });
+
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
                 .SaveSettings(new LocalizationSettings()
                 {

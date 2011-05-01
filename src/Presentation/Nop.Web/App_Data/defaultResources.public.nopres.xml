@@ -386,7 +386,7 @@
     </Children>
   </LocaleResource>
   <LocaleResource Name="Categories">
-    <Value>Categories</Value>
+    <Value>Sort by</Value>
     <Children>
       <LocaleResource Name="Breadcrumb">
         <Children>
@@ -394,6 +394,9 @@
             <Value>Top</Value>
           </LocaleResource>
         </Children>
+      </LocaleResource>
+      <LocaleResource Name="OrderBy">
+        <Value>Sort by</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>
@@ -807,8 +810,14 @@
       <LocaleResource Name="ExclTaxSuffix">
         <Value>{0} excl tax</Value>
       </LocaleResource>
+      <LocaleResource Name="FeaturedProducts">
+        <Value>Featured products</Value>
+      </LocaleResource>
       <LocaleResource Name="InclTaxSuffix">
         <Value>{0} incl tax</Value>
+      </LocaleResource>
+      <LocaleResource Name="PriceRangeFromText">
+        <Value>From {0}</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

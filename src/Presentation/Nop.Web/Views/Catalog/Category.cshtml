@@ -12,6 +12,8 @@
     var storeUrl = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
 }
 <div class="category-page">
+
+    @*category breadcrumb*@
     @if (Model.DisplayCategoryBreadcrumb)
     {
         <div class="breadcrumb">
@@ -30,11 +32,19 @@
         <div class="clear">
         </div>
     }
+    
+
+
+    @*description*@
     <div class="category-description">
         @Html.Raw(Model.Description)
     </div>
     <div class="clear">
     </div>
+
+
+    
+    @*subcategories*@
     @if (Model.SubCategories.Count > 0)
     {
         <div class="sub-category-grid">
@@ -57,15 +67,61 @@
         <div class="clear">
         </div>
     }
-    <ul class="product-list1">
-        @foreach (var product in Model.Products)
-        { 
-            <li class="item-box">
-                @Html.Partial("_ProductBox", product)
-            </li>
+
+
+    
+    @*featured products*@
+    @if (Model.FeaturedProducts.Count > 0)
+    {
+        <div class="featured-product-grid">
+            <div class="title">
+                @T("Products.FeaturedProducts")
+            </div>
+            <div>
+                @(Html.DataList<ProductModel>(Model.FeaturedProducts, 2,
+                    @<div>
+                    @Html.Partial("_ProductBox", @item)
+                    </div>
+                ))
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    }
+    
+    
+    @*sorting*@
+    @if (Model.AllowProductFiltering)
+    {
+        using (Html.BeginForm("ChangeCategoryOrderBy", "Catalog", new { categoryId = Model.Id }, FormMethod.Post))
+        {
+            <div class="product-sorting">
+                @Html.LabelFor(model => model.PagingFilteringContext.OrderBy)
+                @Html.DropDownList("orderby", Model.AllowedSortOptions, new { onchange = "this.form.submit();" })
+            </div>
+            <div class="clear">
+            </div>
         }
-    </ul>
-    <div class="clear">
-    </div>
+    }
+
+    
+    @*filtering*@
+    @*UNDONE implement filter by price & attributes*@
+
+    @*product list*@
+    @if (Model.Products.Count > 0)
+    {
+        <div class="product-list1">
+            @foreach (var product in Model.Products)
+            { 
+                <div class="item-box">
+                    @Html.Partial("_ProductBox", product)
+                </div>
+            }
+        </div>
+        <div class="clear">
+        </div>
+    }
+    @*pager*@
     @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
 </div>

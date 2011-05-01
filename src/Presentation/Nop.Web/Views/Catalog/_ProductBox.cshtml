@@ -9,14 +9,14 @@
         </a>
     </div>
     <div class="description">
-        @Model.ShortDescription
+        @Html.Raw(Model.ShortDescription)
     </div>
-    <div class="prices-wrapper">
+    <div class="add-info">
         <div class="prices">
             @Html.Partial("_ProductPrice", Model.ProductPrice)
         </div>
         <div class="buttons">
-            <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" class="productlistproductdetailbutton">@("Products.Details")</a>
+            <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" class="productlistproductdetailbutton">@T("Products.Details")</a>
             @*UNDONE add to cart
             <br />
             <input type="submit" value="@("Products.AddToCart")" class="productgridproductdetailbutton">*@
