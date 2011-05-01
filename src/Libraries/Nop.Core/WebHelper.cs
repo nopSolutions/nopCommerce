@@ -1,7 +1,9 @@
 
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -266,6 +268,168 @@ namespace Nop.Core
                 path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
                 return Path.Combine(baseDirectory, path);
             }
+        }
+        
+        /// <summary>
+        /// Modifies query string
+        /// </summary>
+        /// <param name="url">Url to modify</param>
+        /// <param name="queryStringModification">Query string modification</param>
+        /// <param name="targetLocationModification">Target location modification</param>
+        /// <returns>New url</returns>
+        public virtual string ModifyQueryString(string url, string queryStringModification, string targetLocationModification)
+        {
+            if (url == null)
+                url = string.Empty;
+            url = url.ToLowerInvariant();
+
+            if (queryStringModification == null)
+                queryStringModification = string.Empty;
+            queryStringModification = queryStringModification.ToLowerInvariant();
+
+            if (targetLocationModification == null)
+                targetLocationModification = string.Empty;
+            targetLocationModification = targetLocationModification.ToLowerInvariant();
+
+
+            string str = string.Empty;
+            string str2 = string.Empty;
+            if (url.Contains("#"))
+            {
+                str2 = url.Substring(url.IndexOf("#") + 1);
+                url = url.Substring(0, url.IndexOf("#"));
+            }
+            if (url.Contains("?"))
+            {
+                str = url.Substring(url.IndexOf("?") + 1);
+                url = url.Substring(0, url.IndexOf("?"));
+            }
+            if (!string.IsNullOrEmpty(queryStringModification))
+            {
+                if (!string.IsNullOrEmpty(str))
+                {
+                    var dictionary = new Dictionary<string, string>();
+                    foreach (string str3 in str.Split(new char[] { '&' }))
+                    {
+                        if (!string.IsNullOrEmpty(str3))
+                        {
+                            string[] strArray = str3.Split(new char[] { '=' });
+                            if (strArray.Length == 2)
+                            {
+                                dictionary[strArray[0]] = strArray[1];
+                            }
+                            else
+                            {
+                                dictionary[str3] = null;
+                            }
+                        }
+                    }
+                    foreach (string str4 in queryStringModification.Split(new char[] { '&' }))
+                    {
+                        if (!string.IsNullOrEmpty(str4))
+                        {
+                            string[] strArray2 = str4.Split(new char[] { '=' });
+                            if (strArray2.Length == 2)
+                            {
+                                dictionary[strArray2[0]] = strArray2[1];
+                            }
+                            else
+                            {
+                                dictionary[str4] = null;
+                            }
+                        }
+                    }
+                    var builder = new StringBuilder();
+                    foreach (string str5 in dictionary.Keys)
+                    {
+                        if (builder.Length > 0)
+                        {
+                            builder.Append("&");
+                        }
+                        builder.Append(str5);
+                        if (dictionary[str5] != null)
+                        {
+                            builder.Append("=");
+                            builder.Append(dictionary[str5]);
+                        }
+                    }
+                    str = builder.ToString();
+                }
+                else
+                {
+                    str = queryStringModification;
+                }
+            }
+            if (!string.IsNullOrEmpty(targetLocationModification))
+            {
+                str2 = targetLocationModification;
+            }
+            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)) + (string.IsNullOrEmpty(str2) ? "" : ("#" + str2))).ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Remove query string from url
+        /// </summary>
+        /// <param name="url">Url to modify</param>
+        /// <param name="queryString">Query string to remove</param>
+        /// <returns>New url</returns>
+        public virtual string RemoveQueryString(string url, string queryString)
+        {
+            if (url == null)
+                url = string.Empty;
+            url = url.ToLowerInvariant();
+
+            if (queryString == null)
+                queryString = string.Empty;
+            queryString = queryString.ToLowerInvariant();
+
+
+            string str = string.Empty;
+            if (url.Contains("?"))
+            {
+                str = url.Substring(url.IndexOf("?") + 1);
+                url = url.Substring(0, url.IndexOf("?"));
+            }
+            if (!string.IsNullOrEmpty(queryString))
+            {
+                if (!string.IsNullOrEmpty(str))
+                {
+                    var dictionary = new Dictionary<string, string>();
+                    foreach (string str3 in str.Split(new char[] { '&' }))
+                    {
+                        if (!string.IsNullOrEmpty(str3))
+                        {
+                            string[] strArray = str3.Split(new char[] { '=' });
+                            if (strArray.Length == 2)
+                            {
+                                dictionary[strArray[0]] = strArray[1];
+                            }
+                            else
+                            {
+                                dictionary[str3] = null;
+                            }
+                        }
+                    }
+                    dictionary.Remove(queryString);
+
+                    var builder = new StringBuilder();
+                    foreach (string str5 in dictionary.Keys)
+                    {
+                        if (builder.Length > 0)
+                        {
+                            builder.Append("&");
+                        }
+                        builder.Append(str5);
+                        if (dictionary[str5] != null)
+                        {
+                            builder.Append("=");
+                            builder.Append(dictionary[str5]);
+                        }
+                    }
+                    str = builder.ToString();
+                }
+            }
+            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)));
         }
     }
 }

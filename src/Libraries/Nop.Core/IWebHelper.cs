@@ -87,5 +87,23 @@ namespace Nop.Core
         /// <param name="path">The path to map. E.g. "~/bin"</param>
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         string MapPath(string path);
+
+
+        /// <summary>
+        /// Modifies query string
+        /// </summary>
+        /// <param name="url">Url to modify</param>
+        /// <param name="queryStringModification">Query string modification</param>
+        /// <param name="targetLocationModification">Target location modification</param>
+        /// <returns>New url</returns>
+        string ModifyQueryString(string url, string queryStringModification, string targetLocationModification);
+
+        /// <summary>
+        /// Remove query string from url
+        /// </summary>
+        /// <param name="url">Url to modify</param>
+        /// <param name="queryString">Query string to remove</param>
+        /// <returns>New url</returns>
+        string RemoveQueryString(string url, string queryString);
     }
 }

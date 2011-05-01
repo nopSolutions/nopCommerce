@@ -93,15 +93,12 @@
     @*sorting*@
     @if (Model.AllowProductFiltering)
     {
-        using (Html.BeginForm("ChangeCategoryOrderBy", "Catalog", new { categoryId = Model.Id }, FormMethod.Post))
-        {
-            <div class="product-sorting">
-                @Html.LabelFor(model => model.PagingFilteringContext.OrderBy)
-                @Html.DropDownList("orderby", Model.AllowedSortOptions, new { onchange = "this.form.submit();" })
-            </div>
-            <div class="clear">
-            </div>
-        }
+        <div class="product-sorting">
+            @Html.LabelFor(model => model.PagingFilteringContext.OrderBy)
+            @Html.DropDownList("products-orderby", Model.AllowedSortOptions, new { onchange = "setLocation(this.value);" })
+        </div>
+        <div class="clear">
+        </div>
     }
 
     

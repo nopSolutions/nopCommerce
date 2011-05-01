@@ -32,6 +32,7 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IWebHelper _webHelper;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -46,6 +47,7 @@ namespace Nop.Web.Controllers
             ITaxService taxService, ICurrencyService currencyService,
             IPictureService pictureService, ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
+            IWebHelper webHelper,
             MediaSettings mediaSetting, CatalogSettings catalogSettings)
         {
             this._currencyService = currencyService;
@@ -57,6 +59,7 @@ namespace Nop.Web.Controllers
             this._localizationService = localizationService;
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
+            this._webHelper = webHelper;
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
@@ -269,11 +272,23 @@ namespace Nop.Web.Controllers
             var model = category.ToModel();
             
             //sorting
-            _catalogSettings.AllowProductSorting = true; //TODO remove test
             model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
             if (model.AllowProductFiltering)
-                model.AllowedSortOptions = ((ProductSortingEnum)command.OrderBy).ToSelectList();
-
+            {
+                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
+                {
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
+                    
+                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
+                    model.AllowedSortOptions.Add(new SelectListItem()
+                        {
+                            Text = sortValue,
+                            Value = sortUrl,
+                            Selected = enumValue == (ProductSortingEnum)command.OrderBy
+                        });
+                }
+            }
 
 
             //category breadcrumb
@@ -353,16 +368,6 @@ namespace Nop.Web.Controllers
             .ToList();
             model.PagingFilteringContext.LoadPagedList(products);
             return View(model);
-        }
-
-        public ActionResult ChangeCategoryOrderBy(int categoryId, int orderBy)
-        {
-            var category = _categoryService.GetCategoryById(categoryId);
-            if (category == null) 
-                return RedirectToAction("Index", "Home");
-
-            return RedirectToRoute("Category", new { categoryId = category.Id, SeName = category.GetSeName(), orderBy = orderBy });
-            return RedirectToAction("Category", "Catalog", new { categoryId = category.Id,  orderBy = orderBy });
         }
 
         public ActionResult CategoryNavigation(int currentCategoryId)

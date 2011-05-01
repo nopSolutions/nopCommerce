@@ -17,3 +17,7 @@ function OpenWindow(query, w, h, scroll) {
     if (scroll) winprops += ',scrollbars=1';
     var f = window.open(query, "_blank", winprops);
 }
+
+function setLocation(url) {
+    window.location.href = url;
+}
