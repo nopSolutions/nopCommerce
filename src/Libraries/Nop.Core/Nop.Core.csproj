@@ -79,6 +79,7 @@
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\NopConfig.cs" />
     <Compile Include="Domain\Catalog\CatalogSettings.cs" />
+    <Compile Include="Domain\Catalog\PriceRange.cs" />
     <Compile Include="Domain\Catalog\ProductExtensions.cs" />
     <Compile Include="Domain\Catalog\SpecificationAttributeOptionFilter.cs" />
     <Compile Include="Domain\Localization\ILocalizedEnum.cs" />

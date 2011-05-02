@@ -793,6 +793,27 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Filtering">
+    <Children>
+      <LocaleResource Name="FilterResults">
+        <Value>Filter your results</Value>
+      </LocaleResource>
+      <LocaleResource Name="PriceRangeFilter">
+        <Value>Filter by price</Value>
+        <Children>
+          <LocaleResource Name="Over">
+            <Value>Over {0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="Remove">
+            <Value>Remove Filter</Value>
+          </LocaleResource>
+          <LocaleResource Name="Under">
+            <Value>Under {0}</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="GiftCardAttribute">
     <Children>
       <LocaleResource Name="From">

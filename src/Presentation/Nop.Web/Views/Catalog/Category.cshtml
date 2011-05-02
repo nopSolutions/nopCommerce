@@ -114,8 +114,26 @@
     </div>
     
     @*filtering*@
-    @*UNDONE implement filter by price & attributes*@
-
+    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+    {
+    <div class="product-filters">
+        <div class="filter-title">
+            <span>@T("Filtering.FilterResults")</span>
+        </div>
+        <div class="filter-item">
+            @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+        </div>
+        <div class="filter-item">
+            @*UNDONE product specification filter*@
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    }
+    
+    
+    
+    
     @*product list*@
     @if (Model.Products.Count > 0)
     {

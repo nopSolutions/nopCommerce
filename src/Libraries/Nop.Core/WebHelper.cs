@@ -431,5 +431,78 @@ namespace Nop.Core
             }
             return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)));
         }
+        
+        /// <summary>
+        /// Gets query string value by name
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <returns>Query string value</returns>
+        public virtual string QueryString(string name)
+        {
+            string result = string.Empty;
+            if (HttpContext.Current != null && HttpContext.Current.Request.QueryString[name] != null)
+                result = HttpContext.Current.Request.QueryString[name].ToString();
+            return result;
+        }
+
+        /// <summary>
+        /// Gets boolean value from query string 
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <returns>Query string value</returns>
+        public virtual bool QueryStringBool(string name)
+        {
+            string resultStr = QueryString(name).ToUpperInvariant();
+            return (resultStr == "YES" || resultStr == "TRUE" || resultStr == "1");
+        }
+
+        /// <summary>
+        /// Gets integer value from query string 
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <returns>Query string value</returns>
+        public virtual int QueryStringInt(string name)
+        {
+            string resultStr = QueryString(name).ToUpperInvariant();
+            int result;
+            Int32.TryParse(resultStr, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets integer value from query string 
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Query string value</returns>
+        public virtual int QueryStringInt(string name, int defaultValue)
+        {
+            string resultStr = QueryString(name).ToUpperInvariant();
+            if (resultStr.Length > 0)
+            {
+                return Int32.Parse(resultStr);
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Gets GUID value from query string 
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <returns>Query string value</returns>
+        public virtual Guid? QueryStringGuid(string name)
+        {
+            string resultStr = QueryString(name).ToUpperInvariant();
+            Guid? result = null;
+            try
+            {
+                result = new Guid(resultStr);
+            }
+            catch
+            {
+            }
+            return result;
+        }
+        
     }
 }

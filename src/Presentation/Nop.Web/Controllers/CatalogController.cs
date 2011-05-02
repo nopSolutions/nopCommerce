@@ -312,6 +312,22 @@ namespace Nop.Web.Controllers
             }
 
 
+
+            //price ranges
+            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(category, _webHelper, _priceFormatter);
+            var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, category.PriceRanges);
+            decimal? minPriceConverted = null;
+            decimal? maxPriceConverted = null;
+            if (selectedPriceRange != null)
+            {
+                if (selectedPriceRange.From.HasValue)
+                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, _workContext.WorkingCurrency);
+
+                if (selectedPriceRange.To.HasValue)
+                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
+            }
+
+
             //category breadcrumb
             model.DisplayCategoryBreadcrumb = true; //UNDONE use "Media.CategoryBreadcrumbEnabled" setting
             if (model.DisplayCategoryBreadcrumb)
@@ -365,14 +381,11 @@ namespace Nop.Web.Controllers
 
 
 
+
             //products
-            //UNDONE convert min/max prices
-            var products = _productService.SearchProducts(categoryId, 0, false,
-                                                          command.PriceMin, command.PriceMax, 0, 0, string.Empty,
-                                                          false,
-                                                          _workContext.WorkingLanguage.Id, command.Specs,
-                                                          (ProductSortingEnum)command.OrderBy,
-                                                          command.PageNumber - 1, command.PageSize);
+            var products = _productService.SearchProducts(categoryId, 0, false, minPriceConverted, maxPriceConverted,
+                0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, command.Specs,
+                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
             model.Products = products.Select(x =>
             {
                 var m = x.ToModel();
@@ -387,6 +400,7 @@ namespace Nop.Web.Controllers
                 return m;
             })
             .ToList();
+
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = command.ViewMode;
             return View(model);
