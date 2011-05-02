@@ -79,8 +79,8 @@
             </div>
             <div>
                 @(Html.DataList<ProductModel>(Model.FeaturedProducts, 2,
-                    @<div>
-                    @Html.Partial("_ProductBox", @item)
+                    @<div class="item-box">
+                        @Html.Partial("_ProductBox", @item)
                     </div>
                 ))
             </div>
@@ -90,17 +90,28 @@
     }
     
     
+    
+    
+    @*view mode*@
+    @if (Model.AllowProductViewModeChanging && Model.Products.Count > 0)
+    {
+        <div class="product-viewmode">
+            @Html.LabelFor(model => model.PagingFilteringContext.ViewMode)
+            @Html.DropDownList("products-viewmode", Model.AvailableViewModes, new { onchange = "setLocation(this.value);" })
+        </div>
+    }   
+    
+    
     @*sorting*@
-    @if (Model.AllowProductFiltering)
+    @if (Model.AllowProductFiltering && Model.Products.Count > 0)
     {
         <div class="product-sorting">
             @Html.LabelFor(model => model.PagingFilteringContext.OrderBy)
-            @Html.DropDownList("products-orderby", Model.AllowedSortOptions, new { onchange = "setLocation(this.value);" })
-        </div>
-        <div class="clear">
+            @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
         </div>
     }
-
+    <div class="clear">
+    </div>
     
     @*filtering*@
     @*UNDONE implement filter by price & attributes*@
@@ -108,17 +119,35 @@
     @*product list*@
     @if (Model.Products.Count > 0)
     {
-        <div class="product-list1">
+        if (Model.PagingFilteringContext.ViewMode == "list")
+        {
+            @*list mode*@
+            <div class="product-list1">
             @foreach (var product in Model.Products)
-            { 
+            {
                 <div class="item-box">
                     @Html.Partial("_ProductBox", product)
                 </div>
             }
-        </div>
-        <div class="clear">
-        </div>
+            </div>
+            <div class="clear">
+            </div>        
+        }
+        else
+        {
+            @*grid mode*@
+            <div class="product-grid">
+                @(Html.DataList<ProductModel>(Model.Products, 2,
+                    @<div class="item-box">
+                        @Html.Partial("_ProductBox", @item)
+                    </div>
+                ))
+            </div>
+        }
     }
+    
+    
+    @*UNDONE allow customer to select page size*@
     @*pager*@
     @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
 </div>

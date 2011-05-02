@@ -281,13 +281,34 @@ namespace Nop.Web.Controllers
                     var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
                     
                     var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.AllowedSortOptions.Add(new SelectListItem()
+                    model.AvailableSortOptions.Add(new SelectListItem()
                         {
                             Text = sortValue,
                             Value = sortUrl,
                             Selected = enumValue == (ProductSortingEnum)command.OrderBy
                         });
                 }
+            }
+
+            //view mode
+            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            if (model.AllowProductViewModeChanging)
+            {
+                var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                //grid
+                model.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
+                    Selected = command.ViewMode == "grid"
+                });
+                //list
+                model.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Categories.ViewMode.List"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
+                    Selected = command.ViewMode == "list"
+                });
             }
 
 
@@ -367,6 +388,7 @@ namespace Nop.Web.Controllers
             })
             .ToList();
             model.PagingFilteringContext.LoadPagedList(products);
+            model.PagingFilteringContext.ViewMode = command.ViewMode;
             return View(model);
         }
 

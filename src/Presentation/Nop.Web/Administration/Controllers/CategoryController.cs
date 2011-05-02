@@ -219,6 +219,9 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             //discounts
             PrepareDiscountModel(model, null, true);
+            //default values
+            model.PageSize = 4;
+            model.Published = true;
             return View(model);
         }
 

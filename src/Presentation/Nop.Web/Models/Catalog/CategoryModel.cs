@@ -16,7 +16,8 @@ namespace Nop.Web.Models.Catalog
             PagingFilteringContext = new PagingFilteringModel();
             SubCategories = new List<SubCategoryModel>();
             CategoryBreadcrumb = new List<CategoryModel>();
-            AllowedSortOptions = new List<SelectListItem>();
+            AvailableSortOptions = new List<SelectListItem>();
+            AvailableViewModes = new List<SelectListItem>();
         }
 
         public string Name { get; set; }
@@ -27,7 +28,9 @@ namespace Nop.Web.Models.Catalog
 
         public PagingFilteringModel PagingFilteringContext { get; set; }
         public bool AllowProductFiltering { get; set; }
-        public IList<SelectListItem> AllowedSortOptions { get; set; }
+        public IList<SelectListItem> AvailableSortOptions { get; set; }
+        public bool AllowProductViewModeChanging { get; set; }
+        public IList<SelectListItem> AvailableViewModes { get; set; }
 
 
         public bool DisplayCategoryBreadcrumb { get; set; }

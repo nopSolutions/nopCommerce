@@ -816,7 +816,8 @@ namespace Nop.Services.Installation
                 .SaveSettings(new CatalogSettings()
                 {
                     HidePricesForNonRegistered = false,
-                    AllowProductSorting = true
+                    AllowProductSorting = true,
+                    AllowProductViewModeChanging = true
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

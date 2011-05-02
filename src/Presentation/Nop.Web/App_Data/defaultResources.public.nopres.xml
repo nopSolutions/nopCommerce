@@ -398,6 +398,17 @@
       <LocaleResource Name="OrderBy">
         <Value>Sort by</Value>
       </LocaleResource>
+      <LocaleResource Name="ViewMode">
+        <Value>View as</Value>
+        <Children>
+          <LocaleResource Name="Grid">
+            <Value>Grid</Value>
+          </LocaleResource>
+          <LocaleResource Name="List">
+            <Value>List</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Common">

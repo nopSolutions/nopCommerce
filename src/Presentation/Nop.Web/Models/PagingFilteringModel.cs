@@ -68,6 +68,12 @@ namespace Nop.Web.Models
         [NopResourceDisplayName("Categories.OrderBy")]
         public int OrderBy { get; set; }
 
+        /// <summary>
+        /// Product sorting
+        /// </summary>
+        [NopResourceDisplayName("Categories.ViewMode")]
+        public string ViewMode { get; set; }
+
         public IList<int> Specs { get; set; }
 
         public int TotalItems { get; set; }

@@ -2506,8 +2506,14 @@ ul.languagelist li .selected
 
 .product-sorting
 {
-	width: 520px;
 	margin: 0px auto 10px auto;
+	float: left;
+}
+
+.product-viewmode
+{
+	margin: 0px auto 10px auto;
+	float: right;
 }
 
 .product-filters
