@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Web.Hosting;
 using System.Xml;
 using Nop.Core;
@@ -32,6 +33,7 @@ using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Helpers;
+using Nop.Services.Media;
 
 
 namespace Nop.Services.Installation
@@ -52,9 +54,8 @@ namespace Nop.Services.Installation
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductVariant> _productVariantRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IRepository<QueuedEmail> _queuedEmailRepository;        
+        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
         private readonly IRepository<ForumGroup> _forumGroupRepository;
         private readonly IRepository<Forum> _forumRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
@@ -65,7 +66,6 @@ namespace Nop.Services.Installation
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly ISettingService _settingService;
 
         #endregion
 
@@ -83,7 +83,6 @@ namespace Nop.Services.Installation
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
-            IRepository<ProductVariant> productVariantRepository,
             IRepository<EmailAccount> emailAccountRepository,
             IRepository<QueuedEmail> queuedEmailRepository,
             IRepository<ForumGroup> forumGroupRepository,
@@ -95,8 +94,7 @@ namespace Nop.Services.Installation
             IRepository<Country> countryRepository,
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<Discount> discountRepository,
-            IRepository<ShippingMethod> shippingMethodRepository,
-            ISettingService settingService)
+            IRepository<ShippingMethod> shippingMethodRepository)
         {
             this._measureDimensionRepository = measureDimensionRepository;
             this._measureWeightRepository = measureWeightRepository;
@@ -111,7 +109,6 @@ namespace Nop.Services.Installation
             this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
-            this._productVariantRepository = productVariantRepository;
 
             this._emailAccountRepository = emailAccountRepository;
             this._queuedEmailRepository = queuedEmailRepository;
@@ -129,8 +126,6 @@ namespace Nop.Services.Installation
             this._discountRepository = discountRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
-
-            this._settingService = settingService;
         }
 
         #endregion
@@ -155,7 +150,7 @@ namespace Nop.Services.Installation
                     throw new NopException("All languages resource attributes 'Name' must have a value.'");
                 }
                 ResourceName = resName;
-               
+
                 if (resValueNode == null || string.IsNullOrEmpty(resValueNode.InnerText.Trim()))
                 {
                     IsPersistable = false;
@@ -242,7 +237,7 @@ namespace Nop.Services.Installation
         private void RecursivelySortChildrenResource(LocaleStringResourceParent resource)
         {
             ArrayList.Adapter((IList)resource.ChildLocaleStringResources).Sort(new InstallationService.ComparisonComparer<LocaleStringResourceParent>((x1, x2) => x1.ResourceName.CompareTo(x2.ResourceName)));
-            
+
             foreach (var child in resource.ChildLocaleStringResources)
             {
                 RecursivelySortChildrenResource(child);
@@ -323,84 +318,79 @@ namespace Nop.Services.Installation
             }
         }
 
-        #endregion
-
-        #region Methods
-
-        public void InstallData(bool installSampleData = true)
+        protected virtual void InstallMeasures()
         {
-            #region Measures
+            var measureDimensions = new List<MeasureDimension>()
+            {
+                new MeasureDimension()
+                {
+                    Name = "inch(es)",
+                    SystemKeyword = "inches",
+                    Ratio = 1M,
+                    DisplayOrder = 1,
+                },
+                new MeasureDimension()
+                {
+                    Name = "feet",
+                    SystemKeyword = "feet",
+                    Ratio = 0.08333333M,
+                    DisplayOrder = 2,
+                },
+                new MeasureDimension()
+                {
+                    Name = "meter(s)",
+                    SystemKeyword = "meters",
+                    Ratio = 0.0254M,
+                    DisplayOrder = 3,
+                },
+                new MeasureDimension()
+                {
+                    Name = "millimetre(s)",
+                    SystemKeyword = "millimetres",
+                    Ratio = 25.4M,
+                    DisplayOrder = 4,
+                }
+            };
 
-            var measureDimensionInches = new MeasureDimension()
-            {
-                Name = "inch(es)",
-                SystemKeyword = "inches",
-                Ratio = 1M,
-                DisplayOrder = 1,
-            };
-            _measureDimensionRepository.Insert(measureDimensionInches);
-            var measureDimensionFeet = new MeasureDimension()
-            {
-                Name = "feet",
-                SystemKeyword = "feet",
-                Ratio = 0.08333333M,
-                DisplayOrder = 2,
-            };
-            _measureDimensionRepository.Insert(measureDimensionFeet);
-            var measureDimensionMeters = new MeasureDimension()
-            {
-                Name = "meter(s)",
-                SystemKeyword = "meters",
-                Ratio = 0.0254M,
-                DisplayOrder = 3,
-            };
-            _measureDimensionRepository.Insert(measureDimensionMeters);
-            var measureDimensionMillimetres = new MeasureDimension()
-            {
-                Name = "millimetre(s)",
-                SystemKeyword = "millimetres",
-                Ratio = 25.4M,
-                DisplayOrder = 4,
-            };
-            _measureDimensionRepository.Insert(measureDimensionMillimetres);
+            measureDimensions.ForEach(x => _measureDimensionRepository.Insert(x));
 
-            var measureWeightOunce = new MeasureWeight()
+            var measureWeights = new List<MeasureWeight>()
             {
-                Name = "ounce(s)",
-                SystemKeyword = "ounce",
-                Ratio = 16M,
-                DisplayOrder = 1,
+                new MeasureWeight()
+                {
+                    Name = "ounce(s)",
+                    SystemKeyword = "ounce",
+                    Ratio = 16M,
+                    DisplayOrder = 1,
+                },
+                new MeasureWeight()
+                {
+                    Name = "lb(s)",
+                    SystemKeyword = "lb",
+                    Ratio = 1M,
+                    DisplayOrder = 2,
+                },
+                new MeasureWeight()
+                {
+                    Name = "kg(s)",
+                    SystemKeyword = "kg",
+                    Ratio = 0.45359237M,
+                    DisplayOrder = 3,
+                },
+                new MeasureWeight()
+                {
+                    Name = "gram(s)",
+                    SystemKeyword = "grams",
+                    Ratio = 453.59237M,
+                    DisplayOrder = 4,
+                }
             };
-            _measureWeightRepository.Insert(measureWeightOunce);
-            var measureWeightLb = new MeasureWeight()
-            {
-                Name = "lb(s)",
-                SystemKeyword = "lb",
-                Ratio = 1M,
-                DisplayOrder = 2,
-            };
-            _measureWeightRepository.Insert(measureWeightLb);
-            var measureWeightKg = new MeasureWeight()
-            {
-                Name = "kg(s)",
-                SystemKeyword = "kg",
-                Ratio = 0.45359237M,
-                DisplayOrder = 3,
-            };
-            _measureWeightRepository.Insert(measureWeightKg);
-            var measureWeightGram = new MeasureWeight()
-            {
-                Name = "gram(s)",
-                SystemKeyword = "grams",
-                Ratio = 453.59237M,
-                DisplayOrder = 4,
-            };
-            _measureWeightRepository.Insert(measureWeightGram);
 
-            #endregion
+            measureWeights.ForEach(x => _measureWeightRepository.Insert(x));
+        }
 
-            #region Tax classes
-
+        protected virtual void InstallTaxCategories()
+        {
             var taxCategories = new List<TaxCategory>
                                {
                                    new TaxCategory
@@ -431,10 +421,10 @@ namespace Nop.Services.Installation
                                };
             taxCategories.ForEach(tc => _taxCategoryRepository.Insert(tc));
 
-            #endregion
+        }
 
-            #region Language & locale resources
-
+        protected virtual void InstallLanguagesAndResources()
+        {
             var languageEng = new Language
             {
                 Name = "English",
@@ -446,11 +436,11 @@ namespace Nop.Services.Installation
             AddLocaleResources(languageEng);
             _languageRepository.Insert(languageEng);
 
-            #endregion
+        }
 
-            #region Currency
-
-            var currencyUSD = new Currency
+        protected virtual void InstallCurrencies()
+        {
+            var currencyUsd = new Currency
             {
                 Name = "US Dollar",
                 CurrencyCode = "USD",
@@ -462,12 +452,11 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
             };
-            _currencyRepository.Insert(currencyUSD);
+            _currencyRepository.Insert(currencyUsd);
+        }
 
-            #endregion
-
-            #region Countries & states
-
+        protected virtual void InstallCountriesAndStates()
+        {
             var countries = new List<Country>
                                 {
                                     new Country
@@ -550,10 +539,10 @@ namespace Nop.Services.Installation
                                 };
             countries.ForEach(c => _countryRepository.Insert(c));
 
-            #endregion
+        }
 
-            #region Shipping methods
-
+        protected virtual void InstallShippingMethods()
+        {
             var shippingMethods = new List<ShippingMethod>
                                 {
                                     new ShippingMethod
@@ -577,10 +566,10 @@ namespace Nop.Services.Installation
                                 };
             shippingMethods.ForEach(sm => _shippingMethodRepository.Insert(sm));
 
-            #endregion
+        }
 
-            #region Customers & Users
-
+        protected virtual void InstallCustomersAndUsers()
+        {
             var adminUser = new User()
             {
                 UserGuid = Guid.NewGuid(),
@@ -702,10 +691,10 @@ namespace Nop.Services.Installation
 
                 _userRepository.Insert(testUser);
             }
-            #endregion
-            
-            #region Email accounts
+        }
 
+        protected virtual void InstallEmailAccounts()
+        {
             var emailAccounts = new List<EmailAccount>
                                {
                                    new EmailAccount
@@ -744,9 +733,10 @@ namespace Nop.Services.Installation
                                };
             emailAccounts.ForEach(ea => _emailAccountRepository.Insert(ea));
 
-            #endregion
+        }
 
-            #region Queued emails(just for testing)
+        protected virtual void InstallQueuedEmails()
+        {
 
             var queuedEmail = new List<QueuedEmail>()
             {
@@ -807,11 +797,10 @@ namespace Nop.Services.Installation
 
             queuedEmail.ForEach(qe => _queuedEmailRepository.Insert(qe));
 
+        }
 
-            #endregion
-            
-            #region Settings
-
+        protected virtual void InstallSettings()
+        {
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
                 .SaveSettings(new CatalogSettings()
                 {
@@ -826,7 +815,7 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
                 .SaveSettings(new LocalizationSettings()
                 {
-                    DefaultAdminLanguageId = languageEng.Id
+                    DefaultAdminLanguageId = _languageRepository.Table.Where(l => l.Name == "English").Single().Id
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<CustomerSettings>>()
@@ -887,19 +876,19 @@ namespace Nop.Services.Installation
 
             EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>()
                 .SaveSettings(new CurrencySettings()
-                                  {
-                                      PrimaryStoreCurrencyId = currencyUSD.Id,
-                                      PrimaryExchangeRateCurrencyId = currencyUSD.Id,
-                                      ActiveExchangeRateProviderSystemName = "CurrencyExchange.McExchange",
-                                      AutoUpdateEnabled = true,
-                                      LastUpdateTime = 0
-                                  });
+                {
+                    PrimaryStoreCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
+                    PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
+                    ActiveExchangeRateProviderSystemName = "CurrencyExchange.McExchange",
+                    AutoUpdateEnabled = true,
+                    LastUpdateTime = 0
+                });
 
             EngineContext.Current.Resolve<IConfigurationProvider<MeasureSettings>>()
                 .SaveSettings(new MeasureSettings()
                 {
-                    BaseDimensionId = measureDimensionInches.Id,
-                    BaseWeightId = measureWeightLb.Id,
+                    BaseDimensionId = _measureDimensionRepository.Table.Where(m => m.SystemKeyword == "inches").Single().Id,
+                    BaseWeightId = _measureWeightRepository.Table.Where(m => m.SystemKeyword == "lb").Single().Id,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<MessageTemplatesSettings>>()
@@ -1029,20 +1018,18 @@ namespace Nop.Services.Installation
                     ActiveDiscussionsFeedCount = 25,
                     ForumFeedCount = 10,
                     ForumSearchTermMinimumLength = 3,
-                });                
+                });
 
             EngineContext.Current.Resolve<IConfigurationProvider<EmailAccountSettings>>()
                 .SaveSettings(new EmailAccountSettings()
                 {
                     DefaultEmailAccountId = 1
                 });
-            #endregion
+        }
 
-            if (installSampleData)
-            {
-                #region Specification Atteributes
-
-                var specificationAttributes = new List<SpecificationAttribute>
+        protected virtual void InstallSpecificationAttributes()
+        {
+            var specificationAttributes = new List<SpecificationAttribute>
                                 {
                                     new SpecificationAttribute
                                         {
@@ -1132,221 +1119,466 @@ namespace Nop.Services.Installation
                                             }
                                         },
                                 };
-                specificationAttributes.ForEach(sa => _specificationAttributeRepository.Insert(sa));
+            specificationAttributes.ForEach(sa => _specificationAttributeRepository.Insert(sa));
 
-                #endregion
+        }
 
-                #region Categories
+        protected virtual void InstallCategories()
+        {
+            //pictures
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+            var sampleImagesPath = string.Format("{0}content\\images\\samples\\", HttpContext.Current.Request.PhysicalApplicationPath);
 
-                for (int i = 1; i <= 30; i++)
+            var categoryPictureBook = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", true);
+            var categoryPictureComputers = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", true);
+            var categoryPictureAccessories = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", true);
+            var categoryPictureSoftware = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", true);
+            var categoryPictureGames = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_games.jpg"), "image/pjpeg", true);
+            var categoryPictureElectronics = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", true);
+            var categoryPictureCameraPhoto = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", true);
+            var categoryPictureCellPhones = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", true);
+            var categoryPictureApparelShoes = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_shoes.jpeg"), "image/jpeg", true);
+            var categoryPictureShirts = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shirts.jpg"), "image/pjpeg", true);
+            var categoryPictureJeans = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jeans.jpg"), "image/pjpeg", true);
+            var categoryPictureShoes = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpg"), "image/pjpeg", true);
+            var categoryPictureAccessoriesShoes = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories_shoes.jpg"), "image/pjpeg", true);
+            var categoryPictureDigitalDownloads = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", true);
+            var categoryPictureJewelry = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", true);
+            var categoryPictureDesktops = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", true);
+            var categoryPictureNotebooks = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", true);
+            var categoryPictureGiftCards = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", true);
+
+            
+
+            //categpries
+            var categoryBooks = new Category
+            {
+                Name = "Books",
+                MetaKeywords = "Books, Dictionary, Textbooks",
+                MetaDescription = "Books category description",
+                PageSize = 4,
+                PictureId = categoryPictureBook.Id,
+                PriceRanges = "-25;25-50;50-;",
+                Published = true,
+                DisplayOrder = 1,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryBooks);
+
+            var categoryComputers = new Category
+            {
+                Name = "Computers",
+                PageSize = 4,
+                PictureId = categoryPictureComputers.Id,
+                Published = true,
+                DisplayOrder = 2,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryComputers);
+
+            var categoryDesktops = new Category
+            {
+                Name = "Desktops",
+                PageSize = 4,
+                ParentCategoryId = categoryComputers.Id,
+                PictureId = categoryPictureDesktops.Id,
+                PriceRanges = "-1000;1000-1200;1200-;",
+                Published = true,
+                DisplayOrder = 1,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryDesktops);
+
+            var categoryNotebooks = new Category
+            {
+                Name = "Notebooks",
+                PageSize = 4,
+                ParentCategoryId = categoryComputers.Id,
+                PictureId = categoryPictureNotebooks.Id,
+                Published = true,
+                DisplayOrder = 2,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryNotebooks);
+
+            var categoryAccessories = new Category
+            {
+                Name = "Accessories",
+                PageSize = 4,
+                ParentCategoryId = categoryComputers.Id,
+                PictureId = categoryPictureAccessories.Id,
+                PriceRanges = "-100;100-;",
+                Published = true,
+                DisplayOrder = 3,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryAccessories);
+
+            var categorySoftware = new Category
+            {
+                Name = "Software",
+                PageSize = 4,
+                ParentCategoryId = categoryComputers.Id,
+                PictureId = categoryPictureSoftware.Id,
+                Published = true,
+                DisplayOrder = 5,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categorySoftware);
+
+            var categoryGames = new Category
+            {
+                Name = "Games",
+                PageSize = 4,
+                ParentCategoryId = categoryComputers.Id,
+                PictureId = categoryPictureGames.Id,
+                Published = true,
+                DisplayOrder = 4,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryGames);
+
+            var categoryElectronics = new Category
+            {
+                Name = "Electronics",
+                PageSize = 4,
+                PictureId = categoryPictureElectronics.Id,
+                Published = true,
+                DisplayOrder = 3,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryElectronics);
+
+            var categoryCameraPhoto = new Category
+            {
+                Name = "Camera, photo",
+                PageSize = 4,
+                ParentCategoryId = categoryElectronics.Id,
+                PictureId = categoryPictureCameraPhoto.Id,
+                PriceRanges = "-500;500-;",
+                Published = true,
+                DisplayOrder = 2,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryCameraPhoto);
+
+            var categoryCellPhones = new Category
+            {
+                Name = "Cell phones",
+                PageSize = 4,
+                ParentCategoryId = categoryElectronics.Id,
+                PictureId = categoryPictureCellPhones.Id,
+                Published = true,
+                DisplayOrder = 4,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryCellPhones);
+
+            var categoryApparelShoes = new Category
+            {
+                Name = "Apparel & Shoes",
+                PageSize = 4,
+                PictureId = categoryPictureApparelShoes.Id,
+                Published = true,
+                DisplayOrder = 5,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryApparelShoes);
+
+            var categoryShirts = new Category
+            {
+                Name = "Shirts",
+                PageSize = 4,
+                ParentCategoryId = categoryApparelShoes.Id,
+                PictureId = categoryPictureShirts.Id,
+                PriceRanges = "-20;20-;",
+                Published = true,
+                DisplayOrder = 1,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryShirts);
+
+            var categoryJeans = new Category
+            {
+                Name = "Jeans",
+                PageSize = 4,
+                ParentCategoryId = categoryApparelShoes.Id,
+                PictureId = categoryPictureJeans.Id,
+                PriceRanges = "-20;20-;",
+                Published = true,
+                DisplayOrder = 2,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryJeans);
+
+            var categoryShoes = new Category
+            {
+                Name = "Shoes",
+                PageSize = 4,
+                ParentCategoryId = categoryApparelShoes.Id,
+                PictureId = categoryPictureShoes.Id,
+                PriceRanges = "-20;20-;",
+                Published = true,
+                DisplayOrder = 3,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryShoes);
+
+            var categoryAccessoriesShoes = new Category
+            {
+                Name = "Accessories",
+                PageSize = 4,
+                ParentCategoryId = categoryApparelShoes.Id,
+                PictureId = categoryPictureAccessoriesShoes.Id,
+                PriceRanges = "-30;30-;",
+                Published = true,
+                DisplayOrder = 4,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryAccessoriesShoes);
+            _categoryRepository.Insert(categoryShoes);
+
+            var categoryDigitalDownloads = new Category
+            {
+                Name = "Digital downloads",
+                PageSize = 4,
+                PictureId = categoryPictureDigitalDownloads.Id,
+                Published = true,
+                DisplayOrder = 6,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryDigitalDownloads);
+
+            var categoryJewelry = new Category
+            {
+                Name = "Jewelry",
+                PageSize = 4,
+                PictureId = categoryPictureJewelry.Id,
+                PriceRanges = "0-500;500-700;700-3000;",
+                Published = true,
+                DisplayOrder = 7,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryJewelry);
+
+            var categoryGiftCards = new Category
+            {
+                Name = "Gift Cards",
+                PageSize = 4,
+                PictureId = categoryPictureGiftCards.Id,
+                Published = true,
+                DisplayOrder = 10,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _categoryRepository.Insert(categoryGiftCards);
+        }
+
+        protected virtual void InstallManufacturers()
+        {
+
+            var manufacturer1 = new Manufacturer()
+            {
+                Name = "Manufacturer 1",
+                Description = "Some description 1",
+                MetaKeywords = string.Empty,
+                MetaDescription = string.Empty,
+                MetaTitle = string.Empty,
+                SeName = string.Empty,
+                PageSize = 4,
+                PriceRanges = string.Empty,
+                Published = true,
+                DisplayOrder = 7,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _manufacturerRepository.Insert(manufacturer1);
+
+        }
+
+        protected virtual void InstallProducts()
+        {
+
+            var allCategories = _categoryRepository.Table.ToList();
+
+            for (var i = 1; i <= 50; i++)
+            {
+                var product = new Product()
                 {
-                    var cat = new Category()
-                    {
-                        Name = "sample category" + i,
-                        Description = "Some description 1",
-                        MetaKeywords = string.Empty,
-                        MetaDescription = string.Empty,
-                        MetaTitle = string.Empty,
-                        SeName = string.Empty,
-                        ParentCategoryId = 0,
-                        PageSize = 3,
-                        PriceRanges = string.Empty,
-                        Published = true,
-                        DisplayOrder = i,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow
-                    };
-                    _categoryRepository.Insert(cat);
-                }
-                Category category1 = _categoryRepository.Table.FirstOrDefault();
-
-                #endregion
-
-                #region Manufacturers
-
-                var manufacturer1 = new Manufacturer()
-                {
-                    Name = "Manufacturer 1",
-                    Description = "Some description 1",
+                    Name = "Product " + i,
+                    ShortDescription = "ShortDescription " + i,
+                    FullDescription = "FullDescription " + i,
+                    AdminComment = string.Empty,
+                    ShowOnHomePage = false,
                     MetaKeywords = string.Empty,
                     MetaDescription = string.Empty,
                     MetaTitle = string.Empty,
                     SeName = string.Empty,
-                    PageSize = 3,
-                    PriceRanges = string.Empty,
+                    AllowCustomerReviews = true,
+                    AllowCustomerRatings = true,
+                    RatingSum = 0,
+                    TotalRatingVotes = 0,
                     Published = true,
-                    DisplayOrder = 7,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow
                 };
-                _manufacturerRepository.Insert(manufacturer1);
-
-                #endregion
-
-                #region Products
-
-                var allCategories = _categoryRepository.Table.ToList();
-
-                for (var i = 1; i <= 50; i++)
+                var productVariant = new ProductVariant()
                 {
-                    var product = new Product()
-                    {
-                        Name = "Product " + i,
-                        ShortDescription = "ShortDescription " + i,
-                        FullDescription = "FullDescription " + i,
-                        AdminComment = string.Empty,
-                        ShowOnHomePage = false,
-                        MetaKeywords = string.Empty,
-                        MetaDescription = string.Empty,
-                        MetaTitle = string.Empty,
-                        SeName = string.Empty,
-                        AllowCustomerReviews = true,
-                        AllowCustomerRatings = true,
-                        RatingSum = 0,
-                        TotalRatingVotes = 0,
-                        Published = true,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow
-                    };
-                    var productVariant = new ProductVariant()
-                    {
-                        Name = string.Empty,
-                        Sku = string.Empty,
-                        Description = string.Empty,
-                        AdminComment = string.Empty,
-                        ManufacturerPartNumber = string.Empty,
-                        UserAgreementText = string.Empty,
-                        IsShipEnabled = true,
-                        ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                        LowStockActivity = LowStockActivity.Unpublish,
-                        BackorderMode = BackorderMode.NoBackorders,
-                        OrderMinimumQuantity = 1,
-                        OrderMaximumQuantity = 10000,
-                        Price = 130.12345M,
-                        Weight = 1,
-                        Length = 1,
-                        Width = 1,
-                        Height = 1,
-                        Published = true,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow,
-                        TaxCategoryId = taxCategories[0].Id
-                    };
-                    product.ProductVariants.Add(productVariant);
+                    Name = string.Empty,
+                    Sku = string.Empty,
+                    Description = string.Empty,
+                    AdminComment = string.Empty,
+                    ManufacturerPartNumber = string.Empty,
+                    UserAgreementText = string.Empty,
+                    IsShipEnabled = true,
+                    ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                    LowStockActivity = LowStockActivity.Unpublish,
+                    BackorderMode = BackorderMode.NoBackorders,
+                    OrderMinimumQuantity = 1,
+                    OrderMaximumQuantity = 10000,
+                    Price = 130.12345M,
+                    Weight = 1,
+                    Length = 1,
+                    Width = 1,
+                    Height = 1,
+                    Published = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                    TaxCategoryId = 0
+                };
+                product.ProductVariants.Add(productVariant);
 
-                    foreach (var category in CommonHelper.SelectNRandom(allCategories, 15))
+                foreach (var category in allCategories)
+                {
+                    var pcm = new ProductCategory()
                     {
-                        var pcm = new ProductCategory()
-                        {
-                            Category = category,
-                            Product = product,
-                            DisplayOrder = i
-                        };
-                        product.ProductCategories.Add(pcm);
-                    }
-
-                    _productRepository.Insert(product);
+                        Category = category,
+                        Product = product,
+                        DisplayOrder = i
+                    };
+                    product.ProductCategories.Add(pcm);
                 }
 
-                #endregion
+                _productRepository.Insert(product);
+            }
 
-                #region Forums
+        }
 
-                int forumGroupCount = 2;
-                int forumCount = 5;
-                int topicCount = 1;
-                int postCount = 1;
+        protected virtual void InstallForums()
+        {
 
-                var customer = customers.FirstOrDefault();
+            int forumGroupCount = 2;
+            int forumCount = 5;
+            int topicCount = 1;
+            int postCount = 1;
 
-                for (int a = 1; a <= forumGroupCount; a++)
+            var customer = _customerRepository.Table.FirstOrDefault();
+
+            for (int a = 1; a <= forumGroupCount; a++)
+            {
+                var forumGroup = new ForumGroup()
                 {
-                    var forumGroup = new ForumGroup()
+                    Name = "Forum Group " + a.ToString(),
+                    Description = "ForumGroup " + a.ToString() + " Description",
+                    DisplayOrder = a,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                    Forums = new List<Forum>()
+                };
+
+                _forumGroupRepository.Insert(forumGroup);
+
+                for (int b = 1; b <= forumCount; b++)
+                {
+                    var forum = new Forum()
                     {
-                        Name = "Forum Group " + a.ToString(),
-                        Description = "ForumGroup " + a.ToString() + " Description",
-                        DisplayOrder = a,
+                        Id = forumGroup.Id,
+                        Name = String.Format("FG{0} Forum {1}", a.ToString(), b.ToString()),
+                        Description = String.Format("FG{0}, Forum {1} Description", a.ToString(), b.ToString()),
+                        NumTopics = 0,
+                        NumPosts = 0,
+                        LastPostCustomerId = customer.Id,
+                        LastPostTime = DateTime.UtcNow,
+                        DisplayOrder = b,
                         CreatedOnUtc = DateTime.UtcNow,
                         UpdatedOnUtc = DateTime.UtcNow,
-                        Forums = new List<Forum>()
+                        ForumGroup = forumGroup,
+                        ForumTopics = new List<ForumTopic>()
                     };
 
-                    _forumGroupRepository.Insert(forumGroup);
+                    _forumRepository.Insert(forum);
+                    forumGroup.Forums.Add(forum);
 
-                    for (int b = 1; b <= forumCount; b++)
+                    for (int c = 1; c <= topicCount; c++)
                     {
-                        var forum = new Forum()
+                        var forumTopic = new ForumTopic()
                         {
-                            Id = forumGroup.Id,
-                            Name = String.Format("FG{0} Forum {1}", a.ToString(), b.ToString()),
-                            Description = String.Format("FG{0}, Forum {1} Description", a.ToString(), b.ToString()),
-                            NumTopics = 0,
+                            Id = forum.Id,
+                            Forum = forum,
+                            CustomerId = customer.Id,
+                            TopicTypeId = (int)ForumTopicType.Normal,
+                            Subject = String.Format("FG{0}, F{1}, Topic {2} Subject", a.ToString(), b.ToString(), c.ToString()),
                             NumPosts = 0,
-                            LastPostCustomerId = customer.Id,
+                            Views = 0,
+                            LastPostId = 0,
                             LastPostTime = DateTime.UtcNow,
-                            DisplayOrder = b,
                             CreatedOnUtc = DateTime.UtcNow,
                             UpdatedOnUtc = DateTime.UtcNow,
-                            ForumGroup = forumGroup,
-                            ForumTopics = new List<ForumTopic>()
+                            ForumPosts = new List<ForumPost>()
                         };
 
-                        _forumRepository.Insert(forum);
-                        forumGroup.Forums.Add(forum);
+                        _forumTopicRepository.Insert(forumTopic);
+                        forum.ForumTopics.Add(forumTopic);
+                        forum.LastTopicId = forumTopic.Id;
 
-                        for (int c = 1; c <= topicCount; c++)
+                        for (int d = 1; d <= postCount; d++)
                         {
-                            var forumTopic = new ForumTopic()
+                            var forumPost = new ForumPost()
                             {
-                                Id = forum.Id,
-                                Forum = forum,
+                                Id = forumTopic.Id,
+                                ForumTopic = forumTopic,
                                 CustomerId = customer.Id,
-                                TopicTypeId = (int)ForumTopicType.Normal,
-                                Subject = String.Format("FG{0}, F{1}, Topic {2} Subject", a.ToString(), b.ToString(), c.ToString()),
-                                NumPosts = 0,
-                                Views = 0,
-                                LastPostId = 0,
-                                LastPostTime = DateTime.UtcNow,
+                                Text = String.Format("Post {0} Text. {1}", d.ToString(), forumTopic.Subject),
+                                IPAddress = "127.0.0.1",
                                 CreatedOnUtc = DateTime.UtcNow,
-                                UpdatedOnUtc = DateTime.UtcNow,
-                                ForumPosts = new List<ForumPost>()
+                                UpdatedOnUtc = DateTime.UtcNow
                             };
-
-                            _forumTopicRepository.Insert(forumTopic);
-                            forum.ForumTopics.Add(forumTopic);
-                            forum.LastTopicId = forumTopic.Id;
-
-                            for (int d = 1; d <= postCount; d++)
-                            {
-                                var forumPost = new ForumPost()
-                                {
-                                    Id = forumTopic.Id,
-                                    ForumTopic = forumTopic,
-                                    CustomerId = customer.Id,
-                                    Text = String.Format("Post {0} Text. {1}", d.ToString(), forumTopic.Subject),
-                                    IPAddress = "127.0.0.1",
-                                    CreatedOnUtc = DateTime.UtcNow,
-                                    UpdatedOnUtc = DateTime.UtcNow
-                                };
-                                _forumPostRepository.Insert(forumPost);
-                                forumTopic.ForumPosts.Add(forumPost);
-                                forum.LastPostId = forumPost.Id;
-                                forum.LastPostTime = DateTime.UtcNow;
-                                forumTopic.LastPostId = forumPost.Id;
-                                forumTopic.LastPostTime = DateTime.UtcNow;
-                            }
-
-                            forumTopic.NumPosts = postCount;
-                            forum.NumPosts += postCount;
+                            _forumPostRepository.Insert(forumPost);
+                            forumTopic.ForumPosts.Add(forumPost);
+                            forum.LastPostId = forumPost.Id;
+                            forum.LastPostTime = DateTime.UtcNow;
+                            forumTopic.LastPostId = forumPost.Id;
+                            forumTopic.LastPostTime = DateTime.UtcNow;
                         }
-                        forum.NumTopics = topicCount;
+
+                        forumTopic.NumPosts = postCount;
+                        forum.NumPosts += postCount;
                     }
+                    forum.NumTopics = topicCount;
                 }
-                #endregion
+            }
+        }
 
-                #region Discounts
-
-                var disounts = new List<Discount>
+        protected virtual void InstallDiscounts()
+        {
+            var disounts = new List<Discount>
                                 {
                                     new Discount
                                         {
@@ -1421,9 +1653,35 @@ namespace Nop.Services.Installation
                                             EndDateUtc = new DateTime(2020,1,1),
                                         },
                                 };
-                disounts.ForEach(d => _discountRepository.Insert(d));
+            disounts.ForEach(d => _discountRepository.Insert(d));
 
-                #endregion
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void InstallData(bool installSampleData = true)
+        {
+            InstallMeasures();
+            InstallTaxCategories();
+            InstallLanguagesAndResources();
+            InstallCurrencies();
+            InstallCountriesAndStates();
+            InstallShippingMethods();
+            InstallCustomersAndUsers();
+            InstallEmailAccounts();
+            InstallQueuedEmails(); //TODo remove. Just for testing
+            InstallSettings();
+
+            if (installSampleData)
+            {
+                InstallSpecificationAttributes();
+                InstallCategories();
+                InstallManufacturers();
+                InstallProducts();
+                InstallForums();
+                InstallDiscounts();
             }
         }
 
