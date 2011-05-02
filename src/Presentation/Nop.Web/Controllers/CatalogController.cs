@@ -33,6 +33,7 @@ namespace Nop.Web.Controllers
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IWebHelper _webHelper;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -47,7 +48,7 @@ namespace Nop.Web.Controllers
             ITaxService taxService, ICurrencyService currencyService,
             IPictureService pictureService, ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
-            IWebHelper webHelper,
+            IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings)
         {
             this._currencyService = currencyService;
@@ -60,6 +61,7 @@ namespace Nop.Web.Controllers
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
             this._webHelper = webHelper;
+            this._specificationAttributeService = specificationAttributeService;
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
@@ -238,14 +240,10 @@ namespace Nop.Web.Controllers
                     NumberOfParentCategories = level
                 };
 
-                //UNDONE display number of products for each category if 'Display.Products.ShowCategoryProductNumber' setting is 'true' (look at nopCommerce 1.90
-                bool showCategoryProductNumber = false;
-                if (showCategoryProductNumber)
+                if (_catalogSettings.ShowCategoryProductNumber)
                 {
                     model.DisplayNumberOfProducts = true;
-                    //UNDONE display number of products for each subcategory category if 'Display.Products.ShowCategoryProductNumber.IncludeSubCategories' setting is 'true' (look at nopCommerce 1.90
-                    bool includeSubCategories = true;
-                    model.NumberOfProducts = GetNumberOfProducts(category, includeSubCategories);
+                    model.NumberOfProducts = GetNumberOfProducts(category, _catalogSettings.ShowCategoryProductNumberIncludingSubcategories);
                 }
                 result.Add(model);
 
@@ -326,10 +324,13 @@ namespace Nop.Web.Controllers
                 if (selectedPriceRange.To.HasValue)
                     maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
             }
-
+            //specs
+            model.PagingFilteringContext.SpecificationFilter.LoadSpecsFilters(category, _specificationAttributeService, _webHelper, _workContext);
+            IList<int> selectedSpecs = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
+            
 
             //category breadcrumb
-            model.DisplayCategoryBreadcrumb = true; //UNDONE use "Media.CategoryBreadcrumbEnabled" setting
+            model.DisplayCategoryBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled;
             if (model.DisplayCategoryBreadcrumb)
             {
                 foreach (var catBr in GetCategoryBreadCrumb(category))
@@ -384,7 +385,7 @@ namespace Nop.Web.Controllers
 
             //products
             var products = _productService.SearchProducts(categoryId, 0, false, minPriceConverted, maxPriceConverted,
-                0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, command.Specs,
+                0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, selectedSpecs,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
             model.Products = products.Select(x =>
             {

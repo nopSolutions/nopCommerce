@@ -114,21 +114,22 @@
     </div>
     
     @*filtering*@
-    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled ||
+        Model.PagingFilteringContext.SpecificationFilter.Enabled)
     {
-    <div class="product-filters">
-        <div class="filter-title">
-            <span>@T("Filtering.FilterResults")</span>
+        <div class="product-filters">
+            <div class="filter-title">
+                <span>@T("Filtering.FilterResults")</span>
+            </div>
+            <div class="filter-item">
+                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+            </div>
+            <div class="filter-item">
+                @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
+            </div>
         </div>
-        <div class="filter-item">
-            @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+        <div class="clear">
         </div>
-        <div class="filter-item">
-            @*UNDONE product specification filter*@
-        </div>
-    </div>
-    <div class="clear">
-    </div>
     }
     
     

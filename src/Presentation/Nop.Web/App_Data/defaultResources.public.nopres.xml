@@ -386,7 +386,7 @@
     </Children>
   </LocaleResource>
   <LocaleResource Name="Categories">
-    <Value>Sort by</Value>
+    <Value>Categories</Value>
     <Children>
       <LocaleResource Name="Breadcrumb">
         <Children>
@@ -809,6 +809,17 @@
           </LocaleResource>
           <LocaleResource Name="Under">
             <Value>Under {0}</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="SpecificationFilter">
+        <Value>Filter by attributes</Value>
+        <Children>
+          <LocaleResource Name="CurrentlyFilteredBy">
+            <Value>Currently shopping by:</Value>
+          </LocaleResource>
+          <LocaleResource Name="Remove">
+            <Value>Remove Filter</Value>
           </LocaleResource>
         </Children>
       </LocaleResource>

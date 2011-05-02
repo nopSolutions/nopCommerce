@@ -364,25 +364,20 @@ namespace Nop.Services.Catalog
                     var specificationAttributeOptionId = psa.SpecificationAttributeOption.Id;
                     if (result.Find(saof => saof.SpecificationAttributeOptionId == specificationAttributeOptionId) == null)
                     {
-                        var specificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(sa => sa.Name, workContext);
-                        var specificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id;
-                        var displayOrder = psa.SpecificationAttributeOption.DisplayOrder;
-                        var specificationAttributeOptionName = psa.SpecificationAttributeOption.GetLocalized(sao => sao.Name, workContext);
-
                         result.Add(new SpecificationAttributeOptionFilter()
                             {
-                                SpecificationAttributeId = specificationAttributeId,
-                                SpecificationAttributeName = specificationAttributeName,
-                                DisplayOrder = displayOrder,
+                                SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id,
+                                SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(sa => sa.Name, workContext),
+                                DisplayOrder = psa.SpecificationAttributeOption.SpecificationAttribute.DisplayOrder,
                                 SpecificationAttributeOptionId = specificationAttributeOptionId,
-                                SpecificationAttributeOptionName = specificationAttributeOptionName
+                                SpecificationAttributeOptionName = psa.SpecificationAttributeOption.GetLocalized(sao => sao.Name, workContext)
                             });
                     }
                 }
             }
-            result.OrderBy(saof => saof.DisplayOrder)
+            result = result.OrderBy(saof => saof.DisplayOrder)
                 .ThenBy(saof => saof.SpecificationAttributeName)
-                .ThenBy(saof => saof.SpecificationAttributeOptionName);
+                .ThenBy(saof => saof.SpecificationAttributeOptionName).ToList();
             return result;
         }
 

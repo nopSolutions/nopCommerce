@@ -966,6 +966,7 @@
     <Content Include="Views\Customer\Avatar.cshtml" />
     <Content Include="Views\Catalog\CategoryNavigation.cshtml" />
     <Content Include="Views\Catalog\_FilterPriceBox.cshtml" />
+    <Content Include="Views\Catalog\_FilterSpecsBox.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

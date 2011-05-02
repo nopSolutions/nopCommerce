@@ -817,7 +817,10 @@ namespace Nop.Services.Installation
                 {
                     HidePricesForNonRegistered = false,
                     AllowProductSorting = true,
-                    AllowProductViewModeChanging = true
+                    AllowProductViewModeChanging = true,
+                    ShowCategoryProductNumber = false,
+                    ShowCategoryProductNumberIncludingSubcategories = false,
+                    CategoryBreadcrumbEnabled = true
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

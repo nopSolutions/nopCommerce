@@ -7,6 +7,7 @@ using MvcContrib.Pagination;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
+using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -18,8 +19,8 @@ namespace Nop.Web.Models.Catalog
 
         public PagingFilteringModel()
         {
-            this.Specs = new List<int>();
             this.PriceRangeFilter = new PriceRangeFilterModel();
+            this.SpecificationFilter = new SpecificationFilterModel();
         }
 
         #endregion
@@ -57,6 +58,11 @@ namespace Nop.Web.Models.Catalog
         public PriceRangeFilterModel PriceRangeFilter { get; set; }
 
         /// <summary>
+        /// Specification filter model
+        /// </summary>
+        public SpecificationFilterModel SpecificationFilter { get; set; }
+
+        /// <summary>
         /// Product sorting
         /// </summary>
         [NopResourceDisplayName("Categories.OrderBy")]
@@ -67,10 +73,7 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         [NopResourceDisplayName("Categories.ViewMode")]
         public string ViewMode { get; set; }
-
-        public IList<int> Specs { get; set; }
-
-
+        
 
         public int FirstItem { get; set; }
 
@@ -111,31 +114,6 @@ namespace Nop.Web.Models.Catalog
 
             #region Utilities
 
-            public virtual PriceRange GetSelectedPriceRange(IWebHelper webHelper, string priceRangesStr)
-            {
-                string range = webHelper.QueryString(QUERYSTRINGPARAM);
-                if (String.IsNullOrEmpty(range))
-                    return null;
-                string[] fromTo = range.Trim().Split(new char[] { '-' });
-                if (fromTo.Length == 2)
-                {
-                    decimal? from = null;
-                    if (!String.IsNullOrEmpty(fromTo[0]) && !String.IsNullOrEmpty(fromTo[0].Trim()))
-                        from = decimal.Parse(fromTo[0].Trim(), new CultureInfo("en-US"));
-                    decimal? to = null;
-                    if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
-                        to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
-
-                    var priceRangeList = GetPriceRangeList(priceRangesStr);
-                    foreach (var pr in priceRangeList)
-                    {
-                        if (pr.From == from && pr.To == to)
-                            return pr;
-                    }
-                }
-                return null;
-            }
-
             /// <summary>
             /// Gets parsed price ranges
             /// </summary>
@@ -162,7 +140,7 @@ namespace Nop.Web.Models.Catalog
                 return priceRanges;
             }
 
-            protected virtual string ExcludePriceFilterQueryStringParams(string url, IWebHelper webHelper)
+            protected virtual string ExcludeQueryStringParams(string url, IWebHelper webHelper)
             {
                 var excludedQueryStringParams = "pagenumber"; //remove page filtering
                 if (!String.IsNullOrEmpty(excludedQueryStringParams))
@@ -178,7 +156,32 @@ namespace Nop.Web.Models.Catalog
             #endregion
 
             #region Methods
-            
+
+            public virtual PriceRange GetSelectedPriceRange(IWebHelper webHelper, string priceRangesStr)
+            {
+                string range = webHelper.QueryString(QUERYSTRINGPARAM);
+                if (String.IsNullOrEmpty(range))
+                    return null;
+                string[] fromTo = range.Trim().Split(new char[] { '-' });
+                if (fromTo.Length == 2)
+                {
+                    decimal? from = null;
+                    if (!String.IsNullOrEmpty(fromTo[0]) && !String.IsNullOrEmpty(fromTo[0].Trim()))
+                        from = decimal.Parse(fromTo[0].Trim(), new CultureInfo("en-US"));
+                    decimal? to = null;
+                    if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
+                        to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
+
+                    var priceRangeList = GetPriceRangeList(priceRangesStr);
+                    foreach (var pr in priceRangeList)
+                    {
+                        if (pr.From == from && pr.To == to)
+                            return pr;
+                    }
+                }
+                return null;
+            }
+
             public virtual void LoadPriceRangeFilters(Category category, IWebHelper webHelper, IPriceFormatter priceFormatter)
             {
                 if (category == null)
@@ -214,7 +217,7 @@ namespace Nop.Web.Models.Catalog
 
                         //filter URL
                         string url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + fromQuery + "-" + toQuery, null);
-                        url = ExcludePriceFilterQueryStringParams(url, webHelper);
+                        url = ExcludeQueryStringParams(url, webHelper);
                         item.FilterUrl = url;
 
 
@@ -225,7 +228,7 @@ namespace Nop.Web.Models.Catalog
                     {
                         //remove filter URL
                         string url = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
-                        url = ExcludePriceFilterQueryStringParams(url, webHelper);
+                        url = ExcludeQueryStringParams(url, webHelper);
                         this.RemoveFilterUrl = url;
                     }
                 }
@@ -251,6 +254,202 @@ namespace Nop.Web.Models.Catalog
             public string To { get; set; }
             public string FilterUrl { get; set; }
             public bool Selected { get; set; }
+        }
+
+        public class SpecificationFilterModel : BaseNopModel
+        {
+            #region Const
+
+            private const string QUERYSTRINGPARAM = "specs";
+
+            #endregion
+
+            #region Ctor
+
+            public SpecificationFilterModel()
+            {
+                this.AlreadyFilteredItems = new List<SpecificationFilterItem>();
+                this.NotFilteredItems = new List<SpecificationFilterItem>();
+            }
+
+            #endregion
+
+            #region Utilities
+
+            protected virtual string ExcludeQueryStringParams(string url, IWebHelper webHelper)
+            {
+                var excludedQueryStringParams = "pagenumber"; //remove page filtering
+                if (!String.IsNullOrEmpty(excludedQueryStringParams))
+                {
+                    string[] excludedQueryStringParamsSplitted = excludedQueryStringParams.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string exclude in excludedQueryStringParamsSplitted)
+                    {
+                        url = webHelper.RemoveQueryString(url, exclude);
+                    }
+                }
+
+                return url;
+            }
+
+            protected virtual IList<SpecificationAttributeOptionFilter> GetAlreadyFilteredSpecs(ISpecificationAttributeService specificationAttributeService, 
+                IWebHelper webHelper, IWorkContext workContext)
+            {
+                var result = new List<SpecificationAttributeOptionFilter>();
+
+                var optionIds = GetAlreadyFilteredSpecOptionIds(webHelper);
+                foreach (var id in optionIds)
+                {
+                    var sao = specificationAttributeService.GetSpecificationAttributeOptionById(id);
+                    if (sao != null)
+                    {
+                        var sa = sao.SpecificationAttribute;
+                        if (sa != null)
+                        {
+                            result.Add(new SpecificationAttributeOptionFilter
+                            {
+                                SpecificationAttributeId = sa.Id,
+                                SpecificationAttributeName = sa.GetLocalized(x => x.Name),
+                                DisplayOrder = sa.DisplayOrder,
+                                SpecificationAttributeOptionId = sao.Id,
+                                SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name)
+                            });
+                        }
+                    }
+                }
+
+                return result;
+            }
+
+            protected virtual IList<SpecificationAttributeOptionFilter> GetNotFilteredSpecs(int categoryId, 
+                ISpecificationAttributeService specificationAttributeService, IWebHelper webHelper, IWorkContext workContext)
+            {
+                //get all
+                var result = specificationAttributeService.GetSpecificationAttributeOptionFilter(categoryId, workContext);
+
+                //remove already filtered
+                var alreadyFilteredOptions = GetAlreadyFilteredSpecs(specificationAttributeService, webHelper, workContext);
+                foreach (var saof1 in alreadyFilteredOptions)
+                {
+                    var query = from s in result
+                                where s.SpecificationAttributeId == saof1.SpecificationAttributeId
+                                select s;
+
+                    var toRemove = query.ToList();
+                    foreach (var saof2 in toRemove)
+                        result.Remove(saof2);
+                }
+                return result;
+            }
+
+            protected virtual string GenerateFilteredSpecQueryParam(IList<int> optionIds)
+            {
+                string result = "";
+
+                if (optionIds == null || optionIds.Count == 0)
+                    return result;
+
+                for (int i = 0; i < optionIds.Count; i++)
+                {
+                    result += optionIds[i];
+                    if (i != optionIds.Count - 1)
+                        result += ",";
+                }
+                return result;
+            }
+
+            #endregion
+
+            #region Methods
+
+            public virtual List<int> GetAlreadyFilteredSpecOptionIds(IWebHelper webHelper)
+            {
+                var result = new List<int>();
+
+                string alreadyFilteredSpecsStr = webHelper.QueryString(QUERYSTRINGPARAM);
+                if (String.IsNullOrWhiteSpace(alreadyFilteredSpecsStr))
+                    return result;
+
+                foreach (var spec in alreadyFilteredSpecsStr.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    int specId = 0;
+                    int.TryParse(spec.Trim(), out specId);
+                    if (!result.Contains(specId))
+                        result.Add(specId);
+                }
+                return result;
+            }
+
+            public virtual void LoadSpecsFilters(Category category, 
+                ISpecificationAttributeService specificationAttributeService, IWebHelper webHelper, 
+                IWorkContext workContext)
+            {
+                if (category == null)
+                    throw new ArgumentNullException("category");
+
+                var alreadyFilteredOptions = GetAlreadyFilteredSpecs(specificationAttributeService, webHelper, workContext);
+                var notFilteredOptions = GetNotFilteredSpecs(category.Id, 
+                    specificationAttributeService, webHelper, workContext);
+
+                if (alreadyFilteredOptions.Count > 0 || notFilteredOptions.Count > 0)
+                {
+                    this.Enabled = true;
+                    
+                    this.AlreadyFilteredItems = alreadyFilteredOptions.ToList().Select(x =>
+                    {
+                        var item = new SpecificationFilterItem();
+                        item.SpecificationAttributeName = x.SpecificationAttributeName;
+                        item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
+
+                        return item;
+                    }).ToList();
+
+                    this.NotFilteredItems = notFilteredOptions.ToList().Select(x =>
+                    {
+                        var item = new SpecificationFilterItem();
+                        item.SpecificationAttributeName = x.SpecificationAttributeName;
+                        item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
+
+                        //filter URL
+                        var alreadyFilteredOptionIds = GetAlreadyFilteredSpecOptionIds(webHelper);
+                        if (!alreadyFilteredOptionIds.Contains(x.SpecificationAttributeOptionId))
+                            alreadyFilteredOptionIds.Add(x.SpecificationAttributeOptionId);
+                        string newQueryParam = GenerateFilteredSpecQueryParam(alreadyFilteredOptionIds);
+                        string filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + newQueryParam, null);
+                        filterUrl = ExcludeQueryStringParams(filterUrl, webHelper);
+                        item.FilterUrl = filterUrl;
+
+
+                        return item;
+                    }).ToList();
+
+
+                    //remove filter URL
+                    string removeFilterUrl = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
+                    removeFilterUrl = ExcludeQueryStringParams(removeFilterUrl, webHelper);
+                    this.RemoveFilterUrl = removeFilterUrl;
+                }
+                else
+                {
+                    this.Enabled = false;
+                }
+            }
+
+            #endregion
+
+            #region Properties
+            public bool Enabled { get; set; }
+            public IList<SpecificationFilterItem> AlreadyFilteredItems { get; set; }
+            public IList<SpecificationFilterItem> NotFilteredItems { get; set; }
+            public string RemoveFilterUrl { get; set; }
+
+            #endregion
+        }
+
+        public class SpecificationFilterItem : BaseNopModel
+        {
+            public string SpecificationAttributeName { get; set; }
+            public string SpecificationAttributeOptionName { get; set; }
+            public string FilterUrl { get; set; }
         }
 
         #endregion
