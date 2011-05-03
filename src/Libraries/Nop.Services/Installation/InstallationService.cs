@@ -844,7 +844,8 @@ namespace Nop.Services.Installation
                     ProductVariantPictureSize = 125,
                     CategoryThumbPictureSize = 125,
                     ManufacturerThumbPictureSize = 125,
-                    MaximumImageSize = 1280
+                    MaximumImageSize = 1280,
+                    DefaultPictureZoomEnabled = false,
                 });
             EngineContext.Current.Resolve<IConfigurationProvider<FormFieldSettings>>()
                 .SaveSettings(new FormFieldSettings()
@@ -1421,7 +1422,7 @@ namespace Nop.Services.Installation
 
             var allCategories = _categoryRepository.Table.ToList();
 
-            for (var i = 1; i <= 50; i++)
+            for (var i = 1; i <= 20; i++)
             {
                 var product = new Product()
                 {

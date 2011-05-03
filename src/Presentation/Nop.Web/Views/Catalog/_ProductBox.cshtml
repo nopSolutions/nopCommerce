@@ -4,8 +4,8 @@
         <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })">@Model.Name</a>
     </h2>
     <div class="picture">
-        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" title="Show details for @Model.Name">
-            <img style="border-width: 0px;" alt="Picture of @Model.Name" src="@Model.ImageUrl" title="Show details for @Model.Name" />
+        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" title="@Model.DefaultPictureModel.Title">
+            <img style="border-width: 0px;" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
     </div>
     <div class="description">

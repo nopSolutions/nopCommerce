@@ -97,6 +97,7 @@
     <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="Models\Catalog\CategoryModel.cs" />
     <Compile Include="Models\Catalog\CategoryNavigationModel.cs" />
+    <Compile Include="Models\Catalog\ManufacturerModel.cs" />
     <Compile Include="Models\Catalog\ManufacturerNavigationModel.cs" />
     <Compile Include="Models\Catalog\ProductModel.cs" />
     <Compile Include="Models\Common\AddressModel.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Models\Home\LanguageModel.cs" />
     <Compile Include="Models\Home\LanguageSelectorModel.cs" />
     <Compile Include="Models\Catalog\PagingFilteringModel.cs" />
+    <Compile Include="Models\Media\PictureModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\Common\AddressValidator.cs" />
     <Compile Include="Validators\Customer\ChangePasswordValidator.cs" />
@@ -791,6 +793,7 @@
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
     <Content Include="Scripts\public.js" />
+    <Content Include="Scripts\slimbox2.js" />
     <Content Include="Scripts\swfobject.js" />
     <Content Include="Themes\DarkOrange\Content\images\bbeditor-button-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\bgTextBox.gif" />
@@ -987,6 +990,8 @@
     <Content Include="Views\Catalog\_FilterPriceBox.cshtml" />
     <Content Include="Views\Catalog\_FilterSpecsBox.cshtml" />
     <Content Include="Views\Catalog\ManufacturerNavigation.cshtml" />
+    <Content Include="Views\Catalog\Manufacturer.cshtml" />
+    <Content Include="Views\Catalog\ManufacturerAll.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

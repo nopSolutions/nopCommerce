@@ -182,17 +182,14 @@ namespace Nop.Web.Models.Catalog
                 return null;
             }
 
-            public virtual void LoadPriceRangeFilters(Category category, IWebHelper webHelper, IPriceFormatter priceFormatter)
+            public virtual void LoadPriceRangeFilters(string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
             {
-                if (category == null)
-                    throw new ArgumentNullException("category");
-
-                var priceRangeList = GetPriceRangeList(category.PriceRanges);
+                var priceRangeList = GetPriceRangeList(priceRangeStr);
                 if (priceRangeList.Count > 0)
                 {
                     this.Enabled = true;
 
-                    var selectedPriceRange = GetSelectedPriceRange(webHelper, category.PriceRanges);
+                    var selectedPriceRange = GetSelectedPriceRange(webHelper, priceRangeStr);
 
                     this.Items = priceRangeList.ToList().Select(x =>
                     {

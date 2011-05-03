@@ -15,51 +15,42 @@ namespace Nop.Web.Extensions
 {
     public static class ModelExtensions
     {
-        #region Category
-
-        public static CategoryModel ToModel(this Category category)
+        //category
+        public static CategoryModel ToModel(this Category entity)
         {
-            return AutoMapper.Mapper.Map<Category, CategoryModel>(category);
+            return AutoMapper.Mapper.Map<Category, CategoryModel>(entity);
         }
 
-        #endregion
-
-        #region Languages
-
-        public static LanguageModel ToModel(this Language language)
+        //manufacturer
+        public static ManufacturerModel ToModel(this Manufacturer entity)
         {
-            return AutoMapper.Mapper.Map<Language, LanguageModel>(language);
+            return AutoMapper.Mapper.Map<Manufacturer, ManufacturerModel>(entity);
         }
 
-  
-        #endregion
-
-        #region Catalog
-
-        public static ProductModel ToModel(this Product product)
+        //language
+        public static LanguageModel ToModel(this Language entity)
         {
-            return AutoMapper.Mapper.Map<Product, ProductModel>(product);
+            return AutoMapper.Mapper.Map<Language, LanguageModel>(entity);
         }
 
-        #endregion
+        //product
+        public static ProductModel ToModel(this Product entity)
+        {
+            return AutoMapper.Mapper.Map<Product, ProductModel>(entity);
+        }
 
-        #region Address
-
+        //address
         public static AddressModel ToModel(this Address entity)
         {
             return AutoMapper.Mapper.Map<Address, AddressModel>(entity);
         }
-
         public static Address ToEntity(this AddressModel model)
         {
             return AutoMapper.Mapper.Map<AddressModel, Address>(model);
         }
-
         public static Address ToEntity(this AddressModel model, Address destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }
-
-        #endregion
     }
 }

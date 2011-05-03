@@ -16,6 +16,7 @@ using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
+using Nop.Web.Models.Media;
 
 namespace Nop.Web.Controllers
 {
@@ -272,6 +273,9 @@ namespace Nop.Web.Controllers
 
             var model = category.ToModel();
             
+
+
+
             //sorting
             model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
             if (model.AllowProductFiltering)
@@ -290,6 +294,8 @@ namespace Nop.Web.Controllers
                         });
                 }
             }
+
+
 
             //view mode
             model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
@@ -315,7 +321,7 @@ namespace Nop.Web.Controllers
 
 
             //price ranges
-            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(category, _webHelper, _priceFormatter);
+            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(category.PriceRanges, _webHelper, _priceFormatter);
             var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, category.PriceRanges);
             decimal? minPriceConverted = null;
             decimal? maxPriceConverted = null;
@@ -327,10 +333,16 @@ namespace Nop.Web.Controllers
                 if (selectedPriceRange.To.HasValue)
                     maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
             }
+
+
+
+
             //specs
             model.PagingFilteringContext.SpecificationFilter.LoadSpecsFilters(category, _specificationAttributeService, _webHelper, _workContext);
             IList<int> selectedSpecs = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
             
+
+
 
             //category breadcrumb
             model.DisplayCategoryBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled;
@@ -356,7 +368,9 @@ namespace Nop.Web.Controllers
                 .Select(x =>
                 {
                     var subCatModel = AutoMapper.Mapper.Map<Category, CategoryModel.SubCategoryModel>(x);
-                    subCatModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
+                    subCatModel.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
+                    subCatModel.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), model.Name);
+                    subCatModel.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), model.Name);
                     return subCatModel;
                 })
                 .ToList();
@@ -376,9 +390,11 @@ namespace Nop.Web.Controllers
                 //picture
                 var picture = x.GetDefaultProductPicture(_pictureService);
                 if (picture != null)
-                    m.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
                 else
-                    m.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
+                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
                 return m;
             })
             .ToList();
@@ -387,7 +403,7 @@ namespace Nop.Web.Controllers
 
 
             //products
-            var products = _productService.SearchProducts(categoryId, 0, false, minPriceConverted, maxPriceConverted,
+            var products = _productService.SearchProducts(category.Id, 0, false, minPriceConverted, maxPriceConverted,
                 0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, selectedSpecs,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
             model.Products = products.Select(x =>
@@ -398,9 +414,11 @@ namespace Nop.Web.Controllers
                 //picture
                 var picture = x.GetDefaultProductPicture(_pictureService);
                 if (picture != null)
-                    m.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
                 else
-                    m.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
+                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
                 return m;
             })
             .ToList();
@@ -425,12 +443,139 @@ namespace Nop.Web.Controllers
             if (manufacturer == null || manufacturer.Deleted || !manufacturer.Published)
                 return RedirectToAction("Index", "Home");
 
-            throw new NotImplementedException();
+            if (command.PageSize <= 0) command.PageSize = manufacturer.PageSize;
+            if (command.PageNumber <= 0) command.PageNumber = 1;
+
+            var model = manufacturer.ToModel();
+
+
+
+
+            //sorting
+            model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
+            if (model.AllowProductFiltering)
+            {
+                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
+                {
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
+
+                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
+                    model.AvailableSortOptions.Add(new SelectListItem()
+                    {
+                        Text = sortValue,
+                        Value = sortUrl,
+                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
+                    });
+                }
+            }
+
+
+
+            //view mode
+            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            if (model.AllowProductViewModeChanging)
+            {
+                var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                //grid
+                model.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Manufacturers.ViewMode.Grid"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
+                    Selected = command.ViewMode == "grid"
+                });
+                //list
+                model.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Manufacturers.ViewMode.List"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
+                    Selected = command.ViewMode == "list"
+                });
+            }
+
+
+
+            //price ranges
+            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(manufacturer.PriceRanges, _webHelper, _priceFormatter);
+            var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, manufacturer.PriceRanges);
+            decimal? minPriceConverted = null;
+            decimal? maxPriceConverted = null;
+            if (selectedPriceRange != null)
+            {
+                if (selectedPriceRange.From.HasValue)
+                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, _workContext.WorkingCurrency);
+
+                if (selectedPriceRange.To.HasValue)
+                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
+            }
+
+            
+
+
+            //featured products
+            var featuredProducts = _productService.SearchProducts(0,
+                manufacturer.Id, true, null, null, 0, 0, null, false, _workContext.WorkingLanguage.Id, null,
+                ProductSortingEnum.Position, 0, int.MaxValue);
+            model.FeaturedProducts = featuredProducts.Select(x =>
+            {
+                var m = x.ToModel();
+                //price
+                m.ProductPrice = PrepareProductPriceModel(x);
+                //picture
+                var picture = x.GetDefaultProductPicture(_pictureService);
+                if (picture != null)
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+                else
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
+                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
+                return m;
+            })
+            .ToList();
+
+
+
+
+            //products
+            var products = _productService.SearchProducts(0, manufacturer.Id, false, minPriceConverted, maxPriceConverted,
+                0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, null,
+                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
+            model.Products = products.Select(x =>
+            {
+                var m = x.ToModel();
+                //price
+                m.ProductPrice = PrepareProductPriceModel(x);
+                //picture
+                var picture = x.GetDefaultProductPicture(_pictureService);
+                if (picture != null)
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+                else
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
+                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
+                return m;
+            })
+            .ToList();
+
+            model.PagingFilteringContext.LoadPagedList(products);
+            model.PagingFilteringContext.ViewMode = command.ViewMode;
+            return View(model);
         }
 
         public ActionResult ManufacturerAll()
         {
-            throw new NotImplementedException();
+            var model = new List<ManufacturerModel>();
+            var manufacturers = _manufacturerService.GetAllManufacturers();
+            foreach (var manufacturer in manufacturers)
+            {
+                var modelMan = manufacturer.ToModel();
+                modelMan.PictureModel.ImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
+                modelMan.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name);
+                modelMan.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name);
+                model.Add(modelMan);
+            }
+
+            return View(model);
         }
 
         public ActionResult ManufacturerNavigation(int currentManufacturerId)
@@ -460,7 +605,51 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var model = product.ToModel();
+            
+
+
+            //price
             model.ProductPrice = PrepareProductPriceModel(product);
+
+
+
+            //pictures
+            model.DefaultPictureZoomEnabled = _mediaSetting.DefaultPictureZoomEnabled;
+            var pictures = _pictureService.GetPicturesByProductId(product.Id);
+            if (pictures.Count > 0)
+            {
+                //default picture
+                model.DefaultPictureModel = new PictureModel()
+                {
+                    ImageUrl = _pictureService.GetPictureUrl(pictures.FirstOrDefault(), _mediaSetting.ProductDetailsPictureSize),
+                    FullSizeImageUrl = _pictureService.GetPictureUrl(pictures.FirstOrDefault()),
+                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
+                };
+                //all pictures
+                foreach (var picture in pictures)
+                {
+                    model.PictureModels.Add(new PictureModel()
+                        {
+                            ImageUrl = _pictureService.GetPictureUrl(picture, 70),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                            Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
+                            AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
+
+                        });
+                }
+            }
+            else
+            {
+                //no images. set the default one
+                model.DefaultPictureModel = new PictureModel()
+                {
+                    ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductDetailsPictureSize),
+                    FullSizeImageUrl = _pictureService.GetDefaultPictureUrl(),
+                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
+                };
+            }
             return View(model);
         }
 

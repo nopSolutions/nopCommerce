@@ -28,20 +28,34 @@ namespace Nop.Web.Infrastructure
         {
             //language
             ViceVersa<Language, LanguageModel>();
-            //catalog product
+            //product
             Mapper.CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
                 .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.GetLocalized(x => x.ShortDescription)))
+                .ForMember(dest => dest.FullDescription, opt => opt.MapFrom(src => src.GetLocalized(x => x.FullDescription)))
+                .ForMember(dest => dest.MetaKeywords, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaKeywords)))
+                .ForMember(dest => dest.MetaDescription, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaDescription)))
+                .ForMember(dest => dest.MetaTitle, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaTitle)))
                 .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
-            //catalog category
+            //category
             Mapper.CreateMap<Category, CategoryModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.GetLocalized(x => x.Description)))
+                .ForMember(dest => dest.MetaKeywords, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaKeywords)))
+                .ForMember(dest => dest.MetaDescription, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaDescription)))
+                .ForMember(dest => dest.MetaTitle, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaTitle)))
                 .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
             Mapper.CreateMap<Category, CategoryModel.SubCategoryModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
                 .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
-
+            //manufacturer
+            Mapper.CreateMap<Manufacturer, ManufacturerModel>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.GetLocalized(x => x.Description)))
+                .ForMember(dest => dest.MetaKeywords, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaKeywords)))
+                .ForMember(dest => dest.MetaDescription, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaDescription)))
+                .ForMember(dest => dest.MetaTitle, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaTitle)))
+                .ForMember(dest => dest.SeName, opt => opt.MapFrom(src => src.GetSeName()));
             //address
             Mapper.CreateMap<Address, AddressModel>();
             Mapper.CreateMap<AddressModel, Address>()

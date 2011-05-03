@@ -835,8 +835,59 @@
   <LocaleResource Name="Manufacturers">
     <Value>Manufacturers</Value>
     <Children>
+      <LocaleResource Name="List">
+        <Value>Manufacturer List</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderBy">
+        <Value>Sort by</Value>
+      </LocaleResource>
       <LocaleResource Name="ViewAll">
         <Value>View all</Value>
+      </LocaleResource>
+      <LocaleResource Name="ViewMode">
+        <Value>View as</Value>
+        <Children>
+          <LocaleResource Name="Grid">
+            <Value>Grid</Value>
+          </LocaleResource>
+          <LocaleResource Name="List">
+            <Value>List</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="Media">
+    <Children>
+      <LocaleResource Name="Category">
+        <Children>
+          <LocaleResource Name="ImageAlternateTextFormat">
+            <Value>Picture for category {0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="ImageLinkTitleFormat">
+            <Value>Show products in category {0}</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Manufacturer">
+        <Children>
+          <LocaleResource Name="ImageAlternateTextFormat">
+            <Value>Picture for manufacturer {0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="ImageLinkTitleFormat">
+            <Value>Show products manufactured by {0}</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Product">
+        <Children>
+          <LocaleResource Name="ImageAlternateTextFormat">
+            <Value>Picture of {0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="ImageLinkTitleFormat">
+            <Value>Show details for {0}</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
     </Children>
   </LocaleResource>
