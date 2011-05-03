@@ -162,7 +162,7 @@ namespace Nop.Web.Framework.Themes
 
         private string CurrentTheme
         {
-            get { return EngineContext.Current.Resolve<IWorkContext>().WorkingTheme; }
+            get { return EngineContext.Current.Resolve<IThemeContext>().WorkingTheme; }
         }
 
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)

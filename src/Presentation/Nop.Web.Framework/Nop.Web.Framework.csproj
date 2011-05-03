@@ -119,11 +119,13 @@
     <Compile Include="TelerikLocalizationService.cs" />
     <Compile Include="TelerikLocalizationServiceFactory.cs" />
     <Compile Include="Themes\IThemeProvider.cs" />
+    <Compile Include="Themes\IThemeContext.cs" />
     <Compile Include="Themes\ThemeableBuildManagerViewEngine .cs" />
     <Compile Include="Themes\ThemeableVirtualPathProviderViewEngine.cs" />
     <Compile Include="Themes\ThemeConfiguration.cs" />
     <Compile Include="Themes\ThemableRazorViewEngine.cs" />
     <Compile Include="Themes\ThemeProvider.cs" />
+    <Compile Include="Themes\ThemeContext.cs" />
     <Compile Include="UI\DataListExtensions.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
   </ItemGroup>
@@ -144,9 +146,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Themes\Html\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

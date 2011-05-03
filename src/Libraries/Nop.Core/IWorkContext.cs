@@ -30,10 +30,5 @@ namespace Nop.Core
         /// Get or set current tax display type
         /// </summary>
         TaxDisplayType TaxDisplayType { get; set; }
-
-        /// <summary>
-        /// Get or set current graphical theme (e.g. darkOrange)
-        /// </summary>
-        string WorkingTheme { get; set; }
     }
 }

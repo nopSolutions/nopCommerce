@@ -66,7 +66,7 @@ namespace Nop.Core
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
         /// </summary>
-        /// <param name="application">HTTP Application</param>
+        /// <param name="request">HTTP Request</param>
         /// <returns>True if the request targets a static resource file.</returns>
         /// <remarks>
         /// These are the file extensions considered to be static resources:
@@ -79,7 +79,7 @@ namespace Nop.Core
         /// .axd
         /// .ashx
         /// </remarks>
-        bool IsStaticResource(HttpApplication application);
+        bool IsStaticResource(HttpRequest request);
 
         /// <summary>
         /// Maps a virtual path to a physical disk path.

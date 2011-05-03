@@ -28,7 +28,6 @@ namespace Nop.Services
         private readonly TaxSettings _taxSettings;
 
         private Customer _cachedCustomer;
-        private string _workingTheme = "";
 
         public WorkContext(HttpContextBase httpContext,
             ICustomerService customerService,
@@ -209,21 +208,6 @@ namespace Nop.Services
 
                 this.CurrentCustomer.TaxDisplayType = value;
                 _customerService.UpdateCustomer(this.CurrentCustomer);
-            }
-        }
-
-        /// <summary>
-        /// Get or set current theme (e.g. darkOrange)
-        /// </summary>
-        public string WorkingTheme
-        {
-            get
-            {
-                return _workingTheme;
-            }
-            set
-            {
-                _workingTheme = value;
             }
         }
     }

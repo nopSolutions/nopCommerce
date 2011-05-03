@@ -110,11 +110,12 @@ namespace Nop.Web.Framework
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfigurationProvider<>));
             builder.RegisterSource(new SettingsSource());
-            
-            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
 
+            //TODO pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)
+            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
+            
             builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
-            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest(); ;
+            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
             builder.RegisterType<PermissionService>().As<IPermissionService>().InstancePerHttpRequest();
 
             builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();
@@ -125,6 +126,8 @@ namespace Nop.Web.Framework
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
 
             builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerHttpRequest();
+
+            //TODO pass MemoryCacheManager to LocalizationService as cacheManager (cache locales between requests)
             builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerHttpRequest();
             builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>().InstancePerHttpRequest();
 
@@ -171,6 +174,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
             builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerHttpRequest();
             builder.RegisterType<ThemeProvider>().As<IThemeProvider>().SingleInstance();
+            builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerHttpRequest();
 
 
             builder.RegisterType<EmbeddedViewResolver>().As<IEmbeddedViewResolver>().SingleInstance();

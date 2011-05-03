@@ -104,17 +104,21 @@ namespace Nop.Web
         {
             //TODO:Get "WorkingTheme" to persist throught the session (cookie?).
             var defaultTheme = EngineContext.Current.Resolve<IThemeProvider>().GetThemeConfigurations().Where(x => x.IsDefault).FirstOrDefault();
-            EngineContext.Current.Resolve<IWorkContext>().WorkingTheme = defaultTheme == null ? string.Empty : defaultTheme.ThemeName;
+            EngineContext.Current.Resolve<IThemeContext>().WorkingTheme = defaultTheme == null ? string.Empty : defaultTheme.ThemeName;
         }
 
         protected void SetWorkingCulture()
         {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            if (workContext.CurrentCustomer!=null &&workContext.WorkingLanguage!=null)
-            { 
-                var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
-                Thread.CurrentThread.CurrentCulture = culture;
-                Thread.CurrentThread.CurrentUICulture = culture;
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            if (!webHelper.IsStaticResource(this.Request))
+            {
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                if (workContext.CurrentCustomer != null && workContext.WorkingLanguage != null)
+                {
+                    var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                    Thread.CurrentThread.CurrentCulture = culture;
+                    Thread.CurrentThread.CurrentUICulture = culture;
+                }
             }
         }
 

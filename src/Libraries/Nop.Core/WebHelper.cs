@@ -206,7 +206,7 @@ namespace Nop.Core
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
         /// </summary>
-        /// <param name="application">HTTP Application</param>
+        /// <param name="request">HTTP Request</param>
         /// <returns>True if the request targets a static resource file.</returns>
         /// <remarks>
         /// These are the file extensions considered to be static resources:
@@ -219,12 +219,12 @@ namespace Nop.Core
         /// .axd
         /// .ashx
         /// </remarks>
-        public virtual bool IsStaticResource(HttpApplication application)
+        public virtual bool IsStaticResource(HttpRequest request)
         {
-            if (application == null)
-                throw new ArgumentNullException("application");
+            if (request == null)
+                throw new ArgumentNullException("request");
 
-            string path = application.Request.Path;
+            string path = request.Path;
             string extension = VirtualPathUtility.GetExtension(path);
 
             if (extension == null) return false;
@@ -232,6 +232,7 @@ namespace Nop.Core
             switch (extension.ToLower())
             {
                 case ".css":
+                case ".ico":
                 case ".gif":
                 case ".png":
                 case ".jpg":
