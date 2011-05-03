@@ -832,6 +832,14 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Manufacturers">
+    <Value>Manufacturers</Value>
+    <Children>
+      <LocaleResource Name="ViewAll">
+        <Value>View all</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Plugins">
     <Children>
       <LocaleResource Name="Title">

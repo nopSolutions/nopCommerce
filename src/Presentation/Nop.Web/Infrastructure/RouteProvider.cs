@@ -13,13 +13,21 @@ namespace Nop.Web.Infrastructure
     {
         public void RegisterRoutes(RouteCollection routes)
         {
+            //products
             routes.MapRoute("Product",
-                            "Product/{productId}/{SeName}",
+                            "product/{productId}/{SeName}",
                             new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional });
 
+            //catalog
             routes.MapRoute("Category",
-                            "Category/{categoryId}/{SeName}",
+                            "category/{categoryId}/{SeName}",
                             new { controller = "Catalog", action = "Category", SeName = UrlParameter.Optional });
+            routes.MapRoute("ManufacturerList",
+                            "manufacturer/all/",
+                            new { controller = "Catalog", action = "ManufacturerAll"});
+            routes.MapRoute("Manufacturer",
+                            "manufacturer/{manufacturerId}/{SeName}",
+                            new { controller = "Catalog", action = "Manufacturer", SeName = UrlParameter.Optional });
         }
         public int Priority
         {

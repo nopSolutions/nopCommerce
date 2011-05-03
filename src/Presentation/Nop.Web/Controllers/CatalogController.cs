@@ -24,6 +24,7 @@ namespace Nop.Web.Controllers
 		#region Fields
 
         private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly IWorkContext _workContext;
         private readonly ITaxService _taxService;
@@ -44,6 +45,7 @@ namespace Nop.Web.Controllers
 		#region Constructors
 
         public CatalogController(ICategoryService categoryService, 
+            IManufacturerService manufacturerService,
             IProductService productService, IWorkContext workContext, 
             ITaxService taxService, ICurrencyService currencyService,
             IPictureService pictureService, ILocalizationService localizationService,
@@ -51,11 +53,12 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings)
         {
-            this._currencyService = currencyService;
-            this._taxService = taxService;
-            this._workContext = workContext;
-            this._productService = productService;
             this._categoryService = categoryService;
+            this._manufacturerService = manufacturerService;
+            this._productService = productService;
+            this._workContext = workContext;
+            this._taxService = taxService;
+            this._currencyService = currencyService;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
             this._priceCalculationService = priceCalculationService;
@@ -261,7 +264,7 @@ namespace Nop.Web.Controllers
         public ActionResult Category(int categoryId, PagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
-            if (category == null)
+            if (category == null || category.Deleted || !category.Published)
                 return RedirectToAction("Index", "Home");
 
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
@@ -415,11 +418,45 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
+        
+        public ActionResult Manufacturer(int manufacturerId, PagingFilteringModel command)
+        {
+            var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
+            if (manufacturer == null || manufacturer.Deleted || !manufacturer.Published)
+                return RedirectToAction("Index", "Home");
+
+            throw new NotImplementedException();
+        }
+
+        public ActionResult ManufacturerAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult ManufacturerNavigation(int currentManufacturerId)
+        {
+            var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
+
+            var model = new List<ManufacturerNavigationModel>();
+            foreach (var manufacturer in _manufacturerService.GetAllManufacturers())
+            {
+                var modelMan = new ManufacturerNavigationModel()
+                {
+                    Id = manufacturer.Id,
+                    Name = manufacturer.GetLocalized(x => x.Name),
+                    SeName = manufacturer.GetSeName(),
+                    IsActive = currentManufacturer != null && currentManufacturer.Id == manufacturer.Id,
+                };
+                model.Add(modelMan);
+            }
+
+            return PartialView(model);
+        }
 
         public ActionResult Product(int productId)
         {
             var product = _productService.GetProductById(productId);
-            if (product == null) 
+            if (product == null || product.Deleted || !product.Published)
                 return RedirectToAction("Index", "Home");
 
             var model = product.ToModel();

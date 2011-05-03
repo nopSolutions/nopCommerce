@@ -1150,7 +1150,7 @@ namespace Nop.Services.Installation
 
             
 
-            //categpries
+            //categories
             var categoryBooks = new Category
             {
                 Name = "Books",
@@ -1393,24 +1393,27 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallManufacturers()
         {
-
-            var manufacturer1 = new Manufacturer()
+            var manufacturerAsus = new Manufacturer
             {
-                Name = "Manufacturer 1",
-                Description = "Some description 1",
-                MetaKeywords = string.Empty,
-                MetaDescription = string.Empty,
-                MetaTitle = string.Empty,
-                SeName = string.Empty,
+                Name = "ASUS",
                 PageSize = 4,
-                PriceRanges = string.Empty,
                 Published = true,
-                DisplayOrder = 7,
+                DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturer1);
+            _manufacturerRepository.Insert(manufacturerAsus);
 
+            var manufacturerHp = new Manufacturer
+            {
+                Name = "HP",
+                PageSize = 4,
+                Published = true,
+                DisplayOrder = 5,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _manufacturerRepository.Insert(manufacturerHp);
         }
 
         protected virtual void InstallProducts()

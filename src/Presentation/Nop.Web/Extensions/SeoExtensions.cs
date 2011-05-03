@@ -42,6 +42,25 @@ namespace Nop.Web.Extensions
 
         #endregion
 
+        #region Manufacturer
+
+        /// <summary>
+        /// Gets manufacturer SE (search engine) name
+        /// </summary>
+        /// <param name="manufacturer">Manufacturer</param>
+        /// <returns>Manufacturer SE (search engine) name</returns>
+        public static string GetSeName(this Manufacturer manufacturer)
+        {
+            if (manufacturer == null)
+                throw new ArgumentNullException("manufacturer");
+            string seName = GetSeName(manufacturer.GetLocalized(x => x.SeName));
+            if (String.IsNullOrEmpty(seName))
+                seName = GetSeName(manufacturer.GetLocalized(x => x.Name));
+            return seName;
+        }
+
+        #endregion
+
         #region Product
 
         /// <summary>
