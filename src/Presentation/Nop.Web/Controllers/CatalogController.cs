@@ -660,17 +660,21 @@ namespace Nop.Web.Controllers
             }
             return View(model);
         }
-
-        public ActionResult ShareButton()
+        
+        public ActionResult ProductManufacturers(int productId)
         {
-            var shareCode = _catalogSettings.PageShareCode;
-            if (_webHelper.IsCurrentConnectionSecured())
-            {
-                //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
-                shareCode = shareCode.Replace("http://", "https://");
-            }
-
-            return PartialView("ShareButton", shareCode);
+            var model = _manufacturerService.GetProductManufacturersByProductId(productId)
+                .Select(x =>
+                {
+                    var m = x.Manufacturer.ToModel();
+                    m.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.Manufacturer.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
+                    m.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), m.Name);
+                    m.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), m.Name);
+                    return m;
+                })
+                .ToList();
+            
+            return PartialView(model);
         }
 
         public ActionResult RelatedProducts(int productId)
@@ -700,6 +704,18 @@ namespace Nop.Web.Controllers
             .ToList();
 
             return PartialView(model);
+        }
+
+        public ActionResult ShareButton()
+        {
+            var shareCode = _catalogSettings.PageShareCode;
+            if (_webHelper.IsCurrentConnectionSecured())
+            {
+                //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
+                shareCode = shareCode.Replace("http://", "https://");
+            }
+
+            return PartialView("ShareButton", shareCode);
         }
 
 		#endregion

@@ -918,6 +918,12 @@
       <LocaleResource Name="InclTaxSuffix">
         <Value>{0} incl tax</Value>
       </LocaleResource>
+      <LocaleResource Name="Manufacturer">
+        <Value>Manufacturer</Value>
+      </LocaleResource>
+      <LocaleResource Name="Manufacturers">
+        <Value>Manufacturers</Value>
+      </LocaleResource> 
       <LocaleResource Name="PriceRangeFromText">
         <Value>From {0}</Value>
       </LocaleResource>

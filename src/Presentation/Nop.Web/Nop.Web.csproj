@@ -994,6 +994,7 @@
     <Content Include="Views\Catalog\ManufacturerAll.cshtml" />
     <Content Include="Views\Catalog\RelatedProducts.cshtml" />
     <Content Include="Views\Catalog\ShareButton.cshtml" />
+    <Content Include="Views\Catalog\ProductManufacturers.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

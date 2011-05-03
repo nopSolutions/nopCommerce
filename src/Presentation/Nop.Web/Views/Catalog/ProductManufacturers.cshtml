@@ -1,0 +1,26 @@
+﻿@model IList<ManufacturerModel>
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    
+    <div class="manufacturers">
+        @if (Model.Count == 1)
+        {
+            @T("Products.Manufacturer")<text>:</text>
+        }
+        else
+        {
+            @T("Products.Manufacturers")<text>:</text>
+        }
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var item = Model[i];
+            <a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = item.Id, SeName = item.SeName })">@item.Name</a>
+            if (i != Model.Count - 1)
+            {
+            <text>,</text>
+            }
+        }
+    </div>
+}

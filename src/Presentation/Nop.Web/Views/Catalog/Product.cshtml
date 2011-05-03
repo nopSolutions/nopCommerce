@@ -10,7 +10,7 @@
 <div class="product-details-page">
     <div class="product-essential">
         <div class="product-details-info">
-        <div class="picture">
+            <div class="picture">
         @if (Model.DefaultPictureZoomEnabled)
         {
             <a href="@Model.DefaultPictureModel.FullSizeImageUrl" rel="lightbox-pd" title="@Model.Name">
@@ -22,22 +22,22 @@
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" style="border-width: 0px;" />
         }        
     </div>
-        <div class="overview">
-        <h1 class="productname">
+            <div class="overview">
+                <h1 class="productname">
             @Model.Name
         </h1>
-        <br />
-        <div class="shortdescription">
+                <br />
+                <div class="shortdescription">
             @Html.Raw(Model.ShortDescription)
         </div>
-        <div class="clear">
-        </div>        
-        @*TODO Manufacturers*@
-        <div class="clear">
-        </div>
-        @if (Model.PictureModels.Count > 1)
-        {
-            <table>
+                <div class="clear">
+                </div>
+                    @Html.Action("ProductManufacturers", "Catalog", new {productId = Model.Id})
+                <div class="clear">
+                </div>
+                @if (Model.PictureModels.Count > 1)
+                {
+                    <table>
                 <tr>
                 @foreach (var picture in Model.PictureModels)
                 {
@@ -49,15 +49,15 @@
                 }
                 </tr>
             </table>
-        }
-        <div class="clear">
+                }
+                <div class="clear">
+                </div>
+                @Html.Action("ShareButton", "Catalog")            
+            </div>
+            <div class="fulldescription">
+                @Html.Raw(Model.FullDescription)
+            </div>
         </div>
-            @Html.Action("ShareButton", "Catalog")
-    </div>
-    <div class="fulldescription">
-        @Html.Raw(Model.FullDescription)
-    </div>
-    </div>
     </div>
     <div class="clear">
     </div>
