@@ -260,7 +260,7 @@ namespace Nop.Web.Controllers
         }
         #endregion
 
-		#region Methods
+        #region Categories
 
         public ActionResult Category(int categoryId, PagingFilteringModel command)
         {
@@ -436,7 +436,11 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
-        
+
+        #endregion
+
+        #region Manufacturers
+
         public ActionResult Manufacturer(int manufacturerId, PagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
@@ -598,6 +602,10 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        #endregion
+
+        #region Products
+
         public ActionResult Product(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -653,11 +661,47 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Index()
+        public ActionResult ShareButton()
         {
-            return RedirectToAction("Index", "Home");
+            var shareCode = _catalogSettings.PageShareCode;
+            if (_webHelper.IsCurrentConnectionSecured())
+            {
+                //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
+                shareCode = shareCode.Replace("http://", "https://");
+            }
+
+            return PartialView("ShareButton", shareCode);
         }
 
-		#endregion Methods 
+        public ActionResult RelatedProducts(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+            
+            var products = _productService.SearchProducts(0,
+                0, null, null, null, productId, 0, null, false,
+                0, null, ProductSortingEnum.Position, 0, int.MaxValue);
+            var model = products.Select(x =>
+            {
+                var m = x.ToModel();
+                //price
+                m.ProductPrice = PrepareProductPriceModel(x);
+                //picture
+                var picture = x.GetDefaultProductPicture(_pictureService);
+                if (picture != null)
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+                else
+                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
+                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
+                return m;
+            })
+            .ToList();
+
+            return PartialView(model);
+        }
+
+		#endregion
     }
 }

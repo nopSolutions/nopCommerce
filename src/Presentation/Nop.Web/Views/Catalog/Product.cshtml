@@ -52,7 +52,7 @@
         }
         <div class="clear">
         </div>
-        @*TODO ProductShareButton*@
+            @Html.Action("ShareButton", "Catalog")
     </div>
     <div class="fulldescription">
         @Html.Raw(Model.FullDescription)
@@ -79,7 +79,7 @@
         <div class="clear">
         </div>
         <div>
-            @*TODO RelatedProducts*@
+            @Html.Action("RelatedProducts", "Catalog", new {productId = Model.Id})
         </div>
         <div class="clear">
         </div>

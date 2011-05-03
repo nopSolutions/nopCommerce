@@ -76,7 +76,7 @@ namespace Nop.Admin.Controllers
                                                                localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.FullDescription,
-                                                               localized.FullDescription,
+                                                               HttpUtility.HtmlDecode(localized.FullDescription),
                                                                localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.MetaKeywords,
@@ -341,6 +341,8 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(ProductModel model, bool continueEditing)
         {
+            //decode description
+            model.FullDescription = HttpUtility.HtmlDecode(model.FullDescription);
             if (ModelState.IsValid)
             {
                 //product
@@ -407,7 +409,9 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(model.Id);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
-            
+
+            //decode description
+            model.FullDescription = HttpUtility.HtmlDecode(model.FullDescription);
             if (ModelState.IsValid)
             {
                 product = model.ToEntity(product);

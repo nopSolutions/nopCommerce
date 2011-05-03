@@ -297,10 +297,10 @@ namespace Nop.Services.Catalog
                 bool relatedProductOK = false;
                 if (relatedToProductId > 0)
                 {
-                    var relatedProducts = GetRelatedProductsByProductId1(prod.Id, showHidden);
+                    var relatedProducts = GetRelatedProductsByProductId1(relatedToProductId, showHidden);
                     foreach (var rp in relatedProducts)
                     {
-                        if (rp.Id == relatedToProductId)
+                        if (rp.ProductId2 == prod.Id)
                         {
                             relatedProductOK = true;
                             break;

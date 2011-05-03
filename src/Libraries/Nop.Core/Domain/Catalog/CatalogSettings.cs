@@ -35,5 +35,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool CategoryBreadcrumbEnabled { get; set; }
 
+        /// <summary>
+        /// Gets or sets a share code (e.g. AddThis button code)
+        /// </summary>
+        public string PageShareCode { get; set; }
+
     }
 }

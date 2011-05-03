@@ -921,6 +921,9 @@
       <LocaleResource Name="PriceRangeFromText">
         <Value>From {0}</Value>
       </LocaleResource>
+      <LocaleResource Name="RelatedProducts">
+        <Value>Related products</Value>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="RewardPoints">
