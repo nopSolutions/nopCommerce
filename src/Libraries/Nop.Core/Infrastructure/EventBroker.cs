@@ -133,7 +133,7 @@ namespace Nop.Core.Infrastructure
             {
                 //TODO inject IWebHelper
                 IWebHelper webHelper = new WebHelper();
-                return webHelper.IsStaticResource(application);
+                return webHelper.IsStaticResource(application.Request);
             }
             return false;
         }

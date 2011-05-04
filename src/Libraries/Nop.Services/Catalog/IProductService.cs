@@ -76,6 +76,13 @@ namespace Nop.Services.Catalog
             string keywords, bool searchDescriptions, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false);
+        
+        /// <summary>
+        /// Update product review totals
+        /// </summary>
+        /// <param name="product">Product</param>
+        void UpdateProductReviewTotals(Product product);
+
         #endregion
 
         #region Product variants

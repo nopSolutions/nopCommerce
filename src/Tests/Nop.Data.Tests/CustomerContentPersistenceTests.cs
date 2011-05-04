@@ -52,19 +52,20 @@ namespace Nop.Data.Tests
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
             };
 
-            var productRating = new ProductRating
-            {
-                Customer = customer,
-                Product = product,
-                Rating = 10,
-                IpAddress = "192.168.1.1",
-                IsApproved = true,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                UpdatedOnUtc = new DateTime(2010, 01, 02)
-            };
+            //UNDONE uncomment commented code when we have one more ContentType (e.g. NewsComment)
+            //var productRating = new ProductRating
+            //{
+            //    Customer = customer,
+            //    Product = product,
+            //    Rating = 10,
+            //    IpAddress = "192.168.1.1",
+            //    IsApproved = true,
+            //    CreatedOnUtc = new DateTime(2010, 01, 01),
+            //    UpdatedOnUtc = new DateTime(2010, 01, 02)
+            //};
 
             context.Set<CustomerContent>().Add(productReview);
-            context.Set<CustomerContent>().Add(productRating);
+            //context.Set<CustomerContent>().Add(productRating);
 
             context.SaveChanges();
 
@@ -78,9 +79,9 @@ namespace Nop.Data.Tests
             dbReviews.Count().ShouldEqual(1);
             dbReviews.First().ReviewText.ShouldEqual("A review");
 
-            var dbRatings = query.OfType<ProductRating>().ToList();
-            dbRatings.Count().ShouldEqual(1);
-            dbRatings.First().Rating.ShouldEqual(10);
+            //var dbRatings = query.OfType<ProductRating>().ToList();
+            //dbRatings.Count().ShouldEqual(1);
+            //dbRatings.First().Rating.ShouldEqual(10);
         }
 
         protected Customer GetTestCustomer()
@@ -100,18 +101,6 @@ namespace Nop.Data.Tests
             return new Product
             {
                 Name = "Name 1",
-                ShortDescription = "ShortDescription 1",
-                FullDescription = "FullDescription 1",
-                AdminComment = "AdminComment 1",
-                ShowOnHomePage = false,
-                MetaKeywords = "Meta keywords",
-                MetaDescription = "Meta description",
-                MetaTitle = "Meta title",
-                SeName = "SE name",
-                AllowCustomerReviews = true,
-                AllowCustomerRatings = true,
-                RatingSum = 2,
-                TotalRatingVotes = 3,
                 Published = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),

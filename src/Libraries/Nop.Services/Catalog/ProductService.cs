@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Core;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Catalog
 {
@@ -28,8 +29,6 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<ProductVariant> _productVariantRepository;
         private readonly IRepository<RelatedProduct> _relatedProductRepository;
         private readonly IRepository<CrossSellProduct> _crossSellProductRepository;
@@ -48,8 +47,6 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="productRepository">Product repository</param>
-        /// <param name="productCategoryRepository">Product category repository</param>
-        /// <param name="productManufacturerRepository">Product manufacturer repository</param>
         /// <param name="productVariantRepository">Product variant repository</param>
         /// <param name="relatedProductRepository">Related product repository</param>
         /// <param name="crossSellProductRepository">Cross-sell product repository</param>
@@ -59,8 +56,6 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeParser">Product attribute parser service</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
-            IRepository<ProductCategory> productCategoryRepository,
-            IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<ProductVariant> productVariantRepository,
             IRepository<RelatedProduct> relatedProductRepository,
             IRepository<CrossSellProduct> crossSellProductRepository,
@@ -71,8 +66,6 @@ namespace Nop.Services.Catalog
         {
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
-            this._productCategoryRepository = productCategoryRepository;
-            this._productManufacturerRepository = productManufacturerRepository;
             this._productVariantRepository = productVariantRepository;
             this._relatedProductRepository = relatedProductRepository;
             this._crossSellProductRepository = crossSellProductRepository;
@@ -297,10 +290,10 @@ namespace Nop.Services.Catalog
                 bool relatedProductOK = false;
                 if (relatedToProductId > 0)
                 {
-                    var relatedProducts = GetRelatedProductsByProductId1(prod.Id, showHidden);
+                    var relatedProducts = GetRelatedProductsByProductId1(relatedToProductId, showHidden);
                     foreach (var rp in relatedProducts)
                     {
-                        if (rp.Id == relatedToProductId)
+                        if (rp.ProductId2 == prod.Id)
                         {
                             relatedProductOK = true;
                             break;
@@ -429,6 +422,41 @@ namespace Nop.Services.Catalog
             
             var products = new PagedList<Product>(sortedProducts, pageIndex, pageSize);
             return products;
+        }
+
+        /// <summary>
+        /// Update product review totals
+        /// </summary>
+        /// <param name="product">Product</param>
+        public void UpdateProductReviewTotals(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            int approvedRatingSum = 0;
+            int notApprovedRatingSum = 0; 
+            int approvedTotalReviews = 0;
+            int notApprovedTotalReviews = 0;
+            var reviews = product.ProductReviews;
+            foreach (var pr in reviews)
+            {
+                if (pr.IsApproved)
+                {
+                    approvedRatingSum += pr.Rating;
+                    approvedTotalReviews ++;
+                }
+                else
+                {
+                    notApprovedRatingSum += pr.Rating;
+                    notApprovedTotalReviews++;
+                }
+            }
+
+            product.ApprovedRatingSum = approvedRatingSum;
+            product.NotApprovedRatingSum = notApprovedRatingSum;
+            product.ApprovedTotalReviews = approvedTotalReviews;
+            product.NotApprovedTotalReviews = notApprovedTotalReviews;
+            UpdateProduct(product);
         }
         #endregion
 

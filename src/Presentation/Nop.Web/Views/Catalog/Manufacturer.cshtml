@@ -1,0 +1,120 @@
+﻿@model Nop.Web.Models.Catalog.ManufacturerModel
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+}
+@using MvcContrib.UI.Pager;
+@using MvcContrib.Pagination;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@{
+    var storeUrl = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
+}
+<div class="manufacturer-page">
+
+    @*description*@
+    <div class="manufacturer-description">
+        @Html.Raw(Model.Description)
+    </div>
+    <div class="clear">
+    </div>
+
+
+    
+    @*featured products*@
+    @if (Model.FeaturedProducts.Count > 0)
+    {
+        <div class="featured-product-grid">
+            <div class="title">
+                @T("Products.FeaturedProducts")
+            </div>
+            <div>
+                @(Html.DataList<ProductModel>(Model.FeaturedProducts, 2,
+                    @<div class="item-box">
+                        @Html.Partial("_ProductBox", @item)
+                    </div>
+                ))
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    }
+    
+    
+    
+    
+    @*view mode*@
+    @if (Model.AllowProductViewModeChanging && Model.Products.Count > 0)
+    {
+        <div class="product-viewmode">
+            @Html.LabelFor(model => model.PagingFilteringContext.ViewMode)
+            @Html.DropDownList("products-viewmode", Model.AvailableViewModes, new { onchange = "setLocation(this.value);" })
+        </div>
+    }   
+    
+    
+    @*sorting*@
+    @if (Model.AllowProductFiltering && Model.Products.Count > 0)
+    {
+        <div class="product-sorting">
+            @Html.LabelFor(model => model.PagingFilteringContext.OrderBy)
+            @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
+        </div>
+    }
+    <div class="clear">
+    </div>
+    
+    @*filtering*@
+    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+    {
+        <div class="product-filters">
+            <div class="filter-title">
+                <span>@T("Filtering.FilterResults")</span>
+            </div>
+            <div class="filter-item">
+                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    }
+    
+    
+    
+    
+    @*product list*@
+    @if (Model.Products.Count > 0)
+    {
+        if (Model.PagingFilteringContext.ViewMode == "list")
+        {
+            @*list mode*@
+            <div class="product-list1">
+            @foreach (var product in Model.Products)
+            {
+                <div class="item-box">
+                    @Html.Partial("_ProductBox", product)
+                </div>
+            }
+            </div>
+            <div class="clear">
+            </div>        
+        }
+        else
+        {
+            @*grid mode*@
+            <div class="product-grid">
+                @(Html.DataList<ProductModel>(Model.Products, 2,
+                    @<div class="item-box">
+                        @Html.Partial("_ProductBox", @item)
+                    </div>
+                ))
+            </div>
+        }
+    }
+    
+    
+    @*UNDONE allow customer to select page size*@
+    @*pager*@
+    @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
+</div>

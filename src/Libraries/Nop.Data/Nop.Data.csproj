@@ -83,7 +83,6 @@
     <Compile Include="Mapping\Security\Permissions\PermissionRecordMap.cs" />
     <Compile Include="Mapping\Security\UserMap.cs" />
     <Compile Include="Mapping\Directory\StateProvinceMap.cs" />
-    <Compile Include="Mapping\Catalog\ProductRatingMap.cs" />
     <Compile Include="Mapping\Catalog\ProductReviewMap.cs" />
     <Compile Include="Mapping\Customers\CustomerContentMap.cs" />
     <Compile Include="Mapping\Catalog\ProductAttributeMap.cs" />

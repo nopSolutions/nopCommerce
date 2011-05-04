@@ -1,6 +1,24 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.cshtml";
 }
+@{
+    //current category ID
+    int currentCategoryId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    }
+
+
+    //current manufacturer ID
+    int currentManufacturerId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
+    }
+}
 <div class="master-wrapper-side-2">
     @if (IsSectionDefined("left"))
     {
@@ -8,8 +26,10 @@
     }
     else
     {
-        <div>
-            Default content</div>
+        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId })
+        <div class="clear">
+        </div>
+        @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
     }
 </div>
 <div class="master-wrapper-center-2">

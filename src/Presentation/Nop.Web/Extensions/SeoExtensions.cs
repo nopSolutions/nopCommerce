@@ -6,72 +6,22 @@ using System.Web;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Localization;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Home;
 
-namespace Nop.Web
+namespace Nop.Web.Extensions
 {
-    //TODO separate ModelExtensions and SeoExtensions to two distinct .cs files
-    public static class ModelExtensions
-    {
-        #region Category
-
-        public static CategoryModel ToModel(this Category category)
-        {
-            return AutoMapper.Mapper.Map<Category, CategoryModel>(category);
-        }
-
-        #endregion
-
-        #region Languages
-
-        public static LanguageModel ToModel(this Language language)
-        {
-            return AutoMapper.Mapper.Map<Language, LanguageModel>(language);
-        }
-
-  
-        #endregion
-
-        #region Catalog
-
-        public static ProductModel ToModel(this Product product)
-        {
-            return AutoMapper.Mapper.Map<Product, ProductModel>(product);
-        }
-
-        #endregion
-
-        #region Address
-
-        public static AddressModel ToModel(this Address entity)
-        {
-            return AutoMapper.Mapper.Map<Address, AddressModel>(entity);
-        }
-
-        public static Address ToEntity(this AddressModel model)
-        {
-            return AutoMapper.Mapper.Map<AddressModel, Address>(model);
-        }
-
-        public static Address ToEntity(this AddressModel model, Address destination)
-        {
-            return AutoMapper.Mapper.Map(model, destination);
-        }
-
-        #endregion
-    }
-
     public static class SeoExtensions
     {
-		#region Fields 
+		#region Fields
 
         private static Dictionary<string, string> _seoCharacterTable;
         private static readonly object s_lock = new object();
 
-		#endregion Fields 
+		#endregion
 
         #region Category
 
@@ -84,11 +34,28 @@ namespace Nop.Web
         {
             if (category == null)
                 throw new ArgumentNullException("category");
-            string seName = GetSeName(category.SeName);
+            string seName = GetSeName(category.GetLocalized(x => x.SeName));
             if (String.IsNullOrEmpty(seName))
-            {
-                seName = GetSeName(category.Name);
-            }
+                seName = GetSeName(category.GetLocalized(x => x.Name));
+            return seName;
+        }
+
+        #endregion
+
+        #region Manufacturer
+
+        /// <summary>
+        /// Gets manufacturer SE (search engine) name
+        /// </summary>
+        /// <param name="manufacturer">Manufacturer</param>
+        /// <returns>Manufacturer SE (search engine) name</returns>
+        public static string GetSeName(this Manufacturer manufacturer)
+        {
+            if (manufacturer == null)
+                throw new ArgumentNullException("manufacturer");
+            string seName = GetSeName(manufacturer.GetLocalized(x => x.SeName));
+            if (String.IsNullOrEmpty(seName))
+                seName = GetSeName(manufacturer.GetLocalized(x => x.Name));
             return seName;
         }
 
@@ -105,11 +72,9 @@ namespace Nop.Web
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-            string seName = GetSeName(product.SeName);
+            string seName = GetSeName(product.GetLocalized(x => x.SeName));
             if (String.IsNullOrEmpty(seName))
-            {
-                seName = GetSeName(product.Name);
-            }
+                seName = GetSeName(product.GetLocalized(x => x.Name));
             return seName;
         }
 

@@ -16,7 +16,6 @@ namespace Nop.Core.Domain.Catalog
             this.ProductCategories = new List<ProductCategory>();
             this.ProductManufacturers = new List<ProductManufacturer>();
             this.ProductPictures = new List<ProductPicture>();
-            this.ProductRatings = new List<ProductRating>();
             this.ProductReviews = new List<ProductReview>();
             this.ProductSpecificationAttributes = new List<ProductSpecificationAttribute>();
         }
@@ -72,19 +71,24 @@ namespace Nop.Core.Domain.Catalog
         public bool AllowCustomerReviews { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the product allows customer ratings
+        /// Gets or sets the rating sum (approved reviews)
         /// </summary>
-        public bool AllowCustomerRatings { get; set; }
+        public int ApprovedRatingSum { get; set; }
 
         /// <summary>
-        /// Gets or sets the rating sum
+        /// Gets or sets the rating sum (not approved reviews)
         /// </summary>
-        public int RatingSum { get; set; }
+        public int NotApprovedRatingSum { get; set; }
 
         /// <summary>
-        /// Gets or sets the total rating votes
+        /// Gets or sets the total rating votes (approved reviews)
         /// </summary>
-        public int TotalRatingVotes { get; set; }
+        public int ApprovedTotalReviews { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total rating votes (not approved reviews)
+        /// </summary>
+        public int NotApprovedTotalReviews { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
@@ -125,11 +129,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the collection of ProductPicture
         /// </summary>
         public virtual ICollection<ProductPicture> ProductPictures { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of product ratings
-        /// </summary>
-        public virtual ICollection<ProductRating> ProductRatings { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of product reviews

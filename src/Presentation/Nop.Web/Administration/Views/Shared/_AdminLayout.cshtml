@@ -4,7 +4,7 @@
     var currentUser = this.AuthenticationService.GetAuthenticatedUser();
     var usernamesEnabled = EngineContext.Current.Resolve<Nop.Core.Domain.Security.UserSettings>().UsernamesEnabled;
 }
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>NopCommerce Web Administration. @ViewBag.Title</title>
@@ -18,6 +18,7 @@
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.blockUI.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.tmpl.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/swfobject.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.uploadify.v2.1.4.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>

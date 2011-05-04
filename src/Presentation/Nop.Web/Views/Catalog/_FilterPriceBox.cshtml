@@ -1,0 +1,52 @@
+﻿@model PagingFilteringModel.PriceRangeFilterModel
+@using Nop.Web.Models.Catalog
+@{
+    var selectedItem = Model.Items.Where(x => x.Selected).FirstOrDefault();
+}
+@helper FormatPriceRangeText(PagingFilteringModel.PriceRangeFilterItem filterItem)
+    {
+    string rangeText = "";
+    if (String.IsNullOrWhiteSpace(filterItem.From))
+    {
+        rangeText = string.Format(T("Filtering.PriceRangeFilter.Under").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.To));
+    }
+    else if (String.IsNullOrWhiteSpace(filterItem.To))
+    {
+        rangeText = string.Format(T("Filtering.PriceRangeFilter.Over").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.From));
+    }
+    else
+    {
+        rangeText = string.Format("<span class=\"PriceRange\">{0}</span> - <span class=\"PriceRange\">{1}</span>", filterItem.From, filterItem.To);
+    }
+    <text>@Html.Raw(rangeText)</text>
+}
+@if (Model.Enabled)
+{
+    <div class="price-range-filter">
+            <div class="title">
+                @T("Filtering.PriceRangeFilter")
+            </div>
+            <div class="clear">
+            </div>
+            @if (selectedItem == null)
+            {
+                <div class="PriceRangeSelector">
+                    <ul>
+                        @foreach (var item in Model.Items)
+                        {
+                            <li><a href="@item.FilterUrl">@FormatPriceRangeText(item)</a> </li>
+                        }
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="selected-price-range">
+                    @FormatPriceRangeText(selectedItem)
+                    <p>
+                    </p>
+                    <a href="@Model.RemoveFilterUrl" class="remove-price-range-filter">@T("Filtering.PriceRangeFilter.Remove")</a>
+                </div>
+            }
+        </div>
+}

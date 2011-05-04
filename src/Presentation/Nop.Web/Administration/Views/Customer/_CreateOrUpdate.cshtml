@@ -251,6 +251,7 @@
                 var rewardPointsMessage = $("#@Html.FieldIdFor(model => model.AddRewardPointsMessage)").val();
                 $('#addRewardPoints').attr('disabled', true);
                 $.ajax({
+                    cache:false,
                     type: "POST",
                     url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
                     data: "addRewardPointsValue=" + rewardPointsValue + "&addRewardPointsMessage=" + rewardPointsMessage + "&customerId=" + @Model.Id,
@@ -353,6 +354,7 @@
             function associateUser(userId) {
                 //if(confirm('Are you sure?')) {
                     $.ajax({
+                        cache:false,
                         type: "POST",
                         url: "@(Url.Action("AssociateNewUserAccount", "Customer"))",
                         data: "userId=" + userId + "&customerId=" + @Model.Id,

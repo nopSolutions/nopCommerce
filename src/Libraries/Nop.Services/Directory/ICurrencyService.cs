@@ -93,6 +93,14 @@ namespace Nop.Services.Directory
         decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount, Currency targetCurrencyCode);
 
         /// <summary>
+        /// Converts to primary store currency 
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="sourceCurrencyCode">Source currency code</param>
+        /// <returns>Converted value</returns>
+        decimal ConvertToPrimaryStoreCurrency(decimal amount, Currency sourceCurrencyCode);
+
+        /// <summary>
         /// Converts from primary store currency
         /// </summary>
         /// <param name="amount">Amount</param>

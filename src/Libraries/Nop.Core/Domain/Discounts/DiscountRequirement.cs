@@ -33,16 +33,16 @@ namespace Nop.Core.Domain.Discounts
         /// Gets or sets the discount requirement - customer's shipping country is... (used when requirement is set to "Shipping country is")
         /// </summary>
         public int ShippingCountryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the restricted customer role identifier
+        /// </summary>
+        public int? RestrictedToCustomerRoleId { get; set; }
         
         /// <summary>
         /// Gets or sets the discount
         /// </summary>
         public virtual Discount Discount { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the customer roles
-        /// </summary>
-        public virtual ICollection<CustomerRole> RestrictedToCustomerRoles { get; set; }
 
     }
 }

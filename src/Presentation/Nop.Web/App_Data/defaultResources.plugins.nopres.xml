@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="ExampleOfNestedResources">
+    <Value>Resouce name will be 'ExampleOfNestedResources'</Value>
+    <Children>
+      <LocaleResource Name="Childred1">
+        <Value>Resouce name will be 'ExampleOfNestedResources.Childred1'</Value>
+      </LocaleResource>
+      <LocaleResource Name="Childred2">
+        <Value>Resouce name will be 'ExampleOfNestedResources.Childred2'</Value>
+        <Children>
+          <LocaleResource Name="Childred3">
+            <Value>Resouce name will be 'ExampleOfNestedResources.Childred2.Childred3'</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+
+  <LocaleResource Name="Plugins">
+    <Value>Plugins</Value>
+    <Children>
+      <LocaleResource Name="DiscountRules">
+        <Children>
+          <LocaleResource Name="Saved">
+            <Value>Discount requirement is saved</Value>
+          </LocaleResource>
+          <LocaleResource Name="BillingCountry">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="Country">
+                    <Value>Billing country</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Select required billing country.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="CustomerRoles">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="CustomerRole">
+                    <Value>Required customer role</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Discount will be applied if customer is in the selected customer role.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="HadSpentAmount">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="Amount">
+                    <Value>Required spent amount</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Discount will be applied if customer has spent/purchased x.xx amount.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="ShippingCountry">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="Country">
+                    <Value>Shipping country</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Select required shipping country.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+</Language>

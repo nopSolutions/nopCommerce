@@ -78,6 +78,8 @@
     <Compile Include="Configuration\IConfigurationProvider.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\NopConfig.cs" />
+    <Compile Include="Domain\Catalog\CatalogSettings.cs" />
+    <Compile Include="Domain\Catalog\PriceRange.cs" />
     <Compile Include="Domain\Catalog\ProductExtensions.cs" />
     <Compile Include="Domain\Catalog\SpecificationAttributeOptionFilter.cs" />
     <Compile Include="Domain\Localization\ILocalizedEnum.cs" />
@@ -149,7 +151,6 @@
     <Compile Include="Domain\Directory\CurrencySettings.cs" />
     <Compile Include="Domain\Directory\MeasureDimension.cs" />
     <Compile Include="Domain\Directory\MeasureWeight.cs" />
-    <Compile Include="Domain\Catalog\ProductRating.cs" />
     <Compile Include="Domain\Catalog\ProductReview.cs" />
     <Compile Include="Domain\Customers\CustomerContent.cs" />
     <Compile Include="Domain\Discounts\DiscountUsageHistory.cs" />

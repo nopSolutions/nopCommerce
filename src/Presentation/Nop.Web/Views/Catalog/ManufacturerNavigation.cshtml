@@ -1,0 +1,30 @@
+﻿@model IList<ManufacturerNavigationModel>
+
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Infrastructure
+@using Nop.Services.Catalog
+@using Nop.Web.Models.Catalog
+@if (Model.Count > 0)
+{
+    <div class="block block-manufacturer-navigation">
+        <div class="title">
+            @T("Manufacturers")
+        </div>
+        <div class="clear">
+        </div>
+        <div class="listbox">
+            <ul>
+                @foreach (var manufacturer in Model)
+                {
+                    <li class="@(manufacturer.IsActive ? "active" : "inactive")">
+                    <a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.SeName })">@manufacturer.Name</a>
+                    </li>
+                }
+            </ul>
+            <div class="viewall">
+                @*add manufacturerlist page*@
+                <a href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.ViewAll")</a>
+            </div>
+        </div>
+    </div>
+}

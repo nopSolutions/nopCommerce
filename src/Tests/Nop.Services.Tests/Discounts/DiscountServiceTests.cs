@@ -22,6 +22,7 @@ namespace Nop.Services.Tests.Discounts
     public class DiscountServiceTests
     {
         IRepository<Discount> _discountRepo;
+        IRepository<DiscountRequirement> _discountRequirementRepo;
         IDiscountService _discountService;
 
         [SetUp]
@@ -56,8 +57,9 @@ namespace Nop.Services.Tests.Discounts
             _discountRepo.Expect(x => x.Table).Return(new List<Discount>() { discount1, discount2 }.AsQueryable());
 
             var cacheManager = new NopNullCache();
+            _discountRequirementRepo = MockRepository.GenerateMock<IRepository<DiscountRequirement>>();
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
-            _discountService = new DiscountService(cacheManager, _discountRepo, pluginFinder);
+            _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo, pluginFinder);
         }
 
         [Test]

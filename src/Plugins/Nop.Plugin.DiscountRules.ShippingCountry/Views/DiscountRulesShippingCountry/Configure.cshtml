@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.DiscountRules.ShippingCountry.Models.RequirementModel
+@using Nop.Web.Framework;
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#saveshippingcountryrequirement@(Model.RequirementId)').click(function () {
+                var countryId = $("#@Html.FieldIdFor(model => model.CountryId)").val();
+                var discountId = @Model.DiscountId;
+                var requirementId = @Model.RequirementId;
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("Configure", "DiscountRulesShippingCountry"))",
+                    data: "discountId=" + discountId +"&discountRequirementId=" + requirementId + "&countryId=" + countryId,
+                    success: function (data) {
+                         $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                         //notify parent if it's a new requirement
+                         @if (Model.RequirementId == 0)
+                         {
+                            <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
+                         }
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to save requirement.')
+                    }  
+                });
+            });
+        });
+    </script>
+    
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CountryId):
+            </td>
+            <td class="adminData">
+                <div>@Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries) <button type="button" name="saveshippingcountryrequirement@(Model.RequirementId)" id="saveshippingcountryrequirement@(Model.RequirementId)" class="t-button">Save</button></div>
+                <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@("Plugins.DiscountRules.Saved")</div>
+            </td>
+        </tr>
+    </table>

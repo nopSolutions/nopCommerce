@@ -219,12 +219,17 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             //discounts
             PrepareDiscountModel(model, null, true);
+            //default values
+            model.PageSize = 4;
+            model.Published = true;
             return View(model);
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(CategoryModel model, bool continueEditing)
         {
+            //decode description
+            model.Description = HttpUtility.HtmlDecode(model.Description);
             if (ModelState.IsValid)
             {
                 var category = model.ToEntity();
@@ -301,6 +306,8 @@ namespace Nop.Admin.Controllers
             if (category == null)
                 throw new ArgumentException("No category found with the specified id");
 
+            //decode description
+            model.Description = HttpUtility.HtmlDecode(model.Description);
             if (ModelState.IsValid)
             {
                 category = model.ToEntity(category);

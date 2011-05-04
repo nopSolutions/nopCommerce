@@ -238,6 +238,26 @@ namespace Nop.Services.Directory
         }
 
         /// <summary>
+        /// Converts to primary store currency 
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="sourceCurrencyCode">Source currency code</param>
+        /// <returns>Converted value</returns>
+        public decimal ConvertToPrimaryStoreCurrency(decimal amount, Currency sourceCurrencyCode)
+        {
+            decimal result = amount;
+            var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            if (result != decimal.Zero && sourceCurrencyCode.Id != primaryStoreCurrency.Id)
+            {
+                decimal exchangeRate = sourceCurrencyCode.Rate;
+                if (exchangeRate == decimal.Zero)
+                    throw new NopException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
+                result = result / exchangeRate;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Converts from primary store currency
         /// </summary>
         /// <param name="amount">Amount</param>

@@ -1,0 +1,29 @@
+﻿@model IList<ProductModel>
+
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="related-products-grid">
+        <div class="title">
+            @T("Products.RelatedProducts")
+        </div>
+        <div class="clear">
+        </div>
+        @(Html.DataList<ProductModel>(Model, 3,
+            @<div class="item-box">
+                <div class="item">
+                    <div class="product-title">
+                        <a href="@Url.RouteUrl("Product", new { productId = item.Id, SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
+                            @item.Name</a>
+                    </div>
+                    <div class="picture">
+                        <a href="@Url.RouteUrl("Product", new { productId = item.Id, SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
+                            <img style="border-width: 0px;" alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl"
+                                        title="@item.DefaultPictureModel.Title" /></a>
+                    </div>
+                </div>
+            </div>
+            ))
+    </div>
+}

@@ -1,7 +1,9 @@
 
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -204,7 +206,7 @@ namespace Nop.Core
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
         /// </summary>
-        /// <param name="application">HTTP Application</param>
+        /// <param name="request">HTTP Request</param>
         /// <returns>True if the request targets a static resource file.</returns>
         /// <remarks>
         /// These are the file extensions considered to be static resources:
@@ -217,12 +219,12 @@ namespace Nop.Core
         /// .axd
         /// .ashx
         /// </remarks>
-        public virtual bool IsStaticResource(HttpApplication application)
+        public virtual bool IsStaticResource(HttpRequest request)
         {
-            if (application == null)
-                throw new ArgumentNullException("application");
+            if (request == null)
+                throw new ArgumentNullException("request");
 
-            string path = application.Request.Path;
+            string path = request.Path;
             string extension = VirtualPathUtility.GetExtension(path);
 
             if (extension == null) return false;
@@ -230,6 +232,7 @@ namespace Nop.Core
             switch (extension.ToLower())
             {
                 case ".css":
+                case ".ico":
                 case ".gif":
                 case ".png":
                 case ".jpg":
@@ -267,5 +270,240 @@ namespace Nop.Core
                 return Path.Combine(baseDirectory, path);
             }
         }
+        
+        /// <summary>
+        /// Modifies query string
+        /// </summary>
+        /// <param name="url">Url to modify</param>
+        /// <param name="queryStringModification">Query string modification</param>
+        /// <param name="targetLocationModification">Target location modification</param>
+        /// <returns>New url</returns>
+        public virtual string ModifyQueryString(string url, string queryStringModification, string targetLocationModification)
+        {
+            if (url == null)
+                url = string.Empty;
+            url = url.ToLowerInvariant();
+
+            if (queryStringModification == null)
+                queryStringModification = string.Empty;
+            queryStringModification = queryStringModification.ToLowerInvariant();
+
+            if (targetLocationModification == null)
+                targetLocationModification = string.Empty;
+            targetLocationModification = targetLocationModification.ToLowerInvariant();
+
+
+            string str = string.Empty;
+            string str2 = string.Empty;
+            if (url.Contains("#"))
+            {
+                str2 = url.Substring(url.IndexOf("#") + 1);
+                url = url.Substring(0, url.IndexOf("#"));
+            }
+            if (url.Contains("?"))
+            {
+                str = url.Substring(url.IndexOf("?") + 1);
+                url = url.Substring(0, url.IndexOf("?"));
+            }
+            if (!string.IsNullOrEmpty(queryStringModification))
+            {
+                if (!string.IsNullOrEmpty(str))
+                {
+                    var dictionary = new Dictionary<string, string>();
+                    foreach (string str3 in str.Split(new char[] { '&' }))
+                    {
+                        if (!string.IsNullOrEmpty(str3))
+                        {
+                            string[] strArray = str3.Split(new char[] { '=' });
+                            if (strArray.Length == 2)
+                            {
+                                dictionary[strArray[0]] = strArray[1];
+                            }
+                            else
+                            {
+                                dictionary[str3] = null;
+                            }
+                        }
+                    }
+                    foreach (string str4 in queryStringModification.Split(new char[] { '&' }))
+                    {
+                        if (!string.IsNullOrEmpty(str4))
+                        {
+                            string[] strArray2 = str4.Split(new char[] { '=' });
+                            if (strArray2.Length == 2)
+                            {
+                                dictionary[strArray2[0]] = strArray2[1];
+                            }
+                            else
+                            {
+                                dictionary[str4] = null;
+                            }
+                        }
+                    }
+                    var builder = new StringBuilder();
+                    foreach (string str5 in dictionary.Keys)
+                    {
+                        if (builder.Length > 0)
+                        {
+                            builder.Append("&");
+                        }
+                        builder.Append(str5);
+                        if (dictionary[str5] != null)
+                        {
+                            builder.Append("=");
+                            builder.Append(dictionary[str5]);
+                        }
+                    }
+                    str = builder.ToString();
+                }
+                else
+                {
+                    str = queryStringModification;
+                }
+            }
+            if (!string.IsNullOrEmpty(targetLocationModification))
+            {
+                str2 = targetLocationModification;
+            }
+            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)) + (string.IsNullOrEmpty(str2) ? "" : ("#" + str2))).ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Remove query string from url
+        /// </summary>
+        /// <param name="url">Url to modify</param>
+        /// <param name="queryString">Query string to remove</param>
+        /// <returns>New url</returns>
+        public virtual string RemoveQueryString(string url, string queryString)
+        {
+            if (url == null)
+                url = string.Empty;
+            url = url.ToLowerInvariant();
+
+            if (queryString == null)
+                queryString = string.Empty;
+            queryString = queryString.ToLowerInvariant();
+
+
+            string str = string.Empty;
+            if (url.Contains("?"))
+            {
+                str = url.Substring(url.IndexOf("?") + 1);
+                url = url.Substring(0, url.IndexOf("?"));
+            }
+            if (!string.IsNullOrEmpty(queryString))
+            {
+                if (!string.IsNullOrEmpty(str))
+                {
+                    var dictionary = new Dictionary<string, string>();
+                    foreach (string str3 in str.Split(new char[] { '&' }))
+                    {
+                        if (!string.IsNullOrEmpty(str3))
+                        {
+                            string[] strArray = str3.Split(new char[] { '=' });
+                            if (strArray.Length == 2)
+                            {
+                                dictionary[strArray[0]] = strArray[1];
+                            }
+                            else
+                            {
+                                dictionary[str3] = null;
+                            }
+                        }
+                    }
+                    dictionary.Remove(queryString);
+
+                    var builder = new StringBuilder();
+                    foreach (string str5 in dictionary.Keys)
+                    {
+                        if (builder.Length > 0)
+                        {
+                            builder.Append("&");
+                        }
+                        builder.Append(str5);
+                        if (dictionary[str5] != null)
+                        {
+                            builder.Append("=");
+                            builder.Append(dictionary[str5]);
+                        }
+                    }
+                    str = builder.ToString();
+                }
+            }
+            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)));
+        }
+        
+        /// <summary>
+        /// Gets query string value by name
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <returns>Query string value</returns>
+        public virtual string QueryString(string name)
+        {
+            string result = string.Empty;
+            if (HttpContext.Current != null && HttpContext.Current.Request.QueryString[name] != null)
+                result = HttpContext.Current.Request.QueryString[name].ToString();
+            return result;
+        }
+
+        /// <summary>
+        /// Gets boolean value from query string 
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <returns>Query string value</returns>
+        public virtual bool QueryStringBool(string name)
+        {
+            string resultStr = QueryString(name).ToUpperInvariant();
+            return (resultStr == "YES" || resultStr == "TRUE" || resultStr == "1");
+        }
+
+        /// <summary>
+        /// Gets integer value from query string 
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <returns>Query string value</returns>
+        public virtual int QueryStringInt(string name)
+        {
+            string resultStr = QueryString(name).ToUpperInvariant();
+            int result;
+            Int32.TryParse(resultStr, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets integer value from query string 
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Query string value</returns>
+        public virtual int QueryStringInt(string name, int defaultValue)
+        {
+            string resultStr = QueryString(name).ToUpperInvariant();
+            if (resultStr.Length > 0)
+            {
+                return Int32.Parse(resultStr);
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Gets GUID value from query string 
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <returns>Query string value</returns>
+        public virtual Guid? QueryStringGuid(string name)
+        {
+            string resultStr = QueryString(name).ToUpperInvariant();
+            Guid? result = null;
+            try
+            {
+                result = new Guid(resultStr);
+            }
+            catch
+            {
+            }
+            return result;
+        }
+        
     }
 }

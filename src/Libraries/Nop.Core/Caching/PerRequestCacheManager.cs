@@ -63,7 +63,10 @@ namespace Nop.Core.Caching
 
             if (data != null)
             {
-                items.Add(key, data);
+                if (items.Contains(key))
+                    items[key] = data;
+                else
+                    items.Add(key, data);
             }
         }
 
@@ -77,7 +80,7 @@ namespace Nop.Core.Caching
             var items = GetItems();
             if (items == null)
                 return false;
-
+            
             return (items[key] != null);
         }
 
