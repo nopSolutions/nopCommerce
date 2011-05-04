@@ -12,7 +12,6 @@
         </div>
         <div class="options">
             <button type="submit" name="delete-selected" value="delete_selected" class="t-button">@T("Admin.System.QueuedEmails.DeleteSelected")</button>
-@*            <button type="submit" id = "deleteChecked" class="t-button">Delete checked</button>*@
         </div>
     </div>
     <table width="100%">
@@ -127,17 +126,6 @@
                 grid.ajaxRequest();
                 return false;
             });
-
-//            $('#deleteChecked').click(function (e) {
-//                e.preventDefault();
-
-//                //var ids = Sys.Serialization.JavaScriptSerializer.serialize(selectedIds);
-//                var postParms = { selectedIds: selectedIds };
-
-
-//                $.post("/QueuedEmail/DeleteBulk", postParms, function (data) { }, "json");
-//                return false;
-//            });
 
             $('#mastercheckbox').click(function () {
                 $('.checkboxGroups').attr('checked', $(this).is(':checked') ? 'checked' : '').change();

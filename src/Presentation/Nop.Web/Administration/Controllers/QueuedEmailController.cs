@@ -146,17 +146,20 @@ namespace Nop.Admin.Controllers
 			return RedirectToAction("List");
 		}
 
+        //TODO: currently, only recored within current page are passed, 
+        //  need to somehow pass all of the records
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-selected")]
         public ActionResult DeleteSelected(QueuedEmailListModel model, ICollection<int> checkedRecords)
         {
-            foreach (var queuedEmailId in checkedRecords)
+            if (checkedRecords != null)
             {
-                var queuedEmail = _queuedEmailService.GetQueuedEmailById(queuedEmailId);
-                _queuedEmailService.DeleteQueuedEmail(queuedEmail);
+                foreach (var queuedEmailId in checkedRecords)
+                {
+                    var queuedEmail = _queuedEmailService.GetQueuedEmailById(queuedEmailId);
+                    _queuedEmailService.DeleteQueuedEmail(queuedEmail);
+                }
             }
-            //var email = _queuedEmailService.GetQueuedEmailById(id);
-            //_queuedEmailService.DeleteQueuedEmail(email);
             return View(model);
         }
 	}
