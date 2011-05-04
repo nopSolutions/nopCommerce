@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 }
 
-@*TODO breadcrumb*@
+@Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })
 <div class="clear">
 </div>
 <div class="product-details-page">
@@ -50,9 +50,10 @@
                 </tr>
             </table>
                 }
-                <div class="clear">
-                </div>
-                @Html.Action("ShareButton", "Catalog")            
+                <div class="clear"></div>
+                @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
+                <div class="clear"></div>
+                @Html.Action("ShareButton", "Catalog")
             </div>
             <div class="fulldescription">
                 @Html.Raw(Model.FullDescription)
@@ -83,6 +84,6 @@
         </div>
         <div class="clear">
         </div>
-        @*TODO ProductReviews, ProductSpecs, ProductTags*@
+        @*TODO ProductSpecs, ProductTags*@
     </div>
 </div>

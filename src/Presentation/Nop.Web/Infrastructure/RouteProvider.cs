@@ -28,6 +28,11 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("Manufacturer",
                             "manufacturer/{manufacturerId}/{SeName}",
                             new { controller = "Catalog", action = "Manufacturer", SeName = UrlParameter.Optional });
+
+            //reviews
+            routes.MapRoute("ProductReviews",
+                            "productreviews/{productId}",
+                            new { controller = "Catalog", action = "ProductReviews" });
         }
         public int Priority
         {

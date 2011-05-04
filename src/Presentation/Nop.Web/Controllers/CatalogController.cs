@@ -5,15 +5,18 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
@@ -36,9 +39,12 @@ namespace Nop.Web.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly IWebHelper _webHelper;
         private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly ICustomerContentService _customerContentService;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
+        private readonly CustomerSettings _customerSettings;
         
 
         #endregion
@@ -52,7 +58,9 @@ namespace Nop.Web.Controllers
             IPictureService pictureService, ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
-            MediaSettings mediaSetting, CatalogSettings catalogSettings)
+            ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
+            MediaSettings mediaSetting, CatalogSettings catalogSettings,
+            CustomerSettings customerSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -66,9 +74,12 @@ namespace Nop.Web.Controllers
             this._priceFormatter = priceFormatter;
             this._webHelper = webHelper;
             this._specificationAttributeService = specificationAttributeService;
+            this._customerContentService = customerContentService;
+            this._dateTimeHelper = dateTimeHelper;
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
+            this._customerSettings = customerSettings;
         }
 
 		#endregion Constructors 
@@ -89,11 +100,6 @@ namespace Nop.Web.Controllers
             return tmp1[0];
         }
 
-        /// <summary>
-        /// Gets a category breadcrumb
-        /// </summary>
-        /// <param name="category">Category</param>
-        /// <returns>Category</returns>
         [NonAction]
         private IList<Category> GetCategoryBreadCrumb(Category category)
         {
@@ -229,8 +235,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private IList<CategoryNavigationModel> GetChildCategoryNavigationModel(IList<Category> breadCrumb, 
-            int rootCategoryId, Category currentCategory, int level)
+        private IList<CategoryNavigationModel> GetChildCategoryNavigationModel(IList<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
         {
             var result = new List<CategoryNavigationModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -258,6 +263,42 @@ namespace Nop.Web.Controllers
 
             return result;
         }
+
+        [NonAction]
+        private ProductReviewsModel PrepareProductReviewsModel(ProductReviewsModel model, Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.ProductId = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+
+            model.AddProductReview.AllowAnonymousUsersToReviewProduct = _catalogSettings.AllowAnonymousUsersToReviewProduct;
+            model.AddProductReview.CustomerIsRegistered = _workContext.CurrentCustomer.IsRegistered();
+
+            var productReviews = product.ProductReviews.Where(pr => pr.IsApproved);
+            foreach (var pr in productReviews)
+            {
+                model.Items.Add(new ProductReviewModel()
+                {
+                    Id = pr.Id,
+                    CustomerName = "TODO customername/email/username here",
+                    Title = pr.Title,
+                    ReviewText = Nop.Core.Html.HtmlHelper.FormatText(pr.ReviewText, false, true, false, false, false, false),
+                    Rating = pr.Rating,
+                    HelpfulYesTotal = pr.HelpfulYesTotal,
+                    HelpfulNoTotal = pr.HelpfulNoTotal,
+                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
+                });
+            }
+
+            return model;
+        }
+
         #endregion
 
         #region Categories
@@ -660,7 +701,43 @@ namespace Nop.Web.Controllers
             }
             return View(model);
         }
-        
+
+        public ActionResult ProductBreadcrumb(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            var model = new ProductModel.ProductBreadcrumbModel()
+            {
+                DisplayBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled,
+                ProductId = product.Id,
+                ProductName = product.GetLocalized(x => x.Name),
+                ProductSeName = product.GetSeName()
+            };
+            if (model.DisplayBreadcrumb)
+            {
+                var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+                if (productCategories.Count > 0)
+                {
+                    var category = productCategories[0].Category;
+                    if (category != null)
+                    {
+                        foreach (var catBr in GetCategoryBreadCrumb(category))
+                        {
+                            model.CategoryBreadcrumb.Add(new CategoryModel()
+                            {
+                                Id = catBr.Id,
+                                Name = catBr.GetLocalized(x => x.Name),
+                                SeName = catBr.GetSeName()
+                            });
+                        }
+                    }
+                }
+            }
+            return PartialView(model);
+        }
+
         public ActionResult ProductManufacturers(int productId)
         {
             var model = _manufacturerService.GetProductManufacturersByProductId(productId)
@@ -675,6 +752,104 @@ namespace Nop.Web.Controllers
                 .ToList();
             
             return PartialView(model);
+        }
+
+        public ActionResult ProductReviewOverview(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            var model = new ProductReviewOverviewModel()
+            {
+                ProductId = product.Id,
+                AllowAnonymousUsersToReviewProduct = _catalogSettings.AllowAnonymousUsersToReviewProduct,
+                CustomerIsRegistered = _workContext.CurrentCustomer.IsRegistered(),
+                RatingSum = product.ApprovedRatingSum,
+                TotalReviews = product.ApprovedTotalReviews,
+                AllowCustomerReviews = product.AllowCustomerReviews
+            };
+            return PartialView(model);
+        }
+
+        public ActionResult ProductReviews(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
+                return RedirectToAction("Index", "Home");
+
+            var model = new ProductReviewsModel();
+            model = PrepareProductReviewsModel(model, product);
+            //default value
+            model.AddProductReview.Rating = 4;
+            return View(model);
+        }
+
+        [HttpPost, ActionName("ProductReviews")]
+        [FormValueRequired("add-review")]
+        public ActionResult AddProductReviews(int productId, ProductReviewsModel model)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
+                return RedirectToAction("Index", "Home");
+
+            if (ModelState.IsValid)
+            {
+                if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                {
+                    ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
+                }
+                else
+                {
+                    //save review
+                    int rating = model.AddProductReview.Rating;
+                    if (rating < 1 || rating > 5)
+                        rating = 4;
+                    bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+
+                    _customerContentService.InsertCustomerContent(new ProductReview()
+                    {
+                        ProductId = product.Id,
+                        CustomerId = _workContext.CurrentCustomer.Id,
+                        IpAddress = _webHelper.GetCurrentIpAddress(),
+                        Title = model.AddProductReview.Title,
+                        ReviewText = model.AddProductReview.ReviewText,
+                        Rating = rating,
+                        HelpfulYesTotal = 0,
+                        HelpfulNoTotal = 0,
+                        IsApproved = isApproved,
+                        CreatedOnUtc = DateTime.UtcNow,
+                        UpdatedOnUtc = DateTime.UtcNow,
+                    });
+
+                    //update product totals
+                    _productService.UpdateProductReviewTotals(product);
+
+                    //notify store owner
+                    if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
+                    {
+                        //UNDONE notification email
+                        //IoC.Resolve<IMessageService>().SendProductReviewNotificationMessage(productReview, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
+                    }
+
+
+                    model = PrepareProductReviewsModel(model, product);
+                    model.AddProductReview.Title = null;
+                    model.AddProductReview.ReviewText = null;
+
+                    model.AddProductReview.SuccessfullyAdded = true;
+                    if (!isApproved)
+                        model.AddProductReview.Result = _localizationService.GetResource("Reviews.SeeAfterApproving");
+                    else
+                        model.AddProductReview.Result = _localizationService.GetResource("Reviews.SuccessfullyAdded");
+
+                    return View(model);
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            model = PrepareProductReviewsModel(model, product);
+            return View(model);
         }
 
         public ActionResult RelatedProducts(int productId)

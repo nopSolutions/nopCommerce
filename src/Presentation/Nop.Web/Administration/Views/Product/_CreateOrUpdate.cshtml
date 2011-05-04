@@ -128,15 +128,6 @@
                 @Html.ValidationMessageFor(model => model.AllowCustomerReviews)
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowCustomerRatings):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowCustomerRatings)
-                @Html.ValidationMessageFor(model => model.AllowCustomerRatings)
-            </td>
-        </tr>
     </table>
 }
 @helper TabFirstVariantInfo()
@@ -667,8 +658,8 @@
         $(document).ready(function () {
             $('#addProductSpec').click(function () {
                 var specificationAttributeOptionId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
-                var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").attr('checked');
-                var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").attr('checked');
+                var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
+                var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
                 var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
                 
                 $('#addProductSpec').attr('disabled', true);

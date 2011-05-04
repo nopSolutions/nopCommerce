@@ -97,6 +97,7 @@
     <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="Models\Catalog\CategoryModel.cs" />
     <Compile Include="Models\Catalog\CategoryNavigationModel.cs" />
+    <Compile Include="Models\Catalog\ProductReviewModel.cs" />
     <Compile Include="Models\Catalog\ManufacturerModel.cs" />
     <Compile Include="Models\Catalog\ManufacturerNavigationModel.cs" />
     <Compile Include="Models\Catalog\ProductModel.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Models\Catalog\PagingFilteringModel.cs" />
     <Compile Include="Models\Media\PictureModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\Catalog\ProductReviewsValidator.cs" />
     <Compile Include="Validators\Common\AddressValidator.cs" />
     <Compile Include="Validators\Customer\ChangePasswordValidator.cs" />
     <Compile Include="Validators\Customer\RegisterValidator.cs" />
@@ -788,7 +790,6 @@
     <Content Include="Scripts\2011.1.315\telerik.window.min.js" />
     <Content Include="Scripts\grid.locale-en.js" />
     <Content Include="Scripts\jquery.blockUI.js" />
-    <Content Include="Scripts\jquery.jqGrid.min.js" />
     <Content Include="Scripts\jquery.superfishmenu.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
@@ -810,9 +811,7 @@
     <Content Include="Themes\DarkOrange\Content\images\closelabel.gif" />
     <Content Include="Themes\DarkOrange\Content\images\deal_box_hl.gif" />
     <Content Include="Themes\DarkOrange\Content\images\deal_box_hr.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\EmptyStar.png" />
     <Content Include="Themes\DarkOrange\Content\images\fb_s_bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\FilledStar.png" />
     <Content Include="Themes\DarkOrange\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-header-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\grey_button_bg.gif" />
@@ -849,7 +848,8 @@
     <Content Include="Themes\DarkOrange\Content\images\prod_grid_box_bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\progress-step-active.gif" />
     <Content Include="Themes\DarkOrange\Content\images\progress-step-inactive.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\SavedStar.png" />
+    <Content Include="Themes\DarkOrange\Content\images\star_x_active.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\star_x_inactive.gif" />
     <Content Include="Themes\DarkOrange\Content\images\tab-line.png" />
     <Content Include="Themes\DarkOrange\Content\images\tab.png" />
     <Content Include="Themes\DarkOrange\Content\styles.css" />
@@ -889,6 +889,8 @@
     <Content Include="Themes\nopClassic\Content\images\progress-step-active.gif" />
     <Content Include="Themes\nopClassic\Content\images\progress-step-inactive.gif" />
     <Content Include="Themes\nopClassic\Content\images\SavedStar.png" />
+    <Content Include="Themes\nopClassic\Content\images\star_x_active.gif" />
+    <Content Include="Themes\nopClassic\Content\images\star_x_inactive.gif" />
     <Content Include="Themes\nopClassic\Content\images\tab-line.png" />
     <Content Include="Themes\nopClassic\Content\images\tab.png" />
     <Content Include="Themes\nopClassic\Content\styles.css" />
@@ -995,6 +997,9 @@
     <Content Include="Views\Catalog\RelatedProducts.cshtml" />
     <Content Include="Views\Catalog\ShareButton.cshtml" />
     <Content Include="Views\Catalog\ProductManufacturers.cshtml" />
+    <Content Include="Views\Catalog\ProductReviewOverview.cshtml" />
+    <Content Include="Views\Catalog\ProductBreadcrumb.cshtml" />
+    <Content Include="Views\Catalog\ProductReviews.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

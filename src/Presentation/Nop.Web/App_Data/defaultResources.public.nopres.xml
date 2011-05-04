@@ -903,6 +903,13 @@
       <LocaleResource Name="AddToCart">
         <Value>Add to cart</Value>
       </LocaleResource>
+      <LocaleResource Name="Breadcrumb">
+        <Children>
+          <LocaleResource Name="Top">
+            <Value>Top</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="CallForPrice">
         <Value>Call for pricing</Value>
       </LocaleResource>
@@ -929,6 +936,82 @@
       </LocaleResource>
       <LocaleResource Name="RelatedProducts">
         <Value>Related products</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="Reviews">
+    <Value>Reviews</Value>
+    <Children>
+      <LocaleResource Name="ExistingReviews">
+        <Value>Existing reviews</Value>
+      </LocaleResource>
+      <LocaleResource Name="From">
+        <Value>From</Value>
+      </LocaleResource>
+      <LocaleResource Name="Fields">
+        <Children>
+          <LocaleResource Name="Rating">
+            <Value>Rating</Value>
+            <Children>
+              <LocaleResource Name="Bad">
+                <Value>Bad</Value>
+              </LocaleResource>
+              <LocaleResource Name="Excellent">
+                <Value>Excellent</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="ReviewText">
+            <Value>Review text</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Review text is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="Title">
+            <Value>Review title</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Review title is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Date">
+        <Value>Date</Value>
+      </LocaleResource>
+      <LocaleResource Name="OnlyRegisteredUsersCanWriteReviews">
+        <Value>Only registered users can write reviews</Value>
+      </LocaleResource>
+      <LocaleResource Name="Overview">
+        <Children>
+          <LocaleResource Name="AddNew">
+            <Value>Add your review</Value>
+          </LocaleResource>
+          <LocaleResource Name="First">
+            <Value>Be the first to review this product</Value>
+          </LocaleResource>
+          <LocaleResource Name="Reviews">
+            <Value>review(s)</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="ProductReviewsFor">
+        <Value>Product reviews for</Value>
+      </LocaleResource>
+      <LocaleResource Name="SeeAfterApproving">
+        <Value>You will see the product review after approving by a store administrator.</Value>
+      </LocaleResource>
+      <LocaleResource Name="SubmitButton">
+        <Value>Submit review</Value>
+      </LocaleResource>
+      <LocaleResource Name="SuccessfullyAdded">
+        <Value>Product review is successfully added.</Value>
+      </LocaleResource>
+      <LocaleResource Name="Write">
+        <Value>Write your own review</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

@@ -327,7 +327,6 @@ namespace Nop.Admin.Controllers
             PrepareManufacturerMapping(model);
             //default values
             model.Published = true;
-            model.AllowCustomerRatings = true;
             model.AllowCustomerReviews = true;
 
 

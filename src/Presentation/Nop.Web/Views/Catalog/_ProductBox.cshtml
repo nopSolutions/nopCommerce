@@ -1,10 +1,10 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
 <div class="product-item">
     <h2 class="product-title">
-        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })">@Model.Name</a>
+        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })">@Model.Name</a>
     </h2>
     <div class="picture">
-        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" title="@Model.DefaultPictureModel.Title">
+        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img style="border-width: 0px;" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
     </div>
@@ -16,7 +16,7 @@
             @Html.Partial("_ProductPrice", Model.ProductPrice)
         </div>
         <div class="buttons">
-            <a href="@Url.RouteUrl("Product", new { productId = Model.Id, Model.SeName })" class="productlistproductdetailbutton">@T("Products.Details")</a>
+            <a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })" class="productlistproductdetailbutton">@T("Products.Details")</a>
             @*UNDONE add to cart
             <br />
             <input type="submit" value="@("Products.AddToCart")" class="productgridproductdetailbutton">*@

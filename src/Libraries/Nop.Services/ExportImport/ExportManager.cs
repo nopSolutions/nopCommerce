@@ -204,9 +204,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("MetaTitle", null, product.MetaTitle);
                 xmlWriter.WriteElementString("SEName", null, product.SeName);
                 xmlWriter.WriteElementString("AllowCustomerReviews", null, product.AllowCustomerReviews.ToString());
-                xmlWriter.WriteElementString("AllowCustomerRatings", null, product.AllowCustomerRatings.ToString());
-                xmlWriter.WriteElementString("RatingSum", null, product.RatingSum.ToString());
-                xmlWriter.WriteElementString("TotalRatingVotes", null, product.TotalRatingVotes.ToString());
                 xmlWriter.WriteElementString("Published", null, product.Published.ToString());
                 xmlWriter.WriteElementString("Deleted", null, product.Deleted.ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, product.CreatedOnUtc.ToString());
@@ -424,7 +421,6 @@ namespace Nop.Services.ExportImport
                 tableDefinition.Add("MetaDescription", "ntext");
                 tableDefinition.Add("MetaTitle", "ntext");
                 tableDefinition.Add("AllowCustomerReviews", "nvarchar(5)");
-                tableDefinition.Add("AllowCustomerRatings", "nvarchar(5)");
                 tableDefinition.Add("Published", "nvarchar(5)");
                 tableDefinition.Add("SKU", "ntext");
                 tableDefinition.Add("ManufacturerPartNumber", "ntext");
@@ -482,7 +478,7 @@ namespace Nop.Services.ExportImport
                     foreach (var pv in productVariants)
                     {
                         var sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc) VALUES (");
                         sb.Append('"'); sb.Append(p.Name.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.ShortDescription.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.FullDescription.Replace('"', '\'')); sb.Append("\",");
@@ -491,7 +487,6 @@ namespace Nop.Services.ExportImport
                         sb.Append('"'); sb.Append(p.MetaDescription.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.MetaTitle.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.AllowCustomerReviews); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.AllowCustomerRatings); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.Published); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.Sku.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.ManufacturerPartNumber.Replace('"', '\'')); sb.Append("\",");

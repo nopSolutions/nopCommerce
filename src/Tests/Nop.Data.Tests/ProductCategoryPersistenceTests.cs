@@ -22,18 +22,6 @@ namespace Nop.Data.Tests
                                          Product = new Product()
                                                        {
                                                            Name = "Name 1",
-                                                           ShortDescription = "ShortDescription 1",
-                                                           FullDescription = "FullDescription 1",
-                                                           AdminComment = "AdminComment 1",
-                                                           ShowOnHomePage = false,
-                                                           MetaKeywords = "Meta keywords",
-                                                           MetaDescription = "Meta description",
-                                                           MetaTitle = "Meta title",
-                                                           SeName = "SE name",
-                                                           AllowCustomerReviews = true,
-                                                           AllowCustomerRatings = true,
-                                                           RatingSum = 2,
-                                                           TotalRatingVotes = 3,
                                                            Published = true,
                                                            Deleted = false,
                                                            CreatedOnUtc = new DateTime(2010, 01, 01),

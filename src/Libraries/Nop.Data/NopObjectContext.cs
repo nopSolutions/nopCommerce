@@ -77,7 +77,6 @@ namespace Nop.Data
         public DbSet<ProductManufacturer> ProductManufacturers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductPicture> ProductPictures { get; set; }
-        public DbSet<ProductRating> ProductRatings { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
         public DbSet<ProductSpecificationAttribute> ProductSpecificationAttributes { get; set; }
         public DbSet<ProductVariantAttribute> ProductVariantAttributes { get; set; }

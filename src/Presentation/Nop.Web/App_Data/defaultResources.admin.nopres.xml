@@ -623,14 +623,6 @@
                                   </LocaleResource>
                                 </Children>
                               </LocaleResource>
-                              <LocaleResource Name="AllowCustomerRatings">
-                                <Value>Allow customer ratings</Value>
-                                <Children>
-                                  <LocaleResource Name="Hint">
-                                    <Value>Check to allow customers to rate this product.</Value>
-                                  </LocaleResource>
-                                </Children>
-                              </LocaleResource>
                               <LocaleResource Name="Published">
                                 <Value>Published</Value>
                                 <Children>

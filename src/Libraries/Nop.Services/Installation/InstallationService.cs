@@ -811,7 +811,10 @@ namespace Nop.Services.Installation
                     ShowCategoryProductNumberIncludingSubcategories = false,
                     CategoryBreadcrumbEnabled = true,
                     PageShareCode = "<!-- AddThis Button BEGIN --> <a class=\"addthis_button\" href=\"http://www.addthis.com/bookmark.php?v=250&amp;username=nopsolutions\"><img src=\"http://s7.addthis.com/static/btn/v2/lg-share-en.gif\" width=\"125\" height=\"16\" alt=\"Bookmark and Share\" style=\"border:0\"/></a><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/250/addthis_widget.js#username=nopsolutions\"></script> <!-- AddThis Button END -->",
-
+                    ProductReviewsMustBeApproved = true,
+                    AllowAnonymousUsersToReviewProduct = false,
+                    NotifyStoreOwnerAboutNewProductReviews = false,
+                    AllowAnonymousUsersToEmailAFriend = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
@@ -827,9 +830,6 @@ namespace Nop.Services.Installation
                     AllowCustomersToUploadAvatars = false,
                     AvatarMaximumSizeBytes = 20000,
                     DefaultAvatarEnabled = true,
-                    AllowAnonymousUsersToReviewProduct = false,
-                    AllowAnonymousUsersToSetProductRatings = false,
-                    AllowAnonymousUsersToEmailAFriend = false,
                     ShowCustomersLocation = false,
                     ShowCustomersJoinDate = false,
                     AllowViewingProfiles = false,
@@ -1438,9 +1438,10 @@ namespace Nop.Services.Installation
                     MetaTitle = string.Empty,
                     SeName = string.Empty,
                     AllowCustomerReviews = true,
-                    AllowCustomerRatings = true,
-                    RatingSum = 0,
-                    TotalRatingVotes = 0,
+                    ApprovedRatingSum = 0,
+                    NotApprovedRatingSum = 0,
+                    ApprovedTotalReviews = 0,
+                    NotApprovedTotalReviews = 0,
                     Published = true,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow

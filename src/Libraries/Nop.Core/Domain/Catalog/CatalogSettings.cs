@@ -40,5 +40,27 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public string PageShareCode { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating product reviews must be approved
+        /// </summary>
+        public bool ProductReviewsMustBeApproved { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to allow anonymous users write product reviews.
+        /// </summary>
+        public bool AllowAnonymousUsersToReviewProduct { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether notification of a store owner about new product reviews is enabled
+        /// </summary>
+        public bool NotifyStoreOwnerAboutNewProductReviews { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to allow anonymous users to email a friend.
+        /// </summary>
+        public bool AllowAnonymousUsersToEmailAFriend { get; set; }
+
+        
+
     }
 }

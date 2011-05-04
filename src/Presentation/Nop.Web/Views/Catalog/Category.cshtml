@@ -22,10 +22,10 @@
             {
                 var catBr = Model.CategoryBreadcrumb[i];
                 <a href="@Url.RouteUrl("Category", new { categoryId = catBr.Id, SeName = catBr.SeName })">@catBr.Name</a>
-                                                                                                     if (i != Model.CategoryBreadcrumb.Count - 1)
-                                                                                                     {
+                if (i != Model.CategoryBreadcrumb.Count - 1)
+                {
                     <text>/</text>
-                                                                                                     }
+                }
             }
             <br />
         </div>

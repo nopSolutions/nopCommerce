@@ -28,9 +28,10 @@ namespace Nop.Data.Tests
                 MetaTitle = "Meta title",
                 SeName = "SE name",
                 AllowCustomerReviews = true,
-                AllowCustomerRatings = true,
-                RatingSum = 2,
-                TotalRatingVotes = 3,
+                ApprovedRatingSum = 2,
+                NotApprovedRatingSum = 3,
+                ApprovedTotalReviews = 4,
+                NotApprovedTotalReviews = 5,
                 Published = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
@@ -48,9 +49,10 @@ namespace Nop.Data.Tests
             fromDb.MetaDescription.ShouldEqual("Meta description");
             fromDb.SeName.ShouldEqual("SE name");
             fromDb.AllowCustomerReviews.ShouldEqual(true);
-            fromDb.AllowCustomerRatings.ShouldEqual(true);
-            fromDb.RatingSum.ShouldEqual(2);
-            fromDb.TotalRatingVotes.ShouldEqual(3);
+            fromDb.ApprovedRatingSum.ShouldEqual(2);
+            fromDb.NotApprovedRatingSum.ShouldEqual(3);
+            fromDb.ApprovedTotalReviews.ShouldEqual(4);
+            fromDb.NotApprovedTotalReviews.ShouldEqual(5);
             fromDb.Published.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
@@ -63,18 +65,6 @@ namespace Nop.Data.Tests
             var product = new Product
                           {
                               Name = "Name 1",
-                              ShortDescription = "ShortDescription 1",
-                              FullDescription = "FullDescription 1",
-                              AdminComment = "AdminComment 1",
-                              ShowOnHomePage = false,
-                              MetaKeywords = "Meta keywords",
-                              MetaDescription = "Meta description",
-                              MetaTitle = "Meta title",
-                              SeName = "SE name",
-                              AllowCustomerReviews = true,
-                              AllowCustomerRatings = true,
-                              RatingSum = 2,
-                              TotalRatingVotes = 3,
                               Published = true,
                               Deleted = false,
                               CreatedOnUtc = new DateTime(2010, 01, 01),
@@ -160,18 +150,6 @@ namespace Nop.Data.Tests
             var product = new Product
                           {
                               Name = "Name 1",
-                              ShortDescription = "ShortDescription 1",
-                              FullDescription = "FullDescription 1",
-                              AdminComment = "AdminComment 1",
-                              ShowOnHomePage = false,
-                              MetaKeywords = "Meta keywords",
-                              MetaDescription = "Meta description",
-                              MetaTitle = "Meta title",
-                              SeName = "SE name",
-                              AllowCustomerReviews = true,
-                              AllowCustomerRatings = true,
-                              RatingSum = 2,
-                              TotalRatingVotes = 3,
                               Published = true,
                               Deleted = false,
                               CreatedOnUtc = new DateTime(2010, 01, 01),
@@ -223,18 +201,6 @@ namespace Nop.Data.Tests
             var product = new Product
                           {
                               Name = "Name 1",
-                              ShortDescription = "ShortDescription 1",
-                              FullDescription = "FullDescription 1",
-                              AdminComment = "AdminComment 1",
-                              ShowOnHomePage = false,
-                              MetaKeywords = "Meta keywords",
-                              MetaDescription = "Meta description",
-                              MetaTitle = "Meta title",
-                              SeName = "SE name",
-                              AllowCustomerReviews = true,
-                              AllowCustomerRatings = true,
-                              RatingSum = 2,
-                              TotalRatingVotes = 3,
                               Published = true,
                               Deleted = false,
                               CreatedOnUtc = new DateTime(2010, 01, 01),
@@ -286,18 +252,6 @@ namespace Nop.Data.Tests
             var product = new Product
                           {
                               Name = "Name 1",
-                              ShortDescription = "ShortDescription 1",
-                              FullDescription = "FullDescription 1",
-                              AdminComment = "AdminComment 1",
-                              ShowOnHomePage = false,
-                              MetaKeywords = "Meta keywords",
-                              MetaDescription = "Meta description",
-                              MetaTitle = "Meta title",
-                              SeName = "SE name",
-                              AllowCustomerReviews = true,
-                              AllowCustomerRatings = true,
-                              RatingSum = 2,
-                              TotalRatingVotes = 3,
                               Published = true,
                               Deleted = false,
                               CreatedOnUtc = new DateTime(2010, 01, 01),

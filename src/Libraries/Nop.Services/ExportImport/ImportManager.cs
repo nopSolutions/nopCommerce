@@ -57,7 +57,6 @@ namespace Nop.Services.ExportImport
                     string metaDescription = dr["MetaDescription"].ToString();
                     string metaTitle = dr["MetaTitle"].ToString();
                     bool allowCustomerReviews = Convert.ToBoolean(dr["AllowCustomerReviews"]);
-                    bool allowCustomerRatings = Convert.ToBoolean(dr["AllowCustomerRatings"]);
                     bool published = Convert.ToBoolean(dr["Published"]);
                     string sku = dr["SKU"].ToString();
                     string manufacturerPartNumber = dr["ManufacturerPartNumber"].ToString();
@@ -117,7 +116,6 @@ namespace Nop.Services.ExportImport
                         product.MetaDescription = metaDescription;
                         product.MetaTitle = metaTitle;
                         product.AllowCustomerReviews = allowCustomerReviews;
-                        product.AllowCustomerRatings = allowCustomerRatings;
                         product.Published = published;
                         product.CreatedOnUtc = createdOnUtc;
                         product.UpdatedOnUtc = DateTime.UtcNow;
@@ -186,7 +184,6 @@ namespace Nop.Services.ExportImport
                             MetaDescription = metaDescription,
                             MetaTitle = metaTitle,
                             AllowCustomerReviews = allowCustomerReviews,
-                            AllowCustomerRatings = allowCustomerRatings,
                             Published = published,
                             CreatedOnUtc = createdOnUtc,
                             UpdatedOnUtc = DateTime.UtcNow

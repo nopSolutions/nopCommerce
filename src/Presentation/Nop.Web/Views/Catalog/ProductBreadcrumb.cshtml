@@ -1,0 +1,20 @@
+﻿@model ProductModel.ProductBreadcrumbModel
+@{
+    var storeLocation = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+}
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@if (Model.DisplayBreadcrumb)
+{
+    <div class="breadcrumb">
+        <a href='@storeLocation'>@T("Products.Breadcrumb.Top")</a> /
+        @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
+        {
+            var catBr = Model.CategoryBreadcrumb[i];
+            <a href="@Url.RouteUrl("Category", new { categoryId = catBr.Id, SeName = catBr.SeName })">@catBr.Name</a>
+            <text>/</text>
+        }
+        <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>
+    </div>
+    <br />
+}

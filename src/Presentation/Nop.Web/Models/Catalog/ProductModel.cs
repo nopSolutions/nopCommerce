@@ -30,13 +30,15 @@ namespace Nop.Web.Models.Catalog
 
         public string SeName { get; set; }
 
+        //price
         public ProductPriceModel ProductPrice { get; set; }
 
+        //picture(s)
         public bool DefaultPictureZoomEnabled { get; set; }
         public PictureModel DefaultPictureModel { get; set; }
         public IList<PictureModel> PictureModels { get; set; }
 
-		#region Nested Classes 
+		#region Nested Classes 
         
         public class ProductPriceModel
         {
@@ -45,6 +47,20 @@ namespace Nop.Web.Models.Catalog
             public string Price {get;set;}
         }
 
-		#endregion Nested Classes 
+        public class ProductBreadcrumbModel
+        {
+            public ProductBreadcrumbModel()
+            {
+                CategoryBreadcrumb = new List<CategoryModel>();
+            }
+
+            public int ProductId { get; set; }
+            public string ProductName { get; set; }
+            public string ProductSeName { get; set; }
+            public bool DisplayBreadcrumb { get; set; }
+            public IList<CategoryModel> CategoryBreadcrumb { get; set; }
+        }
+
+		#endregion
     }
 }

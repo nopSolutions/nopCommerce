@@ -1,0 +1,124 @@
+﻿@model Nop.Web.Models.Catalog.ProductReviewsModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+<div class="product-reviews-page">
+    <div class="page-title">
+        <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a></h1>
+    </div>
+    <div class="clear">
+    </div>
+    @if (Model.AddProductReview.SuccessfullyAdded)
+    {
+        @Model.AddProductReview.Result
+    }
+    else
+    {
+        <div class="write-review" id="review-form">
+            @using (Html.BeginForm())
+            {
+                <table>
+                    <tr>
+                        <td style="text-align: left; vertical-align: middle;" colspan="2">
+                            <strong>@T("Reviews.Write")</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                            @Html.LabelFor(model => model.AddProductReview.Title):
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => model.AddProductReview.Title, new { style = "Width: 350px;" })
+                            @Html.ValidationMessageFor(model => model.AddProductReview.Title)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                            @Html.LabelFor(model => model.AddProductReview.ReviewText):
+                        </td>
+                        <td>
+                            @Html.TextAreaFor(model => model.AddProductReview.ReviewText, new { style = "Width: 350px; Height: 150px;" })
+                            @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                            @Html.LabelFor(model => model.AddProductReview.Rating):
+                        </td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td>
+                                        @T("Reviews.Fields.Rating.Bad")
+                                    </td>
+                                    <td>
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1")
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2")
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3")
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4")
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5")
+                                    </td>
+                                    <td width="50px;">
+                                        @T("Reviews.Fields.Rating.Excellent")
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="message-error" colspan="2">
+                            @Html.ValidationSummary(false)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td style="text-align: left; vertical-align: middle;">
+                            <input type="submit" id="add-review" name="add-review" class="productwritereviewbutton" value="@T("Reviews.SubmitButton")" />
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    }
+    <div class="clear">
+    </div>
+    @if (Model.Items.Count > 0)
+    {
+        <div class="product-review-list">
+        <div>
+        <strong>@T("Reviews.ExistingReviews")</strong>
+        </div>
+            @foreach (var review in Model.Items)
+            {
+                int ratingPercent = review.Rating * 20;
+                
+                <div class="product-review-item">
+                    <div class="review-title">
+                        @review.Title
+                    </div>
+                    <div class="product-review-box">
+                        <div class="rating">
+                            <div style="width: @(ratingPercent)%">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="review-text">
+                        @Html.Raw(review.ReviewText)
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="review-info">
+                        @*TODO if allow viewing customer profiles is enabled, then display a link to it*@
+                        @T("Reviews.From")<text>:</text> @review.CustomerName
+                        <span class="separator">|</span>
+                        @T("Reviews.Date")<text>:</text> @review.WrittenOnStr
+                    </div>
+                    @*TODO ProductReviewHelpfulness (ajax-based)*@
+                </div>
+            }
+        </div>
+    }
+</div>
