@@ -75,6 +75,11 @@
         <div class="clear">
         </div>
         <div>
+            @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
+        </div>
+        <div class="clear">
+        </div>
+        <div>
             @*TODO ProductsAlsoPurchased*@
         </div>
         <div class="clear">
@@ -84,6 +89,6 @@
         </div>
         <div class="clear">
         </div>
-        @*TODO ProductSpecs, ProductTags*@
+        @*TODO ProductTags*@
     </div>
 </div>

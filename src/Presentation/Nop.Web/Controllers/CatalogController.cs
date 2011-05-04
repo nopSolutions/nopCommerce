@@ -787,7 +787,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ProductReviews")]
         [FormValueRequired("add-review")]
-        public ActionResult AddProductReviews(int productId, ProductReviewsModel model)
+        public ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
@@ -850,6 +850,26 @@ namespace Nop.Web.Controllers
             //If we got this far, something failed, redisplay form
             model = PrepareProductReviewsModel(model, product);
             return View(model);
+        }
+
+        public ActionResult ProductSpecifications(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            var model= _specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
+                .Select(psa =>
+                {
+                    return new ProductSpecificationModel()
+                    {
+                        SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                        SpecificationAttributeOption = psa.SpecificationAttributeOption.GetLocalized(x => x.Name)
+                    };
+                })
+                .ToList();
+            
+            return PartialView(model);
         }
 
         public ActionResult RelatedProducts(int productId)

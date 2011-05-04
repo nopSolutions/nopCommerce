@@ -937,6 +937,9 @@
       <LocaleResource Name="RelatedProducts">
         <Value>Related products</Value>
       </LocaleResource>
+      <LocaleResource Name="Specs">
+        <Value>Products specifications</Value>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Reviews">
