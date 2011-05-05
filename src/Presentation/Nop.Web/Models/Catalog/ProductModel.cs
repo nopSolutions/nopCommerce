@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -43,8 +44,8 @@ namespace Nop.Web.Models.Catalog
         public IList<ProductVariantModel> ProductVariantModels { get; set; }
 
 		#region Nested Classes
-        
-        public class ProductPriceModel
+
+        public class ProductPriceModel : BaseNopModel
         {
             public string OldPrice { get; set; }
 
@@ -53,7 +54,7 @@ namespace Nop.Web.Models.Catalog
             public bool DisableBuyButton { get; set; }
         }
 
-        public class ProductBreadcrumbModel
+        public class ProductBreadcrumbModel : BaseNopModel
         {
             public ProductBreadcrumbModel()
             {
@@ -66,8 +67,7 @@ namespace Nop.Web.Models.Catalog
             public bool DisplayBreadcrumb { get; set; }
             public IList<CategoryModel> CategoryBreadcrumb { get; set; }
         }
-
-
+        
         public class ProductVariantModel : BaseNopEntityModel
         {
             public ProductVariantModel()
@@ -76,6 +76,7 @@ namespace Nop.Web.Models.Catalog
                 ProductVariantPrice = new ProductVariantPriceModel();
                 PictureModel = new PictureModel();
                 AddToCart = new AddToCartModel();
+                ProductVariantAttributes = new List<ProductVariantAttributeModel>();
             }
 
             public string Name { get; set; }
@@ -101,10 +102,12 @@ namespace Nop.Web.Models.Catalog
             public AddToCartModel AddToCart { get; set; }
 
             public PictureModel PictureModel { get; set; }
-            
+
+            public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
+
             #region Nested Classes
 
-            public class AddToCartModel
+            public class AddToCartModel : BaseNopModel
             {
                 public int ProductVariantId { get; set; }
 
@@ -121,7 +124,7 @@ namespace Nop.Web.Models.Catalog
                 public bool DisableWishlistButton { get; set; }
             }
 
-            public class ProductVariantPriceModel
+            public class ProductVariantPriceModel : BaseNopModel
             {
                 public string OldPrice { get; set; }
 
@@ -139,14 +142,19 @@ namespace Nop.Web.Models.Catalog
                 public bool IsGiftCard { get; set; }
 
                 [NopResourceDisplayName("Products.GiftCard.RecipientName")]
+                [AllowHtml]
                 public string RecipientName { get; set; }
                 [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
+                [AllowHtml]
                 public string RecipientEmail { get; set; }
                 [NopResourceDisplayName("Products.GiftCard.SenderName")]
+                [AllowHtml]
                 public string SenderName { get; set; }
                 [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
+                [AllowHtml]
                 public string SenderEmail { get; set; }
                 [NopResourceDisplayName("Products.GiftCard.Message")]
+                [AllowHtml]
                 public string Message { get; set; }
 
                 public GiftCardType GiftCardType { get; set; }
@@ -159,8 +167,41 @@ namespace Nop.Web.Models.Catalog
                 public int Quantity { get; set; }
             }
 
+            public class ProductVariantAttributeModel : BaseNopEntityModel
+            {
+                public ProductVariantAttributeModel()
+                {
+                    Values = new List<ProductVariantAttributeValueModel>();
+                }
+
+                public int ProductVariantId { get; set; }
+
+                public int ProductAttributeId { get; set; }
+
+                public string Name { get; set; }
+
+                public string Description { get; set; }
+
+                public string TextPrompt { get; set; }
+
+                public bool IsRequired { get; set; }
+
+                public AttributeControlType AttributeControlType { get; set; }
+
+                public IList<ProductVariantAttributeValueModel> Values { get; set; }
+            }
+
+            public class ProductVariantAttributeValueModel : BaseNopEntityModel
+            {
+                public string Name { get; set; }
+
+                public string PriceAdjustment { get; set; }
+
+                public bool IsPreSelected { get; set; }
+            }
             #endregion
         }
+
 		#endregion
     }
 }

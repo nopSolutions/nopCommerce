@@ -27,9 +27,11 @@
     @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
     <div class="clear">
     </div>
-    <div class="attributes">
-        @*UNDONE ProductAttributes*@
-    </div>
+    @{
+        var dataDictAttributes = new ViewDataDictionary();
+        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+        @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
+    }
     <div class="clear">
     </div>
     @Html.Partial("_ProductVariant_SKU_Man_Stock", Model)

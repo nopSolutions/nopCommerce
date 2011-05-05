@@ -78,7 +78,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult Wishlist()
         {
-            return Content("Shopping cart");
+            return Content("Wishlist");
         }
 		#endregion
     }

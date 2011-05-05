@@ -1013,6 +1013,7 @@
     <Content Include="Views\Catalog\_ProductVariantAddToCart.cshtml" />
     <Content Include="Views\Catalog\_DownloadSample.cshtml" />
     <Content Include="Views\Catalog\_ProductVariant_SKU_Man_Stock.cshtml" />
+    <Content Include="Views\Catalog\_ProductAttributes.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -1031,7 +1032,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>7528</DevelopmentServerPort>
+          <DevelopmentServerPort>11695</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2451/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

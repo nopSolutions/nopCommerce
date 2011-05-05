@@ -107,6 +107,8 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(ProductAttributeModel model, bool continueEditing)
         {
+            //decode description
+            model.Description = HttpUtility.HtmlDecode(model.Description);
             if (ModelState.IsValid)
             {
                 var productAttribute = model.ToEntity();
@@ -143,6 +145,9 @@ namespace Nop.Admin.Controllers
             var productAttribute = _productAttributeService.GetProductAttributeById(model.Id);
             if (productAttribute == null)
                 throw new ArgumentException("No product attribute found with the specified id");
+            
+            //decode description
+            model.Description = HttpUtility.HtmlDecode(model.Description);
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);
