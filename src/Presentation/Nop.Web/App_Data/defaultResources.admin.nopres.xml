@@ -3202,6 +3202,9 @@
                           <LocaleResource Name="Requeue">
                               <Value>Requeue</Value>
                           </LocaleResource>
+                          <LocaleResource Name="DeleteSelected">
+                            <Value>Delete selected</Value>
+                          </LocaleResource>                          
                           <LocaleResource Name="Fields">
                                 <Children>
                                     <LocaleResource Name="Id">
@@ -3213,6 +3216,12 @@
                                             <LocaleResource Name="Hint">
                                                 <Value>The priority of the message.</Value>
                                             </LocaleResource>
+                                          <LocaleResource Name="Required">
+                                            <Value>Enter priority.</Value>
+                                          </LocaleResource>
+                                          <LocaleResource Name="Range">
+                                            <Value>The priority must be from 0 to 999999.</Value>
+                                          </LocaleResource>
                                         </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="From">
@@ -3299,6 +3308,12 @@
                                             <LocaleResource Name="Hint">
                                                 <Value>The number of times to attempt to send this message.</Value>
                                             </LocaleResource>
+                                          <LocaleResource Name="Required">
+                                            <Value>Enter send tries.</Value>
+                                          </LocaleResource>
+                                          <LocaleResource Name="Range">
+                                            <Value>The value must be from 0 to 999999.</Value>
+                                          </LocaleResource>
                                         </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="SentOnUtc">

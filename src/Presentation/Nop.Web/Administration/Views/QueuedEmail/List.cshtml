@@ -10,6 +10,9 @@
             <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" />
             @T("Admin.System.QueuedEmails")
         </div>
+        <div class="options">
+            <button type="submit" name="delete-selected" value="delete_selected" class="t-button">@T("Admin.System.QueuedEmails.DeleteSelected")</button>
+        </div>
     </div>
     <table width="100%">
         <tr>
@@ -82,9 +85,16 @@
             <td>
                 @(Html.Telerik().Grid<Nop.Admin.Models.QueuedEmailModel>()
                         .Name("queuedEmails-grid")
-                        .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound"))
                         .Columns(columns =>
                         {
+                            columns.Bound(x => x.Id)
+                            .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
+                            .Title("<input id='mastercheckbox' type='checkbox'/>")
+                            .Width(50)
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .HeaderHtmlAttributes(new { style = "text-align:center" });
+
                             columns.Bound(x => x.Id);
                             columns.Bound(x => x.Priority);
                             columns.Bound(x => x.From);
@@ -97,26 +107,54 @@
                                 .Width(50)
                                 .Centered()
                                 .HeaderTemplate("Edit")
-                                .Filterable(false);                           
+                                .Filterable(false);
                         })
                         .Pageable(settings => settings.PageSize(10))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("QueuedEmailList", "QueuedEmail", Model))            
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("QueuedEmailList", "QueuedEmail", Model))
                         .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
     
     <script type="text/javascript">
+        var selectedIds = [];
+
         $(document).ready(function () {
+
             $('#btnSearch').click(function () {
                 var grid = $('#queuedEmails-grid').data('tGrid');
                 grid.ajaxRequest();
                 return false;
             });
+
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').attr('checked', $(this).is(':checked') ? 'checked' : '').change();
+            });
+
+            //wire up checkboxes. 
+            $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
+                var $check = $(this);
+                if ($check.attr("checked") == true) {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked == -1) {
+                        //add id to selectedIds.  
+                        selectedIds.push($check.val());
+                    }
+                }
+                else {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked > -1) {
+                        //remove id from selectedIds.  
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
+                    }
+                }
+                updateMasterCheckbox();
+            });
         });
 
     function onDataBinding(e) {
-        
         var searchModel = {
                 SearchStartDate: $('#@Html.FieldIdFor(model => model.SearchStartDate)').val(),
                 SearchEndDate: $('#@Html.FieldIdFor(model => model.SearchEndDate)').val(),
@@ -126,6 +164,31 @@
                 SearchMaxSentTries: $('#@Html.FieldIdFor(model => model.SearchMaxSentTries)').val()
                 };
         e.data = searchModel;
+    }
+
+    function onDataBound(e) {
+
+        $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+            var currentId = $(this).val();
+            var checked = jQuery.inArray(currentId, selectedIds);
+            //set checked based on if current checkbox's value is in selectedIds.  
+            $(this).attr('checked', checked > -1);
+        });
+
+        updateMasterCheckbox();
+    }
+
+    function updateMasterCheckbox()
+    {
+        var numChkBoxes = $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]').length;
+        var numChkBoxesChecked = $('#queuedEmails-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+        if (numChkBoxes == numChkBoxesChecked && numChkBoxes > 0) {
+            $('#mastercheckbox').attr('checked', 'checked');
+        }
+        else {
+            $('#mastercheckbox').attr('checked', '');
+        }
+
     }
    </script>
     

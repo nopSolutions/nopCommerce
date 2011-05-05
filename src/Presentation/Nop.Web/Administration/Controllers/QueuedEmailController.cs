@@ -9,6 +9,7 @@ using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 
 using Telerik.Web.Mvc;
+using System.Collections.Generic;
 
 namespace Nop.Admin.Controllers
 {
@@ -144,5 +145,22 @@ namespace Nop.Admin.Controllers
 			_queuedEmailService.DeleteQueuedEmail(email);
 			return RedirectToAction("List");
 		}
+
+        //TODO: currently, only recored within current page are passed, 
+        //  need to somehow pass all of the records
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("delete-selected")]
+        public ActionResult DeleteSelected(QueuedEmailListModel model, ICollection<int> checkedRecords)
+        {
+            if (checkedRecords != null)
+            {
+                foreach (var queuedEmailId in checkedRecords)
+                {
+                    var queuedEmail = _queuedEmailService.GetQueuedEmailById(queuedEmailId);
+                    _queuedEmailService.DeleteQueuedEmail(queuedEmail);
+                }
+            }
+            return View(model);
+        }
 	}
 }

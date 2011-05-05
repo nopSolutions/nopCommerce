@@ -17,7 +17,6 @@ namespace Nop.Admin.Models
         public override int Id { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Priority")]
-        [Range(0, 999999, ErrorMessage="RangeModel!!!")]        
         public int Priority { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.From")]
