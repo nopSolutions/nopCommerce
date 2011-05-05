@@ -849,6 +849,7 @@ namespace Nop.Services.Installation
                     ProductVariantPictureSize = 125,
                     CategoryThumbPictureSize = 125,
                     ManufacturerThumbPictureSize = 125,
+                    CartThumbPictureSize = 80,
                     MaximumImageSize = 1280,
                     DefaultPictureZoomEnabled = false,
                 });
@@ -913,7 +914,9 @@ namespace Nop.Services.Installation
                 .SaveSettings(new ShoppingCartSettings()
                 {
                     MaximumShoppingCartItems = 1000,
-                    MaximumWishlistItems = 1000
+                    MaximumWishlistItems = 1000,
+                    ShowProductImagesOnShoppingCart = true,
+                    ShowProductImagesOnWishList = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<OrderSettings>>()

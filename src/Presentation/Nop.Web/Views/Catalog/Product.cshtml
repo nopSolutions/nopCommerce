@@ -145,23 +145,25 @@
             }
             @if (!hasMultipleVariants && defaultProductVariant != null)
             {
-                <!--product tier prices-->
-                @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = defaultProductVariant.Id })
-                <div class="clear">
-                </div>
-                 if (!hasMultipleVariants && defaultProductVariant != null)
-                 {
-                     var dataDictAttributes = new ViewDataDictionary();
-                     dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", defaultProductVariant.Id);
-                        @Html.Partial("_ProductAttributes", defaultProductVariant.ProductVariantAttributes, dataDictAttributes)                  
-                 }
-                <div class="clear">
-                </div>
-                 {
-                     var dataDictGiftCard = new ViewDataDictionary();
-                     dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
-                        @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
-                 }
+                <div class="product-variant-line">
+                    <!--product tier prices-->
+                    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = defaultProductVariant.Id })
+                    <div class="clear">
+                    </div>
+                     @if (!hasMultipleVariants && defaultProductVariant != null)
+                     {
+                         var dataDictAttributes = new ViewDataDictionary();
+                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", defaultProductVariant.Id);
+                            @Html.Partial("_ProductAttributes", defaultProductVariant.ProductVariantAttributes, dataDictAttributes)                  
+                     }
+                    <div class="clear">
+                    </div>
+                     @{
+                         var dataDictGiftCard = new ViewDataDictionary();
+                         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                            @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
+                     }
+                 </div>
             }
             <div>
                 @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })

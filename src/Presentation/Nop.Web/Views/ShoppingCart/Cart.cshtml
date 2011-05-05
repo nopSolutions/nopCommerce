@@ -1,0 +1,140 @@
+﻿@model Nop.Web.Models.ShoppingCart.ShoppingCartModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+@*TODO OrderProgress*@
+<div class="shoppingcart-page">
+    <div class="page-title">
+        <h1>@T("ShoppingCart")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div class="order-summary-content">
+            @if (Model.Items.Count > 0)
+            {
+
+                /*TODO warnings*/
+                <table class="cart">
+                    @if (Model.IsEditable)
+                    {
+                        <col width="1" />
+                    }
+                    @if (Model.ShowSku)
+                    {
+                        <col width="1" />
+                    }
+                    @if (Model.ShowProductImages)
+                    {
+                        <col width="1" />
+                    }
+                    <col />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                    <thead>
+                        <tr class="cart-header-row">
+                            @if (Model.IsEditable)
+                            {
+                                <th>
+                                    @T("ShoppingCart.Remove")
+                                </th>
+                            }
+                            @if (Model.ShowSku)
+                            {
+                                <th>
+                                    @T("ShoppingCart.SKU")
+                                </th>
+                            }
+                            @if (Model.ShowProductImages)
+                            {
+                                <th class="picture">
+                                </th>
+                            }
+                            <th>
+                                @T("ShoppingCart.Product(s)")
+                            </th>
+                            <th>
+                                @T("ShoppingCart.UnitPrice")
+                            </th>
+                            <th>
+                                @T("ShoppingCart.Quantity")
+                            </th>
+                            <th class="end">
+                                @T("ShoppingCart.ItemTotal")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="cart-item-row">
+                                @if (Model.IsEditable)
+                                {
+                                    <td>
+                                        <input id="removefromcart@(item.Id)" type="checkbox" name="removefromcart@(item.Id)" />
+                                    </td>
+                                }
+                                @if (Model.ShowSku)
+                                {
+                                    <td style="white-space: nowrap;">
+                                        @item.Sku
+                                    </td>
+                                }
+                                @if (Model.ShowProductImages)
+                                {
+                                    <td class="productpicture">
+                                        <img style="border-width: 0px;" alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
+                                    </td>
+                                }
+                                <td class="product">
+                                    <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <br />
+                                        @Html.Raw(item.AttributeInfo)
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                                    {
+                                        <br />
+                                        @Html.Raw(item.RecurringInfo)
+                                    }
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    <span class="productPrice">@item.UnitPrice</span>
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    @if (Model.IsEditable)
+                                    {
+                                        <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="shoppingcartquantitytext" size="4" />
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Quantity</span>
+                                    }
+                                </td>
+                                <td style="white-space: nowrap;" class="end">
+                                    <span class="productPrice">@item.SubTotal</span>
+                                    @if (!String.IsNullOrEmpty(item.Discount))
+                                    {
+                                        <br />
+                                        @T("ShoppingCart.ItemYouSave")<text>:</text>
+                                        <text>&nbsp; &nbsp;</text>@item.Discount
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="clear">
+                </div>            
+                /*TODO footer*/
+
+            }
+            else
+            {
+                @T("ShoppingCart.CartIsEmpty")
+            }
+        </div>
+    </div>
+</div>

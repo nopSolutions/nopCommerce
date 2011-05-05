@@ -830,6 +830,9 @@
       <LocaleResource Name="From">
         <Value>From: {0}</Value>
       </LocaleResource>
+      <LocaleResource Name="For">
+        <Value>For: {0}</Value>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Manufacturers">
@@ -1136,6 +1139,7 @@
     </Children>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
+    <Value>Shopping cart</Value>
     <Children>
       <LocaleResource Name="AddToCart">
         <Value>Add to cart</Value>
@@ -1146,8 +1150,14 @@
       <LocaleResource Name="CannotMixStandardAndAutoshipProducts">
         <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
       </LocaleResource>
+      <LocaleResource Name="CartIsEmpty">
+        <Value>Your Shopping Cart is empty!</Value>
+      </LocaleResource>
       <LocaleResource Name="CustomerEnteredPrice.RangeError">
         <Value>The price must be from {0} to {1}</Value>
+      </LocaleResource>
+      <LocaleResource Name="ItemTotal">
+        <Value>Total</Value>
       </LocaleResource>
       <LocaleResource Name="MaximumQuantity">
         <Value>The maximum quantity allowed for purchase is {0}.</Value>
@@ -1158,11 +1168,32 @@
       <LocaleResource Name="OutOfStock">
         <Value>Out of stock</Value>
       </LocaleResource>
+      <LocaleResource Name="Product(s)">
+        <Value>Product(s)</Value>
+      </LocaleResource>
+      <LocaleResource Name="Quantity">
+        <Value>Qty.</Value>
+      </LocaleResource>
       <LocaleResource Name="QuantityExceedsStock">
         <Value>Your quantity exceeds stock on hand. The maximum quantity that can be added is {0}.</Value>
       </LocaleResource>
+      <LocaleResource Name="RecurringPeriod">
+        <Value>[Auto-ship, Every {0} {1}]</Value>
+      </LocaleResource>
+      <LocaleResource Name="Remove">
+        <Value>Remove</Value>
+      </LocaleResource>
       <LocaleResource Name="SelectAttribute">
         <Value>Please select {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="SKU">
+        <Value>SKU</Value>
+      </LocaleResource>
+      <LocaleResource Name="UnitPrice">
+        <Value>Price</Value>
+      </LocaleResource>
+      <LocaleResource Name="ItemYouSave">
+        <Value>You save</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>
