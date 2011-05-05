@@ -97,32 +97,15 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         protected decimal GetTierPrice(ProductVariant productVariant, Customer customer, int quantity)
         {
-            var tierPrices = productVariant.TierPrices.OrderBy(tp => tp.Quantity).ToList();
+            var tierPrices = productVariant.TierPrices
+                .OrderBy(tp => tp.Quantity)
+                .ToList()
+                .FilterForCustomer(customer);
 
             int previousQty = 1;
             decimal previousPrice = productVariant.Price;
             foreach (var tierPrice in tierPrices)
             {
-                //check customer role requirement
-                if (tierPrice.CustomerRole != null)
-                {
-                    if (customer == null)
-                        continue;
-
-                    var customerRoles = customer.CustomerRoles.Where(cr => cr.Active).ToList();
-                    if (customerRoles.Count == 0)
-                        continue;
-
-                    bool roleIsFound = false;
-                    foreach (var customerRole in customerRoles)
-                        if (customerRole == tierPrice.CustomerRole)
-                            roleIsFound = true;
-
-                    if (!roleIsFound)
-                        continue;
-                }
-
-
                 //check quantity
                 if (quantity < tierPrice.Quantity)
                     continue;

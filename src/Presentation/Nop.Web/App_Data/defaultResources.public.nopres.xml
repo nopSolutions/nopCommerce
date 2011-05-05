@@ -900,8 +900,22 @@
   </LocaleResource>
   <LocaleResource Name="Products">
     <Children>
-      <LocaleResource Name="AddToCart">
-        <Value>Add to cart</Value>
+      <LocaleResource Name="Availability">
+        <Value>Availability</Value>
+        <Children>
+          <LocaleResource Name="Backordering">
+            <Value>Out of Stock - on backorder and will be despatched once in stock.</Value>
+          </LocaleResource>
+          <LocaleResource Name="InStock">
+            <Value>In stock</Value>
+          </LocaleResource>
+          <LocaleResource Name="InStockWithQuantity">
+            <Value>{0} in stock</Value>
+          </LocaleResource>
+          <LocaleResource Name="OutOfStock">
+            <Value>Out of stock</Value>
+          </LocaleResource>        
+        </Children>
       </LocaleResource>
       <LocaleResource Name="Breadcrumb">
         <Children>
@@ -916,11 +930,41 @@
       <LocaleResource Name="Details">
         <Value>Details</Value>
       </LocaleResource>
+      <LocaleResource Name="DownloadSample">
+        <Value>Download sample</Value>
+      </LocaleResource>
+      <LocaleResource Name="EnterProductPrice">
+        <Value>Please enter your price</Value>
+          <Children>
+            <LocaleResource Name="Range">
+              <Value>The price must be from {0} to {1}</Value>
+            </LocaleResource>
+          </Children>        
+      </LocaleResource>
       <LocaleResource Name="ExclTaxSuffix">
         <Value>{0} excl tax</Value>
       </LocaleResource>
       <LocaleResource Name="FeaturedProducts">
         <Value>Featured products</Value>
+      </LocaleResource>
+      <LocaleResource Name="GiftCard">
+        <Children>
+          <LocaleResource Name="Message">
+            <Value>Message</Value>
+          </LocaleResource>
+          <LocaleResource Name="RecipientEmail">
+            <Value>Recipient's Email</Value>
+          </LocaleResource>
+          <LocaleResource Name="RecipientName">
+            <Value>Recipient's Name</Value>
+          </LocaleResource>
+          <LocaleResource Name="SenderEmail">
+            <Value>Your Email</Value>
+          </LocaleResource>
+          <LocaleResource Name="SenderName">
+            <Value>Your Name</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="InclTaxSuffix">
         <Value>{0} incl tax</Value>
@@ -928,17 +972,48 @@
       <LocaleResource Name="Manufacturer">
         <Value>Manufacturer</Value>
       </LocaleResource>
+      <LocaleResource Name="ManufacturerPartNumber">
+        <Value>Manufacturer part number</Value>
+      </LocaleResource>
       <LocaleResource Name="Manufacturers">
         <Value>Manufacturers</Value>
-      </LocaleResource> 
-      <LocaleResource Name="PriceRangeFromText">
+      </LocaleResource>
+      <LocaleResource Name="Price">
+        <Value>Price</Value>
+        <Children>
+          <LocaleResource Name="OldPrice">
+            <Value>Old price</Value>
+          </LocaleResource>
+          <LocaleResource Name="WithDiscount">
+            <Value>Your price</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="PriceRangeFrom">
         <Value>From {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Qty">
+        <Value>Qty</Value>
       </LocaleResource>
       <LocaleResource Name="RelatedProducts">
         <Value>Related products</Value>
       </LocaleResource>
+      <LocaleResource Name="Sku">
+        <Value>SKU</Value>
+      </LocaleResource>
       <LocaleResource Name="Specs">
         <Value>Products specifications</Value>
+      </LocaleResource>
+      <LocaleResource Name="TierPrices">
+        <Value>PRICE BREAKS - The more you buy, the more you save</Value>
+        <Children>
+          <LocaleResource Name="Price">
+            <Value>Price</Value>
+          </LocaleResource>
+          <LocaleResource Name="Quantity">
+            <Value>Quantity</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
     </Children>
   </LocaleResource>
@@ -1062,6 +1137,12 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
     <Children>
+      <LocaleResource Name="AddToCart">
+        <Value>Add to cart</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddToWishlist">
+        <Value>Add to wishlist</Value>
+      </LocaleResource>
       <LocaleResource Name="CannotMixStandardAndAutoshipProducts">
         <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
       </LocaleResource>

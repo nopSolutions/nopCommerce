@@ -132,9 +132,9 @@
 }
 @helper TabFirstVariantInfo()
     {
-        var dataDict = new ViewDataDictionary();
-        dataDict.TemplateInfo.HtmlFieldPrefix = "FirstProductVariantModel"; /**/
-        @Html.Partial("_ProductVariantInfo", @Model.FirstProductVariantModel, dataDict)
+        var dataDictFpv = new ViewDataDictionary();
+        dataDictFpv.TemplateInfo.HtmlFieldPrefix = "FirstProductVariantModel";
+        @Html.Partial("_ProductVariantInfo", @Model.FirstProductVariantModel, dataDictFpv)
 }
 @helper TabSeo()
     {

@@ -48,6 +48,7 @@
     <Compile Include="Catalog\CategoryService.cs" />
     <Compile Include="Catalog\CategoryExtensions.cs" />
     <Compile Include="Catalog\CompareProductsService.cs" />
+    <Compile Include="Catalog\TierPriceExtensions.cs" />
     <Compile Include="Catalog\ProductExtensions.cs" />
     <Compile Include="Catalog\PriceFormatter.cs" />
     <Compile Include="Catalog\IPriceCalculationService.cs" />

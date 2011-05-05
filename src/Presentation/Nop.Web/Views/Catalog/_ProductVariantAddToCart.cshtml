@@ -1,0 +1,24 @@
+﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel.AddToCartModel
+<div class="add-info">
+    @if (Model.CustomerEntersPrice)
+    {
+        @Html.LabelFor(model => model.CustomerEnteredPrice)<text>:</text>
+        @Html.TextBoxFor(model => model.CustomerEnteredPrice, new { style = "Width: 60px;" })
+        <br />
+        @Model.CustomerEnteredPriceRange
+        <br />
+    }
+    @if (!Model.DisableBuyButton)
+    {
+        @Html.LabelFor(model => model.EnteredQuantity)<text>:</text> 
+        @Html.TextBoxFor(model => model.EnteredQuantity, new { style = "Width: 40px;" })
+    }
+    @if (!Model.DisableBuyButton)
+    {
+        <input type="submit" name="addtocart-@(Model.ProductVariantId)" class="productvariantaddtocartbutton" value="@T("ShoppingCart.AddToCart")" />
+    }
+    @if (!Model.DisableWishlistButton)
+    {
+        <input type="submit" name="addtowishlist-@(Model.ProductVariantId)" class="productvariantaddtowishlistbutton" value="@T("ShoppingCart.AddToWishlist")" />
+    }
+</div>

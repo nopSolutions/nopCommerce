@@ -805,6 +805,8 @@ namespace Nop.Services.Installation
                 .SaveSettings(new CatalogSettings()
                 {
                     HidePricesForNonRegistered = false,
+                    ShowProductSku = false,
+                    ShowManufacturerPartNumber = false,
                     AllowProductSorting = true,
                     AllowProductViewModeChanging = true,
                     ShowCategoryProductNumber = false,
@@ -815,6 +817,7 @@ namespace Nop.Services.Installation
                     AllowAnonymousUsersToReviewProduct = false,
                     NotifyStoreOwnerAboutNewProductReviews = false,
                     AllowAnonymousUsersToEmailAFriend = false,
+                    WishlistEnabled = true
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
@@ -910,8 +913,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new ShoppingCartSettings()
                 {
                     MaximumShoppingCartItems = 1000,
-                    MaximumWishlistItems = 1000,
-                    WishlistEnabled = true
+                    MaximumWishlistItems = 1000
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<OrderSettings>>()
@@ -1456,6 +1458,7 @@ namespace Nop.Services.Installation
                     UserAgreementText = string.Empty,
                     IsShipEnabled = true,
                     ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                    StockQuantity = 10000,
                     LowStockActivity = LowStockActivity.Unpublish,
                     BackorderMode = BackorderMode.NoBackorders,
                     OrderMinimumQuantity = 1,

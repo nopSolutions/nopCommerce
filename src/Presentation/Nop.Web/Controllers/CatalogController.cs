@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
+using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -41,6 +42,7 @@ namespace Nop.Web.Controllers
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ICustomerContentService _customerContentService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IAuthenticationService _authenticationService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -59,6 +61,7 @@ namespace Nop.Web.Controllers
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
+            IAuthenticationService authenticationService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             CustomerSettings customerSettings)
         {
@@ -76,6 +79,7 @@ namespace Nop.Web.Controllers
             this._specificationAttributeService = specificationAttributeService;
             this._customerContentService = customerContentService;
             this._dateTimeHelper = dateTimeHelper;
+            this._authenticationService = authenticationService;
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
@@ -127,56 +131,21 @@ namespace Nop.Web.Controllers
 
             var model = new ProductModel.ProductPriceModel();
             var productVariants = _productService.GetProductVariantsByProductId(product.Id);
-            if (productVariants.Count > 0)
+
+            switch (productVariants.Count)
             {
-                if (productVariants.Count == 1)
-                {
-                    var productVariant = productVariants[0];
-
-                    if (!_catalogSettings.HidePricesForNonRegistered ||
-                        (_workContext.CurrentCustomer != null &&
-                        !_workContext.CurrentCustomer.IsGuest()))
+                case 0:
                     {
-                        if (!productVariant.CustomerEntersPrice)
-                        {
-                            if (productVariant.CallForPrice)
-                            {
-                                model.OldPrice = null;
-                                model.Price = _localizationService.GetResource("Products.CallForPrice");
-                            }
-                            else
-                            {
-                                decimal taxRate = decimal.Zero;
-                                decimal oldPriceBase = _taxService.GetProductPrice(productVariant, productVariant.OldPrice, out taxRate);
-                                decimal finalPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, true), out taxRate);
-
-                                decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
-                                decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
-
-                                if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
-                                {
-                                    model.OldPrice = _priceFormatter.FormatPrice(oldPrice);
-                                    model.Price = _priceFormatter.FormatPrice(finalPrice);
-                                }
-                                else
-                                {
-                                    model.OldPrice = null;
-                                    model.Price = _priceFormatter.FormatPrice(finalPrice);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
+                        //no variants
                         model.OldPrice = null;
                         model.Price = null;
                     }
-                }
-                else
-                {
-                    var productVariant = GetMinimalPriceProductVariant(productVariants);
-                    if (productVariant != null)
+                    break;
+                case 1:
                     {
+                        //only one variant
+                        var productVariant = productVariants[0];
+
                         if (!_catalogSettings.HidePricesForNonRegistered ||
                             (_workContext.CurrentCustomer != null &&
                             !_workContext.CurrentCustomer.IsGuest()))
@@ -191,11 +160,22 @@ namespace Nop.Web.Controllers
                                 else
                                 {
                                     decimal taxRate = decimal.Zero;
-                                    decimal fromPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, false), out taxRate);
-                                    decimal fromPrice = _currencyService.ConvertFromPrimaryStoreCurrency(fromPriceBase, _workContext.WorkingCurrency);
+                                    decimal oldPriceBase = _taxService.GetProductPrice(productVariant, productVariant.OldPrice, out taxRate);
+                                    decimal finalPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, true), out taxRate);
 
-                                    model.OldPrice = null;
-                                    model.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFromText"), _priceFormatter.FormatPrice(fromPrice));
+                                    decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                                    decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+
+                                    if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                    {
+                                        model.OldPrice = _priceFormatter.FormatPrice(oldPrice);
+                                        model.Price = _priceFormatter.FormatPrice(finalPrice);
+                                    }
+                                    else
+                                    {
+                                        model.OldPrice = null;
+                                        model.Price = _priceFormatter.FormatPrice(finalPrice);
+                                    }
                                 }
                             }
                         }
@@ -205,12 +185,78 @@ namespace Nop.Web.Controllers
                             model.Price = null;
                         }
                     }
-                }
+                    break;
+                default:
+                    {
+                        //multiple variants
+                        var productVariant = GetMinimalPriceProductVariant(productVariants);
+                        if (productVariant != null)
+                        {
+                            if (!_catalogSettings.HidePricesForNonRegistered ||
+                                (_workContext.CurrentCustomer != null &&
+                                !_workContext.CurrentCustomer.IsGuest()))
+                            {
+                                if (!productVariant.CustomerEntersPrice)
+                                {
+                                    if (productVariant.CallForPrice)
+                                    {
+                                        model.OldPrice = null;
+                                        model.Price = _localizationService.GetResource("Products.CallForPrice");
+                                    }
+                                    else
+                                    {
+                                        decimal taxRate = decimal.Zero;
+                                        decimal fromPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, false), out taxRate);
+                                        decimal fromPrice = _currencyService.ConvertFromPrimaryStoreCurrency(fromPriceBase, _workContext.WorkingCurrency);
+
+                                        model.OldPrice = null;
+                                        model.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(fromPrice));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                model.OldPrice = null;
+                                model.Price = null;
+                            }
+                        }
+                    }
+                    break;
             }
-            else
+
+            //'add to cart' button
+            switch (productVariants.Count)
             {
-                model.OldPrice = null;
-                model.Price = null;
+                case 0:
+                    {
+                        // no variants
+                        model.DisableBuyButton = true;
+                    }
+                    break;
+                case 1:
+                    {
+
+                        //only one variant
+                        var productVariant = productVariants[0];
+                        model.DisableBuyButton = productVariant.DisableBuyButton;
+                        if (!_catalogSettings.HidePricesForNonRegistered ||
+                            (_workContext.CurrentCustomer != null &&
+                            !_workContext.CurrentCustomer.IsGuest()))
+                        {
+                            //invert condition
+                        }
+                        else
+                        {
+                            model.DisableBuyButton = true;
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        //multiple variants
+                        model.DisableBuyButton = true;
+                    }
+                    break;
             }
             
             return model;
@@ -299,6 +345,150 @@ namespace Nop.Web.Controllers
             return model;
         }
 
+        [NonAction]
+        private ProductModel.ProductVariantModel PrepareProductVariantModel(ProductModel.ProductVariantModel model, ProductVariant productVariant)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            #region Properties
+
+            model.Id = productVariant.Id;
+            model.Name = productVariant.GetLocalized(x => x.Name);
+            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.Sku = productVariant.Sku;
+            model.Description = productVariant.GetLocalized(x => x.Description);
+            model.ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber;
+            model.ManufacturerPartNumber = productVariant.ManufacturerPartNumber;
+            model.StockAvailablity = productVariant.FormatStockMessage(_localizationService);
+            model.PictureModel.ImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, _mediaSetting.ProductVariantPictureSize, false);
+            model.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
+            model.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
+            if (productVariant.IsDownload && productVariant.HasSampleDownload)
+            {
+                model.DownloadSampleUrl = Url.Action("Sample", "Download", new { productVariantId = productVariant.Id });
+            }
+            #endregion
+
+            #region Product variant price
+            
+            if (!_catalogSettings.HidePricesForNonRegistered ||
+                        (_workContext.CurrentCustomer != null &&
+                        !_workContext.CurrentCustomer.IsGuest()))
+            {
+                if (productVariant.CustomerEntersPrice)
+                {
+                    model.ProductVariantPrice.CustomerEntersPrice = true;
+                }
+                else
+                {
+                    if (productVariant.CallForPrice)
+                    {
+                        model.ProductVariantPrice.CallForPrice = true;
+                    }
+                    else
+                    {
+                        decimal taxRate = decimal.Zero;
+                        decimal oldPriceBase = _taxService.GetProductPrice(productVariant, productVariant.OldPrice, out taxRate);
+                        decimal finalPriceWithoutDiscountBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, false), out taxRate);
+                        decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, true), out taxRate);
+
+                        decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                        decimal finalPriceWithoutDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
+                        decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+
+                        if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
+                            model.ProductVariantPrice.OldPrice = _priceFormatter.FormatPrice(oldPrice);
+
+                        model.ProductVariantPrice.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
+
+                        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
+                            model.ProductVariantPrice.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                    }
+                }
+            }
+            else
+            {
+                model.ProductVariantPrice.OldPrice = null;
+                model.ProductVariantPrice.Price = null;
+            }
+            #endregion
+
+            #region 'Add to cart' model
+
+            model.AddToCart.ProductVariantId = productVariant.Id;
+
+            //quantity
+            model.AddToCart.EnteredQuantity = productVariant.OrderMinimumQuantity;
+
+            //'add to cart', 'add to wishlist' buttons
+            if (productVariant.DisableBuyButton)
+            {
+                model.AddToCart.DisableBuyButton = true;
+                model.AddToCart.DisableWishlistButton = true;
+            }
+            if (!_catalogSettings.WishlistEnabled)
+            {
+                model.AddToCart.DisableWishlistButton = true;
+            }
+            if (!_catalogSettings.HidePricesForNonRegistered ||
+                        (_workContext.CurrentCustomer != null &&
+                        !_workContext.CurrentCustomer.IsGuest()))
+            {
+                //invert condition
+            }
+            else
+            {
+                model.AddToCart.DisableBuyButton = true;
+                model.AddToCart.DisableWishlistButton = true;
+            }
+
+            model.AddToCart.CustomerEntersPrice = productVariant.CustomerEntersPrice;
+            if (model.AddToCart.CustomerEntersPrice)
+            {
+                decimal minimumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(productVariant.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
+                decimal maximumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(productVariant.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
+
+                model.AddToCart.CustomerEnteredPrice = minimumCustomerEnteredPrice;
+                model.AddToCart.CustomerEnteredPriceRange = string.Format(_localizationService.GetResource("Products.EnterProductPrice.Range"),
+                    _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
+                    _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
+            }
+
+            #endregion 
+            
+            #region Gift card
+
+            model.GiftCard.IsGiftCard = productVariant.IsGiftCard;
+            if (model.GiftCard.IsGiftCard)
+            {
+                model.GiftCard.GiftCardType = productVariant.GiftCardType;
+                var customer = _workContext.CurrentCustomer;
+                if (customer != null)
+                {
+                    var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+                    var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+                    model.GiftCard.SenderName = firstName + lastName;
+                }
+                var user = _authenticationService.GetAuthenticatedUser();
+                if (user != null)
+                    model.GiftCard.SenderEmail = user.Email;
+            }
+
+            #endregion
+
+            #region Product attributes
+
+            //TODO Product attributes
+
+            #endregion 
+
+            return model;
+        }
+        
         #endregion
 
         #region Categories
@@ -469,6 +659,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [ChildActionOnly]
         public ActionResult CategoryNavigation(int currentCategoryId)
         {
             var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
@@ -623,6 +814,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [ChildActionOnly]
         public ActionResult ManufacturerNavigation(int currentManufacturerId)
         {
             var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
@@ -655,12 +847,6 @@ namespace Nop.Web.Controllers
 
             var model = product.ToModel();
             
-
-
-            //price
-            model.ProductPrice = PrepareProductPriceModel(product);
-
-
 
             //pictures
             model.DefaultPictureZoomEnabled = _mediaSetting.DefaultPictureZoomEnabled;
@@ -699,9 +885,23 @@ namespace Nop.Web.Controllers
                     AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
                 };
             }
+
+
+            //product variants
+            foreach (var variant in _productService.GetProductVariantsByProductId(product.Id))
+                model.ProductVariantModels.Add(PrepareProductVariantModel(new ProductModel.ProductVariantModel(), variant));
+
+
             return View(model);
         }
 
+        [HttpPost, ActionName("Product")]
+        public ActionResult AddToCartProduct(int productId, FormCollection form)
+        {
+            return Product(productId);
+        }
+
+        [ChildActionOnly]
         public ActionResult ProductBreadcrumb(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -738,6 +938,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        [ChildActionOnly]
         public ActionResult ProductManufacturers(int productId)
         {
             var model = _manufacturerService.GetProductManufacturersByProductId(productId)
@@ -754,6 +955,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        [ChildActionOnly]
         public ActionResult ProductReviewOverview(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -852,6 +1054,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [ChildActionOnly]
         public ActionResult ProductSpecifications(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -872,6 +1075,34 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        [ChildActionOnly]
+        public ActionResult ProductTierPrices(int productVariantId)
+        {
+            var variant = _productService.GetProductVariantById(productVariantId);
+            if (variant == null)
+                throw new ArgumentException("No product variant found with the specified id");
+
+            var model = _productService.GetTierPricesByProductVariantId(productVariantId)
+                .FilterForCustomer(_workContext.CurrentCustomer)
+                .Select(tierPrice =>
+                {
+                    var m  = new ProductModel.ProductVariantModel.TierPriceModel()
+                    {
+                        Quantity = tierPrice.Quantity,
+                    };
+                    decimal taxRate = decimal.Zero;
+                    decimal priceBase = _taxService.GetProductPrice(variant, tierPrice.Price, out taxRate);
+                    decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
+                    m.Price = _priceFormatter.FormatPrice(price, false, false);
+
+                    return m;
+                })
+                .ToList();
+
+            return PartialView(model);
+        }
+
+        [ChildActionOnly]
         public ActionResult RelatedProducts(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -901,6 +1132,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        [ChildActionOnly]
         public ActionResult ShareButton()
         {
             var shareCode = _catalogSettings.PageShareCode;

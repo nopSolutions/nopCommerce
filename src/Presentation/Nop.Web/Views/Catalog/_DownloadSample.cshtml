@@ -1,0 +1,9 @@
+﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel
+@if (!String.IsNullOrWhiteSpace(Model.DownloadSampleUrl))
+{
+    <div class="downloadsample">
+        <span class="downloadsamplebutton">
+            <a href="@Model.DownloadSampleUrl">@T("Products.DownloadSample")</a>
+        </span>
+    </div>
+}

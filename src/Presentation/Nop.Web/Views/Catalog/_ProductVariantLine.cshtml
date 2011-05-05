@@ -1,0 +1,58 @@
+﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel
+<div class="product-variant-line">
+    @if (!String.IsNullOrWhiteSpace(Model.PictureModel.ImageUrl))
+    {
+        <div class="picture">
+            <img style="border-width: 0px;" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl"
+                                    title="@Model.PictureModel.Title" />
+        </div>
+    }
+    @if (!String.IsNullOrWhiteSpace(Model.Name))
+    {
+        <div class="overview">
+            <div class="productname">
+                @Model.Name
+            </div>
+        </div>
+    }
+    @if (!String.IsNullOrWhiteSpace(Model.Description))
+    {
+        <div class="description">
+            @Html.Raw(Model.Description)
+        </div>
+    }
+    @Html.Partial("_DownloadSample", Model)
+    <div class="clear">
+    </div>
+    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
+    <div class="clear">
+    </div>
+    <div class="attributes">
+        @*UNDONE ProductAttributes*@
+    </div>
+    <div class="clear">
+    </div>
+    @Html.Partial("_ProductVariant_SKU_Man_Stock", Model)
+    <div class="clear">
+    </div>
+    @{
+        var dataDictGiftCard = new ViewDataDictionary();
+        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+        @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
+    }
+    <div class="clear">
+    </div>
+    @{
+        var dataDictPrice = new ViewDataDictionary();
+        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+        @Html.Partial("_ProductVariantPrice", Model.ProductVariantPrice, dataDictPrice)
+    }
+    @{
+        var dataDictAddToCart = new ViewDataDictionary();
+        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+        @Html.Partial("_ProductVariantAddToCart", Model.AddToCart, dataDictPrice)
+    }
+    <div class="clear">
+    </div>
+    <span class="error">@*UNDONE ValidationSumary, errors*@ </span>
+</div>

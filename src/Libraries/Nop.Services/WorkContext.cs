@@ -73,7 +73,13 @@ namespace Nop.Services
                     {
                         var customerGuid = Guid.Empty;
                         if (Guid.TryParse(customerCookie.Value, out customerGuid))
-                            customer = _customerService.GetCustomerByGuid(customerGuid);
+                        {
+                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
+                            //this customer (from cookie) should not be registered
+                            //otherwise we'll have registered 'CurrentCustomer', but 'CurrentUser' is null
+                            if (customerByCookie != null && !customerByCookie.IsRegistered())
+                                customer = customerByCookie;
+                        }
                     }
                 }
 
@@ -87,7 +93,10 @@ namespace Nop.Services
                 SetCustomerCookie(customer.CustomerGuid);
             }
 
-            _cachedCustomer = customer;
+            //validation
+            if (customer != null && !customer.Deleted && customer.Active)
+                _cachedCustomer = customer;
+
             return _cachedCustomer;
         }
 

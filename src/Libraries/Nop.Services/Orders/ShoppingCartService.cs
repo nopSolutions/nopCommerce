@@ -25,6 +25,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<ShoppingCartItem> _sciRepository;
         private readonly IWorkContext _workContext;
         private readonly ICurrencyService _currencyService;
+        private readonly IProductService _productService;
         private readonly ILocalizationService _localizationService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
@@ -32,6 +33,7 @@ namespace Nop.Services.Orders
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerService _customerService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly CatalogSettings _catalogSettings;
         #endregion
 
         #region Ctor
@@ -49,20 +51,22 @@ namespace Nop.Services.Orders
         /// <param name="priceFormatter">Price formatter</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
-            IWorkContext workContext,
-            ICurrencyService currencyService,
-            ILocalizationService localizationService,
+            IWorkContext workContext, ICurrencyService currencyService,
+            IProductService productService, ILocalizationService localizationService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICheckoutAttributeParser checkoutAttributeParser,
             IPriceFormatter priceFormatter,
             ICustomerService customerService,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            CatalogSettings catalogSettings)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
             this._currencyService = currencyService;
+            this._productService = productService;
             this._localizationService = localizationService;
             this._productAttributeParser = productAttributeParser;
             this._checkoutAttributeService = checkoutAttributeService;
@@ -70,6 +74,7 @@ namespace Nop.Services.Orders
             this._priceFormatter = priceFormatter;
             this._customerService = customerService;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -575,7 +580,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("productVariant");
 
             var warnings = new List<string>();
-            if (shoppingCartType == ShoppingCartType.Wishlist && !_shoppingCartSettings.WishlistEnabled)
+            if (shoppingCartType == ShoppingCartType.Wishlist && !_catalogSettings.WishlistEnabled)
                 return warnings;
 
 
@@ -698,6 +703,35 @@ namespace Nop.Services.Orders
             }
 
             return warnings;
+        }
+
+        /// <summary>
+        /// Direct add to cart allowed
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="productVariantId">Default product variant identifier for adding to cart</param>
+        /// <returns>A value indicating whether direct add to cart is allowed</returns>
+        public bool DirectAddToCartAllowed(int productId, out int productVariantId)
+        {
+            bool result = false;
+            productVariantId = 0;
+            var productVariants = _productService.GetProductVariantsByProductId(productId);
+            if (productVariants.Count == 1)
+            {
+                var defaultProductVariant = productVariants[0];
+                if (!defaultProductVariant.CustomerEntersPrice)
+                {
+                    var addToCartWarnings = GetShoppingCartItemWarnings(ShoppingCartType.ShoppingCart,
+                        defaultProductVariant, string.Empty, decimal.Zero, 1);
+
+                    if (addToCartWarnings.Count == 0)
+                    {
+                        productVariantId = defaultProductVariant.Id;
+                        result = true;
+                    }
+                }
+            }
+            return result;
         }
 
         #endregion

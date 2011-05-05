@@ -1,94 +1,143 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
-                   
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
-}
 
+    //render page depending on how many variants we have
+    var hasMultipleVariants = Model.ProductVariantModels.Count > 1;
+    var defaultProductVariant = Model.ProductVariantModels.Count == 1 ? Model.ProductVariantModels[0] : null;
+}
 @Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })
 <div class="clear">
 </div>
 <div class="product-details-page">
-    <div class="product-essential">
-        <div class="product-details-info">
-            <div class="picture">
-        @if (Model.DefaultPictureZoomEnabled)
-        {
-            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" rel="lightbox-pd" title="@Model.Name">
-                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" style="border-width: 0px;" />
-            </a>
-        }
-        else
-        {
-            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" style="border-width: 0px;" />
-        }        
-    </div>
-            <div class="overview">
-                <h1 class="productname">
-            @Model.Name
-        </h1>
-                <br />
-                <div class="shortdescription">
-            @Html.Raw(Model.ShortDescription)
-        </div>
-                <div class="clear">
-                </div>
-                    @Html.Action("ProductManufacturers", "Catalog", new {productId = Model.Id})
-                <div class="clear">
-                </div>
-                @if (Model.PictureModels.Count > 1)
-                {
-                    <table>
-                <tr>
-                @foreach (var picture in Model.PictureModels)
-                {
-                    <td align="left">
-                        <a href="@picture.FullSizeImageUrl" rel="lightbox-p" title="@Model.Name">
-                            <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+    @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post))
+    {
+        <div class="product-essential">
+            <div class="product-details-info">
+                <div class="picture">
+                    @if (Model.DefaultPictureZoomEnabled)
+                    {
+                        <a href="@Model.DefaultPictureModel.FullSizeImageUrl" rel="lightbox-pd" title="@Model.Name">
+                            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" style="border-width: 0px;" />
                         </a>
-                    </td>
-                }
-                </tr>
-            </table>
-                }
-                <div class="clear"></div>
-                @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
-                <div class="clear"></div>
-                @Html.Action("ShareButton", "Catalog")
+                    }
+                    else
+                    {
+                        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" style="border-width: 0px;" />
+                    }                    
+                    @if (Model.PictureModels.Count > 1)
+                    {
+                        <table style="margin-top: 10px;">
+                            <tr>
+                                @foreach (var picture in Model.PictureModels)
+                                {
+                                    <td align="left">
+                                        <a href="@picture.FullSizeImageUrl" rel="lightbox-p" title="@Model.Name">
+                                            <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                        </table>
+                    }
+                </div>
+                <div class="overview">
+                    <h1 class="productname">
+                        @Model.Name
+                    </h1>
+                    <br />
+                    <div class="shortdescription">
+                        @Html.Raw(Model.ShortDescription)
+                    </div>
+                    <div class="clear">
+                    </div>
+                    @if (!hasMultipleVariants && defaultProductVariant != null)
+                    {
+                        @Html.Partial("_ProductVariant_SKU_Man_Stock", defaultProductVariant)
+                    }
+                    <div class="clear">
+                    </div>
+                    @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })                    
+                    <div class="clear">
+                    </div>
+                    @if (!hasMultipleVariants && defaultProductVariant != null)
+                    {
+                        @Html.Partial("_DownloadSample", defaultProductVariant)
+                    }
+                    <div class="clear">
+                    </div>
+                        @if (!hasMultipleVariants && defaultProductVariant != null)
+                        {
+                            var dataDictPrice = new ViewDataDictionary();
+                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
+                            @Html.Partial("_ProductVariantPrice", defaultProductVariant.ProductVariantPrice, dataDictPrice)
+                            
+                            var dataDictAddToCart = new ViewDataDictionary();
+                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
+                            @Html.Partial("_ProductVariantAddToCart", defaultProductVariant.AddToCart, dataDictPrice)                    
+                        }
+                    <div class="clear"></div>
+                        @*TODO ProductEmailAFriendButton*@ &nbsp; @*TODO ProductAddToCompareList*@
+                    <div class="clear"></div>
+                    @Html.Action("ShareButton", "Catalog")
+                    
+                </div>
+                <div class="fulldescription">
+                    @Html.Raw(Model.FullDescription)
+                </div>
             </div>
-            <div class="fulldescription">
-                @Html.Raw(Model.FullDescription)
+        </div>
+        <div class="clear">
+        </div>
+        <div class="product-collateral">
+            @if (hasMultipleVariants)
+            {
+                <div class="product-variant-list">                
+                        @foreach (var variant in Model.ProductVariantModels)
+                        {
+                            var dataDictVariant = new ViewDataDictionary();
+                            dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
+                            @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
+                        }                
+                </div>
+                <div class="clear">
+                </div>
+            }
+            @if (!hasMultipleVariants && defaultProductVariant != null)
+            {
+                @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = defaultProductVariant.Id })
+                <div class="clear">
+                </div>
+                <div class="attributes">
+                    @*UNDONE ProductAttributes*@
+                </div>
+                <div class="clear">
+                </div>
+           {
+               var dataDictGiftCard = new ViewDataDictionary();
+               dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                    @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
+           }
+            }
+            <div>
+                @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
             </div>
+            <div class="clear">
+            </div>
+            <div>
+                @*TODO ProductsAlsoPurchased*@
+            </div>
+            <div class="clear">
+            </div>
+            <div>
+                @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
+            </div>
+            <div class="clear">
+            </div>
+            @*TODO ProductTags*@
         </div>
-    </div>
-    <div class="clear">
-    </div>
-    <div class="product-collateral">
-        @*TODO ProductRating*@
-        <div class="clear">
-        </div>
-        @*TODO ProductEmailAFriendButton*@
-        &nbsp;
-         @*TODO ProductAddToCompareList*@
-        <div class="clear">
-        </div>
-            @*TODO ProductVariantsInGrid*@
-        <div class="clear">
-        </div>
-        <div>
-            @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
-        </div>
-        <div class="clear">
-        </div>
-        <div>
-            @*TODO ProductsAlsoPurchased*@
-        </div>
-        <div class="clear">
-        </div>
-        <div>
-            @Html.Action("RelatedProducts", "Catalog", new {productId = Model.Id})
-        </div>
-        <div class="clear">
-        </div>
-        @*TODO ProductTags*@
-    </div>
+    }
 </div>

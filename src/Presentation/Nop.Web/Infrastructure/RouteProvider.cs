@@ -33,6 +33,17 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("ProductReviews",
                             "productreviews/{productId}",
                             new { controller = "Catalog", action = "ProductReviews" });
+
+            //shopping cart
+            routes.MapRoute("AddProductToCart",
+                            "cart/addproduct/{productId}",
+                            new { controller = "ShoppingCart", action = "AddProductToCart" });
+            routes.MapRoute("ShoppingCart",
+                            "cart/",
+                            new { controller = "ShoppingCart", action = "Cart" });
+            routes.MapRoute("Wishlist",
+                            "wishlist/",
+                            new { controller = "ShoppingCart", action = "Wishlist" });
         }
         public int Priority
         {

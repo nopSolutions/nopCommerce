@@ -89,5 +89,13 @@ namespace Nop.Services.Orders
         IList<string> UpdateShoppingCartItem(Customer customer, int shoppingCartItemId,
             int newQuantity, bool resetCheckoutData);
 
+        /// <summary>
+        /// Direct add to cart allowed
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="productVariantId">Default product variant identifier for adding to cart</param>
+        /// <returns>A value indicating whether direct add to cart is allowed</returns>
+        bool DirectAddToCartAllowed(int productId, out int productVariantId);
+
     }
 }

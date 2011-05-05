@@ -16,10 +16,12 @@
             @Html.Partial("_ProductPrice", Model.ProductPrice)
         </div>
         <div class="buttons">
-            <a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })" class="productlistproductdetailbutton">@T("Products.Details")</a>
-            @*UNDONE add to cart
-            <br />
-            <input type="submit" value="@("Products.AddToCart")" class="productgridproductdetailbutton">*@
+            <input type="button" value="@T("Products.Details")" class="productlistproductdetailbutton" onclick="setLocation('@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })')" />
+            @if (!Model.ProductPrice.DisableBuyButton)
+            {
+                <br />
+                <input type="button" value="@T("ShoppingCart.AddToCart")" class="productlistaddtocartbutton" onclick="setLocation('@(@Url.RouteUrl("AddProductToCart", new { productId = Model.Id }))')" />
+            }
         </div>
     </div>
 </div>

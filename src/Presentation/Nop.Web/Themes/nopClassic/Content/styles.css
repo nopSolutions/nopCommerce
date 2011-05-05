@@ -976,27 +976,20 @@ ul.languagelist li .selected
 	text-align: right;
 }
 
-.block-category-navigation .active a
+.block-category-navigation .active a, .block-manufacturer-navigation .active a
 {
 }
 
-.block-category-navigation .listbox ul .active
+.block-category-navigation .listbox ul .active, .block-manufacturer-navigation .listbox ul .active
 {
 	font-weight: bold;
 }
 
-.block-category-navigation .listbox ul .inactive
+.block-category-navigation .listbox ul .inactive, .block-manufacturer-navigation .listbox ul .inactive
 {
 }
 
-.block-manufacturer-navigation a.active
-{
-	font-weight:bold;
-}
 
-.block-manufacturer-navigation a.inactive
-{
-}
 
 .block-account-navigation a.active
 {
@@ -3673,6 +3666,9 @@ ul.languagelist li .selected
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
+.product-no-reviews a
+{
+}
 
 .product-reviews-page
 {
@@ -3740,6 +3736,7 @@ ul.languagelist li .selected
 
 .product-variant-line
 {
+    clear: both;
 	margin-bottom: 20px;
 	padding-bottom: 20px;
 	margin-top: 10px;
@@ -3774,14 +3771,15 @@ ul.languagelist li .selected
 	margin-bottom: 0.3em;
 }
 
-.product-variant-line .downloadsample
+.product-details-page .downloadsample
 {
 	clear: both;
 	color: #555;
-	margin-bottom: 0.3em;
+	margin-top: 15px;
+	margin-bottom: 15px;
 }
 
-.product-variant-line .downloadsample .downloadsamplebutton
+.product-details-page .downloadsample .downloadsamplebutton
 {
 	-x-system-font:none !important;
 	background:#F1F1F1 url(images/btn_download_bg.gif) repeat-x scroll 0 100%;
@@ -3807,7 +3805,8 @@ ul.languagelist li .selected
 .product-variant-line .price
 {
 	float: left;
-	margin-right: 10px;
+	padding: 10px 10px 10px 10px;
+	margin-right: 30px;
 }
 
 .product-variant-line .price .productPrice
@@ -3823,6 +3822,7 @@ ul.languagelist li .selected
 
 .product-variant-line .add-info
 {
+    float: left;
 	padding: 10px 10px 10px 10px;
 	background: #F7F5E8;
 	min-height: 17px;
@@ -3854,51 +3854,21 @@ ul.languagelist li .selected
 	color: Red;
 }
 
-.one-variant-price
+.product-essential .price
 {
-	margin: 0px 0px 5px 0px;
+	margin-top: 15px;
+	margin-bottom: 15px;
 }
 
-.one-variant-price .productPrice
+.product-essential .price .productPrice
 {
 	color: green;
 }
 
-.one-variant-price .oldProductPrice
+.product-essential .price .oldProductPrice
 {
 	color: red;
 	text-decoration: line-through;
-}
-
-.one-variant-download-sample
-{
-	clear: both;
-	color: #555;
-	margin-bottom: 0.3em;
-	margin-top: 5px;
-}
-
-.one-variant-download-sample .downloadsamplebutton
-{
-	-x-system-font:none !important;
-	background:#F1F1F1 url(images/btn_download_bg.gif) repeat-x scroll 0 100%;
-	border:1px solid #B5B5B5;
-	color:#444444;
-	cursor:pointer;
-	font-family:arial,sans-serif !important;
-	font-size:11px !important;
-	font-size-adjust:none !important;
-	font-stretch:normal !important;
-	font-style:normal !important;
-	font-variant:normal !important;
-	font-weight:bold !important;
-	line-height:normal !important;
-	overflow:visible;
-	padding:1px 5px;
-	text-align:center;
-	text-transform:uppercase;
-	vertical-align:middle;
-	width:auto;
 }
 
 .related-products-grid, .also-purchased-products-grid

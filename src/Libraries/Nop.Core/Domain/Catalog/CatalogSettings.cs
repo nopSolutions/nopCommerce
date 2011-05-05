@@ -9,7 +9,17 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to hide prices for non-registered customers
         /// </summary>
         public bool HidePricesForNonRegistered { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display product SKU
+        /// </summary>
+        public bool ShowProductSku { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display manufacturer part number of a product
+        /// </summary>
+        public bool ShowManufacturerPartNumber { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether product sorting is enabled
         /// </summary>
@@ -60,7 +70,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool AllowAnonymousUsersToEmailAFriend { get; set; }
 
-        
 
+        /// <summary>
+        /// Gets or sets a value indicating whether "wishlist" feature is enabled
+        /// </summary>
+        public bool WishlistEnabled { get; set; }
     }
 }

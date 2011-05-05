@@ -1,12 +1,7 @@
 ﻿@using Nop.Core.Infrastructure.DependencyManagement
-@using Nop.Services.Customers
 @using Nop.Core.Infrastructure
 @{
-    var currentUser = this.AuthenticationService.GetAuthenticatedUser();
-    var currentCustomer = this.WorkContext.CurrentCustomer;
-    var usernamesEnabled = EngineContext.Current.Resolve<Nop.Core.Domain.Security.UserSettings>().UsernamesEnabled;
     var storeLocation = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
-    var wishListEnabled = EngineContext.Current.Resolve<Nop.Core.Domain.Orders.ShoppingCartSettings>().WishlistEnabled;
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -43,33 +38,7 @@
                         &nbsp; </a>
                 </div>
                 <div class="header-links-wrapper">
-                    <div class="header-links">
-                        <ul>
-                            @if (currentUser != null)
-                            {
-                                <li><a href="@Url.Action("myaccount", "customer")" class="account">@if (usernamesEnabled) { @currentUser.Username } else { @currentUser.Email }</a></li>
-                                <li><a href="@Url.Action("logout", "customer")" class="account">@T("Account.Logout")</a></li>
-                            }
-                            else
-                            {
-                                <li><a href="@Url.Action("register", "customer")" class="ico-register">@T("Account.Register")</a></li>
-                                <li><a href="@Url.Action("login", "customer")" class="ico-login">@T("Account.Login")</a></li>
-                            }
-                            <li>
-                                <a href="@Url.Action("shoppingcart", "checkout")" class="ico-cart">@T("Account.ShoppingCart")</a>
-                                <a href="@Url.Action("shoppingcart", "checkout")">(0)</a>
-                            </li>
-                            @if (wishListEnabled)
-                            {
-                            <li><a href="@Url.Action("wishlist", "checkout")" class="ico-wishlist">@T("Wishlist.Wishlist")</a> <a href="@Url.Action("wishlist", "checkout")">(0)</a></li>
-                            }
-                            @*TODO uncomment below
-                            @if (currentCustomer != null && currentCustomer.IsAdmin())
-                            {*@
-                            <li><a href="/admin" class="ico-admin">@T("Account.Administration")</a> </li>
-                            @*}*@
-                        </ul>
-                    </div>
+                    @Html.Action("Header", "Home")
                 </div>
                 <div class="header-selectors-wrapper">
                     <div class="header-taxDisplayTypeSelector">

@@ -1,0 +1,26 @@
+﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel
+@if (!String.IsNullOrWhiteSpace(Model.StockAvailablity))
+{
+        <div class="stock">
+            @T("Products.Availability")<text>:</text>
+            @Model.StockAvailablity
+        </div>
+}
+    <div class="clear">
+    </div>
+    @if (!String.IsNullOrWhiteSpace(Model.Sku) && Model.ShowSku)
+    {
+        <div class="sku">
+            @T("Products.Sku")<text>:</text>
+            @Model.Sku
+        </div>
+    }
+    <div class="clear">
+    </div>
+    @if (!String.IsNullOrWhiteSpace(Model.ManufacturerPartNumber) && Model.ShowManufacturerPartNumber)
+    {
+        <div class="manufacturerpartnumber">
+            @T("Products.ManufacturerPartNumber")<text>:</text>
+            @Model.ManufacturerPartNumber
+        </div>
+    }

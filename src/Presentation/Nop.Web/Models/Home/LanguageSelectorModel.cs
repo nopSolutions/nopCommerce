@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Nop.Web.Models.Home;
 
-namespace Nop.Web.Models
+namespace Nop.Web.Models.Home
 {
     public class LanguageSelectorModel
     {
