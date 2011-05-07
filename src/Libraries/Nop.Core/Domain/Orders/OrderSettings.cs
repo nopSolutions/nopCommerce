@@ -32,6 +32,11 @@ namespace Nop.Core.Domain.Orders
         public bool ReturnRequestsEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Terms of service' enabled
+        /// </summary>
+        public bool TermsOfServiceEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of return request reasons
         /// </summary>
         public List<string> ReturnRequestReasons { get; set; }

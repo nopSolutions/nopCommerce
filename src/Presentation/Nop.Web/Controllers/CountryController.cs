@@ -22,14 +22,16 @@ namespace Nop.Web.Controllers
 		#region Fields
 
         private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
 
 	    #endregion Fields 
 
 		#region Constructors
 
-        public CountryController(ICountryService countryService)
+        public CountryController(ICountryService countryService, IStateProvinceService stateProvinceService)
 		{
             this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
 		}
 
 		#endregion Constructors 
@@ -43,10 +45,8 @@ namespace Nop.Web.Controllers
             if (String.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException("countryId");
 
-            var states = new List<StateProvince>();
             var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
-            if (country != null)
-                states = country.StateProvinces.ToList();
+            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
             var result = (from s in states
                          select new { id = s.Id, name = s.Name }).ToList();
             if (addEmptyStateIfRequired && result.Count == 0)

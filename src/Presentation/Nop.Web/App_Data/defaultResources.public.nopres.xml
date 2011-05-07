@@ -411,6 +411,30 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Checkout">
+    <Value>Checkout</Value>
+    <Children>
+      <LocaleResource Name="MinOrderSubtotalAmount">
+        <Value>Minimum order sub-total amount is {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShippingIsNotAllowed">
+        <Value>Shipping is not allowed</Value>
+      </LocaleResource>
+      <LocaleResource Name="TermsOfService">
+        <Children>
+          <LocaleResource Name="IAccept">
+            <Value>I agree with the terms of service and I adhere to them unconditionally</Value>
+          </LocaleResource>
+          <LocaleResource Name="PleaseAccept">
+            <Value>Please accept the terms of service before the next step.</Value>
+          </LocaleResource>
+          <LocaleResource Name="Read">
+            <Value>(read)</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Common">
     <Children>
       <LocaleResource Name="AddNew">
@@ -1153,8 +1177,65 @@
       <LocaleResource Name="CartIsEmpty">
         <Value>Your Shopping Cart is empty!</Value>
       </LocaleResource>
+      <LocaleResource Name="ContinueShopping">
+        <Value>Continue shopping</Value>
+      </LocaleResource>
+      <LocaleResource Name="CrossSells">
+        <Value>Based on your selection, you may be interested in the following items</Value>
+      </LocaleResource>
       <LocaleResource Name="CustomerEnteredPrice.RangeError">
         <Value>The price must be from {0} to {1}</Value>
+      </LocaleResource>
+      <LocaleResource Name="DiscountCouponCode">
+        <Value>Discount Code</Value>
+        <Children>
+          <LocaleResource Name="Button">
+            <Value>Apply coupon</Value>
+          </LocaleResource>
+          <LocaleResource Name="Tooltip">
+            <Value>Enter your coupon here</Value>
+          </LocaleResource>
+          <LocaleResource Name="WrongDiscount">
+            <Value>The coupon code you entered couldn't be applied to your order</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="EstimateShipping">
+        <Value>Estimate shipping</Value>
+        <Children>
+          <LocaleResource Name="Button">
+            <Value>Estimate shipping</Value>
+          </LocaleResource>
+          <LocaleResource Name="Country">
+            <Value>Country</Value>
+          </LocaleResource>
+          <LocaleResource Name="StateProvince">
+            <Value>State / province</Value>
+          </LocaleResource>
+          <LocaleResource Name="Tooltip">
+            <Value>Enter your destination to get a shipping estimate</Value>
+          </LocaleResource>
+          <LocaleResource Name="ZipPostalCode">
+            <Value>Zip / postal code</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="GiftCardCouponCode">
+        <Value>Gift Cards</Value>
+        <Children>
+          <LocaleResource Name="Button">
+            <Value>Add gift card</Value>
+          </LocaleResource>
+          <LocaleResource Name="DontWorkWithAutoshipProducts">
+            <Value>You cannot use gift cards with auto-ship (recurring) items.</Value>
+          </LocaleResource>
+          <LocaleResource Name="Tooltip">
+            <Value>Enter gift card code</Value>
+          </LocaleResource>
+          <LocaleResource Name="WrongGiftCard">
+            <Value>The coupon code you entered couldn't be applied to your order</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="ItemTotal">
         <Value>Total</Value>
@@ -1191,6 +1272,9 @@
       </LocaleResource>
       <LocaleResource Name="UnitPrice">
         <Value>Price</Value>
+      </LocaleResource>
+      <LocaleResource Name="UpdateCart">
+        <Value>Update shopping cart</Value>
       </LocaleResource>
       <LocaleResource Name="ItemYouSave">
         <Value>You save</Value>

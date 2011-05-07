@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private TaxSettings _taxSettings;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressService _addressService;
 
 	    #endregion Fields 
@@ -36,13 +38,14 @@ namespace Nop.Admin.Controllers
         public TaxController(ITaxService taxService,
             ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
             ISettingService settingService, ICountryService countryService, 
-            IAddressService addressService)
+            IStateProvinceService stateProvinceService, IAddressService addressService)
 		{
             this._taxService = taxService;
             this._taxCategoryService = taxCategoryService;
             this._taxSettings = taxSettings;
             this._settingService = settingService;
             this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
             this._addressService = addressService;
 		}
 
@@ -229,9 +232,10 @@ namespace Nop.Admin.Controllers
             foreach (var c in _countryService.GetAllCountries(true))
                 model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (defaultAddress != null && c.Id == defaultAddress.CountryId) });
 
-            if (defaultAddress != null && defaultAddress.Country != null && defaultAddress.Country.StateProvinces.Count > 0)
+            var states = defaultAddress != null && defaultAddress.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(defaultAddress.Country.Id).ToList() : new List<StateProvince>();
+            if (defaultAddress != null && defaultAddress.Country != null && states.Count > 0)
             {
-                foreach (var s in defaultAddress.Country.StateProvinces)
+                foreach (var s in states)
                     model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == defaultAddress.StateProvinceId) });
             }
             else

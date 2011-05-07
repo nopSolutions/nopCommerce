@@ -1,0 +1,112 @@
+﻿@model EstimateShippingModel
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework;
+@using Nop.Web.Models.ShoppingCart;
+@if (Model.Enabled)
+{
+    <div class="shipping">
+        @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
+        {
+            <script type="text/javascript">
+     $(function() {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)")
+                $.ajax({
+                    cache:false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: "countryId=" + selectedItem + "&addEmptyStateIfRequired=true",
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve states.')
+                    }  
+                });
+            });
+        });
+            </script>
+            
+            <div class="estimate-shipping">
+                <b>@T("ShoppingCart.EstimateShipping")</b>
+                <br />@T("ShoppingCart.EstimateShipping.Tooltip")<br />
+                <div class="shipping-options">
+                    <div>
+                        <table>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(model => model.CountryId):
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+                                    @Html.ValidationMessageFor(model => model.CountryId)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(model => model.StateProvinceId):
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+                                    @Html.ValidationMessageFor(model => model.StateProvinceId)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(model => model.ZipPostalCode):
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.ZipPostalCode)
+                                    @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type="submit" name="estimateshipping" value="@T("ShoppingCart.EstimateShipping.Button")" id="estimateshipping" class="estimateshippingbutton" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div>
+                        @foreach (var shippingOption in Model.ShippingOptions)
+                        {
+                            <div class="shipping-option-item">
+                                <div class="option-name">
+                                    @shippingOption.Name (@shippingOption.Price)
+                                </div>
+                                <div class="option-description">
+                                    @Html.Raw(shippingOption.Description)
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="clear">
+                    </div>
+                    @if (Model.Warnings.Count > 0)
+                    {
+                        <div class="warning-box">
+                            <div class="warning-text">
+                                @for (int i = 0; i < Model.Warnings.Count; i++)
+                                {
+                                    @Model.Warnings[i]
+                               if (i != Model.Warnings.Count - 1)
+                               {
+                                    <br />
+                               }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

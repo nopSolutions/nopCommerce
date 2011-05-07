@@ -1193,7 +1193,7 @@ ul.languagelist li .selected
 	color: Green;
 }
 
-.order-summary-content .WarningBox .WarningText, .wishlist-content .WarningBox .WarningText
+.order-summary-content .warning-box .warning-text, .wishlist-content .warning-box .warning-text
 {
 	color: Red;	
 }

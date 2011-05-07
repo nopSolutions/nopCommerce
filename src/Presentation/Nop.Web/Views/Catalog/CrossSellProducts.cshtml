@@ -1,0 +1,17 @@
+﻿@model IList<ProductModel>
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="product-grid">
+        <span class="crosssells-title">
+            @T("ShoppingCart.CrossSells"): </span>
+        <div class="clear">
+        </div>
+        @(Html.DataList<ProductModel>(Model, 2,
+                    @<div class="item-box">
+                        @Html.Partial("_ProductBox", @item)
+                    </div>
+                ))
+    </div>
+}

@@ -362,14 +362,14 @@ namespace Nop.Services.Shipping
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <returns>Shipping options</returns>
-        public IList<ShippingOption> GetShippingOptions(IList<ShoppingCartItem> cart,
-            Address shippingAddress, string allowedShippingRateComputationMethodSystemName)
+        public GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart,
+            Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "")
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
 
-            var shippingOptions = new List<ShippingOption>();
-
+            var result = new GetShippingOptionResponse();
+            
             bool isFreeShipping = IsFreeShipping(cart);
 
             //create a package
@@ -389,26 +389,33 @@ namespace Nop.Services.Shipping
                 foreach (var so2 in getShippingOptionResponse.ShippingOptions)
                 {
                     so2.ShippingRateComputationMethodSystemName = srcm.SystemName;
-                    shippingOptions.Add(so2);
+                    result.ShippingOptions.Add(so2);
                 }
 
                 //log errors
                 if (!getShippingOptionResponse.Success)
                 {
                     foreach (string error in getShippingOptionResponse.Errors)
+                    {
+                        result.AddError(error);
                         _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.FriendlyName, error));
+                    }
                 }
             }
             
             //additional shipping charges
             decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
-            shippingOptions.ForEach(so => so.Rate += additionalShippingCharge);
-            
-            //free shipping
-            if (isFreeShipping)
-                shippingOptions.ForEach(so => so.Rate = decimal.Zero);
+            foreach (var so in result.ShippingOptions)
+            {
+                so.Rate += additionalShippingCharge;
 
-            return shippingOptions;
+                //free shipping
+                if (isFreeShipping)
+                    so.Rate = decimal.Zero;
+
+            }
+            
+            return result;
         }
 
         #endregion

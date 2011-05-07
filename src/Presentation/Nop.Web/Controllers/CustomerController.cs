@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -50,6 +52,7 @@ namespace Nop.Web.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
@@ -67,7 +70,8 @@ namespace Nop.Web.Controllers
             ITaxService taxService, RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings, ForumSettings forumSettings,
             OrderSettings orderSettings, IAddressService addressService,
-            ICountryService countryService, IOrderTotalCalculationService orderTotalCalculationService,
+            ICountryService countryService, IStateProvinceService stateProvinceService,
+            IOrderTotalCalculationService orderTotalCalculationService,
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
             IPictureService pictureService, MediaSettings mediaSettings)
         {
@@ -88,6 +92,7 @@ namespace Nop.Web.Controllers
             this._orderSettings = orderSettings;
             this._addressService = addressService;
             this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._currencyService = currencyService;
             this._priceFormatter = priceFormatter;
@@ -572,9 +577,10 @@ namespace Nop.Web.Controllers
             foreach (var c in _countryService.GetAllCountries(true))
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
-            if (country != null && country.StateProvinces.Count > 0)
+            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
+            if (country != null && states.Count > 0)
             {
-                foreach (var s in country.StateProvinces)
+                foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
             }
             else
@@ -606,9 +612,10 @@ namespace Nop.Web.Controllers
             foreach (var c in _countryService.GetAllCountries(true))
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
-            if (address.Country != null && address.Country.StateProvinces.Count > 0)
+            var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id).ToList() : new List<StateProvince>();
+            if (address.Country != null && states.Count > 0)
             {
-                foreach (var s in address.Country.StateProvinces)
+                foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
@@ -652,9 +659,10 @@ namespace Nop.Web.Controllers
             foreach (var c in _countryService.GetAllCountries(true))
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
-            if (country != null && country.StateProvinces.Count > 0)
+            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
+            if (country != null && states.Count > 0)
             {
-                foreach (var s in country.StateProvinces)
+                foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
             }
             else

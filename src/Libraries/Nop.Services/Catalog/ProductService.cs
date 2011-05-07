@@ -5,6 +5,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Core;
 using Nop.Services.Customers;
@@ -458,6 +459,7 @@ namespace Nop.Services.Catalog
             product.NotApprovedTotalReviews = notApprovedTotalReviews;
             UpdateProduct(product);
         }
+
         #endregion
 
         #region Product variants
@@ -851,6 +853,53 @@ namespace Nop.Services.Catalog
             _crossSellProductRepository.Update(crossSellProduct);
         }
 
+        /// <summary>
+        /// Gets a cross-sells
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="numberOfProducts">Number of products to return</param>
+        /// <returns>Cross-sells</returns>
+        public IList<Product> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts)
+        {
+            var result = new List<Product>();
+
+            if (numberOfProducts == 0)
+                return result;
+
+            if (cart == null || cart.Count == 0)
+                return result;
+
+            var cartProductIds = new List<int>();
+            foreach (var sci in cart)
+            {
+                int prodId = sci.ProductVariant.ProductId;
+                if (!cartProductIds.Contains(prodId))
+                    cartProductIds.Add(prodId);
+            }
+
+            for (int i = 0; i < cart.Count; i++)
+            {
+                var sci = cart[i];
+                var crossSells = GetCrossSellProductsByProductId1(sci.ProductVariant.ProductId);
+                foreach (var crossSell in crossSells)
+                {
+                    //TODO create a helper method to validate product availability (dates, quantity) etc
+
+
+                    //validate that this product is not added to result yet
+                    //validate that this product is not in the cart
+                    if (result.Find(p => p.Id == crossSell.ProductId2) == null &&
+                        !cartProductIds.Contains(crossSell.ProductId2))
+                    {
+                        var productToAdd = GetProductById(crossSell.ProductId2);
+                        result.Add(productToAdd);
+                        if (result.Count >= numberOfProducts)
+                            return result;
+                    }
+                }
+            }
+            return result;
+        }
         #endregion
         
         #region Tier prices

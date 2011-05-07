@@ -35,6 +35,7 @@ namespace Nop.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressService _addressService;
         private readonly IUserService _userService;
         private readonly FormFieldSettings _formFieldSettings;
@@ -48,7 +49,8 @@ namespace Nop.Admin.Controllers
         public CustomerController(ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
-            ICountryService countryService, IAddressService addressService,
+            ICountryService countryService, IStateProvinceService stateProvinceService, 
+            IAddressService addressService,
             IUserService userService, FormFieldSettings formFieldSettings,
             ITaxService taxService, IWorkContext workContext)
         {
@@ -59,6 +61,7 @@ namespace Nop.Admin.Controllers
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
             this._addressService = addressService;
             this._userService = userService;
             this._formFieldSettings = formFieldSettings;
@@ -569,9 +572,10 @@ namespace Nop.Admin.Controllers
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
             Country country = model.Address.CountryId.HasValue ? _countryService.GetCountryById(model.Address.CountryId.Value) : null;
-            if (country != null && country.StateProvinces.Count > 0)
+            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
+            if (country != null && states.Count > 0)
             {
-                foreach (var s in country.StateProvinces)
+                foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
             }
             else
@@ -597,9 +601,10 @@ namespace Nop.Admin.Controllers
             foreach (var c in _countryService.GetAllCountries(true))
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
-            if (address.Country != null && address.Country.StateProvinces.Count > 0)
+            var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id).ToList() : new List<StateProvince>();
+            if (address.Country != null && states.Count > 0)
             {
-                foreach (var s in address.Country.StateProvinces)
+                foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
@@ -635,9 +640,10 @@ namespace Nop.Admin.Controllers
             foreach (var c in _countryService.GetAllCountries(true))
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
-            if (address.Country != null && address.Country.StateProvinces.Count > 0)
+            var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id).ToList() : new List<StateProvince>();
+            if (address.Country != null && states.Count > 0)
             {
-                foreach (var s in address.Country.StateProvinces)
+                foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else

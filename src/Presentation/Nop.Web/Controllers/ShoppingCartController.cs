@@ -5,16 +5,23 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
@@ -40,10 +47,22 @@ namespace Nop.Web.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IDiscountService _discountService;
+        private readonly ICustomerService _customerService;
+        private readonly IGiftCardService _giftCardService;
+        private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IShippingService _shippingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        
 
         private readonly MediaSettings _mediaSetting;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly OrderSettings _orderSettings;
+        private readonly ShippingSettings _shippingSettings;
 
         #endregion
 
@@ -52,10 +71,16 @@ namespace Nop.Web.Controllers
         public ShoppingCartController(IProductService productService, IWorkContext workContext,
             IShoppingCartService shoppingCartService, IPictureService pictureService,
             ILocalizationService localizationService, IProductAttributeFormatter productAttributeFormatter,
-            ITaxService taxService, ICurrencyService currencyService,
+            ITaxService taxService, ICurrencyService currencyService, 
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
+            ICheckoutAttributeFormatter checkoutAttributeFormatter, IOrderProcessingService orderProcessingService,
+            IDiscountService discountService,ICustomerService customerService, 
+            IGiftCardService giftCardService, ICountryService countryService,
+            IStateProvinceService stateProvinceService, IShippingService shippingService, 
+            IOrderTotalCalculationService orderTotalCalculationService,
             MediaSettings mediaSetting, ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings, OrderSettings orderSettings,
+            ShippingSettings shippingSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
@@ -67,10 +92,21 @@ namespace Nop.Web.Controllers
             this._currencyService = currencyService;
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
+            this._checkoutAttributeFormatter = checkoutAttributeFormatter;
+            this._orderProcessingService = orderProcessingService;
+            this._discountService = discountService;
+            this._customerService = customerService;
+            this._giftCardService = giftCardService;
+            this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
+            this._shippingService = shippingService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
 
             this._mediaSetting = mediaSetting;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
+            this._orderSettings = orderSettings;
+            this._shippingSettings = shippingSettings;
         }
 
 		#endregion Constructors 
@@ -86,10 +122,49 @@ namespace Nop.Web.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
+            if (cart.Count == 0)
+                return model;
+
             model.IsEditable = true;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowProductSku;
+            model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(_workContext.CurrentCustomer.CheckoutAttributes, _workContext.CurrentCustomer);
+            bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
+            if (!minOrderSubtotalAmountOk)
+            {
+                decimal minOrderSubtotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, _workContext.WorkingCurrency);
+                model.MinOrderSubtotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false));
+            }
+            model.TermsOfServiceEnabled = _orderSettings.TermsOfServiceEnabled;
+            model.ShowDiscountBox = _shoppingCartSettings.ShowDiscountBox;
+            model.ShowGiftCardBox = _shoppingCartSettings.ShowGiftCardBox;
 
+            //cart warnings
+            var cartWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, "", false);
+            foreach (var warning in cartWarnings)
+                model.Warnings.Add(warning);
+
+            //estimate shipping
+            model.EstimateShipping.Enabled = cart.Count > 0 && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
+            if (model.EstimateShipping.Enabled)
+            {
+                //countries
+                var country = model.EstimateShipping.CountryId.HasValue ? _countryService.GetCountryById(model.EstimateShipping.CountryId.Value) : null;
+                model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+                foreach (var c in _countryService.GetAllCountries(true))
+                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.EstimateShipping.CountryId) });
+                //states
+                var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
+                if (country != null && states.Count > 0)
+                {
+                    foreach (var s in states)
+                        model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.EstimateShipping.StateProvinceId) });
+                }
+                else
+                    model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+            }
+
+            //cart items
             foreach (var sci in cart)
             {
                 var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel()
@@ -164,6 +239,16 @@ namespace Nop.Web.Controllers
                     };
                 }
 
+                //item warnings
+                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
+                            sci.ShoppingCartType,
+                            sci.ProductVariant,
+                            sci.AttributesXml,
+                            sci.CustomerEnteredPrice,
+                            sci.Quantity);
+                foreach (var warning in itemWarnings)
+                    cartItemModel.Warnings.Add(warning);
+
                 model.Items.Add(cartItemModel);
             }
 
@@ -202,6 +287,176 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("updatecart")]
+        public ActionResult UpdateCart(FormCollection form)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+
+            //TODO ApplyCheckoutAttributes();
+            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+            foreach (var sci in cart)
+            {
+                bool remove = allIdsToRemove.Contains(sci.Id);
+                if (remove)
+                    _shoppingCartService.DeleteShoppingCartItem(sci, true);
+                else
+                {
+                    int newQuantity = sci.Quantity;
+                    foreach (string formKey in form.AllKeys)
+                        if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            int.TryParse(form[formKey], out newQuantity);
+                            break;
+                        }
+                    _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                        sci.Id, newQuantity, true);
+                }
+            }
+
+            //updated cart
+            cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart);
+            return View(model);
+        }
+
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("continueshopping")]
+        public ActionResult ContinueShopping()
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+
+            //TODO LastContinueShoppingPage
+            //string returnUrl = NopContext.Current.LastContinueShoppingPage;
+            //if (!String.IsNullOrEmpty(returnUrl))
+            //    Response.Redirect(returnUrl);
+            //else
+            //    Response.Redirect(CommonHelper.GetStoreLocation());
+            
+            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart);
+            return View(model);
+        }
+
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("applydiscountcouponcode")]
+        public ActionResult ApplyDiscountCoupon(string discountcouponcode)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var model = new ShoppingCartModel();
+
+            if (!String.IsNullOrWhiteSpace(discountcouponcode))
+            {
+                var discounts = _discountService.GetAllDiscounts(null);
+                var discount = discounts.Where(d => !String.IsNullOrEmpty(d.CouponCode) && d.CouponCode.Equals(discountcouponcode, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                bool isDiscountValid = discount != null;
+                if (isDiscountValid)
+                {
+                    _workContext.CurrentCustomer.DiscountCouponCode = discountcouponcode;
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                }
+                else
+                    model.DiscountWarning = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+            }
+
+            model = PrepareShoppingCartModel(model, cart);
+            return View(model);
+        }
+
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("applygiftcardcouponcode")]
+        public ActionResult ApplyGiftCard(string giftcardcouponcode)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var model = new ShoppingCartModel();
+
+            if (!cart.IsRecurring())
+            {
+                var giftCard = _giftCardService.GetAllGiftCards(null, null, null, giftcardcouponcode).FirstOrDefault();
+                bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
+                if (isGiftCardValid)
+                {
+                    _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                }
+                else
+                    model.GiftCardWarning = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
+            }
+            else
+                model.GiftCardWarning = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
+
+            model = PrepareShoppingCartModel(model, cart);
+            return View(model);
+        }
+        
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("estimateshipping")]
+        public ActionResult GetEstimateShipping(EstimateShippingModel shippingModel)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var model = new ShoppingCartModel();
+            model.EstimateShipping.CountryId = shippingModel.CountryId;
+            model.EstimateShipping.StateProvinceId = shippingModel.StateProvinceId;
+            model.EstimateShipping.ZipPostalCode = shippingModel.ZipPostalCode;
+            model = PrepareShoppingCartModel(model, cart);
+
+            if (cart.RequiresShipping())
+            {
+                var address = new Address()
+                {
+                    CountryId = shippingModel.CountryId,
+                    Country = shippingModel.CountryId.HasValue ? _countryService.GetCountryById(shippingModel.CountryId.Value) : null,
+                    StateProvinceId  =shippingModel.StateProvinceId,
+                    StateProvince = shippingModel.StateProvinceId.HasValue ? _stateProvinceService.GetStateProvinceById(shippingModel.StateProvinceId.Value) : null,
+                };
+                GetShippingOptionResponse getShippingOptionResponse = _shippingService.GetShippingOptions(cart, address);
+                if (!getShippingOptionResponse.Success)
+                {
+                    foreach (var error in getShippingOptionResponse.Errors)
+                        model.EstimateShipping.Warnings.Add(error);
+                }
+                else
+                {
+                    if (getShippingOptionResponse.ShippingOptions.Count > 0)
+                    {
+                        foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
+                        {
+                            var soModel = new EstimateShippingModel.ShippingOptionModel()
+                            {
+                                Name = shippingOption.Name,
+                                Description = shippingOption.Description,
+
+                            };
+                            //calculate discounted and taxed rate
+                            Discount appliedDiscount = null;
+                            decimal shippingTotalWithoutDiscount = shippingOption.Rate;
+                            decimal discountAmount = _orderTotalCalculationService.GetShippingDiscount(_workContext.CurrentCustomer,
+                                shippingTotalWithoutDiscount, out appliedDiscount);
+                            decimal shippingTotalWithDiscount = shippingTotalWithoutDiscount - discountAmount;
+                            if (shippingTotalWithDiscount < decimal.Zero)
+                                shippingTotalWithDiscount = decimal.Zero;
+                            shippingTotalWithDiscount = Math.Round(shippingTotalWithDiscount, 2);
+
+                            decimal rateBase = _taxService.GetShippingPrice(shippingTotalWithDiscount, _workContext.CurrentCustomer);
+                            decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                            soModel.Price = _priceFormatter.FormatShippingPrice(rate, true);
+                            model.EstimateShipping.ShippingOptions.Add(soModel);
+                        }
+                    }
+                    else
+                    {
+                       model.EstimateShipping.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
+                    }
+                }
+            }
+
+            return View(model);
+        }
+        
         public ActionResult Wishlist()
         {
             return Content("UNDONE Wishlist");

@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Catalog
 {
@@ -216,6 +217,14 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
         void UpdateCrossSellProduct(CrossSellProduct crossSellProduct);
+        
+        /// <summary>
+        /// Gets a cross-sells
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="numberOfProducts">Number of products to return</param>
+        /// <returns>Cross-sells</returns>
+        IList<Product> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts);
 
         #endregion
         

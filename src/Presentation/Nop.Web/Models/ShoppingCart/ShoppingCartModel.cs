@@ -15,6 +15,8 @@ namespace Nop.Web.Models.ShoppingCart
         public ShoppingCartModel()
         {
             Items = new List<ShoppingCartItemModel>();
+            Warnings = new List<string>();
+            EstimateShipping = new EstimateShippingModel();
         }
 
         public bool ShowSku { get; set; }
@@ -25,6 +27,22 @@ namespace Nop.Web.Models.ShoppingCart
 
         public IList<ShoppingCartItemModel> Items { get; set; }
 
+        public IList<string> Warnings { get; set; }
+
+        public string CheckoutAttributeInfo { get; set; }
+
+        public string MinOrderSubtotalWarning { get; set; }
+
+        public bool TermsOfServiceEnabled { get; set; }
+
+        public bool ShowDiscountBox { get; set; }
+        public string DiscountWarning { get; set; }
+
+        public bool ShowGiftCardBox { get; set; }
+        public string GiftCardWarning { get; set; }
+
+        public EstimateShippingModel EstimateShipping { get; set; }
+
 		#region Nested Classes
 
         public class ShoppingCartItemModel : BaseNopEntityModel
@@ -32,6 +50,7 @@ namespace Nop.Web.Models.ShoppingCart
             public ShoppingCartItemModel()
             {
                 Picture = new PictureModel();
+                Warnings = new List<string>();
             }
             public string Sku { get; set; }
 
@@ -54,6 +73,8 @@ namespace Nop.Web.Models.ShoppingCart
             public string AttributeInfo { get; set; }
 
             public string RecurringInfo { get; set; }
+
+            public IList<string> Warnings { get; set; }
 
         }
 

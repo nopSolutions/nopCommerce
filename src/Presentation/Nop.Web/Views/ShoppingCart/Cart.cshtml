@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.Models.ShoppingCart.ShoppingCartModel
+@using Nop.Core.Domain.Orders
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 }
@@ -13,8 +14,23 @@
         <div class="order-summary-content">
             @if (Model.Items.Count > 0)
             {
-
-                /*TODO warnings*/
+                if (Model.Warnings.Count > 0)
+                {
+                <div class="warning-box">
+                    <div class="warning-text">
+                        @for (int i = 0; i < Model.Warnings.Count; i++)
+                        {
+                            @Model.Warnings[i]
+                       if (i != Model.Warnings.Count - 1)
+                       {
+                            <br />
+                       }
+                        }
+                    </div>
+                </div>
+                }
+                using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
+                {
                 <table class="cart">
                     @if (Model.IsEditable)
                     {
@@ -72,7 +88,7 @@
                                 @if (Model.IsEditable)
                                 {
                                     <td>
-                                        <input id="removefromcart@(item.Id)" type="checkbox" name="removefromcart@(item.Id)" />
+                                        <input id="removefromcart" type="checkbox" name="removefromcart" value="@(item.Id)" />
                                     </td>
                                 }
                                 @if (Model.ShowSku)
@@ -98,6 +114,21 @@
                                     {
                                         <br />
                                         @Html.Raw(item.RecurringInfo)
+                                    }
+                                    @if (item.Warnings.Count > 0)
+                                    {
+                                        <div class="warning-box">
+                                            <div class="warning-text">
+                                                @for (int i = 0; i < item.Warnings.Count; i++)
+                                                {
+                                                    @item.Warnings[i]
+                                               if (i != item.Warnings.Count - 1)
+                                               {
+                                                    <br />
+                                               }
+                                                }
+                                            </div>
+                                        </div>
                                     }
                                 </td>
                                 <td style="white-space: nowrap;">
@@ -125,11 +156,141 @@
                             </tr>
                         }
                     </tbody>
-                </table>
+                </table>                
                 <div class="clear">
-                </div>            
-                /*TODO footer*/
-
+                </div>
+                        if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+                        {
+                <div class="selected-checkout-attributes">
+                    @Html.Raw(Model.CheckoutAttributeInfo)
+                </div>
+                <div class="clear">
+                </div>
+                        }
+                <div>
+                    @if (Model.IsEditable)
+                    {
+                        <div class="common-buttons">
+                            <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" id="updatecart" class="updatecartbutton" />
+                            <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" id="continueshopping" class="continueshoppingbutton" />
+                        </div>                    
+                        <div class="clear">
+                        </div>
+                        /*TODO CheckoutAttributes*/
+                        <div class="clear">
+                        </div>
+                    }
+                </div>
+                <div class="clear">
+                </div>                
+                }
+                <div class="cart-footer">
+                    @if (Model.IsEditable)
+                    {
+                        if (!String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                        {
+                        <div>
+                            <div class="min-amount-warning">
+                                @Model.MinOrderSubtotalWarning
+                            </div>
+                        </div>
+                        }
+                    }
+                    <div class="clear">
+                    </div>
+                    <div class="totals">
+                        @*TODO OrderTotals*@
+                        @if (Model.IsEditable)
+                        {
+                            <div class="clear">
+                            </div>
+                            if (Model.TermsOfServiceEnabled)
+                            {
+                            <script language="javascript" type="text/javascript">
+                                function accepttermsofservice() {
+                                    if (!document.getElementById('termsofservice').checked) {
+                                        alert('@T("Checkout.TermsOfService.PleaseAccept")');
+                                        return false;
+                                    }
+                                    else
+                                        return true;
+                                }
+                            </script>
+                            <div class="terms-of-service">
+                                <input id="termsofservice" type="checkbox" name="termsofservice" />
+                                @*UNDONE add /cart/conditionsinfopopup page*@
+                                @T("Checkout.TermsOfService.IAccept")
+                                <span class="read" onclick="javascript:OpenWindow('/cart/conditionsinfopopup', 450, 500, true)">@T("Checkout.TermsOfService.Read")</span>
+                            </div>
+                            }
+                            
+                            <div class="clear">
+                            </div>
+                            <div class="checkout-buttons">
+                                @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                                {
+                                    <input type="submit" name="checkout" value="@T("Checkout")" id="checkout" class="checkoutbutton" @(Model.TermsOfServiceEnabled ? Html.Raw(" onclick=\"return accepttermsofservice()\"") : null)  />
+                                }
+                            </div>
+                            <div class="addon-buttons">
+                                @*TODO GoogleCheckoutButton*@
+                            </div>
+                        }
+                    </div>
+                    <div class="cart-collaterals">
+                        @if (Model.IsEditable)
+                        {
+                            <div class="deals">
+                                @if (Model.ShowDiscountBox)
+                                {
+                                    using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
+                                    {
+                                    <div class="coupon-box">
+                                        <b>@T("ShoppingCart.DiscountCouponCode")</b>
+                                        <br />@T("ShoppingCart.DiscountCouponCode.Tooltip")<br />
+                                        <input name="discountcouponcode" type="text" id="discountcouponcode" style="width: 125px;" />&nbsp;
+                                        <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" class="applycouponcodebutton" />
+                                        @if (!String.IsNullOrEmpty(Model.DiscountWarning))
+                                        {
+                                            <div class="warning-box">
+                                                <div class="warning-text">
+                                                    <br />
+                                                    @Model.DiscountWarning
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    }
+                                }
+                                @if (Model.ShowGiftCardBox)
+                                {
+                                    using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
+                                    {
+                                    <div class="giftcard-box">
+                                        <b>@T("ShoppingCart.GiftCardCouponCode")</b>
+                                        <br />@T("ShoppingCart.GiftCardCouponCode.Tooltip")<br />
+                                        <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" style="width: 125px;" />&nbsp;
+                                        <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" id="applygiftcardcouponcode" class="applycouponcodebutton" />
+                                        @if (!String.IsNullOrEmpty(Model.GiftCardWarning))
+                                        {
+                                            <div class="warning-box">
+                                                <div class="warning-text">
+                                                    <br />
+                                                    @Model.GiftCardWarning
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    }
+                                }
+                            </div>
+                            @Html.Partial("EstimateShipping", Model.EstimateShipping)
+                        }
+                    </div>
+                    <div class="clear">
+                    </div>
+                    @Html.Action("CrossSellProducts", "Catalog")
+                </div>
             }
             else
             {

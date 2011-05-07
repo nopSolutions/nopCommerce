@@ -24,5 +24,20 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether to show product image on wishlist page
         /// </summary>
         public bool ShowProductImagesOnWishList { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show discount box on shopping cart page
+        /// </summary>
+        public bool ShowDiscountBox { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show gift card box on shopping cart page
+        /// </summary>
+        public bool ShowGiftCardBox { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of "Cross-sells" on shopping cart page
+        /// </summary>
+        public int CrossSellsNumber { get; set; }
     }
 }

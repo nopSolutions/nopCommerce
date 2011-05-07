@@ -917,6 +917,9 @@ namespace Nop.Services.Installation
                     MaximumWishlistItems = 1000,
                     ShowProductImagesOnShoppingCart = true,
                     ShowProductImagesOnWishList = true,
+                    ShowDiscountBox = true,
+                    ShowGiftCardBox = true,
+                    CrossSellsNumber = 2,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<OrderSettings>>()
@@ -928,7 +931,8 @@ namespace Nop.Services.Installation
                     AnonymousCheckoutAllowed = false,
                     ReturnRequestsEnabled = true,
                     ReturnRequestActions = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
-                    ReturnRequestReasons = new List<string>() { "Repair", "Replacement", "Store Credit" }
+                    ReturnRequestReasons = new List<string>() { "Repair", "Replacement", "Store Credit" },
+                    TermsOfServiceEnabled = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<UserSettings>>()
@@ -950,6 +954,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new ShippingSettings()
                 {
                     ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
+                    EstimateShippingEnabled = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<PaymentSettings>>()

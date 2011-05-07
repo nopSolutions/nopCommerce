@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models;
 using Nop.Core;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -25,6 +26,7 @@ namespace Nop.Admin.Controllers
         private ShippingSettings _shippingSettings;
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressService _addressService;
 
 		#endregion Fields 
@@ -33,12 +35,13 @@ namespace Nop.Admin.Controllers
 
         public ShippingController(IShippingService shippingService, ShippingSettings shippingSettings,
             ISettingService settingService, ICountryService countryService, 
-            IAddressService addressService)
+            IStateProvinceService stateProvinceService, IAddressService addressService)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
             this._settingService = settingService;
             this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
             this._addressService = addressService;
 		}
 
@@ -242,9 +245,10 @@ namespace Nop.Admin.Controllers
             foreach (var c in _countryService.GetAllCountries(true))
                 model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (originAddress != null && c.Id == originAddress.CountryId) });
 
-            if (originAddress != null && originAddress.Country != null && originAddress.Country.StateProvinces.Count > 0)
+            var states = originAddress != null && originAddress.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(originAddress.Country.Id).ToList() : new List<StateProvince>();
+            if (originAddress != null && originAddress.Country != null && states.Count > 0)
             {
-                foreach (var s in originAddress.Country.StateProvinces)
+                foreach (var s in states)
                     model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == originAddress.StateProvinceId) });
             }
             else
