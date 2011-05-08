@@ -97,6 +97,8 @@
     <Compile Include="Installation\InstallationService.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
+    <Compile Include="Logging\CustomerActivityService.cs" />
+    <Compile Include="Logging\ICustomerActivityService.cs" />
     <Compile Include="Media\Extensions.cs" />
     <Compile Include="Media\IDownloadService.cs" />
     <Compile Include="Media\DownloadService.cs" />

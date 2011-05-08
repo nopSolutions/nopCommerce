@@ -162,6 +162,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
 
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
+            builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerHttpRequest();
 
             builder.RegisterType<InstallationService>().As<IInstallationService>().InstancePerHttpRequest();
 

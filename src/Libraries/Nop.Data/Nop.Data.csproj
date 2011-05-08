@@ -64,6 +64,8 @@
     <Compile Include="Mapping\Forums\ForumSubscriptionMap.cs" />
     <Compile Include="Mapping\Forums\ForumTopicMap.cs" />
     <Compile Include="Mapping\Forums\PrivateMessageMap.cs" />
+    <Compile Include="Mapping\Logging\ActivityLogMap.cs" />
+    <Compile Include="Mapping\Logging\ActivityLogTypeMap.cs" />
     <Compile Include="Mapping\Media\DownloadMap.cs" />
     <Compile Include="Mapping\Messages\EmailAccountMap.cs" />
     <Compile Include="Mapping\Messages\MessageTemplateMap.cs" />
