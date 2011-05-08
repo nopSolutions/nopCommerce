@@ -24,10 +24,10 @@
 
             function toggleTax() {
                 if (getE('@Html.FieldIdFor(model => model.IsTaxExempt)').checked) {
-                    $('#pnlTaxCategory').show();
+                    $('#pnlTaxCategory').hide();
                 }
                 else {
-                    $('#pnlTaxCategory').hide();
+                    $('#pnlTaxCategory').show();
                 }
             }
 </script>
@@ -160,6 +160,16 @@
                                     .Width(300);
                                 //TODO display localized values here
                                 //.ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                                columns.Bound(x => x.PriceAdjustment)
+                                    .Width(100)
+                                    .Centered();
+                                columns.Bound(x => x.WeightAdjustment)
+                                    .Width(100)
+                                    .Centered();
+                                columns.Bound(x => x.IsPreSelected)
+                                    .Width(100)
+                                    .Template(x => x.IsPreSelected.ToString().ToLower())
+                                    .Centered();
                                 columns.Bound(x => x.DisplayOrder)
                                     .Width(100)
                                     .Centered();

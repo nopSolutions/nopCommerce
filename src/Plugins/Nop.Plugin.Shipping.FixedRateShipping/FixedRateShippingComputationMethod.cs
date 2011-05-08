@@ -95,12 +95,12 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
-            if (getShippingOptionRequest.Items == null)
-                return null;
-            if (getShippingOptionRequest.ShippingAddress == null)
-                return null;
-            if (getShippingOptionRequest.ShippingAddress.Country == null)
-                return null;
+            //if (getShippingOptionRequest.Items == null)
+            //    return null;
+            //if (getShippingOptionRequest.ShippingAddress == null)
+            //    return null;
+            //if (getShippingOptionRequest.ShippingAddress.Country == null)
+            //    return null;
 
             //TODO uncomment vode below after "restricting shipping by country" is implemented
             //var shippingMethods = this.ShippingService.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);

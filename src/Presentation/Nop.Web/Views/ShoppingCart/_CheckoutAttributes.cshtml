@@ -1,0 +1,85 @@
+﻿@model IList<Nop.Web.Models.ShoppingCart.ShoppingCartModel.CheckoutAttributeModel>
+@using Nop.Core.Domain.Catalog
+@if (Model.Count > 0)
+{
+    <div class="checkout-attributes">
+        @foreach (var attribute in Model)
+        {
+            string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
+            <div>
+                @if (attribute.IsRequired)
+                {
+                    <span>*</span>
+                }
+                @if (!string.IsNullOrEmpty(attribute.TextPrompt))
+                {
+                    <span style="font-weight: bold">@attribute.TextPrompt</span>
+                }
+                else
+                {
+                    <span style="font-weight: bold">@attribute.Name</span>
+                }
+                @if (attribute.AttributeControlType == AttributeControlType.TextBox)
+                {
+                    <text>&nbsp;&nbsp;&nbsp;</text>
+                }
+                else
+                {
+                    <br />
+                }
+                @switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                        {
+                    <select name="@(controlId)" id="@(controlId)">
+                        @if (!attribute.IsRequired)
+                        {
+                            <option value="0">---</option>
+                        }
+                        @foreach (var caValue in attribute.Values)
+                        {
+                            <option @(caValue.IsPreSelected ? " selected=\"selected\"" : null) value="@caValue.Id">@caValue.Name
+                                @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)
+                            </option>
+                        }
+                    </select>
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                        {
+                            foreach (var caValue in attribute.Values)
+                            {
+                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <label for="@(controlId)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            foreach (var caValue in attribute.Values)
+                            {
+                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <label for="@(controlId)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                        {
+                    <input name="@(controlId)" type="text" id="@(controlId)" class="textBox" style="width:300px;" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + attribute.DefaultValue : null) />
+                        }
+                        break;
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                    <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" style="Width: 300px; Height: 150px;">@(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? attribute.DefaultValue : null)</textarea>
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            <text>UNDONE Datepicker</text>
+                        }
+                        break;
+                }
+            </div>
+        }
+    </div>
+}

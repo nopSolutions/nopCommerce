@@ -1,9 +1,10 @@
 ﻿@model Nop.Web.Models.ShoppingCart.ShoppingCartModel
 @using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Checkout
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 }
-@*TODO OrderProgress*@
+@Html.Partial("~/Views/Checkout/CheckoutProgress.cshtml", new CheckoutProgressModel() { CheckoutProgressStep = CheckoutProgressStep.Cart }, new ViewDataDictionary())
 <div class="shoppingcart-page">
     <div class="page-title">
         <h1>@T("ShoppingCart")</h1>
@@ -173,10 +174,11 @@
                         <div class="common-buttons">
                             <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" id="updatecart" class="updatecartbutton" />
                             <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" id="continueshopping" class="continueshoppingbutton" />
+                            <input type="submit" name="startcheckout" value="startcheckout" id="startcheckout" style="display: none;" />
                         </div>                    
                         <div class="clear">
                         </div>
-                        /*TODO CheckoutAttributes*/
+                            @Html.Partial("_CheckoutAttributes", Model.CheckoutAttributes, new ViewDataDictionary())
                         <div class="clear">
                         </div>
                     }
@@ -199,7 +201,7 @@
                     <div class="clear">
                     </div>
                     <div class="totals">
-                        @*TODO OrderTotals*@
+                        @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = true })
                         @if (Model.IsEditable)
                         {
                             <div class="clear">
@@ -229,7 +231,23 @@
                             <div class="checkout-buttons">
                                 @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
                                 {
-                                    <input type="submit" name="checkout" value="@T("Checkout")" id="checkout" class="checkoutbutton" @(Model.TermsOfServiceEnabled ? Html.Raw(" onclick=\"return accepttermsofservice()\"") : null)  />
+                                    <script language="javascript" type="text/javascript">
+                                        function startcheckout() {
+                                            //terms of services
+                                            var termOfServiceOk = true;
+                                            @if (Model.TermsOfServiceEnabled)
+                                            {
+                                                <text>
+                                                termOfServiceOk = accepttermsofservice();
+                                                </text>
+                                            }
+                                            if (termOfServiceOk)
+                                            {
+                                                $('#startcheckout').trigger("click");
+                                            }
+                                        }
+                                    </script>
+                                    <input type="submit" name="checkout" value="@T("Checkout")" id="checkout" class="checkoutbutton" onclick="startcheckout()" />
                                 }
                             </div>
                             <div class="addon-buttons">

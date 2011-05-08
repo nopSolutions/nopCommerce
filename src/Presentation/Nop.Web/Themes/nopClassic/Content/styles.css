@@ -1231,8 +1231,14 @@ ul.languagelist li .selected
 .order-summary-content .removegiftcardbutton, .order-summary-content .removediscountbutton 
 {
 	padding-right: 5px;
-	padding-left: 18px;
+	padding-left: 18px;	
 	background: url('images/ico-delete.gif') no-repeat;
+	border: 0;
+}
+
+.order-summary-content .removegiftcardbutton:hover, .order-summary-content .removediscountbutton:hover
+{
+	cursor: pointer;
 }
 
 .order-summary-content .selected-checkout-attributes

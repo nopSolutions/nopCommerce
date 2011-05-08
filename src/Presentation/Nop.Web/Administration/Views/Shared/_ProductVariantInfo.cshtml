@@ -126,10 +126,10 @@
 
     function toggleTax() {
         if (getE('@Html.FieldIdFor(model => model.IsTaxExempt)').checked) {
-            $('#pnlTaxCategory').show();
+            $('#pnlTaxCategory').hide();
         }
         else {
-            $('#pnlTaxCategory').hide();
+            $('#pnlTaxCategory').show();
         }
     }
 

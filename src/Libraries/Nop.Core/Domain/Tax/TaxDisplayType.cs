@@ -9,10 +9,10 @@ namespace Nop.Core.Domain.Tax
         /// <summary>
         /// Including tax
         /// </summary>
-        IncludingTax = 1,
+        IncludingTax = 0,
         /// <summary>
         /// Excluding tax
         /// </summary>
-        ExcludingTax = 2,
+        ExcludingTax = 10,
     }
 }

@@ -65,6 +65,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
+        private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
 
         #endregion
@@ -94,6 +95,7 @@ namespace Nop.Services.Installation
             IRepository<Country> countryRepository,
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<Discount> discountRepository,
+            IRepository<GiftCard> giftCardRepository,
             IRepository<ShippingMethod> shippingMethodRepository)
         {
             this._measureDimensionRepository = measureDimensionRepository;
@@ -124,6 +126,7 @@ namespace Nop.Services.Installation
             this._stateProvinceRepository = stateProvinceRepository;
 
             this._discountRepository = discountRepository;
+            this._giftCardRepository = giftCardRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
         }
@@ -1596,7 +1599,7 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallDiscounts()
         {
-            var disounts = new List<Discount>
+            var discounts = new List<Discount>
                                 {
                                     new Discount
                                         {
@@ -1671,7 +1674,46 @@ namespace Nop.Services.Installation
                                             EndDateUtc = new DateTime(2020,1,1),
                                         },
                                 };
-            disounts.ForEach(d => _discountRepository.Insert(d));
+            discounts.ForEach(d => _discountRepository.Insert(d));
+
+        }
+
+        protected virtual void InstallGiftCards()
+        {
+            //TODO remove after tested
+            var giftCards = new List<GiftCard>
+                                {
+                                    new GiftCard
+                                        {
+                                            GiftCardType = GiftCardType.Virtual,
+                                            Amount = 10,
+                                            IsGiftCardActivated = true,
+                                            GiftCardCouponCode= "GC1",
+                                            RecipientName = "",
+                                            RecipientEmail = "",
+                                            SenderEmail = "",
+                                            SenderName = "",
+                                            Message = "",
+                                            IsRecipientNotified = true,
+                                            CreatedOnUtc = DateTime.UtcNow,
+                                        },
+                                        
+                                    new GiftCard
+                                        {
+                                            GiftCardType = GiftCardType.Virtual,
+                                            Amount = 20,
+                                            IsGiftCardActivated = true,
+                                            GiftCardCouponCode= "GC2",
+                                            RecipientName = "",
+                                            RecipientEmail = "",
+                                            SenderEmail = "",
+                                            SenderName = "",
+                                            Message = "",
+                                            IsRecipientNotified = true,
+                                            CreatedOnUtc = DateTime.UtcNow,
+                                        }
+                                };
+            giftCards.ForEach(gc => _giftCardRepository.Insert(gc));
 
         }
 
@@ -1700,6 +1742,7 @@ namespace Nop.Services.Installation
                 InstallProducts();
                 InstallForums();
                 InstallDiscounts();
+                InstallGiftCards();
             }
         }
 

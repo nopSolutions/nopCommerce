@@ -417,6 +417,28 @@
       <LocaleResource Name="MinOrderSubtotalAmount">
         <Value>Minimum order sub-total amount is {0}</Value>
       </LocaleResource>
+      <LocaleResource Name="Progress">
+        <Children>
+          <LocaleResource Name="Address">
+            <Value>Address</Value>
+          </LocaleResource>
+          <LocaleResource Name="Cart">
+            <Value>Cart</Value>
+          </LocaleResource>
+          <LocaleResource Name="Complete">
+            <Value>Complete</Value>
+          </LocaleResource>
+          <LocaleResource Name="Confirm">
+            <Value>Confirm</Value>
+          </LocaleResource>
+          <LocaleResource Name="Payment">
+            <Value>Payment</Value>
+          </LocaleResource>
+          <LocaleResource Name="Shipping">
+            <Value>Shipping</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="ShippingIsNotAllowed">
         <Value>Shipping is not allowed</Value>
       </LocaleResource>
@@ -466,6 +488,9 @@
       </LocaleResource>
       <LocaleResource Name="NoCancel">
         <Value>No, cancel</Value>
+      </LocaleResource>
+      <LocaleResource Name="Remove">
+        <Value>Remove</Value>
       </LocaleResource>
       <LocaleResource Name="Save">
         <Value>Save</Value>
@@ -1269,6 +1294,54 @@
       </LocaleResource>
       <LocaleResource Name="SKU">
         <Value>SKU</Value>
+      </LocaleResource>
+      <LocaleResource Name="Totals">
+        <Value></Value>
+        <Children>
+          <LocaleResource Name="SubTotal">
+            <Value>Sub-Total</Value>
+          </LocaleResource>
+          <LocaleResource Name="SubTotalDiscount">
+            <Value>Discount</Value>
+          </LocaleResource>
+          <LocaleResource Name="Shipping">
+            <Value>Shipping</Value>
+            <Children>
+              <LocaleResource Name="NotRequired">
+                <Value>Not required</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="PaymentMethodAdditionalFee">
+            <Value>Payment method additional fee</Value>
+          </LocaleResource>
+          <LocaleResource Name="TaxRateLine">
+            <Value>Tax {0}%</Value>
+          </LocaleResource>
+          <LocaleResource Name="Tax">
+            <Value>Tax</Value>
+          </LocaleResource>
+          <LocaleResource Name="OrderTotalDiscount">
+            <Value>Discount</Value>
+          </LocaleResource>
+          <LocaleResource Name="GiftCardInfo">
+            <Value>Gift Card ({0})</Value>
+            <Children>
+              <LocaleResource Name="Remaining">
+                <Value>{0} remaining</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="RewardPoints">
+            <Value>{0} reward points</Value>
+          </LocaleResource>
+          <LocaleResource Name="OrderTotal">
+            <Value>Total</Value>
+          </LocaleResource>
+          <LocaleResource Name="CalculatedDuringCheckout">
+            <Value>Calculated during checkout</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="UnitPrice">
         <Value>Price</Value>

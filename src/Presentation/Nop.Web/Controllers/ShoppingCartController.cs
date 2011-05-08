@@ -12,6 +12,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -21,6 +22,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
@@ -47,6 +49,7 @@ namespace Nop.Web.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IDiscountService _discountService;
@@ -56,6 +59,8 @@ namespace Nop.Web.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IShippingService _shippingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly IPaymentService _paymentService;
         
 
         private readonly MediaSettings _mediaSetting;
@@ -63,6 +68,7 @@ namespace Nop.Web.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly OrderSettings _orderSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -73,14 +79,16 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService, IProductAttributeFormatter productAttributeFormatter,
             ITaxService taxService, ICurrencyService currencyService, 
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
-            ICheckoutAttributeFormatter checkoutAttributeFormatter, IOrderProcessingService orderProcessingService,
+            ICheckoutAttributeParser checkoutAttributeParser, ICheckoutAttributeFormatter checkoutAttributeFormatter, 
+            IOrderProcessingService orderProcessingService,
             IDiscountService discountService,ICustomerService customerService, 
             IGiftCardService giftCardService, ICountryService countryService,
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IOrderTotalCalculationService orderTotalCalculationService,
+            ICheckoutAttributeService checkoutAttributeService, IPaymentService paymentService,
             MediaSettings mediaSetting, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,TaxSettings taxSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
@@ -92,6 +100,7 @@ namespace Nop.Web.Controllers
             this._currencyService = currencyService;
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
+            this._checkoutAttributeParser = checkoutAttributeParser;
             this._checkoutAttributeFormatter = checkoutAttributeFormatter;
             this._orderProcessingService = orderProcessingService;
             this._discountService = discountService;
@@ -101,12 +110,15 @@ namespace Nop.Web.Controllers
             this._stateProvinceService = stateProvinceService;
             this._shippingService = shippingService;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._checkoutAttributeService = checkoutAttributeService;
+            this._paymentService = paymentService;
 
             this._mediaSetting = mediaSetting;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
             this._orderSettings = orderSettings;
             this._shippingSettings = shippingSettings;
+            this._taxSettings = taxSettings;
         }
 
 		#endregion Constructors 
@@ -124,6 +136,8 @@ namespace Nop.Web.Controllers
 
             if (cart.Count == 0)
                 return model;
+            
+            #region Simple properties
 
             model.IsEditable = true;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
@@ -143,8 +157,103 @@ namespace Nop.Web.Controllers
             var cartWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, "", false);
             foreach (var warning in cartWarnings)
                 model.Warnings.Add(warning);
+            
+            #endregion
 
-            //estimate shipping
+            #region Checkout attributes
+
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(!cart.RequiresShipping());
+            foreach (var attribute in checkoutAttributes)
+            {
+                var caModel = new ShoppingCartModel.CheckoutAttributeModel()
+                {
+                    Id = attribute.Id,
+                    Name = attribute.GetLocalized(x => x.Name),
+                    TextPrompt = attribute.TextPrompt,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var caValues = _checkoutAttributeService.GetCheckoutAttributeValues(attribute.Id);
+                    foreach (var caValue in caValues)
+                    {
+                        var pvaValueModel = new ShoppingCartModel.CheckoutAttributeValueModel()
+                        {
+                            Id = caValue.Id,
+                            Name = caValue.GetLocalized(x => x.Name),
+                            IsPreSelected = caValue.IsPreSelected
+                        };
+                        caModel.Values.Add(pvaValueModel);
+
+                        //display price if allowed
+                        if (!_catalogSettings.HidePricesForNonRegistered ||
+                            (_workContext.CurrentCustomer != null &&
+                            !_workContext.CurrentCustomer.IsGuest()))
+                        {
+                            decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(caValue);
+                            decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                            if (priceAdjustmentBase > decimal.Zero)
+                                pvaValueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment);
+                            else if (priceAdjustmentBase < decimal.Zero)
+                                pvaValueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment);
+                        }
+                    }
+                }
+
+
+
+                //set already selected attributes
+                if (_workContext.CurrentCustomer != null)
+                {
+                    string selectedCheckoutAttributes = _workContext.CurrentCustomer.CheckoutAttributes;
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.Checkboxes:
+                            {
+                                if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                                {
+                                    //clear default selection
+                                    foreach (var item in caModel.Values)
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedCaValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
+                                    foreach (var caValue in selectedCaValues)
+                                        foreach (var item in caModel.Values)
+                                            if (caValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                                }
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                                {
+                                    var enteredText = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
+                                    if (enteredText.Count > 0)
+                                        caModel.DefaultValue = enteredText[0];
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+
+                model.CheckoutAttributes.Add(caModel);
+            }
+
+            #endregion 
+
+            #region Estimate shipping
+
             model.EstimateShipping.Enabled = cart.Count > 0 && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
             if (model.EstimateShipping.Enabled)
             {
@@ -164,7 +273,10 @@ namespace Nop.Web.Controllers
                     model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
             }
 
-            //cart items
+            #endregion
+
+            #region Cart items
+
             foreach (var sci in cart)
             {
                 var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel()
@@ -252,6 +364,8 @@ namespace Nop.Web.Controllers
                 model.Items.Add(cartItemModel);
             }
 
+            #endregion
+
             return model;
         }
         #endregion
@@ -338,6 +452,99 @@ namespace Nop.Web.Controllers
             var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart);
             return View(model);
         }
+        
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("startcheckout")]
+        public ActionResult StartCheckout(FormCollection form)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+
+            //apply attributes
+            string selectedAttributes = "";
+
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(!cart.RequiresShipping());
+            foreach (var attribute in checkoutAttributes)
+            {
+                string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                        {
+                            var ddlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ddlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ddlAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                        {
+                            var rblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(rblAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(rblAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                        {
+                            var txtAttribute = form[controlId];
+                            if (!String.IsNullOrEmpty(txtAttribute))
+                            {
+                                string enteredText = txtAttribute.Trim();
+                                selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var txtAttribute = form[controlId];
+                            if (!String.IsNullOrEmpty(txtAttribute))
+                            {
+                                string enteredText = txtAttribute.Trim();
+                                selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            //TODO date picker
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            _workContext.CurrentCustomer.CheckoutAttributes = selectedAttributes;
+            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+            return RedirectToRoute("Checkout");
+        }
 
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
@@ -375,15 +582,18 @@ namespace Nop.Web.Controllers
 
             if (!cart.IsRecurring())
             {
-                var giftCard = _giftCardService.GetAllGiftCards(null, null, null, giftcardcouponcode).FirstOrDefault();
-                bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
-                if (isGiftCardValid)
+                if (!String.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
-                    _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    var giftCard = _giftCardService.GetAllGiftCards(null, null, null, giftcardcouponcode).FirstOrDefault();
+                    bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
+                    if (isGiftCardValid)
+                    {
+                        _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
+                        _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    }
+                    else
+                        model.GiftCardWarning = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
                 }
-                else
-                    model.GiftCardWarning = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
             }
             else
                 model.GiftCardWarning = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
@@ -456,7 +666,196 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
-        
+
+        [ChildActionOnly]
+        public ActionResult OrderTotals(bool isEditable)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var model = new OrderTotalsModel();
+            model.IsEditable = isEditable;
+
+            if (cart.Count > 0)
+            {
+                //payment method (if already selected)
+                string paymentMethodSystemName = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.SelectedPaymentMethodSystemName : null;
+                
+                //subtotal
+                decimal subtotalBase = decimal.Zero;
+                decimal orderSubTotalDiscountAmountBase = decimal.Zero;
+                Discount orderSubTotalAppliedDiscount = null;
+                decimal subTotalWithoutDiscountBase = decimal.Zero;
+                decimal subTotalWithDiscountBase = decimal.Zero;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
+                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
+                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                subtotalBase = subTotalWithoutDiscountBase;
+                    decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
+                    model.SubTotal = _priceFormatter.FormatPrice(subtotal);
+                    if (orderSubTotalDiscountAmountBase > decimal.Zero)
+                    {
+                        decimal orderSubTotalDiscountAmount = _currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, _workContext.WorkingCurrency);
+                        model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount);
+                        model.AllowRemovingSubTotalDiscount = orderSubTotalAppliedDiscount != null &&
+                            orderSubTotalAppliedDiscount.RequiresCouponCode &&
+                            !String.IsNullOrEmpty(orderSubTotalAppliedDiscount.CouponCode) &&
+                            model.IsEditable;
+                    }
+                
+
+                //shipping info
+                model.RequiresShipping = cart.RequiresShipping();
+                if (model.RequiresShipping)
+                {
+                    decimal? shoppingCartShippingBase = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart);
+                    if (shoppingCartShippingBase.HasValue)
+                    {
+                        decimal shoppingCartShipping = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartShippingBase.Value, _workContext.WorkingCurrency);
+                        model.Shipping = _priceFormatter.FormatShippingPrice(shoppingCartShipping, true);
+                    }
+                }
+
+                //payment method fee
+                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(paymentMethodSystemName);
+                decimal paymentMethodAdditionalFeeWithTaxBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
+                if (paymentMethodAdditionalFeeWithTaxBase > decimal.Zero)
+                {
+                    decimal paymentMethodAdditionalFeeWithTax = _currencyService.ConvertFromPrimaryStoreCurrency(paymentMethodAdditionalFeeWithTaxBase, _workContext.WorkingCurrency);
+                    model.PaymentMethodAdditionalFee = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeWithTax, true);
+                }
+
+                //tax
+                bool displayTax = true;
+                bool displayTaxRates = true;
+                if (_taxSettings.HideTaxInOrderSummary && _workContext.TaxDisplayType == TaxDisplayType.IncludingTax)
+                {
+                    displayTax = false;
+                    displayTaxRates = false;
+                }
+                else
+                {
+                    SortedDictionary<decimal, decimal> taxRates = null;
+                    decimal shoppingCartTaxBase = _orderTotalCalculationService.GetTaxTotal(cart, out taxRates);
+                    decimal shoppingCartTax = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTaxBase, _workContext.WorkingCurrency);
+
+                        if (shoppingCartTaxBase == 0 && _taxSettings.HideZeroTax)
+                        {
+                            displayTax = false;
+                            displayTaxRates = false;
+                        }
+                        else
+                        {
+                            displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+                            displayTax = !displayTaxRates;
+
+                            model.Tax = _priceFormatter.FormatPrice(shoppingCartTax, true, false);
+                            foreach (var tr in taxRates)
+                            {
+                                model.TaxRates.Add(new OrderTotalsModel.TaxRate()
+                                    {
+                                        Rate = _priceFormatter.FormatTaxRate(tr.Key),
+                                        Value = _priceFormatter.FormatPrice(_currencyService.ConvertFromPrimaryStoreCurrency(tr.Value, _workContext.WorkingCurrency), true, false),
+                                    });
+                            }
+                        }
+                }
+                model.DisplayTaxRates = displayTaxRates;
+                model.DisplayTax = displayTax;
+
+                //total
+                decimal orderTotalDiscountAmountBase = decimal.Zero;
+                Discount orderTotalAppliedDiscount = null;
+                List<AppliedGiftCard> appliedGiftCards = null;
+                int redeemedRewardPoints = 0;
+                decimal redeemedRewardPointsAmount = decimal.Zero;
+                decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart,
+                    out orderTotalDiscountAmountBase, out orderTotalAppliedDiscount,
+                    out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount);
+                if (shoppingCartTotalBase.HasValue)
+                {
+                    decimal shoppingCartTotal = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTotalBase.Value, _workContext.WorkingCurrency);
+                    model.OrderTotal = _priceFormatter.FormatPrice(shoppingCartTotal, true, false);
+                }
+
+                //discount
+                if (orderTotalDiscountAmountBase > decimal.Zero)
+                {
+                    decimal orderTotalDiscountAmount = _currencyService.ConvertFromPrimaryStoreCurrency(orderTotalDiscountAmountBase, _workContext.WorkingCurrency);
+                    model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderTotalDiscountAmount, true, false);
+                    model.AllowRemovingOrderTotalDiscount = orderTotalAppliedDiscount != null &&
+                        orderTotalAppliedDiscount.RequiresCouponCode &&
+                        !String.IsNullOrEmpty(orderTotalAppliedDiscount.CouponCode) &&
+                        model.IsEditable;
+                }
+
+                //gift cards
+                if (appliedGiftCards != null && appliedGiftCards.Count > 0)
+                {
+                    foreach (var appliedGiftCard in appliedGiftCards)
+                    {
+                        var gcModel = new OrderTotalsModel.GiftCard()
+                            {
+                                Id = appliedGiftCard.GiftCard.Id,
+                                CouponCode =  appliedGiftCard.GiftCard.GiftCardCouponCode,
+                            };
+                        decimal amountCanBeUsed = _currencyService.ConvertFromPrimaryStoreCurrency(appliedGiftCard.AmountCanBeUsed, _workContext.WorkingCurrency);
+                        gcModel.Amount = _priceFormatter.FormatPrice(-amountCanBeUsed, true, false);
+
+                        decimal remainingAmountBase = appliedGiftCard.GiftCard.GetGiftCardRemainingAmount() - appliedGiftCard.AmountCanBeUsed;
+                        decimal remainingAmount = _currencyService.ConvertFromPrimaryStoreCurrency(remainingAmountBase, _workContext.WorkingCurrency);
+                        gcModel.Remaining = _priceFormatter.FormatPrice(remainingAmount, true, false);
+                        
+                        model.GiftCards.Add(gcModel);
+                    }
+                }
+
+                //reward points
+                if (redeemedRewardPointsAmount > decimal.Zero)
+                {
+                    decimal redeemedRewardPointsAmountInCustomerCurrency = _currencyService.ConvertFromPrimaryStoreCurrency(redeemedRewardPointsAmount, _workContext.WorkingCurrency);
+                    model.RedeemedRewardPoints = redeemedRewardPoints;
+                    model.RedeemedRewardPointsAmount = _priceFormatter.FormatPrice(-redeemedRewardPointsAmountInCustomerCurrency, true, false);
+                }
+            }
+
+
+            return PartialView(model);
+        }
+
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("removesubtotaldiscount", "removeordertotaldiscount")]
+        public ActionResult RemoveDiscountCoupon()
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var model = new ShoppingCartModel();
+
+            _workContext.CurrentCustomer.DiscountCouponCode = "";
+            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+            model = PrepareShoppingCartModel(model, cart);
+            return View(model);
+        }
+
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("removegiftcard")]
+        public ActionResult RemoveGiftardCode(int giftCardId)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var model = new ShoppingCartModel();
+
+            var gc = _giftCardService.GetGiftCardById(giftCardId);
+            if (gc != null)
+            {
+                _workContext.CurrentCustomer.RemoveGiftCardCouponCode(gc.GiftCardCouponCode);
+                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+            }
+
+            model = PrepareShoppingCartModel(model, cart);
+            return View(model);
+        }
+
+
         public ActionResult Wishlist()
         {
             return Content("UNDONE Wishlist");

@@ -1,0 +1,21 @@
+﻿@model CheckoutProgressModel
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework;
+@using Nop.Web.Models.Checkout;
+@*TODO check all link URLs*@
+<div class="order-progress">
+    <ul>
+        <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Cart ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.RouteUrl("ShoppingCart") : null)>@T("Checkout.Progress.Cart")</a>
+        </li>
+        <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Address ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.Action("shippingaddress", "checkout") : null)>@T("Checkout.Progress.Address")</a>
+        </li>
+        <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Shipping ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.Action("shipping", "checkout") : null)>@T("Checkout.Progress.Shipping")</a>
+        </li>
+        <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Payment ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.Action("payment", "checkout") : null)>@T("Checkout.Progress.Payment")</a>
+        </li>
+        <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Confirm ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Payment && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.Action("confirm", "checkout") : null)>@T("Checkout.Progress.Confirm")</a>
+        </li>
+        <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? " class=active-step" : " class=inactive-step")>@T("Checkout.Progress.Complete")</a>
+        </li>
+    </ul>
+</div>

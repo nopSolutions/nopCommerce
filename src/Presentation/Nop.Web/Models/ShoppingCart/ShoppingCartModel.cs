@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart
@@ -17,6 +18,7 @@ namespace Nop.Web.Models.ShoppingCart
             Items = new List<ShoppingCartItemModel>();
             Warnings = new List<string>();
             EstimateShipping = new EstimateShippingModel();
+            CheckoutAttributes = new List<CheckoutAttributeModel>();
         }
 
         public bool ShowSku { get; set; }
@@ -42,6 +44,8 @@ namespace Nop.Web.Models.ShoppingCart
         public string GiftCardWarning { get; set; }
 
         public EstimateShippingModel EstimateShipping { get; set; }
+
+        public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
 
 		#region Nested Classes
 
@@ -78,6 +82,34 @@ namespace Nop.Web.Models.ShoppingCart
 
         }
 
+        public class CheckoutAttributeModel : BaseNopEntityModel
+        {
+            public CheckoutAttributeModel()
+            {
+                Values = new List<CheckoutAttributeValueModel>();
+            }
+
+            public string Name { get; set; }
+
+            public string DefaultValue { get; set; }
+
+            public string TextPrompt { get; set; }
+
+            public bool IsRequired { get; set; }
+
+            public AttributeControlType AttributeControlType { get; set; }
+
+            public IList<CheckoutAttributeValueModel> Values { get; set; }
+        }
+
+        public class CheckoutAttributeValueModel : BaseNopEntityModel
+        {
+            public string Name { get; set; }
+
+            public string PriceAdjustment { get; set; }
+
+            public bool IsPreSelected { get; set; }
+        }
 		#endregion
     }
 }
