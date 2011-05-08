@@ -102,6 +102,8 @@ namespace Nop.Data
         public DbSet<Forum> Forums { get; set; }
         public DbSet<ForumTopic> ForumTopics { get; set; }
         public DbSet<ForumPost> ForumPosts { get; set; }
+        public DbSet<ActivityLogType> ActivityLogType { get; set; }
+        public DbSet<ActivityLog> ActivityLog { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

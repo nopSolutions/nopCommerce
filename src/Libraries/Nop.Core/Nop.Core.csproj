@@ -83,6 +83,8 @@
     <Compile Include="Domain\Catalog\ProductExtensions.cs" />
     <Compile Include="Domain\Catalog\SpecificationAttributeOptionFilter.cs" />
     <Compile Include="Domain\Localization\ILocalizedEnum.cs" />
+    <Compile Include="Domain\Logging\ActivityLog.cs" />
+    <Compile Include="Domain\Logging\ActivityLogType.cs" />
     <Compile Include="Domain\Media\MediaSettings.cs" />
     <Compile Include="Domain\Security\UserRegistrationType.cs" />
     <Compile Include="Domain\Customers\FormFieldSettings.cs" />
