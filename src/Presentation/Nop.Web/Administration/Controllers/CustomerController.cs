@@ -478,7 +478,6 @@ namespace Nop.Admin.Controllers
         }
         
         #endregion
-
         
         #region Addresses
 
@@ -653,7 +652,6 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-
 
         #region User accounts
 

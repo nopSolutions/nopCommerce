@@ -93,5 +93,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets the product variant
         /// </summary>
         public virtual ProductVariant ProductVariant { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reward points history record
+        /// </summary>
+        public virtual GiftCard AssociatedGiftCard { get; set; }
+
     }
 }

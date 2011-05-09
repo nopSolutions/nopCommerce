@@ -569,6 +569,26 @@ namespace Nop.Admin
         }
         
         #endregion
+
+        #region Gift Cards
+
+        public static GiftCardModel ToModel(this GiftCard entity)
+        {
+            return AutoMapper.Mapper.Map<GiftCard, GiftCardModel>(entity);
+        }
+
+        public static GiftCard ToEntity(this GiftCardModel model)
+        {
+            return AutoMapper.Mapper.Map<GiftCardModel, GiftCard>(model);
+        }
+
+        public static GiftCard ToEntity(this GiftCardModel model, GiftCard destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+        
     }
 
     public static class HtmlExtensions

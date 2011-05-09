@@ -15,6 +15,9 @@
               <siteMapNode title="Checkout Attributes" nopResource="Admin.Catalog.Attributes.CheckoutAttributes" controller="CheckoutAttribute" action="List"/>
             </siteMapNode>
         </siteMapNode>
+        <siteMapNode title="Sales" nopResource="Admin.Sales">
+          <siteMapNode title="Gift Cards" nopResource="Admin.GiftCards" controller="GiftCard" action="List" />
+        </siteMapNode>
         <siteMapNode title="Customers" nopResource="Admin.Customers">
           <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />
           <siteMapNode title="Customers" nopResource="Admin.Customers.Customers" controller="Customer" action="List" />

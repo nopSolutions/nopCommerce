@@ -57,6 +57,31 @@ namespace Nop.Data.Tests
             fromDb.Order.ShouldNotBeNull();
         }
 
+        [Test]
+        public void Can_save_and_load_orderProductVariant_with_giftCard()
+        {
+            var opv = new OrderProductVariant()
+            {
+                Order = GetTestOrder(),
+                ProductVariant = GetTestProductVariant(),
+                AssociatedGiftCard = GetTestGiftCard()
+            };
+
+            var fromDb = SaveAndLoadEntity(opv);
+            fromDb.ShouldNotBeNull();
+            fromDb.AssociatedGiftCard.ShouldNotBeNull();
+            fromDb.AssociatedGiftCard.Amount.ShouldEqual(10);
+        }
+
+        protected GiftCard GetTestGiftCard()
+        {
+            return new GiftCard
+            {
+                Amount = 10,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+        }
+
         protected ProductVariant GetTestProductVariant()
         {
             return new ProductVariant

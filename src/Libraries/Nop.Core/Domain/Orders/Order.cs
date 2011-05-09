@@ -356,7 +356,7 @@ namespace Nop.Core.Domain.Orders
         public virtual Address ShippingAddress { get; set; }
         
         /// <summary>
-        /// Gets or sets the customer
+        /// Gets or sets the reward points history record
         /// </summary>
         public virtual RewardPointsHistory RedeemedRewardPointsEntry { get; set; }
 

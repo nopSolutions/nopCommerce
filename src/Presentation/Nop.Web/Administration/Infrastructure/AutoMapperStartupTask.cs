@@ -125,6 +125,11 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<CheckoutAttributeValue, CheckoutAttributeValueModel>();
             //discounts
             ViceVersa<Discount, DiscountModel>();
+            //gift cards
+            Mapper.CreateMap<GiftCard, GiftCardModel>();
+            Mapper.CreateMap<GiftCardModel, GiftCard>()
+                .ForMember(dest => dest.IsRecipientNotified, dt => dt.Ignore())
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
         }
 
         protected virtual void ViceVersa<T1, T2>()

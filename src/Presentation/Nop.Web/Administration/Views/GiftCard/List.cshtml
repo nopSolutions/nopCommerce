@@ -1,0 +1,91 @@
+﻿@model Nop.Admin.Models.GiftCardListModel
+           
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" />
+            @T("Admin.GiftCards")
+        </div>
+        <div class="options">
+            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        </div>
+    </div>
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ActivatedId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.ActivatedId, Model.ActivatedList, new { @class = "adminInput" })
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CouponCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CouponCode)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
+            </td>
+        </tr>
+    </table>
+     <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<Nop.Admin.Models.GiftCardModel>()
+                        .Name("giftcards-grid")
+                .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                        .Columns(columns =>
+                        {
+                            columns.Bound(x => x.AmountStr);
+                            columns.Bound(x => x.RemainingAmountStr);
+                            columns.Bound(x => x.GiftCardCouponCode);
+                            columns.Bound(x => x.IsGiftCardActivated);
+                            columns.Bound(x => x.CreatedOnStr);
+                            columns.Bound(x => x.Id)
+                                .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                                .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                                .Width(50)
+                                .Centered()
+                                .HeaderTemplate("Edit")
+                                .Filterable(false);
+                        })
+                        .Pageable(settings => settings.PageSize(10))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("GiftCardList", "GiftCard", Model))
+                        .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+    
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#btnSearch').click(function () {
+                var grid = $('#giftcards-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+    function onDataBinding(e) {
+        var searchModel = {
+                ActivatedId: $('#@Html.FieldIdFor(model => model.ActivatedId)').val(),
+                CouponCode: $('#@Html.FieldIdFor(model => model.CouponCode)').val()
+                };
+        e.data = searchModel;
+    }
+
+   </script>
+    
+}

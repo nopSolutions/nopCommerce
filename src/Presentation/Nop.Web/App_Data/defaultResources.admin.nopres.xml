@@ -3017,6 +3017,163 @@
                 </LocaleResource>
               </Children>
             </LocaleResource>
+            <LocaleResource Name="GiftCards">
+              <Value>Gift cards</Value>
+              <Children>
+                    <LocaleResource Name="AddNew">
+                      <Value>Add a new gift card</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="BackToList">
+                      <Value>back to gift card list</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="EditGiftCardDetails">
+                      <Value>Edit gift card details</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Fields">
+                      <Children>
+                        <LocaleResource Name="GiftCardType">
+                          <Value>Gift card type</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The gift card type.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Order">
+                          <Value>Order</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The gift card was purchased with this order.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Amount">
+                          <Value>Initial value</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The initial value of this gift card.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="RemainingAmount">
+                          <Value>Remaining amount</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The remaining amount of this gift card.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="IsGiftCardActivated">
+                          <Value>Is gift card activated</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Determines whether gift this card is activated and can be used.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="GiftCardCouponCode">
+                          <Value>Coupon code</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The gift card coupon code (used during checkout).</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Generate">
+                              <Value>Generate code</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="RecipientName">
+                          <Value>Recipient's Name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter recipient's name.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="RecipientEmail">
+                          <Value>Recipient's Email</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter recipient's email.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="SenderName">
+                          <Value>Sender's Name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Sender's name is required</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="SenderEmail">
+                          <Value>Sender's Email</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter sender's email.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Message">
+                          <Value>Message</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter message.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="IsRecipientNotified">
+                          <Value>Is recipient notified</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Is recipient notified.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Notify">
+                              <Value>Notify recipient</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="CreatedOn">
+                          <Value>Creation date</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The date/time the gift card was created/purchased.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Info">
+                      <Value>Gift card info</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="List">
+                  <Children>
+                    <LocaleResource Name="Activated">
+                      <Value>Activated</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Search by a specific gift card status e.g. Activated.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CouponCode">
+                      <Value>Gift card coupon code</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>A gift card coupon code. Leave empty to load all records.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+                    <LocaleResource Name="History">
+                      <Value>Usage history</Value>
+                    </LocaleResource>
+              </Children>
+            </LocaleResource>
+            <LocaleResource Name="Sales">
+              <Value>Sales</Value>
+            </LocaleResource>
             <LocaleResource Name="Picture">
               <Children>
                 <LocaleResource Name="RemovePicture">

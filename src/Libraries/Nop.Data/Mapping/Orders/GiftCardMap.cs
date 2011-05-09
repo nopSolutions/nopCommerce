@@ -16,6 +16,10 @@ namespace Nop.Data.Mapping.Orders
             this.Property(gc => gc.Amount).HasPrecision(18, 4);
 
             this.Ignore(gc => gc.GiftCardType);
+
+            this.HasOptional(gc => gc.PurchasedWithOrderProductVariant)
+                .WithOptionalDependent(opv => opv.AssociatedGiftCard)
+                .WillCascadeOnDelete(false);
         }
     }
 }

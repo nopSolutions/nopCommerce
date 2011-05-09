@@ -1,0 +1,175 @@
+﻿@model Nop.Admin.Models.GiftCardModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("giftcard-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.GiftCards.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.GiftCards.History").Text).Content(TabHistory().ToHtmlString());
+    }
+})
+@helper TabInfo()
+    { 
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GiftCardType):
+            </td>
+            <td class="adminData">
+                @Model.GiftCardType.ToString()
+            </td>
+        </tr>
+        @if (Model.PurchasedWithOrderId.HasValue)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.PurchasedWithOrderId)
+                </td>
+                <td class="adminData">
+                    <a href="@Url.Action("Edit", "Order", new { Id = @Model.PurchasedWithOrderId.Value })">@T("Admin.Common.View")</a>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Amount):
+            </td>
+            <td class="adminData">
+            
+                @Html.Telerik().NumericTextBoxFor(model => model.Amount).MinValue(0)
+                @Html.ValidationMessageFor(model => model.Amount)
+            </td>
+        </tr>
+        @if (Model.Id > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.RemainingAmountStr):
+                </td>
+                <td class="adminData">
+                    @Model.RemainingAmountStr
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsGiftCardActivated):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsGiftCardActivated)
+                @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GiftCardCouponCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GiftCardCouponCode)
+                @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
+                <button type="button" name="generateCouponCode" id="generateCouponCode" class="t-button">
+                    @T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")</button>
+                <script type="text/javascript">
+        $(document).ready(function () {
+            $('#generateCouponCode').click(function () {
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
+                    success: function (data) {
+                         $('#@Html.FieldIdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to generate code.')
+                    }  
+                });
+            });
+        });
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecipientName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecipientName)
+                @Html.ValidationMessageFor(model => model.RecipientName)
+            </td>
+        </tr>
+        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.RecipientEmail):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.RecipientEmail)
+                    @Html.ValidationMessageFor(model => model.RecipientEmail)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SenderName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SenderName)
+                @Html.ValidationMessageFor(model => model.SenderName)
+            </td>
+        </tr>
+        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SenderEmail):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.SenderEmail)
+                    @Html.ValidationMessageFor(model => model.SenderEmail)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Message):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Message)
+                @Html.ValidationMessageFor(model => model.Message)
+            </td>
+        </tr>
+        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual && Model.Id > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.IsRecipientNotified):
+                </td>
+                <td class="adminData">
+                    @Model.IsRecipientNotified.ToString()
+                    <button type="submit" name="notifyRecipient" value="notifyRecipient" class="t-button">@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")</button>
+                </td>
+            </tr>
+        }
+        @if (!String.IsNullOrEmpty(Model.CreatedOnStr))
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.CreatedOnStr):
+                </td>
+                <td class="adminData">
+                    @Model.CreatedOnStr
+                </td>
+            </tr>
+        }
+    </table>
+}
+@helper TabHistory()
+    {
+    /*TODO implement gift card usage history*/
+    
+}

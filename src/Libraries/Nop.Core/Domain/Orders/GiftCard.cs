@@ -16,7 +16,6 @@ namespace Nop.Core.Domain.Orders
             this.GiftCardUsageHistory = new List<GiftCardUsageHistory>();
         }
 
-
         /// <summary>
         /// Gets or sets the gift card type identifier
         /// </summary>
@@ -91,6 +90,11 @@ namespace Nop.Core.Domain.Orders
                 this.GiftCardTypeId = (int)value;
             }
         }
+        
+        /// <summary>
+        /// Gets the product variant
+        /// </summary>
+        public virtual OrderProductVariant PurchasedWithOrderProductVariant { get; set; }
 
         #region Methods
 
@@ -126,6 +130,7 @@ namespace Nop.Core.Domain.Orders
 
             return false;
         }
+
         #endregion
     }
 }
