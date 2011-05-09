@@ -126,7 +126,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, IList<ShoppingCartItem> cart)
+        private ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, IList<ShoppingCartItem> cart, bool isEditable)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -139,7 +139,7 @@ namespace Nop.Web.Controllers
             
             #region Simple properties
 
-            model.IsEditable = true;
+            model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowProductSku;
             model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(_workContext.CurrentCustomer.CheckoutAttributes, _workContext.CurrentCustomer);
@@ -368,9 +368,131 @@ namespace Nop.Web.Controllers
 
             return model;
         }
+
+        [NonAction]
+        private WishlistModel PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable)
+        {
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
+
+            if (cart.Count == 0)
+                return model;
+
+            #region Simple properties
+
+            model.IsEditable = isEditable;
+            model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
+            model.ShowSku = _catalogSettings.ShowProductSku;
+            
+            //cart warnings
+            var cartWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, "", false);
+            foreach (var warning in cartWarnings)
+                model.Warnings.Add(warning);
+
+            #endregion
+            
+            #region Cart items
+
+            foreach (var sci in cart)
+            {
+                var cartItemModel = new WishlistModel.ShoppingCartItemModel()
+                {
+                    Id = sci.Id,
+                    Sku = sci.ProductVariant.Sku,
+                    ProductId = sci.ProductVariant.ProductId,
+                    ProductSeName = sci.ProductVariant.Product.GetSeName(),
+                    Quantity = sci.Quantity,
+                    AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.ProductVariant, sci.AttributesXml),
+                };
+
+                //recurring info
+                if (sci.ProductVariant.IsRecurring)
+                    cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"), sci.ProductVariant.RecurringCycleLength, sci.ProductVariant.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+
+                //unit prices
+                if (sci.ProductVariant.CallForPrice)
+                {
+                    cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
+                }
+                else
+                {
+                    decimal taxRate = decimal.Zero;
+                    decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate);
+                    decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+                    cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                }
+                //subtotal, discount
+                if (sci.ProductVariant.CallForPrice)
+                {
+                    cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
+                }
+                else
+                {
+                    //sub total
+                    decimal taxRate = decimal.Zero;
+                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetSubTotal(sci, true), out taxRate);
+                    decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
+                    cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
+
+                    //display an applied discount amount
+                    decimal shoppingCartItemSubTotalWithoutDiscountBase = _taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetSubTotal(sci, false), out taxRate);
+                    decimal shoppingCartItemDiscountBase = shoppingCartItemSubTotalWithoutDiscountBase - shoppingCartItemSubTotalWithDiscountBase;
+                    if (shoppingCartItemDiscountBase > decimal.Zero)
+                    {
+                        decimal shoppingCartItemDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemDiscountBase, _workContext.WorkingCurrency);
+                        cartItemModel.Discount = _priceFormatter.FormatPrice(shoppingCartItemDiscount);
+                    }
+                }
+
+                //product name
+                if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
+                    cartItemModel.ProductName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
+                else
+                    cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
+
+                //picture
+                if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
+                {
+                    var picture = _pictureService.GetPictureById(sci.ProductVariant.PictureId);
+                    if (picture == null)
+                    {
+                        picture = _pictureService.GetPicturesByProductId(sci.ProductVariant.Product.Id, 1).FirstOrDefault();
+                    }
+                    cartItemModel.Picture = new PictureModel()
+                    {
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.CartThumbPictureSize, true),
+                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), cartItemModel.ProductName),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), cartItemModel.ProductName),
+
+                    };
+                }
+
+                //item warnings
+                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
+                            sci.ShoppingCartType,
+                            sci.ProductVariant,
+                            sci.AttributesXml,
+                            sci.CustomerEnteredPrice,
+                            sci.Quantity);
+                foreach (var warning in itemWarnings)
+                    cartItemModel.Warnings.Add(warning);
+
+                model.Items.Add(cartItemModel);
+            }
+
+            #endregion
+
+            return model;
+        }
+
         #endregion
 
-        #region Methods
+        #region Shopping cart
 
         public ActionResult AddProductToCart(int productId)
         {
@@ -397,7 +519,7 @@ namespace Nop.Web.Controllers
         public ActionResult Cart()
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
-            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart);
+            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
             return View(model);
         }
 
@@ -408,7 +530,6 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
-            //TODO ApplyCheckoutAttributes();
             var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
             foreach (var sci in cart)
             {
@@ -431,7 +552,7 @@ namespace Nop.Web.Controllers
 
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
-            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart);
+            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
             return View(model);
         }
 
@@ -448,8 +569,8 @@ namespace Nop.Web.Controllers
             //    Response.Redirect(returnUrl);
             //else
             //    Response.Redirect(CommonHelper.GetStoreLocation());
-            
-            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart);
+
+            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
             return View(model);
         }
         
@@ -568,7 +689,7 @@ namespace Nop.Web.Controllers
                     model.DiscountWarning = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
             }
 
-            model = PrepareShoppingCartModel(model, cart);
+            model = PrepareShoppingCartModel(model, cart, true);
             return View(model);
         }
 
@@ -598,7 +719,7 @@ namespace Nop.Web.Controllers
             else
                 model.GiftCardWarning = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
 
-            model = PrepareShoppingCartModel(model, cart);
+            model = PrepareShoppingCartModel(model, cart, true);
             return View(model);
         }
         
@@ -612,7 +733,7 @@ namespace Nop.Web.Controllers
             model.EstimateShipping.CountryId = shippingModel.CountryId;
             model.EstimateShipping.StateProvinceId = shippingModel.StateProvinceId;
             model.EstimateShipping.ZipPostalCode = shippingModel.ZipPostalCode;
-            model = PrepareShoppingCartModel(model, cart);
+            model = PrepareShoppingCartModel(model, cart, true);
 
             if (cart.RequiresShipping())
             {
@@ -832,7 +953,7 @@ namespace Nop.Web.Controllers
             _workContext.CurrentCustomer.DiscountCouponCode = "";
             _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-            model = PrepareShoppingCartModel(model, cart);
+            model = PrepareShoppingCartModel(model, cart, true);
             return View(model);
         }
 
@@ -851,14 +972,98 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
             }
 
-            model = PrepareShoppingCartModel(model, cart);
+            model = PrepareShoppingCartModel(model, cart, true);
+            return View(model);
+        }
+        
+        #endregion
+
+        #region Wishlist
+        
+        public ActionResult Wishlist()
+        {
+            if (!_shoppingCartSettings.WishlistEnabled)
+                return RedirectToAction("Index", "Home");
+
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+            var model = PrepareWishlistModel(new WishlistModel(), cart, true);
             return View(model);
         }
 
-
-        public ActionResult Wishlist()
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Wishlist")]
+        [FormValueRequired("updatecart")]
+        public ActionResult UpdateWishlist(FormCollection form)
         {
-            return Content("UNDONE Wishlist");
+            if (!_shoppingCartSettings.WishlistEnabled)
+                return RedirectToAction("Index", "Home");
+
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+
+            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+            foreach (var sci in cart)
+            {
+                bool remove = allIdsToRemove.Contains(sci.Id);
+                if (remove)
+                    _shoppingCartService.DeleteShoppingCartItem(sci, true);
+                else
+                {
+                    int newQuantity = sci.Quantity;
+                    foreach (string formKey in form.AllKeys)
+                        if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            int.TryParse(form[formKey], out newQuantity);
+                            break;
+                        }
+                    _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                        sci.Id, newQuantity, true);
+                }
+            }
+
+            //updated cart
+            cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+            var model = PrepareWishlistModel(new WishlistModel(), cart, true);
+            return View(model);
+        }
+
+        [ValidateInput(false)]
+        [HttpPost, ActionName("Wishlist")]
+        [FormValueRequired("addtocartbutton")]
+        public ActionResult AddtoCartFromWishlist(FormCollection form)
+        {
+            if (!_shoppingCartSettings.WishlistEnabled)
+                return RedirectToAction("Index", "Home");
+
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+
+            var allIdsToAdd = form["addtocart"] != null ? form["addtocart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+            foreach (var sci in cart)
+            {
+                if (allIdsToAdd.Contains(sci.Id))
+                {
+                    _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
+                        sci.ProductVariant, ShoppingCartType.ShoppingCart,
+                        sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity);
+                }
+            }
+
+            //updated cart
+            cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+            var model = PrepareWishlistModel(new WishlistModel(), cart, true);
+            return View(model);
+        }
+
+        public ActionResult EmailWishlist()
+        {
+            if (!_shoppingCartSettings.WishlistEnabled || !_shoppingCartSettings.EmailWishlistEnabled)
+                return RedirectToAction("Index", "Home");
+
+            //TODO implement email a friend
+            //var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+            //var model = PrepareWishlistModel(new WishlistModel(), cart, true);
+            //return View(model);
+
+            return Content("TODO implement email a friend");
         }
 
 		#endregion

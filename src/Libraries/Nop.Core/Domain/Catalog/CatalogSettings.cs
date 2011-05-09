@@ -69,11 +69,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to allow anonymous users to email a friend.
         /// </summary>
         public bool AllowAnonymousUsersToEmailAFriend { get; set; }
-
-
-        /// <summary>
-        /// Gets or sets a value indicating whether "wishlist" feature is enabled
-        /// </summary>
-        public bool WishlistEnabled { get; set; }
     }
 }

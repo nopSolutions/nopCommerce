@@ -113,7 +113,7 @@
     <Compile Include="Domain\Messages\SMSSettings.cs" />
     <Compile Include="Domain\Orders\OrderNote.cs" />
     <Compile Include="Domain\Orders\OrderProductVariant.cs" />
-    <Compile Include="Domain\Orders\OrderStatusEnum.cs" />
+    <Compile Include="Domain\Orders\OrderStatus.cs" />
     <Compile Include="Domain\Orders\RecurringPayment.cs" />
     <Compile Include="Domain\Orders\RecurringPaymentHistory.cs" />
     <Compile Include="Domain\Orders\OrderSettings.cs" />

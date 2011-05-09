@@ -580,7 +580,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("productVariant");
 
             var warnings = new List<string>();
-            if (shoppingCartType == ShoppingCartType.Wishlist && !_catalogSettings.WishlistEnabled)
+            if (shoppingCartType == ShoppingCartType.Wishlist && !_shoppingCartSettings.WishlistEnabled)
                 return warnings;
 
 

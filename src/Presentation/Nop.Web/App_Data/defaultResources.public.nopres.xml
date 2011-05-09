@@ -1371,9 +1371,16 @@
     </Children>
   </LocaleResource>
   <LocaleResource Name="Wishlist">
-    <Children>
-      <LocaleResource Name="Wishlist">
         <Value>Wishlist</Value>
+    <Children>
+      <LocaleResource Name="CartIsEmpty">
+        <Value>The wishlist is empty!</Value>
+      </LocaleResource>
+      <LocaleResource Name="EmailButton">
+        <Value>Email a friend</Value>
+      </LocaleResource>
+      <LocaleResource Name="UpdateCart">
+        <Value>Update wishlist</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

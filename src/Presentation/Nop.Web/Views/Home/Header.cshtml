@@ -15,7 +15,7 @@
             <a href="@Url.RouteUrl("ShoppingCart")">(@Model.ShoppingCartItems)</a> </li>
         @if (Model.WishlistEnabled)
         {
-            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist.Wishlist")</a>
+            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a>
                 <a href="@Url.RouteUrl("Wishlist")">(@Model.WishlistItems)</a> </li>
         }
         @if (Model.DisplayAdminLink)

@@ -41,9 +41,13 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("ShoppingCart",
                             "cart/",
                             new { controller = "ShoppingCart", action = "Cart" });
+            //wishlist
             routes.MapRoute("Wishlist",
                             "wishlist/",
                             new { controller = "ShoppingCart", action = "Wishlist" });
+            routes.MapRoute("EmailWishlist",
+                            "wishlist/email",
+                            new { controller = "ShoppingCart", action = "EmailWishlist" });
 
             //checkout
             routes.MapRoute("Checkout",

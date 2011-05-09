@@ -496,7 +496,7 @@ namespace Nop.Web.Controllers
                 model.AddToCart.DisableBuyButton = true;
                 model.AddToCart.DisableWishlistButton = true;
             }
-            if (!_catalogSettings.WishlistEnabled)
+            if (!_shoppingCartSettings.WishlistEnabled)
             {
                 model.AddToCart.DisableWishlistButton = true;
             }

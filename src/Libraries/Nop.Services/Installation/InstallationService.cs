@@ -819,8 +819,7 @@ namespace Nop.Services.Installation
                     ProductReviewsMustBeApproved = true,
                     AllowAnonymousUsersToReviewProduct = false,
                     NotifyStoreOwnerAboutNewProductReviews = false,
-                    AllowAnonymousUsersToEmailAFriend = false,
-                    WishlistEnabled = true
+                    AllowAnonymousUsersToEmailAFriend = false
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
@@ -923,6 +922,8 @@ namespace Nop.Services.Installation
                     ShowDiscountBox = true,
                     ShowGiftCardBox = true,
                     CrossSellsNumber = 2,
+                    WishlistEnabled = true,
+                    EmailWishlistEnabled = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<OrderSettings>>()

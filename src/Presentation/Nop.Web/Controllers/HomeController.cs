@@ -23,17 +23,17 @@ namespace Nop.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IAuthenticationService _authenticationService;
         private readonly UserSettings _userSettings;
-        private readonly CatalogSettings _catalogSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public HomeController(ILanguageService languageService, IWorkContext workContext,
             IAuthenticationService authenticationService,
-            UserSettings userSettings, CatalogSettings catalogSettings)
+            UserSettings userSettings, ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
             this._languageService = languageService;
             this._authenticationService = authenticationService;
             this._userSettings = userSettings;
-            this._catalogSettings = catalogSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         public ActionResult Index()
@@ -79,7 +79,7 @@ namespace Nop.Web.Controllers
                 //DisplayAdminLink = customer != null && customer.IsAdmin(),
                 DisplayAdminLink = true,
                 ShoppingCartItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts() : 0,
-                WishlistEnabled=_catalogSettings.WishlistEnabled,
+                WishlistEnabled = _shoppingCartSettings.WishlistEnabled,
                 WishlistItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts() : 0,
             };
 

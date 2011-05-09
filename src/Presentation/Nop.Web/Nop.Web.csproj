@@ -121,6 +121,7 @@
     <Compile Include="Models\Home\LanguageSelectorModel.cs" />
     <Compile Include="Models\Catalog\PagingFilteringModel.cs" />
     <Compile Include="Models\Media\PictureModel.cs" />
+    <Compile Include="Models\ShoppingCart\WishlistModel.cs" />
     <Compile Include="Models\ShoppingCart\OrderTotalsModel.cs" />
     <Compile Include="Models\ShoppingCart\EstimateShippingModel.cs" />
     <Compile Include="Models\ShoppingCart\ShoppingCartModel.cs" />
@@ -1025,6 +1026,7 @@
     <Content Include="Views\Checkout\CheckoutProgress.cshtml" />
     <Content Include="Views\ShoppingCart\_CheckoutAttributes.cshtml" />
     <Content Include="Views\ShoppingCart\OrderTotals.cshtml" />
+    <Content Include="Views\ShoppingCart\Wishlist.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
