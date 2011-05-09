@@ -1,0 +1,33 @@
+﻿@model Nop.Web.Models.Home.TaxTypeSelectorModel
+@using Nop.Core.Domain.Tax
+@if (Model.Enabled)
+{
+    using (Ajax.BeginForm("TaxTypeSelected", "Home", new AjaxOptions { OnComplete = "onTaxTypeChangedRequestCompleted();" }, new { id = "form-taxtypeselector" }))
+    {
+        var taxTypes = new List<SelectListItem>();
+        taxTypes.Add(new SelectListItem()
+        {
+            Text = T("Tax.Inclusive").Text,
+            Value = ((int)TaxDisplayType.IncludingTax).ToString(),
+            Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
+        });
+        taxTypes.Add(new SelectListItem()
+        {
+            Text = T("Tax.Exclusive").Text,
+            Value = ((int)TaxDisplayType.ExcludingTax).ToString(),
+            Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
+        });
+    
+    @Html.DropDownList("customerTaxType",
+        taxTypes,
+        new { onChange = "onTaxTypeChanged();" })
+    }
+    <script type="text/javascript">
+        function onTaxTypeChanged() {
+            $("#form-taxtypeselector").submit();
+        }
+        function onTaxTypeChangedRequestCompleted() {
+            location.reload();
+        }
+    </script>
+}

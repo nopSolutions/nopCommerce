@@ -42,10 +42,10 @@
                 </div>
                 <div class="header-selectors-wrapper">
                     <div class="header-taxDisplayTypeSelector">
-                        <!--UNDONE tax display selector -->
+                        @Html.Action("TaxTypeSelector", "Home")
                     </div>
                     <div class="header-currencyselector">
-                        <!--UNDONE currency selector -->
+                        @Html.Action("CurrencySelector", "Home")
                     </div>
                     <div class="header-languageselector">
                         @Html.Action("LanguageSelector", "Home")

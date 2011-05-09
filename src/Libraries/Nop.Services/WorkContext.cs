@@ -212,7 +212,7 @@ namespace Nop.Services
             }
             set
             {
-                if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
+                if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
                     return;
 
                 this.CurrentCustomer.TaxDisplayType = value;

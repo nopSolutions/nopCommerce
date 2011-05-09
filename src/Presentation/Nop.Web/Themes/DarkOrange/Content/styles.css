@@ -920,42 +920,6 @@ textarea
 	overflow: visible;
 }
 
-.currencylist
-{
-	background: #e3e3e3;
-	border: solid 1px #3a3a3a;
-}
-
-select.languagelist
-{
-	background: #e3e3e3;
-	border: solid 1px #3a3a3a;
-}
-
-ul.languagelist
-{
-	display: inline;
-	line-height: 25px;
-}
-
-ul.languagelist li
-{
-	list-style: none;
-	display: inline;
-	padding: 0px 5px 0 5px;	
-}
-
-ul.languagelist li .selected
-{
-	border: solid 1px #cccccc !important;
-}
-
-.taxdisplaytypelist
-{
-	background: #e3e3e3;
-	border: solid 1px #3a3a3a;
-}
-
 .storethemelist
 {
 	background: #e3e3e3;

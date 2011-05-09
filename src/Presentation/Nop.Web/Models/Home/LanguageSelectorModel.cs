@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Models.Home;
 
 namespace Nop.Web.Models.Home
 {
-    public class LanguageSelectorModel
+    public class LanguageSelectorModel : BaseNopModel
     {
         public LanguageSelectorModel()
         {
-            AvaibleLanguages = new List<LanguageModel>();
+            AvailableLanguages = new List<LanguageModel>();
         }
 
-        public IList<LanguageModel> AvaibleLanguages { get; set; }
+        public IList<LanguageModel> AvailableLanguages { get; set; }
 
         public LanguageModel CurrentLanguage { get; set; }
-
-        public bool IsAjaxRequest { get; set; }
     }
 }

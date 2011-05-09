@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Tasks;
 using Nop.Services.Localization;
@@ -27,7 +28,9 @@ namespace Nop.Web.Infrastructure
         public void Execute()
         {
             //language
-            ViceVersa<Language, LanguageModel>();
+            Mapper.CreateMap<Language, LanguageModel>();
+            //currency
+            Mapper.CreateMap<Currency, CurrencyModel>();
             //product
             Mapper.CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.GetLocalized(x => x.Name)))

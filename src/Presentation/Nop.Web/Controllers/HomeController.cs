@@ -7,8 +7,10 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Tax;
 using Nop.Services;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Extensions;
@@ -20,20 +22,28 @@ namespace Nop.Web.Controllers
     public class HomeController : BaseNopController
     {
         private readonly ILanguageService _languageService;
+        private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly IAuthenticationService _authenticationService;
         private readonly UserSettings _userSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly TaxSettings _taxSettings;
 
-        public HomeController(ILanguageService languageService, IWorkContext workContext,
-            IAuthenticationService authenticationService,
-            UserSettings userSettings, ShoppingCartSettings shoppingCartSettings)
+        public HomeController(ILanguageService languageService, 
+            ICurrencyService currencyService, ICustomerService customerService,
+            IWorkContext workContext, IAuthenticationService authenticationService,
+            UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
+            TaxSettings taxSettings)
         {
-            this._workContext = workContext;
             this._languageService = languageService;
+            this._currencyService = currencyService;
+            this._customerService = customerService;
+            this._workContext = workContext;
             this._authenticationService = authenticationService;
             this._userSettings = userSettings;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._taxSettings = taxSettings;
         }
 
         public ActionResult Index()
@@ -45,9 +55,8 @@ namespace Nop.Web.Controllers
         public ActionResult LanguageSelector()
         {
             var model = new LanguageSelectorModel();
-            var avaibleLanguages = _languageService.GetAllLanguages();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvaibleLanguages = avaibleLanguages.Select(x=> x.ToModel()).ToList();
+            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x=> x.ToModel()).ToList();
             return PartialView(model);
         }
 
@@ -59,13 +68,53 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage = language;
             }
             var model = new LanguageSelectorModel();
-            var avaibleLanguages = _languageService.GetAllLanguages();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvaibleLanguages = avaibleLanguages.Select(x => x.ToModel()).ToList();
-            model.IsAjaxRequest = true;
+            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
             return PartialView("LanguageSelector", model);
         }
-        
+
+        [ChildActionOnly]
+        public ActionResult CurrencySelector()
+        {
+            var model = new CurrencySelectorModel();
+            model.CurrentCurrency = _workContext.WorkingCurrency.ToModel();
+            model.AvailableCurrencies = _currencyService.GetAllCurrencies().Select(x => x.ToModel()).ToList();
+            return PartialView(model);
+        }
+
+        public ActionResult CurrencySelected(int customerCurrency)
+        {
+            var currency = _currencyService.GetCurrencyById(customerCurrency);
+            if (currency != null)
+            {
+                _workContext.WorkingCurrency = currency;
+            }
+            var model = new CurrencySelectorModel();
+            model.CurrentCurrency = _workContext.WorkingCurrency.ToModel();
+            model.AvailableCurrencies = _currencyService.GetAllCurrencies().Select(x => x.ToModel()).ToList();
+            return PartialView("CurrencySelector", model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult TaxTypeSelector()
+        {
+            var model = new TaxTypeSelectorModel();
+            model.Enabled = _taxSettings.AllowCustomersToSelectTaxDisplayType;
+            model.CurrentTaxType = _workContext.TaxDisplayType;
+            return PartialView(model);
+        }
+
+        public ActionResult TaxTypeSelected(int customerTaxType)
+        {
+            var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
+            _workContext.TaxDisplayType = taxDisplayType;
+
+            var model = new TaxTypeSelectorModel();
+            model.Enabled = _taxSettings.AllowCustomersToSelectTaxDisplayType;
+            model.CurrentTaxType = _workContext.TaxDisplayType;
+            return PartialView("TaxTypeSelector", model);
+        }
+
         [ChildActionOnly]
         public ActionResult Header()
         {

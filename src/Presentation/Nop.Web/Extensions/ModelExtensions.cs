@@ -5,6 +5,7 @@ using System.Text;
 using System.Web;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
@@ -31,6 +32,13 @@ namespace Nop.Web.Extensions
         public static LanguageModel ToModel(this Language entity)
         {
             return AutoMapper.Mapper.Map<Language, LanguageModel>(entity);
+        }
+
+
+        //currency
+        public static CurrencyModel ToModel(this Currency entity)
+        {
+            return AutoMapper.Mapper.Map<Currency, CurrencyModel>(entity);
         }
 
         //product

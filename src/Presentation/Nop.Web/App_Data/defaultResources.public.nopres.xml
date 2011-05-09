@@ -1370,6 +1370,16 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Tax">
+    <Children>
+      <LocaleResource Name="Exclusive">
+        <Value>Show prices tax exclusive</Value>
+      </LocaleResource>
+      <LocaleResource Name="Inclusive">
+        <Value>Show prices tax inclusive</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Wishlist">
         <Value>Wishlist</Value>
     <Children>
