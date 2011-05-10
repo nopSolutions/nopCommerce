@@ -518,9 +518,15 @@ namespace Nop.Web.Controllers
 
         public ActionResult Cart()
         {
+            return View();
+        }
+
+        [ChildActionOnly]
+        public ActionResult OrderSummary(bool isEditable)
+        {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
-            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
-            return View(model);
+            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, isEditable);
+            return PartialView(model);
         }
 
         [ValidateInput(false)]

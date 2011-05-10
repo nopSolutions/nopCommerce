@@ -23,7 +23,7 @@
                         </tr>
                         <tr>
                             <td align="right" style="padding-right: 20px; padding-top: 20px;">
-                             <input type="submit" class="registerbutton" id="register-button" onclick="location.href='@Url.Action("register")'" value="@T("Account.Register")" name="register-button" />
+                             <input type="submit" class="registerbutton" id="register-button" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" name="register-button" />
                             </td>
                         </tr>
                     </tbody>
@@ -34,7 +34,7 @@
             <span class="login-title">@T("Account.Login.ReturningCustomer")</span>
             <div class="login-block">
                 @Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)
-                @using (Html.BeginForm(Url.Action("login", new { ReturnUrl = Request.QueryString["ReturnUrl"] })))
+                @using (Html.BeginForm(Url.RouteUrl("Login")))
                 {
                     <table class="login-table-container">
                         <tbody>

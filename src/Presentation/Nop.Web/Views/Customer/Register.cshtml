@@ -2,7 +2,7 @@
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
 }
-@using (Html.BeginForm(Url.Action("register", new { ReturnUrl = Request.QueryString["ReturnUrl"] })))
+@using (Html.BeginForm(Url.RouteUrl("Register")))
 {
     <div class="registration-page">
         <div class="page-title">

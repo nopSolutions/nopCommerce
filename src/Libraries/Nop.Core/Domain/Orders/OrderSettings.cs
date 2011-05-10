@@ -37,6 +37,11 @@ namespace Nop.Core.Domain.Orders
         public bool TermsOfServiceEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'One-page checkout' is enabled
+        /// </summary>
+        public bool OnePageCheckoutEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of return request reasons
         /// </summary>
         public List<string> ReturnRequestReasons { get; set; }
@@ -45,5 +50,6 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a list of return request actions
         /// </summary>
         public List<string> ReturnRequestActions { get; set; }
+
     }
 }

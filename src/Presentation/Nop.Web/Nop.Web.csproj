@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Controllers\BaseNopController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\DownloadController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
@@ -1032,6 +1033,8 @@
     <Content Include="Views\ShoppingCart\Wishlist.cshtml" />
     <Content Include="Views\Home\CurrencySelector.cshtml" />
     <Content Include="Views\Home\TaxTypeSelector.cshtml" />
+    <Content Include="Views\ShoppingCart\OrderSummary.cshtml" />
+    <Content Include="Views\Checkout\ShippingAddress.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

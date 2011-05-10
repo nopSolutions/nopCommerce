@@ -1,0 +1,28 @@
+﻿@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Checkout
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+<div class="checkout-page">
+    @Html.Partial("~/Views/Checkout/CheckoutProgress.cshtml", new CheckoutProgressModel() { CheckoutProgressStep = CheckoutProgressStep.Address }, new ViewDataDictionary())
+    <div class="clear">
+    </div>
+    <div class="page-title">
+        <h1>@T("Checkout.ShippingAddress")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    UNDONE shipping address
+    <div class="clear">
+    </div>
+    <div class="clear">
+    </div>
+    <div class="order-summary-title">
+        @T("Checkout.OrderSummary")
+    </div>
+    <div class="clear">
+    </div>
+    <div class="order-summary-body">
+        @Html.Action("OrderSummary", "ShoppingCart", new { isEditable = false })
+    </div>
+</div>

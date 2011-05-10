@@ -4,12 +4,12 @@
         @if (Model.IsAuthenticated)
         {
             <li><a href="@Url.Action("myaccount", "customer")" class="account">@Model.CustomerEmailUsername</a></li>
-            <li><a href="@Url.Action("logout", "customer")" class="account">@T("Account.Logout")</a></li>
+            <li><a href="@Url.RouteUrl("Logout")" class="account">@T("Account.Logout")</a></li>
         }
         else
         {
-            <li><a href="@Url.Action("register", "customer")" class="ico-register">@T("Account.Register")</a></li>
-            <li><a href="@Url.Action("login", "customer")" class="ico-login">@T("Account.Login")</a></li>
+            <li><a href="@Url.RouteUrl("Register")" class="ico-register">@T("Account.Register")</a></li>
+            <li><a href="@Url.RouteUrl("Login")" class="ico-login">@T("Account.Login")</a></li>
         }
         <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
             <a href="@Url.RouteUrl("ShoppingCart")">(@Model.ShoppingCartItems)</a> </li>

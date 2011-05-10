@@ -934,9 +934,10 @@ namespace Nop.Services.Installation
                     MinOrderTotalAmount = 0,
                     AnonymousCheckoutAllowed = false,
                     ReturnRequestsEnabled = true,
+                    TermsOfServiceEnabled = false,
+                    OnePageCheckoutEnabled = false,
                     ReturnRequestActions = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
                     ReturnRequestReasons = new List<string>() { "Repair", "Replacement", "Store Credit" },
-                    TermsOfServiceEnabled = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<UserSettings>>()
