@@ -1,0 +1,125 @@
+﻿@model Nop.Web.Models.Checkout.CheckoutBillingAddressModel
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Checkout
+@using Nop.Web.Models.Common
+@using Nop.Web.Framework.UI
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+<div class="checkout-page">
+    @Html.Partial("~/Views/Checkout/CheckoutProgress.cshtml", new CheckoutProgressModel() { CheckoutProgressStep = CheckoutProgressStep.Address }, new ViewDataDictionary())
+    <div class="clear">
+    </div>
+    <div class="page-title">
+        <h1>@T("Checkout.BillingAddress")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="checkout-data">
+        @if (Model.ExistingAddresses.Count > 0)
+        {
+            <div>
+                <div class="select-address-title">
+                    @T("Checkout.SelectBillingAddress")
+                </div>
+                <div class="clear">
+                </div>
+                <div class="address-grid">
+                    @(Html.DataList<AddressModel>(Model.ExistingAddresses, 3,
+                    @<div class="item-box">
+                        <div class="address-item">
+                            <div class="select-button">
+                                <input type="button" name="selectBillingAddress" value="@T("Checkout.BillingToThisAddress")" id="selectBillingAddress" class="selectbillingaddressbutton"  onclick="setLocation('@(@Url.Action("SelectBillingAddress", "Checkout", new { addressId = @item.Id }))')" />                            
+                            </div>
+                            <div class="address-box">
+                                <table width="100%" cellspacing="0" cellpadding="2" border="0">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <b>@item.FirstName @item.LastName</b></div>
+                                                <div>@T("Address.Fields.Email"): @item.Email</div>
+                                                <div>
+                                                    @T("Address.Fields.PhoneNumber"):
+                                                    @item.PhoneNumber</div>
+                                                <div>
+                                                    @T("Address.Fields.FaxNumber"):
+                                                    @item.FaxNumber</div>
+                                                @if (!String.IsNullOrEmpty(item.Company))
+                                                {
+                                                    <div>
+                                                        @item.Company
+                                                    </div>
+                                                }
+                                                <div>
+                                                    @item.Address1</div>
+                                                @if (!String.IsNullOrEmpty(item.Address2))
+                                                {
+                                                    <div>
+                                                        @item.Address2
+                                                    </div>
+                                                }
+                                                <div>
+                                                    @item.City, @item.StateProvinceName @item.ZipPostalCode</div>
+                                                @if (!String.IsNullOrEmpty(item.CountryName))
+                                                {
+                                                    <div>
+                                                        @item.CountryName
+                                                    </div>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    ))
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+        }
+        <div class="enter-address-title">
+            @if (Model.ExistingAddresses.Count > 0)
+            {
+                @T("Checkout.OrEnterNewAddress")
+            }
+            else
+            {
+                @T("Checkout.EnterBillingAddress")
+            }
+        </div>
+        <div class="clear">
+        </div>
+        <div class="enter-address">
+            @using (Html.BeginRouteForm("CheckoutBillingAddress", FormMethod.Post))
+            {
+                <div class="enter-address-body">
+                    @{
+                var dataDictAddress = new ViewDataDictionary();
+                //Merge ModelState (required for validation)
+                dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
+                        @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
+                    }
+                </div>
+                <div class="clear">
+                </div>
+                <div class="button">
+                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" id="nextstep" class="newaddressnextstepbutton" />
+                </div>
+            }
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="order-summary-title">
+        @T("Checkout.OrderSummary")
+    </div>
+    <div class="clear">
+    </div>
+    <div class="order-summary-body">
+        @Html.Action("OrderSummary", "ShoppingCart", new { isEditable = false })
+    </div>
+</div>

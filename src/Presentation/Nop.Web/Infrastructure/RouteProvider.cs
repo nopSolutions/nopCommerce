@@ -89,9 +89,9 @@ namespace Nop.Web.Infrastructure
                             "checkout/billingaddress",
                             new { controller = "Checkout", action = "BillingAddress" },
                             new[] { "Nop.Web.Controllers" });
-            routes.MapRoute("CheckoutShipping",
-                            "checkout/shipping",
-                            new { controller = "Checkout", action = "Shipping" },
+            routes.MapRoute("CheckoutShippingMethod",
+                            "checkout/shippingmethod",
+                            new { controller = "Checkout", action = "ShippingMethod" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("CheckoutPaymentMethod",
                             "checkout/paymentmethod",

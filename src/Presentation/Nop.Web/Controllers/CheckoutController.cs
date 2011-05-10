@@ -149,6 +149,8 @@ namespace Nop.Web.Controllers
             return Content("UNDONE OnePageCheckout");
         }
 
+
+
         public ActionResult ShippingAddress()
         {
             //validation
@@ -265,8 +267,104 @@ namespace Nop.Web.Controllers
 
         public ActionResult BillingAddress()
         {
-            return Content("UNDONE BillingAddress");
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+            
+            //model
+            var model = new CheckoutBillingAddressModel();
+            //existing addresses
+            var addresses = _workContext.CurrentCustomer.Addresses.Where(a => a.Country.AllowsBilling).ToList();
+            foreach (var address in addresses)
+                model.ExistingAddresses.Add(address.ToModel());
+
+            //new address model
+            model.NewAddress = new AddressModel();
+            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountriesForBilling())
+                model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+            model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+
+            return View(model);
         }
+
+        public ActionResult SelectBillingAddress(int addressId)
+        {
+            var address = _workContext.CurrentCustomer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            if (address == null)
+                return RedirectToRoute("CheckoutBillingAddress");
+
+            _workContext.CurrentCustomer.SetBillingAddress(address);
+            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+            return RedirectToRoute("CheckoutShippingMethod");
+        }
+
+        [HttpPost, ActionName("BillingAddress")]
+        [FormValueRequired("nextstep")]
+        public ActionResult NewBillingAddress(CheckoutBillingAddressModel model)
+        {
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            if (ModelState.IsValid)
+            {
+                var address = model.NewAddress.ToEntity();
+                address.CreatedOnUtc = DateTime.UtcNow;
+                //some validation
+                if (address.CountryId == 0)
+                    address.CountryId = null;
+                if (address.StateProvinceId == 0)
+                    address.StateProvinceId = null;
+                _workContext.CurrentCustomer.AddAddress(address);
+                _workContext.CurrentCustomer.SetBillingAddress(address);
+                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                return RedirectToRoute("CheckoutShippingMethod");
+            }
+
+
+            //If we got this far, something failed, redisplay form
+            //existing addresses
+            var addresses = _workContext.CurrentCustomer.Addresses.Where(a => a.Country.AllowsBilling).ToList();
+            foreach (var address in addresses)
+                model.ExistingAddresses.Add(address.ToModel());
+
+            //new address model
+            //countries
+            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries())
+                model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.NewAddress.CountryId) });
+            //states
+            var states = model.NewAddress.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.NewAddress.CountryId.Value).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
+            {
+                foreach (var s in states)
+                    model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.NewAddress.StateProvinceId) });
+            }
+            else
+                model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+
+
+            return View(model);
+        }
+
+
 
         public ActionResult Shipping()
         {

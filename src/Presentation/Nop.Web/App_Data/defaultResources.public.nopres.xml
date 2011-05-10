@@ -414,6 +414,15 @@
   <LocaleResource Name="Checkout">
     <Value>Checkout</Value>
     <Children>
+      <LocaleResource Name="BillingAddress">
+        <Value>Billing address</Value>
+      </LocaleResource>
+      <LocaleResource Name="BillingToThisAddress">
+        <Value>Billing to this address</Value>
+      </LocaleResource>
+      <LocaleResource Name="EnterBillingAddress">
+        <Value>Enter billing address</Value>
+      </LocaleResource>
       <LocaleResource Name="EnterShippingAddress">
         <Value>Enter shipping address</Value>
       </LocaleResource>
@@ -450,6 +459,9 @@
       </LocaleResource>
       <LocaleResource Name="OrEnterNewAddress">
         <Value>Or enter new address</Value>
+      </LocaleResource>
+      <LocaleResource Name="SelectBillingAddress">
+        <Value>Select billing address</Value>
       </LocaleResource>
       <LocaleResource Name="SelectShippingAddress">
         <Value>Select shipping address</Value>
