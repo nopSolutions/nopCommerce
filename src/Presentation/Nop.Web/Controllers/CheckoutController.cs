@@ -56,6 +56,7 @@ namespace Nop.Web.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IShippingService _shippingService;
         private readonly IPaymentService _paymentService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         
 
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -73,7 +74,7 @@ namespace Nop.Web.Controllers
             IPriceFormatter priceFormatter, IOrderProcessingService orderProcessingService,
             ICustomerService customerService,  ICountryService countryService,
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
-            IPaymentService paymentService,
+            IPaymentService paymentService, IOrderTotalCalculationService orderTotalCalculationService,
             ShoppingCartSettings shoppingCartSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings,TaxSettings taxSettings)
         {
@@ -90,6 +91,7 @@ namespace Nop.Web.Controllers
             this._stateProvinceService = stateProvinceService;
             this._shippingService = shippingService;
             this._paymentService = paymentService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
 
             this._shoppingCartSettings = shoppingCartSettings;
             this._orderSettings = orderSettings;
@@ -366,10 +368,111 @@ namespace Nop.Web.Controllers
 
 
 
-        public ActionResult Shipping()
+        public ActionResult ShippingMethod()
         {
-            return Content("UNDONE Shipping");
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            if (!cart.RequiresShipping())
+            {
+                _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
+                return RedirectToRoute("CheckoutPaymentMethod");
+            }
+            
+            
+            //model
+            var model = new CheckoutShippingMethodModel();
+            
+            var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress);
+            if (getShippingOptionResponse.Success)
+            {
+                foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
+                {
+                    var soModel = new CheckoutShippingMethodModel.ShippingMethodModel()
+                    {
+                        Name = shippingOption.Name,
+                        Description = shippingOption.Description,
+                        ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
+                    };
+
+                    //calculate discounted and taxed rate
+                    Discount appliedDiscount = null;
+                    decimal shippingTotalWithoutDiscount = shippingOption.Rate;
+                    decimal discountAmount = _orderTotalCalculationService.GetShippingDiscount(_workContext.CurrentCustomer,
+                        shippingTotalWithoutDiscount, out appliedDiscount);
+                    decimal shippingTotalWithDiscount = shippingTotalWithoutDiscount - discountAmount;
+                    if (shippingTotalWithDiscount < decimal.Zero)
+                        shippingTotalWithDiscount = decimal.Zero;
+                    shippingTotalWithDiscount = Math.Round(shippingTotalWithDiscount, 2);
+
+                    decimal rateBase = _taxService.GetShippingPrice(shippingTotalWithDiscount, _workContext.CurrentCustomer);
+                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                    soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
+
+                    model.ShippingMethods.Add(soModel);
+                }
+            }
+            else
+                foreach (var error in getShippingOptionResponse.Errors)
+                    model.Warnings.Add(error);
+            
+            return View(model);
         }
+
+        [HttpPost, ActionName("ShippingMethod")]
+        [FormValueRequired("nextstep")]
+        [ValidateInput(false)]
+        public ActionResult SelectShippingMethod(string shippingoption)
+        {
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            if (!cart.RequiresShipping())
+            {
+                _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
+                return RedirectToRoute("CheckoutPaymentMethod");
+            }
+
+            //parse selected method 
+            if (String.IsNullOrEmpty(shippingoption))
+                return ShippingMethod();
+            var splittedOption = shippingoption.Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
+            if (splittedOption.Length != 2)
+                return ShippingMethod();
+            string selectedName = splittedOption[0];
+            string shippingRateComputationMethodSystemName = splittedOption[1];
+
+            //find it
+            var shippingOptions = _shippingService.GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName);
+            var shippingOption = shippingOptions.ShippingOptions.ToList()
+                .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
+            if (shippingOption == null)
+                return ShippingMethod();
+
+            //save
+            _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
+            
+            return RedirectToRoute("CheckoutPaymentMethod");
+        }
+
+
+
 
         public ActionResult PaymentMethod()
         {

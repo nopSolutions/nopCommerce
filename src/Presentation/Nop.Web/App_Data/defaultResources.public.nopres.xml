@@ -466,6 +466,9 @@
       <LocaleResource Name="SelectShippingAddress">
         <Value>Select shipping address</Value>
       </LocaleResource>
+      <LocaleResource Name="SelectShippingMethod">
+        <Value>Select shipping method</Value>
+      </LocaleResource>
       <LocaleResource Name="ShippingAddress">
         <Value>Shipping address</Value>
       </LocaleResource>

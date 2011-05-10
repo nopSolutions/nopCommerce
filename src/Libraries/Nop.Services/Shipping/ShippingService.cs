@@ -382,7 +382,7 @@ namespace Nop.Services.Shipping
             foreach (var srcm in shippingRateComputationMethods)
             {
                 if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName) &&
-                   allowedShippingRateComputationMethodSystemName.Equals(srcm.SystemName, StringComparison.InvariantCultureIgnoreCase))
+                   !allowedShippingRateComputationMethodSystemName.Equals(srcm.SystemName, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
                 var getShippingOptionResponse = srcm.GetShippingOptions(getShippingOptionRequest);
@@ -402,7 +402,12 @@ namespace Nop.Services.Shipping
                     }
                 }
             }
-            
+
+
+            //no shipping options loaded
+            if (result.ShippingOptions.Count == 0 && result.Errors.Count == 0)
+                result.Errors.Add("Shipping options could not be loaded");
+
             //additional shipping charges
             decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
             foreach (var so in result.ShippingOptions)

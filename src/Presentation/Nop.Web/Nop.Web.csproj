@@ -108,6 +108,7 @@
     <Compile Include="Models\Checkout\CheckoutShippingAddressModel.cs" />
     <Compile Include="Models\Checkout\CheckoutProgressModel.cs" />
     <Compile Include="Models\Checkout\CheckoutBillingAddressModel.cs" />
+    <Compile Include="Models\Checkout\CheckoutShippingMethodModel.cs" />
     <Compile Include="Models\Common\AddressModel.cs" />
     <Compile Include="Models\Customer\ChangePasswordModel.cs" />
     <Compile Include="Models\Customer\CustomerAvatarModel.cs" />
@@ -1038,6 +1039,7 @@
     <Content Include="Views\ShoppingCart\OrderSummary.cshtml" />
     <Content Include="Views\Checkout\ShippingAddress.cshtml" />
     <Content Include="Views\Checkout\BillingAddress.cshtml" />
+    <Content Include="Views\Checkout\ShippingMethod.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
