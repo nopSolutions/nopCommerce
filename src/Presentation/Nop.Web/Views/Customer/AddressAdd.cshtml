@@ -16,7 +16,13 @@
         <div class="clear">
         </div>
         <div class="body">
-            @Html.Partial("_CreateOrUpdateAddress", Model)
+            @{
+                var dataDictAddress = new ViewDataDictionary();
+                //Merge ModelState (required for validation)
+                dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)              
+            }
             <table width="100%" cellspacing="0" cellpadding="2" border="0">
                 <tbody>
                     <tr>

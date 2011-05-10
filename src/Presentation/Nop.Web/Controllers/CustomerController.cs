@@ -536,7 +536,7 @@ namespace Nop.Web.Controllers
             model.Address = new AddressModel();
             //countries
             model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
+            foreach (var c in _countryService.GetAllCountries())
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
             model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
 
@@ -572,13 +572,12 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             //countries
-            var country = _countryService.GetCountryById(model.Address.Id);
             model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
+            foreach (var c in _countryService.GetAllCountries())
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
-            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
-            if (country != null && states.Count > 0)
+            var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
@@ -609,11 +608,11 @@ namespace Nop.Web.Controllers
             model.Address = address.ToModel();
             //countries
             model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
+            foreach (var c in _countryService.GetAllCountries())
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id).ToList() : new List<StateProvince>();
-            if (address.Country != null && states.Count > 0)
+            if (states.Count > 0)
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
@@ -654,13 +653,12 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             //countries
-            var country = _countryService.GetCountryById(model.Address.Id);
             model.Address.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
+            foreach (var c in _countryService.GetAllCountries())
                 model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
-            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
-            if (country != null && states.Count > 0)
+            var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });

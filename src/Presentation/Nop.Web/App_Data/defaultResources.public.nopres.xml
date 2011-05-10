@@ -414,8 +414,17 @@
   <LocaleResource Name="Checkout">
     <Value>Checkout</Value>
     <Children>
+      <LocaleResource Name="EnterShippingAddress">
+        <Value>Enter shipping address</Value>
+      </LocaleResource>
       <LocaleResource Name="MinOrderSubtotalAmount">
         <Value>Minimum order sub-total amount is {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="NextButton">
+        <Value>Next</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderSummary">
+        <Value>Order summary</Value>
       </LocaleResource>
       <LocaleResource Name="Progress">
         <Children>
@@ -439,8 +448,20 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="OrEnterNewAddress">
+        <Value>Or enter new address</Value>
+      </LocaleResource>
+      <LocaleResource Name="SelectShippingAddress">
+        <Value>Select shipping address</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShippingAddress">
+        <Value>Shipping address</Value>
+      </LocaleResource>
       <LocaleResource Name="ShippingIsNotAllowed">
         <Value>Shipping is not allowed</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShipToThisAddress">
+        <Value>Ship to this address</Value>
       </LocaleResource>
       <LocaleResource Name="TermsOfService">
         <Children>

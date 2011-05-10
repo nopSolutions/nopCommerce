@@ -258,13 +258,12 @@ namespace Nop.Web.Controllers
             if (model.EstimateShipping.Enabled)
             {
                 //countries
-                var country = model.EstimateShipping.CountryId.HasValue ? _countryService.GetCountryById(model.EstimateShipping.CountryId.Value) : null;
                 model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-                foreach (var c in _countryService.GetAllCountries(true))
+                foreach (var c in _countryService.GetAllCountries())
                     model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.EstimateShipping.CountryId) });
                 //states
-                var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
-                if (country != null && states.Count > 0)
+                var states = model.EstimateShipping.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.EstimateShipping.CountryId.Value).ToList() : new List<StateProvince>();
+                if (states.Count > 0)
                 {
                     foreach (var s in states)
                         model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.EstimateShipping.StateProvinceId) });
