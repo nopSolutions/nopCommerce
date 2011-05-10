@@ -432,8 +432,14 @@
       <LocaleResource Name="NextButton">
         <Value>Next</Value>
       </LocaleResource>
+      <LocaleResource Name="NoPaymentMethods">
+        <Value>No payment methods available</Value>
+      </LocaleResource>
       <LocaleResource Name="OrderSummary">
         <Value>Order summary</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrEnterNewAddress">
+        <Value>Or enter new address</Value>
       </LocaleResource>
       <LocaleResource Name="Progress">
         <Children>
@@ -457,11 +463,11 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
-      <LocaleResource Name="OrEnterNewAddress">
-        <Value>Or enter new address</Value>
-      </LocaleResource>
       <LocaleResource Name="SelectBillingAddress">
         <Value>Select billing address</Value>
+      </LocaleResource>
+      <LocaleResource Name="SelectPaymentMethod">
+        <Value>Select payment method</Value>
       </LocaleResource>
       <LocaleResource Name="SelectShippingAddress">
         <Value>Select shipping address</Value>
@@ -490,6 +496,9 @@
             <Value>(read)</Value>
           </LocaleResource>
         </Children>
+      </LocaleResource>
+      <LocaleResource Name="UseRewardPoints">
+        <Value>Use my reward points, {0} reward points ({1}) available</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

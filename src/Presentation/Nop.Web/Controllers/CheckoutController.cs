@@ -63,6 +63,7 @@ namespace Nop.Web.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
 
         #endregion
 
@@ -76,7 +77,8 @@ namespace Nop.Web.Controllers
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IPaymentService paymentService, IOrderTotalCalculationService orderTotalCalculationService,
             ShoppingCartSettings shoppingCartSettings, OrderSettings orderSettings,
-            ShippingSettings shippingSettings,TaxSettings taxSettings)
+            ShippingSettings shippingSettings,TaxSettings taxSettings,
+            RewardPointsSettings rewardPointsSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
@@ -97,12 +99,24 @@ namespace Nop.Web.Controllers
             this._orderSettings = orderSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
         }
 
 		#endregion Constructors 
 
         #region Utilities
 
+        [NonAction]
+        private bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart)
+        {
+            bool result = true;
+
+            //check whether order total equals zero
+            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart);
+            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
+                result = false;
+            return result;
+        }
 
         #endregion
 
@@ -476,7 +490,106 @@ namespace Nop.Web.Controllers
 
         public ActionResult PaymentMethod()
         {
-            return Content("UNDONE PaymentMethod");
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            //Check whether payment workflow is required
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            if (!isPaymentWorkflowRequired)
+            {
+                _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = "";
+                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                return RedirectToRoute("CheckoutPaymentInfo");
+            }
+
+            //model
+            var model = new CheckoutPaymentMethodModel();
+
+            //reward points
+            if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
+            {
+                int rewardPointsBalance = _workContext.CurrentCustomer.GetRewardPointsBalance();
+                decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
+                decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
+                if (rewardPointsAmount > decimal.Zero)
+                {
+                    model.DisplayRewardPoints = true;
+                    model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
+                    model.RewardPointsBalance = rewardPointsBalance;
+                }
+            }
+            
+            var boundPaymentMethods = _paymentService.LoadActivePaymentMethods();
+            foreach (var pm in boundPaymentMethods)
+            {
+                var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel()
+                {
+                    Name = pm.FriendlyName,
+                    PaymentMethodSystemName = pm.SystemName,
+                };
+                //payment method additional fee
+                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(pm.SystemName);
+                decimal rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
+                decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                if (rate > decimal.Zero)
+                    pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
+
+                model.PaymentMethods.Add(pmModel);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("PaymentMethod")]
+        [FormValueRequired("nextstep")]
+        [ValidateInput(false)]
+        public ActionResult SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
+        {
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            //Check whether payment workflow is required
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            if (!isPaymentWorkflowRequired)
+            {
+                _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = "";
+                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                return RedirectToRoute("CheckoutPaymentInfo");
+            }
+            //payment method 
+            if (String.IsNullOrEmpty(paymentmethod))
+                return PaymentMethod();
+
+            //reward points
+            _workContext.CurrentCustomer.UseRewardPointsDuringCheckout = model.UseRewardPoints;
+            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+            var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
+            if (paymentMethodInst == null)
+                //TODO check whether payment method is active if (paymentMethodInst == null && !paymentMethodInst.IsActive)
+                return PaymentMethod();
+
+            //save
+            _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = paymentmethod;
+            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+            return RedirectToRoute("CheckoutPaymentInfo");
         }
 
         public ActionResult PaymentInfo()
