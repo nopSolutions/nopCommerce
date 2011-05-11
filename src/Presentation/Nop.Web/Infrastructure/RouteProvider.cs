@@ -105,9 +105,15 @@ namespace Nop.Web.Infrastructure
                             "checkout/confirm",
                             new { controller = "Checkout", action = "Confirm" },
                             new[] { "Nop.Web.Controllers" });
-            routes.MapRoute("CheckoutComplete",
+            routes.MapRoute("CheckoutCompleted",
                             "checkout/payment",
-                            new { controller = "Checkout", action = "Complete" },
+                            new { controller = "Checkout", action = "Completed" },
+                            new[] { "Nop.Web.Controllers" });
+
+            //orders
+            routes.MapRoute("OrderDetails",
+                            "order/{orderId}",
+                            new { controller = "Order", action = "Details" },
                             new[] { "Nop.Web.Controllers" });
         }
         public int Priority

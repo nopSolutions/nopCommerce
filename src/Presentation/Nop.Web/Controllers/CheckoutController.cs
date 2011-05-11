@@ -57,6 +57,8 @@ namespace Nop.Web.Controllers
         private readonly IShippingService _shippingService;
         private readonly IPaymentService _paymentService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ILogger _logger;
+        private readonly IOrderService _orderService;
         
 
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -76,6 +78,7 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,  ICountryService countryService,
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IPaymentService paymentService, IOrderTotalCalculationService orderTotalCalculationService,
+            ILogger logger, IOrderService orderService,
             ShoppingCartSettings shoppingCartSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings,TaxSettings taxSettings,
             RewardPointsSettings rewardPointsSettings)
@@ -94,6 +97,8 @@ namespace Nop.Web.Controllers
             this._shippingService = shippingService;
             this._paymentService = paymentService;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._logger = logger;
+            this._orderService = orderService;
 
             this._shoppingCartSettings = shoppingCartSettings;
             this._orderSettings = orderSettings;
@@ -592,19 +597,141 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutPaymentInfo");
         }
 
+
         public ActionResult PaymentInfo()
         {
-            return Content("UNDONE PaymentInfo");
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            //Check whether payment workflow is required
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            if (!isPaymentWorkflowRequired)
+            {
+                return RedirectToRoute("CheckoutConfirm");
+            }
+
+            //model
+            var model = new CheckoutPaymentInfoModel();
+            //TODO load payment info control
+
+            return View(model);
         }
+
+
 
         public ActionResult Confirm()
         {
-            return Content("UNDONE Confirm");
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            //model
+            var model = new CheckoutConfirmModel();
+            //min order amount validation
+            bool minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
+            if (!minOrderTotalAmountOk)
+            {
+                decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
+                model.MinOrderTotalWarning =  string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false));
+            }
+
+            return View(model);
         }
 
-        public ActionResult Complete()
+
+        [HttpPost, ActionName("Confirm")]
+        [ValidateInput(false)]
+        public ActionResult ConfirmOrder()
         {
-            return Content("UNDONE Complete");
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+
+            //model
+            var model = new CheckoutConfirmModel();
+            try
+            {
+                //TODO var paymentInfo = this.PaymentInfo;
+                //if (paymentInfo == null)
+                //{
+                //    return RedirectToRoute("CheckoutPaymentInfo");
+                //}
+
+                var processPaymentRequest = new ProcessPaymentRequest()
+                {
+                    Customer = _workContext.CurrentCustomer
+                };
+                var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
+                //TODO this.PaymentInfo = null;
+                if (placeOrderResult.Success)
+                {
+                    var postProcessPaymentRequest = new PostProcessPaymentRequest()
+                    {
+                        Order = placeOrderResult.PlacedOrder
+                    };
+                    _paymentService.PostProcessPayment(postProcessPaymentRequest);
+
+                    return RedirectToRoute("CheckoutCompleted");
+                }
+                else
+                {
+                    foreach (var error in placeOrderResult.Errors)
+                        model.Warnings.Add(error);
+                }
+            }
+            catch (Exception exc)
+            {
+                _logger.Warning(exc.Message, exc);
+                model.Warnings.Add(exc.Message);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
+        public ActionResult Completed()
+        {
+            //validation
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            //model
+            var model = new CheckoutCompletedModel();
+
+            var orders = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id);
+            if (orders.Count == 0)
+                return RedirectToAction("Index", "Home");
+            else
+            {
+                var lastOrder = orders[0];
+                model.OrderId = lastOrder.Id;
+            }
+
+            return View(model);
         }
         
         #endregion

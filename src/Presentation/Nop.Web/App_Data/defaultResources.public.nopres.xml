@@ -420,6 +420,15 @@
       <LocaleResource Name="BillingToThisAddress">
         <Value>Billing to this address</Value>
       </LocaleResource>
+      <LocaleResource Name="ConfirmButton">
+        <Value>Confirm</Value>
+      </LocaleResource>
+      <LocaleResource Name="ConfirmYourOrder">
+        <Value>Confirm your order</Value>
+      </LocaleResource>
+      <LocaleResource Name="Continue">
+        <Value>Continue</Value>
+      </LocaleResource>
       <LocaleResource Name="EnterBillingAddress">
         <Value>Enter billing address</Value>
       </LocaleResource>
@@ -429,17 +438,29 @@
       <LocaleResource Name="MinOrderSubtotalAmount">
         <Value>Minimum order sub-total amount is {0}</Value>
       </LocaleResource>
+      <LocaleResource Name="MinOrderTotalAmount">
+        <Value>Minimum order total amount is {0}</Value>
+      </LocaleResource>
       <LocaleResource Name="NextButton">
         <Value>Next</Value>
       </LocaleResource>
       <LocaleResource Name="NoPaymentMethods">
         <Value>No payment methods available</Value>
       </LocaleResource>
+      <LocaleResource Name="PlacedOrderDetails">
+        <Value>Click here for order details.</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderNumber">
+        <Value>Order number</Value>
+      </LocaleResource>
       <LocaleResource Name="OrderSummary">
         <Value>Order summary</Value>
       </LocaleResource>
       <LocaleResource Name="OrEnterNewAddress">
         <Value>Or enter new address</Value>
+      </LocaleResource>
+      <LocaleResource Name="PaymentInfo">
+        <Value>Payment Info</Value>
       </LocaleResource>
       <LocaleResource Name="Progress">
         <Children>
@@ -497,8 +518,14 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="ThankYou">
+        <Value>Thank you</Value>
+      </LocaleResource>
       <LocaleResource Name="UseRewardPoints">
         <Value>Use my reward points, {0} reward points ({1}) available</Value>
+      </LocaleResource>
+      <LocaleResource Name="YourOrderHasBeenSuccessfullyProcessed">
+        <Value>Your order has been successfully processed!</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>
