@@ -18,16 +18,22 @@
     <div class="checkout-data">
         @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post))
         {
-            <div class="checkout-data">
-                <div class="payment-info">
-                    <div class="body">
-                        @*TODO CheckoutPaymentInfo PlaceHolder*@
-                    </div>
-                    <div class="clear">
-                    </div>
-                    <div class="select-button">
-                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" id="nextstep" class="paymentinfonextstepbutton" />
-                    </div>
+            <div class="payment-info">
+                <div class="body">
+                    @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
+                </div>
+                <div class="clear">
+                </div>
+                <div class="select-button">
+                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" id="nextstep" class="paymentinfonextstepbutton" />
+                </div>
+            </div>
+            
+            <div class="clear">
+            </div>
+            <div class="error-block">
+                <div class="message-error">
+                    @Html.ValidationSummary(false)
                 </div>
             </div>
         }

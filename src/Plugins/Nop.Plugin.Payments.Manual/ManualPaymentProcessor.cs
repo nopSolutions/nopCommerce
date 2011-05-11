@@ -3,6 +3,7 @@ using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
+using Nop.Plugin.Payments.Manual.Controllers;
 using Nop.Services.Configuration;
 using Nop.Services.Payments;
 
@@ -26,7 +27,7 @@ namespace Nop.Plugin.Payments.Manual
 
         #endregion
 
-        #region Utilties
+        #region Utilities
 
         /// <summary>
         /// Gets current transaction mode
@@ -36,11 +37,11 @@ namespace Nop.Plugin.Payments.Manual
         {
             return _manualPaymentSettings.TransactMode;
         }
+
         #endregion
         
         #region Methods
-
-
+        
         /// <summary>
         /// Process a payment
         /// </summary>
@@ -205,6 +206,24 @@ namespace Nop.Plugin.Payments.Manual
             actionName = "Configure";
             controllerName = "PaymentManual";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
+        }
+
+        /// <summary>
+        /// Gets a route for payment info
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            actionName = "PaymentInfo";
+            controllerName = "PaymentManual";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
+        }
+
+        public Type GetControllerType()
+        {
+            return typeof(PaymentManualController);
         }
 
         #endregion

@@ -48,7 +48,8 @@
     <Compile Include="Controllers\PaymentManualController.cs" />
     <Compile Include="ManualPaymentSettings.cs" />
     <Compile Include="ManualPaymentProcessor.cs" />
-    <Compile Include="Models\PaymentManualModel.cs" />
+    <Compile Include="Models\ConfigurationModel.cs" />
+    <Compile Include="Models\PaymentInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteProvider.cs" />
     <Compile Include="TransactMode.cs" />
@@ -69,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\PaymentManual\Configure.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\PaymentManual\PaymentInfo.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

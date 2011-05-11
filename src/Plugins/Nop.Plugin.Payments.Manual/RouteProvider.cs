@@ -18,6 +18,12 @@ namespace Nop.Plugin.Payments.Manual
                  new { controller = "PaymentManual", action = "Configure" },
                  new[] { "Nop.Plugin.Payments.Manual.Controllers" }
             );
+
+            routes.MapRoute("Plugin.Payments.Manual.PaymentInfo",
+                 "Plugins/PaymentManual/PaymentInfo",
+                 new { controller = "PaymentManual", action = "PaymentInfo" },
+                 new[] { "Nop.Plugin.Payments.Manual.Controllers" }
+            );
         }
         public int Priority
         {

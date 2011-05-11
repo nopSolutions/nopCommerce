@@ -1015,6 +1015,25 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Payment">
+    <Children>
+      <LocaleResource Name="CardCode">
+        <Value>Card code</Value>
+      </LocaleResource>
+      <LocaleResource Name="CardholderName">
+        <Value>Cardholder name</Value>
+      </LocaleResource>
+      <LocaleResource Name="CardNumber">
+        <Value>Card number</Value>
+      </LocaleResource>
+      <LocaleResource Name="ExpirationDate">
+        <Value>Expiration date</Value>
+      </LocaleResource>
+      <LocaleResource Name="SelectCreditCard">
+        <Value>Select credit card</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Plugins">
     <Children>
       <LocaleResource Name="Title">

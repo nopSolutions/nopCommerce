@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -33,9 +34,9 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Checkout;
+using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
-using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
 {
@@ -43,7 +44,6 @@ namespace Nop.Web.Controllers
     {
 		#region Fields
 
-        private readonly IProductService _productService;
         private readonly IWorkContext _workContext;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ILocalizationService _localizationService;
@@ -61,29 +61,23 @@ namespace Nop.Web.Controllers
         private readonly IOrderService _orderService;
         
 
-        private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly OrderSettings _orderSettings;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
 
         #endregion
 
 		#region Constructors
 
-        public CheckoutController(IProductService productService, IWorkContext workContext,
+        public CheckoutController(IWorkContext workContext,
             IShoppingCartService shoppingCartService, ILocalizationService localizationService, 
             ITaxService taxService, ICurrencyService currencyService, 
             IPriceFormatter priceFormatter, IOrderProcessingService orderProcessingService,
             ICustomerService customerService,  ICountryService countryService,
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IPaymentService paymentService, IOrderTotalCalculationService orderTotalCalculationService,
-            ILogger logger, IOrderService orderService,
-            ShoppingCartSettings shoppingCartSettings, OrderSettings orderSettings,
-            ShippingSettings shippingSettings,TaxSettings taxSettings,
-            RewardPointsSettings rewardPointsSettings)
+            ILogger logger, IOrderService orderService, 
+            OrderSettings orderSettings, RewardPointsSettings rewardPointsSettings)
         {
-            this._productService = productService;
             this._workContext = workContext;
             this._shoppingCartService = shoppingCartService;
             this._localizationService = localizationService;
@@ -100,10 +94,7 @@ namespace Nop.Web.Controllers
             this._logger = logger;
             this._orderService = orderService;
 
-            this._shoppingCartSettings = shoppingCartSettings;
             this._orderSettings = orderSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
         }
 
@@ -617,11 +608,76 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToRoute("CheckoutConfirm");
             }
+            
+            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(_workContext.CurrentCustomer.SelectedPaymentMethodSystemName);
+            if (paymentMethod == null)
+                return RedirectToRoute("CheckoutPaymentMethod");
 
             //model
             var model = new CheckoutPaymentInfoModel();
-            //TODO load payment info control
+            string actionName;
+            string controllerName;
+            RouteValueDictionary routeValues;
+            paymentMethod.GetPaymentInfoRoute(out actionName, out controllerName, out routeValues);
+            model.PaymentInfoActionName = actionName;
+            model.PaymentInfoControllerName = controllerName;
+            model.PaymentInfoRouteValues = routeValues;
 
+            return View(model);
+        }
+
+        [HttpPost, ActionName("PaymentInfo")]
+        [FormValueRequired("nextstep")]
+        [ValidateInput(false)]
+        public ActionResult EnterPaymentInfo(FormCollection form)
+        {
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("CheckoutOnePage");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            //Check whether payment workflow is required
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            if (!isPaymentWorkflowRequired)
+            {
+                return RedirectToRoute("CheckoutConfirm");
+            }
+
+            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(_workContext.CurrentCustomer.SelectedPaymentMethodSystemName);
+            if (paymentMethod == null)
+                return RedirectToRoute("CheckoutPaymentMethod");
+
+            var paymentControllerType = paymentMethod.GetControllerType();
+            var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BaseNopPaymentController;
+            var warnings = paymentController.ValidatePaymentForm(form);
+            foreach (var warning in warnings)
+                ModelState.AddModelError("", warning);
+            if (ModelState.IsValid)
+            {
+                //get payment info
+                var paymentInfo = paymentController.GetPaymentInfo(form);
+                //session save
+                this.Session["OrderPaymentInfo"] = paymentInfo;
+                return RedirectToRoute("CheckoutConfirm");
+            }
+
+            //If we got this far, something failed, redisplay form
+            //TODO previously entered values should rendred (currently they're cleared)
+            //model
+            var model = new CheckoutPaymentInfoModel();
+            string actionName;
+            string controllerName;
+            RouteValueDictionary routeValues;
+            paymentMethod.GetPaymentInfoRoute(out actionName, out controllerName, out routeValues);
+            model.PaymentInfoActionName = actionName;
+            model.PaymentInfoControllerName = controllerName;
+            model.PaymentInfoRouteValues = routeValues;
             return View(model);
         }
 
@@ -674,18 +730,14 @@ namespace Nop.Web.Controllers
             var model = new CheckoutConfirmModel();
             try
             {
-                //TODO var paymentInfo = this.PaymentInfo;
-                //if (paymentInfo == null)
-                //{
-                //    return RedirectToRoute("CheckoutPaymentInfo");
-                //}
+                ProcessPaymentRequest processPaymentRequest = this.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
+                if (processPaymentRequest == null)
+                    return RedirectToRoute("CheckoutPaymentInfo");
 
-                var processPaymentRequest = new ProcessPaymentRequest()
-                {
-                    Customer = _workContext.CurrentCustomer
-                };
+                processPaymentRequest.Customer = _workContext.CurrentCustomer;
+                processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.SelectedPaymentMethodSystemName;
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
-                //TODO this.PaymentInfo = null;
+                this.Session["OrderPaymentInfo"] = null;
                 if (placeOrderResult.Success)
                 {
                     var postProcessPaymentRequest = new PostProcessPaymentRequest()

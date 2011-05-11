@@ -172,7 +172,7 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation");
         }
 
-        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
+        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)
         {
             var result = new StringBuilder();
             var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
@@ -181,7 +181,7 @@ namespace Nop.Web.Framework
             if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
             {
                 var resourceDisplayName = value as NopResourceDisplayName;
-                if (resourceDisplayName != null)
+                if (resourceDisplayName != null && displayHint)
                 {
                     hintResource =
                         EngineContext.Current.Resolve<ILocalizationService>().GetResource(

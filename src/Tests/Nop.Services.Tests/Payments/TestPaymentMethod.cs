@@ -120,6 +120,24 @@ namespace Nop.Services.Tests.Payments
             routeValues = null;
         }
 
+        /// <summary>
+        /// Gets a route for payment info
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            actionName = null;
+            controllerName = null;
+            routeValues = null;
+        }
+
+        public Type GetControllerType()
+        {
+            return typeof(TestPaymentMethod);
+        }
+
         #endregion
 
         #region Properies
