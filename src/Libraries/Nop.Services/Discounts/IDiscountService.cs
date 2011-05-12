@@ -70,5 +70,11 @@ namespace Nop.Services.Discounts
         /// <returns>true - requirement is met; otherwise, false</returns>
         bool IsDiscountValid(Discount discount, Customer customer);
 
+        /// <summary>
+        /// Delete discount usage history record
+        /// </summary>
+        /// <param name="discountUsageHistory">Discount usage history record</param>
+        void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
+
     }
 }

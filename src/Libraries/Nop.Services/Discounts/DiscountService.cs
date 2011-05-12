@@ -28,6 +28,7 @@ namespace Nop.Services.Discounts
 
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
+        private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IPluginFinder _pluginFinder;
         #endregion
@@ -44,11 +45,13 @@ namespace Nop.Services.Discounts
         public DiscountService(ICacheManager cacheManager,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
+            IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IPluginFinder pluginFinder)
         {
             this._cacheManager = cacheManager;
-            this._discountRequirementRepository = discountRequirementRepository;
             this._discountRepository = discountRepository;
+            this._discountRequirementRepository = discountRequirementRepository;
+            this._discountUsageHistoryRepository = discountUsageHistoryRepository;
             this._pluginFinder = pluginFinder;
         }
 
@@ -62,7 +65,7 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Value indicating whether discount can be used</returns>
-        public static bool CheckDiscountLimitations(Discount discount, Customer customer)
+        protected virtual bool CheckDiscountLimitations(Discount discount, Customer customer)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -302,6 +305,19 @@ namespace Nop.Services.Discounts
             return true;
         }
 
+        /// <summary>
+        /// Delete discount usage history record
+        /// </summary>
+        /// <param name="discountUsageHistory">Discount usage history record</param>
+        public void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
+        {
+            if (discountUsageHistory == null)
+                throw new ArgumentNullException("discountUsageHistory");
+
+            _discountUsageHistoryRepository.Delete(discountUsageHistory);
+
+            _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+        }
         #endregion
     }
 }

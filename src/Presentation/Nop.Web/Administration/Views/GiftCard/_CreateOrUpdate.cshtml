@@ -39,7 +39,6 @@
                 @Html.NopLabelFor(model => model.Amount):
             </td>
             <td class="adminData">
-            
                 @Html.Telerik().NumericTextBoxFor(model => model.Amount).MinValue(0)
                 @Html.ValidationMessageFor(model => model.Amount)
             </td>
@@ -170,6 +169,27 @@
 }
 @helper TabHistory()
     {
-    /*TODO implement gift card usage history*/
+    @(Html.Telerik().Grid<GiftCardModel.GiftCardUsageHistoryModel>()
+                    .Name("usagehistory-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.UsedValue).Width(200);
+                        columns.Bound(x => x.OrderId)
+                            .Width(100)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.OrderId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Order/Edit/<#= OrderId #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.CreatedOn).Width(200);
+
+                    })
+                    .Pageable(settings => settings.PageSize(20))
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("UsageHistoryList", "GiftCard", new { giftCardId = Model.Id });
+                    })
+                    .EnableCustomBinding(true))
     
 }

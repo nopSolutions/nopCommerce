@@ -4,7 +4,6 @@
 @using Nop.Core;
 @using Telerik.Web.Mvc.UI;
 @using Nop.Admin.Models;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("discount-edit").Items(x =>
@@ -13,8 +12,6 @@
     x.Add().Text(T("Admin.Promotions.Discounts.Requirements").Text).Content(TabRequirements().ToHtmlString());
     x.Add().Text(T("Admin.Promotions.Discounts.History").Text).Content(TabHistory().ToHtmlString());
 })
-
-
 @helper TabInfo()
     {
         
@@ -169,13 +166,12 @@
         </tr>
     </table>
 }
-
 @helper TabRequirements()
     {
-    if (Model.Id > 0)
-    {
+        if (Model.Id > 0)
+        {
         
-        <script type="text/javascript">
+    <script type="text/javascript">
             
             $(document).ready(function () {
             
@@ -251,10 +247,11 @@
 
            //array of exisiting discount requirements
            var discountRequirements = [
-                    @for(int i=0; i<Model.DiscountRequirementMetaInfos.Count;i++)
+                    @for (int i = 0; i < Model.DiscountRequirementMetaInfos.Count; i++)
                     {
                         var drmi = Model.DiscountRequirementMetaInfos[i];
-                        <text>{ discountRequirementId: @(drmi.DiscountRequirementId), ruleName: "@(drmi.RuleName)", url:  "@(Html.Raw(drmi.ConfigurationUrl))" } </text> if(i!=Model.DiscountRequirementMetaInfos.Count-1) {<text>, </text>}
+                        <text>{ discountRequirementId: @(drmi.DiscountRequirementId), ruleName: "@(drmi.RuleName)", url:  "@(Html.Raw(drmi.ConfigurationUrl))" } </text> if (i != Model.DiscountRequirementMetaInfos.Count - 1)
+                                                                                                                                                                         {<text>, </text>}
 
                     }
                ];
@@ -302,11 +299,12 @@
 
         }
 
-        </script>
-        <!-- Template container -->
-        <div id="discountRequirementContainer"></div>
-        <!-- Discount requirement template -->
-        <script id="discountRequirementTemplate" type="text/html">
+    </script>
+    <!-- Template container -->
+    <div id="discountRequirementContainer">
+    </div>
+    <!-- Discount requirement template -->
+    <script id="discountRequirementTemplate" type="text/html">
             <div id="editrequirement{{= discountRequirementId }}">
                 <div>Discount requirement type: <b>{{= ruleName }}</b></div>
                 <div id="editrequirementplaceholder{{= discountRequirementId }}" style="float:left;"></div>
@@ -321,38 +319,67 @@
                     </tr>
                 </table>
             </div>
-        </script>
+    </script>
             
-        <table class="adminContent">
-            <tr>
-                <td colspan="2">
-                    <b>@T("Admin.Promotions.Discounts.Requirements.AddNew")</b>
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AddDiscountRequirement):
-                </td>
-                <td class="adminData">
-                    @Html.DropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
-                    @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
-                </td>
-            </tr>
-        </table>
-        <table class="adminContent">
-            <tr>
-                <td colspan="2">
-                    <div id="addrequirementplaceholder"></div>    
-                </td>
-            </tr>
-        </table>
-    }
-    else
-    {
-        @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
-    }
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <b>@T("Admin.Promotions.Discounts.Requirements.AddNew")</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddDiscountRequirement):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
+                @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
+            </td>
+        </tr>
+    </table>
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <div id="addrequirementplaceholder">
+                </div>
+            </td>
+        </tr>
+    </table>
+        }
+        else
+        {
+    @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
+        }
 }
 @helper TabHistory()
     { 
-    /*TODO implement history*/
+    
+    @(Html.Telerik().Grid<DiscountModel.DiscountUsageHistoryModel>()
+                    .Name("usagehistory-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                        x.Add(y => y.DiscountId).RouteKey("discountId");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.OrderId)
+                            .Width(100)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.OrderId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Order/Edit/<#= OrderId #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.CreatedOn).Width(200);
+                        columns.Command(commands =>
+                        {
+                            commands.Delete();
+                        }).Width(100).Title("Admin.Common.Delete");
+
+                    })
+                    .Pageable(settings => settings.PageSize(20))
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("UsageHistoryList", "Discount", new { discountId = Model.Id })
+                            .Delete("UsageHistoryDelete", "Discount");
+                    })
+                    .EnableCustomBinding(true))
+        
 }

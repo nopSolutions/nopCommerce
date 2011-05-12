@@ -10,9 +10,11 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -27,17 +29,20 @@ namespace Nop.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion Fields
 
         #region Constructors
 
         public DiscountController(IDiscountService discountService, 
-            ILocalizationService localizationService, IWebHelper webHelper)
+            ILocalizationService localizationService, IWebHelper webHelper,
+            IDateTimeHelper dateTimeHelper)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
+            this._dateTimeHelper = dateTimeHelper;
         }
 
         #endregion Constructors
@@ -70,6 +75,7 @@ namespace Nop.Admin.Controllers
 
             if (discount != null)
             {
+                //requirements
                 foreach (var dr in discount.DiscountRequirements.OrderBy(dr=>dr.Id))
                 {
                     var drr = _discountService.LoadDiscountRequirementRuleBySystemName(dr.DiscountRequirementRuleSystemName);
@@ -83,6 +89,7 @@ namespace Nop.Admin.Controllers
                         });
                     }
                 }
+
             }
         }
 
@@ -241,6 +248,60 @@ namespace Nop.Admin.Controllers
             _discountService.DeleteDiscountRequirement(discountRequirement);
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region Discount usage history
+        
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult UsageHistoryList(int discountId, GridCommand command)
+        {
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new ArgumentException("No discount found with the specified id");
+            
+            var usageHistoryModel = discount.DiscountUsageHistory.OrderByDescending(duh => duh.CreatedOnUtc)
+                .Select(x =>
+                {
+                    return new DiscountModel.DiscountUsageHistoryModel()
+                    {
+                        Id = x.Id,
+                        DiscountId = x.DiscountId,
+                        OrderId = x.OrderId,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                    };
+                })
+                .ToList();
+            var model = new GridModel<DiscountModel.DiscountUsageHistoryModel>
+            {
+                Data = usageHistoryModel.PagedForCommand(command),
+                Total = usageHistoryModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult UsageHistoryDelete(int discountId, int id, GridCommand command)
+        {
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new ArgumentException("No discount found with the specified id");
+            
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var duh = discount.DiscountUsageHistory.Where(x => x.Id == id).FirstOrDefault();
+            if (duh != null)
+                _discountService.DeleteDiscountUsageHistory(duh);
+            return UsageHistoryList(discountId, command);
         }
 
         #endregion

@@ -732,7 +732,13 @@ namespace Nop.Web.Controllers
             {
                 ProcessPaymentRequest processPaymentRequest = this.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
                 if (processPaymentRequest == null)
-                    return RedirectToRoute("CheckoutPaymentInfo");
+                {
+                    //Check whether payment workflow is required
+                    if (IsPaymentWorkflowRequired(cart))
+                        return RedirectToRoute("CheckoutPaymentInfo");
+                    else
+                        processPaymentRequest = new ProcessPaymentRequest();
+                }
 
                 processPaymentRequest.Customer = _workContext.CurrentCustomer;
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.SelectedPaymentMethodSystemName;

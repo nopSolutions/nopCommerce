@@ -23,6 +23,7 @@ namespace Nop.Services.Tests.Discounts
     {
         IRepository<Discount> _discountRepo;
         IRepository<DiscountRequirement> _discountRequirementRepo;
+        IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
         IDiscountService _discountService;
 
         [SetUp]
@@ -58,8 +59,10 @@ namespace Nop.Services.Tests.Discounts
 
             var cacheManager = new NopNullCache();
             _discountRequirementRepo = MockRepository.GenerateMock<IRepository<DiscountRequirement>>();
+            _discountUsageHistoryRepo = MockRepository.GenerateMock<IRepository<DiscountUsageHistory>>();
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
-            _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo, pluginFinder);
+            _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
+                _discountUsageHistoryRepo, pluginFinder);
         }
 
         [Test]

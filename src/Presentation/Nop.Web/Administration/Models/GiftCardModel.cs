@@ -60,5 +60,22 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.CreatedOn")]
         public string CreatedOnStr { get; set; }
+
+
+        #region Nested classes
+
+        public class GiftCardUsageHistoryModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.GiftCards.History.UsedValue")]
+            public string UsedValue { get; set; }
+
+            [NopResourceDisplayName("Admin.GiftCards.History.Order")]
+            public int OrderId { get; set; }
+
+            [NopResourceDisplayName("Admin.GiftCards.History.CreatedOn")]
+            public string CreatedOn { get; set; }
+        }
+
+        #endregion
     }
 }

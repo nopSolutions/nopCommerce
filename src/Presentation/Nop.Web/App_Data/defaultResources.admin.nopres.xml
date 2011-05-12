@@ -3168,6 +3168,17 @@
                 </LocaleResource>
                     <LocaleResource Name="History">
                       <Value>Usage history</Value>
+                      <Children>
+                        <LocaleResource Name="UsedValue">
+                          <Value>Used amount</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Order">
+                          <Value>Order</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="CreatedOn">
+                          <Value>Used</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
               </Children>
             </LocaleResource>
@@ -3299,6 +3310,14 @@
                   </LocaleResource>
                   <LocaleResource Name="History">
                     <Value>Usage history</Value>
+                    <Children>
+                      <LocaleResource Name="Order">
+                        <Value>Order</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="CreatedOn">
+                        <Value>Used</Value>
+                      </LocaleResource>
+                    </Children>
                   </LocaleResource>
                   <LocaleResource Name="Requirements">
                     <Value>Requirements</Value>

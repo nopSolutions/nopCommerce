@@ -194,6 +194,41 @@ namespace Nop.Admin.Controllers
             _giftCardService.DeleteGiftCard(giftCard);
             return RedirectToAction("List");
         }
+
+
+
+        //Gif card usage history
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult UsageHistoryList(int giftCardId, GridCommand command)
+        {
+            var giftCard = _giftCardService.GetGiftCardById(giftCardId);
+            if (giftCard == null)
+                throw new ArgumentException("No gift card found with the specified id");
+
+            var usageHistoryModel = giftCard.GiftCardUsageHistory.OrderByDescending(gcuh => gcuh.CreatedOnUtc)
+                .Select(x =>
+                {
+                    return new GiftCardModel.GiftCardUsageHistoryModel()
+                    {
+                        Id = x.Id,
+                        OrderId = x.UsedWithOrderId,
+                        UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                    };
+                })
+                .ToList();
+            var model = new GridModel<GiftCardModel.GiftCardUsageHistoryModel>
+            {
+                Data = usageHistoryModel.PagedForCommand(command),
+                Total = usageHistoryModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
         #endregion
     }
 }

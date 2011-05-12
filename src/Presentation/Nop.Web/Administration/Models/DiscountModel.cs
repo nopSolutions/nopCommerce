@@ -17,6 +17,7 @@ namespace Nop.Admin.Models
             AvailableDiscountRequirementRules = new List<SelectListItem>();
             DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
         }
+
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -62,15 +63,28 @@ namespace Nop.Admin.Models
         public IList<SelectListItem> AvailableDiscountRequirementRules { get; set; }
 
         public IList<DiscountRequirementMetaInfo> DiscountRequirementMetaInfos { get; set; }
-
+        
 
         #region Nested classes
+
         public class DiscountRequirementMetaInfo : BaseNopModel
         {
             public int DiscountRequirementId { get; set; }
             public string RuleName { get; set; }
             public string ConfigurationUrl { get; set; }
         }
+
+        public class DiscountUsageHistoryModel : BaseNopEntityModel
+        {
+            public int DiscountId { get; set; }
+
+            [NopResourceDisplayName("Admin.Promotions.Discounts.History.Order")]
+            public int OrderId { get; set; }
+
+            [NopResourceDisplayName("Admin.Promotions.Discounts.History.CreatedOn")]
+            public string CreatedOn { get; set; }
+        }
+
         #endregion
     }
 }
