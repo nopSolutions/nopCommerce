@@ -9,7 +9,7 @@ using Nop.Data;
 namespace Nop.Services.Common
 {
     /// <summary>
-    /// Customer service
+    /// Address service
     /// </summary>
     public partial class AddressService : IAddressService
     {

@@ -31,6 +31,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MigraDoc.DocumentObjectModel">
+      <HintPath>..\..\packages\PdfSharp\MigraDoc.DocumentObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Rendering">
+      <HintPath>..\..\packages\PdfSharp\MigraDoc.Rendering.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.RtfRendering">
+      <HintPath>..\..\packages\PdfSharp\MigraDoc.RtfRendering.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp">
+      <HintPath>..\..\packages\PdfSharp\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting">
+      <HintPath>..\..\packages\PdfSharp\PdfSharp.Charting.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -59,6 +74,8 @@
     <Compile Include="Catalog\ProductAttributeFormatter.cs" />
     <Compile Include="Catalog\ProductAttributeParser.cs" />
     <Compile Include="Common\AddressService.cs" />
+    <Compile Include="Common\IPdfService.cs" />
+    <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Customers\CustomerExtentions.cs" />

@@ -1,0 +1,76 @@
+﻿@model Nop.Web.Models.Customer.CustomerOrderListModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+@using Nop.Web.Framework;
+@section left
+{
+    @Html.Partial("~/Views/Customer/MyAccountNavigation.cshtml", Model.NavigationModel, new ViewDataDictionary())
+}
+<div class="account-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.CustomerOrders")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div class="customer-orders">
+            @*UNDONE display RecurringPayments*@
+            <div class="clear">
+            </div>
+            <div class="order-list">
+                @if (Model.Orders.Count > 0)
+                {
+                    foreach (var order in Model.Orders)
+                    {
+                    <div class="order-item">
+                        <table width="100%" cellspacing="0" cellpadding="2" border="0">
+                            <tbody>
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        <b>
+                                            @T("Account.CustomerOrders.OrderNumber"): @order.Id</b>
+                                    </td>
+                                    <td align="right">
+                                        @if (order.IsReturnRequestAllowed)
+                                        {
+                                            <input type="button" name="returnitems" value="@T("Account.CustomerOrders.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@(@Url.RouteUrl("ReturnRequest", new { orderId = @order.Id }))')" />
+                                            <text>&nbsp;&nbsp;&nbsp;</text>
+                                        }
+                                        <input type="button" name="orderdetails" value="@T("Account.CustomerOrders.OrderDetails")" id="orderdetails" class="orderdetailsbutton" onclick="setLocation('@(@Url.RouteUrl("OrderDetails", new { orderId = @order.Id }))')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <table cellspacing="0" cellpadding="2" border="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div>
+                                                            @T("Account.CustomerOrders.OrderStatus"): @order.OrderStatus</div>
+                                                        <div>
+                                                            @T("Account.CustomerOrders.OrderDate"): @order.CreatedOn</div>
+                                                        <div>
+                                                            @T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clear">
+                    </div>
+                    }
+                }
+                else
+                {
+                    @T("Account.CustomerOrders.NoOrders")
+                }
+            </div>
+        </div>
+    </div>
+</div>

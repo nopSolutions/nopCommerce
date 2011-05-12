@@ -5,7 +5,7 @@ using Nop.Core.Domain.Common;
 namespace Nop.Services.Common
 {
     /// <summary>
-    /// Customer service interface
+    /// Address service interface
     /// </summary>
     public partial interface IAddressService
     {

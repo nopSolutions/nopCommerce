@@ -804,6 +804,14 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallSettings()
         {
+            EngineContext.Current.Resolve<IConfigurationProvider<PdfSettings>>()
+                .SaveSettings(new PdfSettings()
+                {
+                    Enabled = true,
+                    LogoFilePath = null,
+                    RenderOrderNotes = true,
+                });
+
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
                 .SaveSettings(new CatalogSettings()
                 {

@@ -112,10 +112,19 @@ namespace Nop.Web.Infrastructure
 
             //orders
             routes.MapRoute("OrderDetails",
-                            "order/{orderId}",
+                            "orderdetails/{orderId}",
                             new { controller = "Order", action = "Details" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("ReturnRequest",
+                            "returnrequest/{orderId}",
+                            new { controller = "Order", action = "ReturnRequest" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("GetOrderPdfInvoice",
+                            "orderdetails/pdf/{orderId}",
+                            new { controller = "Order", action = "GetPdfInvoice" },
+                            new[] { "Nop.Web.Controllers" });
         }
+
         public int Priority
         {
             get

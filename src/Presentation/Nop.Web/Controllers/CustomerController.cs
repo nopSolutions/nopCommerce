@@ -54,10 +54,13 @@ namespace Nop.Web.Controllers
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderService _orderService;
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IPictureService _pictureService;
         private readonly MediaSettings _mediaSettings;
+
         #endregion
 
         #region Ctor
@@ -72,6 +75,7 @@ namespace Nop.Web.Controllers
             OrderSettings orderSettings, IAddressService addressService,
             ICountryService countryService, IStateProvinceService stateProvinceService,
             IOrderTotalCalculationService orderTotalCalculationService,
+            IOrderProcessingService orderProcessingService, IOrderService orderService,
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
             IPictureService pictureService, MediaSettings mediaSettings)
         {
@@ -93,7 +97,9 @@ namespace Nop.Web.Controllers
             this._addressService = addressService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
+            this._orderProcessingService = orderProcessingService;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._orderService = orderService;
             this._currencyService = currencyService;
             this._priceFormatter = priceFormatter;
             this._pictureService = pictureService;
@@ -669,6 +675,38 @@ namespace Nop.Web.Controllers
             return View(model);
         }
            
+        #endregion
+
+        #region Orders
+
+        public ActionResult Orders()
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new CustomerOrderListModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
+            var orders = _orderService.GetOrdersByCustomerId(customer.Id);
+            foreach (var order in orders)
+            {
+                var orderModel = new CustomerOrderListModel.OrderDetailsModel()
+                {
+                    Id = order.Id,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString(),
+                    OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order)
+                };
+                var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
+                orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+
+                model.Orders.Add(orderModel);
+            }
+            return View(model);
+        }
+
         #endregion
 
         #region Reward points

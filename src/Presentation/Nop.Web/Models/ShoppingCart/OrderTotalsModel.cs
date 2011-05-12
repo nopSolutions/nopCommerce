@@ -30,19 +30,17 @@ namespace Nop.Web.Models.ShoppingCart
         public string PaymentMethodAdditionalFee { get; set; }
 
         public string Tax { get; set; }
-        public List<TaxRate> TaxRates { get; set; }
+        public IList<TaxRate> TaxRates { get; set; }
         public bool DisplayTax { get; set; }
         public bool DisplayTaxRates { get; set; }
 
 
-        public List<GiftCard> GiftCards { get; set; }
+        public IList<GiftCard> GiftCards { get; set; }
 
         public string OrderTotalDiscount { get; set; }
         public bool AllowRemovingOrderTotalDiscount { get; set; }
-
         public int RedeemedRewardPoints { get; set; }
         public string RedeemedRewardPointsAmount { get; set; }
-
         public string OrderTotal { get; set; }
 
         #region Nested classes

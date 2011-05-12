@@ -96,6 +96,29 @@
       </LocaleResource>
       <LocaleResource Name="CustomerOrders">
         <Value>Orders</Value>
+        <Children>
+          <LocaleResource Name="OrderDetails">
+            <Value>Details</Value>
+          </LocaleResource>
+          <LocaleResource Name="NoOrders">
+            <Value>No orders</Value>
+          </LocaleResource>
+          <LocaleResource Name="OrderDate">
+            <Value>Order Date</Value>
+          </LocaleResource>
+          <LocaleResource Name="OrderNumber">
+            <Value>Order Number</Value>
+          </LocaleResource>
+          <LocaleResource Name="OrderStatus">
+            <Value>Order status</Value>
+          </LocaleResource>
+          <LocaleResource Name="OrderTotal">
+            <Value>Order Total</Value>
+          </LocaleResource>
+          <LocaleResource Name="ReturnItems">
+            <Value>Return Item(s)</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="CustomerReturnRequests">
         <Value>Return requests</Value>
@@ -1015,6 +1038,140 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Order">
+    <Children>
+      <LocaleResource Name="BillingAddress">
+        <Value>Billing Address</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeliveredOn">
+        <Value>Delivered on</Value>
+      </LocaleResource>
+      <LocaleResource Name="Email">
+        <Value>Email</Value>
+      </LocaleResource>
+      <LocaleResource Name="Fax">
+        <Value>Fax</Value>
+      </LocaleResource>
+      <LocaleResource Name="GetPDFInvoice">
+        <Value>PDF Invoice</Value>
+      </LocaleResource>
+      <LocaleResource Name="GiftCardInfo">
+        <Value>Gift card ({0})</Value>
+      </LocaleResource>
+      <LocaleResource Name="Notes">
+        <Value>Note(s)</Value>
+        <Children>
+          <LocaleResource Name="CreatedOn">
+            <Value>Created On</Value>
+          </LocaleResource>
+          <LocaleResource Name="Note">
+            <Value>Note</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="NotYetDelivered">
+        <Value>Not delivered yet</Value>
+      </LocaleResource>
+      <LocaleResource Name="NotYetShipped">
+        <Value>Not shipped yet</Value>
+      </LocaleResource>
+      <LocaleResource Name="Order#">
+        <Value>Order #</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderDate">
+        <Value>Order Date</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderInformation">
+        <Value>Order information</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderStatus">
+        <Value>Order Status</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderTotal">
+        <Value>Order Total</Value>
+      </LocaleResource>
+      <LocaleResource Name="PaymentMethod">
+        <Value>Payment Method</Value>
+      </LocaleResource>
+      <LocaleResource Name="PaymentMethodAdditionalFee">
+        <Value>Payment method additional fee</Value>
+      </LocaleResource>
+      <LocaleResource Name="Phone">
+        <Value>Phone</Value>
+      </LocaleResource>
+      <LocaleResource Name="Print">
+        <Value>Print</Value>
+      </LocaleResource>
+      <LocaleResource Name="Product(s)">
+        <Value>Product(s)</Value>
+        <Children>
+          <LocaleResource Name="SKU">
+            <Value>SKU</Value>
+          </LocaleResource>
+          <LocaleResource Name="Name">
+            <Value>Name</Value>
+          </LocaleResource>
+          <LocaleResource Name="Price">
+            <Value>Price</Value>
+          </LocaleResource>
+          <LocaleResource Name="Quantity">
+            <Value>Quantity</Value>
+          </LocaleResource>
+          <LocaleResource Name="Total">
+            <Value>Total</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Reorder">
+        <Value>Re-order</Value>
+      </LocaleResource>
+      <LocaleResource Name="ReturnItems">
+        <Value>Return Item(s)</Value>
+      </LocaleResource>
+      <LocaleResource Name="RewardPoints">
+        <Value>{0} reward points</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShippedOn">
+        <Value>Shipped on</Value>
+      </LocaleResource>
+      <LocaleResource Name="Reorder">
+        <Value>Re-order</Value>
+      </LocaleResource>
+      <LocaleResource Name="Shipping">
+        <Value>Shipping</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShippingAddress">
+        <Value>Shipping Address</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShippingMethod">
+        <Value>Shipping Method</Value>
+      </LocaleResource>
+      <LocaleResource Name="SubTotal">
+        <Value>Sub-Total</Value>
+      </LocaleResource>
+      <LocaleResource Name="SubTotalDiscount">
+        <Value>Discount</Value>
+      </LocaleResource>
+      <LocaleResource Name="Tax">
+        <Value>Tax</Value>
+      </LocaleResource>
+      <LocaleResource Name="TaxRateLine">
+        <Value>Tax {0}%</Value>
+      </LocaleResource>
+      <LocaleResource Name="TotalDiscount">
+        <Value>Discount</Value>
+      </LocaleResource>
+      <LocaleResource Name="TrackingNumber">
+        <Value>Tracking number</Value>
+      </LocaleResource>
+      <LocaleResource Name="VATNumber">
+        <Value>VAT number</Value>
+      </LocaleResource>
+      <LocaleResource Name="Weight">
+        <Value>Weight</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Payment">
     <Children>
       <LocaleResource Name="CardCode">
@@ -1031,6 +1188,97 @@
       </LocaleResource>
       <LocaleResource Name="SelectCreditCard">
         <Value>Select credit card</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice">
+    <Children>
+      <LocaleResource Name="Address">
+        <Value>Address: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Address2">
+        <Value>Address 2: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="BillingInformation">
+        <Value>Billing Information:</Value>
+      </LocaleResource>
+      <LocaleResource Name="Company">
+        <Value>Company: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Discount">
+        <Value>Discount:</Value>
+      </LocaleResource>
+      <LocaleResource Name="Fax">
+        <Value>Fax: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="GiftCardInfo">
+        <Value>Gift card ({0}):</Value>
+      </LocaleResource>
+      <LocaleResource Name="Name">
+        <Value>Name: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Order#">
+        <Value>Order# {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderDate">
+        <Value>Date: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderNotes">
+        <Value>Order notes:</Value>
+      </LocaleResource>
+      <LocaleResource Name="CreatedOn">
+        <Value>Created on</Value>
+      </LocaleResource>
+      <LocaleResource Name="Note">
+        <Value>Note</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderTotal">
+        <Value>Order total:</Value>
+      </LocaleResource>
+      <LocaleResource Name="PaymentMethodAdditionalFee">
+        <Value>Payment Method Additional Fee:</Value>
+      </LocaleResource>
+      <LocaleResource Name="Phone">
+        <Value>Phone: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Product(s)">
+        <Value>Product(s)</Value>
+      </LocaleResource>
+      <LocaleResource Name="ProductName">
+        <Value>Name</Value>
+      </LocaleResource>
+      <LocaleResource Name="ProductPrice">
+        <Value>Price</Value>
+      </LocaleResource>
+      <LocaleResource Name="ProductQuantity">
+        <Value>Q-ty</Value>
+      </LocaleResource>
+      <LocaleResource Name="ProductTotal">
+        <Value>Total</Value>
+      </LocaleResource>
+      <LocaleResource Name="RewardPoints">
+        <Value>{0} reward points:</Value>
+      </LocaleResource>
+      <LocaleResource Name="Shipping">
+        <Value>Shipping:</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShippingInformation">
+        <Value>Shipping Information:</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShippingMethod">
+        <Value>Shipping method: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Sub-Total">
+        <Value>Sub-total:</Value>
+      </LocaleResource>
+      <LocaleResource Name="Tax">
+        <Value>Tax:</Value>
+      </LocaleResource>
+      <LocaleResource Name="TaxRate">
+        <Value>Tax {0}%:</Value>
+      </LocaleResource>
+      <LocaleResource Name="VATNumber">
+        <Value>VAT number: {0}</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

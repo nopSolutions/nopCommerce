@@ -364,6 +364,9 @@ namespace Nop.Services.Orders
             if (processPaymentRequest == null)
                 throw new ArgumentNullException("processPaymentRequest");
 
+            if (processPaymentRequest.OrderGuid == Guid.Empty)
+                processPaymentRequest.OrderGuid = Guid.NewGuid();
+
             var result = new PlaceOrderResult();
             try
             {
@@ -386,14 +389,18 @@ namespace Nop.Services.Orders
 
                 //customer currency
                 string customerCurrencyCode = "";
+                decimal customerCurrencyRate = decimal.Zero;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
                     var customerCurrency = (customer.Currency != null && customer.Currency.Published) ? customer.Currency : _workContext.WorkingCurrency;
                     customerCurrencyCode = customerCurrency.CurrencyCode;
+                    customerCurrencyRate = customerCurrency.Rate;
                 }
                 else
+                {
                     customerCurrencyCode = initialOrder.CustomerCurrencyCode;
-
+                    customerCurrencyRate = initialOrder.CurrencyRate;
+                }
                 //customer language
                 Language customerLanguage = null;
                 if (!processPaymentRequest.IsRecurringPayment)
@@ -834,6 +841,7 @@ namespace Nop.Services.Orders
                             CheckoutAttributeDescription = checkoutAttributeDescription,
                             CheckoutAttributesXml = checkoutAttributesXml,
                             CustomerCurrencyCode = customerCurrencyCode,
+                            CurrencyRate = customerCurrencyRate,
                             OrderWeight = orderWeight,
                             AffiliateId = customer.AffiliateId,
                             OrderStatus = OrderStatus.Pending,
