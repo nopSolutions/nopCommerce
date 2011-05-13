@@ -130,10 +130,14 @@ namespace Nop.Services.Orders
         /// <param name="os">Order status; null to load all orders</param>
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shippment status; null to load all orders</param>
+        /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
-        public IList<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, string orderGuid = null)
+        public IPagedList<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
+            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, string billingEmail, 
+            string orderGuid, int pageIndex, int pageSize)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -146,24 +150,30 @@ namespace Nop.Services.Orders
             int? shippingStatusId = null;
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
-            
-            var query = from o in _orderRepository.Table
-                        where (!startTime.HasValue || startTime.Value <= o.CreatedOnUtc) &&
-                        (!endTime.HasValue || endTime.Value >= o.CreatedOnUtc) &&
-                        (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                        (!paymentStatusId.HasValue || paymentStatusId.Value == o.PaymentStatusId) &&
-                        (!shippingStatusId.HasValue || shippingStatusId.Value == o.ShippingStatusId) &&
-                        !o.Deleted
-                        orderby o.CreatedOnUtc descending
-                        select o;
+
+            var query = _orderRepository.Table;
+            if (startTime.HasValue)
+                query = query.Where(o => startTime.Value <= o.CreatedOnUtc);
+            if (endTime.HasValue)
+                query = query.Where(o => endTime.Value >= o.CreatedOnUtc);
+            if (orderStatusId.HasValue)
+                query = query.Where(o => orderStatusId.Value == o.OrderStatusId);
+            if (paymentStatusId.HasValue)
+                query = query.Where(o => paymentStatusId.Value == o.PaymentStatusId);
+            if (shippingStatusId.HasValue)
+                query = query.Where(o => shippingStatusId.Value == o.ShippingStatusId);
+            if (!String.IsNullOrEmpty(billingEmail))
+                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+            query = query.Where(o => !o.Deleted);
+            query = query.OrderByDescending(o => o.CreatedOnUtc);
 
             var orders = query.ToList();
             
             //filter by GUID. Filter in BLL because EF doesn't support casting of GUID to string
             if (!String.IsNullOrEmpty(orderGuid))
                 orders = orders.FindAll(o => o.OrderGuid.ToString().ToLowerInvariant().Contains(orderGuid.ToLowerInvariant()));
-            
-            return orders;
+
+            return new PagedList<Order>(orders, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -172,7 +182,7 @@ namespace Nop.Services.Orders
         /// <returns>Order collection</returns>
         public IList<Order> LoadAllOrders()
         {
-            return SearchOrders(null, null, null, null, null, null);
+            return SearchOrders(null, null, null, null, null, null, null, 0, int.MaxValue);
         }
 
         /// <summary>

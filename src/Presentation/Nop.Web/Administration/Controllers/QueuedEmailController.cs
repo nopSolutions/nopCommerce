@@ -61,13 +61,13 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-email-by-number")]
-        public ActionResult GoToSku(QueuedEmailListModel model)
+        public ActionResult GoToEmailByNumber(QueuedEmailListModel model)
         {
             var queuedEmail = _queuedEmailService.GetQueuedEmailById(model.GoDirectlyToNumber);
             if (queuedEmail != null)
                 return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
             else
-                return View(model);
+                return List();
         }
 
 		public ActionResult Edit(int id)

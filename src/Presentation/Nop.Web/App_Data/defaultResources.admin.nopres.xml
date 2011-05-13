@@ -3182,6 +3182,139 @@
                     </LocaleResource>
               </Children>
             </LocaleResource>
+            <LocaleResource Name="Orders">
+              <Value>Orders</Value>
+              <Children>
+                <LocaleResource Name="Fields">
+                  <Children>
+                  <LocaleResource Name="ID">
+                    <Value>Order ID</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The unique ID of this order.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="OrderTotal">
+                    <Value>Order total</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The total cost of this order (includes discounts, shipping and tax).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                    <LocaleResource Name="OrderStatus">
+                      <Value>Order status</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The status of this order.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="PaymentStatus">
+                      <Value>Payment status</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The status of the payment.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="ShippingStatus">
+                      <Value>Shipping status</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The status of the shipping.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CustomerEmail">
+                      <Value>Email</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Email</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CreatedOn">
+                      <Value>Created on</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The date/time the order was placed/created.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                </Children>
+                </LocaleResource>
+                <LocaleResource Name="List">
+                <Children>
+                  <LocaleResource Name="StartDate">
+                    <Value>Start date</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The start date for the search</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="EndDate">
+                    <Value>End date</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The end date for the search.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="CustomerEmail">
+                    <Value>Billing email address</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>A billing email address.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="OrderStatus">
+                    <Value>Order status</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Search by a specific order status e.g. Complete.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="PaymentStatus">
+                    <Value>Payment status</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Search by a specific payment status e.g. Paid.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ShippingStatus">
+                    <Value>Shipping status</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="OrderGuid">
+                    <Value>Order GUID</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="GoDirectlyToNumber">
+                    <Value>Go directly to order #</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Go directly to order #</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              </Children>
+            </LocaleResource>
             <LocaleResource Name="Sales">
               <Value>Sales</Value>
             </LocaleResource>

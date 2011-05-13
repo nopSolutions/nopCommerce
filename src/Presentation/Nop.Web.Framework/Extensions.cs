@@ -126,7 +126,7 @@ namespace Nop.Web.Framework
                             .HeaderHtmlAttributes(new { style = "text-align:center;" });
         }
 
-        public static SelectList ToSelectList<TEnum>(this TEnum enumObj) where TEnum : struct
+        public static SelectList ToSelectList<TEnum>(this TEnum enumObj, bool markCurrentAsSelected = true) where TEnum : struct
         {
             if (!typeof(TEnum).IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");
 
@@ -135,7 +135,10 @@ namespace Nop.Web.Framework
 
             var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))
                          select new { ID = Convert.ToInt32(enumValue), Name = enumValue.GetLocalizedEnum(localizationService, workContext) };
-            return new SelectList(values, "ID", "Name", Convert.ToInt32(enumObj));
+            object selectedValue = null;
+            if (markCurrentAsSelected)
+                selectedValue = Convert.ToInt32(enumObj);
+            return new SelectList(values, "ID", "Name", selectedValue);
         }
 
         public static string GetValueFromAppliedFilter(this IFilterDescriptor filter, string valueName, FilterOperator? filterOperator = null)

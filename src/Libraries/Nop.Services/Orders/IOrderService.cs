@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -41,10 +42,14 @@ namespace Nop.Services.Orders
         /// <param name="os">Order status; null to load all orders</param>
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shippment status; null to load all orders</param>
-        /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
+        /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
+        /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all records.</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
-        IList<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
-           OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, string orderGuid = null);
+        IPagedList<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
+            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, string billingEmail,
+            string orderGuid, int pageIndex, int pageSize);
 
         /// <summary>
         /// Load all orders

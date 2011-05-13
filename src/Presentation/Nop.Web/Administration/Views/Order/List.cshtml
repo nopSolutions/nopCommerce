@@ -1,0 +1,147 @@
+﻿@model Nop.Admin.Models.OrderListModel
+           
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" />
+            @T("Admin.Orders")
+        </div>
+        <div class="options">
+            @*TODO print packaging slips support*@
+        </div>
+    </div>
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StartDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StartDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EndDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.EndDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.CustomerEmail)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderStatusId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PaymentStatusId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippingStatusId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
+            </td>
+        </tr>
+       <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderGuid):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.OrderGuid)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GoDirectlyToNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.GoDirectlyToNumber)
+                <button type="submit" name="go-to-order-by-number" value="go-to-order-by-number" class="t-button">@T("Admin.Common.Go")</button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
+            </td>
+        </tr>
+    </table>
+     <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<Nop.Admin.Models.OrderModel>()
+                        .Name("orders-grid")
+                .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                        .Columns(columns =>
+                        {
+                            columns.Bound(x => x.Id);
+                            columns.Bound(x => x.OrderTotal);
+                            columns.Bound(x => x.OrderStatus);
+                            columns.Bound(x => x.PaymentStatus);
+                            columns.Bound(x => x.ShippingStatus);
+                            columns.Bound(x => x.CustomerEmail);
+                            columns.Bound(x => x.Id)
+                                .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", new { id = x.Id }))
+                                .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+                                .Width(50)
+                                .Centered()
+                                .Title("Edit");
+                        })
+                        .Pageable(settings => settings.PageSize(10))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("OrderList", "Order", Model))
+                        .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+    
+    <script type="text/javascript">
+        var selectedIds = [];
+
+        $(document).ready(function () {
+
+            $('#btnSearch').click(function () {
+                var grid = $('#orders-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+
+        });
+
+    function onDataBinding(e) {
+        var searchModel = {
+                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                CustomerEmail: $('#@Html.FieldIdFor(model => model.CustomerEmail)').val(),
+                OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
+                PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
+                ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val(),
+                OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
+                };
+        e.data = searchModel;
+    }
+
+   </script>
+    
+}
