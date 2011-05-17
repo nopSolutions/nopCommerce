@@ -118,6 +118,8 @@ namespace Nop.Admin.Controllers
             //subtotal
             model.OrderSubtotalInclTax = _priceFormatter.FormatPrice(order.OrderSubtotalInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
             model.OrderSubtotalExclTax = _priceFormatter.FormatPrice(order.OrderSubtotalExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            model.OrderSubtotalInclTaxValue = order.OrderSubtotalInclTax;
+            model.OrderSubtotalExclTaxValue = order.OrderSubtotalExclTax;
             //discount (applied to order subtotal)
             string orderSubtotalDiscountInclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
             string orderSubtotalDiscountExclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
@@ -125,11 +127,14 @@ namespace Nop.Admin.Controllers
                 model.OrderSubTotalDiscountInclTax = orderSubtotalDiscountInclTaxStr;
             if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
                 model.OrderSubTotalDiscountExclTax = orderSubtotalDiscountExclTaxStr;
-
+            model.OrderSubTotalDiscountInclTaxValue = order.OrderSubTotalDiscountInclTax;
+            model.OrderSubTotalDiscountExclTaxValue = order.OrderSubTotalDiscountExclTax;
 
             //shipping
             model.OrderShippingInclTax = _priceFormatter.FormatShippingPrice(order.OrderShippingInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
             model.OrderShippingExclTax = _priceFormatter.FormatShippingPrice(order.OrderShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            model.OrderShippingInclTaxValue = order.OrderShippingInclTax;
+            model.OrderShippingExclTaxValue = order.OrderShippingExclTax;
 
             //payment method additional fee
             if (order.PaymentMethodAdditionalFeeInclTax > decimal.Zero)
@@ -137,6 +142,8 @@ namespace Nop.Admin.Controllers
                 model.PaymentMethodAdditionalFeeInclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
                 model.PaymentMethodAdditionalFeeExclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
             }
+            model.PaymentMethodAdditionalFeeInclTaxValue = order.PaymentMethodAdditionalFeeInclTax;
+            model.PaymentMethodAdditionalFeeExclTaxValue = order.PaymentMethodAdditionalFeeExclTax;
 
 
             //tax
@@ -154,10 +161,13 @@ namespace Nop.Admin.Controllers
             }
             model.DisplayTaxRates = displayTaxRates;
             model.DisplayTax = displayTax;
+            model.TaxValue = order.OrderTax;
+            model.TaxRatesValue = order.TaxRates;
 
             //discount
             if (order.OrderDiscount > 0)
                 model.OrderTotalDiscount = _priceFormatter.FormatPrice(-order.OrderDiscount, true, false);
+            model.OrderTotalDiscountValue = order.OrderDiscount;
 
             //gift cards
             foreach (var gcuh in order.GiftCardUsageHistory)
@@ -178,6 +188,7 @@ namespace Nop.Admin.Controllers
 
             //total
             model.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+            model.OrderTotalValue = order.OrderTotal;
 
             //refunded amount
             if (order.RefundedAmount > decimal.Zero)
@@ -306,7 +317,8 @@ namespace Nop.Admin.Controllers
                     Quantity = opv.Quantity,
                     IsDownload = opv.ProductVariant.IsDownload,
                     DownloadActivationType = opv.ProductVariant.DownloadActivationType,
-                    IsDownloadActivated = opv.IsDownloadActivated
+                    IsDownloadActivated = opv.IsDownloadActivated,
+                    LicenseDownloadId = opv.LicenseDownloadId
                 };
 
                 //product name
@@ -598,6 +610,63 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("btnSaveCC")]
+        public ActionResult EditCreditCardInfo(int id, OrderModel model)
+        {
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            if (order.AllowStoringCreditCardNumber)
+            {
+                string cardType = model.CardType;
+                string cardName = model.CardName;
+                string cardNumber = model.CardNumber;
+                string cardCvv2 = model.CardCvv2;
+                string cardExpirationMonth = model.CardExpirationMonth;
+                string cardExpirationYear = model.CardExpirationYear;
+
+                order.CardType = _encryptionService.EncryptText(cardType);
+                order.CardName = _encryptionService.EncryptText(cardName);
+                order.CardNumber = _encryptionService.EncryptText(cardNumber);
+                order.MaskedCreditCardNumber = _encryptionService.EncryptText(_paymentService.GetMaskedCreditCardNumber(cardNumber));
+                order.CardCvv2 = _encryptionService.EncryptText(cardCvv2);
+                order.CardExpirationMonth = _encryptionService.EncryptText(cardExpirationMonth);
+                order.CardExpirationYear = _encryptionService.EncryptText(cardExpirationYear);
+                _orderService.UpdateOrder(order);
+            }
+
+            model = PrepareOrderDetailsModel(order);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("btnSaveOrderTotals")]
+        public ActionResult EditOrderTotals(int id, OrderModel model)
+        {
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            order.OrderSubtotalInclTax = model.OrderSubtotalInclTaxValue;
+            order.OrderSubtotalExclTax = model.OrderSubtotalExclTaxValue;
+            order.OrderSubTotalDiscountInclTax = model.OrderSubTotalDiscountInclTaxValue;
+            order.OrderSubTotalDiscountExclTax = model.OrderSubTotalDiscountExclTaxValue;
+            order.OrderShippingInclTax = model.OrderShippingInclTaxValue;
+            order.OrderShippingExclTax = model.OrderShippingExclTaxValue;
+            order.PaymentMethodAdditionalFeeInclTax = model.PaymentMethodAdditionalFeeInclTaxValue;
+            order.PaymentMethodAdditionalFeeExclTax = model.PaymentMethodAdditionalFeeExclTaxValue;
+            order.TaxRates = model.TaxRatesValue;
+            order.OrderTax = model.TaxValue;
+            order.OrderDiscount = model.OrderTotalDiscountValue;
+            order.OrderTotal = model.OrderTotalValue;
+            _orderService.UpdateOrder(order);
+            
+            model = PrepareOrderDetailsModel(order);
+            return View(model);
+        }
+        
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -870,7 +939,77 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        
+        public ActionResult UploadLicenseFilePopup(int id, int opvId)
+        {
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            if (orderProductVariant == null)
+                throw new ArgumentException("No order product variant found with the specified id");
+            
+            if (!orderProductVariant.ProductVariant.IsDownload)
+                throw new ArgumentException("Product variant is not downloadable");
+
+            var model = new OrderModel.UploadLicenseModel()
+            {
+                LicenseDownloadId = orderProductVariant.LicenseDownloadId.HasValue ? orderProductVariant.LicenseDownloadId.Value : 0,
+                OrderId = order.Id,
+                OrderProductVariantId = orderProductVariant.Id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [FormValueRequired("uploadlicense")]
+        public ActionResult UploadLicenseFilePopup(string btnId, OrderModel.UploadLicenseModel model)
+        {
+            var order = _orderService.GetOrderById(model.OrderId);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == model.OrderProductVariantId).FirstOrDefault();
+            if (orderProductVariant == null)
+                throw new ArgumentException("No order product variant found with the specified id");
+
+            //attach license
+            if (model.LicenseDownloadId > 0)
+                orderProductVariant.LicenseDownloadId = model.LicenseDownloadId;
+            else
+                orderProductVariant.LicenseDownloadId = null;
+            _orderService.UpdateOrder(order);
+
+            //success
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("UploadLicenseFilePopup")]
+        [FormValueRequired("deletelicense")]
+        public ActionResult DeleteLicenseFilePopup(string btnId, OrderModel.UploadLicenseModel model)
+        {
+            var order = _orderService.GetOrderById(model.OrderId);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == model.OrderProductVariantId).FirstOrDefault();
+            if (orderProductVariant == null)
+                throw new ArgumentException("No order product variant found with the specified id");
+
+            //attach license
+            orderProductVariant.LicenseDownloadId = null;
+            _orderService.UpdateOrder(order);
+
+            //success
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+
+            return View(model);
+        }
         #endregion
 
         #region Addresses

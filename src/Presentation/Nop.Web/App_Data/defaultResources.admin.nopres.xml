@@ -3250,6 +3250,12 @@
                     <LocaleResource Name="BillingAddress">
                       <Value>Billing address</Value>
                     </LocaleResource>
+                    <LocaleResource Name="CancelCC">
+                      <Value>Cancel editing</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="CancelOrderTotals">
+                      <Value>Cancel order totals</Value>
+                    </LocaleResource>
                     <LocaleResource Name="Capture">
                       <Value>Capture</Value>
                     </LocaleResource>
@@ -3354,6 +3360,86 @@
                           <Value>Not yet</Value>
                         </LocaleResource>
                       </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Edit">
+                      <Children>
+                        <LocaleResource Name="InclTax">
+                          <Value>incl tax:</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="ExclTax">
+                          <Value>excl tax:</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderShipping">
+                          <Value>Order shipping</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Edit the total shipping cost for this order.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderSubtotal">
+                          <Value>Order subtotal</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Edit the subtotal of this order.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderSubTotalDiscount">
+                          <Value>Order subtotal discount</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Edit the subtotal discount of this order.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="PaymentMethodAdditionalFee">
+                          <Value>Payment method additional fee</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Edit the payment method additional fee for this order.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Tax">
+                          <Value>Order tax</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Edit the total tax applied to this order.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="TaxRates">
+                          <Value>Order tax rates</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Edit the tax rates applied to this order ([rate]:[taxtotal] - separated by semicolon).</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderTotal">
+                          <Value>Order total</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Edit the total cost of this order.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderTotalDiscount">
+                          <Value>Order discount</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Edit the total discount applied to this order.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="EditCC">
+                      <Value>Edit credit card</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="EditOrderTotals">
+                      <Value>Edit order totals</Value>
                     </LocaleResource>
                     <LocaleResource Name="GiftCardInfo">
                       <Value>Gift card</Value>
@@ -3551,6 +3637,12 @@
                           <Value>The total refunded amount.</Value>
                         </LocaleResource>
                       </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="SaveCC">
+                      <Value>Save credit card</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SaveOrderTotals">
+                      <Value>Save order totals</Value>
                     </LocaleResource>
                     <LocaleResource Name="ShippedDate">
                       <Value>Shipped date</Value>
@@ -3767,6 +3859,17 @@
                         </LocaleResource>
                         <LocaleResource Name="Deactivate">
                           <Value>Deactivate</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="License">
+                      <Value>License file (optional):</Value>
+                      <Children>
+                        <LocaleResource Name="UploadFile">
+                          <Value>Upload license file</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="DownloadLicense">
+                          <Value>Download license file</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>

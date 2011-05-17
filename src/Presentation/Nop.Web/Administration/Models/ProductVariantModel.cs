@@ -335,6 +335,7 @@ namespace Nop.Admin.Models
         public bool HidePublishedProperty { get; set; }
         public bool HideDisplayOrderProperty { get; set; }
     }
+
     public class ProductVariantLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
