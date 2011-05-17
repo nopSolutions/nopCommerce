@@ -131,6 +131,7 @@ namespace Nop.Admin.Models
 
         public IList<OrderNote> OrderNotes { get; set; }
 
+        public bool HasDownloadableProducts { get; set; }
         public IList<OrderProductVariantModel> Items { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.Fields.CreatedOn")]
@@ -170,19 +171,30 @@ namespace Nop.Admin.Models
 
         public class OrderProductVariantModel : BaseNopEntityModel
         {
-            public int ProductId { get; set; }
+            public int ProductVariantId { get; set; }
 
-            public string ProductName { get; set; }
+            public string FullProductName { get; set; }
 
-            public string ProductSeName { get; set; }
-
-            public string UnitPrice { get; set; }
-
-            public string SubTotal { get; set; }
+            public string UnitPriceInclTax { get; set; }
+            public string UnitPriceExclTax { get; set; }
+            public decimal UnitPriceInclTaxValue { get; set; }
+            public decimal UnitPriceExclTaxValue { get; set; }
 
             public int Quantity { get; set; }
 
+            public string DiscountInclTax { get; set; }
+            public string DiscountExclTax { get; set; }
+            public decimal DiscountInclTaxValue { get; set; }
+            public decimal DiscountExclTaxValue { get; set; }
+
+            public string SubTotalInclTax { get; set; }
+            public string SubTotalExclTax { get; set; }
+            public decimal SubTotalInclTaxValue { get; set; }
+            public decimal SubTotalExclTaxValue { get; set; }
+
             public string AttributeInfo { get; set; }
+
+            public string RecurringInfo { get; set; }
         }
 
         public class TaxRate : BaseNopModel

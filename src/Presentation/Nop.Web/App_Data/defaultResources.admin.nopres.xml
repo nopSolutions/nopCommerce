@@ -3752,6 +3752,39 @@
                 </LocaleResource>
                 <LocaleResource Name="Products">
                   <Value>Products</Value>
+                  <Children>
+                    <LocaleResource Name="ProductName">
+                      <Value>Product name</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="RecurringPeriod">
+                      <Value>[Auto-ship, Every {0} {1}]</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Download">
+                      <Value>Downloable product</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Price">
+                      <Value>Price</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Quantity">
+                      <Value>Quantity</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Discount">
+                      <Value>Discount</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Total">
+                      <Value>Total</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Edit">
+                      <Children>
+                        <LocaleResource Name="InclTax">
+                          <Value>Incl tax:</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="ExclTax">
+                          <Value>Excl tax:</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
                 </LocaleResource>
                 <LocaleResource Name="ShippingInfo">
                   <Value>Shipping info</Value>

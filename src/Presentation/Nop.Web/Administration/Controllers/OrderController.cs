@@ -291,10 +291,52 @@ namespace Nop.Admin.Controllers
 
             #endregion
 
-            #region Product info
+            #region Products
+            model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
+            bool hasDownloadableItems = false;
+            foreach (var opv in order.OrderProductVariants)
+            {
+                if (opv.ProductVariant != null && opv.ProductVariant.IsDownload)
+                    hasDownloadableItems = true;
 
-            //UNDONE Product info
+                var opvModel = new OrderModel.OrderProductVariantModel()
+                {
+                    Id = opv.Id,
+                    ProductVariantId = opv.ProductVariantId
+                };
 
+                //product name
+                if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
+                    opvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name, opv.ProductVariant.Name);
+                else
+                    opvModel.FullProductName = opv.ProductVariant.Product.Name;
+
+                //unit price
+                opvModel.UnitPriceInclTaxValue = opv.UnitPriceInclTax;
+                opvModel.UnitPriceExclTaxValue = opv.UnitPriceExclTax;
+                opvModel.UnitPriceInclTax = _priceFormatter.FormatPrice(opv.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                opvModel.UnitPriceExclTax = _priceFormatter.FormatPrice(opv.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                //quantity
+                opv.Quantity = opv.Quantity;
+                //discounts
+                opvModel.DiscountInclTaxValue = opv.DiscountAmountInclTax;
+                opvModel.DiscountExclTaxValue = opv.DiscountAmountExclTax;
+                opvModel.DiscountInclTax = _priceFormatter.FormatPrice(opv.DiscountAmountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                opvModel.DiscountExclTax = _priceFormatter.FormatPrice(opv.DiscountAmountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                //subtotal
+                opvModel.SubTotalInclTaxValue = opv.PriceInclTax;
+                opvModel.SubTotalExclTaxValue = opv.PriceExclTax;
+                opvModel.SubTotalInclTax = _priceFormatter.FormatPrice(opv.PriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                opvModel.SubTotalExclTax = _priceFormatter.FormatPrice(opv.PriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+
+                opvModel.AttributeInfo = opv.AttributeDescription;
+                if (opv.ProductVariant.IsRecurring)
+                    opvModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), opv.ProductVariant.RecurringCycleLength, opv.ProductVariant.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+
+
+                model.Items.Add(opvModel);
+            }
+            model.HasDownloadableProducts = hasDownloadableItems;
             #endregion
 
             return model;
