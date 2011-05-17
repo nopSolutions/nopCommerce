@@ -62,11 +62,10 @@
 
 }
 @Html.DeleteConfirmation("order-delete")
-
 @*TODO Add confirmaion box for each button(set as shipped/delivered, refund, cancel)*@
-
 @helper TabInfo()
     {
+        
         
         <script type="text/javascript">
             $(document).ready(function () {
@@ -365,9 +364,6 @@
                 </td>
             </tr>
         }
-        
-
-
         <tr id="trEditOrderTotals">
                     <td colspan="2">
                         <table style="border: solid 1px black; padding: 5px;">
@@ -453,12 +449,6 @@
                         </table>
                     </td>
                 </tr>
-
-
-
-
-
-
             <tr>
                 <td>
                     <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick="toggleOrderTotals(true);return false;" id="btnEditOrderTotals" class="adminButton" />
@@ -978,21 +968,18 @@
 }
 @helper TabProducts()
     {
-    
-        
-    <table class="adminContent"> 
-    <tr>
-    <td class="adminData"> 
-
-    @foreach (var item in Model.Items)
-    {
-        <script type="text/javascript">
+    <table class="adminContent">
+        <tr>
+            <td class="adminData">
+                @foreach (var item in Model.Items)
+                {
+                    <script type="text/javascript">
         $(document).ready(function() {
         toggleOpvEdit@(item.Id)(false);
         });
-        </script>
+                    </script>
         
-        <script type="text/javascript">
+                    <script type="text/javascript">
         function toggleOpvEdit@(item.Id) (editMode) {
         if (editMode) {
         $('#pnlEditPvUnitPrice@(item.Id)').show();
@@ -1015,105 +1002,99 @@
         $('#btnCancelOpv@(item.Id)').hide();
         }
         }
-        </script>
+                    </script>
 
-    }
-    <table class="tablestyle" border="1" cellspacing="0" style="width:100%;border-collapse:collapse;">
-            
-                            <col />
-                        @if (Model.HasDownloadableProducts)
-                        {
-                            <col />
-                        }
-                            <col />
-                        <col/>
-                        <col />
-                        <col />
-                        <col />
-                              <thead>
-                <tr class="headerstyle">
-                        <th align="center">
-                            @T("Admin.Orders.Products.ProductName")
-                        </th>
+                }
+                <table class="tablestyle" border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <col />
                     @if (Model.HasDownloadableProducts)
                     {
-                        <th align="center">
-                            @T("Admin.Orders.Products.Download")
-                        </th>
+                        <col />
                     }
-                    <th align="center">
-                        @T("Admin.Orders.Products.Price")
-                    </th>
-                    <th align="center">
-                        @T("Admin.Orders.Products.Quantity")
-                    </th>
-                    <th align="center">
-                        @T("Admin.Orders.Products.Discount")
-                    </th>
-                    <th align="center">
-                        @T("Admin.Orders.Products.Total")
-                    </th>
-                    <th align="center">
-                        @T("Admin.Common.Edit")
-                    </th>
-                </tr>
-            </thead>
-                              <tbody>
-                @foreach (var item in Model.Items)
-                {
-                    <tr>
-                            <td style="width:25%;">
-                            <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                                            <em><a href="@Url.Action("Edit", "ProductVariant", new { id = @item.ProductVariantId })">@item.FullProductName</a></em>
-                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                            {
-                                <br />
-                                @Html.Raw(item.AttributeInfo)
-                                            }
-                            @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <thead>
+                        <tr class="headerstyle">
+                            <th align="center">
+                                @T("Admin.Orders.Products.ProductName")
+                            </th>
+                            @if (Model.HasDownloadableProducts)
                             {
-                                <br />
-                                @Html.Raw(item.RecurringInfo)
+                                <th align="center">
+                                    @T("Admin.Orders.Products.Download")
+                                </th>
                             }
-                            @*TODO display links to associated return requests*@
-                                        </div>
-                                
-                            </td>
-                        @if (Model.HasDownloadableProducts)
+                            <th align="center">
+                                @T("Admin.Orders.Products.Price")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Products.Quantity")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Products.Discount")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Products.Total")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Common.Edit")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
                         {
-                            <td  align="center" style="width:10%;">
-                                @if (item.IsDownload)
-                                {
-                                    if (item.DownloadActivationType == DownloadActivationType.Manually)
-                                    {
-                                    <div>
-                                        <input type="submit" name="btnPvActivateDownload@(item.Id)" @(item.IsDownloadActivated ? " value=" + T("Admin.Orders.Products.Download.Deactivate") : " value=" + T("Admin.Orders.Products.Download.Activate")) id="btnPvActivateDownload@(item.Id)" class="adminButton" />
-                                    </div>
-                                    }
-                                    <div>
-                                        <hr />
-                                            <b>
-                                                @T("Admin.Orders.Products.License")</b>
+                            <tr>
+                                <td style="width: 25%;">
+                                    <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = @item.ProductVariantId })">@item.FullProductName</a></em>
+                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                        {
                                             <br />
-                                            
-                                    @if (item.LicenseDownloadId.HasValue && item.LicenseDownloadId.Value > 0)
-                                    {
-                                        <a href="@Url.Action("DownloadFile", "Download", new { downloadId = item.LicenseDownloadId.Value })">@T("Admin.Orders.Products.License.DownloadLicense")</a>
-                                    }
-                                    <br />
-                                    <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new { id = Model.Id, opvId = item.Id, btnId = "btnRefreshPage" }))', 500, 300, true); return false;" class="adminButton" />                                        
+                                            @Html.Raw(item.AttributeInfo)
+                                        }
+                                        @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                                        {
+                                            <br />
+                                            @Html.Raw(item.RecurringInfo)
+                                        }
+@*TODO display links to associated return requests*@
                                     </div>
+                                </td>
+                                @if (Model.HasDownloadableProducts)
+                                {
+                                    <td align="center" style="width: 10%;">
+                                        @if (item.IsDownload)
+                                        {
+                                            if (item.DownloadActivationType == DownloadActivationType.Manually)
+                                            {
+                                            <div>
+                                                <input type="submit" name="btnPvActivateDownload@(item.Id)" @(item.IsDownloadActivated ? " value=" + T("Admin.Orders.Products.Download.Deactivate") : " value=" + T("Admin.Orders.Products.Download.Activate")) id="btnPvActivateDownload@(item.Id)" class="adminButton" />
+                                            </div>
+                                            }
+                                            <div>
+                                                <hr />
+                                                <b>
+                                                    @T("Admin.Orders.Products.License")</b>
+                                                <br />
+                                                @if (item.LicenseDownloadId.HasValue && item.LicenseDownloadId.Value > 0)
+                                                {
+                                                    <a href="@Url.Action("DownloadFile", "Download", new { downloadId = item.LicenseDownloadId.Value })">@T("Admin.Orders.Products.License.DownloadLicense")</a>
+                                                }
+                                                <br />
+                                                <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new { id = Model.Id, opvId = item.Id, btnId = "btnRefreshPage" }))', 500, 300, true); return false;" class="adminButton" />
+                                            </div>
+                                        }
+                                    </td>
                                 }
-                            </td>
-                        }
-                            <td align="center" style="width:15%;">
-
-
-                            
+                                <td align="center" style="width: 15%;">
                                     @if (Model.AllowCustomersToSelectTaxDisplayType)
                                     {
-                                                @item.UnitPriceInclTax
-                                                <br />
+                                        @item.UnitPriceInclTax
+                                        <br />
                                         @item.UnitPriceExclTax
                                     }
                                     else
@@ -1122,63 +1103,60 @@
                                         {
                                             case TaxDisplayType.ExcludingTax:
                                                 {
-                                                    @item.UnitPriceExclTax
+                                        @item.UnitPriceExclTax
                                                 }
                                                 break;
                                             case TaxDisplayType.IncludingTax:
                                                 {
-                                                    @item.UnitPriceInclTax
+                                        @item.UnitPriceInclTax
                                                 }
                                                 break;
                                             default:
                                                 break;
                                         }
                                     }
-                                        <div class="clear">
-                                        </div>
-                                        <div id="pnlEditPvUnitPrice@(item.Id)">
-                                            <table class="order-edit">
-                                                <tr>
-                                                    <td>
-                                                        @T("Admin.Orders.Products.Edit.InclTax")
-                                                    </td>
-                                                    <td>
+                                    <div class="clear">
+                                    </div>
+                                    <div id="pnlEditPvUnitPrice@(item.Id)">
+                                        <table class="order-edit">
+                                            <tr>
+                                                <td>
+                                                    @T("Admin.Orders.Products.Edit.InclTax")
+                                                </td>
+                                                <td>
                                                     <input name="pvUnitPriceInclTax@(item.Id)" type="text" value="@item.UnitPriceInclTaxValue" id="pvUnitPriceInclTax@(item.Id)" class="adminInput" style="width:100px;" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        @T("Admin.Orders.Products.Edit.ExclTax")
-                                                    </td>
-                                                    <td>
-                                                        <input name="pvUnitPriceExclTax@(item.Id)" type="text" value="@item.UnitPriceExclTaxValue" id="pvUnitPriceExclTax@(item.Id)" class="adminInput" style="width:100px;" />
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                            </td>
-                            <td align="center" style="width:10%;">
-                                                @item.Quantity
-                                        <div class="clear">
-                                        </div>
-                                        <div id="pnlEditPvQuantity@(item.Id)">
-                                            <table class="order-edit">
-                                                <tr>
-                                                    <td colspan="2">
-                                                        <input name="pvQuantity@(item.Id)" type="text" value="@item.Quantity" id="pvQuantity@(item.Id)" class="adminInput" style="width:100px;" />
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                            </td>
-                            <td  align="center" style="width:15%;">
-
-
-                            
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @T("Admin.Orders.Products.Edit.ExclTax")
+                                                </td>
+                                                <td>
+                                                    <input name="pvUnitPriceExclTax@(item.Id)" type="text" value="@item.UnitPriceExclTaxValue" id="pvUnitPriceExclTax@(item.Id)" class="adminInput" style="width:100px;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td align="center" style="width: 10%;">
+                                    @item.Quantity
+                                    <div class="clear">
+                                    </div>
+                                    <div id="pnlEditPvQuantity@(item.Id)">
+                                        <table class="order-edit">
+                                            <tr>
+                                                <td colspan="2">
+                                                    <input name="pvQuantity@(item.Id)" type="text" value="@item.Quantity" id="pvQuantity@(item.Id)" class="adminInput" style="width:100px;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td align="center" style="width: 15%;">
                                     @if (Model.AllowCustomersToSelectTaxDisplayType)
                                     {
-                                                @item.DiscountInclTax
-                                                <br />
+                                        @item.DiscountInclTax
+                                        <br />
                                         @item.DiscountExclTax
                                     }
                                     else
@@ -1187,49 +1165,46 @@
                                         {
                                             case TaxDisplayType.ExcludingTax:
                                                 {
-                                                    @item.DiscountExclTax
+                                        @item.DiscountExclTax
                                                 }
                                                 break;
                                             case TaxDisplayType.IncludingTax:
                                                 {
-                                                    @item.DiscountInclTax
+                                        @item.DiscountInclTax
                                                 }
                                                 break;
                                             default:
                                                 break;
                                         }
                                     }
-                                        <div class="clear">
-                                        </div>
-                                        <div id="pnlEditPvDiscount@(item.Id)">
-                                            <table class="order-edit">
-                                                <tr>
-                                                    <td>
-                                                        @T("Admin.Orders.Products.Edit.InclTax")
-                                                    </td>
-                                                    <td>
+                                    <div class="clear">
+                                    </div>
+                                    <div id="pnlEditPvDiscount@(item.Id)">
+                                        <table class="order-edit">
+                                            <tr>
+                                                <td>
+                                                    @T("Admin.Orders.Products.Edit.InclTax")
+                                                </td>
+                                                <td>
                                                     <input name="pvDiscountInclTax@(item.Id)" type="text" value="@item.DiscountInclTaxValue" id="pvDiscountInclTax@(item.Id)" class="adminInput" style="width:100px;" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        @T("Admin.Orders.Products.Edit.ExclTax")
-                                                    </td>
-                                                    <td>
-                                                        <input name="pvDiscountExclTax@(item.Id)" type="text" value="@item.DiscountExclTaxValue" id="pvDiscountExclTax@(item.Id)" class="adminInput" style="width:100px;" />
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                            </td>
-                            <td  align="center" style="width:15%;">
-
-
-                            
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @T("Admin.Orders.Products.Edit.ExclTax")
+                                                </td>
+                                                <td>
+                                                    <input name="pvDiscountExclTax@(item.Id)" type="text" value="@item.DiscountExclTaxValue" id="pvDiscountExclTax@(item.Id)" class="adminInput" style="width:100px;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td align="center" style="width: 15%;">
                                     @if (Model.AllowCustomersToSelectTaxDisplayType)
                                     {
-                                                @item.SubTotalInclTax
-                                                <br />
+                                        @item.SubTotalInclTax
+                                        <br />
                                         @item.SubTotalExclTax
                                     }
                                     else
@@ -1238,59 +1213,61 @@
                                         {
                                             case TaxDisplayType.ExcludingTax:
                                                 {
-                                                    @item.SubTotalExclTax
+                                        @item.SubTotalExclTax
                                                 }
                                                 break;
                                             case TaxDisplayType.IncludingTax:
                                                 {
-                                                    @item.SubTotalInclTax
+                                        @item.SubTotalInclTax
                                                 }
                                                 break;
                                             default:
                                                 break;
                                         }
                                     }
-                                        <div class="clear">
-                                        </div>
-                                        <div id="pnlEditPvPrice@(item.Id)">
-                                            <table class="order-edit">
-                                                <tr>
-                                                    <td>
-                                                        @T("Admin.Orders.Products.Edit.InclTax")
-                                                    </td>
-                                                    <td>
+                                    <div class="clear">
+                                    </div>
+                                    <div id="pnlEditPvPrice@(item.Id)">
+                                        <table class="order-edit">
+                                            <tr>
+                                                <td>
+                                                    @T("Admin.Orders.Products.Edit.InclTax")
+                                                </td>
+                                                <td>
                                                     <input name="pvPriceInclTax@(item.Id)" type="text" value="@item.SubTotalInclTaxValue" id="pvPriceInclTax@(item.Id)" class="adminInput" style="width:100px;" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        @T("Admin.Orders.Products.Edit.ExclTax")
-                                                    </td>
-                                                    <td>
-                                                        <input name="pvPriceExclTax@(item.Id)" type="text" value="@item.SubTotalExclTaxValue" id="pvPriceExclTax@(item.Id)" class="adminInput" style="width:100px;" />
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                            </td>
-                        <td  align="center" style="width:15%;">
-                            <input type="submit" name="btnEditOpv@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOpvEdit@(item.Id)(true);return false;" id="btnEditOpv@(item.Id)" class="adminButton" />
-                            <input type="submit" name="btnDeleteOpv@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOpv@(item.Id)" class="adminButton" />
-                            <input type="submit" name="btnSaveOpv@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOpv@(item.Id)" class="adminButton" style="display: none;" />
-                            <input type="submit" name="btnCancelOpv@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOpvEdit@(item.Id)(false);return false;" id="btnCancelOpv@(item.Id)" class="adminButton" style="display: none;" />
-                        </td>
-                    </tr>
-                }
-            </tbody>
-                    </table>
-    </td>
-    </tr>
-    @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
-    {
-        <tr> <td class="adminData">
-        @Html.Raw(Model.CheckoutAttributeInfo)
-    </td> </tr>
-    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @T("Admin.Orders.Products.Edit.ExclTax")
+                                                </td>
+                                                <td>
+                                                    <input name="pvPriceExclTax@(item.Id)" type="text" value="@item.SubTotalExclTaxValue" id="pvPriceExclTax@(item.Id)" class="adminInput" style="width:100px;" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td align="center" style="width: 15%;">
+                                    <input type="submit" name="btnEditOpv@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOpvEdit@(item.Id)(true);return false;" id="btnEditOpv@(item.Id)" class="adminButton" />
+                                    <input type="submit" name="btnDeleteOpv@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOpv@(item.Id)" class="adminButton" />
+                                    <input type="submit" name="btnSaveOpv@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOpv@(item.Id)" class="adminButton" style="display: none;" />
+                                    <input type="submit" name="btnCancelOpv@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOpvEdit@(item.Id)(false);return false;" id="btnCancelOpv@(item.Id)" class="adminButton" style="display: none;" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+        {
+            <tr>
+                <td class="adminData">
+                    @Html.Raw(Model.CheckoutAttributeInfo)
+                </td>
+            </tr>
+        }
     </table>
 }
 @helper TabOrderNotes()
