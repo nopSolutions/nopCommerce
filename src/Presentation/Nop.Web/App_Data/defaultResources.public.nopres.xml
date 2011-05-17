@@ -1282,6 +1282,40 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="PdfPackagingSlip">
+    <Children>
+      <LocaleResource Name="Address">
+        <Value>Address: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Address2">
+        <Value>Address 2: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Company">
+        <Value>Company: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Name">
+        <Value>Name: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="Order">
+        <Value>Order</Value>
+      </LocaleResource>
+      <LocaleResource Name="Phone">
+        <Value>Phone: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="ProductName">
+        <Value>Product Name</Value>
+      </LocaleResource>
+      <LocaleResource Name="QTY">
+        <Value>Quantity</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShippingMethod">
+        <Value>Shipping method: {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="SKU">
+        <Value>SKU</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Plugins">
     <Children>
       <LocaleResource Name="Title">

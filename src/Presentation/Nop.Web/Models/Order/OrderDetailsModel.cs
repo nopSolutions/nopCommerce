@@ -54,14 +54,11 @@ namespace Nop.Web.Models.Order
         public string OrderSubTotalDiscount { get; set; }
         public string OrderShipping { get; set; }
         public string PaymentMethodAdditionalFee { get; set; }
-
         public string CheckoutAttributeInfo { get; set; }
-
         public string Tax { get; set; }
         public IList<TaxRate> TaxRates { get; set; }
         public bool DisplayTax { get; set; }
         public bool DisplayTaxRates { get; set; }
-
         public string OrderTotalDiscount { get; set; }
         public int RedeemedRewardPoints { get; set; }
         public string RedeemedRewardPointsAmount { get; set; }

@@ -199,8 +199,7 @@
     })
     .DataBinding(binding =>
     {
-        binding.Ajax().Select("RewardPointsHistorySelect", "Customer", new { customerId = Model.Id })
-            .Insert("RewardPointsHistoryAdd", "Customer", new { customerId = Model.Id });
+        binding.Ajax().Select("RewardPointsHistorySelect", "Customer", new { customerId = Model.Id });
     })
     .Columns(columns =>
     {

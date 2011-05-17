@@ -77,46 +77,7 @@ namespace Nop.Web.Framework
 
         public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string buttonsSelector = null) where T : BaseNopEntityModel
         {
-            var modalId = helper.DeleteConfirmationModelId().ToHtmlString();
-
-            #region Write click events for button, if supplied
-
-            //there's an issue in Telerik (ScriptRegistrar.Current implemenation)
-            //it's a little hack to ensure ScriptRegistrar.Current is loaded
-            var test = helper.Telerik();
-
-            if (!string.IsNullOrEmpty(buttonsSelector))
-            {
-                var textWriter = new StringWriter();
-                IClientSideObjectWriter objectWriter = new ClientSideObjectWriterFactory().Create(buttonsSelector, "click", textWriter);
-                objectWriter.Start();
-                textWriter.Write("function(e){e.preventDefault();openModalWindow(\"" + modalId + "\");}");
-                objectWriter.Complete();
-                var value = textWriter.ToString();
-                ScriptRegistrar.Current.OnDocumentReadyStatements.Add(value);
-            }
-
-            #endregion
-
-            
-
-            var deleteConfirmationModel = new DeleteConfirmationModel
-                                              {
-                                                  Id = helper.ViewData.Model.Id,
-                                                  ControllerName = helper.ViewContext.RouteData.GetRequiredString("controller"),
-                                                  ActionName = "Delete"
-                                              };
-
-            var window = helper.Telerik().Window().Name(modalId)
-                .Title(EngineContext.Current.LocalizationService().GetResource("Admin.Common.AreYouSure"))
-                .Modal(true)
-                .Effects(x => x.Toggle())
-                .Resizable(x => x.Enabled(false))
-                .Buttons(x => x.Close())
-                .Visible(false)
-                .Content(helper.Partial("Delete", deleteConfirmationModel).ToHtmlString()).ToHtmlString();
-
-            return MvcHtmlString.Create(window);
+            return DeleteConfirmation<T>(helper, "", buttonsSelector);
         }
 
         // Adds an action name parameter for using other delete action names

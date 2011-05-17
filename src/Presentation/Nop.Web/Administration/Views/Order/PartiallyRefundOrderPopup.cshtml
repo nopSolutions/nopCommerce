@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model Nop.Admin.Models.OrderModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" />
+            @T("Admin.Orders.Fields.PartialRefund")
+        </div>
+        <div class="options">
+        </div>
+    </div>
+    
+    @Html.ValidationSummary(false)
+    
+if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms[0].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+    </script>
+}
+
+
+    <p>
+        <b>
+            @string.Format(T("Admin.Orders.Fields.PartialRefund.OrderInfo").Text, Model.Id)</b>
+    </p>
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AmountToRefund):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().NumericTextBoxFor(model => model.AmountToRefund).MinValue(0): 
+                &nbsp;&nbsp;&nbsp; 
+                <span style="white-space: nowrap">
+                    @string.Format(@T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)</span>
+            </td>
+        </tr>
+    </table>
+    <input type="submit" name="partialrefundorder" value="@T("Admin.Orders.Fields.Refund")" id="partialrefundorder" class="adminButton" />
+    
+    if (Model.ChangePaymentStatusErrors.Count > 0)
+    {
+        <div style="color: red">
+            <b>
+                @foreach (var error in Model.ChangePaymentStatusErrors)
+                {
+                    @error
+                    <br />
+                }
+            </b>
+        </div>
+    }
+
+}

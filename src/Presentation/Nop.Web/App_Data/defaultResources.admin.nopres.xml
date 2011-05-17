@@ -2739,7 +2739,7 @@
                           <Value>back to customer details</Value>
                         </LocaleResource>
                         <LocaleResource Name="EditAddress">
-                          <Value>Edit address details</Value>
+                          <Value>Edit address</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
@@ -3185,53 +3185,127 @@
             <LocaleResource Name="Orders">
               <Value>Orders</Value>
               <Children>
+                <LocaleResource Name="Address">
+                  <Children>
+                    <LocaleResource Name="EditAddress">
+                      <Value>Edit address</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="BackToOrder">
+                      <Value>back to order details</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="FullName">
+                      <Value>Full name</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Email">
+                      <Value>Email</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Phone">
+                      <Value>Phone</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Fax">
+                      <Value>Fax</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Company">
+                      <Value>Company</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Address1">
+                      <Value>Address 1</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Address2">
+                      <Value>Address 2</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="City">
+                      <Value>City</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="StateProvince">
+                      <Value>State / province</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="ZipPostalCode">
+                      <Value>Zip / postal code</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Country">
+                      <Value>Country</Value>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+                <LocaleResource Name="BackToList">
+                  <Value>back to order list</Value>
+                </LocaleResource>
+                <LocaleResource Name="BillingInfo">
+                  <Value>Billing info</Value>
+                </LocaleResource>
+                <LocaleResource Name="EditOrderDetails">
+                  <Value>Edit order details</Value>
+                </LocaleResource>
                 <LocaleResource Name="Fields">
                   <Children>
-                  <LocaleResource Name="ID">
-                    <Value>Order ID</Value>
-                    <Children>
-                      <LocaleResource Name="Hint">
-                        <Value>The unique ID of this order.</Value>
-                      </LocaleResource>
-                    </Children>
-                  </LocaleResource>
-                  <LocaleResource Name="OrderTotal">
-                    <Value>Order total</Value>
-                    <Children>
-                      <LocaleResource Name="Hint">
-                        <Value>The total cost of this order (includes discounts, shipping and tax).</Value>
-                      </LocaleResource>
-                    </Children>
-                  </LocaleResource>
-                    <LocaleResource Name="OrderStatus">
-                      <Value>Order status</Value>
+                    <LocaleResource Name="AuthorizationTransactionID">
+                      <Value>Authorization transaction ID</Value>
                       <Children>
                         <LocaleResource Name="Hint">
-                          <Value>The status of this order.</Value>
+                          <Value>Authorization transaction identifer received from your payment gateway.</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
-                    <LocaleResource Name="PaymentStatus">
-                      <Value>Payment status</Value>
+                    <LocaleResource Name="BillingAddress">
+                      <Value>Billing address</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Capture">
+                      <Value>Capture</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="CaptureTransactionID">
+                      <Value>Capture transaction ID</Value>
                       <Children>
                         <LocaleResource Name="Hint">
-                          <Value>The status of the payment.</Value>
+                          <Value>Capture transaction identifer received from your payment gateway.</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
-                    <LocaleResource Name="ShippingStatus">
-                      <Value>Shipping status</Value>
+                    <LocaleResource Name="CardCVV2">
+                      <Value>Card CVV2</Value>
                       <Children>
                         <LocaleResource Name="Hint">
-                          <Value>The status of the shipping.</Value>
+                          <Value>The card security code of the card used in the transaction.</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
-                    <LocaleResource Name="CustomerEmail">
-                      <Value>Email</Value>
+                    <LocaleResource Name="CardExpirationMonth">
+                      <Value>Card expiry month</Value>
                       <Children>
                         <LocaleResource Name="Hint">
-                          <Value>Email</Value>
+                          <Value>The expiry month of the card used in the transaction.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CardExpirationYear">
+                      <Value>Card expiry year</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The expiry year of the card used in the transaction.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CardName">
+                      <Value>Card name</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The name on the card used in the transaction.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CardNumber">
+                      <Value>Card number</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The number of the card used in the transaction.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CardType">
+                      <Value>Card type</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The type of card used in the transaction.</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
@@ -3243,7 +3317,324 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
-                </Children>
+                    <LocaleResource Name="Customer">
+                      <Value>Customer</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The customer who placed this order.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CustomerEmail">
+                      <Value>Email</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Email</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="CustomerIP">
+                      <Value>Customer IP address</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Customer IP address from where order has been placed.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="DeliveryDate">
+                      <Value>Delivery date</Value>
+                      <Children>
+                        <LocaleResource Name="Button">
+                          <Value>Set as delivered</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Hint">
+                          <Value>The date this order was delivered.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="NotYet">
+                          <Value>Not yet</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="GiftCardInfo">
+                      <Value>Gift card</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Applied gift card.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="ID">
+                      <Value>Order ID</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The unique ID of this order.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="MarkAsPaid">
+                      <Value>Mark as paid</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderGuid">
+                      <Value>Order GUID</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Internal reference for order.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderShippingExclTax">
+                      <Value>Order shipping (excl tax)</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The total shipping cost for this order (excluding tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderShippingInclTax">
+                      <Value>Order shipping (incl tax)</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The total shipping cost for this order (including tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderStatus">
+                      <Value>Order status</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The status of this order.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Cancel">
+                          <Value>Cancel order</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderSubtotalExclTax">
+                      <Value>Order subtotal (excl tax)</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The subtotal of this order (excluding tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderSubtotalInclTax">
+                      <Value>Order subtotal (incl tax)</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The subtotal of this order (including tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderSubTotalDiscountExclTax">
+                      <Value>Order subtotal discount (excl tax)</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The subtotal discount of this order (excluding tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderSubTotalDiscountInclTax">
+                      <Value>Order subtotal discount (incl tax)</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The subtotal discount of this order (including tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderTotal">
+                      <Value>Order total</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The total cost of this order (includes discounts, shipping and tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderTotalDiscount">
+                      <Value>Order discount</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The total discount applied to this order. Manage your discounts from Promotions : Discounts.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderWeight">
+                      <Value>Order weight</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The total weight of this order.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="PartialRefund">
+                      <Value>Partial refund</Value>
+                      <Children>
+                        <LocaleResource Name="AmountToRefund">
+                          <Value>Amount to refund</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter amount to refund.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Max">
+                              <Value>Max amount is {0} {1}</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderInfo">
+                          <Value>Partial refund for order #{0}</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="PartialRefundOffline">
+                      <Value>Partial refund (Offline)</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="PaymentMethod">
+                      <Value>Payment method</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The payment method used for this transaction. You can manage Payment Methods from Configuration : Payment : Payment Methods.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="PaymentMethodAdditionalFeeExclTax">
+                      <Value>Payment method additional fee (excl tax)</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The payment method additional fee for this order (excluding tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="PaymentMethodAdditionalFeeInclTax">
+                      <Value>Payment method additional fee (incl tax)</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The payment method additional fee for this order (including tax).</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="PaymentStatus">
+                      <Value>Payment status</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The status of the payment.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="PurchaseOrderNumber">
+                      <Value>Purchase order number</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The customer's purchase order number when using the Purchase Order payment method. You can manage payment methods from Configuration : Payment : Payment Methods</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="RedeemedRewardPoints">
+                      <Value>Reward points</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Redeemed reward points.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Points">
+                          <Value>points</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Refund">
+                      <Value>Refund</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="RefundOffline">
+                      <Value>Refund (Offline)</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="RefundedAmount">
+                      <Value>Refunded amount</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The total refunded amount.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="ShippedDate">
+                      <Value>Shipped date</Value>
+                      <Children>
+                        <LocaleResource Name="Button">
+                          <Value>Set as shipped</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Hint">
+                          <Value>The date this order was shipped.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="NotYet">
+                          <Value>Not yet</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="ShippingAddress">
+                      <Value>Shipping address</Value>
+                      <Children>
+                        <LocaleResource Name="ViewOnGoogleMaps">
+                          <Value>View address on Google Maps</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="ShippingMethod">
+                      <Value>Shipping method</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration : Shipping : Shipping Methods.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="ShippingStatus">
+                      <Value>Shipping status</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The status of the shipping.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="SubscriptionTransactionID">
+                      <Value>Subscription transaction ID</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Subscription transaction identifer received from your payment gateway.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Tax">
+                      <Value>Order tax</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Total tax applied to this order. Manage your tax settings from Configuration : Tax</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="TrackingNumber">
+                      <Value>Tracking number</Value>
+                      <Children>
+                        <LocaleResource Name="Button">
+                          <Value>Set tracking number</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Hint">
+                          <Value>Set a tracking number of the current order.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="VatNumber">
+                      <Value>VAT number</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Used VAT number (the European Union Value Added Tax)</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Void">
+                      <Value>Void</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="VoidOffline">
+                      <Value>Void (Offline)</Value>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+                <LocaleResource Name="Info">
+                  <Value>Info</Value>
                 </LocaleResource>
                 <LocaleResource Name="List">
                 <Children>
@@ -3313,6 +3704,63 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+                <LocaleResource Name="OrderNotes">
+                  <Value>Order notes</Value>
+                  <Children>
+                    <LocaleResource Name="AddButton">
+                      <Value>Add order note</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="AddTitle">
+                      <Value>Add order note</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Fields">
+                      <Children>
+                        <LocaleResource Name="DisplayToCustomer">
+                          <Value>Display to customer</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Note">
+                          <Value>Note</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="CreatedOn">
+                          <Value>Created on</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="AddOrderNoteDisplayToCustomer">
+                          <Value>Display to customer</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>A value indicating whether to display this order note to a customer.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="AddOrderNoteMessage">
+                          <Value>Message</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter this order note message.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+                <LocaleResource Name="PdfInvoice">
+                  <Value>Invoice (PDF)</Value>
+                </LocaleResource>
+                <LocaleResource Name="PrintPackagingSlip">
+                  <Value>Print packaging slip</Value>
+                </LocaleResource>
+                <LocaleResource Name="Products">
+                  <Value>Products</Value>
+                </LocaleResource>
+                <LocaleResource Name="ShippingInfo">
+                  <Value>Shipping info</Value>
+                  <Children>
+                    <LocaleResource Name="NotRequired">
+                      <Value>Shipping not required</Value>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
               </Children>
             </LocaleResource>
             <LocaleResource Name="Sales">

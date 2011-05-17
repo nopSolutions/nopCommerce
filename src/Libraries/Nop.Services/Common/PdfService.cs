@@ -510,6 +510,107 @@ namespace Nop.Services.Common
         }
 
 
+        /// <summary>
+        /// Print packaging slips to PDF
+        /// </summary>
+        /// <param name="orders">Orders</param>
+        /// <param name="filePath">File path</param>
+        public void PrintPackagingSlipsToPdf(IList<Order> orders, string filePath)
+        {
+            if (String.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentNullException("filePath");
+            }
+            
+            Document doc = new Document();
+            Section section = doc.AddSection();
+
+            int ordCount = orders.Count;
+            int ordNum = 0;
+
+            foreach (var order in orders)
+            {
+                if (order.ShippingAddress != null)
+                {
+                    Paragraph p1 = section.AddParagraph(String.Format("{0} #{1}", _localizationService.GetResource("PdfPackagingSlip.Order"), order.Id));
+                    p1.Format.Font.Bold = true;
+                    p1.Format.Font.Color = Colors.Black;
+                    p1.Format.Font.Underline = Underline.None;
+                    section.AddParagraph();
+
+                    if (!String.IsNullOrEmpty(order.ShippingAddress.Company))
+                    {
+                        section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Company"), order.ShippingAddress.Company));
+                    }
+                    section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Name"), order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName));
+                    section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Phone"), order.ShippingAddress.PhoneNumber));
+                    section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Address"), order.ShippingAddress.Address1));
+                    if (!String.IsNullOrEmpty(order.ShippingAddress.Address2))
+                        section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Address2"), order.ShippingAddress.Address2));
+                    section.AddParagraph(String.Format("{0}, {1}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "", order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.Name : ""));
+                    section.AddParagraph(String.Format("{0}, {1}", order.ShippingAddress.City, order.ShippingAddress.ZipPostalCode));
+
+                    section.AddParagraph();
+
+                    section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.ShippingMethod"), order.ShippingMethod));
+                    section.AddParagraph();
+
+                    Table productTable = section.AddTable();
+                    productTable.Borders.Visible = true;
+                    productTable.AddColumn(Unit.FromCentimeter(4));
+                    productTable.AddColumn(Unit.FromCentimeter(10));
+                    productTable.AddColumn(Unit.FromCentimeter(4));
+
+                    Row header = productTable.AddRow();
+                    header.Shading.Color = Colors.LightGray;
+
+                    header.Cells[0].Format.Alignment = ParagraphAlignment.Center;
+                    header.Cells[0].AddParagraph(_localizationService.GetResource("PdfPackagingSlip.QTY"));
+
+                    header.Cells[1].Format.Alignment = ParagraphAlignment.Center;
+                    header.Cells[1].AddParagraph(_localizationService.GetResource("PdfPackagingSlip.ProductName"));
+
+                    header.Cells[2].Format.Alignment = ParagraphAlignment.Center;
+                    header.Cells[2].AddParagraph(_localizationService.GetResource("PdfPackagingSlip.SKU"));
+
+                    var opvc = order.OrderProductVariants;
+                    foreach (var orderProductVariant in opvc)
+                    {
+                        Row row = productTable.AddRow();
+
+                        row.Cells[0].Format.Alignment = ParagraphAlignment.Center;
+                        row.Cells[0].AddParagraph(orderProductVariant.Quantity.ToString());
+
+                        var pv = orderProductVariant.ProductVariant;
+                        string name = "";
+                        if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name)))
+                            name = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name), pv.GetLocalized(x => x.Name));
+                        else
+                            name = pv.Product.GetLocalized(x => x.Name);
+
+                        row.Cells[1].Format.Alignment = ParagraphAlignment.Left;
+                        row.Cells[1].AddParagraph(name);
+                        Paragraph p2 = row.Cells[1].AddParagraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true));
+                        p2.Format.Font.Italic = true;
+
+                        row.Cells[2].Format.Alignment = ParagraphAlignment.Center;
+                        row.Cells[2].AddParagraph(pv.Sku);
+                    }
+                }
+
+                ordNum++;
+                if (ordNum < ordCount)
+                {
+                    section.AddPageBreak();
+                }
+            }
+
+            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
+            renderer.Document = doc;
+            renderer.RenderDocument();
+            renderer.PdfDocument.Save(filePath);
+        }
+
         #endregion
     }
 }

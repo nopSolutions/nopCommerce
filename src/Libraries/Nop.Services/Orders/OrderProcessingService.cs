@@ -1997,8 +1997,6 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            amountToRefund = Math.Round(amountToRefund, 2);
-
             if (!CanPartiallyRefund(order, amountToRefund))
                 throw new NopException("Can not do partial refund for order.");
 
@@ -2109,9 +2107,7 @@ namespace Nop.Services.Orders
         {
             if (order == null)
                 throw new ArgumentNullException("order");
-
-            amountToRefund = Math.Round(amountToRefund, 2);
-
+            
             if (!CanPartiallyRefundOffline(order, amountToRefund))
                 throw new NopException("You can't partially refund (offline) this order");
 
@@ -2120,6 +2116,7 @@ namespace Nop.Services.Orders
 
             //update order info
             order.RefundedAmount = totalAmountRefunded;
+            //TODO if (order.OrderTotal == totalAmountRefunded), then set order.PaymentStatus = PaymentStatus.Refunded;
             order.PaymentStatus = PaymentStatus.PartiallyRefunded;
             _orderService.UpdateOrder(order);
 

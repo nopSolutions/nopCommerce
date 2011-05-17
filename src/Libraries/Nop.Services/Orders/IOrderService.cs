@@ -92,6 +92,12 @@ namespace Nop.Services.Orders
         /// <param name="order">The order</param>
         void UpdateOrder(Order order);
 
+        /// <summary>
+        /// Deletes an order note
+        /// </summary>
+        /// <param name="orderNote">The order note</param>
+        void DeleteOrderNote(OrderNote orderNote);
+
         #endregion
 
         #region Orders product variants

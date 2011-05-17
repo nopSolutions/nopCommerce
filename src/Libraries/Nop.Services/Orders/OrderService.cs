@@ -36,6 +36,7 @@ namespace Nop.Services.Orders
 
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderProductVariant> _opvRepository;
+        private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<ProductVariant> _pvRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
@@ -51,6 +52,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderRepository">Order repository</param>
         /// <param name="opvRepository">Order product variant repository</param>
+        /// <param name="orderNoteRepository">Order note repository</param>
         /// <param name="pvRepository">Product variant repository</param>
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
         /// <param name="recurringPaymentHistoryRepository">Recurring payment history repository</param>
@@ -58,6 +60,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestRepository">Return request repository</param>
         public OrderService(IRepository<Order> orderRepository,
             IRepository<OrderProductVariant> opvRepository,
+            IRepository<OrderNote> orderNoteRepository,
             IRepository<ProductVariant> pvRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
@@ -66,6 +69,7 @@ namespace Nop.Services.Orders
         {
             this._orderRepository = orderRepository;
             this._opvRepository = opvRepository;
+            this._orderNoteRepository = orderNoteRepository;
             this._pvRepository = pvRepository;
             this._recurringPaymentRepository = recurringPaymentRepository;
             this._recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
@@ -259,6 +263,17 @@ namespace Nop.Services.Orders
             _orderRepository.Update(order);
         }
 
+        /// <summary>
+        /// Deletes an order note
+        /// </summary>
+        /// <param name="orderNote">The order note</param>
+        public void DeleteOrderNote(OrderNote orderNote)
+        {
+            if (orderNote == null)
+                throw new ArgumentNullException("orderNote");
+
+            _orderNoteRepository.Delete(orderNote);
+        }
         #endregion
         
         #region Orders product variants
