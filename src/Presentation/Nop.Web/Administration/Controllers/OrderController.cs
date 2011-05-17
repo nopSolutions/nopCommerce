@@ -302,7 +302,11 @@ namespace Nop.Admin.Controllers
                 var opvModel = new OrderModel.OrderProductVariantModel()
                 {
                     Id = opv.Id,
-                    ProductVariantId = opv.ProductVariantId
+                    ProductVariantId = opv.ProductVariantId,
+                    Quantity = opv.Quantity,
+                    IsDownload = opv.ProductVariant.IsDownload,
+                    DownloadActivationType = opv.ProductVariant.DownloadActivationType,
+                    IsDownloadActivated = opv.IsDownloadActivated
                 };
 
                 //product name
@@ -316,8 +320,6 @@ namespace Nop.Admin.Controllers
                 opvModel.UnitPriceExclTaxValue = opv.UnitPriceExclTax;
                 opvModel.UnitPriceInclTax = _priceFormatter.FormatPrice(opv.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
                 opvModel.UnitPriceExclTax = _priceFormatter.FormatPrice(opv.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
-                //quantity
-                opv.Quantity = opv.Quantity;
                 //discounts
                 opvModel.DiscountInclTaxValue = opv.DiscountAmountInclTax;
                 opvModel.DiscountExclTaxValue = opv.DiscountAmountExclTax;
@@ -692,9 +694,7 @@ namespace Nop.Admin.Controllers
                 return View(model);
             }
         }
-
-
-        //edit
+        
         public ActionResult PartiallyRefundOrderPopup(int id, bool online)
         {
             var order = _orderService.GetOrderById(id);
@@ -756,7 +756,121 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOpv")]
+        [ValidateInput(false)]
+        public ActionResult EditOrderProductVariant(int id, FormCollection form)
+        {
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
 
+            ViewData["selectedTab"] = "products";
+
+            //get order product variant identifier
+            int opvId = 0;
+            foreach (var formValue in form.AllKeys)
+                if (formValue.StartsWith("btnSaveOpv", StringComparison.InvariantCultureIgnoreCase))
+                    opvId = Convert.ToInt32(formValue.Substring("btnSaveOpv".Length));
+
+            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            if (orderProductVariant == null)
+                throw new ArgumentException("No order product variant found with the specified id");
+
+
+            decimal unitPriceInclTax, unitPriceExclTax, discountInclTax, discountExclTax,priceInclTax,priceExclTax;
+            int quantity;
+            if (!decimal.TryParse(form["pvUnitPriceInclTax" + opvId], out unitPriceInclTax))
+                unitPriceInclTax =orderProductVariant.UnitPriceInclTax;
+            if (!decimal.TryParse(form["pvUnitPriceExclTax" + opvId], out unitPriceExclTax))
+                unitPriceExclTax = orderProductVariant.UnitPriceExclTax;
+            if (!int.TryParse(form["pvQuantity" + opvId], out quantity))
+                quantity = orderProductVariant.Quantity;
+            if (!decimal.TryParse(form["pvDiscountInclTax" + opvId], out discountInclTax))
+                discountInclTax = orderProductVariant.DiscountAmountInclTax;
+            if (!decimal.TryParse(form["pvDiscountExclTax" + opvId], out discountExclTax))
+                discountExclTax = orderProductVariant.DiscountAmountExclTax;
+            if (!decimal.TryParse(form["pvPriceInclTax" + opvId], out priceInclTax))
+                priceInclTax = orderProductVariant.PriceInclTax;
+            if (!decimal.TryParse(form["pvPriceExclTax" + opvId], out priceExclTax))
+                priceExclTax = orderProductVariant.PriceExclTax;
+
+            if (quantity > 0)
+            {
+                orderProductVariant.UnitPriceInclTax = unitPriceInclTax;
+                orderProductVariant.UnitPriceExclTax = unitPriceExclTax;
+                orderProductVariant.Quantity = quantity;
+                orderProductVariant.DiscountAmountInclTax = discountInclTax;
+                orderProductVariant.DiscountAmountExclTax = discountExclTax;
+                orderProductVariant.PriceInclTax = priceInclTax;
+                orderProductVariant.PriceExclTax = priceExclTax;
+                _orderService.UpdateOrder(order);
+            }
+            else
+            {
+                _orderService.DeleteOrderProductVariant(orderProductVariant);
+            }
+
+            var model = PrepareOrderDetailsModel(order);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOpv")]
+        [ValidateInput(false)]
+        public ActionResult DeleteOrderProductVariant(int id, FormCollection form)
+        {
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            ViewData["selectedTab"] = "products";
+
+            //get order product variant identifier
+            int opvId = 0;
+            foreach (var formValue in form.AllKeys)
+                if (formValue.StartsWith("btnDeleteOpv", StringComparison.InvariantCultureIgnoreCase))
+                    opvId = Convert.ToInt32(formValue.Substring("btnDeleteOpv".Length));
+
+            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            if (orderProductVariant == null)
+                throw new ArgumentException("No order product variant found with the specified id");
+
+            _orderService.DeleteOrderProductVariant(orderProductVariant);
+
+            var model = PrepareOrderDetailsModel(order);
+            return View(model);
+        }
+        
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "btnPvActivateDownload")]
+        [ValidateInput(false)]
+        public ActionResult ActivateDownloadOrderProductVariant(int id, FormCollection form)
+        {
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            ViewData["selectedTab"] = "products";
+
+            //get order product variant identifier
+            int opvId = 0;
+            foreach (var formValue in form.AllKeys)
+                if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
+                    opvId = Convert.ToInt32(formValue.Substring("btnPvActivateDownload".Length));
+
+            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            if (orderProductVariant == null)
+                throw new ArgumentException("No order product variant found with the specified id");
+
+            orderProductVariant.IsDownloadActivated = !orderProductVariant.IsDownloadActivated;
+            _orderService.UpdateOrder(order);
+
+            var model = PrepareOrderDetailsModel(order);
+            return View(model);
+        }
+
+        
         #endregion
 
         #region Addresses

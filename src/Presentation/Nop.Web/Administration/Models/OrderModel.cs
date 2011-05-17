@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
 using Nop.Web.Framework;
@@ -195,6 +196,10 @@ namespace Nop.Admin.Models
             public string AttributeInfo { get; set; }
 
             public string RecurringInfo { get; set; }
+
+            public bool IsDownload { get; set; }
+            public DownloadActivationType DownloadActivationType { get; set; }
+            public bool IsDownloadActivated { get; set; }
         }
 
         public class TaxRate : BaseNopModel

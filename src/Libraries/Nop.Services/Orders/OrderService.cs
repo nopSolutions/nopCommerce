@@ -274,6 +274,19 @@ namespace Nop.Services.Orders
 
             _orderNoteRepository.Delete(orderNote);
         }
+
+        /// <summary>
+        /// Delete an order product variant
+        /// </summary>
+        /// <param name="orderProductVariant">The order product variant</param>
+        public void DeleteOrderProductVariant(OrderProductVariant orderProductVariant)
+        {
+            if (orderProductVariant == null)
+                throw new ArgumentNullException("orderProductVariant");
+
+            _opvRepository.Delete(orderProductVariant);
+        }
+
         #endregion
         
         #region Orders product variants

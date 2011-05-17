@@ -3761,6 +3761,14 @@
                     </LocaleResource>
                     <LocaleResource Name="Download">
                       <Value>Downloable product</Value>
+                      <Children>
+                        <LocaleResource Name="Activate">
+                          <Value>Activate</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Deactivate">
+                          <Value>Deactivate</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
                     <LocaleResource Name="Price">
                       <Value>Price</Value>
