@@ -63,7 +63,7 @@ namespace Nop.Data.Tests
                     new RecurringPaymentHistory()
                     {
                         CreatedOnUtc = new DateTime(2010, 01, 03),
-                        Order = GetTestOrder()
+                        //Order = GetTestOrder()
                     }
                 }
             };

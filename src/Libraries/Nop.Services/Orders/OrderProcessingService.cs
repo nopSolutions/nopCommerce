@@ -1098,7 +1098,7 @@ namespace Nop.Services.Orders
                                         {
                                             RecurringPayment = rp,
                                             CreatedOnUtc = DateTime.UtcNow,
-                                            Order = order,
+                                            OrderId = order.Id,
                                         };
                                         rp.RecurringPaymentHistory.Add(rph);
                                         _orderService.UpdateRecurringPayment(rp);
@@ -1264,7 +1264,7 @@ namespace Nop.Services.Orders
                     {
                         RecurringPayment = recurringPayment,
                         CreatedOnUtc = DateTime.UtcNow,
-                        Order = result.PlacedOrder,
+                        OrderId = result.PlacedOrder.Id,
                     };
                     _orderService.UpdateRecurringPayment(recurringPayment);
                 }
@@ -2379,7 +2379,9 @@ namespace Nop.Services.Orders
             if (orderProductVariant == null)
                 return false;
 
-            return IsDownloadAllowed(orderProductVariant) && orderProductVariant.LicenseDownloadId > 0;
+            return IsDownloadAllowed(orderProductVariant) && 
+                orderProductVariant.LicenseDownloadId.HasValue &&
+                orderProductVariant.LicenseDownloadId > 0;
         }
 
         

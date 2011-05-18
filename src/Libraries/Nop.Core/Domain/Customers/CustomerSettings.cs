@@ -44,6 +44,16 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether 'New customer' notification message should be sent to a store owner
         /// </summary>
         public bool NotifyNewCustomerRegistration { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether to hide 'Downloable products' tab on 'My account' page
+        /// </summary>
+        public bool HideDownloadableProductsTab { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to validate user when downloading products
+        /// </summary>
+        public bool DownloadableProductsValidateUser { get; set; }
 
         /// <summary>
         /// Customer name formatting

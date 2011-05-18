@@ -29,7 +29,6 @@ namespace Nop.Data.Tests
                     CreatedOnUtc = new DateTime(2010, 01, 02),
                     InitialOrder = GetTestOrder(),
                 },
-                Order = GetTestOrder()
             };
 
             var fromDb = SaveAndLoadEntity(rph);
@@ -38,8 +37,6 @@ namespace Nop.Data.Tests
 
             fromDb.RecurringPayment.ShouldNotBeNull();
             fromDb.RecurringPayment.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
-            fromDb.Order.ShouldNotBeNull();
-            fromDb.Order.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
         }
         
         protected Customer GetTestCustomer()
@@ -52,23 +49,6 @@ namespace Nop.Data.Tests
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
-        }
-
-        protected GiftCard GetTestGiftCard()
-        {
-            return new GiftCard()
-             {
-                 Amount = 1,
-                 IsGiftCardActivated = true,
-                 GiftCardCouponCode = "Secret",
-                 RecipientName = "RecipientName 1",
-                 RecipientEmail = "a@b.c",
-                 SenderName = "SenderName 1",
-                 SenderEmail = "d@e.f",
-                 Message = "Message 1",
-                 IsRecipientNotified = true,
-                 CreatedOnUtc = new DateTime(2010, 01, 01),
-             };
         }
 
         protected Order GetTestOrder()

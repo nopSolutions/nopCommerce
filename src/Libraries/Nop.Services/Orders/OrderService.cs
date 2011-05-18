@@ -274,19 +274,7 @@ namespace Nop.Services.Orders
 
             _orderNoteRepository.Delete(orderNote);
         }
-
-        /// <summary>
-        /// Delete an order product variant
-        /// </summary>
-        /// <param name="orderProductVariant">The order product variant</param>
-        public void DeleteOrderProductVariant(OrderProductVariant orderProductVariant)
-        {
-            if (orderProductVariant == null)
-                throw new ArgumentNullException("orderProductVariant");
-
-            _opvRepository.Delete(orderProductVariant);
-        }
-
+        
         #endregion
         
         #region Orders product variants
@@ -356,7 +344,18 @@ namespace Nop.Services.Orders
             var orderProductVariants = query.ToList();
             return orderProductVariants;
         }
-        
+
+        /// <summary>
+        /// Delete an order product variant
+        /// </summary>
+        /// <param name="orderProductVariant">The order product variant</param>
+        public void DeleteOrderProductVariant(OrderProductVariant orderProductVariant)
+        {
+            if (orderProductVariant == null)
+                throw new ArgumentNullException("orderProductVariant");
+
+            _opvRepository.Delete(orderProductVariant);
+        }
         #endregion
         
         #region Recurring payments
@@ -462,9 +461,9 @@ namespace Nop.Services.Orders
                          .Where(rp => rp.Id == rph.RecurringPaymentId)
                          .DefaultIfEmpty()
                          where
-                         (!rp.Deleted && !rph.Order.Deleted) &&
+                         (!rp.Deleted) &&
                          (recurringPaymentId == 0 || rph.RecurringPaymentId == recurringPaymentId) &&
-                         (orderId == 0 || rph.Order.Id == orderId)
+                         (orderId == 0 || rph.OrderId == orderId)
                          select rph.Id;
 
             var query2 = from rph in _recurringPaymentHistoryRepository.Table

@@ -1,0 +1,39 @@
+﻿@model Nop.Web.Models.Customer.UserAgreementModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml"; 
+}
+@using Nop.Web.Framework;
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#agreementagree").click(toggleContinueButton);
+
+        toggleContinueButton();
+    });
+
+    function toggleContinueButton() {
+        if ($('#agreementagree').is(':checked')) {
+            $('#continuedownloading').removeAttr('disabled');
+        } else {
+            $('#continuedownloading').attr('disabled', 'disabled');
+        } 
+    }
+</script>
+
+<div class="user-agreement-page">
+    <div class="page-title">
+        <h1>@T("DownloadableProducts.UserAgreement")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="page-body">
+        @Html.Raw(Model.UserAgreementText)
+        <br />
+        <br />
+        <input id="agreementagree" type="checkbox" name="agreementagree" value="@T("DownloadableProducts.IAgree")" />
+        <br />
+        <br />
+        <input type="submit" id="continuedownloading" class="useragreementbutton" value="@T("Common.Continue")" onclick="setLocation('@Url.Action("GetDownload", "Download", new { opvId = Model.OrderProductVariantGuid, agree = true })')" />
+    </div>
+</div>

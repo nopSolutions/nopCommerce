@@ -16,8 +16,8 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(rp => rp.NextPaymentDate);
             this.Ignore(rp => rp.CyclesRemaining);
             this.Ignore(rp => rp.CyclePeriod);
-            
-            this.HasRequired(rp => rp.InitialOrder).WithOptional();
+
+            this.HasRequired(rp => rp.InitialOrder).WithOptional().WillCascadeOnDelete(false);
         }
     }
 }

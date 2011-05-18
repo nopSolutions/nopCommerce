@@ -566,6 +566,9 @@
       <LocaleResource Name="Cancel">
         <Value>Cancel</Value>
       </LocaleResource>
+      <LocaleResource Name="Continue">
+        <Value>Continue</Value>
+      </LocaleResource>
       <LocaleResource Name="DeleteConfirmationParam">
         <Value>Are you sure you want to delete "{0}"?</Value>
       </LocaleResource>
@@ -605,6 +608,43 @@
     <Children>
       <LocaleResource Name="CopyrightNotice">
         <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="DownloadableProducts">
+    <Children>
+      <LocaleResource Name="Fields">
+        <Children>
+          <LocaleResource Name="Order">
+            <Value>Order #</Value>
+          </LocaleResource>
+          <LocaleResource Name="Date">
+            <Value>Date</Value>
+          </LocaleResource>
+          <LocaleResource Name="Product">
+            <Value>Product</Value>
+          </LocaleResource>
+          <LocaleResource Name="Download">
+            <Value>Download</Value>
+            <Children>
+              <LocaleResource Name="NA">
+                <Value>n/a</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="DownloadLicense">
+            <Value>Download license</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="IAgree">
+        <Value>I agree</Value>
+      </LocaleResource>
+      <LocaleResource Name="NoItems">
+        <Value>There are no downloadable products</Value>
+      </LocaleResource>
+      <LocaleResource Name="UserAgreement">
+        <Value>User agreement</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

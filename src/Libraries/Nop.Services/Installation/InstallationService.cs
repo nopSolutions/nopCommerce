@@ -847,6 +847,8 @@ namespace Nop.Services.Installation
                     ShowCustomersJoinDate = false,
                     AllowViewingProfiles = false,
                     NotifyNewCustomerRegistration = false,
+                    HideDownloadableProductsTab = false,
+                    DownloadableProductsValidateUser = false,
                     CustomerNameFormat = CustomerNameFormat.ShowEmails
                 });
 
