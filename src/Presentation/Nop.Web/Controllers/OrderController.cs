@@ -52,7 +52,8 @@ namespace Nop.Web.Controllers
         private readonly IPaymentService _paymentService;
         private readonly ILocalizationService _localizationService;
         private readonly IPdfService _pdfService;
-        
+        private readonly ICustomerService _customerService;
+
         private readonly MeasureSettings _measureSettings;
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
@@ -68,7 +69,7 @@ namespace Nop.Web.Controllers
             IOrderProcessingService orderProcessingService,
             IDateTimeHelper dateTimeHelper, IMeasureService measureService,
             IPaymentService paymentService, ILocalizationService localizationService,
-            IPdfService pdfService,
+            IPdfService pdfService, ICustomerService customerService,
             MeasureSettings measureSettings, CatalogSettings catalogSettings,
             OrderSettings orderSettings, TaxSettings taxSettings, PdfSettings pdfSettings)
         {
@@ -82,6 +83,7 @@ namespace Nop.Web.Controllers
             this._paymentService = paymentService;
             this._localizationService = localizationService;
             this._pdfService = pdfService;
+            this._customerService = customerService;
 
             this._measureSettings = measureSettings;
             this._catalogSettings = catalogSettings;
@@ -321,9 +323,83 @@ namespace Nop.Web.Controllers
             return model;
         }
 
+        [NonAction]
+        private SubmitReturnRequestModel PrepareReturnRequestModel(SubmitReturnRequestModel model, Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.OrderId = order.Id;
+
+            //return reasons
+            if (_orderSettings.ReturnRequestReasons != null)
+                foreach (var rrr in _orderSettings.ReturnRequestReasons)
+                {
+                    model.AvailableReturnReasons.Add(new SelectListItem()
+                        {
+                            Text = rrr,
+                            Value = rrr
+                        });
+                }
+
+            //return actions
+            if (_orderSettings.ReturnRequestActions != null)
+                foreach (var rra in _orderSettings.ReturnRequestActions)
+                {
+                    model.AvailableReturnActions.Add(new SelectListItem()
+                    {
+                        Text = rra,
+                        Value = rra
+                    });
+                }
+
+            //products
+            var orderProductVariants = _orderService.GetAllOrderProductVariants(order.Id, null, null, null, null, null, null);
+            foreach (var opv in orderProductVariants)
+            {
+                var opvModel = new SubmitReturnRequestModel.OrderProductVariantModel()
+                {
+                    Id = opv.Id,
+                    ProductId = opv.ProductVariant.ProductId,
+                    ProductSeName = opv.ProductVariant.Product.GetSeName(),
+                    AttributeInfo = opv.AttributeDescription,
+                    Quantity = opv.Quantity
+                };
+
+                //product name
+                if (!String.IsNullOrEmpty(opv.ProductVariant.GetLocalized(x => x.Name)))
+                    opvModel.ProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.GetLocalized(x => x.Name), opv.ProductVariant.GetLocalized(x => x.Name));
+                else
+                    opvModel.ProductName = opv.ProductVariant.Product.GetLocalized(x => x.Name);
+                model.Items.Add(opvModel);
+
+                //unit price
+                switch (order.CustomerTaxDisplayType)
+                {
+                    case TaxDisplayType.ExcludingTax:
+                        {
+                            var opvUnitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(opv.UnitPriceExclTax, order.CurrencyRate);
+                            opvModel.UnitPrice = _priceFormatter.FormatPrice(opvUnitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+                        }
+                        break;
+                    case TaxDisplayType.IncludingTax:
+                        {
+                            var opvUnitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(opv.UnitPriceInclTax, order.CurrencyRate);
+                            opvModel.UnitPrice = _priceFormatter.FormatPrice(opvUnitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
+                        }
+                        break;
+                }
+            }
+
+            return model;
+        }
+
         #endregion
 
-        #region Methods
+        #region Order details
 
         public ActionResult Details(int orderId)
         {
@@ -367,9 +443,78 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("ShoppingCart");
         }
 
+        #endregion
+
+        #region Return requests
+
         public ActionResult ReturnRequest(int orderId)
         {
-            return Content("Return request for order#" + orderId);
+            if (_workContext.CurrentCustomer == null)
+                return new HttpUnauthorizedResult();
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+                return new HttpUnauthorizedResult();
+
+            if (!_orderProcessingService.IsReturnRequestAllowed(order))
+                return RedirectToAction("Index", "Home");
+
+            var model = new SubmitReturnRequestModel();
+            model = PrepareReturnRequestModel(model, order);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("ReturnRequest")]
+        [ValidateInput(false)]
+        public ActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, FormCollection form)
+        {
+            if (_workContext.CurrentCustomer == null)
+                return new HttpUnauthorizedResult();
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+                return new HttpUnauthorizedResult();
+
+            if (!_orderProcessingService.IsReturnRequestAllowed(order))
+                return RedirectToAction("Index", "Home");
+
+            int count = 0;
+            foreach (var opv in order.OrderProductVariants)
+            {
+                int quantity = 0; //parse quantity
+                foreach (string formKey in form.AllKeys)
+                    if (formKey.Equals(string.Format("quantity{0}", opv.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        int.TryParse(form[formKey], out quantity);
+                        break;
+                    }
+                if (quantity > 0)
+                {
+                    var rr = new ReturnRequest()
+                    {
+                        OrderProductVariantId = opv.Id,
+                        Quantity = quantity,
+                        CustomerId = _workContext.CurrentCustomer.Id,
+                        ReasonForReturn = model.ReturnReason,
+                        RequestedAction = model.ReturnAction,
+                        CustomerComments = model.Comments,
+                        StaffNotes = string.Empty,
+                        ReturnRequestStatus = ReturnRequestStatus.Pending,
+                        CreatedOnUtc = DateTime.UtcNow,
+                        UpdatedOnUtc = DateTime.UtcNow
+                    };
+                    _workContext.CurrentCustomer.ReturnRequests.Add(rr);
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    //TODO notify store owner here (email)
+                    count++;
+                }
+            }
+
+            model = PrepareReturnRequestModel(model, order);
+            if (count > 0)
+                model.Result = _localizationService.GetResource("ReturnRequests.Submitted");
+            else
+                model.Result = _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
+
+            return View(model);
         }
 
         #endregion

@@ -120,13 +120,13 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private CustomerNavigationModel GetCustomerNavigationModel()
+        private CustomerNavigationModel GetCustomerNavigationModel(Customer customer)
         {
             var model = new CustomerNavigationModel();
             model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
             model.HideRewardPoints = !_rewardPointsSettings.Enabled;
             model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
-            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled;
+            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled || _orderService.SearchReturnRequests(customer.Id, 0, null).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             return model;
         }
@@ -474,7 +474,7 @@ namespace Nop.Web.Controllers
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
 
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Info;
         }
 
@@ -490,7 +490,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerAddressListModel();
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
             foreach (var address in customer.Addresses)
             {
@@ -533,7 +533,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerAddressEditModel();
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
 
             model.Address = new AddressModel();
@@ -554,7 +554,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
 
             if (ModelState.IsValid)
@@ -599,7 +599,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerAddressEditModel();
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
 
             //find address (ensure that it belongs to the current customer)
@@ -634,12 +634,12 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
 
             if (ModelState.IsValid)
             {
-                model.NavigationModel = GetCustomerNavigationModel();
+                model.NavigationModel = GetCustomerNavigationModel(customer);
                 model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
 
                 //find address (ensure that it belongs to the current customer)
@@ -717,7 +717,7 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException("customer");
 
             var model = new CustomerOrderListModel();
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
             var orders = _orderService.GetOrdersByCustomerId(customer.Id);
             foreach (var order in orders)
@@ -758,6 +758,49 @@ namespace Nop.Web.Controllers
 
         #endregion
 
+        #region Return request
+
+        public ActionResult ReturnRequests()
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new CustomeReturnRequestsModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.ReturnRequests;
+            var returnRequests = _orderService.SearchReturnRequests(customer.Id, 0, null);
+            foreach (var returnRequest in returnRequests)
+            {
+                var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
+                var pv = opv.ProductVariant;
+
+                var itemModel = new CustomeReturnRequestsModel.ReturnRequestModel()
+                {
+                    Id = returnRequest.Id,
+                    ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    ProductId = pv.ProductId,
+                    ProductSeName = pv.Product.GetSeName(),
+                    Quantity = returnRequest.Quantity,
+                    ReturnAction = returnRequest.RequestedAction,
+                    ReturnReason = returnRequest.ReasonForReturn,
+                    Comments = returnRequest.CustomerComments,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc).ToString(),
+                };
+                model.Items.Add(itemModel);
+
+                if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name)))
+                    itemModel.ProductName = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name), pv.GetLocalized(x => x.Name));
+                else
+                    itemModel.ProductName = pv.Product.GetLocalized(x => x.Name);
+            }
+
+            return View(model);
+        }
+
+        #endregion
+
         #region Downloable products
 
         public ActionResult DownloadableProducts()
@@ -768,7 +811,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerDownloadableProductsModel();
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.DownloadableProducts;
             var items = _orderService.GetAllOrderProductVariants(null, customer.Id, null, null,
                 null, null, null, true);
@@ -834,7 +877,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerRewardPointsModel();
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.RewardPoints;
             foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
             {
@@ -867,7 +910,7 @@ namespace Nop.Web.Controllers
             var user = _authenticationService.GetAuthenticatedUser();
 
             var model = new ChangePasswordModel();
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.ChangePassword;
             return View(model);
         }
@@ -881,7 +924,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
             var user = _authenticationService.GetAuthenticatedUser();
 
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.ChangePassword;
 
             if (ModelState.IsValid)
@@ -920,7 +963,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerAvatarModel();
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
             model.AvatarUrl = _pictureService.GetPictureUrl(
                 customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
@@ -941,7 +984,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
 
 
@@ -1002,7 +1045,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            model.NavigationModel = GetCustomerNavigationModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
             
             var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId));

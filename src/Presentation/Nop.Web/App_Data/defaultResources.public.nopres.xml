@@ -143,7 +143,7 @@
                 <Value>View order (ID - {0})</Value>
               </LocaleResource>
               <LocaleResource Name="Cancel">
-                <Value>Cancel payments</Value>
+                <Value>Cancel payment</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
@@ -151,6 +151,26 @@
       </LocaleResource>
       <LocaleResource Name="CustomerReturnRequests">
         <Value>Return requests</Value>
+        <Children>
+          <LocaleResource Name="Title">
+            <Value>Return #{0} - {1}</Value>
+          </LocaleResource>
+          <LocaleResource Name="Item">
+            <Value>Returned Item:</Value>
+          </LocaleResource>
+          <LocaleResource Name="Reason">
+            <Value>Return Reason: {0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="Action">
+            <Value>Return Action: {0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="Date">
+            <Value>Date Requested: {0}</Value>
+          </LocaleResource>
+          <LocaleResource Name="Comments">
+            <Value>Your Comments:</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="DownloadableProducts">
         <Value>Downloadable products</Value>
@@ -1521,6 +1541,50 @@
             <Value>Quantity</Value>
           </LocaleResource>
         </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests">
+    <Children>
+      <LocaleResource Name="Comments">
+        <Value>Comments</Value>
+      </LocaleResource>
+      <LocaleResource Name="NoItemsSubmitted">
+        <Value>Your return request has not been submitted because you haven't chosen any items.</Value>
+      </LocaleResource>
+      <LocaleResource Name="Products">
+        <Children>
+          <LocaleResource Name="Name">
+            <Value>Product</Value>
+          </LocaleResource>
+          <LocaleResource Name="Price">
+            <Value>Unit price</Value>
+          </LocaleResource>
+          <LocaleResource Name="Quantity">
+            <Value>Qty. to return</Value>
+          </LocaleResource>
+        </Children>>
+      </LocaleResource>
+      <LocaleResource Name="ReturnReason">
+        <Value>Return reason</Value>
+      </LocaleResource>
+      <LocaleResource Name="ReturnAction">
+        <Value>Return action</Value>
+      </LocaleResource>
+      <LocaleResource Name="SelectProduct(s)">
+        <Value>Which items do you want to return?</Value>
+      </LocaleResource>
+      <LocaleResource Name="Submit">
+        <Value>Submit return request</Value>
+      </LocaleResource>
+      <LocaleResource Name="Submitted">
+        <Value>Your return request has been submitted successfully.</Value>
+      </LocaleResource>
+      <LocaleResource Name="Title">
+        <Value>Return item(s) from order #{0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="WhyReturning">
+        <Value>Why are you returning these items?</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

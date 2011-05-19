@@ -282,6 +282,19 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets an order product variant
         /// </summary>
+        /// <param name="orderProductVariantId">Order product variant identifier</param>
+        /// <returns>Order product variant</returns>
+        public OrderProductVariant GetOrderProductVariantById(int orderProductVariantId)
+        {
+            if (orderProductVariantId == 0)
+                return null;
+
+            return _opvRepository.GetById(orderProductVariantId);
+        }
+
+        /// <summary>
+        /// Gets an order product variant
+        /// </summary>
         /// <param name="orderProductVariantGuid">Order product variant identifier</param>
         /// <returns>Order product variant</returns>
         public OrderProductVariant GetOrderProductVariantByGuid(Guid orderProductVariantGuid)

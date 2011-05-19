@@ -1,0 +1,47 @@
+﻿@model Nop.Web.Models.Customer.CustomeReturnRequestsModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml"; 
+}
+@using Nop.Web.Framework;
+@section left
+{
+    @Html.Partial("~/Views/Customer/MyAccountNavigation.cshtml", Model.NavigationModel, new ViewDataDictionary())
+}
+<div class="account-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.CustomerReturnRequests")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div class="customer-return-request-list">
+            <div class="request-list">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="request-item">
+                        <b>@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.Id, item.ReturnRequestStatus)</b>
+                        <br />
+                        @T("Account.CustomerReturnRequests.Item") <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                        x @item.Quantity
+                        <br />
+                        @string.Format(T("Account.CustomerReturnRequests.Reason").Text, item.ReturnReason)
+                        <br />
+                        @string.Format(T("Account.CustomerReturnRequests.Action").Text, item.ReturnAction)
+                        <br />
+                        @string.Format(T("Account.CustomerReturnRequests.Date").Text, item.CreatedOn)
+                        @if (!String.IsNullOrEmpty(item.Comments))
+                        {
+                            <br />
+                            @T("Account.CustomerReturnRequests.Comments")
+                            <br />
+                            @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(item.Comments, false, true, false, false, false, false))
+                        }
+                    </div>
+     
+                    <div class="clear">
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

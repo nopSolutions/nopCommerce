@@ -392,7 +392,7 @@ namespace Nop.Web.Controllers
             model.AddProductReview.AllowAnonymousUsersToReviewProduct = _catalogSettings.AllowAnonymousUsersToReviewProduct;
             model.AddProductReview.CustomerIsRegistered = _workContext.CurrentCustomer.IsRegistered();
 
-            var productReviews = product.ProductReviews.Where(pr => pr.IsApproved);
+            var productReviews = product.ProductReviews.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
             foreach (var pr in productReviews)
             {
                 model.Items.Add(new ProductReviewModel()

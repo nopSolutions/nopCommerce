@@ -101,6 +101,13 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Orders product variants
+        
+        /// <summary>
+        /// Gets an order product variant
+        /// </summary>
+        /// <param name="orderProductVariantId">Order product variant identifier</param>
+        /// <returns>Order product variant</returns>
+        OrderProductVariant GetOrderProductVariantById(int orderProductVariantId);
 
         /// <summary>
         /// Gets an order product variant
