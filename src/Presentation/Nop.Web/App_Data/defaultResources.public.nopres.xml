@@ -118,6 +118,35 @@
           <LocaleResource Name="ReturnItems">
             <Value>Return Item(s)</Value>
           </LocaleResource>
+          <LocaleResource Name="RecurringOrders">
+            <Value>Recurring payments</Value>
+            <Children>
+              <LocaleResource Name="StartDate">
+                <Value>Start date</Value>
+              </LocaleResource>
+              <LocaleResource Name="CycleInfo">
+                <Value>Cycle info</Value>
+              </LocaleResource>
+              <LocaleResource Name="NextPayment">
+                <Value>Next payment</Value>
+              </LocaleResource>
+              <LocaleResource Name="TotalCycles">
+                <Value>Total cycles</Value>
+              </LocaleResource>
+              <LocaleResource Name="CyclesRemaining">
+                <Value>Cycles remaining</Value>
+              </LocaleResource>
+              <LocaleResource Name="InitialOrder">
+                <Value>Initial order</Value>
+              </LocaleResource>
+              <LocaleResource Name="ViewInitialOrder">
+                <Value>View order (ID - {0})</Value>
+              </LocaleResource>
+              <LocaleResource Name="Cancel">
+                <Value>Cancel payments</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
         </Children>
       </LocaleResource>
       <LocaleResource Name="CustomerReturnRequests">

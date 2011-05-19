@@ -12,9 +12,11 @@ namespace Nop.Web.Models.Customer
         public CustomerOrderListModel()
         {
             Orders = new List<OrderDetailsModel>();
+            RecurringOrders = new List<RecurringOrderModel>();
         }
 
         public IList<OrderDetailsModel> Orders { get; set; }
+        public IList<RecurringOrderModel> RecurringOrders { get; set; }
         public CustomerNavigationModel NavigationModel { get; set; }
 
         #region Nested classes
@@ -24,6 +26,16 @@ namespace Nop.Web.Models.Customer
             public bool IsReturnRequestAllowed { get; set; }
             public string OrderStatus { get; set; }
             public string CreatedOn { get; set; }
+        }
+        public class RecurringOrderModel : BaseNopEntityModel
+        {
+            public string StartDate { get; set; }
+            public string CycleInfo { get; set; }
+            public string NextPayment { get; set; }
+            public int TotalCycles { get; set; }
+            public int CyclesRemaining { get; set; }
+            public int InitialOrderId { get; set; }
+            public bool CanCancel { get; set; }
         }
         #endregion
     }

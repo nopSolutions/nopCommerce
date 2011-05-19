@@ -682,6 +682,39 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
+            var model = PrepareCustomerOrderListModel(customer);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Orders")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
+        public ActionResult CancelRecurringPayment(FormCollection form)
+        {
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            //get recurring payment identifier
+            int recurringPaymentId = 0;
+            foreach (var formValue in form.AllKeys)
+                if (formValue.StartsWith("cancelRecurringPayment", StringComparison.InvariantCultureIgnoreCase))
+                    recurringPaymentId = Convert.ToInt32(formValue.Substring("cancelRecurringPayment".Length));
+
+            var recurringPayment = _orderService.GetRecurringPaymentById(recurringPaymentId);
+            if (_orderProcessingService.CanCancelRecurringPayment(customer, recurringPayment))
+            {
+                var errors = _orderProcessingService.CancelRecurringPayment(recurringPayment);
+                //UNDONE display errors (if errors.Count > 0)
+            }
+            var model = PrepareCustomerOrderListModel(customer);
+            return View(model);
+        }
+
+        private CustomerOrderListModel PrepareCustomerOrderListModel(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
 
             var model = new CustomerOrderListModel();
             model.NavigationModel = GetCustomerNavigationModel();
@@ -701,7 +734,26 @@ namespace Nop.Web.Controllers
 
                 model.Orders.Add(orderModel);
             }
-            return View(model);
+
+            var recurringPayments = _orderService.SearchRecurringPayments(customer.Id, 0, null);
+            foreach (var recurringPayment in recurringPayments)
+            {
+                var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel()
+                {
+                    Id = recurringPayment.Id,
+                    StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
+                    CycleInfo =string.Format("{0} {1}", recurringPayment.CycleLength, recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService,_workContext)),
+                    NextPayment = recurringPayment.NextPaymentDate.HasValue ? _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString() : "",
+                    TotalCycles = recurringPayment.TotalCycles,
+                    CyclesRemaining = recurringPayment.CyclesRemaining,
+                    InitialOrderId = recurringPayment.InitialOrder.Id,
+                    CanCancel = _orderProcessingService.CanCancelRecurringPayment(customer, recurringPayment),
+                };
+
+                model.RecurringOrders.Add(recurringPaymentModel);
+            }
+
+            return model;
         }
 
         #endregion
