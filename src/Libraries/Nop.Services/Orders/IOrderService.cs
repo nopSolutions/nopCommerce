@@ -172,15 +172,6 @@ namespace Nop.Services.Orders
         IList<RecurringPayment> SearchRecurringPayments(int customerId,
            int initialOrderId, OrderStatus? initialOrderStatus, bool showHidden = false);
 
-        /// <summary>
-        /// Search recurring payment history
-        /// </summary>
-        /// <param name="recurringPaymentId">The recurring payment identifier; 0 to load all records</param>
-        /// <param name="orderId">The order identifier; 0 to load all records</param>
-        /// <returns>Recurring payment history collection</returns>
-        IList<RecurringPaymentHistory> SearchRecurringPaymentHistory(int recurringPaymentId,
-           int orderId);
-
         #endregion
 
         #region Return requests

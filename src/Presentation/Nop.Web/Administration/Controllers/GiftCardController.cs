@@ -85,10 +85,10 @@ namespace Nop.Admin.Controllers
                 isGiftCardActivated = true;
             else if (model.ActivatedId == 2)
                 isGiftCardActivated = false;
-            var queuedEmails = _giftCardService.GetAllGiftCards(null, null, isGiftCardActivated, model.CouponCode);
+            var giftCards = _giftCardService.GetAllGiftCards(null, null, isGiftCardActivated, model.CouponCode);
             var gridModel = new GridModel<GiftCardModel>
             {
-                Data = queuedEmails.PagedForCommand(command).Select(x =>
+                Data = giftCards.PagedForCommand(command).Select(x =>
                 {
                     var m = x.ToModel();
                     m.RemainingAmountStr = _priceFormatter.FormatPrice(x.GetGiftCardRemainingAmount(), true, false);
@@ -96,7 +96,7 @@ namespace Nop.Admin.Controllers
                     m.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
                     return m;
                 }),
-                Total = queuedEmails.Count()
+                Total = giftCards.Count()
             };
             return new JsonResult
             {

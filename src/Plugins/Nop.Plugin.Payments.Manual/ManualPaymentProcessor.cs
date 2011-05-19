@@ -156,30 +156,7 @@ namespace Nop.Plugin.Payments.Manual
                         return result;
                     }
             }
-
-            //restore credit cart info
-            if (processPaymentRequest.IsRecurringPayment)
-            {
-                if (processPaymentRequest.InitialOrder != null)
-                {
-                    //TODO ensure that the following properties will be saved (temporary commented):
-                    //CreditCardType, CreditCardName, CreditCardNumber, CreditCardCvv2,
-                    //CreditCardExpireMonth, CreditCardExpireYear
-                    //result.CreditCardType = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(processPaymentRequest.InitialOrder.CardType) : string.Empty;
-                    //result.CreditCardName = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(processPaymentRequest.InitialOrder.CardName) : string.Empty;
-                    //result.CreditCardNumber = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(processPaymentRequest.InitialOrder.CardNumber) : string.Empty;
-                    //result.CreditCardCvv2 = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(processPaymentRequest.InitialOrder.CardCvv2) : string.Empty;
-                    //try
-                    //{
-                    //    result.CreditCardExpireMonth = Convert.ToInt32(processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(processPaymentRequest.InitialOrder.CardExpirationMonth) : "0");
-                    //    result.CreditCardExpireYear = Convert.ToInt32(processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(processPaymentRequest.InitialOrder.CardExpirationYear) : "0");
-                    //}
-                    //catch
-                    //{
-                    //}
-                }
-            }
-
+            
             return result;
         }
 
@@ -190,9 +167,8 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Result</returns>
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
-            var result = new CancelRecurringPaymentResult();
-            result.AddError("Cancelling recurring orders not supported");
-            return result;
+            //always success
+            return new CancelRecurringPaymentResult();
         }
 
         /// <summary>

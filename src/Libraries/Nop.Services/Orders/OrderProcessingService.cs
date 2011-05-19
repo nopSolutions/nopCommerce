@@ -771,6 +771,19 @@ namespace Nop.Services.Orders
                     {
                         if (isRecurringShoppingCart)
                         {
+                            //Old credit card info
+                            processPaymentRequest.CreditCardType = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardType) : "";
+                            processPaymentRequest.CreditCardName = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardName) : "";
+                            processPaymentRequest.CreditCardNumber = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardNumber) : "";
+                            //MaskedCreditCardNumber 
+                            processPaymentRequest.CreditCardCvv2 = initialOrder.AllowStoringCreditCardNumber ? _encryptionService.DecryptText(initialOrder.CardCvv2) : "";
+                            try
+                            {
+                                processPaymentRequest.CreditCardExpireMonth = initialOrder.AllowStoringCreditCardNumber ? Convert.ToInt32(_encryptionService.DecryptText(initialOrder.CardExpirationMonth)) : 0;
+                                processPaymentRequest.CreditCardExpireYear = initialOrder.AllowStoringCreditCardNumber ? Convert.ToInt32(_encryptionService.DecryptText(initialOrder.CardExpirationYear)) : 0;
+                            }
+                            catch {}
+
                             var recurringPaymentType = _paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName);
                             switch (recurringPaymentType)
                             {
@@ -1266,6 +1279,7 @@ namespace Nop.Services.Orders
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = result.PlacedOrder.Id,
                     };
+                    recurringPayment.RecurringPaymentHistory.Add(rph);
                     _orderService.UpdateRecurringPayment(recurringPayment);
                 }
                 else

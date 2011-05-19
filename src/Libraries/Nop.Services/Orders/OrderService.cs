@@ -446,35 +446,6 @@ namespace Nop.Services.Orders
             return recurringPayments;
         }
 
-        /// <summary>
-        /// Search recurring payment history
-        /// </summary>
-        /// <param name="recurringPaymentId">The recurring payment identifier; 0 to load all records</param>
-        /// <param name="orderId">The order identifier; 0 to load all records</param>
-        /// <returns>Recurring payment history collection</returns>
-        public IList<RecurringPaymentHistory> SearchRecurringPaymentHistory(int recurringPaymentId, 
-            int orderId)
-        {
-            //TODO test (new implementation)
-            var query1 = from rph in _recurringPaymentHistoryRepository.Table
-                         from rp in _recurringPaymentRepository.Table
-                         .Where(rp => rp.Id == rph.RecurringPaymentId)
-                         .DefaultIfEmpty()
-                         where
-                         (!rp.Deleted) &&
-                         (recurringPaymentId == 0 || rph.RecurringPaymentId == recurringPaymentId) &&
-                         (orderId == 0 || rph.OrderId == orderId)
-                         select rph.Id;
-
-            var query2 = from rph in _recurringPaymentHistoryRepository.Table
-                         where query1.Contains(rph.Id)
-                         orderby rph.CreatedOnUtc, rph.Id
-                         select rph;
-
-            var recurringPaymentHistory = query2.ToList();
-            return recurringPaymentHistory;
-        }
-
         #endregion
 
         #region Return requests

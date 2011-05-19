@@ -17,6 +17,7 @@
         </siteMapNode>
         <siteMapNode title="Sales" nopResource="Admin.Sales">
           <siteMapNode title="Orders" nopResource="Admin.Orders" controller="Order" action="List" />
+          <siteMapNode title="Recurring payments" nopResource="Admin.RecurringPayments" controller="RecurringPayment" action="List" />
           <siteMapNode title="Gift Cards" nopResource="Admin.GiftCards" controller="GiftCard" action="List" />
         </siteMapNode>
         <siteMapNode title="Customers" nopResource="Admin.Customers">

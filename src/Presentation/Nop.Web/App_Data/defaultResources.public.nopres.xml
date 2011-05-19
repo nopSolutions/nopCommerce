@@ -975,6 +975,19 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Nop.Services.Payments.RecurringPaymentType">
+        <Children>
+          <LocaleResource Name="NotSupported">
+            <Value>Not supported</Value>
+          </LocaleResource>
+          <LocaleResource Name="Manual">
+            <Value>Manual</Value>
+          </LocaleResource>
+          <LocaleResource Name="Automatic">
+            <Value>Automatic</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Filtering">

@@ -47,7 +47,7 @@ namespace Nop.Admin.Controllers
 
         #endregion Constructors
 
-        #region Utitlies
+        #region Utilities
 
         [NonAction]
         public string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)

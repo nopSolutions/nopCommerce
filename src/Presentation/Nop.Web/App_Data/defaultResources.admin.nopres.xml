@@ -2992,6 +2992,120 @@
                 </LocaleResource>
               </Children>
             </LocaleResource>
+            <LocaleResource Name="RecurringPayments">
+            <Value>Recurring payments</Value>
+            <Children>
+              <LocaleResource Name="BackToList">
+                <Value>back to recurring payment list</Value>
+              </LocaleResource>
+              <LocaleResource Name="EditPaymentDetails">
+                <Value>Edit recurring payment details</Value>
+              </LocaleResource>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="InitialOrder">
+                    <Value>Initial order</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Initial order of this recurring payment.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="CycleLength">
+                    <Value>Cycle length</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enter cycle length.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="CyclePeriod">
+                    <Value>Cycle period</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Select cycle period.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="TotalCycles">
+                    <Value>Total cycles</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enter total cycles.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="StartDate">
+                    <Value>Start date</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Start date of this recurring payment.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="PaymentType">
+                    <Value>Payment type</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Indicates the payment type (Manual or Automatic).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="IsActive">
+                    <Value>Is active</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Determines whether this recurring payment is active.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="NextPaymentDate">
+                    <Value>Next payment date</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="CyclesRemaining">
+                    <Value>Cycles remaining</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Number of cycles remaining.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="Info">
+                <Value>Recurring payment info</Value>
+              </LocaleResource>
+              <LocaleResource Name="History">
+                <Value>History</Value>
+                <Children>
+                  <LocaleResource Name="CancelPayment">
+                    <Value>Cancel recurring payment</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="CreatedOn">
+                    <Value>Created on</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NextPaymentDate">
+                    <Value>Next payment date</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Order">
+                    <Value>Created order</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="OrderStatus">
+                    <Value>Order status</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="PaymentStatus">
+                    <Value>Payment status</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="ProcessNextPayment">
+                    <Value>Process next payment (create a new order)</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="ShippingStatus">
+                    <Value>Shipping status</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
             <LocaleResource Name="Download">
               <Children>
                 <LocaleResource Name="DownloadUploadedFile">

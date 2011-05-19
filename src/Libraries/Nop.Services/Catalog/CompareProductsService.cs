@@ -39,9 +39,9 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
-        
-        #region Utitlies
-        
+
+        #region Utilities
+
         /// <summary>
         /// Gets a "compare products" identifier list
         /// </summary>

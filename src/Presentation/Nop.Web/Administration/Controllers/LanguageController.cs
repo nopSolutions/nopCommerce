@@ -120,12 +120,13 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult Resources(int languageId)
 		{
-			ViewBag.AllLanguages = _languageService.GetAllLanguages(true).Select(x => new DropDownItem
-																						  {
-																							  Selected = (x.Id.Equals(languageId)),
-																							  Text = x.Name,
-																							  Value = x.Id.ToString()
-																						  }).ToList();
+			ViewBag.AllLanguages = _languageService.GetAllLanguages(true)
+                .Select(x => new DropDownItem
+                {
+                    Selected = (x.Id.Equals(languageId)),
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }).ToList();
 		    var language = _languageService.GetLanguageById(languageId);
 		    ViewBag.LanguageId = languageId;
 		    ViewBag.LanguageName = language.Name;
@@ -147,10 +148,10 @@ namespace Nop.Admin.Controllers
 		        .ForCommand(command);
 
             var model = new GridModel<LanguageResourceModel>
-                            {
-                                Data = resources.PagedForCommand(command),
-                                Total = resources.Count()
-                            };
+            {
+                Data = resources.PagedForCommand(command),
+                Total = resources.Count()
+            };
 		    return new JsonResult
 			{
 				Data = model
@@ -170,26 +171,9 @@ namespace Nop.Admin.Controllers
             resource = model.ToEntity(resource);
             _localizationService.UpdateLocaleStringResource(resource);
 
-            #region Return a model with the current page and pagesize
-
-            var resources = _localizationService.GetAllResourcesByLanguageId(model.LanguageId).Select(x => x.Value)
-                .Select(x => x.ToModel())
-                .ForCommand(command);
-            var gridModel = new GridModel<LanguageResourceModel>
-                                {
-                                    Data = resources.PagedForCommand(command),
-                                    Total = resources.Count()
-                                };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
-
-            #endregion
+            return Resources(model.LanguageId, command);
         }
-
-
-
+        
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ResourceAdd(int id, LanguageResourceModel resourceModel, GridCommand command)
         {
@@ -203,19 +187,8 @@ namespace Nop.Admin.Controllers
             resource = resourceModel.ToEntity(resource);
             _localizationService.InsertLocaleStringResource(resource);
 
-            var resources = _localizationService.GetAllResourcesByLanguageId(id).Select(x => x.Value)
-                .Select(x => x.ToModel())
-                .ForCommand(command);
 
-            var gridModel = new GridModel<LanguageResourceModel>
-            {
-                Data = resources.PagedForCommand(command),
-                Total = resources.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Resources(id, command);
         }
 
 
@@ -231,19 +204,8 @@ namespace Nop.Admin.Controllers
             var resource = _localizationService.GetLocaleStringResourceById(id);
             _localizationService.DeleteLocaleStringResource(resource);
 
-            var resources = _localizationService.GetAllResourcesByLanguageId(languageId).Select(x => x.Value)
-                .Select(x => x.ToModel())
-                .ForCommand(command);
 
-            var gridModel = new GridModel<LanguageResourceModel>
-            {
-                Data = resources.PagedForCommand(command),
-                Total = resources.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Resources(languageId, command);
         }
 
         #endregion

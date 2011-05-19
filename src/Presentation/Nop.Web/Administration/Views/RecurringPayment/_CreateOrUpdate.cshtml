@@ -1,0 +1,162 @@
+﻿@model Nop.Admin.Models.RecurringPaymentModel
+@using Nop.Web.Framework;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("recurringpayment-edit").Items(x =>
+{
+    var tabInfo = x.Add().Text(T("Admin.RecurringPayments.Info").Text).Content(TabInfo().ToHtmlString());
+    var tabHistory = x.Add().Text(T("Admin.RecurringPayments.History").Text).Content(TabHistory().ToHtmlString());
+
+    var selectedTab = (string)ViewData["selectedTab"];
+    switch (selectedTab)
+    {
+        case "info":
+            tabInfo.Selected(true);
+            break;
+        case "history":
+            tabHistory.Selected(true);
+            break;
+        default:
+            tabInfo.Selected(true);
+            break;
+    }
+})
+@helper TabInfo()
+    {
+        
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.InitialOrderId):
+            </td>
+            <td class="adminData">
+                @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.InitialOrderId }, new { })
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CycleLength):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().IntegerTextBoxFor(model => model.CycleLength).MinValue(1)
+                @Html.ValidationMessageFor(model => model.CycleLength)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CyclePeriodId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CyclePeriodId, ((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.CyclePeriodId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TotalCycles):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().IntegerTextBoxFor(model => model.TotalCycles).MinValue(1)
+                @Html.ValidationMessageFor(model => model.TotalCycles)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CyclesRemaining):
+            </td>
+            <td class="adminData">
+                @Model.CyclesRemaining
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PaymentType):
+            </td>
+            <td class="adminData">
+                @Model.PaymentType
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StartDate):
+            </td>
+            <td class="adminData">
+                @Model.StartDate
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsActive):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsActive)
+                @Html.ValidationMessageFor(model => model.IsActive)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabHistory()
+    { 
+    <table class="adminContent">
+        <tr>
+            <td>
+            @*TODO add confirmation for buttons*@
+                @if (!String.IsNullOrEmpty(Model.NextPaymentDate))
+                        {
+                    @T("Admin.RecurringPayments.History.NextPaymentDate")
+                    <text>:</text> @Model.NextPaymentDate
+                    <button type="submit" name="processnextpayment" value="processnextpayment" class="t-button">@T("Admin.RecurringPayments.History.ProcessNextPayment")</button>
+                        }
+                @if (Model.CanCancelRecurringPayment)
+                        {
+                    <button type="submit" name="cancelpayment" value="cancelpayment" class="t-button">@T("Admin.RecurringPayments.History.CancelPayment")</button>
+                        }
+            </td>
+        </tr>
+        @if (Model.ProcessPaymentErrors.Count > 0)
+                {
+            <tr>
+                <td>
+                    <div style="color: red">
+                        <b>
+                            @foreach (var error in Model.ProcessPaymentErrors)
+                            {
+                                @error
+                                <br />
+                            }
+                        </b>
+                    </div>
+                </td>
+            </tr>
+                }
+    </table>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<RecurringPaymentModel.RecurringPaymentHistoryModel>(Model.History)
+                    .Name("history-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.OrderId)
+                            .Width(100)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.OrderId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Order/Edit/<#= OrderId #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.OrderStatus).Width(200);
+                        columns.Bound(x => x.PaymentStatus).Width(200);
+                        columns.Bound(x => x.ShippingStatus).Width(200);
+                        columns.Bound(x => x.CreatedOn).Width(200);
+
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("HistoryList", "RecurringPayment", new { recurringPaymentId = Model.Id });
+                    })
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+}
