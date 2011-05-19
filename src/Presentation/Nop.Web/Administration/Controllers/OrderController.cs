@@ -347,6 +347,9 @@ namespace Nop.Admin.Controllers
                 if (opv.ProductVariant.IsRecurring)
                     opvModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), opv.ProductVariant.RecurringCycleLength, opv.ProductVariant.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
+                //return requests
+                opvModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, opv.Id, null)
+                    .Select(rr=> rr.Id).ToList();
 
                 model.Items.Add(opvModel);
             }

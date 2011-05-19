@@ -369,6 +369,7 @@ namespace Nop.Services.Orders
 
             _opvRepository.Delete(orderProductVariant);
         }
+
         #endregion
         
         #region Recurring payments
@@ -462,7 +463,19 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Return requests
-        
+
+        /// <summary>
+        /// Deletes a return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        public void DeleteReturnRequest(ReturnRequest returnRequest)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
+
+            _returnRequestRepository.Delete(returnRequest);
+        }
+
         /// <summary>
         /// Gets a return request
         /// </summary>

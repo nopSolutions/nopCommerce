@@ -1,0 +1,54 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.ReturnRequestModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" />
+        @T("Admin.ReturnRequests")
+    </div>
+    <div class="options">
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.ReturnRequestModel>(Model.Data)
+                    .Name("returnrequests-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id)
+                            .Width(50);
+                        columns.Bound(x => x.ProductName)
+                            .Width(200)
+                            .Template(x => Html.ActionLink(x.ProductName, "Edit", "ProductVariant", new { id = x.ProductVariantId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= ProductVariantId #>\"><#= ProductName #></a>");
+                        columns.Bound(x => x.Quantity)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.CustomerId)
+                            .Width(50)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.OrderId)
+                            .Width(50)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.OrderId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Order/Edit/<#= OrderId #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.CreatedOn)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.ReturnRequestStatusStr)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "ReturnRequest"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

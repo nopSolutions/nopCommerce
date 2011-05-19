@@ -218,6 +218,10 @@ namespace Nop.Admin.Models
 
         public class OrderProductVariantModel : BaseNopEntityModel
         {
+            public OrderProductVariantModel()
+            {
+                ReturnRequestIds = new List<int>();
+            }
             public int ProductVariantId { get; set; }
 
             public string FullProductName { get; set; }
@@ -240,8 +244,8 @@ namespace Nop.Admin.Models
             public decimal SubTotalExclTaxValue { get; set; }
 
             public string AttributeInfo { get; set; }
-
             public string RecurringInfo { get; set; }
+            public IList<int> ReturnRequestIds { get; set; }
 
             public bool IsDownload { get; set; }
             public DownloadActivationType DownloadActivationType { get; set; }

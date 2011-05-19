@@ -184,6 +184,12 @@ namespace Nop.Services.Orders
         #region Return requests
 
         /// <summary>
+        /// Deletes a return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        void DeleteReturnRequest(ReturnRequest returnRequest);
+
+        /// <summary>
         /// Gets a return request
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
