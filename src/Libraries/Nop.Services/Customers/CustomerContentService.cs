@@ -42,7 +42,7 @@ namespace Nop.Services.Customers
         /// Deletes a customer content
         /// </summary>
         /// <param name="content">Customer content</param>
-        public void DeleteLanguage(CustomerContent content)
+        public void DeleteCustomerContent(CustomerContent content)
         {
             if (content == null)
                 throw new ArgumentNullException("content");
@@ -115,7 +115,7 @@ namespace Nop.Services.Customers
         /// Updates a customer content
         /// </summary>
         /// <param name="content">Customer content</param>
-        public void UpdateCustomerContente(CustomerContent content)
+        public void UpdateCustomerContent(CustomerContent content)
         {
             if (content == null)
                 throw new ArgumentNullException("content");

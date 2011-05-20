@@ -12,7 +12,7 @@ namespace Nop.Services.Customers
         /// Deletes a customer content
         /// </summary>
         /// <param name="content">Customer content</param>
-        void DeleteLanguage(CustomerContent content);
+        void DeleteCustomerContent(CustomerContent content);
 
         /// <summary>
         /// Gets all customer content
@@ -48,6 +48,6 @@ namespace Nop.Services.Customers
         /// Updates a customer content
         /// </summary>
         /// <param name="content">Customer content</param>
-        void UpdateCustomerContente(CustomerContent content);
+        void UpdateCustomerContent(CustomerContent content);
     }
 }

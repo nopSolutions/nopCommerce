@@ -8,6 +8,7 @@
             </siteMapNode>
             <siteMapNode title="Products" nopResource="Admin.Catalog.Products" controller="Product" action="List">
                 <siteMapNode title="Manage Products" nopResource="Admin.Catalog.Products.Manage" controller="Product" action="List"/>
+              <siteMapNode title="Product Reviews" nopResource="Admin.Catalog.ProductReviews" controller="ProductReview" action="List"/>
             </siteMapNode>
             <siteMapNode title="Attributes" nopResource="Admin.Catalog.Attributes">
               <siteMapNode title="Products Attributes" nopResource="Admin.Catalog.Attributes.ProductAttributes" controller="ProductAttribute" action="List"/>

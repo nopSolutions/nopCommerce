@@ -1,0 +1,53 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.ProductReviewModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+        @T("Admin.Catalog.ProductReviews")
+    </div>
+    <div class="options">
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.ProductReviewModel>(Model.Data)
+                    .Name("productreviews-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id)
+                            .Width(50);
+                        columns.Bound(x => x.ProductName)
+                            .Width(200)
+                            .Template(x => Html.ActionLink(x.ProductName, "Edit", "Product", new { id = x.ProductId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Product/Edit/<#= ProductId #>\"><#= ProductName #></a>");
+                        columns.Bound(x => x.CustomerId)
+                            .Width(50)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.Title)
+                            .Width(250)
+                            .Centered();
+                        columns.Bound(x => x.Rating)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.IsApproved)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.CreatedOn)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "ProductReview"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

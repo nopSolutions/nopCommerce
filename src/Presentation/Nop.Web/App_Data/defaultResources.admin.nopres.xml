@@ -481,6 +481,91 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
+                    <LocaleResource Name="ProductReviews">
+                      <Value>Product reviews</Value>
+                      <Children>
+                          <LocaleResource Name="BackToList">
+                          <Value>back to product review list</Value>
+                        </LocaleResource>
+                          <LocaleResource Name="EditProductReviewDetails">
+                            <Value>Edit product review details</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Product">
+                                <Value>Product</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The name of the product that the review is for.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Customer">
+                                <Value>Customer</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The customer who created the review.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="IPAddress">
+                                <Value>IP Address</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The IP address.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Title">
+                                <Value>Title</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The title of the product review.</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Required">
+                                    <Value>Title is required.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="ReviewText">
+                                <Value>Review text</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The review text.</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Required">
+                                    <Value>Review text is required.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Rating">
+                                <Value>Rating</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The customer's product rating.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="IsApproved">
+                                <Value>Is approved</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Is the review approved? Marking it as approved means that it is visible to all your site's visitors.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="CreatedOn">
+                                <Value>Created on</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The date/time that the review was created.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Products">
                         <Value>Products</Value>
                         <Children>

@@ -26,6 +26,7 @@ namespace Nop.Services
         private readonly ILanguageService _languageService;
         private readonly ICurrencyService _currencyService;
         private readonly TaxSettings _taxSettings;
+        private readonly CurrencySettings _currencySettings;
 
         private Customer _cachedCustomer;
 
@@ -34,7 +35,7 @@ namespace Nop.Services
             IAuthenticationService authenticationService,
             ILanguageService languageService,
             ICurrencyService currencyService,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings, CurrencySettings currencySettings)
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
@@ -42,6 +43,7 @@ namespace Nop.Services
             this._languageService = languageService;
             this._currencyService = currencyService;
             this._taxSettings = taxSettings;
+            this._currencySettings = currencySettings;
         }
 
         protected Customer GetCurrentCustomer()
@@ -177,6 +179,10 @@ namespace Nop.Services
         {
             get
             {
+                //TODO return primary store currency when we're in admin area/mode
+                //if (this.IsAdmin)
+                //    return _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
                 if (this.CurrentCustomer != null &&
                     this.CurrentCustomer.Currency != null &&
                     this.CurrentCustomer.Currency.Published)

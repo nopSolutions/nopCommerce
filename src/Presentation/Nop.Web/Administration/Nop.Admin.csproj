@@ -78,6 +78,7 @@
     <Compile Include="Controllers\BaseNopController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CheckoutAttributeController.cs" />
+    <Compile Include="Controllers\ProductReviewController.cs" />
     <Compile Include="Controllers\ReturnRequestController.cs" />
     <Compile Include="Controllers\RecurringPaymentController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CheckoutAttributeModel.cs" />
     <Compile Include="Models\CheckoutAttributeValueModel.cs" />
+    <Compile Include="Models\ProductReviewModel.cs" />
     <Compile Include="Models\ReturnRequestModel.cs" />
     <Compile Include="Models\RecurringPaymentModel.cs" />
     <Compile Include="Models\OrderAddressModel.cs" />
@@ -159,6 +161,7 @@
     <Compile Include="Validators\AddressValidator.cs" />
     <Compile Include="Validators\CheckoutAttributeValueValidator.cs" />
     <Compile Include="Validators\CheckoutAttributeValidator.cs" />
+    <Compile Include="Validators\ProductReviewValidator.cs" />
     <Compile Include="Validators\ReturnRequestValidator.cs" />
     <Compile Include="Validators\RecurringPaymentValidator.cs" />
     <Compile Include="Validators\DiscountValidator.cs" />
@@ -601,6 +604,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ReturnRequest\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductReview\_CreateOrUpdate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductReview\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductReview\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

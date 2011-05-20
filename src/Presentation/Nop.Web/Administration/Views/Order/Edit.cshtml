@@ -62,73 +62,67 @@
 
 }
 @Html.DeleteConfirmation("order-delete")
-@*TODO Add confirmaion box for each button(set as shipped/delivered, refund, cancel)*@
 @helper TabInfo()
     {
-        
-        
-        <script type="text/javascript">
-            $(document).ready(function () {
-                toggleOrderTotals(false);
-                toggleCC(false);
-            });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            toggleOrderTotals(false);
+            toggleCC(false);
+        });
 
-            function toggleOrderTotals(editmode) {
-                if (editmode) {
-                    $('#trEditOrderTotals').show();
-                    $('#btnEditOrderTotals').hide();
-                    $('#btnSaveOrderTotals').show();
-                    $('#btnCancelOrderTotals').show();
-                }
-                else {
-                    $('#trEditOrderTotals').hide();
-                    $('#btnEditOrderTotals').show();
-                    $('#btnSaveOrderTotals').hide();
-                    $('#btnCancelOrderTotals').hide();
-                }
+        function toggleOrderTotals(editmode) {
+            if (editmode) {
+                $('#trEditOrderTotals').show();
+                $('#btnEditOrderTotals').hide();
+                $('#btnSaveOrderTotals').show();
+                $('#btnCancelOrderTotals').show();
             }
-
-            function toggleCC(editmode) {
-                if (editmode) {
-                    $('#lblCardType').hide();
-                    $('#@Html.FieldIdFor(model => model.CardType)').show();
-                    $('#lblCardName').hide();
-                    $('#@Html.FieldIdFor(model => model.CardName)').show();
-                    $('#lblCardNumber').hide();
-                    $('#@Html.FieldIdFor(model => model.CardNumber)').show();
-                    $('#lblCardCvv2').hide();
-                    $('#@Html.FieldIdFor(model => model.CardCvv2)').show();
-                    $('#lblCardExpirationMonth').hide();
-                    $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').show();
-                    $('#lblCardExpirationYear').hide();
-                    $('#@Html.FieldIdFor(model => model.CardExpirationYear)').show();
-                    $('#btnEditCC').hide();
-                    $('#btnSaveCC').show();
-                    $('#btnCancelCC').show();
-                }
-                else {
-                    $('#lblCardType').show();
-                    $('#@Html.FieldIdFor(model => model.CardType)').hide();
-                    $('#lblCardName').show();
-                    $('#@Html.FieldIdFor(model => model.CardName)').hide();
-                    $('#lblCardNumber').show();
-                    $('#@Html.FieldIdFor(model => model.CardNumber)').hide();
-                    $('#lblCardCvv2').show();
-                    $('#@Html.FieldIdFor(model => model.CardCvv2)').hide();
-                    $('#lblCardExpirationMonth').show();
-                    $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').hide();
-                    $('#lblCardExpirationYear').show();
-                    $('#@Html.FieldIdFor(model => model.CardExpirationYear)').hide();
-                    $('#btnEditCC').show();
-                    $('#btnSaveCC').hide();
-                    $('#btnCancelCC').hide();
-                }
+            else {
+                $('#trEditOrderTotals').hide();
+                $('#btnEditOrderTotals').show();
+                $('#btnSaveOrderTotals').hide();
+                $('#btnCancelOrderTotals').hide();
             }
+        }
 
-</script>
-        
-        
-        
+        function toggleCC(editmode) {
+            if (editmode) {
+                $('#lblCardType').hide();
+                $('#@Html.FieldIdFor(model => model.CardType)').show();
+                $('#lblCardName').hide();
+                $('#@Html.FieldIdFor(model => model.CardName)').show();
+                $('#lblCardNumber').hide();
+                $('#@Html.FieldIdFor(model => model.CardNumber)').show();
+                $('#lblCardCvv2').hide();
+                $('#@Html.FieldIdFor(model => model.CardCvv2)').show();
+                $('#lblCardExpirationMonth').hide();
+                $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').show();
+                $('#lblCardExpirationYear').hide();
+                $('#@Html.FieldIdFor(model => model.CardExpirationYear)').show();
+                $('#btnEditCC').hide();
+                $('#btnSaveCC').show();
+                $('#btnCancelCC').show();
+            }
+            else {
+                $('#lblCardType').show();
+                $('#@Html.FieldIdFor(model => model.CardType)').hide();
+                $('#lblCardName').show();
+                $('#@Html.FieldIdFor(model => model.CardName)').hide();
+                $('#lblCardNumber').show();
+                $('#@Html.FieldIdFor(model => model.CardNumber)').hide();
+                $('#lblCardCvv2').show();
+                $('#@Html.FieldIdFor(model => model.CardCvv2)').hide();
+                $('#lblCardExpirationMonth').show();
+                $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').hide();
+                $('#lblCardExpirationYear').show();
+                $('#@Html.FieldIdFor(model => model.CardExpirationYear)').hide();
+                $('#btnEditCC').show();
+                $('#btnSaveCC').hide();
+                $('#btnCancelCC').hide();
+            }
+        }
+
+    </script>
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -365,99 +359,96 @@
             </tr>
         }
         <tr id="trEditOrderTotals">
-                    <td colspan="2">
-                        <table style="border: solid 1px black; padding: 5px;">
-                            <tr>
-                                <td>
-                    @Html.NopLabelFor(model => model.OrderSubtotalInclTaxValue):
-                                </td>
-                                <td>
-                                    @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderSubtotalInclTaxValue)
-                                </td>
-                                <td>
-                                    @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderSubtotalExclTaxValue)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                    @Html.NopLabelFor(model => model.OrderSubTotalDiscountInclTaxValue):
-                                </td>
-                                <td>
-                                    @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderSubTotalDiscountInclTaxValue)
-                                </td>
-                                <td>
-                                    @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderSubTotalDiscountExclTaxValue)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                    @Html.NopLabelFor(model => model.OrderShippingInclTaxValue):
-                                </td>
-                                <td>
-                                    @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderShippingInclTaxValue)
-                                </td>
-                                <td>
-                                    @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderShippingExclTaxValue)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                    @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeInclTaxValue):
-                                </td>
-                                <td>
-                                    @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
-                                </td>
-                                <td>
-                                    @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.PaymentMethodAdditionalFeeExclTaxValue)
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td>
-                    @Html.NopLabelFor(model => model.TaxRatesValue):
-                                </td>
-                                <td colspan="2">
-                                    @Html.EditorFor(model => model.TaxRatesValue)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                    @Html.NopLabelFor(model => model.TaxValue):
-                                </td>
-                                <td colspan="2">
-                                    @Html.EditorFor(model => model.TaxValue)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                    @Html.NopLabelFor(model => model.OrderTotalDiscountValue):
-                                </td>
-                                <td colspan="2">
-                                    @Html.EditorFor(model => model.OrderTotalDiscountValue)
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td>
-                    @Html.NopLabelFor(model => model.OrderTotalValue):
-                                </td>
-                                <td colspan="2">
-                                    @Html.EditorFor(model => model.OrderTotalValue)
-                                </td>
-                            </tr>
-                            
-                        </table>
-                    </td>
-                </tr>
-            <tr>
-                <td>
-                    <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick="toggleOrderTotals(true);return false;" id="btnEditOrderTotals" class="adminButton" />
-                    <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="adminButton" />
-                </td>
-                <td>
-                    <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick="toggleOrderTotals(false);return false;" id="btnCancelOrderTotals" class="adminButton" />
-                </td>
-            </tr>
+            <td colspan="2">
+                <table style="border: solid 1px black; padding: 5px;">
+                    <tr>
+                        <td>
+                            @Html.NopLabelFor(model => model.OrderSubtotalInclTaxValue):
+                        </td>
+                        <td>
+                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderSubtotalInclTaxValue)
+                        </td>
+                        <td>
+                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderSubtotalExclTaxValue)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.NopLabelFor(model => model.OrderSubTotalDiscountInclTaxValue):
+                        </td>
+                        <td>
+                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderSubTotalDiscountInclTaxValue)
+                        </td>
+                        <td>
+                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderSubTotalDiscountExclTaxValue)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.NopLabelFor(model => model.OrderShippingInclTaxValue):
+                        </td>
+                        <td>
+                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderShippingInclTaxValue)
+                        </td>
+                        <td>
+                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderShippingExclTaxValue)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeInclTaxValue):
+                        </td>
+                        <td>
+                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
+                        </td>
+                        <td>
+                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.PaymentMethodAdditionalFeeExclTaxValue)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.NopLabelFor(model => model.TaxRatesValue):
+                        </td>
+                        <td colspan="2">
+                            @Html.EditorFor(model => model.TaxRatesValue)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.NopLabelFor(model => model.TaxValue):
+                        </td>
+                        <td colspan="2">
+                            @Html.EditorFor(model => model.TaxValue)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.NopLabelFor(model => model.OrderTotalDiscountValue):
+                        </td>
+                        <td colspan="2">
+                            @Html.EditorFor(model => model.OrderTotalDiscountValue)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.NopLabelFor(model => model.OrderTotalValue):
+                        </td>
+                        <td colspan="2">
+                            @Html.EditorFor(model => model.OrderTotalValue)
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick="toggleOrderTotals(true);return false;" id="btnEditOrderTotals" class="adminButton" />
+                <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="adminButton" />
+            </td>
+            <td>
+                <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick="toggleOrderTotals(false);return false;" id="btnCancelOrderTotals" class="adminButton" />
+            </td>
+        </tr>
         <tr class="adminSeparator">
             <td colspan="2">
                 <hr />
@@ -484,7 +475,6 @@
                 <td class="adminData">
                     <span id="lblCardName">@Model.CardName</span>
                     @Html.EditorFor(model => model.CardName)
-                    
                 </td>
             </tr>
         }
@@ -1067,14 +1057,14 @@
                                             <br />
                                             <hr />
                                             @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
-                                            for (int i = 0; i < item.ReturnRequestIds.Count; i++)
-                                            {
-                                                <a href="@Url.Action("Edit", "ReturnRequest", new {id=item.ReturnRequestIds[i]})">@item.ReturnRequestIds[i]</a>
-                                                if (i != item.ReturnRequestIds.Count-1)
-                                                {
-                                                    <text>,</text>
-                                                }
-                                            }
+                                       for (int i = 0; i < item.ReturnRequestIds.Count; i++)
+                                       {
+                                            <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@item.ReturnRequestIds[i]</a>
+                                                                                                                             if (i != item.ReturnRequestIds.Count - 1)
+                                                                                                                             {
+                                            <text>,</text>
+                                                                                                                             }
+                                       }
                                         }
                                     </div>
                                 </td>
@@ -1286,7 +1276,10 @@
 }
 @helper TabOrderNotes()
     {
-    @(Html.Telerik().Grid<Nop.Admin.Models.OrderModel.OrderNote>().Name("ordernotes-grid")
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<Nop.Admin.Models.OrderModel.OrderNote>().Name("ordernotes-grid")
         .DataKeys(keys =>
         {
             keys.Add(x => x.Id).RouteKey("orderNoteId");
@@ -1308,9 +1301,11 @@
             }).Width(180).Title("Delete");
         })
         .EnableCustomBinding(true));
+            </td>
+        </tr>
+    </table>
     <div class="clear">
-    </div>
-    
+    </div>    
     <p>
         <strong>
             @T("Admin.Orders.OrderNotes.AddTitle")
