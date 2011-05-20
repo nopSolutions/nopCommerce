@@ -51,21 +51,20 @@ namespace Nop.Data.Tests
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
             };
-
-            //UNDONE uncomment commented code when we have one more ContentType (e.g. NewsComment)
-            //var productRating = new ProductRating
-            //{
-            //    Customer = customer,
-            //    Product = product,
-            //    Rating = 10,
-            //    IpAddress = "192.168.1.1",
-            //    IsApproved = true,
-            //    CreatedOnUtc = new DateTime(2010, 01, 01),
-            //    UpdatedOnUtc = new DateTime(2010, 01, 02)
-            //};
+            
+            var productReviewHelpfulness = new ProductReviewHelpfulness
+            {
+                Customer = customer,
+                ProductReview = productReview,
+                WasHelpful = true,
+                IpAddress = "192.168.1.1",
+                IsApproved = true,
+                CreatedOnUtc = new DateTime(2010, 01, 03),
+                UpdatedOnUtc = new DateTime(2010, 01, 04)
+            };
 
             context.Set<CustomerContent>().Add(productReview);
-            //context.Set<CustomerContent>().Add(productRating);
+            context.Set<CustomerContent>().Add(productReviewHelpfulness);
 
             context.SaveChanges();
 
@@ -79,9 +78,49 @@ namespace Nop.Data.Tests
             dbReviews.Count().ShouldEqual(1);
             dbReviews.First().ReviewText.ShouldEqual("A review");
 
-            //var dbRatings = query.OfType<ProductRating>().ToList();
-            //dbRatings.Count().ShouldEqual(1);
-            //dbRatings.First().Rating.ShouldEqual(10);
+            var dbHelpfulnessRecords = query.OfType<ProductReviewHelpfulness>().ToList();
+            dbHelpfulnessRecords.Count().ShouldEqual(1);
+            dbHelpfulnessRecords.First().WasHelpful.ShouldEqual(true);
+        }
+
+        [Test]
+        public void Can_save_productReview_with_helpfulness()
+        {
+            var customer = SaveAndLoadEntity<Customer>(GetTestCustomer());
+            var product = SaveAndLoadEntity<Product>(GetTestProduct());
+
+            var productReview = new ProductReview
+            {
+                Customer = customer,
+                Product = product,
+                Title = "Test",
+                ReviewText = "A review",
+                IpAddress = "192.168.1.1",
+                IsApproved = true,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                UpdatedOnUtc = new DateTime(2010, 01, 02),
+                ProductReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>()
+                {
+                    new ProductReviewHelpfulness
+                    {
+                        Customer = customer,
+                        WasHelpful = true,
+                        IpAddress = "192.168.1.1",
+                        IsApproved = true,
+                        CreatedOnUtc = new DateTime(2010, 01, 03),
+                        UpdatedOnUtc = new DateTime(2010, 01, 04)
+                    } 
+                }
+            };
+
+            var fromDb = SaveAndLoadEntity(productReview);
+            fromDb.ShouldNotBeNull();
+            fromDb.ReviewText.ShouldEqual("A review");
+
+
+            fromDb.ProductReviewHelpfulnessEntries.ShouldNotBeNull();
+            (fromDb.ProductReviewHelpfulnessEntries.Count == 1).ShouldBeTrue();
+            fromDb.ProductReviewHelpfulnessEntries.First().WasHelpful.ShouldEqual(true);
         }
 
         protected Customer GetTestCustomer()

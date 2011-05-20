@@ -1070,6 +1070,7 @@
     <Content Include="Views\Catalog\RecentlyAddedProducts.cshtml" />
     <Content Include="Views\Home\Menu.cshtml" />
     <Content Include="Views\Home\InfoBlock.cshtml" />
+    <Content Include="Views\Catalog\_ProductReviewHelpfulness.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

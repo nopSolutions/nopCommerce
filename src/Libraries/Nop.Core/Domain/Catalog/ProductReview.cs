@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 namespace Nop.Core.Domain.Catalog
 {
@@ -41,5 +42,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets the product
         /// </summary>
         public virtual Product Product { get; set; }
+
+        /// <summary>
+        /// Gets the entries of product review helpfulness
+        /// </summary>
+        public virtual ICollection<ProductReviewHelpfulness> ProductReviewHelpfulnessEntries { get; set; }
     }
 }

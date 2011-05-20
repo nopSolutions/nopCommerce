@@ -420,10 +420,14 @@ namespace Nop.Web.Controllers
                     Id = pr.Id,
                     CustomerName = "TODO customername/email/username here",
                     Title = pr.Title,
-                    ReviewText = Nop.Core.Html.HtmlHelper.FormatText(pr.ReviewText, false, true, false, false, false, false),
+                    ReviewText = Core.Html.HtmlHelper.FormatText(pr.ReviewText, false, true, false, false, false, false),
                     Rating = pr.Rating,
-                    HelpfulYesTotal = pr.HelpfulYesTotal,
-                    HelpfulNoTotal = pr.HelpfulNoTotal,
+                    Helpfulness = new ProductReviewHelpfulnessModel()
+                    {
+                        ProductReviewId = pr.Id,
+                        HelpfulYesTotal = pr.HelpfulYesTotal,
+                        HelpfulNoTotal = pr.HelpfulNoTotal,
+                    },
                     WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
                 });
             }
@@ -1380,6 +1384,63 @@ namespace Nop.Web.Controllers
             //If we got this far, something failed, redisplay form
             model = PrepareProductReviewsModel(model, product);
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult SetProductReviewHelpfulness(int productReviewId, bool washelpful)
+        {
+            var productReview = _customerContentService.GetCustomerContentById(productReviewId) as ProductReview;
+            if (productReview == null)
+                throw new ArgumentException("No product review found with the specified id");
+
+            if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+            {
+                return Json(new
+                {
+                    Result = _localizationService.GetResource("Reviews.Helpfulness.OnlyRegistered"),
+                    TotalYes = productReview.HelpfulYesTotal,
+                    TotalNo = productReview.HelpfulNoTotal
+                });
+            }
+
+            //delete previous helpfulness
+            var oldPrh = (from prh in productReview.ProductReviewHelpfulnessEntries
+                          where prh.CustomerId == _workContext.CurrentCustomer.Id
+                          select prh).FirstOrDefault();
+            if (oldPrh != null)
+                _customerContentService.DeleteCustomerContent(oldPrh);
+
+            //insert new helpfulness
+            var newPrh = new ProductReviewHelpfulness()
+            {
+                ProductReviewId = productReview.Id,
+                CustomerId = _workContext.CurrentCustomer.Id,
+                IpAddress = _webHelper.GetCurrentIpAddress(),
+                WasHelpful = washelpful,
+                IsApproved = true, //always approved
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+            };
+            _customerContentService.InsertCustomerContent(newPrh);
+
+            //new totals
+            int helpfulYesTotal = (from prh in productReview.ProductReviewHelpfulnessEntries
+                                   where prh.WasHelpful
+                                   select prh).Count();
+            int helpfulNoTotal = (from prh in productReview.ProductReviewHelpfulnessEntries
+                                  where !prh.WasHelpful
+                                  select prh).Count();
+
+            productReview.HelpfulYesTotal = helpfulYesTotal;
+            productReview.HelpfulNoTotal = helpfulNoTotal;
+            _customerContentService.UpdateCustomerContent(productReview);
+
+            return Json(new
+            {
+                Result = _localizationService.GetResource("Reviews.Helpfulness.SuccessfullyVoted"),
+                TotalYes = productReview.HelpfulYesTotal,
+                TotalNo = productReview.HelpfulNoTotal
+            });
         }
 
         [ChildActionOnly]

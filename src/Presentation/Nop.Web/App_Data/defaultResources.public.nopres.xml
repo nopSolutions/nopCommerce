@@ -651,6 +651,9 @@
       <LocaleResource Name="View">
         <Value>View</Value>
       </LocaleResource>
+      <LocaleResource Name="Yes">
+        <Value>Yes</Value>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Content">
@@ -1607,11 +1610,11 @@
   <LocaleResource Name="Reviews">
     <Value>Reviews</Value>
     <Children>
+      <LocaleResource Name="Date">
+        <Value>Date</Value>
+      </LocaleResource>
       <LocaleResource Name="ExistingReviews">
         <Value>Existing reviews</Value>
-      </LocaleResource>
-      <LocaleResource Name="From">
-        <Value>From</Value>
       </LocaleResource>
       <LocaleResource Name="Fields">
         <Children>
@@ -1644,8 +1647,21 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
-      <LocaleResource Name="Date">
-        <Value>Date</Value>
+      <LocaleResource Name="From">
+        <Value>From</Value>
+      </LocaleResource>
+      <LocaleResource Name="Helpfulness">
+        <Children>
+          <LocaleResource Name="OnlyRegistered">
+            <Value>Only registered customers can set review helpfulness</Value>
+          </LocaleResource>
+          <LocaleResource Name="SuccessfullyVoted">
+            <Value>Successfully voted</Value>
+          </LocaleResource>
+          <LocaleResource Name="WasHelpful?">
+            <Value>Was this review helpful?</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="OnlyRegisteredUsersCanWriteReviews">
         <Value>Only registered users can write reviews</Value>

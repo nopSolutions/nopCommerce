@@ -3700,6 +3700,26 @@ textarea
 }
 
 
+.product-review-helpfulness
+{
+    font-size: 11px;
+	color: #333;
+	clear: both;
+}
+.product-review-helpfulness .vote
+{
+	color: #3664A5;
+	font-weight: bold;
+	text-decoration: none;
+}
+.product-review-helpfulness .vote:hover
+{
+	cursor: pointer;
+	text-decoration: none;
+}
+
+
+
 
 .product-variant-list
 {

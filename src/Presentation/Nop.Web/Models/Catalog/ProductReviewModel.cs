@@ -55,12 +55,20 @@ namespace Nop.Web.Models.Catalog
 
         public int Rating { get; set; }
 
-        public int HelpfulYesTotal { get; set; }
-
-        public int HelpfulNoTotal { get; set; }
+        public ProductReviewHelpfulnessModel Helpfulness { get; set; }
 
         public string WrittenOnStr { get; set; }
     }
+
+
+    public class ProductReviewHelpfulnessModel : BaseNopModel
+    {
+        public int ProductReviewId { get; set; }
+
+        public int HelpfulYesTotal { get; set; }
+
+        public int HelpfulNoTotal { get; set; }
+    } 
 
     public class AddProductReviewModel : BaseNopModel
     {
