@@ -18,6 +18,7 @@ namespace Nop.Web.Models.Catalog
             DefaultPictureModel = new PictureModel();
             PictureModels = new List<PictureModel>();
             ProductVariantModels = new List<ProductVariantModel>();
+            SpecificationAttributeModels = new List<ProductSpecificationModel>();
         }
 
         public string Name { get; set; }
@@ -42,6 +43,7 @@ namespace Nop.Web.Models.Catalog
         public PictureModel DefaultPictureModel { get; set; }
         public IList<PictureModel> PictureModels { get; set; }
         public IList<ProductVariantModel> ProductVariantModels { get; set; }
+        public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
 
 		#region Nested Classes
 

@@ -832,6 +832,7 @@ namespace Nop.Services.Installation
                     RecentlyViewedProductsEnabled = true,
                     RecentlyAddedProductsNumber = 4,
                     RecentlyAddedProductsEnabled = true,
+                    CompareProductsEnabled = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Models.Media;
 
-namespace Nop.Web.Models.Home
+namespace Nop.Web.Models.Catalog
 {
-    public class InfoBlockModel : BaseNopModel
+    public class AddToCompareListModel : BaseNopModel
     {
-        public bool RecentlyAddedProductsEnabled { get; set; }
-        public bool RecentlyViewedProductsEnabled { get; set; }
+        public int ProductId { get; set; }
+
         public bool CompareProductsEnabled { get; set; }
     }
 }

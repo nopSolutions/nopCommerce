@@ -19,7 +19,7 @@ namespace Nop.Services.Catalog
         /// Gets a "compare products" list
         /// </summary>
         /// <returns>"Compare products" list</returns>
-        List<Product> GetComparedProducts();
+        IList<Product> GetComparedProducts();
 
 
         /// <summary>

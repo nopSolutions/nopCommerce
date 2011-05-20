@@ -30,6 +30,24 @@ namespace Nop.Web.Infrastructure
                             "newproducts/rss",
                             new { controller = "Catalog", action = "RecentlyAddedProductsRss" },
                             new[] { "Nop.Web.Controllers" });
+            
+            //comparing products
+            routes.MapRoute("AddProductToCompare",
+                            "compareproducts/add/{productId}",
+                            new { controller = "Catalog", action = "AddProductToCompareList" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("CompareProducts",
+                            "compareproducts/",
+                            new { controller = "Catalog", action = "CompareProducts" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("RemoveProductFromCompareList",
+                            "compareproducts/remove/{productId}",
+                            new { controller = "Catalog", action = "RemoveProductFromCompareList"},
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("ClearCompareList",
+                            "clearcomparelist/",
+                            new { controller = "Catalog", action = "ClearCompareList" },
+                            new[] { "Nop.Web.Controllers" });
 
             //catalog
             routes.MapRoute("Category",

@@ -51,6 +51,7 @@ namespace Nop.Web.Controllers
         private readonly IAuthenticationService _authenticationService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly ICompareProductsService _compareProductsService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -69,7 +70,7 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IAuthenticationService authenticationService, IShoppingCartService shoppingCartService,
-            IRecentlyViewedProductsService recentlyViewedProductsService,
+            IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings, ShoppingCartSettings shoppingCartSettings)
         {
             this._categoryService = categoryService;
@@ -91,6 +92,7 @@ namespace Nop.Web.Controllers
             this._authenticationService = authenticationService;
             this._shoppingCartService = shoppingCartService;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
+            this._compareProductsService = compareProductsService;
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
@@ -915,6 +917,7 @@ namespace Nop.Web.Controllers
 
         #region Products
 
+        //product details page
         public ActionResult Product(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -1227,6 +1230,7 @@ namespace Nop.Web.Controllers
                 {
                     return new ProductSpecificationModel()
                     {
+                        SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
                         SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
                         SpecificationAttributeOption = psa.SpecificationAttributeOption.GetLocalized(x => x.Name)
                     };
@@ -1306,6 +1310,7 @@ namespace Nop.Web.Controllers
             return PartialView("ShareButton", shareCode);
         }
 
+        //products reviews
         public ActionResult ProductReviews(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -1469,6 +1474,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        //recently viewed products
         public ActionResult RecentlyViewedProducts()
         {
             var model = new List<ProductModel>();
@@ -1494,6 +1500,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        //recently added products
         public ActionResult RecentlyAddedProducts()
         {
             var model = new List<ProductModel>();
@@ -1522,6 +1529,83 @@ namespace Nop.Web.Controllers
             
             //TODO retun RSS with recently added products
             throw new NotImplementedException();
+        }
+
+        //compare products
+        public ActionResult AddProductToCompareList(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null || product.Deleted || !product.Published)
+                return RedirectToAction("Index", "Home");
+
+            if (!_catalogSettings.CompareProductsEnabled)
+                return RedirectToAction("Index", "Home");
+            
+            _compareProductsService.AddProductToCompareList(productId);
+
+            return RedirectToRoute("CompareProducts");
+        }
+
+        public ActionResult RemoveProductFromCompareList(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                return RedirectToAction("Index", "Home");
+
+            if (!_catalogSettings.CompareProductsEnabled)
+                return RedirectToAction("Index", "Home");
+
+            _compareProductsService.RemoveProductFromCompareList(productId);
+
+            return RedirectToRoute("CompareProducts");
+        }
+
+        public ActionResult CompareProducts()
+        {
+            if (!_catalogSettings.CompareProductsEnabled)
+                return RedirectToAction("Index", "Home");
+
+            var model = new List<ProductModel>();
+            foreach (var product in _compareProductsService.GetComparedProducts())
+            {
+                var productModel = PrepareProductOverviewModel(product);
+                //specs for comparing
+                productModel.SpecificationAttributeModels = _specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
+                    .Select(psa =>
+                    {
+                        return new ProductSpecificationModel()
+                        {
+                            SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
+                            SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                            SpecificationAttributeOption = psa.SpecificationAttributeOption.GetLocalized(x => x.Name)
+                        };
+                    })
+                    .ToList();
+                model.Add(productModel);
+            }
+            return View(model);
+        }
+
+        public ActionResult ClearCompareList()
+        {
+            if (!_catalogSettings.CompareProductsEnabled)
+                return RedirectToAction("Index", "Home");
+
+            _compareProductsService.ClearCompareProducts();
+            
+            return RedirectToRoute("CompareProducts");
+        }
+
+        [ChildActionOnly]
+        public ActionResult CompareProductsButton(int productId)
+        {
+            var model = new AddToCompareListModel()
+            {
+                ProductId = productId,
+                CompareProductsEnabled = _catalogSettings.CompareProductsEnabled
+            };
+
+            return PartialView("CompareProductsButton", model);
         }
 
 		#endregion

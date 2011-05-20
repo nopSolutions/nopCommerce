@@ -89,5 +89,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether "Recently added products" feature is enabled
         /// </summary>
         public bool RecentlyAddedProductsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether "Compare products" feature is enabled
+        /// </summary>
+        public bool CompareProductsEnabled { get; set; }
     }
 }

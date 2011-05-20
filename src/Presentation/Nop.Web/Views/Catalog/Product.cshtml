@@ -116,7 +116,9 @@
                     }
                     <div class="clear">
                     </div>
-                    @*TODO ProductEmailAFriendButton*@ &nbsp; @*TODO ProductAddToCompareList*@
+                    <br />
+                    @*TODO ProductEmailAFriendButton*@ &nbsp;
+                    @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
                     <div class="clear">
                     </div>
                     @Html.Action("ShareButton", "Catalog")

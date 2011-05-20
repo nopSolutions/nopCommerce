@@ -1,0 +1,111 @@
+﻿@model IList<ProductModel>
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@{
+    string columnWidth = "";
+    if (Model.Count > 0)
+    {
+        columnWidth = Math.Round((decimal)(90M / Model.Count), 0).ToString() + "%";
+    }
+
+
+    var specificationAttributes = new List<ProductSpecificationModel>();
+    foreach (var product in Model)
+    {
+        foreach (var attribute in product.SpecificationAttributeModels)
+        {
+            if (specificationAttributes.Where(sa => sa.SpecificationAttributeId == attribute.SpecificationAttributeId).FirstOrDefault() == null)
+            {
+                specificationAttributes.Add(attribute);
+            }
+        }
+    }
+}
+<div class="compare-products">
+    <div class="page-title">
+        <h1>@T("Products.Compare.Title")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        @if (Model.Count > 0)
+        {
+            <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')">@T("Products.Compare.Clear")</a>
+            <br />
+            <br />
+            <table cellpadding="0" cellspacing="0" border="0" class="compare-products-table">
+                <tbody>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                        @foreach (var product in Model)
+                        {
+                            <td style="width: @columnWidth; text-align: center;">
+                                <div>
+                                    <p align="center">
+                                        <input type="submit" value="@T("Common.Remove")" title="@T("Common.Remove")" class="remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" />
+                                        <br />
+                                        <br />
+                                        <img border="0" alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
+                                    </p>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                    <tr class="product-name">
+                        <td>
+                            &nbsp;
+                        </td>
+                        @foreach (var product in Model)
+                        {
+                            <td align="center" style="width: @columnWidth; text-align: center;">
+                                <a class="link" href="@Url.RouteUrl("Product", new { productId = product.Id, SeName = product.SeName })">@product.Name</a>
+                            </td>
+                        }
+                    </tr>
+                    <tr class="productPrice">
+                        <td align="left">
+                            @T("Products.Compare.Price")
+                        </td>
+                        @foreach (var product in Model)
+                        {
+                            <td align="center" style="width: @columnWidth; text-align: center;">
+                                @product.ProductPrice.Price
+                            </td>
+                        }
+                    </tr>
+                    @foreach (var specificationAttribute in specificationAttributes)
+                    {
+                        <tr>
+                            <td align="left">@specificationAttribute.SpecificationAttributeName
+                            </td>
+                            @foreach (var product in Model)
+                            {
+                                var foundProductSpec = product.SpecificationAttributeModels.Where(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId).FirstOrDefault();
+                                var specValue = foundProductSpec != null ? foundProductSpec.SpecificationAttributeOption : "";
+                                                                
+                                <td align="center" valign="top" style="width: @columnWidth; text-align: center;">
+                                    @if (!String.IsNullOrEmpty(specValue))
+                                    {
+                                        @specValue
+                                    }
+                                    else
+                                    {
+                                    <text>&nbsp;</text>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

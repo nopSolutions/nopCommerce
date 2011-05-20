@@ -155,6 +155,7 @@ namespace Nop.Web.Controllers
             {
                 RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
+                CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
             };
 
             return PartialView(model);

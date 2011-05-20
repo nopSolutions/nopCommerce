@@ -87,7 +87,7 @@ namespace Nop.Services.Catalog
         /// Gets a "compare products" list
         /// </summary>
         /// <returns>"Compare products" list</returns>
-        public List<Product> GetComparedProducts()
+        public IList<Product> GetComparedProducts()
         {
             var products = new List<Product>();
             var productIds = GetComparedProductIds();

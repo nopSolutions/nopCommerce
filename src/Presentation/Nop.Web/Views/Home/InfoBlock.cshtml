@@ -1,6 +1,6 @@
 ﻿@model Nop.Web.Models.Home.InfoBlockModel
 @*TODO localize
-TODO enbale/disable links based on settings: forums/comparing products/blog
+TODO enbale/disable links based on settings: forums/blog
 TODO add URLs*@
 <div class="block block-info">
     <div class="title">
@@ -22,9 +22,12 @@ TODO add URLs*@
             {
                 <li><a href="@Url.RouteUrl("RecentlyViewedProducts")">@T("Products.RecentlyViewedProducts")</a></li>
             }
-            <li><a href="#">Compare products list</a></li>            
-            <li><a href="#">Sitemap</a></li>            
-            <li><a href="#">Shipping & Returns</a></li>            
+            @if (Model.CompareProductsEnabled)
+            {
+                <li><a href="@Url.RouteUrl("CompareProducts")">@T("Products.Compare.List")</a></li>            
+            }
+            <li><a href="#">Sitemap</a></li>
+            <li><a href="#">Shipping & Returns</a></li>
             <li><a href="#">Privacy Notice</a></li>
             <li><a href="#">Conditions of Use</a></li>
         </ul>

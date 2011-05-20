@@ -1457,6 +1457,26 @@
       <LocaleResource Name="CallForPrice">
         <Value>Call for pricing</Value>
       </LocaleResource>
+      <LocaleResource Name="Compare">
+        <Value>Compare products</Value>
+        <Children>
+          <LocaleResource Name="AddToCompareList">
+            <Value>Add to compare list</Value>
+          </LocaleResource>
+          <LocaleResource Name="Clear">
+            <Value>Clear list</Value>
+          </LocaleResource>
+          <LocaleResource Name="List">
+            <Value>Compare products list</Value>
+          </LocaleResource>
+          <LocaleResource Name="Price">
+            <Value>Price</Value>
+          </LocaleResource>
+          <LocaleResource Name="Title">
+            <Value>Compare products</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Details">
         <Value>Details</Value>
       </LocaleResource>
