@@ -1,0 +1,38 @@
+﻿@model IList<Nop.Web.Models.Catalog.ProductModel>
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+}
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+<div class="recently-added-products">
+    <div class="page-title">
+        <table width="100%">
+            <tr>
+                <td style="text-align: left;">
+                    <h1>@T("Products.NewProducts")</h1>
+                </td>
+                <td style="text-align: right;">
+                    <a href="@Url.RouteUrl("RecentlyAddedProductsRSS")">
+                        <img title="@T("Products.NewProducts.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Products.NewProducts.RSS")" style="border-width:0px;" /></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="clear">
+    </div>
+    @*product list*@
+    @if (Model.Count > 0)
+    {
+@*grid mode*@
+        <div class="product-grid">
+            @(Html.DataList<ProductModel>(Model, 2,
+                    @<div class="item-box">
+                        @Html.Partial("_ProductBox", @item)
+                    </div>
+                ))
+        </div>
+        
+    }
+</div>

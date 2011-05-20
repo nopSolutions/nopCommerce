@@ -827,7 +827,11 @@ namespace Nop.Services.Installation
                     ProductReviewsMustBeApproved = true,
                     AllowAnonymousUsersToReviewProduct = false,
                     NotifyStoreOwnerAboutNewProductReviews = false,
-                    AllowAnonymousUsersToEmailAFriend = false
+                    AllowAnonymousUsersToEmailAFriend = false,
+                    RecentlyViewedProductsNumber = 4,
+                    RecentlyViewedProductsEnabled = true,
+                    RecentlyAddedProductsNumber = 4,
+                    RecentlyAddedProductsEnabled = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

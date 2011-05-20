@@ -1505,6 +1505,19 @@
       <LocaleResource Name="Manufacturers">
         <Value>Manufacturers</Value>
       </LocaleResource>
+      <LocaleResource Name="NewProducts">
+        <Value>New products</Value>
+        <Children>
+          <LocaleResource Name="RSS">
+            <Value>RSS</Value>
+            <Children>
+              <LocaleResource Name="Hint">
+                <Value>Click here to be informed automatically when we add new items to our site</Value>
+              </LocaleResource>              
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Price">
         <Value>Price</Value>
         <Children>
@@ -1521,6 +1534,9 @@
       </LocaleResource>
       <LocaleResource Name="Qty">
         <Value>Qty</Value>
+      </LocaleResource>
+      <LocaleResource Name="RecentlyViewedProducts">
+        <Value>Recently viewed products</Value>
       </LocaleResource>
       <LocaleResource Name="RelatedProducts">
         <Value>Related products</Value>

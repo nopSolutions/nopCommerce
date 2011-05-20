@@ -18,6 +18,18 @@ namespace Nop.Web.Infrastructure
                             "product/{productId}/{SeName}",
                             new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("RecentlyViewedProducts",
+                            "recentlyviewedproducts/",
+                            new { controller = "Catalog", action = "RecentlyViewedProducts" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("RecentlyAddedProducts",
+                            "newproducts/",
+                            new { controller = "Catalog", action = "RecentlyAddedProducts" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("RecentlyAddedProductsRSS",
+                            "newproducts/rss",
+                            new { controller = "Catalog", action = "RecentlyAddedProductsRss" },
+                            new[] { "Nop.Web.Controllers" });
 
             //catalog
             routes.MapRoute("Category",

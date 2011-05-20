@@ -29,12 +29,13 @@ namespace Nop.Web.Controllers
         private readonly UserSettings _userSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly CatalogSettings _catalogSettings;
 
         public HomeController(ILanguageService languageService, 
             ICurrencyService currencyService, ICustomerService customerService,
             IWorkContext workContext, IAuthenticationService authenticationService,
             UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings, CatalogSettings catalogSettings)
         {
             this._languageService = languageService;
             this._currencyService = currencyService;
@@ -44,6 +45,7 @@ namespace Nop.Web.Controllers
             this._userSettings = userSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._taxSettings = taxSettings;
+            this._catalogSettings = catalogSettings;
         }
 
         public ActionResult Index()
@@ -134,6 +136,28 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
+        
+        [ChildActionOnly]
+        public ActionResult Menu()
+        {
+            var model = new MenuModel()
+            {
+                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
+            };
 
+            return PartialView(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult InfoBlock()
+        {
+            var model = new InfoBlockModel()
+            {
+                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
+                RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
+            };
+
+            return PartialView(model);
+        }
     }
 }

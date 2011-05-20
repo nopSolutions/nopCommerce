@@ -50,10 +50,10 @@ namespace Nop.Web.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IAuthenticationService _authenticationService;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
-        private readonly CustomerSettings _customerSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         
         #endregion
@@ -69,8 +69,8 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IAuthenticationService authenticationService, IShoppingCartService shoppingCartService,
-            MediaSettings mediaSetting, CatalogSettings catalogSettings,
-            CustomerSettings customerSettings, ShoppingCartSettings shoppingCartSettings)
+            IRecentlyViewedProductsService recentlyViewedProductsService,
+            MediaSettings mediaSetting, CatalogSettings catalogSettings, ShoppingCartSettings shoppingCartSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -90,10 +90,10 @@ namespace Nop.Web.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._authenticationService = authenticationService;
             this._shoppingCartService = shoppingCartService;
+            this._recentlyViewedProductsService = recentlyViewedProductsService;
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
-            this._customerSettings = customerSettings;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -270,6 +270,26 @@ namespace Nop.Web.Controllers
                     break;
             }
             
+            return model;
+        }
+
+        [NonAction]
+        private ProductModel PrepareProductOverviewModel(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var model = product.ToModel();
+            //price
+            model.ProductPrice = PrepareProductPriceModel(product);
+            //picture
+            var picture = product.GetDefaultProductPicture(_pictureService);
+            if (picture != null)
+                model.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+            else
+                model.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+            model.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
+            model.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
             return model;
         }
 
@@ -725,22 +745,7 @@ namespace Nop.Web.Controllers
             var featuredProducts = _productService.SearchProducts(category.Id,
                 0, true, null, null, 0, 0, null, false, _workContext.WorkingLanguage.Id, null,
                  ProductSortingEnum.Position, 0, int.MaxValue);
-            model.FeaturedProducts = featuredProducts.Select(x =>
-            {
-                var m = x.ToModel();
-                //price
-                m.ProductPrice = PrepareProductPriceModel(x);
-                //picture
-                var picture = x.GetDefaultProductPicture(_pictureService);
-                if (picture != null)
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
-                else
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
-                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
-                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
-                return m;
-            })
-            .ToList();
+            model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
 
 
 
@@ -749,22 +754,7 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(category.Id, 0, false, minPriceConverted, maxPriceConverted,
                 0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, selectedSpecs,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
-            model.Products = products.Select(x =>
-            {
-                var m = x.ToModel();
-                //price
-                m.ProductPrice = PrepareProductPriceModel(x);
-                //picture
-                var picture = x.GetDefaultProductPicture(_pictureService);
-                if (picture != null)
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
-                else
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
-                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
-                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
-                return m;
-            })
-            .ToList();
+            model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = command.ViewMode;
@@ -864,22 +854,7 @@ namespace Nop.Web.Controllers
             var featuredProducts = _productService.SearchProducts(0,
                 manufacturer.Id, true, null, null, 0, 0, null, false, _workContext.WorkingLanguage.Id, null,
                 ProductSortingEnum.Position, 0, int.MaxValue);
-            model.FeaturedProducts = featuredProducts.Select(x =>
-            {
-                var m = x.ToModel();
-                //price
-                m.ProductPrice = PrepareProductPriceModel(x);
-                //picture
-                var picture = x.GetDefaultProductPicture(_pictureService);
-                if (picture != null)
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
-                else
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
-                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
-                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
-                return m;
-            })
-            .ToList();
+            model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
 
 
 
@@ -888,22 +863,7 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(0, manufacturer.Id, false, minPriceConverted, maxPriceConverted,
                 0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, null,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
-            model.Products = products.Select(x =>
-            {
-                var m = x.ToModel();
-                //price
-                m.ProductPrice = PrepareProductPriceModel(x);
-                //picture
-                var picture = x.GetDefaultProductPicture(_pictureService);
-                if (picture != null)
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
-                else
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
-                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
-                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
-                return m;
-            })
-            .ToList();
+            model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = command.ViewMode;
@@ -958,6 +918,10 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var model = PrepareProductDetailsPageModel(product);
+
+            //save as recently viewed
+            _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
+
             return View(model);
         }
 
@@ -1442,6 +1406,61 @@ namespace Nop.Web.Controllers
             .ToList();
 
             return PartialView(model);
+        }
+
+        public ActionResult RecentlyViewedProducts()
+        {
+            var model = new List<ProductModel>();
+            if (_catalogSettings.RecentlyViewedProductsEnabled)
+            {
+                var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+                foreach (var product in products)
+                    model.Add(PrepareProductOverviewModel(product));
+            }
+            return View(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult RecentlyViewedProductsBlock()
+        {
+            var model = new List<ProductModel>();
+            if (_catalogSettings.RecentlyViewedProductsEnabled)
+            {
+                var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+                foreach (var product in products)
+                    model.Add(PrepareProductDetailsPageModel(product));
+            }
+            return PartialView(model);
+        }
+
+        public ActionResult RecentlyAddedProducts()
+        {
+            var model = new List<ProductModel>();
+            if (_catalogSettings.RecentlyAddedProductsEnabled)
+            {
+                var products = _productService.SearchProducts(0, 0, null, null,
+                    null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
+                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
+                foreach (var product in products)
+                    model.Add(PrepareProductOverviewModel(product));
+            }
+            return View(model);
+        }
+
+        public ActionResult RecentlyAddedProductsRss()
+        {
+            var model = new List<ProductModel>();
+            if (_catalogSettings.RecentlyAddedProductsEnabled)
+            {
+                var products = _productService.SearchProducts(0, 0, null, null,
+                    null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
+                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
+                foreach (var product in products)
+                    model.Add(PrepareProductOverviewModel(product));
+            }
+            
+            //TODO retun RSS with recently added products
+            throw new NotImplementedException();
         }
 
 		#endregion

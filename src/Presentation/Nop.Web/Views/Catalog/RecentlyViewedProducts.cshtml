@@ -1,0 +1,28 @@
+﻿@model IList<Nop.Web.Models.Catalog.ProductModel>
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+}
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+<div class="recently-viewed-products">
+    <div class="page-title">
+        <h1>@T("Products.RecentlyViewedProducts")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    @*product list*@
+    @if (Model.Count > 0)
+    {
+@*grid mode*@
+        <div class="product-grid">
+            @(Html.DataList<ProductModel>(Model, 2,
+                    @<div class="item-box">
+                        @Html.Partial("_ProductBox", @item)
+                    </div>
+                ))
+        </div>
+        
+    }
+</div>

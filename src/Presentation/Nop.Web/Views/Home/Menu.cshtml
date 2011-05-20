@@ -1,0 +1,17 @@
+﻿@model Nop.Web.Models.Home.MenuModel
+@{
+    var storeLocation = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+}
+<ul class="topmenu">
+    <li><a href="@storeLocation">Home page</a></li>
+    @if (Model.RecentlyAddedProductsEnabled)
+    {
+        <li><a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a>
+        </li>
+    }
+    <li><a href="#">Search</a> </li>
+    <li><a href="@Url.Action("myaccount", "customer")">My account</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">Forums</a></li>
+    <li><a href="#">Contact us</a></li>
+</ul>

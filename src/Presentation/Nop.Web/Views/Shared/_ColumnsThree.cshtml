@@ -30,7 +30,10 @@
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId })
         <div class="clear">
         </div>
-        @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+        @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })        
+        <div class="clear">
+        </div>
+        @Html.Action("InfoBlock", "Home")
     }
 </div>
 <div class="master-wrapper-center-3">
@@ -45,7 +48,8 @@
     }
     else
     {
-        <div>
-            Default content</div>
+        @Html.Action("RecentlyViewedProductsBlock", "Catalog")
+        <div class="clear">
+        </div>
     }
 </div>
