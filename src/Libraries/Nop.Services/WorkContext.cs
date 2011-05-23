@@ -61,7 +61,8 @@ namespace Nop.Services
                     customer = _customerService.GetCustomerByAssociatedUserId(user.Id);
                     if (customer == null)
                     {
-                        //TODO create a registed customer record
+                        //TODO create a registed customer record 
+                        //ensure that all validation is skipped (e.g., email validation, etc)
                         //_customerService.InsertGuestCustomer(); _customerService.RegisterCustomer();
                         //_customerService.InsertCustomer();
                     }
@@ -88,7 +89,8 @@ namespace Nop.Services
                 //create guest if not exists
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
-                    //TODO we should not create guest customer if request is made by search engine
+                    //TODO we should not create guest customer if request is made by search engine?
+                    //perhaps, use a single built-in system record for it
                     customer = _customerService.InsertGuestCustomer();
                 }
 
@@ -144,6 +146,7 @@ namespace Nop.Services
             set
             {
                 SetCustomerCookie(value.CustomerGuid);
+                _cachedCustomer = value;
             }
         }
 

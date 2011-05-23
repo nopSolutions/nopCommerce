@@ -28,6 +28,7 @@
           <siteMapNode title="Customer roles" nopResource="Admin.Customers.CustomerRoles" controller="CustomerRole" action="List" />
         </siteMapNode>
         <siteMapNode title="Promotions" nopResource="Admin.Promotions">
+          <siteMapNode title="Affiliates" nopResource="Admin.Affiliates" controller="Affiliate" action="List" />
           <siteMapNode title="NewsletterSubscriptions" nopResource="Admin.Promotions.NewsletterSubscriptions" controller="NewsLetterSubscription" action="List" />
           <siteMapNode title="Discounts" nopResource="Admin.Promotions.Discounts" controller="Discount" action="List" />
         </siteMapNode>

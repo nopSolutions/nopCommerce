@@ -113,6 +113,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.LastActivityDateUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.AssociatedUserId, dt => dt.Ignore())
+                .ForMember(dest => dest.AffiliateId, dt => dt.Ignore())
                 .ForMember(dest => dest.Deleted, dt => dt.Ignore());
 
             //product attributes

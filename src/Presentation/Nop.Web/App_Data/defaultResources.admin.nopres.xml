@@ -29,6 +29,85 @@
                 </LocaleResource>
               </Children>
             </LocaleResource>
+            <LocaleResource Name="Affiliates">
+            <Value>Affiliates</Value>
+            <Children>
+              <LocaleResource Name="AddNew">
+                <Value>Add a new affiliate</Value>
+              </LocaleResource>
+              <LocaleResource Name="BackToList">
+                <Value>back to affiliate list</Value>
+              </LocaleResource>
+              <LocaleResource Name="EditAffiliateDetails">
+                <Value>Edit affiliate details</Value>
+              </LocaleResource>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="Active">
+                    <Value>Active</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>A value indicating whether the affiliate is active.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ID">
+                    <Value>Affiliate identifier</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Affiliate's unique identifier.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="URL">
+                    <Value>Affiliate URL</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>When this hyperlink is clicked from the affiliate site, this site looks for an Affiliate ID query string parameter. If one exists, the customer is tagged with that affiliate.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="Info">
+                <Value>Affiliate info</Value>
+              </LocaleResource>
+              <LocaleResource Name="Customers">
+                <Value>Affiliated customers</Value>
+                <Children>
+                  <LocaleResource Name="Name">
+                    <Value>Name</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="Orders">
+                <Value>Affiliated orders</Value>
+                <Children>
+                  <LocaleResource Name="CreatedOn">
+                    <Value>Created on</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Order">
+                    <Value>Created order</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="OrderStatus">
+                    <Value>Order status</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="OrderTotal">
+                    <Value>Order total</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="PaymentStatus">
+                    <Value>Payment status</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="ProcessNextPayment">
+                    <Value>Process next payment (create a new order)</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="ShippingStatus">
+                    <Value>Shipping status</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
             <LocaleResource Name="Catalog">
                 <Value>Catalog</Value>
                 <Children>
@@ -2847,6 +2926,14 @@
                     </LocaleResource>
                     <LocaleResource Name="Fields">
                       <Children>
+                        <LocaleResource Name="Affiliate">
+                          <Value>Affiliate</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The affiliate who the customer is linked to.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                         <LocaleResource Name="Gender">
                           <Value>Gender</Value>
                           <Children>
@@ -3324,6 +3411,14 @@
               </LocaleResource>
               <LocaleResource Name="Fields">
                 <Children>
+                  <LocaleResource Name="Affiliate">
+                    <Value>Affiliate</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The affiliate who the order is linked to.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="AuthorizationTransactionID">
                     <Value>Authorization transaction ID</Value>
                     <Children>

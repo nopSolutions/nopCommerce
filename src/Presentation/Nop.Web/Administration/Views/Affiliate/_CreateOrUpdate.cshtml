@@ -1,0 +1,100 @@
+﻿@model Nop.Admin.Models.AffiliateModel
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("affiliate-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Affiliates.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Affiliates.Customers").Text).Content(TabCustomers().ToHtmlString());
+        x.Add().Text(T("Admin.Affiliates.Orders").Text).Content(TabOrders().ToHtmlString());
+    }
+})
+@helper TabInfo()
+    {        
+    <table class="adminContent">
+        @if (Model.Id > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Id):
+                </td>
+                <td class="adminData">
+                    @Model.Id
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Url):
+                </td>
+                <td class="adminData">
+                    @Model.Url
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Active):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </td>
+        </tr>
+    </table>
+        
+    @Html.EditorFor(model => model.Address, "Address")
+}
+@helper TabCustomers()
+    { 
+    
+    @(Html.Telerik().Grid<AffiliateModel.AffiliatedCustomerModel>()
+                    .Name("customers-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id).Width(50);
+                        columns.Bound(x => x.Name).Width(200);
+                        columns.Bound(x => x.Id)
+                            .Width(100)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.Id }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+                            .Title(T("Admin.Common.View").Text);
+                    })
+                    .Pageable(settings => settings.PageSize(20))
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("AffiliatedCustomerList", "Affiliate", new { affiliateId = Model.Id });
+                    })
+                    .EnableCustomBinding(true))
+        
+}
+@helper TabOrders()
+    { 
+    
+    @(Html.Telerik().Grid<AffiliateModel.AffiliatedOrderModel>()
+                    .Name("order-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id)
+                            .Width(100)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.Id }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Order/Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.OrderStatus).Width(200);
+                        columns.Bound(x => x.PaymentStatus).Width(200);
+                        columns.Bound(x => x.ShippingStatus).Width(200);
+                        columns.Bound(x => x.OrderTotal).Width(200);
+                        columns.Bound(x => x.CreatedOn).Width(200);
+
+                    })
+                    .Pageable(settings => settings.PageSize(20))
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("AffiliatedOrderList", "Affiliate", new { affiliateId = Model.Id });
+                    })
+                    .EnableCustomBinding(true))
+        
+}

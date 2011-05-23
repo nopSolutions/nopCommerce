@@ -72,6 +72,7 @@
     <Compile Include="CategoryPersistenceTests.cs" />
     <Compile Include="CheckoutAttributePersistenceTests.cs" />
     <Compile Include="CheckoutAttributeValuePersistenceTests.cs" />
+    <Compile Include="AffiliatePersistenceTests.cs" />
     <Compile Include="ForumGroupPersistenceTests.cs" />
     <Compile Include="ForumPersistenceTests.cs" />
     <Compile Include="ForumPostPersistenceTests.cs" />

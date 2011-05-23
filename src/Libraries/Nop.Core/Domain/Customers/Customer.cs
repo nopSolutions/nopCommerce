@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
@@ -109,7 +110,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public int AffiliateId { get; set; }
+        public int? AffiliateId { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active
@@ -166,6 +167,11 @@ namespace Nop.Core.Domain.Customers
         #endregion
 
         #region Navigation properties
+
+        /// <summary>
+        /// Gets or sets the affiliate
+        /// </summary>
+        public virtual Affiliate Affiliate { get; set; }
 
         /// <summary>
         /// Gets or sets the language

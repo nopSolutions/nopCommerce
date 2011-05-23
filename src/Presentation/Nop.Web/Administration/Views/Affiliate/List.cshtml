@@ -1,0 +1,40 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.AffiliateModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
+        @T("Admin.Affiliates")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.AffiliateModel>()
+                    .Name("affiliates-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Address.FirstName)
+                            .Width(200);
+                        columns.Bound(x => x.Address.LastName)
+                            .Width(200);
+                        columns.Bound(x => x.Active)
+                            .Width(100)
+                            .Template(x => x.Active.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .Pageable(settings => settings.PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Affiliate"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

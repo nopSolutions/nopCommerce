@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
@@ -52,7 +53,6 @@ namespace Nop.Data.Tests
                 CheckoutAttributeDescription = "CheckoutAttributeDescription1",
                 CheckoutAttributesXml = "CheckoutAttributesXml1",
                 CustomerLanguageId = 14,
-                AffiliateId= 15,
                 CustomerIp="CustomerIp1",
                 AllowStoringCreditCardNumber= true,
                 CardType= "Visa",
@@ -110,7 +110,6 @@ namespace Nop.Data.Tests
             fromDb.CheckoutAttributeDescription.ShouldEqual("CheckoutAttributeDescription1");
             fromDb.CheckoutAttributesXml.ShouldEqual("CheckoutAttributesXml1");
             fromDb.CustomerLanguageId.ShouldEqual(14);
-            fromDb.AffiliateId.ShouldEqual(15);
             fromDb.CustomerIp.ShouldEqual("CustomerIp1");
             fromDb.AllowStoringCreditCardNumber.ShouldEqual(true);
             fromDb.CardType.ShouldEqual("Visa");
@@ -299,7 +298,25 @@ namespace Nop.Data.Tests
             fromDb.OrderProductVariants.Count.ShouldEqual(1);
             fromDb.OrderProductVariants.First().Quantity.ShouldEqual(1);
         }
+        
+        [Test]
+        public void Can_save_and_load_customer_with_affiliate()
+        {
+            var order = new Order
+            {
+                OrderGuid = Guid.NewGuid(),
+                Customer = GetTestCustomer(),
+                Affiliate = GetTestAffiliate(),
+                BillingAddress = GetTestBillingAddress(),
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
 
+            var fromDb = SaveAndLoadEntity(order);
+            fromDb.ShouldNotBeNull();
+
+            fromDb.Affiliate.ShouldNotBeNull();
+            fromDb.Affiliate.Active.ShouldEqual(true);
+        }
 
         protected ProductVariant GetTestProductVariant()
         {
@@ -316,6 +333,35 @@ namespace Nop.Data.Tests
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02)
                 }
+            };
+        }
+        
+        protected Affiliate GetTestAffiliate()
+        {
+            return new Affiliate
+            {
+                Deleted = true,
+                Active = true,
+                Address = new Address()
+                {
+                    FirstName = "FirstName 1",
+                    LastName = "LastName 1",
+                    Email = "Email 1",
+                    Company = "Company 1",
+                    City = "City 1",
+                    Address1 = "Address1a",
+                    Address2 = "Address1a",
+                    ZipPostalCode = "ZipPostalCode 1",
+                    PhoneNumber = "PhoneNumber 1",
+                    FaxNumber = "FaxNumber 1",
+                    CreatedOnUtc = new DateTime(2010, 01, 01),
+                    Country = new Country
+                    {
+                        Name = "United States",
+                        TwoLetterIsoCode = "US",
+                        ThreeLetterIsoCode = "USA",
+                    }
+                },
             };
         }
 

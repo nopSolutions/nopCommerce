@@ -185,8 +185,18 @@
                     @Model.VatNumber
                 </td>
             </tr>
-        }
-@*TODO display affiliate info *@
+        }        
+    @if (Model.AffiliateId.HasValue && Model.AffiliateId.Value > 0)
+    {
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AffiliateId):
+        </td>
+        <td class="adminData">
+            <a href="@Url.Action("Edit", "Affiliate", new { id = @Model.AffiliateId.Value})">@Model.AffiliateId.Value - @T("Admin.Common.View")</a>
+        </td>
+    </tr>
+    }
         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
         {
             <tr>

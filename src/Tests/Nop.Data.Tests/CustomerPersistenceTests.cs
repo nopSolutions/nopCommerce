@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nop.Core.Domain.Affiliates;
 using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain;
@@ -35,7 +36,6 @@ namespace Nop.Data.Tests
             fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
             fromDb.DiscountCouponCode.ShouldEqual("coupon1");
             fromDb.GiftCardCouponCodes.ShouldEqual("GiftCardCouponCodes 1");
-            fromDb.AffiliateId.ShouldEqual(1);
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
@@ -143,6 +143,18 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.Addresses.Count.ShouldEqual(1);
             fromDb.Addresses.First().FirstName.ShouldEqual("Test");
+        }
+
+        [Test]
+        public void Can_save_customer_with_affiliate()
+        {
+            var customer = GetTestCustomer();
+            customer.Affiliate = GetTestAffiliate();
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
+            fromDb.Affiliate.ShouldNotBeNull();
+            fromDb.Affiliate.Active.ShouldEqual(true);
         }
 
         [Test]
@@ -255,6 +267,40 @@ namespace Nop.Data.Tests
             fromDb.Orders.First().Deleted.ShouldEqual(true);
         }
 
+        protected Affiliate GetTestAffiliate()
+        {
+            return new Affiliate
+            {
+                Deleted = true,
+                Active = true,
+                Address = GetTestAddress(),
+            };
+        }
+
+        protected Address GetTestAddress()
+        {
+            return new Address()
+            {
+                FirstName = "FirstName 1",
+                LastName = "LastName 1",
+                Email = "Email 1",
+                Company = "Company 1",
+                City = "City 1",
+                Address1 = "Address1a",
+                Address2 = "Address1a",
+                ZipPostalCode = "ZipPostalCode 1",
+                PhoneNumber = "PhoneNumber 1",
+                FaxNumber = "FaxNumber 1",
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                Country = new Country
+                {
+                    Name = "United States",
+                    TwoLetterIsoCode = "US",
+                    ThreeLetterIsoCode = "USA",
+                }
+            };
+        }
+
         protected Customer GetTestCustomer()
         {
             return new Customer
@@ -270,7 +316,6 @@ namespace Nop.Data.Tests
                 CheckoutAttributes = "CheckoutAttributes 1",
                 DiscountCouponCode= "coupon1",
                 GiftCardCouponCodes = "GiftCardCouponCodes 1",
-                AffiliateId = 1,
                 Active = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),

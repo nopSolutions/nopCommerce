@@ -108,7 +108,8 @@ namespace Nop.Admin.Controllers
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString(),
                 DisplayPdfInvoice = _pdfSettings.Enabled,
                 AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType,
-                TaxDisplayType = _taxSettings.TaxDisplayType
+                TaxDisplayType = _taxSettings.TaxDisplayType,
+                AffiliateId = order.AffiliateId
             };
             
             #region Order totals

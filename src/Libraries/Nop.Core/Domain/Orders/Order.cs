@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -208,7 +209,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public int AffiliateId { get; set; }
+        public int? AffiliateId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer IP address
@@ -339,6 +340,11 @@ namespace Nop.Core.Domain.Orders
         #endregion
 
         #region Navigation properties
+
+        /// <summary>
+        /// Gets or sets the affiliate
+        /// </summary>
+        public virtual Affiliate Affiliate { get; set; }
 
         /// <summary>
         /// Gets or sets the customer

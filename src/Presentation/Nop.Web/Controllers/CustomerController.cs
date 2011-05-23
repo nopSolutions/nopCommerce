@@ -212,8 +212,14 @@ namespace Nop.Web.Controllers
                 var registrationResult = _userService.RegisterUser(registrationRequest);
                 if (registrationResult.Success)
                 {
-                    //now register 'Customer' entity
+                    if (_workContext.CurrentCustomer.IsRegistered())
+                    {
+                        //already registered customer. save a new record
+                        _workContext.CurrentCustomer = _customerService.InsertGuestCustomer();
+                    }
+
                     var customer = _workContext.CurrentCustomer;
+                    //now register 'Customer' entity
                     customer = _customerService.RegisterCustomer(customer.Id);
                     //associate it with this user
                     customer.AssociatedUserId = registrationResult.User.Id;

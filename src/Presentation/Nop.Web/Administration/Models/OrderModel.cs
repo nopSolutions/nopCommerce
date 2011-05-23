@@ -39,6 +39,9 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Orders.Fields.CustomerIP")]
         public string CustomerIp { get; set; }
 
+        [NopResourceDisplayName("Admin.Orders.Fields.Affiliate")]
+        public int? AffiliateId { get; set; }
+
         //totals
         public bool AllowCustomersToSelectTaxDisplayType { get; set; }
         public TaxDisplayType TaxDisplayType { get; set; }

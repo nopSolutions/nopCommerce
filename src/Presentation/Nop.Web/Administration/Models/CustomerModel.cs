@@ -58,6 +58,8 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Active")]
         public bool Active { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
+        public int? AffiliateId { get; set; }
 
 
 

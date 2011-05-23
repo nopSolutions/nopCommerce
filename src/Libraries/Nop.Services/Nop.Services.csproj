@@ -59,6 +59,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Affiliates\AffiliateService.cs" />
+    <Compile Include="Affiliates\IAffiliateService.cs" />
     <Compile Include="Catalog\CatalogPermissionProvider.cs" />
     <Compile Include="Catalog\CategoryService.cs" />
     <Compile Include="Catalog\CategoryExtensions.cs" />
