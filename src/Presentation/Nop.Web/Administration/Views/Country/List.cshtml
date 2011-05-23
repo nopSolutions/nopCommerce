@@ -1,0 +1,63 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.CountryModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+        @T("Admin.Configuration.Location.Countries")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.CountryModel>()
+                    .Name("countries-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name)
+                            .Width(150)
+                            .Centered();
+                        columns.Bound(x => x.AllowsBilling)
+                             .Width(50)
+                             .Template(x => x.AllowsBilling.ToString().ToLower())
+                             .Centered();
+                        columns.Bound(x => x.AllowsShipping)
+                             .Width(50)
+                             .Template(x => x.AllowsShipping.ToString().ToLower())
+                             .Centered();
+                        columns.Bound(x => x.TwoLetterIsoCode)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.ThreeLetterIsoCode)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.NumericIsoCode)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.SubjectToVat)
+                             .Width(50)
+                             .Template(x => x.SubjectToVat.ToString().ToLower())
+                             .Centered();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.Published)
+                             .Width(50)
+                             .Template(x => x.Published.ToString().ToLower())
+                             .Centered();
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate("Edit");
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("CountryList", "Country"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

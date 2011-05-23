@@ -400,7 +400,6 @@ namespace Nop.Data.Tests
             return new Country
             {
                 Name = "United States",
-                AllowsRegistration = true,
                 AllowsBilling = true,
                 AllowsShipping = true,
                 TwoLetterIsoCode = "US",

@@ -207,7 +207,6 @@ namespace Nop.Services.Tests.ExportImport
             return new Country
             {
                 Name = "United States",
-                AllowsRegistration = true,
                 AllowsBilling = true,
                 AllowsShipping = true,
                 TwoLetterIsoCode = "US",

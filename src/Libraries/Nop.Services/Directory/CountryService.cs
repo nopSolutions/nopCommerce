@@ -14,7 +14,6 @@ namespace Nop.Services.Directory
     {
         #region Constants
         private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}";
-        private const string COUNTRIES_REGISTRATION_KEY = "Nop.country.registration-{0}";
         private const string COUNTRIES_BILLING_KEY = "Nop.country.billing-{0}";
         private const string COUNTRIES_SHIPPING_KEY = "Nop.country.shipping-{0}";
         private const string COUNTRIES_BY_ID_KEY = "Nop.country.id-{0}";
@@ -73,25 +72,6 @@ namespace Nop.Services.Directory
                 var query = from c in _countryRepository.Table
                             orderby c.DisplayOrder, c.Name
                             where showHidden || c.Published
-                            select c;
-                var countries = query.ToList();
-                return countries;
-            });
-        }
-
-        /// <summary>
-        /// Gets all countries that allow registration
-        /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Country collection</returns>
-        public IList<Country> GetAllCountriesForRegistration(bool showHidden = false)
-        {
-            string key = string.Format(COUNTRIES_REGISTRATION_KEY, showHidden);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from c in _countryRepository.Table
-                            orderby c.DisplayOrder, c.Name
-                            where (showHidden || c.Published) && c.AllowsRegistration
                             select c;
                 var countries = query.ToList();
                 return countries;

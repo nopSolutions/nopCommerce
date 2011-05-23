@@ -1,0 +1,151 @@
+﻿@model Nop.Admin.Models.CountryModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("discount-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Configuration.Location.Countries.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Location.Countries.States").Text).Content(TabStates().ToHtmlString());
+})
+@helper TabInfo()
+    {
+        
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowsBilling):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowsBilling)
+                @Html.ValidationMessageFor(model => model.AllowsBilling)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowsShipping):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowsShipping)
+                @Html.ValidationMessageFor(model => model.AllowsShipping)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TwoLetterIsoCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TwoLetterIsoCode)
+                @Html.ValidationMessageFor(model => model.TwoLetterIsoCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ThreeLetterIsoCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ThreeLetterIsoCode)
+                @Html.ValidationMessageFor(model => model.ThreeLetterIsoCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NumericIsoCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NumericIsoCode)
+                @Html.ValidationMessageFor(model => model.NumericIsoCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SubjectToVat):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SubjectToVat)
+                @Html.ValidationMessageFor(model => model.SubjectToVat)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Published):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Published)
+                @Html.ValidationMessageFor(model => model.Published)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().NumericTextBoxFor(model => model.DisplayOrder).DecimalDigits(0)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabStates()
+    {
+        if (Model.Id > 0)
+        {
+            
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<Nop.Admin.Models.StateProvinceModel>()
+                    .Name("states-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                        x.Add(y => y.CountryId).RouteKey("countryId");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name).Width(250);
+                        columns.Bound(x => x.Abbreviation).Width(100);
+                        columns.Bound(x => x.Published)
+                             .Width(100)
+                             .Template(x => x.Published.ToString().ToLower())
+                             .Centered();
+                        columns.Bound(x => x.DisplayOrder1).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        }).Width(180);
+
+                    })
+                    .ToolBar(x => x.Insert())
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("States", "Country", new { countryId = Model.Id })
+                            .Update("StateUpdate", "Country")
+                            .Delete("StateDelete", "Country")
+                            .Insert("StateAdd", "Country", new { countryId = Model.Id });
+                    })
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+
+        }
+        else
+        {
+    @T("Admin.Configuration.Location.Countries.States.SaveBeforeEdit")
+        }
+}

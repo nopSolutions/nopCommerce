@@ -93,15 +93,17 @@ namespace Nop.Services.Directory
         /// Gets a state/province collection by country identifier
         /// </summary>
         /// <param name="countryId">Country identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>State/province collection</returns>
-        public IList<StateProvince> GetStateProvincesByCountryId(int countryId)
+        public IList<StateProvince> GetStateProvincesByCountryId(int countryId, bool showHidden = false)
         {
             string key = string.Format(STATEPROVINCES_ALL_KEY, countryId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
                             orderby sp.DisplayOrder
-                            where sp.CountryId == countryId
+                            where sp.CountryId == countryId &&
+                            (showHidden || sp.Published)
                             select sp;
                 var stateProvinces = query.ToList();
                 return stateProvinces;

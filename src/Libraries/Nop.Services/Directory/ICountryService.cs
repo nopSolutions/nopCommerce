@@ -23,13 +23,6 @@ namespace Nop.Services.Directory
         IList<Country> GetAllCountries(bool showHidden = false);
 
         /// <summary>
-        /// Gets all countries that allow registration
-        /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Country collection</returns>
-        IList<Country> GetAllCountriesForRegistration(bool showHidden = false);
-
-        /// <summary>
         /// Gets all countries that allow billing
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>

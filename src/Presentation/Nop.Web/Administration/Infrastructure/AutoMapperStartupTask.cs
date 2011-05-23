@@ -29,6 +29,14 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<AddressModel, Address>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
 
+            //countries
+            ViceVersa<Country, CountryModel>();
+            //state/provinces
+            Mapper.CreateMap<StateProvince, StateProvinceModel>()
+                .ForMember(dest => dest.DisplayOrder1, dt => dt.MapFrom(src => src.DisplayOrder));
+            Mapper.CreateMap<StateProvinceModel, StateProvince>()
+                .ForMember(dest => dest.DisplayOrder, dt => dt.MapFrom(src => src.DisplayOrder1));
+
             //language
             ViceVersa<Language, LanguageModel>();
             //email account

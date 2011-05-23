@@ -20,12 +20,6 @@ namespace Nop.Core.Domain.Directory
         /// </summary>
         public string Name { get; set; }
 
-        //TODO remove 'AllowsRegistration' property. It's not required any more
-        /// <summary>
-        /// Gets or sets a value indicating whether registration is allowed to this country
-        /// </summary>
-        public bool AllowsRegistration { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether billing is allowed to this country
         /// </summary>

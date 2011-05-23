@@ -1894,50 +1894,17 @@
               <LocaleResource Name="Location">
                 <Value>Location</Value>
                 <Children>
-                  <LocaleResource Name="Languages">
-                    <Value>Languages</Value>
+                  <LocaleResource Name="Countries">
+                    <Value>Countries</Value>
                     <Children>
-                      <LocaleResource Name="Localization">
-                        <Value>Localization</Value>
-                      </LocaleResource>
-                      <LocaleResource Name="Select">
-                        <Value>Select a language</Value>
-                      </LocaleResource>
-
                       <LocaleResource Name="AddNew">
-                        <Value>Add a new language</Value>
+                        <Value>Add a new country</Value>
                       </LocaleResource>
                       <LocaleResource Name="BackToList">
-                        <Value>back to language list</Value>
+                        <Value>back to country list</Value>
                       </LocaleResource>
-                      <LocaleResource Name="EditLanguageDetails">
-                        <Value>Edit language details</Value>
-                      </LocaleResource>
-                      <LocaleResource Name="Resources">
-                        <Value>Language resources</Value>
-                        <Children>
-                          <LocaleResource Name="View">
-                            <Value>View string resources</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Fields">
-                            <Children>
-                              <LocaleResource Name="Name">
-                                <Value>Resource name</Value>
-                                <Children>
-                                  <LocaleResource Name="Required">
-                                    <Value>Please provide a resource name.</Value>
-                                  </LocaleResource>
-                                </Children>
-                              </LocaleResource>
-                              <LocaleResource Name="Value">
-                                <Value>Value</Value>
-                              </LocaleResource>
-                              <LocaleResource Name="LanguageName">
-                                <Value>Language</Value>
-                              </LocaleResource>
-                            </Children>
-                          </LocaleResource>
-                        </Children>
+                      <LocaleResource Name="EditCountryDetails">
+                        <Value>Edit country details</Value>
                       </LocaleResource>
                       <LocaleResource Name="Fields">
                         <Children>
@@ -1945,29 +1912,70 @@
                             <Value>Name</Value>
                             <Children>
                               <LocaleResource Name="Hint">
-                                <Value>The name of the language.</Value>
+                                <Value>The name of the country.</Value>
                               </LocaleResource>
                               <LocaleResource Name="Required">
                                 <Value>Please provide a name.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
-                          <LocaleResource Name="LanguageCulture">
-                            <Value>Language culture</Value>
+                          <LocaleResource Name="AllowsBilling">
+                            <Value>Allows billing</Value>
                             <Children>
                               <LocaleResource Name="Hint">
-                                <Value>The language specific culture code.</Value>
-                              </LocaleResource>
-                              <LocaleResource Name="Validation">
-                                <Value>Language culture must be valid.</Value>
+                                <Value>Allow billing to customers located in this country.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
-                          <LocaleResource Name="FlagImageFileName">
-                            <Value>Flag image file name</Value>
+                          <LocaleResource Name="AllowsShipping">
+                            <Value>Allows shipping</Value>
                             <Children>
                               <LocaleResource Name="Hint">
-                                <Value>The flag image file name. The image should be saved into \\images\\flags\\ directory.</Value>
+                                <Value>Allow shipping to customers located in this country.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="TwoLetterIsoCode">
+                            <Value>Two letter ISO code</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The two letter ISO code for this country. For a complete list of ISO codes go to: http://en.wikipedia.org/wiki/ISO_3166-1_alpha.</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Length">
+                                <Value>Two letter ISO code should be 2 characters long.</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Two letter ISO code is required.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="ThreeLetterIsoCode">
+                            <Value>Three letter ISO code</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The three letter ISO code for this country. For a complete list of ISO codes go to: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Length">
+                                <Value>Three letter ISO code should be 3 characters long.</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Three letter ISO code is required.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="NumericIsoCode">
+                            <Value>Numeric ISO code</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The numeric ISO code for this country. For a complete list of ISO codes go to: http://en.wikipedia.org/wiki/ISO_3166-1_numeric</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="SubjectToVat">
+                            <Value>Subject to VAT</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Value indicating whether customers in this country must be charged EU VAT (the European Union Value Added Tax).</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -1975,7 +1983,7 @@
                             <Value>Published</Value>
                             <Children>
                               <LocaleResource Name="Hint">
-                                <Value>Determines whether this language is published and can therefore be selected by visitors to your store.</Value>
+                                <Value>Determines whether this country is published (visible for creation of shipping/billing addresses).</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -1983,12 +1991,62 @@
                             <Value>Display order</Value>
                             <Children>
                               <LocaleResource Name="Hint">
-                                <Value>The display order of this language. 1 represents the top of the list.</Value>
+                                <Value>The display order for this country. 1 represents the top of the list.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>                         
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Info">
+                        <Value>Country info</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="States">
+                        <Value>States and provinces</Value>
+                        <Children>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Name">
+                                <Value>Name</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The name of the state.</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="Required">
+                                    <Value>Please provide a name.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Abbreviation">
+                                <Value>Abbreviation</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>An abbreviation for this state/province.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Published">
+                                <Value>Published</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Determines whether this state is published.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="DisplayOrder">
+                                <Value>Display order</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The display order for this state. 1 represents the top of the list.</Value>
+                                  </LocaleResource>
+                                </Children>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
+                          <LocaleResource Name="SaveBeforeEdit">
+                            <Value>You need to save the country before you can add states for this country page.</Value>
+                          </LocaleResource>
                         </Children>
-                      </LocaleResource>
+                      </LocaleResource>                      
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Currencies">
@@ -2122,6 +2180,103 @@
                               <Value>Click to enable auto update of currency rates each one hour.</Value>
                             </LocaleResource>
                           </LocaleResource>                          
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Languages">
+                    <Value>Languages</Value>
+                    <Children>
+                      <LocaleResource Name="Localization">
+                        <Value>Localization</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Select">
+                        <Value>Select a language</Value>
+                      </LocaleResource>
+
+                      <LocaleResource Name="AddNew">
+                        <Value>Add a new language</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="BackToList">
+                        <Value>back to language list</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="EditLanguageDetails">
+                        <Value>Edit language details</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Resources">
+                        <Value>Language resources</Value>
+                        <Children>
+                          <LocaleResource Name="View">
+                            <Value>View string resources</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Fields">
+                            <Children>
+                              <LocaleResource Name="Name">
+                                <Value>Resource name</Value>
+                                <Children>
+                                  <LocaleResource Name="Required">
+                                    <Value>Please provide a resource name.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Value">
+                                <Value>Value</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="LanguageName">
+                                <Value>Language</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="Name">
+                            <Value>Name</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The name of the language.</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Please provide a name.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="LanguageCulture">
+                            <Value>Language culture</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The language specific culture code.</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Validation">
+                                <Value>Language culture must be valid.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="FlagImageFileName">
+                            <Value>Flag image file name</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The flag image file name. The image should be saved into \\images\\flags\\ directory.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Published">
+                            <Value>Published</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Determines whether this language is published and can therefore be selected by visitors to your store.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="DisplayOrder">
+                            <Value>Display order</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The display order of this language. 1 represents the top of the list.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
                       </LocaleResource>
                     </Children>

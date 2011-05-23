@@ -588,7 +588,41 @@ namespace Nop.Admin
         }
 
         #endregion
-        
+
+        #region Countries / states
+
+        public static CountryModel ToModel(this Country entity)
+        {
+            return AutoMapper.Mapper.Map<Country, CountryModel>(entity);
+        }
+
+        public static Country ToEntity(this CountryModel model)
+        {
+            return AutoMapper.Mapper.Map<CountryModel, Country>(model);
+        }
+
+        public static Country ToEntity(this CountryModel model, Country destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        public static StateProvinceModel ToModel(this StateProvince entity)
+        {
+            return AutoMapper.Mapper.Map<StateProvince, StateProvinceModel>(entity);
+        }
+
+        public static StateProvince ToEntity(this StateProvinceModel model)
+        {
+            return AutoMapper.Mapper.Map<StateProvinceModel, StateProvince>(model);
+        }
+
+        public static StateProvince ToEntity(this StateProvinceModel model, StateProvince destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        #endregion
     }
 
     public static class HtmlExtensions

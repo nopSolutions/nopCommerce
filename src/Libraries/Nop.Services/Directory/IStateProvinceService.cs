@@ -33,8 +33,9 @@ namespace Nop.Services.Directory
         /// Gets a state/province collection by country identifier
         /// </summary>
         /// <param name="countryId">Country identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>State/province collection</returns>
-        IList<StateProvince> GetStateProvincesByCountryId(int countryId);
+        IList<StateProvince> GetStateProvincesByCountryId(int countryId, bool showHidden = false);
 
         /// <summary>
         /// Inserts a state/province

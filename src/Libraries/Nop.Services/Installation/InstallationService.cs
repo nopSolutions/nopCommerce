@@ -467,7 +467,6 @@ namespace Nop.Services.Installation
                                             Name = "United States",
                                             AllowsBilling = true,
                                             AllowsShipping = true,
-                                            AllowsRegistration = true,
                                             TwoLetterIsoCode = "US",
                                             ThreeLetterIsoCode = "USA",
                                             NumericIsoCode = 840,
@@ -480,12 +479,14 @@ namespace Nop.Services.Installation
                                                 {
                                                     Name = "Alabama",
                                                     Abbreviation = "AL",
+                                                    Published = true,
                                                     DisplayOrder = 1,
                                                 },
                                                 new StateProvince()
                                                 {
                                                     Name = "Alaska",
                                                     Abbreviation = "AK",
+                                                    Published = true,
                                                     DisplayOrder = 1,
                                                 },
                                                 //UNDONE insert other states
@@ -493,6 +494,7 @@ namespace Nop.Services.Installation
                                                 {
                                                     Name = "New York",
                                                     Abbreviation = "NY",
+                                                    Published = true,
                                                     DisplayOrder = 1,
                                                 },
                                             }
@@ -502,7 +504,6 @@ namespace Nop.Services.Installation
                                             Name = "Canada",
                                             AllowsBilling = true,
                                             AllowsShipping = true,
-                                            AllowsRegistration = true,
                                             TwoLetterIsoCode = "CA",
                                             ThreeLetterIsoCode = "CAN",
                                             NumericIsoCode = 124,
@@ -515,12 +516,14 @@ namespace Nop.Services.Installation
                                                 {
                                                     Name = "Alberta",
                                                     Abbreviation = "AB",
+                                                    Published = true,
                                                     DisplayOrder = 1,
                                                 },
                                                 new StateProvince()
                                                 {
                                                     Name = "British Columbia",
                                                     Abbreviation = "BC",
+                                                    Published = true,
                                                     DisplayOrder = 1,
                                                 },
                                                 //UNDONE insert other states
@@ -531,7 +534,6 @@ namespace Nop.Services.Installation
                                             Name = "Russia",
                                             AllowsBilling = true,
                                             AllowsShipping = true,
-                                            AllowsRegistration = true,
                                             TwoLetterIsoCode = "RU",
                                             ThreeLetterIsoCode = "RUS",
                                             NumericIsoCode = 643,

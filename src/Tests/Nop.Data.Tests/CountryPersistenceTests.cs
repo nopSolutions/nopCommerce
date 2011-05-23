@@ -18,7 +18,6 @@ namespace Nop.Data.Tests
             var country = new Country
             {
                 Name = "United States",
-                AllowsRegistration = true,
                 AllowsBilling = true,
                 AllowsShipping = true,
                 TwoLetterIsoCode = "US",
@@ -32,7 +31,6 @@ namespace Nop.Data.Tests
             var fromDb = SaveAndLoadEntity(country);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("United States");
-            fromDb.AllowsRegistration.ShouldEqual(true);
             fromDb.AllowsBilling.ShouldEqual(true);
             fromDb.AllowsShipping.ShouldEqual(true);
             fromDb.TwoLetterIsoCode.ShouldEqual("US");
@@ -49,7 +47,6 @@ namespace Nop.Data.Tests
             var country = new Country
             {
                 Name = "United States",
-                AllowsRegistration = true,
                 AllowsBilling = true,
                 AllowsShipping = true,
                 TwoLetterIsoCode = "US",

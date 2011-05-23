@@ -19,11 +19,11 @@ namespace Nop.Data.Tests
             {
                 Name = "California",
                 Abbreviation = "CA",
+                Published = true,
                 DisplayOrder = 1,
                 Country = new Country()
                                {
                                    Name = "United States",
-                                   AllowsRegistration = true,
                                    AllowsBilling = true,
                                    AllowsShipping = true,
                                    TwoLetterIsoCode = "US",
@@ -39,6 +39,7 @@ namespace Nop.Data.Tests
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("California");
             fromDb.Abbreviation.ShouldEqual("CA");
+            fromDb.Published.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);
 
             fromDb.Country.ShouldNotBeNull();
