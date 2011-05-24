@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 using Nop.Admin.Models;
@@ -78,32 +79,29 @@ namespace Nop.Admin.Controllers
 			return View(email.ToModel());
 		}
 
-        [HttpPost, ActionName("Edit"), FormValueRequired("save")]
-        public ActionResult Save(QueuedEmailModel model)
-		{
+        [HttpPost, ActionName("Edit")]
+        [FormValueExists("save", "save-continue", "continueEditing")]
+        [FormValueRequired("save", "save-continue")]
+        public ActionResult Save(QueuedEmailModel model, bool continueEditing)
+        {
+            var email = _queuedEmailService.GetQueuedEmailById(model.Id);
+            if (email == null)
+                throw new ArgumentException("No email found with the specified id");
+
+            //decode body
+            model.Body = HttpUtility.HtmlDecode(model.Body);
+
             if (ModelState.IsValid)
             {
-                Update(model);
-                return RedirectToAction("List");
+                email = model.ToEntity(email);
+                _queuedEmailService.UpdateQueuedEmail(email);
+                return continueEditing ? RedirectToAction("Edit", new { id = email.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             return View(model);
 		}
-
-        [HttpPost, ActionName("Edit"), FormValueRequired("save-continue")]
-        public ActionResult SaveAndContinue(QueuedEmailModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                Update(model);
-                return RedirectToAction("Edit", model.Id);
-            }
-
-            //If we got this far, something failed, redisplay form
-            return View(model);
-        }
-
+        
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
         public ActionResult Requeue(QueuedEmailModel queuedEmailModel)
         {
@@ -129,13 +127,6 @@ namespace Nop.Admin.Controllers
             }
             else
                 return RedirectToAction("List");
-        }
-
-        private void Update(QueuedEmailModel queuedEmailModel)
-        {
-            var email = _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
-            email = queuedEmailModel.ToEntity(email);
-            _queuedEmailService.UpdateQueuedEmail(email);
         }
 
 		[HttpPost, ActionName("Delete")]

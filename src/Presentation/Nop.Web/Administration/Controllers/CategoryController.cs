@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
 
                 _localizedEntityService.SaveLocalizedValue(category,
                                                            x => x.Description,
-                                                           HttpUtility.HtmlDecode(localized.Description),
+                                                           localized.Description,
                                                            localized.LanguageId);
 
                 _localizedEntityService.SaveLocalizedValue(category,
@@ -230,6 +230,9 @@ namespace Nop.Admin.Controllers
         {
             //decode description
             model.Description = HttpUtility.HtmlDecode(model.Description);
+            foreach (var localized in model.Locales)
+                localized.Description = HttpUtility.HtmlDecode(localized.Description);
+
             if (ModelState.IsValid)
             {
                 var category = model.ToEntity();
@@ -308,6 +311,10 @@ namespace Nop.Admin.Controllers
 
             //decode description
             model.Description = HttpUtility.HtmlDecode(model.Description);
+            foreach (var localized in model.Locales)
+                localized.Description = HttpUtility.HtmlDecode(localized.Description);
+
+
             if (ModelState.IsValid)
             {
                 category = model.ToEntity(category);

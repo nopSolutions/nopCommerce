@@ -84,7 +84,7 @@
             @Html.NopLabelFor(model => model.Body):
         </td>
         <td class="adminData">
-            @Html.Telerik().EditorFor(model => model.Body).Encode(false)
+            @Html.EditorFor(model => model.Body, "RichEditor")
             @Html.ValidationMessageFor(model => model.Body)
         </td>
     </tr>

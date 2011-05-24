@@ -649,7 +649,7 @@
                         <Value>Products</Value>
                         <Children>
                             <LocaleResource Name="AddNew">
-                              <Value>Add a new category</Value>
+                              <Value>Add a new product</Value>
                             </LocaleResource>
                             <LocaleResource Name="BackToList">
                               <Value>back to product list</Value>
@@ -1800,6 +1800,9 @@
                   </LocaleResource>
                   <LocaleResource Name="Treeview">
                     <Value>Tree view</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Update">
+                    <Value>Update</Value>
                   </LocaleResource>
                 </Children>
             </LocaleResource>

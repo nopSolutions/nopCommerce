@@ -1,0 +1,73 @@
+﻿@model System.String
+@using Telerik.Web.Mvc.UI
+@{
+    var clientId = (ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty));
+}
+@(Html.Telerik().Editor().Name(clientId)
+/*.Encode(false) weird. Settings "Encode(false)" doesn't work on category & product details page
+Now we have to manually decode values*/
+.Value(Model)
+.Tools(tools => tools
+.Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource(event)" }))))
+<script type="text/javascript">
+    var htmlSourcePopup;
+
+    function viewRichHtmlEditorSource(e) {
+        e = $.Event(e);
+
+        e.stopPropagation();
+        e.preventDefault();
+
+        var editor = $('#@(clientId)').data('tEditor');
+        var html = editor.value();
+
+        if (!htmlSourcePopup) {
+            htmlSourcePopup =
+                $('<div class="html-view">' +
+                        '<div class="textarea t-state-default"><textarea style="width: 100%; height: 300px;"></textarea></div>' +
+                        '<div class="t-button-wrapper">' +
+                            '<button id="htmlCancel-@(clientId)" class="t-button" style="float: right;">@T("Admin.Common.Cancel")</button>' +
+                            '<button id="htmlUpdate-@(clientId)" class="t-button">@T("Admin.Common.Update")</button>' +
+                        '</div>' +
+                    '</div>')
+                .css('display', 'none')
+                .tWindow({
+                    title: 'View Generated HTML',
+                    modal: true,
+                    resizable: false,
+                    draggable: true,
+                    width: 700,
+                    onLoad: function () {
+                        var $popup = $(this);
+                        $popup.find('.textarea')
+                                .css('width', function () {
+                                    return 700 - (this.offsetWidth - $(this).width());
+                                })
+                                .focus()
+                                .end()
+                                .find('#htmlCancel-@(clientId)')
+                                .click(function () {
+                                    htmlSourcePopup.close();
+                                })
+                                .end()
+                                .find('#htmlUpdate-@(clientId)')
+                                .click(function () {
+                                    var value = $popup.find('textarea').val();
+                                    editor.value(value);
+                                    htmlSourcePopup.close();
+                                });
+                    },
+                    onClose: function () {
+                        editor.focus();
+                    }
+                })
+            .data('tWindow');
+        }
+
+        $(htmlSourcePopup.element).find('textarea').text(html);
+
+        htmlSourcePopup.center().open();
+    }
+</script>
+
+@*TODO added iameg browser support - http://demos.telerik.com/aspnet-mvc/editor/imagetool*@

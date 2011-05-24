@@ -20,7 +20,7 @@
                 @Html.NopLabelFor(model => model.Locales[item].Description):
             </td>
             <td class="adminData">
-                @Html.Telerik().EditorFor(model => model.Locales[item].Description)
+                @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
                 @Html.ValidationMessageFor(model => model.Locales[item].Description)
             </td>
         </tr>
@@ -46,7 +46,7 @@
                 @Html.NopLabelFor(model => model.Description):
             </td>
             <td class="adminData">
-                @Html.Telerik().EditorFor(x => x.Description)
+                @Html.EditorFor(x => x.Description, "RichEditor")
                 @Html.ValidationMessageFor(model => model.Description)
             </td>
         </tr>

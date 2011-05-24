@@ -76,7 +76,7 @@ namespace Nop.Admin.Controllers
                                                                localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.FullDescription,
-                                                               HttpUtility.HtmlDecode(localized.FullDescription),
+                                                               localized.FullDescription,
                                                                localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
                                                                x => x.MetaKeywords,
@@ -342,6 +342,9 @@ namespace Nop.Admin.Controllers
         {
             //decode description
             model.FullDescription = HttpUtility.HtmlDecode(model.FullDescription);
+            foreach (var localized in model.Locales)
+                localized.FullDescription = HttpUtility.HtmlDecode(localized.FullDescription);
+
             if (ModelState.IsValid)
             {
                 //product
@@ -411,6 +414,9 @@ namespace Nop.Admin.Controllers
 
             //decode description
             model.FullDescription = HttpUtility.HtmlDecode(model.FullDescription);
+            foreach (var localized in model.Locales)
+                localized.FullDescription = HttpUtility.HtmlDecode(localized.FullDescription);
+
             if (ModelState.IsValid)
             {
                 product = model.ToEntity(product);
