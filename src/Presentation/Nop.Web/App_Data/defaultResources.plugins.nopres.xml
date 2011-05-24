@@ -91,6 +91,135 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Feed">
+        <Children>
+          <LocaleResource Name="Become">
+            <Children>
+              <LocaleResource Name="ClickHere">
+                <Value>Click here</Value>
+              </LocaleResource>
+              <LocaleResource Name="Currency">
+                <Value>Currency</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Select the default currency that will be used to generate the feed.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="Generate">
+                <Value>Generate feed</Value>
+              </LocaleResource>
+              <LocaleResource Name="ProductPictureSize">
+                <Value>Product thumbnail image size</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>The default size (pixels) for product thumbnail images.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="SuccessResult">
+                <Value>Become.com feed has been successfully generated. {0} to see generated feed</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="Froogle">
+            <Children>
+              <LocaleResource Name="ClickHere">
+                <Value>Click here</Value>
+              </LocaleResource>
+              <LocaleResource Name="Currency">
+                <Value>Currency</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Select the default currency that will be used to generate the feed.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="FtpHostname">
+                <Value>FTP Hostname</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Google FTP server hostname.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="FtpFilename">
+                <Value>FTP File name</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Feed file name.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="FtpUsername">
+                <Value>FTP Username</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Google FTP account username.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="FtpPassword">
+                <Value>FTP Password</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Google FTP account password.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="FtpUploadStatus">
+                <Value>Froogle feed upload status: {0}</Value>
+              </LocaleResource>
+              <LocaleResource Name="Generate">
+                <Value>Generate feed</Value>
+              </LocaleResource>
+              <LocaleResource Name="ProductPictureSize">
+                <Value>Product thumbnail image size</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>The default size (pixels) for product thumbnail images.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="SuccessResult">
+                <Value>Froogle feed has been successfully generated. {0} to see generated feed</Value>
+              </LocaleResource>
+              <LocaleResource Name="Upload">
+                <Value>Upload feed to Google FTP server</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="PriceGrabber">
+            <Children>
+              <LocaleResource Name="ClickHere">
+                <Value>Click here</Value>
+              </LocaleResource>
+              <LocaleResource Name="Currency">
+                <Value>Currency</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Select the default currency that will be used to generate the feed.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="Generate">
+                <Value>Generate feed</Value>
+              </LocaleResource>
+              <LocaleResource Name="ProductPictureSize">
+                <Value>Product thumbnail image size</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>The default size (pixels) for product thumbnail images.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="SuccessResult">
+                <Value>PriceGrabber feed has been successfully generated. {0} to see generated feed</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
     </Children>
   </LocaleResource>
 </Language>

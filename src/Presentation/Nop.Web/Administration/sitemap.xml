@@ -29,8 +29,9 @@
         </siteMapNode>
         <siteMapNode title="Promotions" nopResource="Admin.Promotions">
           <siteMapNode title="Affiliates" nopResource="Admin.Affiliates" controller="Affiliate" action="List" />
-          <siteMapNode title="NewsletterSubscriptions" nopResource="Admin.Promotions.NewsletterSubscriptions" controller="NewsLetterSubscription" action="List" />
+          <siteMapNode title="Newsletter subscriptions" nopResource="Admin.Promotions.NewsletterSubscriptions" controller="NewsLetterSubscription" action="List" />
           <siteMapNode title="Discounts" nopResource="Admin.Promotions.Discounts" controller="Discount" action="List" />
+          <siteMapNode title="Promotion feeds" nopResource="Admin.Promotions.Feeds" controller="PromotionFeed" action="List" />
         </siteMapNode>
         <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement">
             <siteMapNode title="Forums" nopResource="Admin.ContentManagement.Forums">

@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using System.Xml;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
@@ -56,6 +58,7 @@ namespace Nop.Web.Controllers
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly StoreInformationSettings _storeInformationSettings;
         
         #endregion
 
@@ -71,7 +74,8 @@ namespace Nop.Web.Controllers
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IAuthenticationService authenticationService, IShoppingCartService shoppingCartService,
             IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
-            MediaSettings mediaSetting, CatalogSettings catalogSettings, ShoppingCartSettings shoppingCartSettings)
+            MediaSettings mediaSetting, CatalogSettings catalogSettings,
+            ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -97,6 +101,7 @@ namespace Nop.Web.Controllers
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._storeInformationSettings = storeInformationSettings;
         }
 
 		#endregion Constructors 
@@ -1517,18 +1522,63 @@ namespace Nop.Web.Controllers
 
         public ActionResult RecentlyAddedProductsRss()
         {
-            var model = new List<ProductModel>();
             if (_catalogSettings.RecentlyAddedProductsEnabled)
             {
                 var products = _productService.SearchProducts(0, 0, null, null,
                     null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
                     null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
-                foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product));
+                
+                var sb = new StringBuilder();
+                var settings = new XmlWriterSettings
+                {
+                    Encoding = Encoding.UTF8
+                };
+                using (var writer = XmlWriter.Create(sb, settings))
+                {
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("rss");
+                    writer.WriteAttributeString("version", "2.0");
+                    writer.WriteStartElement("channel");
+                    writer.WriteElementString("title", string.Format("{0}: Recently added products", _storeInformationSettings.StoreName));
+                    writer.WriteElementString("link", _webHelper.GetStoreLocation(false));
+                    writer.WriteElementString("description", "Information about products");
+                    writer.WriteElementString("copyright", string.Format("Copyright {0} by {1}", DateTime.Now.Year, _storeInformationSettings.StoreName));
+
+                    foreach (var product in products)
+                    {
+                        writer.WriteStartElement("item");
+                        
+                        writer.WriteStartElement("title");
+                        writer.WriteCData(product.GetLocalized(x => x.Name, _workContext));
+                        writer.WriteEndElement(); // title
+                        writer.WriteStartElement("author");
+                        writer.WriteCData(_storeInformationSettings.StoreName);
+                        writer.WriteEndElement(); // author
+                        writer.WriteStartElement("description");
+                        writer.WriteCData(product.GetLocalized(x => x.ShortDescription, _workContext));
+                        writer.WriteEndElement(); // description
+                        writer.WriteStartElement("link");
+                        //TODO add a method for getting product URL (e.g. SEOHelper.GetProductUrl)
+                        var productUrl = string.Format("{0}product/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
+                        writer.WriteCData(productUrl);
+                        writer.WriteEndElement(); // link
+                        writer.WriteStartElement("pubDate");
+                        writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc)));
+                        writer.WriteEndElement(); // pubDate
+
+
+                        writer.WriteEndElement(); // item
+                    }
+
+                    writer.WriteEndElement(); // channel
+                    writer.WriteEndElement(); // rss
+                    writer.WriteEndDocument();
+                }
+
+                return this.Content(sb.ToString(), "text/xml");
             }
-            
-            //TODO retun RSS with recently added products
-            throw new NotImplementedException();
+
+            return Content("");
         }
 
         //compare products

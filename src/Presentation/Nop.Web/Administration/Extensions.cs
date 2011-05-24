@@ -20,6 +20,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Payments;
+using Nop.Services.PromotionFeed;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
@@ -426,6 +427,15 @@ namespace Nop.Admin
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
         {
             return AutoMapper.Mapper.Map<IPaymentMethod, PaymentMethodModel>(entity);
+        }
+
+        #endregion
+
+        #region Promotion feeds
+
+        public static PromotionFeedModel ToModel(this IPromotionFeed entity)
+        {
+            return AutoMapper.Mapper.Map<IPromotionFeed, PromotionFeedModel>(entity);
         }
 
         #endregion

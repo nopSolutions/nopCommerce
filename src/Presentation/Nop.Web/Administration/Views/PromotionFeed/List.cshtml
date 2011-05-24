@@ -1,0 +1,42 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.PromotionFeedModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
+        @T("Admin.Promotions.Feeds")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.PromotionFeedModel>()
+                    .Name("feeds-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.SystemName).RouteKey("systemName");
+                    })
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.FriendlyName).Width(150).ReadOnly();
+                        //TODO add ClientTemplate for Configuration link
+                        columns.Template(
+                                @<div>
+                                    @Html.ActionLink(T("Admin.Promotions.Feeds.Configure").Text, "ConfigureMethod", new { systemName = @item.SystemName })
+                                </div>
+                            ).Width(100)
+                            .Centered()
+                            .Title(T("Admin.Promotions.Feeds.Configure").Text);
+                        columns.Bound(x => x.SystemName).Width(150).ReadOnly();
+                        columns.Bound(x => x.Version).Width(150).ReadOnly();
+                        columns.Bound(x => x.Author).Width(150).ReadOnly();
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("List", "PromotionFeed");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

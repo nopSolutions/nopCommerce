@@ -20,6 +20,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.FriendlyName).Width(150).ReadOnly();
+                        //TODO add ClientTemplate for Configuration link
                         columns.Template(
                                 @<div>
                                     @Html.ActionLink(T("Admin.Configuration.Shipping.Providers.Configure").Text, "ConfigureProvider", new { systemName = @item.SystemName })

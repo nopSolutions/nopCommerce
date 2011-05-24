@@ -6,6 +6,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Tasks;
 using Nop.Services.Localization;
 using Nop.Web.Extensions;
+using Nop.Web.Framework;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;

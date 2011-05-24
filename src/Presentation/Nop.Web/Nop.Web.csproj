@@ -93,7 +93,6 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
-    <Compile Include="Extensions\SeoExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -474,6 +473,7 @@
     <Content Include="Content\2011.1.315\Windows7\slider-vs-right.gif" />
     <Content Include="Content\2011.1.315\Windows7\sprite-vertical.png" />
     <Content Include="Content\2011.1.315\Windows7\sprite.png" />
+    <Content Include="Content\files\Feeds\Index.htm" />
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\flash\uploadify.swf" />

@@ -36,6 +36,7 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
 using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
@@ -127,6 +128,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerHttpRequest();
 
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
+            builder.RegisterType<PromotionFeedService>().As<IPromotionFeedService>().InstancePerHttpRequest();
 
             builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerHttpRequest();
 

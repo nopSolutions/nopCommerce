@@ -4407,6 +4407,33 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="Feeds">
+                    <Value>Pomotion feeds</Value>
+                    <Children>
+                      <LocaleResource Name="BackToList">
+                        <Value>back to feed list</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Configure">
+                        <Value>Configure</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="FriendlyName">
+                            <Value>Friendly name</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="SystemName">
+                            <Value>System name</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Version">
+                            <Value>Version</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Author">
+                            <Value>Author</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
               <LocaleResource Name="NewsLetterSubscriptions">
                 <Value>Newsletter Subscribers</Value>
                 <Children>

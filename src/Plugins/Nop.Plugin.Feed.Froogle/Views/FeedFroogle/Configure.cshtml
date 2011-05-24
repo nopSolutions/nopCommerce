@@ -1,0 +1,91 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Feed.Froogle.Models.FeedFroogleModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductPictureSize)
+                @Html.ValidationMessageFor(model => model.ProductPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CurrencyId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CurrencyId, Model.AvailableCurrencies)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FtpHostname):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FtpHostname)
+                @Html.ValidationMessageFor(model => model.FtpHostname)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FtpFilename):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FtpFilename)
+                @Html.ValidationMessageFor(model => model.FtpFilename)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FtpUsername):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FtpUsername)
+                @Html.ValidationMessageFor(model => model.FtpUsername)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FtpPassword):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FtpPassword)
+                @Html.ValidationMessageFor(model => model.FtpPassword)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    @T("Admin.Common.Save")</button>
+                <button type="submit" name="generate" value="generate" class="t-button">
+                    @T("Plugins.Feed.Froogle.Generate")</button>
+                <button type="submit" name="uploadfeed" value="uploadfeed" class="t-button">
+                    @T("Plugins.Feed.Froogle.Upload")</button>
+            </td>
+        </tr>
+        @if (!String.IsNullOrEmpty(Model.GenerateFeedResult))
+        {
+            <tr class="adminSeparator">
+                <td colspan="2">
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" width="100%">
+                    <b>@Html.Raw(Model.GenerateFeedResult)</b>
+                </td>
+            </tr>
+        }
+    </table>    
+}

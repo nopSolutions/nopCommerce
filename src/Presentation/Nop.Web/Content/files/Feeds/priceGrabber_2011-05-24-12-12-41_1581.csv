@@ -1,0 +1,21 @@
+Unique Retailer SKU;Manufacturer Name;Manufacturer Part Number;Product Title;Categorization;Product URL;Image URL;Detailed Description;Selling Price;Condition;Availability
+1;ASUS;;Product 1;Books;http://localhost:2844/product/1/product-1;http://localhost:2844/content/images/thumbs/0000019_150.octet-st;FullDescription 1;130.1235;New;Yes
+10;;;Product 10;Books;http://localhost:2844/product/10/product-10;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 10;130.1235;New;Yes
+11;;;Product 11;Books;http://localhost:2844/product/11/product-11;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 11;130.1235;New;Yes
+12;;;Product 12;Books;http://localhost:2844/product/12/product-12;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 12;130.1235;New;Yes
+13;;;Product 13;Books;http://localhost:2844/product/13/product-13;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 13;130.1235;New;Yes
+14;;;Product 14;Books;http://localhost:2844/product/14/product-14;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 14;130.1235;New;Yes
+15;;;Product 15;Books;http://localhost:2844/product/15/product-15;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 15;130.1235;New;Yes
+16;;;Product 16;Books;http://localhost:2844/product/16/product-16;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 16;130.1235;New;Yes
+17;;;Product 17;Books;http://localhost:2844/product/17/product-17;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 17;130.1235;New;Yes
+18;;;Product 18;Books;http://localhost:2844/product/18/product-18;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 18;130.1235;New;Yes
+19;;;Product 19;Books;http://localhost:2844/product/19/product-19;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 19;130.1235;New;Yes
+2;;;Product 2;Books;http://localhost:2844/product/2/product-2;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 2;130.1235;New;Yes
+20;;;Product 20;Books;http://localhost:2844/product/20/product-20;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 20;130.1235;New;Yes
+3;;;Product 3;Books;http://localhost:2844/product/3/product-3;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 3;130.1235;New;Yes
+4;;;Product 4;Books;http://localhost:2844/product/4/product-4;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 4;130.1235;New;Yes
+5;;;Product 5;Books;http://localhost:2844/product/5/product-5;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 5;130.1235;New;Yes
+6;;;Product 6;Books;http://localhost:2844/product/6/product-6;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 6;130.1235;New;Yes
+7;;;Product 7;Books;http://localhost:2844/product/7/product-7;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 7;130.1235;New;Yes
+8;;;Product 8;Books;http://localhost:2844/product/8/product-8;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 8;130.1235;New;Yes
+9;;;Product 9;Books;http://localhost:2844/product/9/product-9;http://localhost:2844/content/images/thumbs/noDefaultImage_150.gif;FullDescription 9;130.1235;New;Yes
