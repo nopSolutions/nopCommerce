@@ -1,8 +1,6 @@
 ﻿@model Nop.Admin.Models.EmailAccountModel
-
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 <table class="adminContent">
@@ -24,7 +22,7 @@
             @Html.ValidationMessageFor(model => model.DisplayName)
         </td>
     </tr>
-	<tr>
+    <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.Host):
         </td>
@@ -33,7 +31,7 @@
             @Html.ValidationMessageFor(model => model.Host)
         </td>
     </tr>
-	<tr>
+    <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.Port):
         </td>
@@ -42,7 +40,7 @@
             @Html.ValidationMessageFor(model => model.Port)
         </td>
     </tr>
-		<tr>
+    <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.Username):
         </td>
@@ -51,7 +49,7 @@
             @Html.ValidationMessageFor(model => model.Username)
         </td>
     </tr>
-	<tr>
+    <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.Password):
         </td>
@@ -78,12 +76,40 @@
             @Html.ValidationMessageFor(model => model.UseDefaultCredentials)
         </td>
     </tr>
-    <tr>
-        <td class="adminTitle">
-            <label>Send test message</label>:
-        </td>
-        <td class="adminData">
-            TODO @*TODO// Add support for sending test message*@
-        </td>
-    </tr>
+    @if (Model.Id > 0)
+    {
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <p>
+                    <strong>@T("Admin.Configuration.EmailAccounts.SendTestEmail")</strong>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SendTestEmailTo):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SendTestEmailTo)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+            </td>
+            <td class="adminData">
+                <button type="submit" name="sendtestemail" value="sendtestemail" class="t-button">@T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")</button>
+            </td>
+        </tr>
+        if (!String.IsNullOrEmpty(Model.SendTestEmailResult))
+        {
+            <tr> <td class="adminTitle"> </td> <td class="adminData" style="color: red">
+            @Model.SendTestEmailResult
+        </td> </tr>
+        }
+    }
 </table>

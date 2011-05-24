@@ -1,11 +1,12 @@
 ﻿using System.Web.Mvc;
+using FluentValidation.Attributes;
+using Nop.Admin.Validators;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models
 {
-    //TODO add validator
-    //[Validator(typeof(EmailAccountValidator))]
+    [Validator(typeof(EmailAccountValidator))]
     public class EmailAccountModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Email")]
@@ -39,6 +40,12 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount")]
         public bool IsDefaultEmailAccount { get; set; }
+
+
+        [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo")]
+        [AllowHtml]
+        public string SendTestEmailTo { get; set; }
+        public string SendTestEmailResult { get; set; }
 
     }
 }

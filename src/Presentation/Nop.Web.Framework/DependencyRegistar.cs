@@ -143,6 +143,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerHttpRequest();
             builder.RegisterType<NewsLetterSubscriptionService>().As<INewsLetterSubscriptionService>().InstancePerHttpRequest();
             builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerHttpRequest();
+            builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerHttpRequest();
             builder.RegisterType<SMSService>().As<ISMSService>().InstancePerHttpRequest();
 
             builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerHttpRequest();

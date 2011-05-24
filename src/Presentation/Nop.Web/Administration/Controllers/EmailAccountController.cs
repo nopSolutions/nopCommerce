@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Mail;
 using System.Web.Mvc;
 
 using Nop.Admin.Models;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 
@@ -15,16 +18,24 @@ namespace Nop.Admin.Controllers
 	[AdminAuthorize]
 	public class EmailAccountController : BaseNopController
 	{
-		private readonly IEmailAccountService _emailAccountService;
-		private readonly EmailAccountSettings _emailAccountSettings;
-		private readonly ISettingService _settingService;
+        private readonly IEmailAccountService _emailAccountService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ISettingService _settingService;
+        private readonly IEmailSender _emailSender;
+        private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly StoreInformationSettings _storeSettings;
 
-		public EmailAccountController(IEmailAccountService emailAccountService
-			, EmailAccountSettings emailAccountSettings, ISettingService settingService)
+		public EmailAccountController(IEmailAccountService emailAccountService,
+            ILocalizationService localizationService, ISettingService settingService, 
+            IEmailSender emailSender, 
+            EmailAccountSettings emailAccountSettings, StoreInformationSettings storeSettings)
 		{
-			_emailAccountService = emailAccountService;
-			_emailAccountSettings = emailAccountSettings;
-			_settingService = settingService;
+            this._emailAccountService = emailAccountService;
+            this._localizationService = localizationService;
+            this._emailAccountSettings = emailAccountSettings;
+            this._emailSender = emailSender;
+            this._settingService = settingService;
+            this._storeSettings = storeSettings;
 		}
 
 		public ActionResult List(string id)
@@ -104,11 +115,13 @@ namespace Nop.Admin.Controllers
 		}
         
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(EmailAccountModel model, bool continueEditing)
         {
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
-                throw new ArgumentException("No email account found with the specified id", "id");
+                throw new ArgumentException("No email account found with the specified id");
+
             if (ModelState.IsValid)
             {
                 emailAccount = model.ToEntity(emailAccount);
@@ -119,6 +132,32 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
 		}
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("sendtestemail")]
+        public ActionResult SendTestEmail(EmailAccountModel model)
+        {
+            var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
+            if (emailAccount == null)
+                throw new ArgumentException("No email account found with the specified id");
+
+            try
+            {
+                var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+                var to = new MailAddress(model.SendTestEmailTo);
+                string subject = _storeSettings.StoreName + ". Testing email functionaly.";
+                string body = "Email works fine.";
+                _emailSender.SendEmail(emailAccount, subject, body, from, to);
+                model.SendTestEmailResult = _localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success");
+            }
+            catch (Exception exc)
+            {
+                model.SendTestEmailResult = exc.Message;
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)

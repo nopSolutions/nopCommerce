@@ -168,6 +168,7 @@
     <Compile Include="Validators\CheckoutAttributeValueValidator.cs" />
     <Compile Include="Validators\CheckoutAttributeValidator.cs" />
     <Compile Include="Validators\AffiliateValidator.cs" />
+    <Compile Include="Validators\EmailAccountValidator.cs" />
     <Compile Include="Validators\StateProvinceValidator.cs" />
     <Compile Include="Validators\CountryValidator.cs" />
     <Compile Include="Validators\ProductReviewValidator.cs" />

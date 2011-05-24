@@ -25,9 +25,28 @@ namespace Nop.Services.Messages
             string fromAddress, string fromName, string toAddress, string toName,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null)
         {
+            SendEmail(emailAccount, subject, body, 
+                new MailAddress(fromAddress, fromName), new MailAddress(toAddress, toName), 
+                bcc, cc);
+        }
+
+        /// <summary>
+        /// Sends an email
+        /// </summary>
+        /// <param name="emailAccount">Email account to use</param>
+        /// <param name="subject">Subject</param>
+        /// <param name="body">Body</param>
+        /// <param name="from">From address</param>
+        /// <param name="to">To address</param>
+        /// <param name="bcc">BCC addresses list</param>
+        /// <param name="cc">CC addresses ist</param>
+        public void SendEmail(EmailAccount emailAccount, string subject, string body,
+            MailAddress from, MailAddress to,
+            IEnumerable<string> bcc = null, IEnumerable<string> cc = null)
+        {
             var message = new MailMessage();
-            message.From =  new MailAddress(fromAddress, fromName);
-            message.To.Add(new MailAddress(toAddress, toName));
+            message.From = from;
+            message.To.Add(to);
             if (null != bcc)
             {
                 foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))

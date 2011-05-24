@@ -1890,6 +1890,25 @@
                       <LocaleResource Name="IsDefaultEmailAccount">
                         <Value>Is default email account</Value>
                       </LocaleResource>
+                      <LocaleResource Name="SendTestEmailTo">
+                        <Value>Send email to</Value>
+                        <Children>
+                          <LocaleResource Name="Button">
+                            <Value>The email address to which you want to send your test email.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="SendTestEmail">
+                    <Value>Send Test Email (save settings first by clicking "Save" button)</Value>
+                    <Children>
+                      <LocaleResource Name="Button">
+                        <Value>Send test email</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Success">
+                        <Value>Email has been successfully sent.</Value>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                 </Children>

@@ -42,6 +42,8 @@ namespace Nop.Services.Messages
 
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Inserts a message template
         /// </summary>
@@ -124,5 +126,7 @@ namespace Nop.Services.Messages
                 return messageTemplates;
             });
         }
+
+        #endregion
     }
 }
