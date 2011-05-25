@@ -74,25 +74,24 @@ namespace Nop.Data.Tests
                                    Deleted = false,
                                    DisplayOrder = 5,
                                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                                   UpdatedOnUtc = new DateTime(2010, 01, 02),
-                                   ProductCategories = new List<ProductCategory>()
-                                   {
-                                       new ProductCategory
-                                       {
-                                           IsFeaturedProduct = true,
-                                           DisplayOrder = 1,
-                                           Product = new Product()
-                                           {
-                                               Name = "Name 1",
-                                               Published = true,
-                                               Deleted = false,
-                                               CreatedOnUtc = new DateTime(2010, 01, 01),
-                                               UpdatedOnUtc = new DateTime(2010, 01, 02)
-                                           }
-                                       }
-                                   }
+                                   UpdatedOnUtc = new DateTime(2010, 01, 02)
                                };
-
+            category.ProductCategories.Add
+                (
+                    new ProductCategory
+                    {
+                        IsFeaturedProduct = true,
+                        DisplayOrder = 1,
+                        Product = new Product()
+                        {
+                            Name = "Name 1",
+                            Published = true,
+                            Deleted = false,
+                            CreatedOnUtc = new DateTime(2010, 01, 01),
+                            UpdatedOnUtc = new DateTime(2010, 01, 02)
+                        }
+                    }
+                );
             var fromDb = SaveAndLoadEntity(category);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Books");

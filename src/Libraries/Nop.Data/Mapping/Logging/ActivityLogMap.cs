@@ -8,7 +8,7 @@ namespace Nop.Data.Mapping.Logging
         public ActivityLogMap()
         {
             this.ToTable("ActivityLog");
-            this.HasKey(al => al.ActivityLogId);
+            this.HasKey(al => al.Id);
             this.Property(al => al.Comment).IsRequired().HasMaxLength(4000);
 
             this.HasRequired(al => al.ActivityLogType)

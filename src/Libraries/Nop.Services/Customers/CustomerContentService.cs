@@ -42,7 +42,7 @@ namespace Nop.Services.Customers
         /// Deletes a customer content
         /// </summary>
         /// <param name="content">Customer content</param>
-        public void DeleteCustomerContent(CustomerContent content)
+        public virtual void DeleteCustomerContent(CustomerContent content)
         {
             if (content == null)
                 throw new ArgumentNullException("content");
@@ -56,7 +56,7 @@ namespace Nop.Services.Customers
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param>
         /// <returns>Customer content</returns>
-        public IList<CustomerContent> GetAllCustomerContent(int customerId, bool? approved)
+        public virtual IList<CustomerContent> GetAllCustomerContent(int customerId, bool? approved)
         {
             var query = from c in _contentRepository.Table
                         orderby c.CreatedOnUtc
@@ -74,7 +74,7 @@ namespace Nop.Services.Customers
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param>
         /// <returns>Customer content</returns>
-        public IList<T> GetAllCustomerContent<T>(int customerId, bool? approved) where T: CustomerContent
+        public virtual IList<T> GetAllCustomerContent<T>(int customerId, bool? approved) where T: CustomerContent
         {
             var query = from c in _contentRepository.Table
                         orderby c.CreatedOnUtc
@@ -90,7 +90,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="contentId">Customer content identifier</param>
         /// <returns>Customer content</returns>
-        public CustomerContent GetCustomerContentById(int contentId)
+        public virtual CustomerContent GetCustomerContentById(int contentId)
         {
             if (contentId == 0)
                 return null;
@@ -103,7 +103,7 @@ namespace Nop.Services.Customers
         /// Inserts a customer content
         /// </summary>
         /// <param name="content">Customer content</param>
-        public void InsertCustomerContent(CustomerContent content)
+        public virtual void InsertCustomerContent(CustomerContent content)
         {
             if (content == null)
                 throw new ArgumentNullException("content");
@@ -115,7 +115,7 @@ namespace Nop.Services.Customers
         /// Updates a customer content
         /// </summary>
         /// <param name="content">Customer content</param>
-        public void UpdateCustomerContent(CustomerContent content)
+        public virtual void UpdateCustomerContent(CustomerContent content)
         {
             if (content == null)
                 throw new ArgumentNullException("content");

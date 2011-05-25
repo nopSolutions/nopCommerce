@@ -18,8 +18,7 @@ namespace Nop.Data.Tests
                 Description = "Forum Group 1 Description",
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                Forums = new List<Forum>(),
+                UpdatedOnUtc = DateTime.UtcNow
             };
 
             var fromDb = SaveAndLoadEntity(forumGroup);

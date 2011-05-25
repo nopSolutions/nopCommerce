@@ -9,51 +9,56 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class CustomerRole : BaseEntity
     {
-        public CustomerRole() 
-        {
-            this.Customers = new List<Customer>();
-            this.PermissionRecords = new List<PermissionRecord>();
-        }
+        private ICollection<Customer> _customers;
+        private ICollection<PermissionRecord> _permissionRecords;
 
         /// <summary>
         /// Gets or sets the customer role name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is marked as free shiping
         /// </summary>
-        public bool FreeShipping { get; set; }
+        public virtual bool FreeShipping { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is marked as tax exempt
         /// </summary>
-        public bool TaxExempt { get; set; }
+        public virtual bool TaxExempt { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is active
         /// </summary>
-        public bool Active { get; set; }
+        public virtual bool Active { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is system
         /// </summary>
-        public bool IsSystemRole { get; set; }
+        public virtual bool IsSystemRole { get; set; }
 
         /// <summary>
         /// Gets or sets the customer role system name
         /// </summary>
-        public string SystemName { get; set; }
+        public virtual string SystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the customers
         /// </summary>
-        public virtual ICollection<Customer> Customers { get; set; }
+        public virtual ICollection<Customer> Customers
+        {
+            get { return _customers ?? (_customers = new List<Customer>()); }
+            protected set { _customers = value; }
+        }
 
         /// <summary>
         /// Gets or sets the permission records
         /// </summary>
-        public virtual ICollection<PermissionRecord> PermissionRecords { get; set; }
+        public virtual ICollection<PermissionRecord> PermissionRecords
+        {
+            get { return _permissionRecords ?? (_permissionRecords = new List<PermissionRecord>()); }
+            protected set { _permissionRecords = value; }
+        }
     }
 
 }

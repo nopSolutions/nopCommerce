@@ -39,7 +39,7 @@ namespace Nop.Services.ExportImport
         /// Import products from XLS file
         /// </summary>
         /// <param name="filePath">Excel file path</param>
-        public void ImportProductsFromXls(string filePath)
+        public virtual void ImportProductsFromXls(string filePath)
         {
             using (var excelHelper = new ExcelHelper(filePath))
             {

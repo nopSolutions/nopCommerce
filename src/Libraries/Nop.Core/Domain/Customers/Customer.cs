@@ -20,124 +20,122 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class Customer : BaseEntity
     {
-        public Customer()
-        {
-            this.CustomerContent = new List<CustomerContent>();
-            this.CustomerRoles = new List<CustomerRole>();
-            this.CustomerAttributes = new List<CustomerAttribute>();
-            this.Addresses = new List<Address>();
-            this.ShoppingCartItems = new List<ShoppingCartItem>();
-            this.Orders = new List<Order>();
-            this.RewardPointsHistory = new List<RewardPointsHistory>();
-            this.ReturnRequests = new List<ReturnRequest>();
-        }
+        private ICollection<CustomerContent> _customerContent;
+        private ICollection<CustomerRole> _customerRoles;
+        private ICollection<CustomerAttribute> _customerAttributes;
+        private ICollection<ShoppingCartItem> _shoppingCartItems;
+        private ICollection<Order> _orders;
+        private ICollection<RewardPointsHistory> _rewardPointsHistory;
+        private ICollection<ReturnRequest> _returnRequests;
+        private ICollection<Address> _addresses;
+        private ICollection<ActivityLog> _activityLog;
 
         /// <summary>
         /// Gets or sets the customer Guid
         /// </summary>
-        public Guid CustomerGuid { get; set; }
+        public virtual Guid CustomerGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the associated user identifier
         /// </summary>
-        public int? AssociatedUserId { get; set; }
+        public virtual int? AssociatedUserId { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
-        public string AdminComment { get; set; }
+        public virtual string AdminComment { get; set; }
 
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int? LanguageId { get; set; }
+        public virtual int? LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the currency identifier
         /// </summary>
-        public int? CurrencyId { get; set; }
+        public virtual int? CurrencyId { get; set; }
 
         /// <summary>
         /// Gets or sets the tax display type identifier
         /// </summary>
-        public int TaxDisplayTypeId { get; set; }
+        public virtual int TaxDisplayTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer is tax exempt
         /// </summary>
-        public bool IsTaxExempt { get; set; }
+        public virtual bool IsTaxExempt { get; set; }
 
         /// <summary>
         /// Gets or sets a VAT number (including counry code)
         /// </summary>
-        public string VatNumber { get; set; }
+        public virtual string VatNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the VAT number status identifier
         /// </summary>
-        public int VatNumberStatusId { get; set; }
+        public virtual int VatNumberStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the last payment method system name (selected one)
         /// </summary>
-        public string SelectedPaymentMethodSystemName { get; set; }
+        public virtual string SelectedPaymentMethodSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the selected checkout attributes (serialized)
         /// </summary>
-        public string CheckoutAttributes { get; set; }
+        public virtual string CheckoutAttributes { get; set; }
 
         /// <summary>
         /// Gets or sets the applied discount coupon code
         /// </summary>
-        public string DiscountCouponCode { get; set; }
+        public virtual string DiscountCouponCode { get; set; }
 
         /// <summary>
         /// Gets or sets the applied gift card coupon codes (serialized)
         /// </summary>
-        public string GiftCardCouponCodes { get; set; }
+        public virtual string GiftCardCouponCodes { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to use reward points during checkout
         /// </summary>
-        public bool UseRewardPointsDuringCheckout { get; set; }
+        public virtual bool UseRewardPointsDuringCheckout { get; set; }
 
         /// <summary>
         /// Gets or sets the time zone identifier
         /// </summary>
-        public string TimeZoneId { get; set; }
+        public virtual string TimeZoneId { get; set; }
 
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public int? AffiliateId { get; set; }
+        public virtual int? AffiliateId { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
-        public bool Active { get; set; }
+        public virtual bool Active { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer has been deleted
         /// </summary>
-        public bool Deleted { get; set; }
+        public virtual bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of last activity
         /// </summary>
-        public DateTime? LastActivityDateUtc { get; set; }
+        public virtual DateTime? LastActivityDateUtc { get; set; }
         
         #region Custom properties
 
         /// <summary>
         /// Gets the tax display type
         /// </summary>
-        public TaxDisplayType TaxDisplayType
+        public virtual TaxDisplayType TaxDisplayType
         {
             get
             {
@@ -152,7 +150,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets the VAT number status
         /// </summary>
-        public VatNumberStatus VatNumberStatus
+        public virtual VatNumberStatus VatNumberStatus
         {
             get
             {
@@ -186,37 +184,63 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets customer generated content
         /// </summary>
-        public virtual ICollection<CustomerContent> CustomerContent { get; set; }
-
+        public virtual ICollection<CustomerContent> CustomerContent
+        {
+            get { return _customerContent ?? (_customerContent = new List<CustomerContent>()); }
+            protected set { _customerContent = value; }
+        }
         /// <summary>
         /// Gets or sets the customer roles
         /// </summary>
-        public virtual ICollection<CustomerRole> CustomerRoles { get; set; }
+        public virtual ICollection<CustomerRole> CustomerRoles
+        {
+            get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
+            protected set { _customerRoles = value; }
+        }
 
         /// <summary>
         /// Gets or sets customer attributes
         /// </summary>
-        public virtual ICollection<CustomerAttribute> CustomerAttributes { get; set; }
-
+        public virtual ICollection<CustomerAttribute> CustomerAttributes
+        {
+            get { return _customerAttributes ?? (_customerAttributes = new List<CustomerAttribute>()); }
+            protected set { _customerAttributes = value; }
+        }
         /// <summary>
         /// Gets or sets shopping cart items
         /// </summary>
-        public virtual ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItems
+        {
+            get { return _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>()); }
+            protected set { _shoppingCartItems = value; }            
+        }
 
         /// <summary>
         /// Gets or sets orders
         /// </summary>
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Order> Orders
+        {
+            get { return _orders ?? (_orders = new List<Order>()); }
+            protected set { _orders = value; }            
+        }
 
         /// <summary>
         /// Gets or sets reward points history
         /// </summary>
-        public virtual ICollection<RewardPointsHistory> RewardPointsHistory { get; set; }
+        public virtual ICollection<RewardPointsHistory> RewardPointsHistory
+        {
+            get { return _rewardPointsHistory ?? (_rewardPointsHistory = new List<RewardPointsHistory>()); }
+            protected set { _rewardPointsHistory = value; }            
+        }
 
         /// <summary>
         /// Gets or sets return request of this customer
         /// </summary>
-        public virtual ICollection<ReturnRequest> ReturnRequests { get; set; }
+        public virtual ICollection<ReturnRequest> ReturnRequests
+        {
+            get { return _returnRequests ?? (_returnRequests = new List<ReturnRequest>()); }
+            protected set { _returnRequests = value; }            
+        }
         
         /// <summary>
         /// Default billing address
@@ -231,12 +255,20 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets customer addresses
         /// </summary>
-        public virtual ICollection<Address> Addresses { get; set; }
+        public virtual ICollection<Address> Addresses
+        {
+            get { return _addresses ?? (_addresses = new List<Address>()); }
+            protected set { _addresses = value; }            
+        }
 
         /// <summary>
         /// Gets the activity log
         /// </summary>
-        public virtual ICollection<ActivityLog> ActivityLog { get; set; }
+        public virtual ICollection<ActivityLog> ActivityLog
+        {
+            get { return _activityLog ?? (_activityLog = new List<ActivityLog>()); }
+            protected set { _activityLog = value; }            
+        }
 
         #endregion
 
@@ -313,7 +345,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets coupon codes
         /// </summary>
         /// <returns>Coupon codes</returns>
-        public string[] ParseAppliedGiftCardCouponCodes()
+        public virtual string[] ParseAppliedGiftCardCouponCodes()
         {
             string serializedGiftCartCouponCodes = this.GiftCardCouponCodes;
 
@@ -348,7 +380,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         /// <param name="couponCode">Coupon code</param>
         /// <returns>New coupon codes document</returns>
-        public void ApplyGiftCardCouponCode(string couponCode)
+        public virtual void ApplyGiftCardCouponCode(string couponCode)
         {
             string result = string.Empty;
             try
@@ -409,7 +441,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         /// <param name="couponCode">Coupon code to remove</param>
         /// <returns>New coupon codes document</returns>
-        public void RemoveGiftCardCouponCode(string couponCode)
+        public virtual void RemoveGiftCardCouponCode(string couponCode)
         {
             //get applied coupon codes
             var existingCouponCodes = ParseAppliedGiftCardCouponCodes();

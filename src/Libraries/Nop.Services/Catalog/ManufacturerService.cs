@@ -58,7 +58,7 @@ namespace Nop.Services.Catalog
         /// Deletes a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public void DeleteManufacturer(Manufacturer manufacturer)
+        public virtual void DeleteManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
@@ -72,7 +72,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturer collection</returns>
-        public IList<Manufacturer> GetAllManufacturers(bool showHidden = false)
+        public virtual IList<Manufacturer> GetAllManufacturers(bool showHidden = false)
         {
             string key = string.Format(MANUFACTURERS_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
@@ -92,7 +92,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
-        public Manufacturer GetManufacturerById(int manufacturerId)
+        public virtual Manufacturer GetManufacturerById(int manufacturerId)
         {
             if (manufacturerId == 0)
                 return null;
@@ -109,7 +109,7 @@ namespace Nop.Services.Catalog
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public void InsertManufacturer(Manufacturer manufacturer)
+        public virtual void InsertManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
@@ -125,7 +125,7 @@ namespace Nop.Services.Catalog
         /// Updates the manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public void UpdateManufacturer(Manufacturer manufacturer)
+        public virtual void UpdateManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
@@ -141,7 +141,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public void DeleteProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual void DeleteProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
@@ -159,7 +159,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        public IList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId, bool showHidden = false)
+        public virtual IList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId, bool showHidden = false)
         {
             if (manufacturerId == 0)
                 return new List<ProductManufacturer>();
@@ -185,7 +185,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        public IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false)
+        public virtual IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false)
         {
             if (productId == 0)
                 return new List<ProductManufacturer>();
@@ -211,7 +211,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productManufacturerId">Product manufacturer mapping identifier</param>
         /// <returns>Product manufacturer mapping</returns>
-        public ProductManufacturer GetProductManufacturerById(int productManufacturerId)
+        public virtual ProductManufacturer GetProductManufacturerById(int productManufacturerId)
         {
             if (productManufacturerId == 0)
                 return null;
@@ -227,7 +227,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public void InsertProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual void InsertProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
@@ -243,7 +243,7 @@ namespace Nop.Services.Catalog
         /// Updates the product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public void UpdateProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual void UpdateProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");

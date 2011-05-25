@@ -33,17 +33,16 @@ namespace Nop.Data.Tests
             var specificationAttribute = new SpecificationAttribute
             {
                 Name = "Name 1",
-                DisplayOrder = 1,
-                SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                {
+                DisplayOrder = 1
+            };
+            specificationAttribute.SpecificationAttributeOptions.Add
+                (
                     new SpecificationAttributeOption
                     {
                         Name = "SpecificationAttributeOption name 1",
                         DisplayOrder = 1,
                     }
-                }
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(specificationAttribute);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");

@@ -41,7 +41,7 @@ namespace Nop.Services.Payments
         /// Load active payment methods
         /// </summary>
         /// <returns>Payment methods</returns>
-        public IList<IPaymentMethod> LoadActivePaymentMethods()
+        public virtual IList<IPaymentMethod> LoadActivePaymentMethods()
         {
             var systemNames = _paymentSettings.ActivePaymentMethodSystemNames;
             var providers = new List<IPaymentMethod>();
@@ -58,7 +58,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Found payment provider</returns>
-        public IPaymentMethod LoadPaymentMethodBySystemName(string systemName)
+        public virtual IPaymentMethod LoadPaymentMethodBySystemName(string systemName)
         {
             var providers = LoadAllPaymentMethods();
             var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
@@ -69,7 +69,7 @@ namespace Nop.Services.Payments
         /// Load all payment providers
         /// </summary>
         /// <returns>Payment providers</returns>
-        public IList<IPaymentMethod> LoadAllPaymentMethods()
+        public virtual IList<IPaymentMethod> LoadAllPaymentMethods()
         {
             var providers = _pluginFinder.GetPlugins<IPaymentMethod>();
             return providers.OrderBy(tp => tp.FriendlyName).ToList();
@@ -82,7 +82,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
+        public virtual ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
             if (processPaymentRequest.OrderTotal == decimal.Zero)
             {
@@ -105,7 +105,7 @@ namespace Nop.Services.Payments
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        public virtual void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //already paid or order.OrderTotal == decimal.Zero
             if (postProcessPaymentRequest.Order.PaymentStatus == PaymentStatus.Paid)
@@ -124,7 +124,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Additional handling fee</returns>
-        public decimal GetAdditionalHandlingFee(string paymentMethodSystemName)
+        public virtual decimal GetAdditionalHandlingFee(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
@@ -144,7 +144,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether capture is supported</returns>
-        public bool SupportCapture(string paymentMethodSystemName)
+        public virtual bool SupportCapture(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
@@ -157,7 +157,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
         /// <returns>Capture payment result</returns>
-        public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
+        public virtual CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(capturePaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
@@ -172,7 +172,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether partial refund is supported</returns>
-        public bool SupportPartiallyRefund(string paymentMethodSystemName)
+        public virtual bool SupportPartiallyRefund(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
@@ -185,7 +185,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether refund is supported</returns>
-        public bool SupportRefund(string paymentMethodSystemName)
+        public virtual bool SupportRefund(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
@@ -198,7 +198,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
+        public virtual RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(refundPaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
@@ -213,7 +213,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether void is supported</returns>
-        public bool SupportVoid(string paymentMethodSystemName)
+        public virtual bool SupportVoid(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
@@ -226,7 +226,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
+        public virtual VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(voidPaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
@@ -241,7 +241,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A recurring payment type of payment method</returns>
-        public RecurringPaymentType GetRecurringPaymentType(string paymentMethodSystemName)
+        public virtual RecurringPaymentType GetRecurringPaymentType(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
@@ -254,7 +254,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
+        public virtual ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
             if (processPaymentRequest.OrderTotal == decimal.Zero)
             {
@@ -278,7 +278,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
+        public virtual CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             if (cancelPaymentRequest.Order.OrderTotal == decimal.Zero)
                 return new CancelRecurringPaymentResult();
@@ -296,7 +296,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A payment method type</returns>
-        public PaymentMethodType GetPaymentMethodType(string paymentMethodSystemName)
+        public virtual PaymentMethodType GetPaymentMethodType(string paymentMethodSystemName)
         {
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
@@ -309,7 +309,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="creditCardNumber">Credit card number</param>
         /// <returns>Masked credit card number</returns>
-        public string GetMaskedCreditCardNumber(string creditCardNumber)
+        public virtual string GetMaskedCreditCardNumber(string creditCardNumber)
         {
             if (String.IsNullOrEmpty(creditCardNumber))
                 return string.Empty;

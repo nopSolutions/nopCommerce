@@ -11,49 +11,47 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public partial class RecurringPayment : BaseEntity
     {
-        public RecurringPayment()
-        {
-            this.RecurringPaymentHistory = new List<RecurringPaymentHistory>();
-        }
+        private ICollection<RecurringPaymentHistory> _recurringPaymentHistory;
+
         /// <summary>
         /// Gets or sets the cycle length
         /// </summary>
-        public int CycleLength { get; set; }
+        public virtual int CycleLength { get; set; }
 
         /// <summary>
         /// Gets or sets the cycle period identifier
         /// </summary>
-        public int CyclePeriodId { get; set; }
+        public virtual int CyclePeriodId { get; set; }
 
         /// <summary>
         /// Gets or sets the total cycles
         /// </summary>
-        public int TotalCycles { get; set; }
+        public virtual int TotalCycles { get; set; }
 
         /// <summary>
         /// Gets or sets the start date
         /// </summary>
-        public DateTime StartDateUtc { get; set; }
+        public virtual DateTime StartDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the payment is active
         /// </summary>
-        public bool IsActive { get; set; }
+        public virtual bool IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public bool Deleted { get; set; }
+        public virtual bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of payment creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets the next payment date
         /// </summary>
-        public DateTime? NextPaymentDate
+        public virtual DateTime? NextPaymentDate
         {
             get
             {
@@ -154,7 +152,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the cycles remaining
         /// </summary>
-        public int CyclesRemaining
+        public virtual int CyclesRemaining
         {
             get
             {
@@ -171,7 +169,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the payment status
         /// </summary>
-        public RecurringProductCyclePeriod CyclePeriod
+        public virtual RecurringProductCyclePeriod CyclePeriod
         {
             get
             {
@@ -187,8 +185,11 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the recurring payment history
         /// </summary>
-        public virtual ICollection<RecurringPaymentHistory> RecurringPaymentHistory { get; set; }
-        
+        public virtual ICollection<RecurringPaymentHistory> RecurringPaymentHistory
+        {
+            get { return _recurringPaymentHistory ?? (_recurringPaymentHistory = new List<RecurringPaymentHistory>()); }
+            protected set { _recurringPaymentHistory = value; }
+        }        
         /// <summary>
         /// Gets the initial order
         /// </summary>

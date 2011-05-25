@@ -227,9 +227,9 @@ namespace Nop.Services.Tests.Catalog
                 Name = "Discount 1",
                 DiscountType = DiscountType.AssignedToSkus,
                 DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited,
-                AppliedToProductVariants = new List<ProductVariant>() { productVariant }
+                DiscountLimitation = DiscountLimitationType.Unlimited
             };
+            discount1.AppliedToProductVariants.Add(productVariant);
             productVariant.AppliedDiscounts.Add(discount1);
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
             
@@ -264,9 +264,9 @@ namespace Nop.Services.Tests.Catalog
                 Name = "Discount 1",
                 DiscountType = DiscountType.AssignedToSkus,
                 DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited,
-                AppliedToProductVariants = new List<ProductVariant>() { productVariant }
+                DiscountLimitation = DiscountLimitationType.Unlimited
             };
+            discount1.AppliedToProductVariants.Add(productVariant);
             productVariant.AppliedDiscounts.Add(discount1);
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
 
@@ -276,9 +276,9 @@ namespace Nop.Services.Tests.Catalog
                 Name = "Discount 2",
                 DiscountType = DiscountType.AssignedToSkus,
                 DiscountAmount = 4,
-                DiscountLimitation = DiscountLimitationType.Unlimited,
-                AppliedToProductVariants = new List<ProductVariant>() { productVariant }
+                DiscountLimitation = DiscountLimitationType.Unlimited
             };
+            discount2.AppliedToProductVariants.Add(productVariant);
             productVariant.AppliedDiscounts.Add(discount2);
             _discountService.Expect(ds => ds.IsDiscountValid(discount2, customer)).Return(true);
 
@@ -290,9 +290,9 @@ namespace Nop.Services.Tests.Catalog
                 DiscountAmount = 5,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
                 RequiresCouponCode = true,
-                CouponCode = "SECRET CODE",
-                AppliedToProductVariants = new List<ProductVariant>() { productVariant }
+                CouponCode = "SECRET CODE"
             };
+            discount3.AppliedToProductVariants.Add(productVariant);
             productVariant.AppliedDiscounts.Add(discount3);
             //discount is not valid
             _discountService.Expect(ds => ds.IsDiscountValid(discount3, customer)).Return(false);
@@ -332,9 +332,9 @@ namespace Nop.Services.Tests.Catalog
                 Name = "Discount 1",
                 DiscountType = DiscountType.AssignedToSkus,
                 DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited,
-                AppliedToProductVariants = new List<ProductVariant>() { productVariant }
+                DiscountLimitation = DiscountLimitationType.Unlimited
             };
+            discount1.AppliedToProductVariants.Add(productVariant);
             productVariant.AppliedDiscounts.Add(discount1);
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
             

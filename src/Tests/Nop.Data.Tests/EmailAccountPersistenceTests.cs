@@ -51,9 +51,11 @@ namespace Nop.Data.Tests
                 Username = "John",
                 Password = "111",
                 EnableSsl = true,
-                UseDefaultCredentials = true,
-                QueuedEmails = new List<QueuedEmail>()
-                {
+                UseDefaultCredentials = true
+            };
+
+            emailAccount.QueuedEmails.Add
+                (
                     new QueuedEmail()
                     {
                         Priority = 1,
@@ -67,10 +69,7 @@ namespace Nop.Data.Tests
                         Body = "Body",
                         CreatedOnUtc = new DateTime(2010, 01, 01)
                     }
-                }
-            };
-
-
+                );
             var fromDb = SaveAndLoadEntity(emailAccount);
             fromDb.ShouldNotBeNull();
             fromDb.Email.ShouldEqual("admin@yourstore.com");

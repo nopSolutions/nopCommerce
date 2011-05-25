@@ -40,7 +40,7 @@ namespace Nop.Services.Messages
         /// <param name="to">To address</param>
         /// <param name="bcc">BCC addresses list</param>
         /// <param name="cc">CC addresses ist</param>
-        public void SendEmail(EmailAccount emailAccount, string subject, string body,
+        public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
             MailAddress from, MailAddress to,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null)
         {

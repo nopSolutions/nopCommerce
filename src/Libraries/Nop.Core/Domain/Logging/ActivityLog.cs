@@ -10,29 +10,24 @@ namespace Nop.Core.Domain.Logging
     {
         #region Properties
         /// <summary>
-        /// Gets or sets the activity log identifier
-        /// </summary>
-        public int ActivityLogId { get; set; }
-
-        /// <summary>
         /// Gets or sets the activity log type identifier
         /// </summary>
-        public int ActivityLogTypeId { get; set; }
+        public virtual int ActivityLogTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public virtual int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the activity comment
         /// </summary>
-        public string Comment { get; set; }
+        public virtual string Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public virtual DateTime CreatedOn { get; set; }
         #endregion
 
         #region Navigation Properties

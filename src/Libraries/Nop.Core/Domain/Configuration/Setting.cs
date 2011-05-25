@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Domain.Configuration
 {
     /// <summary>
@@ -17,12 +16,12 @@ namespace Nop.Core.Domain.Configuration
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the value
         /// </summary>
-        public string Value { get; set; }
+        public virtual string Value { get; set; }
 
         /// <summary>
         /// Gets or sets the description
@@ -32,7 +31,7 @@ namespace Nop.Core.Domain.Configuration
         /// <summary>
         /// Returns the setting value as the specified type
         /// </summary>
-        public T As<T>() {
+        public virtual T As<T>() {
             return CommonHelper.To<T>(this.Value);
         }
 

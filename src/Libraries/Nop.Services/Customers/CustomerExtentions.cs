@@ -74,8 +74,6 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            if (customer.CustomerAttributes == null)
-                customer.CustomerAttributes = new List<CustomerAttribute>();
             var customerAttribute = customer.CustomerAttributes.FirstOrDefault(ca => ca.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
             if (customerAttribute == null)
                 return default(T);

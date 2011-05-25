@@ -195,18 +195,17 @@ namespace Nop.Data.Tests
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = testCustomer,
-                DiscountUsageHistory = new List<DiscountUsageHistory>()
-                {
+                BillingAddress = GetTestBillingAddress(),
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
+            order.DiscountUsageHistory.Add
+                (
                     new DiscountUsageHistory()
                     {
                         Discount = GetTestDiscount(),
                         CreatedOnUtc = new DateTime(2010, 01, 01)
                     }
-                },
-                BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(order);
             fromDb.ShouldNotBeNull();
 
@@ -224,19 +223,18 @@ namespace Nop.Data.Tests
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = testCustomer,
-                GiftCardUsageHistory = new List<GiftCardUsageHistory>()
-                {
+                BillingAddress = GetTestBillingAddress(),
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
+            order.GiftCardUsageHistory.Add
+                (
                     new GiftCardUsageHistory()
                     {
                         UsedValue = 1.1M,
                         CreatedOnUtc = new DateTime(2010, 01, 01),
                         GiftCard = GetTestGiftCard()
                     }
-                },
-                BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(order);
             fromDb.ShouldNotBeNull();
 
@@ -252,18 +250,17 @@ namespace Nop.Data.Tests
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                OrderNotes = new List<OrderNote>()
-                {
+                BillingAddress = GetTestBillingAddress(),
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
+            order.OrderNotes.Add
+                (
                     new OrderNote()
                     {
                         Note = "Note 1",
                         CreatedOnUtc = new DateTime(2010, 01, 01),
                     }
-                },
-                BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(order);
             fromDb.ShouldNotBeNull();
 
@@ -279,18 +276,17 @@ namespace Nop.Data.Tests
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                OrderProductVariants = new List<OrderProductVariant>()
-                {
+                BillingAddress = GetTestBillingAddress(),
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
+            order.OrderProductVariants.Add
+                (
                     new OrderProductVariant()
                     {
                         ProductVariant = GetTestProductVariant(),
                         Quantity = 1
                     }
-                },
-                BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(order);
             fromDb.ShouldNotBeNull();
 

@@ -48,7 +48,7 @@ namespace Nop.Services.Messages
         /// Inserts a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        public void InsertMessageTemplate(MessageTemplate messageTemplate)
+        public virtual void InsertMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
                 throw new ArgumentNullException("messageTemplate");
@@ -62,7 +62,7 @@ namespace Nop.Services.Messages
         /// Updates a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        public void UpdateMessageTemplate(MessageTemplate messageTemplate)
+        public virtual void UpdateMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
                 throw new ArgumentNullException("messageTemplate");
@@ -77,7 +77,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
         /// <returns>Message template</returns>
-        public MessageTemplate GetMessageTemplateById(int messageTemplateId)
+        public virtual MessageTemplate GetMessageTemplateById(int messageTemplateId)
         {
             if (messageTemplateId == 0)
                 return null;
@@ -95,7 +95,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
         /// <returns>Message template</returns>
-        public MessageTemplate GetMessageTemplateByName(string messageTemplateName)
+        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException("messageTemplateName");
@@ -115,7 +115,7 @@ namespace Nop.Services.Messages
         /// Gets all message templates
         /// </summary>
         /// <returns>Message template list</returns>
-        public IList<MessageTemplate> GetAllMessageTemplates()
+        public virtual IList<MessageTemplate> GetAllMessageTemplates()
         {
             return _cacheManager.Get(MESSAGETEMPLATES_ALL_KEY, () =>
             {

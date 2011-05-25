@@ -218,7 +218,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
-        public void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true)
+        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -237,7 +237,7 @@ namespace Nop.Services.Orders
         /// Deletes expired shopping cart items
         /// </summary>
         /// <param name="olderThanUtc">Older than date and time</param>
-        public void DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
+        public virtual void DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
         {
             var query = from sci in _sciRepository.Table
                            where sci.UpdatedOnUtc < olderThanUtc
@@ -257,7 +257,7 @@ namespace Nop.Services.Orders
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
-        public IList<string> GetShoppingCartItemWarnings(ShoppingCartType shoppingCartType,
+        public virtual IList<string> GetShoppingCartItemWarnings(ShoppingCartType shoppingCartType,
             ProductVariant productVariant, string selectedAttributes, decimal customerEnteredPrice, 
             int quantity)
         {
@@ -404,7 +404,7 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributes">Checkout attributes</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
-        public IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart, 
+        public virtual IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart, 
             string checkoutAttributes = "", bool validateCheckoutAttributes = false)
         {
             var warnings = new List<string>();
@@ -498,7 +498,7 @@ namespace Nop.Services.Orders
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Price entered by a customer</param>
         /// <returns>Found shopping cart item</returns>
-        public ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
+        public virtual ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
             ProductVariant productVariant,
             string selectedAttributes = "",
@@ -569,7 +569,7 @@ namespace Nop.Services.Orders
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
-        public IList<string> AddToCart(Customer customer, ProductVariant productVariant, 
+        public virtual IList<string> AddToCart(Customer customer, ProductVariant productVariant, 
             ShoppingCartType shoppingCartType, string selectedAttributes,
             decimal customerEnteredPrice, int quantity)
         {
@@ -660,7 +660,7 @@ namespace Nop.Services.Orders
         /// <param name="newQuantity">New shopping cart item quantity</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
-        public IList<string> UpdateShoppingCartItem(Customer customer, int shoppingCartItemId, 
+        public virtual IList<string> UpdateShoppingCartItem(Customer customer, int shoppingCartItemId, 
             int newQuantity, bool resetCheckoutData)
         {
             if (customer == null)
@@ -711,7 +711,7 @@ namespace Nop.Services.Orders
         /// <param name="productId">Product identifier</param>
         /// <param name="productVariantId">Default product variant identifier for adding to cart</param>
         /// <returns>A value indicating whether direct add to cart is allowed</returns>
-        public bool DirectAddToCartAllowed(int productId, out int productVariantId)
+        public virtual bool DirectAddToCartAllowed(int productId, out int productVariantId)
         {
             bool result = false;
             productVariantId = 0;

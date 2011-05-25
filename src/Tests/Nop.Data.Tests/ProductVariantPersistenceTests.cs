@@ -217,17 +217,16 @@ namespace Nop.Data.Tests
                     Deleted = false,
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02),
-                },
-                TierPrices = new List<TierPrice>()
-                {
+                }
+            };
+            productVariant.TierPrices.Add
+                (
                     new TierPrice
                     {
                         Quantity= 1,
                         Price= 2,
-                    },
-                }
-            };
-
+                    }
+                );
             var fromDb = SaveAndLoadEntity(productVariant);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Product variant name 1");

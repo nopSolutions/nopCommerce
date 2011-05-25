@@ -1,8 +1,4 @@
-﻿
-using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
-
-namespace Nop.Core.Domain.Discounts
+﻿namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
     /// Represents a discount requirement
@@ -12,32 +8,32 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount identifier
         /// </summary>
-        public int DiscountId { get; set; }
+        public virtual int DiscountId { get; set; }
         
         /// <summary>
         /// Gets or sets the discount requirement rule system name
         /// </summary>
-        public string DiscountRequirementRuleSystemName { get; set; }
+        public virtual string DiscountRequirementRuleSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the the discount requirement spent amount - customer had spent/purchased x.xx amount (used when requirement is set to "Customer had spent/purchased x.xx amount")
         /// </summary>
-        public decimal SpentAmount { get; set; }
+        public virtual decimal SpentAmount { get; set; }
 
         /// <summary>
         /// Gets or sets the discount requirement - customer's billing country is... (used when requirement is set to "Billing country is")
         /// </summary>
-        public int BillingCountryId { get; set; }
+        public virtual int BillingCountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the discount requirement - customer's shipping country is... (used when requirement is set to "Shipping country is")
         /// </summary>
-        public int ShippingCountryId { get; set; }
+        public virtual int ShippingCountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the restricted customer role identifier
         /// </summary>
-        public int? RestrictedToCustomerRoleId { get; set; }
+        public virtual int? RestrictedToCustomerRoleId { get; set; }
         
         /// <summary>
         /// Gets or sets the discount

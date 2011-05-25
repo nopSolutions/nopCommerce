@@ -32,8 +32,7 @@ namespace Nop.Data.Tests
         public void Can_save_and_load_customerRole_with_customer()
         {
             var customerRole = GetTestCustomerRole();
-            customerRole.Customers = new List<Customer>()
-            {
+            customerRole.Customers.Add(
                 new Customer()
                 {
                     CustomerGuid = Guid.NewGuid(),
@@ -41,7 +40,7 @@ namespace Nop.Data.Tests
                     Active = true,
                     CreatedOnUtc = new DateTime(2010, 01, 01)
                 }
-            };
+            );
 
             var fromDb = SaveAndLoadEntity(customerRole);
             fromDb.ShouldNotBeNull();
@@ -55,15 +54,15 @@ namespace Nop.Data.Tests
         public void Can_save_and_load_customerRole_with_permissions()
         {
             var customerRole = GetTestCustomerRole();
-            customerRole.PermissionRecords = new List<PermissionRecord>()
-            {
+            customerRole.PermissionRecords.Add
+            (
                 new PermissionRecord()
                 {
                     Name = "Name 1",
                     SystemName = "SystemName 2",
                     Category = "Category 4",
                 }
-            };
+            );
 
             var fromDb = SaveAndLoadEntity(customerRole);
             fromDb.ShouldNotBeNull();

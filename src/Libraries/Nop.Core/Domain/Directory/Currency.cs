@@ -10,11 +10,7 @@ namespace Nop.Core.Domain.Directory
     /// </summary>
     public partial class Currency : BaseEntity
     {
-        public Currency() 
-        {
-            this.Customers = new List<Customer>();
-        }
-
+        private ICollection<Customer> _customers;
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -63,7 +59,11 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// Gets or sets the customers
         /// </summary>
-        public virtual ICollection<Customer> Customers { get; set; }
+        public virtual ICollection<Customer> Customers
+        {
+            get { return _customers ?? (_customers = new List<Customer>()); }
+            protected set { _customers = value; }
+        }
     }
 
 }

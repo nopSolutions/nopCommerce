@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
@@ -9,17 +8,17 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the first product identifier
         /// </summary>
-        public int ProductId1 { get; set; }
+        public virtual int ProductId1 { get; set; }
 
         /// <summary>
         /// Gets or sets the second product identifier
         /// </summary>
-        public int ProductId2 { get; set; }
+        public virtual int ProductId2 { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
     }
 
 }

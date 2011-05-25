@@ -11,41 +11,38 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Category : BaseEntity, ILocalizedEntity
     {
-        public Category() 
-        {
-            this.ProductCategories = new List<ProductCategory>();
-            this.AppliedDiscounts = new List<Discount>();
-        }
+        private ICollection<ProductCategory> _productCategories;
+        private ICollection<Discount> _appliedDiscounts;
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the description
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
-        public string MetaKeywords { get; set; }
+        public virtual string MetaKeywords { get; set; }
 
         /// <summary>
         /// Gets or sets the meta description
         /// </summary>
-        public string MetaDescription { get; set; }
+        public virtual string MetaDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the meta title
         /// </summary>
-        public string MetaTitle { get; set; }
+        public virtual string MetaTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the search-engine name
         /// </summary>
-        public string SeName { get; set; }
+        public virtual string SeName { get; set; }
 
         /// <summary>
         /// Gets or sets the parent category identifier
@@ -55,56 +52,63 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the picture identifier
         /// </summary>
-        public int PictureId { get; set; }
+        public virtual int PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the page size
         /// </summary>
-        public int PageSize { get; set; }
+        public virtual int PageSize { get; set; }
 
         /// <summary>
         /// Gets or sets the available price ranges
         /// </summary>
-        public string PriceRanges { get; set; }
+        public virtual string PriceRanges { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the category on home page
         /// </summary>
-        public bool ShowOnHomePage { get; set; }
+        public virtual bool ShowOnHomePage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
-        public bool Published { get; set; }
+        public virtual bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public bool Deleted { get; set; }
+        public virtual bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOnUtc { get; set; }
+        public virtual DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of ProductCategory
         /// </summary>
-        public virtual ICollection<ProductCategory> ProductCategories { get; set; }
-
+        public virtual ICollection<ProductCategory> ProductCategories
+        {
+            get { return _productCategories ?? (_productCategories = new List<ProductCategory>()); }
+            protected set { _productCategories = value; }
+        }
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts { get; set; }
+        public virtual ICollection<Discount> AppliedDiscounts
+        {
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            protected set { _appliedDiscounts = value; }
+        }
     }
 }

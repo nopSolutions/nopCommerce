@@ -65,18 +65,17 @@ namespace Nop.Data.Tests
                 SenderEmail = "d@e.f",
                 Message = "Message 1",
                 IsRecipientNotified = true,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                GiftCardUsageHistory = new List<GiftCardUsageHistory>()
-                {
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
+            giftCard.GiftCardUsageHistory.Add
+                (
                     new GiftCardUsageHistory()
                     {
                         UsedValue = 1.1M,
                         CreatedOnUtc = new DateTime(2010, 01, 01),
                         UsedWithOrder = GetTestOrder()
                     }
-                }
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(giftCard);
             fromDb.ShouldNotBeNull();
 

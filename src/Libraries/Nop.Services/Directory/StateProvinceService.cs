@@ -47,7 +47,7 @@ namespace Nop.Services.Directory
         /// Deletes a state/province
         /// </summary>
         /// <param name="stateProvince">The state/province</param>
-        public void DeleteStateProvince(StateProvince stateProvince)
+        public virtual void DeleteStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
                 throw new ArgumentNullException("stateProvince");
@@ -62,7 +62,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="stateProvinceId">The state/province identifier</param>
         /// <returns>State/province</returns>
-        public StateProvince GetStateProvinceById(int stateProvinceId)
+        public virtual StateProvince GetStateProvinceById(int stateProvinceId)
         {
             if (stateProvinceId == 0)
                 return null;
@@ -80,7 +80,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="abbreviation">The state/province abbreviation</param>
         /// <returns>State/province</returns>
-        public StateProvince GetStateProvinceByAbbreviation(string abbreviation)
+        public virtual StateProvince GetStateProvinceByAbbreviation(string abbreviation)
         {
             var query = from sp in _stateProvinceRepository.Table
                         where sp.Abbreviation == abbreviation
@@ -95,7 +95,7 @@ namespace Nop.Services.Directory
         /// <param name="countryId">Country identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>State/province collection</returns>
-        public IList<StateProvince> GetStateProvincesByCountryId(int countryId, bool showHidden = false)
+        public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, bool showHidden = false)
         {
             string key = string.Format(STATEPROVINCES_ALL_KEY, countryId);
             return _cacheManager.Get(key, () =>
@@ -114,7 +114,7 @@ namespace Nop.Services.Directory
         /// Inserts a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
-        public void InsertStateProvince(StateProvince stateProvince)
+        public virtual void InsertStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
                 throw new ArgumentNullException("stateProvince");
@@ -128,7 +128,7 @@ namespace Nop.Services.Directory
         /// Updates a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
-        public void UpdateStateProvince(StateProvince stateProvince)
+        public virtual void UpdateStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
                 throw new ArgumentNullException("stateProvince");

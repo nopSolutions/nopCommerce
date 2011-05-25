@@ -12,32 +12,32 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public virtual int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the points redeemed/added
         /// </summary>
-        public int Points { get; set; }
+        public virtual int Points { get; set; }
 
         /// <summary>
         /// Gets or sets the points balance
         /// </summary>
-        public int PointsBalance { get; set; }
+        public virtual int PointsBalance { get; set; }
 
         /// <summary>
         /// Gets or sets the used amount
         /// </summary>
-        public decimal UsedAmount { get; set; }
+        public virtual decimal UsedAmount { get; set; }
 
         /// <summary>
         /// Gets or sets the message
         /// </summary>
-        public string Message { get; set; }
+        public virtual string Message { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the order for which points were redeemed as a payment

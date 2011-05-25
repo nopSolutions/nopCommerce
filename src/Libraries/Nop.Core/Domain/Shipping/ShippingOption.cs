@@ -11,7 +11,6 @@ namespace Nop.Core.Domain.Shipping
     /// <summary>
     /// Represents a shipping option
     /// </summary>
-    [Serializable]
     public partial class ShippingOption
     {
         /// <summary>

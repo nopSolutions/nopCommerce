@@ -54,18 +54,17 @@ namespace Nop.Data.Tests
                 NumericIsoCode = 1,
                 SubjectToVat = true,
                 Published = true,
-                DisplayOrder = 1,
-                StateProvinces = new List<StateProvince>()
-                {
+                DisplayOrder = 1
+            };
+            country.StateProvinces.Add
+                (
                     new StateProvince()
                     {
                         Name = "California",
-                        Abbreviation= "CA",
+                        Abbreviation = "CA",
                         DisplayOrder = 1
                     }
-                }
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(country);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("United States");

@@ -1,8 +1,6 @@
 
 using System;
-using System.Linq;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Discounts
 {
@@ -14,17 +12,17 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount identifier
         /// </summary>
-        public int DiscountId { get; set; }
+        public virtual int DiscountId { get; set; }
 
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public int OrderId { get; set; }
+        public virtual int OrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
 
         /// <summary>

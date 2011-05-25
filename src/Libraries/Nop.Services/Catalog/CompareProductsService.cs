@@ -72,7 +72,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Clears a "compare products" list
         /// </summary>
-        public void ClearCompareProducts()
+        public virtual void ClearCompareProducts()
         {
             var compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
             if (compareCookie != null)
@@ -87,7 +87,7 @@ namespace Nop.Services.Catalog
         /// Gets a "compare products" list
         /// </summary>
         /// <returns>"Compare products" list</returns>
-        public IList<Product> GetComparedProducts()
+        public virtual IList<Product> GetComparedProducts()
         {
             var products = new List<Product>();
             var productIds = GetComparedProductIds();
@@ -105,7 +105,7 @@ namespace Nop.Services.Catalog
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifer</param>
-        public void RemoveProductFromCompareList(int productId)
+        public virtual void RemoveProductFromCompareList(int productId)
         {
             var oldProductIds = GetComparedProductIds();
             var newProductIds = new List<int>();
@@ -126,7 +126,7 @@ namespace Nop.Services.Catalog
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifer</param>
-        public void AddProductToCompareList(int productId)
+        public virtual void AddProductToCompareList(int productId)
         {
             var oldProductIds = GetComparedProductIds();
             var newProductIds = new List<int>();

@@ -95,7 +95,7 @@ namespace Nop.Services.Catalog
         /// Delete a product
         /// </summary>
         /// <param name="product">Product</param>
-        public void DeleteProduct(Product product)
+        public virtual void DeleteProduct(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -114,7 +114,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
-        public IList<Product> GetAllProducts(bool showHidden = false)
+        public virtual IList<Product> GetAllProducts(bool showHidden = false)
         {
             var query = from p in _productRepository.Table
                         orderby p.Name
@@ -129,7 +129,7 @@ namespace Nop.Services.Catalog
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Product collection</returns>
-        public IList<Product> GetAllProductsDisplayedOnHomePage()
+        public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
         {
             var query = from p in _productRepository.Table
                         orderby p.Name
@@ -146,7 +146,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product</returns>
-        public Product GetProductById(int productId)
+        public virtual Product GetProductById(int productId)
         {
             if (productId == 0)
                 return null;
@@ -163,7 +163,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
-        public void InsertProduct(Product product)
+        public virtual void InsertProduct(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -179,7 +179,7 @@ namespace Nop.Services.Catalog
         /// Updates the product
         /// </summary>
         /// <param name="product">Product</param>
-        public void UpdateProduct(Product product)
+        public virtual void UpdateProduct(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -210,7 +210,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
-        public IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
+        public virtual IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax,
             int relatedToProductId, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
@@ -438,7 +438,7 @@ namespace Nop.Services.Catalog
         /// Update product review totals
         /// </summary>
         /// <param name="product">Product</param>
-        public void UpdateProductReviewTotals(Product product)
+        public virtual void UpdateProductReviewTotals(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -477,7 +477,7 @@ namespace Nop.Services.Catalog
         /// Get low stock product variants
         /// </summary>
         /// <returns>Result</returns>
-        public IList<ProductVariant> GetLowStockProductVariants()
+        public virtual IList<ProductVariant> GetLowStockProductVariants()
         {
             var query = from pv in _productVariantRepository.Table
                         orderby pv.MinStockQuantity
@@ -493,7 +493,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Product variant</returns>
-        public ProductVariant GetProductVariantById(int productVariantId)
+        public virtual ProductVariant GetProductVariantById(int productVariantId)
         {
             if (productVariantId == 0)
                 return null;
@@ -511,7 +511,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="sku">SKU</param>
         /// <returns>Product variant</returns>
-        public ProductVariant GetProductVariantBySku(string sku)
+        public virtual ProductVariant GetProductVariantBySku(string sku)
         {
             if (String.IsNullOrEmpty(sku))
                 return null;
@@ -531,7 +531,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product variant
         /// </summary>
         /// <param name="productVariant">The product variant</param>
-        public void InsertProductVariant(ProductVariant productVariant)
+        public virtual void InsertProductVariant(ProductVariant productVariant)
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
@@ -547,7 +547,7 @@ namespace Nop.Services.Catalog
         /// Updates the product variant
         /// </summary>
         /// <param name="productVariant">The product variant</param>
-        public void UpdateProductVariant(ProductVariant productVariant)
+        public virtual void UpdateProductVariant(ProductVariant productVariant)
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
@@ -565,7 +565,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">The product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variant collection</returns>
-        public IList<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden = false)
+        public virtual IList<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden = false)
         {
             string key = string.Format(PRODUCTVARIANTS_ALL_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>
@@ -602,7 +602,7 @@ namespace Nop.Services.Catalog
         /// Delete a product variant
         /// </summary>
         /// <param name="productVariant">Product variant</param>
-        public void DeleteProductVariant(ProductVariant productVariant)
+        public virtual void DeleteProductVariant(ProductVariant productVariant)
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
@@ -619,7 +619,7 @@ namespace Nop.Services.Catalog
         /// <param name="decrease">A value indicating whether to increase or descrease product variant stock quantity</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        public void AdjustInventory(ProductVariant productVariant, bool decrease,
+        public virtual void AdjustInventory(ProductVariant productVariant, bool decrease,
             int quantity, string attributesXml)
         {
             if (productVariant == null)
@@ -721,7 +721,7 @@ namespace Nop.Services.Catalog
         /// Deletes a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        public void DeleteRelatedProduct(RelatedProduct relatedProduct)
+        public virtual void DeleteRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
@@ -735,7 +735,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Related product collection</returns>
-        public IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1, bool showHidden = false)
+        public virtual IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1, bool showHidden = false)
         {
             var query = from rp in _relatedProductRepository.Table
                         join p in _productRepository.Table on rp.ProductId2 equals p.Id
@@ -754,7 +754,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="relatedProductId">Related product identifer</param>
         /// <returns>Related product</returns>
-        public RelatedProduct GetRelatedProductById(int relatedProductId)
+        public virtual RelatedProduct GetRelatedProductById(int relatedProductId)
         {
             if (relatedProductId == 0)
                 return null;
@@ -767,7 +767,7 @@ namespace Nop.Services.Catalog
         /// Inserts a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        public void InsertRelatedProduct(RelatedProduct relatedProduct)
+        public virtual void InsertRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
@@ -779,7 +779,7 @@ namespace Nop.Services.Catalog
         /// Updates a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        public void UpdateRelatedProduct(RelatedProduct relatedProduct)
+        public virtual void UpdateRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
@@ -795,7 +795,7 @@ namespace Nop.Services.Catalog
         /// Deletes a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell identifer</param>
-        public void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
+        public virtual void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
                 throw new ArgumentNullException("crossSellProduct");
@@ -809,7 +809,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Cross-sell product collection</returns>
-        public IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false)
+        public virtual IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false)
         {
             var query = from csp in _crossSellProductRepository.Table
                         join p in _productRepository.Table on csp.ProductId2 equals p.Id
@@ -827,7 +827,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="crossSellProductId">Cross-sell product identifer</param>
         /// <returns>Cross-sell product</returns>
-        public CrossSellProduct GetCrossSellProductById(int crossSellProductId)
+        public virtual CrossSellProduct GetCrossSellProductById(int crossSellProductId)
         {
             if (crossSellProductId == 0)
                 return null;
@@ -840,7 +840,7 @@ namespace Nop.Services.Catalog
         /// Inserts a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
-        public void InsertCrossSellProduct(CrossSellProduct crossSellProduct)
+        public virtual void InsertCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
                 throw new ArgumentNullException("crossSellProduct");
@@ -852,7 +852,7 @@ namespace Nop.Services.Catalog
         /// Updates a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
-        public void UpdateCrossSellProduct(CrossSellProduct crossSellProduct)
+        public virtual void UpdateCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
                 throw new ArgumentNullException("crossSellProduct");
@@ -866,7 +866,7 @@ namespace Nop.Services.Catalog
         /// <param name="cart">Shopping cart</param>
         /// <param name="numberOfProducts">Number of products to return</param>
         /// <returns>Cross-sells</returns>
-        public IList<Product> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts)
+        public virtual IList<Product> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts)
         {
             var result = new List<Product>();
 
@@ -915,7 +915,7 @@ namespace Nop.Services.Catalog
         /// Deletes a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        public void DeleteTierPrice(TierPrice tierPrice)
+        public virtual void DeleteTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
@@ -932,7 +932,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="tierPriceId">Tier price identifier</param>
         /// <returns>Tier price</returns>
-        public TierPrice GetTierPriceById(int tierPriceId)
+        public virtual TierPrice GetTierPriceById(int tierPriceId)
         {
             if (tierPriceId == 0)
                 return null;
@@ -946,7 +946,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Tier price collection</returns>
-        public IList<TierPrice> GetTierPricesByProductVariantId(int productVariantId)
+        public virtual IList<TierPrice> GetTierPricesByProductVariantId(int productVariantId)
         {
             if (productVariantId == 0)
                 return new List<TierPrice>();
@@ -967,7 +967,7 @@ namespace Nop.Services.Catalog
         /// Inserts a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        public void InsertTierPrice(TierPrice tierPrice)
+        public virtual void InsertTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
@@ -983,7 +983,7 @@ namespace Nop.Services.Catalog
         /// Updates the tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        public void UpdateTierPrice(TierPrice tierPrice)
+        public virtual void UpdateTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
@@ -1003,7 +1003,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        public void DeleteProductPicture(ProductPicture productPicture)
+        public virtual void DeleteProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
                 throw new ArgumentNullException("productPicture");
@@ -1016,7 +1016,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">The product identifier</param>
         /// <returns>Product pictures</returns>
-        public IList<ProductPicture> GetProductPicturesByProductId(int productId)
+        public virtual IList<ProductPicture> GetProductPicturesByProductId(int productId)
         {
             var query = from pp in _productPictureRepository.Table
                         where pp.ProductId == productId
@@ -1031,7 +1031,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productPictureId">Product picture identifer</param>
         /// <returns>Product picture</returns>
-        public ProductPicture GetProductPictureById(int productPictureId)
+        public virtual ProductPicture GetProductPictureById(int productPictureId)
         {
             if (productPictureId == 0)
                 return null;
@@ -1044,7 +1044,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        public void InsertProductPicture(ProductPicture productPicture)
+        public virtual void InsertProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
                 throw new ArgumentNullException("productPicture");
@@ -1056,7 +1056,7 @@ namespace Nop.Services.Catalog
         /// Updates a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        public void UpdateProductPicture(ProductPicture productPicture)
+        public virtual void UpdateProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
                 throw new ArgumentNullException("productPicture");
