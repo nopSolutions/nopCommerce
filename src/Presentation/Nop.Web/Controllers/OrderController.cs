@@ -9,6 +9,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -22,8 +23,10 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
@@ -53,7 +56,10 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPdfService _pdfService;
         private readonly ICustomerService _customerService;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IUserService _userService;
 
+        private readonly LocalizationSettings _localizationSettings;
         private readonly MeasureSettings _measureSettings;
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
@@ -70,6 +76,8 @@ namespace Nop.Web.Controllers
             IDateTimeHelper dateTimeHelper, IMeasureService measureService,
             IPaymentService paymentService, ILocalizationService localizationService,
             IPdfService pdfService, ICustomerService customerService,
+            IWorkflowMessageService workflowMessageService, IUserService userService,
+            LocalizationSettings localizationSettings,
             MeasureSettings measureSettings, CatalogSettings catalogSettings,
             OrderSettings orderSettings, TaxSettings taxSettings, PdfSettings pdfSettings)
         {
@@ -84,7 +92,10 @@ namespace Nop.Web.Controllers
             this._localizationService = localizationService;
             this._pdfService = pdfService;
             this._customerService = customerService;
+            this._workflowMessageService = workflowMessageService;
+            this._userService = userService;
 
+            this._localizationSettings = localizationSettings;
             this._measureSettings = measureSettings;
             this._catalogSettings = catalogSettings;
             this._orderSettings = orderSettings;
@@ -476,6 +487,8 @@ namespace Nop.Web.Controllers
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToAction("Index", "Home");
 
+            var user = _workContext.CurrentCustomer.AssociatedUserId.HasValue ? _userService.GetUserById(_workContext.CurrentCustomer.AssociatedUserId.Value) : null;
+
             int count = 0;
             foreach (var opv in order.OrderProductVariants)
             {
@@ -503,7 +516,9 @@ namespace Nop.Web.Controllers
                     };
                     _workContext.CurrentCustomer.ReturnRequests.Add(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                    //TODO notify store owner here (email)
+                    //notify store owner here (email)
+                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, user, opv, _localizationSettings.DefaultAdminLanguageId);
+
                     count++;
                 }
             }

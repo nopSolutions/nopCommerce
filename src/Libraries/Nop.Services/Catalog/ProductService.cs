@@ -9,6 +9,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Core;
 using Nop.Services.Customers;
+using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog
 {
@@ -37,7 +38,9 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ICacheManager _cacheManager;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -55,6 +58,8 @@ namespace Nop.Services.Catalog
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
+        /// <param name="workflowMessageService">Workflow message service</param>
+        /// <param name="localizationSettings">Localization settings</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductVariant> productVariantRepository,
@@ -63,7 +68,9 @@ namespace Nop.Services.Catalog
             IRepository<TierPrice> tierPriceRepository,
             IRepository<ProductPicture> productPictureRepository,
             IProductAttributeService productAttributeService,
-            IProductAttributeParser productAttributeParser)
+            IProductAttributeParser productAttributeParser,
+            IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings)
         {
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
@@ -74,6 +81,8 @@ namespace Nop.Services.Catalog
             this._productPictureRepository = productPictureRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
+            this._workflowMessageService = workflowMessageService;
+            this._localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -653,17 +662,15 @@ namespace Nop.Services.Catalog
                             }
                         }
 
-                        if (decrease && productVariant.NotifyAdminForQuantityBelow > newStockQuantity)
-                        {
-                            //UNDONE send email notification
-                            //_messageService.SendQuantityBelowStoreOwnerNotification(productVariant, _localizationSettings.DefaultAdminLanguageId);
-                        }
-
                         productVariant.StockQuantity = newStockQuantity;
                         productVariant.DisableBuyButton = newDisableBuyButton;
                         productVariant.Published = newPublished;
                         UpdateProductVariant(productVariant);
 
+                        //send email notification
+                        if (decrease && productVariant.NotifyAdminForQuantityBelow > newStockQuantity)
+                            _workflowMessageService.SendQuantityBelowStoreOwnerNotification(productVariant, _localizationSettings.DefaultAdminLanguageId);
+                        
                         if (decrease)
                         {
                             var product = productVariant.Product;

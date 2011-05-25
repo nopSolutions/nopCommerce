@@ -449,6 +449,17 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id)));
         }
 
+        public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderProductVariant opv)
+        {
+
+            tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
+            tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
+            tokens.Add(new Token("ReturnRequest.Product.Name", HttpUtility.HtmlEncode(opv.ProductVariant.FullProductName)));
+            tokens.Add(new Token("ReturnRequest.Reason", HttpUtility.HtmlEncode(returnRequest.ReasonForReturn)));
+            tokens.Add(new Token("ReturnRequest.RequestedAction", HttpUtility.HtmlEncode(returnRequest.RequestedAction)));
+            tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false)));
+        }
+
         public virtual void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
         {
             tokens.Add(new Token("GiftCard.SenderName", HttpUtility.HtmlEncode(giftCard.SenderName)));

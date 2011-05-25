@@ -150,6 +150,17 @@ namespace Nop.Services.Messages
             return tokens;
         }
 
+        private IList<Token> GenerateTokens(ReturnRequest returnRequest, User user, OrderProductVariant opv)
+        {
+            var tokens = new List<Token>();
+
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddCustomerTokens(tokens, returnRequest.Customer, user);
+            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, opv);
+
+            return tokens;
+        }
+
         private IList<Token> GenerateTokens(GiftCard giftCard)
         {
             var tokens = new List<Token>();
@@ -382,7 +393,6 @@ namespace Nop.Services.Messages
             return SendNotification(messageTemplate, emailAccount,
                 languageId, orderTokens,
                 toEmail, toName);
-
         }
 
         /// <summary>
@@ -655,6 +665,64 @@ namespace Nop.Services.Messages
                 toEmail, toName);
         }
 
+        #endregion
+
+        #region Return requests
+
+        /// <summary>
+        /// Sends 'New Return Request' message to a store owner
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, User user, OrderProductVariant opv, int languageId)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
+
+            languageId = EnsureLanguageIsActive(languageId);
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("NewReturnRequest.StoreOwnerNotification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(returnRequest, user, opv);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, orderTokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends 'Return Request status changed' message to a customer
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, User user, OrderProductVariant opv, int languageId)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
+
+            languageId = EnsureLanguageIsActive(languageId);
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(returnRequest, user, opv);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var toEmail = user.Email;
+            var toName = string.Format("{0} {1}", returnRequest.Customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), returnRequest.Customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, orderTokens,
+                toEmail, toName);
+        }
+        
         #endregion
 
         #region Misc

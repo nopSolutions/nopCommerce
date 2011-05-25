@@ -4760,6 +4760,9 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+                <LocaleResource Name="NotifyCustomer">
+                  <Value>Notify customer about status change</Value>
+                </LocaleResource>
             </Children>
             </LocaleResource>
             <LocaleResource Name="System">
