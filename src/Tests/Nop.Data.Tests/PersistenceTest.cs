@@ -35,15 +35,19 @@ namespace Nop.Data.Tests
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="entity">Entity</param>
-        protected T SaveAndLoadEntity<T>(T entity) where T : BaseEntity
+        /// <param name="disposeContext">A value indicating whether to dispose context</param>
+        protected T SaveAndLoadEntity<T>(T entity, bool disposeContext = true) where T : BaseEntity
         {
             context.Set<T>().Add(entity);
             context.SaveChanges();
 
             object id = entity.Id;
 
-            context.Dispose();
-            context = new NopObjectContext(GetTestDbName());
+            if (disposeContext)
+            {
+                context.Dispose();
+                context = new NopObjectContext(GetTestDbName());
+            }
 
             var fromDb = context.Set<T>().Find(id);
             return fromDb;

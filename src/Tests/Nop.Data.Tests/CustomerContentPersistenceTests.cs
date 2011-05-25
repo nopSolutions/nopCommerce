@@ -37,8 +37,8 @@ namespace Nop.Data.Tests
         [Test]
         public void Can_get_customer_content_by_type()
         {
-            var customer = SaveAndLoadEntity<Customer>(GetTestCustomer());
-            var product = SaveAndLoadEntity<Product>(GetTestProduct());
+            var customer = SaveAndLoadEntity<Customer>(GetTestCustomer(), false);
+            var product = SaveAndLoadEntity<Product>(GetTestProduct(), false);
 
             var productReview = new ProductReview
             {
@@ -86,8 +86,8 @@ namespace Nop.Data.Tests
         [Test]
         public void Can_save_productReview_with_helpfulness()
         {
-            var customer = SaveAndLoadEntity<Customer>(GetTestCustomer());
-            var product = SaveAndLoadEntity<Product>(GetTestProduct());
+            var customer = SaveAndLoadEntity<Customer>(GetTestCustomer(), false);
+            var product = SaveAndLoadEntity<Product>(GetTestProduct(), false);
 
             var productReview = new ProductReview
             {
