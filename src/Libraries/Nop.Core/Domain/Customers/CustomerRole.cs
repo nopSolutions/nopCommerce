@@ -48,7 +48,7 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<Customer> Customers
         {
             get { return _customers ?? (_customers = new List<Customer>()); }
-            protected set { _customers = value; }
+            set { _customers = value; }
         }
 
         /// <summary>

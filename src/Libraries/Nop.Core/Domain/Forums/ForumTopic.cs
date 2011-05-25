@@ -98,7 +98,7 @@ namespace Nop.Core.Domain.Forums
         public virtual ICollection<ForumPost> ForumPosts
         {
             get { return _forumPosts ?? (_forumPosts = new List<ForumPost>()); }
-            protected set { _forumPosts = value; }
+            set { _forumPosts = value; }
         }
         /// <summary>
         /// Gets the number of replies

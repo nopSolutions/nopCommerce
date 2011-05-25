@@ -63,7 +63,7 @@ namespace Nop.Core.Domain.Directory
         public virtual ICollection<StateProvince> StateProvinces
         {
             get { return _stateProvinces ?? (_stateProvinces = new List<StateProvince>()); }
-            protected set { _stateProvinces = value; }
+            set { _stateProvinces = value; }
         }
         /// <summary>
         /// Gets or sets the addresses

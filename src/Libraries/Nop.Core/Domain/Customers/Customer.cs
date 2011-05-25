@@ -195,7 +195,7 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<CustomerRole> CustomerRoles
         {
             get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
-            protected set { _customerRoles = value; }
+            set { _customerRoles = value; }
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<CustomerAttribute> CustomerAttributes
         {
             get { return _customerAttributes ?? (_customerAttributes = new List<CustomerAttribute>()); }
-            protected set { _customerAttributes = value; }
+            set { _customerAttributes = value; }
         }
         /// <summary>
         /// Gets or sets shopping cart items

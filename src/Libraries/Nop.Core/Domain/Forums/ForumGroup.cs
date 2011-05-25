@@ -41,7 +41,7 @@ namespace Nop.Core.Domain.Forums
         public virtual ICollection<Forum> Forums
         {
             get { return _forums ?? (_forums = new List<Forum>()); }
-            protected set { _forums = value; }
+            set { _forums = value; }
         }
     }
 }

@@ -78,7 +78,7 @@ namespace Nop.Core.Domain.Forums
         public virtual ICollection<ForumTopic> ForumTopics
         {
             get { return _forumTopics ?? (_forumTopics = new List<ForumTopic>()); }
-            protected set { _forumTopics = value; }
+            set { _forumTopics = value; }
         }
         /// <summary>
         /// Gets the ForumGroup
