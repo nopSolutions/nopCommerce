@@ -42,6 +42,8 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<Language, LanguageModel>();
             //email account
             ViceVersa<EmailAccount, EmailAccountModel>();
+            //message template
+            ViceVersa<MessageTemplate, MessageTemplateModel>();
             //queued email
             Mapper.CreateMap<QueuedEmail, QueuedEmailModel>()
                 .ForMember(dest => dest.EmailAccountName,

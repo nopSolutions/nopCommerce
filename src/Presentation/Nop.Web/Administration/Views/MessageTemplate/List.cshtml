@@ -1,0 +1,36 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.MessageTemplateModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
+        @T("Admin.ContentManagement.MessageTemplates")
+    </div>
+    <div class="options">
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.MessageTemplateModel>(Model.Data)
+                    .Name("templates-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name)
+                            .Width(400);
+                        columns.Bound(x => x.IsActive)
+                            .Width(100)
+                            .Template(x => x.IsActive.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "MessageTemplate"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

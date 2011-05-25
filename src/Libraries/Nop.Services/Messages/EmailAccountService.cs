@@ -125,27 +125,5 @@ namespace Nop.Services.Messages
             var emailAccounts = query.ToList();
             return emailAccounts;
         }
-
-        /// <summary>
-        /// Gets or sets a store default email account
-        /// </summary>
-        public EmailAccount DefaultEmailAccount
-        {
-            get
-            {
-                int defaultEmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
-                var emailAccount = GetEmailAccountById(defaultEmailAccountId);
-                if (emailAccount == null)
-                    emailAccount = GetAllEmailAccounts().FirstOrDefault();
-
-                return emailAccount;
-            }
-            set
-            {
-                if (value != null)
-                    _emailAccountSettings.DefaultEmailAccountId = value.Id;
-            }
-        }
-
     }
 }

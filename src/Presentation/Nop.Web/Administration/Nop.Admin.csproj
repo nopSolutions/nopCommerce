@@ -79,6 +79,7 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CheckoutAttributeController.cs" />
     <Compile Include="Controllers\AffiliateController.cs" />
+    <Compile Include="Controllers\MessageTemplateController.cs" />
     <Compile Include="Controllers\PromotionFeedController.cs" />
     <Compile Include="Controllers\ProductReviewController.cs" />
     <Compile Include="Controllers\ReturnRequestController.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Models\CheckoutAttributeModel.cs" />
     <Compile Include="Models\CheckoutAttributeValueModel.cs" />
     <Compile Include="Models\AffiliateModel.cs" />
+    <Compile Include="Models\MessageTemplateModel.cs" />
     <Compile Include="Models\PromotionFeedModel.cs" />
     <Compile Include="Models\StateProvinceModel.cs" />
     <Compile Include="Models\CountryModel.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="Validators\CheckoutAttributeValueValidator.cs" />
     <Compile Include="Validators\CheckoutAttributeValidator.cs" />
     <Compile Include="Validators\AffiliateValidator.cs" />
+    <Compile Include="Validators\MessageTemplateValidator.cs" />
     <Compile Include="Validators\EmailAccountValidator.cs" />
     <Compile Include="Validators\StateProvinceValidator.cs" />
     <Compile Include="Validators\CountryValidator.cs" />
@@ -656,6 +659,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\RichEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MessageTemplate\_CreateOrUpdate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MessageTemplate\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MessageTemplate\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

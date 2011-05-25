@@ -234,6 +234,25 @@ namespace Nop.Admin
 
         #endregion
 
+        #region Message templates
+
+        public static MessageTemplateModel ToModel(this MessageTemplate entity)
+        {
+            return AutoMapper.Mapper.Map<MessageTemplate, MessageTemplateModel>(entity);
+        }
+
+        public static MessageTemplate ToEntity(this MessageTemplateModel model)
+        {
+            return AutoMapper.Mapper.Map<MessageTemplateModel, MessageTemplate>(model);
+        }
+
+        public static MessageTemplate ToEntity(this MessageTemplateModel model, MessageTemplate destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
         #region Queued email
 
         public static QueuedEmailModel ToModel(this QueuedEmail entity)

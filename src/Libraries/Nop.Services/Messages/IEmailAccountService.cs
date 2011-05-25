@@ -36,10 +36,5 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <returns>Email accounts list</returns>
         IList<EmailAccount> GetAllEmailAccounts();
-
-        /// <summary>
-        /// Gets or sets a store default email account
-        /// </summary>
-        EmailAccount DefaultEmailAccount { get; set; }
     }
 }

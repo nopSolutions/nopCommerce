@@ -149,6 +149,8 @@ namespace Nop.Services.Messages
 
         #endregion
 
+        #region Misc
+
         /// <summary>
         /// Sends a product review notification message to a store owner
         /// </summary>
@@ -184,15 +186,9 @@ namespace Nop.Services.Messages
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewVATSubmittedStoreOwnerNotification(Customer customer,
+        int SendNewVatSubmittedStoreOwnerNotification(Customer customer,
             string vatName, string vatAddress, int languageId);
 
-
-
-
-
-
-
- 
+        #endregion
     }
 }

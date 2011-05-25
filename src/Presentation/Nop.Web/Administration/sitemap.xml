@@ -35,9 +35,10 @@
         </siteMapNode>
         <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement">
             <siteMapNode title="Forums" nopResource="Admin.ContentManagement.Forums">
-                <siteMapNode title="Forums Settings" nopResource="Admin.ContentManagement.Forums.Settings" controller="Forum" action="Settings" />
-                <siteMapNode title="Manage Forums" nopResource="Admin.ContentManagement.Forums.Manage" controller="Forum" action="List" />
+                <siteMapNode title="Forums settings" nopResource="Admin.ContentManagement.Forums.Settings" controller="Forum" action="Settings" />
+                <siteMapNode title="Manage forums" nopResource="Admin.ContentManagement.Forums.Manage" controller="Forum" action="List" />
             </siteMapNode>
+          <siteMapNode title="Message templates" nopResource="Admin.ContentManagement.MessageTemplates" controller="MessageTemplate" action="List" />
         </siteMapNode>
         <siteMapNode title="Configuration" nopResource="Admin.Configuration">
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>

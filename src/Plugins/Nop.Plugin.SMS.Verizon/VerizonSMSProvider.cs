@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Principal;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
@@ -20,10 +21,12 @@ namespace Nop.Plugin.SMS.Verizon
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILogger _logger;
         private readonly StoreInformationSettings _storeSettings;
+        private readonly EmailAccountSettings _emailAccountSettings;
 
         public VerizonSMSProvider(ISettingService settingService,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
-            ILogger logger, StoreInformationSettings storeSettigs)
+            ILogger logger, StoreInformationSettings storeSettigs,
+            EmailAccountSettings emailAccountSettings)
         {
             this._settingService = settingService;
             this._queuedEmailService = queuedEmailService;
@@ -31,6 +34,7 @@ namespace Nop.Plugin.SMS.Verizon
             this._logger = logger;
 
             this._storeSettings = storeSettigs;
+            this._emailAccountSettings = emailAccountSettings;
         }
 
         /// <summary>
@@ -74,7 +78,9 @@ namespace Nop.Plugin.SMS.Verizon
         {
             try
             {
-                var emailAccount = _emailAccountService.DefaultEmailAccount;
+                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+                if (emailAccount == null)
+                    emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
 
                 var queuedEmail = new QueuedEmail()
                 {

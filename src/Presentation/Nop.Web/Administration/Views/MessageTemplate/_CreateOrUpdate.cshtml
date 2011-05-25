@@ -1,0 +1,112 @@
+﻿@model Nop.Admin.Models.MessageTemplateModel
+@using Nop.Web.Framework;
+@using Nop.Core.Domain.Catalog;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Admin.Models;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@*UNDONE display a list of all allowed message tokens*@
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name):
+        </td>
+        <td class="adminData">
+            @Model.Name
+            @Html.HiddenFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsActive):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.IsActive)
+            @Html.ValidationMessageFor(model => model.IsActive)
+        </td>
+    </tr>
+</table>
+@(Html.LocalizedEditor<MessageTemplateModel, MessageTemplateLocalizedModel>("messagetemplate-localized",
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].BccEmailAddresses):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.Locales[item].BccEmailAddresses)
+                @Html.ValidationMessageFor(model => model.Locales[item].BccEmailAddresses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].Subject):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.Locales[item].Subject)
+                @Html.ValidationMessageFor(model => model.Locales[item].Subject)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].Body):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => Model.Locales[item].Body, new { style = "Width: 450px; Height: 250px;" })
+                @Html.ValidationMessageFor(model => model.Locales[item].Body)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].EmailAccountId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => Model.Locales[item].EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))
+                @Html.ValidationMessageFor(model => model.Locales[item].EmailAccountId)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            </td>
+        </tr>
+    </table>
+    ,
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BccEmailAddresses):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.BccEmailAddresses)
+                @Html.ValidationMessageFor(model => model.BccEmailAddresses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Subject):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Subject)
+                @Html.ValidationMessageFor(model => model.Subject)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Body):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Body, new { style = "Width: 450px; Height: 250px;" })
+                @Html.ValidationMessageFor(model => model.Body)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EmailAccountId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName"))
+                @Html.ValidationMessageFor(model => model.EmailAccountId)
+            </td>
+        </tr>
+    </table>
+    ))

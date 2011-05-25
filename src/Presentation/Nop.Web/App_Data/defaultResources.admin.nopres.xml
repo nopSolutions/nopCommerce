@@ -2990,6 +2990,75 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="MessageTemplates">
+                <Value>Message templates</Value>
+                <Children>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to return message template list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="EditMessageTemplateDetails">
+                    <Value>Edit message template details</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="Name">
+                        <Value>Name</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The name of this template (read only).</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="BccEmailAddresses">
+                        <Value>BCC</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The blind carbon copy (BCC) recipients for this e-mail message.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Subject">
+                        <Value>Subject</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The subject of the message (email). TIP - You can include tokens in your subject.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Required">
+                            <Value>Subject is required.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Body">
+                        <Value>Body</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The body of your message.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Required">
+                            <Value>Body is required.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="IsActive">
+                        <Value>Is active</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Indicating whether the message template is active.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="EmailAccount">
+                        <Value>Email account</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The email account that will be used to send this message template.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
             </Children>
           </LocaleResource>
             <LocaleResource Name="Customers">
