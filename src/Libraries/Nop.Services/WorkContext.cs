@@ -61,7 +61,8 @@ namespace Nop.Services
                     customer = _customerService.GetCustomerByAssociatedUserId(user.Id);
                     if (customer == null)
                     {
-                        //TODO create a registed customer record 
+                        //TODO create a registed customer record
+                        //or throw an exception?
                         //ensure that all validation is skipped (e.g., email validation, etc)
                         //_customerService.InsertGuestCustomer(); _customerService.RegisterCustomer();
                         //_customerService.InsertCustomer();

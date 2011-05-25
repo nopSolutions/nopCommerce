@@ -69,9 +69,9 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Register customer
         /// </summary>
-        /// <param name="customerId">Customer identifier</param>
+        /// <param name="customer">Customer</param>
         /// <returns>Customer</returns>
-        Customer RegisterCustomer(int customerId);
+        void RegisterCustomer(Customer customer);
 
         /// <summary>
         /// Insert a customer

@@ -95,12 +95,13 @@
                             .HtmlAttributes(new { style = "text-align:center" })
                             .HeaderHtmlAttributes(new { style = "text-align:center" });
 
-                            columns.Bound(x => x.Id);
-                            columns.Bound(x => x.Priority);
-                            columns.Bound(x => x.From);
-                            columns.Bound(x => x.FromName);
-                            columns.Bound(x => x.CreatedOnUtc); //TODO convert ot user datetime
-                            columns.Bound(x => x.SentOnUtc);    //TODO convert ot user datetime
+                            columns.Bound(x => x.Id).Width(50);
+                            columns.Bound(x => x.Subject).Width(300);
+                            columns.Bound(x => x.Priority).Width(50);
+                            columns.Bound(x => x.From).Width(100);
+                            columns.Bound(x => x.FromName).Width(100);
+                            columns.Bound(x => x.CreatedOnUtc).Width(100); //TODO convert ot user datetime
+                            columns.Bound(x => x.SentOnUtc).Width(100);    //TODO convert ot user datetime
                             columns.Bound(x => x.Id)
                                 .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                                 .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")

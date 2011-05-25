@@ -55,6 +55,7 @@ namespace Nop.Services.Orders
         private readonly IDiscountService _discountService;
         private readonly IEncryptionService _encryptionService;
         private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
@@ -89,6 +90,7 @@ namespace Nop.Services.Orders
         /// <param name="discountService">Discount service</param>
         /// <param name="encryptionService">Encryption service</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
         /// <param name="taxSettings">Tax settings</param>
@@ -114,6 +116,7 @@ namespace Nop.Services.Orders
             IDiscountService discountService,
             IEncryptionService encryptionService,
             IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
@@ -135,6 +138,7 @@ namespace Nop.Services.Orders
             this._shoppingCartService = shoppingCartService;
             this._checkoutAttributeFormatter = checkoutAttributeFormatter;
             this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
             this._shippingService = shippingService;
             this._taxService = taxService;
             this._customerService = customerService;
@@ -184,36 +188,36 @@ namespace Nop.Services.Orders
                 os == OrderStatus.Complete
                 && notifyCustomer)
             {
-                //TODO implement notification
-                //int orderCompletedCustomerNotificationQueuedEmailId = _messageService.SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId);
-                //if (orderCompletedCustomerNotificationQueuedEmailId > 0)
-                //{
-                //    order.OrderNotes.Add(new OrderNote()
-                //    {
-                //        Note = string.Format("\"Order completed\" email (to customer) has been queued. Queued email identifier: {0}.", orderCompletedCustomerNotificationQueuedEmailId),
-                //        DisplayToCustomer = false,
-                //        CreatedOnUtc = DateTime.UtcNow
-                //    });
-                //    _orderService.UpdateOrder(order);
-                //}
+                //notification
+                int orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId);
+                if (orderCompletedCustomerNotificationQueuedEmailId > 0)
+                {
+                    order.OrderNotes.Add(new OrderNote()
+                    {
+                        Note = string.Format("\"Order completed\" email (to customer) has been queued. Queued email identifier: {0}.", orderCompletedCustomerNotificationQueuedEmailId),
+                        DisplayToCustomer = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+                    _orderService.UpdateOrder(order);
+                }
             }
 
             if (prevOrderStatus != OrderStatus.Cancelled &&
                 os == OrderStatus.Cancelled
                 && notifyCustomer)
             {
-                //TODO implement notification
-                //int orderCancelledCustomerNotificationQueuedEmailId = _messageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
-                //if (orderCancelledCustomerNotificationQueuedEmailId > 0)
-                //{
-                //    order.OrderNotes.Add(new OrderNote()
-                //    {
-                //        Note = string.Format("\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {0}.", orderCancelledCustomerNotificationQueuedEmailId),
-                //        DisplayToCustomer = false,
-                //        CreatedOnUtc = DateTime.UtcNow
-                //    });
-                //    _orderService.UpdateOrder(order);
-                //}
+                //notification
+                int orderCancelledCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
+                if (orderCancelledCustomerNotificationQueuedEmailId > 0)
+                {
+                    order.OrderNotes.Add(new OrderNote()
+                    {
+                        Note = string.Format("\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {0}.", orderCancelledCustomerNotificationQueuedEmailId),
+                        DisplayToCustomer = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+                    _orderService.UpdateOrder(order);
+                }
             }
 
             //reward points
@@ -1140,30 +1144,30 @@ namespace Nop.Services.Orders
                             });
                         _orderService.UpdateOrder(order);
 
-                        //UNDONE send email notifications
-                        //int orderPlacedStoreOwnerNotificationQueuedEmailId = _messageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
-                        //if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
-                        //{
-                        //    order.OrderNotes.Add(new OrderNote()
-                        //    {
-                        //        Note = string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId),
-                        //        DisplayToCustomer = false,
-                        //        CreatedOnUtc = DateTime.UtcNow
-                        //    });
-                        //    _orderService.UpdateOrder(order);
-                        //}
+                        //send email notifications
+                        int orderPlacedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                        if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
+                        {
+                            order.OrderNotes.Add(new OrderNote()
+                            {
+                                Note = string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId),
+                                DisplayToCustomer = false,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                            _orderService.UpdateOrder(order);
+                        }
 
-                        //int orderPlacedCustomerNotificationQueuedEmailId = messageService.SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId);
-                        //if (orderPlacedCustomerNotificationQueuedEmailId > 0)
-                        //{
-                        //    order.OrderNotes.Add(new OrderNote()
-                        //    {
-                        //        Note = string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId),
-                        //        DisplayToCustomer = false,
-                        //        CreatedOnUtc = DateTime.UtcNow
-                        //    });
-                        //    _orderService.UpdateOrder(order);
-                        //}
+                        int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId);
+                        if (orderPlacedCustomerNotificationQueuedEmailId > 0)
+                        {
+                            order.OrderNotes.Add(new OrderNote()
+                            {
+                                Note = string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId),
+                                DisplayToCustomer = false,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                            _orderService.UpdateOrder(order);
+                        }
 
                         //UNDONE send SMS
                         //_smsService.SendOrderPlacedNotification(order);
@@ -1458,18 +1462,18 @@ namespace Nop.Services.Orders
 
             if (notifyCustomer)
             {
-                //TODO notify customer
-                //int orderShippedCustomerNotificationQueuedEmailId = _messageService.SendOrderShippedCustomerNotification(order, order.CustomerLanguageId);
-                //if (orderShippedCustomerNotificationQueuedEmailId > 0)
-                //{
-                //    order.OrderNotes.Add(new OrderNote()
-                //    {
-                //        Note = string.Format("\"Shipped\" email (to customer) has been queued. Queued email identifier: {0}.", orderShippedCustomerNotificationQueuedEmailId),
-                //        DisplayToCustomer = false,
-                //        CreatedOnUtc = DateTime.UtcNow
-                //    });
-                //    _orderService.UpdateOrder(order);
-                //}
+                //otify customer
+                int orderShippedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderShippedCustomerNotification(order, order.CustomerLanguageId);
+                if (orderShippedCustomerNotificationQueuedEmailId > 0)
+                {
+                    order.OrderNotes.Add(new OrderNote()
+                    {
+                        Note = string.Format("\"Shipped\" email (to customer) has been queued. Queued email identifier: {0}.", orderShippedCustomerNotificationQueuedEmailId),
+                        DisplayToCustomer = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+                    _orderService.UpdateOrder(order);
+                }
             }
 
             //check order status
@@ -1523,18 +1527,18 @@ namespace Nop.Services.Orders
 
             if (notifyCustomer)
             {
-                //TODO send email notification
-                //int orderDeliveredCustomerNotificationQueuedEmailId = _messageService.SendOrderDeliveredCustomerNotification(order, order.CustomerLanguageId);
-                //if (orderDeliveredCustomerNotificationQueuedEmailId > 0)
-                //{
-                //    order.OrderNotes.Add(new OrderNote()
-                //    {
-                //        Note = string.Format("\"Delivered\" email (to customer) has been queued. Queued email identifier: {0}.", orderDeliveredCustomerNotificationQueuedEmailId),
-                //        DisplayToCustomer = false,
-                //        CreatedOnUtc = DateTime.UtcNow
-                //    });
-                //    _orderService.UpdateOrder(order);
-                //}
+                //send email notification
+                int orderDeliveredCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderDeliveredCustomerNotification(order, order.CustomerLanguageId);
+                if (orderDeliveredCustomerNotificationQueuedEmailId > 0)
+                {
+                    order.OrderNotes.Add(new OrderNote()
+                    {
+                        Note = string.Format("\"Delivered\" email (to customer) has been queued. Queued email identifier: {0}.", orderDeliveredCustomerNotificationQueuedEmailId),
+                        DisplayToCustomer = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+                    _orderService.UpdateOrder(order);
+                }
             }
 
             //check order status

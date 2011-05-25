@@ -151,6 +151,12 @@
                 <td class="adminData">
                     @Model.IsRecipientNotified.ToString()
                     <button type="submit" name="notifyRecipient" value="notifyRecipient" class="t-button">@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")</button>
+                    @if (!String.IsNullOrEmpty(Model.RecepientNotificationError))
+        {
+                        <div style="color: red">
+                            @Model.RecepientNotificationError
+                        </div>
+        }
                 </td>
             </tr>
         }

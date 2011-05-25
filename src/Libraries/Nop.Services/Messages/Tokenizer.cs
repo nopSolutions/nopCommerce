@@ -34,9 +34,7 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("tokens");
 
             foreach (var token in tokens)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token.Key),  HttpUtility.HtmlEncode(token.Value));
-            }
+                template = Replace(template, String.Format(@"%{0}%", token.Key),  token.Value);
             return template;
 
         }

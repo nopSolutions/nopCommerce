@@ -7,11 +7,13 @@ using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
@@ -28,21 +30,23 @@ namespace Nop.Admin.Controllers
 
         private readonly IGiftCardService _giftCardService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly ILocalizationService _localizationService;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion Fields
 
         #region Constructors
 
-        public GiftCardController(IGiftCardService giftCardService, 
-            IPriceFormatter priceFormatter, ILocalizationService localizationService,
-            IDateTimeHelper dateTimeHelper)
+        public GiftCardController(IGiftCardService giftCardService,
+            IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,
+            IDateTimeHelper dateTimeHelper, LocalizationSettings localizationSettings)
         {
             this._giftCardService = giftCardService;
             this._priceFormatter = priceFormatter;
-            this._localizationService = localizationService;
+            this._workflowMessageService = workflowMessageService;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -174,16 +178,32 @@ namespace Nop.Admin.Controllers
         {
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
-            int queuedEmailId = 0;
-            //TODO queue email notification 
-            // queuedEmailId = this.MessageService.SendGiftCardNotification(gc, customerLang.LanguageId);
-            if (queuedEmailId > 0)
+            model = giftCard.ToModel();
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.Id : null;
+            model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
+            model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
+            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc).ToString();
+
+            try
             {
-                giftCard.IsRecipientNotified = true;
-                _giftCardService.UpdateGiftCard(giftCard);
+                if (!CommonHelper.IsValidEmail(giftCard.RecipientEmail))
+                    throw new NopException("Recipient email is not valid");
+                if (!CommonHelper.IsValidEmail(giftCard.SenderEmail))
+                    throw new NopException("Sender email is not valid");
+
+                int queuedEmailId = _workflowMessageService.SendGiftCardNotification(giftCard, _localizationSettings.DefaultAdminLanguageId);
+                if (queuedEmailId > 0)
+                {
+                    giftCard.IsRecipientNotified = true;
+                    _giftCardService.UpdateGiftCard(giftCard);
+                }
+            }
+            catch (Exception exc)
+            {
+                model.RecepientNotificationError = exc.Message;
             }
 
-            return RedirectToAction("Edit", giftCard.Id);
+            return View(model);
         }
         
 

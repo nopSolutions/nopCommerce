@@ -57,6 +57,7 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.IsRecipientNotified")]
         public bool IsRecipientNotified { get; set; }
+        public string RecepientNotificationError { get; set; }
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.CreatedOn")]
         public string CreatedOnStr { get; set; }

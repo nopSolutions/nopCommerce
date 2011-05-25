@@ -20,6 +20,7 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
@@ -62,6 +63,7 @@ namespace Nop.Services.Tests.Orders
         ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         ICustomerService _customerService;
         IEncryptionService _encryptionService;
+        IWorkflowMessageService _workflowMessageService;
         OrderSettings _orderSettings;
         LocalizationSettings _localizationSettings;
 
@@ -128,7 +130,8 @@ namespace Nop.Services.Tests.Orders
             _shoppingCartService= MockRepository.GenerateMock<IShoppingCartService>();
             _checkoutAttributeFormatter= MockRepository.GenerateMock<ICheckoutAttributeFormatter>();
             _customerService= MockRepository.GenerateMock<ICustomerService>();
-            _encryptionService= MockRepository.GenerateMock<IEncryptionService>();
+            _encryptionService = MockRepository.GenerateMock<IEncryptionService>();
+            _workflowMessageService = MockRepository.GenerateMock<IWorkflowMessageService>();
 
             _orderSettings = new OrderSettings();
 
@@ -142,7 +145,7 @@ namespace Nop.Services.Tests.Orders
                 _giftCardService, _shoppingCartService, _checkoutAttributeFormatter,
                 _shippingService, _taxService,
                 _customerService, _discountService,
-                _encryptionService, _workContext,
+                _encryptionService, _workContext, _workflowMessageService,
                 _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings);
         }

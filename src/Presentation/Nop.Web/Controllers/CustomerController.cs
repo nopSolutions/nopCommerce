@@ -227,7 +227,7 @@ namespace Nop.Web.Controllers
 
                     var customer = _workContext.CurrentCustomer;
                     //now register 'Customer' entity
-                    customer = _customerService.RegisterCustomer(customer.Id);
+                    _customerService.RegisterCustomer(customer);
                     //associate it with this user
                     customer.AssociatedUserId = registrationResult.User.Id;
                     //properties
@@ -266,10 +266,18 @@ namespace Nop.Web.Controllers
                     if (isApproved)
                         _authenticationService.SignIn(registrationResult.User, true);
 
-                    //UNDONE notification
-                    //if (_customerService.NotifyNewCustomerRegistration)
-                    //    _messageWorkflowService.SendNewCustomerNotificationMessage(customer, _localizationService.DefaultAdminLanguage.LanguageId);
-
+                    //notifications
+                    if (_customerSettings.NotifyNewCustomerRegistration)
+                        _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, registrationResult.User, _localizationSettings.DefaultAdminLanguageId);
+                    if (_userSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
+                    {
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
+                        _workflowMessageService.SendCustomerEmailValidationMessage(customer, registrationResult.User, _workContext.WorkingLanguage.Id);
+                    }
+                    else
+                    {
+                        _workflowMessageService.SendCustomerWelcomeMessage(customer, registrationResult.User, _workContext.WorkingLanguage.Id);
+                    }
                     switch (_userSettings.UserRegistrationType)
                     {
                         case UserRegistrationType.EmailValidation:

@@ -222,18 +222,15 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Register customer
         /// </summary>
-        /// <param name="customerId">Customer identifier</param>
+        /// <param name="customer">Customer</param>
         /// <returns>Customer</returns>
-        public Customer RegisterCustomer(int customerId)
+        public void RegisterCustomer(Customer customer)
         {
-            var customer = GetCustomerById(customerId);
-
             if (customer == null)
-                throw new NopException(string.Format("Customer {0} could not be loaded", customerId));
+                throw new ArgumentNullException("customer");
 
             //TODO pass and save customer attributes as argument
-            //TODO check CustomerRegistrationType (Disabled, EmailValidation, AdminApproval, etc)
-            
+
             //add to 'Registered' role
             var registeredRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
             if (registeredRole == null)
@@ -248,20 +245,9 @@ namespace Nop.Services.Customers
             if (_rewardPointsSettings.Enabled &&
                 _rewardPointsSettings.PointsForRegistration > 0 &&
                 !customer.IsGuest())
-            {
-                //UNDONE uncomment code below to localize note 
-                //Currently we can't inject _localizationService due to curricular dependencies
-                //string note = _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration");
-                string note = "Registered as customer";
-                customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration, note);
-            }
+                customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration, "Registered as customer");
 
             _customerRepository.Update(customer);
-
-            //TODO Send welcome message / email validation message
-            bool notify = _customerSettings.NotifyNewCustomerRegistration;
-
-            return customer;
         }
 
         /// <summary>

@@ -474,8 +474,8 @@ namespace Nop.Services.Messages
 
 
             //TODO add a method for getting URL
-            tokens.Add(new Token("Order.PasswordRecoveryURL", user != null ? string.Format("{0}passwordrecovery/?prt={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), user.Email) : ""));
-            tokens.Add(new Token("Order.AccountActivationURL", user != null ? string.Format("{0}accountactivation/?act={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), user.Email) : ""));
+            tokens.Add(new Token("Customer.PasswordRecoveryURL", user != null ? string.Format("{0}passwordrecovery/?prt={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), user.Email) : ""));
+            tokens.Add(new Token("Customer.AccountActivationURL", user != null ? string.Format("{0}accountactivation/?act={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), user.Email) : ""));
             tokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/?guid={1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
         }
 
