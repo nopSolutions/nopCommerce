@@ -171,7 +171,7 @@ namespace Nop.Services.Logging
             
 
             var activity = new ActivityLog();
-            activity.ActivityLogTypeId = activityType.ActivityLogTypeId;
+            activity.ActivityLogTypeId = activityType.Id;
             activity.Customer = _workContext.CurrentCustomer;
             activity.Comment = comment;
             activity.CreatedOn = DateTime.UtcNow;
@@ -235,7 +235,7 @@ namespace Nop.Services.Logging
 
             
             var query = from al in _activityLogRepository.Table
-                        where al.ActivityLogId == activityLogId
+                        where al.Id == activityLogId
                         select al;
             var activityLog = query.SingleOrDefault();
             return activityLog;

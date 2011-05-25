@@ -10,11 +10,6 @@ namespace Nop.Core.Domain.Logging
     {
         #region Properties
         /// <summary>
-        /// Gets or sets the activity log identifier
-        /// </summary>
-        public int ActivityLogId { get; set; }
-
-        /// <summary>
         /// Gets or sets the activity log type identifier
         /// </summary>
         public int ActivityLogTypeId { get; set; }
