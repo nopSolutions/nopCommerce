@@ -11,27 +11,33 @@ namespace Nop.Core.Domain.Affiliates
     /// </summary>
     public partial class Affiliate : BaseEntity
     {
-        public Affiliate()
-        {
-            this.AffiliatedOrders = new List<Order>();
-            this.AffiliatedCustomers = new List<Customer>();
-        }
-        public int AddressId { get; set; }
+        private ICollection<Customer> _affiliatedCustomers;
+        private ICollection<Order> _affiliatedOrders;
+
+        public virtual int AddressId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public bool Deleted { get; set; }
+        public virtual bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is active
         /// </summary>
-        public bool Active { get; set; }
+        public virtual bool Active { get; set; }
 
         public virtual Address Address { get; set; }
 
-        public virtual ICollection<Customer> AffiliatedCustomers { get; set; }
+        public virtual ICollection<Customer> AffiliatedCustomers 
+        {
+            get { return _affiliatedCustomers ?? (_affiliatedCustomers = new List<Customer>()); }
+            protected set { _affiliatedCustomers = value; }
+        }
 
-        public virtual ICollection<Order> AffiliatedOrders { get; set; }
+        public virtual ICollection<Order> AffiliatedOrders
+        {
+            get { return _affiliatedOrders ?? (_affiliatedOrders = new List<Order>()); }
+            protected set { _affiliatedOrders = value; }            
+        }
     }
 }

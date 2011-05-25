@@ -16,7 +16,7 @@ namespace Nop.Services.Security
             this._securitySettings = securitySettings;
         }
 
-        public string CreateSaltKey(int size) 
+        public virtual string CreateSaltKey(int size) 
         {
             // Generate a cryptographic random number
             var rng = new RNGCryptoServiceProvider();
@@ -27,7 +27,7 @@ namespace Nop.Services.Security
             return Convert.ToBase64String(buff);
         }
 
-        public string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1")
+        public virtual string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1")
         {
             if (String.IsNullOrEmpty(passwordFormat))
                 passwordFormat = "SHA1";
@@ -38,7 +38,7 @@ namespace Nop.Services.Security
             return hashedPassword;
         }
 
-        public string EncryptText(string plainText, string encryptionPrivateKey = "") 
+        public virtual string EncryptText(string plainText, string encryptionPrivateKey = "") 
         {
             if (string.IsNullOrEmpty(plainText))
                 return plainText;
@@ -54,7 +54,7 @@ namespace Nop.Services.Security
             return Convert.ToBase64String(encryptedBinary);
         }
 
-        public string DecryptText(string cipherText, string encryptionPrivateKey = "") 
+        public virtual string DecryptText(string cipherText, string encryptionPrivateKey = "") 
         {
             if (String.IsNullOrEmpty(cipherText))
                 return cipherText;

@@ -11,37 +11,37 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the customer identifier who sent the message
         /// </summary>
-        public int FromCustomerId { get; set; }
+        public virtual int FromCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier who should receive the message
         /// </summary>
-        public int ToCustomerId { get; set; }
+        public virtual int ToCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the subject
         /// </summary>
-        public string Subject { get; set; }
+        public virtual string Subject { get; set; }
 
         /// <summary>
         /// Gets or sets the text
         /// </summary>
-        public string Text { get; set; }
+        public virtual string Text { get; set; }
 
         /// <summary>
         /// Gets or sets a value indivating whether message is read
         /// </summary>
-        public bool IsRead { get; set; }
+        public virtual bool IsRead { get; set; }
 
         /// <summary>
         /// Gets or sets a value indivating whether message is deleted by author
         /// </summary>
-        public bool IsDeletedByAuthor { get; set; }
+        public virtual bool IsDeletedByAuthor { get; set; }
 
         /// <summary>
         /// Gets or sets a value indivating whether message is deleted by recipient
         /// </summary>
-        public bool IsDeletedByRecipient { get; set; }
+        public virtual bool IsDeletedByRecipient { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

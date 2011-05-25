@@ -10,73 +10,67 @@ namespace Nop.Core.Domain.Forums
     /// </summary>
     public partial class ForumTopic : BaseEntity
     {
-        /// <summary>
-        /// ctor
-        /// </summary>
-        public ForumTopic()
-        {
-            this.ForumPosts = new List<ForumPost>();
-        }
+        private ICollection<ForumPost> _forumPosts;
 
         /// <summary>
         /// Gets or sets the forum identifier
         /// </summary>
-        public int ForumId { get; set; }
+        public virtual int ForumId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public virtual int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the topic type identifier
         /// </summary>
-        public int TopicTypeId { get; set; }
+        public virtual int TopicTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the subject
         /// </summary>
-        public string Subject { get; set; }
+        public virtual string Subject { get; set; }
 
         /// <summary>
         /// Gets or sets the number of posts
         /// </summary>
-        public int NumPosts { get; set; }
+        public virtual int NumPosts { get; set; }
 
         /// <summary>
         /// Gets or sets the number of views
         /// </summary>
-        public int Views { get; set; }
+        public virtual int Views { get; set; }
 
         /// <summary>
         /// Gets or sets the last post identifier
         /// </summary>
-        public int LastPostId { get; set; }
+        public virtual int LastPostId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post customer identifier
         /// </summary>
-        public int LastPostCustomerId { get; set; }
+        public virtual int LastPostCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post date and time
         /// </summary>
-        public DateTime? LastPostTime { get; set; }
+        public virtual DateTime? LastPostTime { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOnUtc { get; set; }
+        public virtual DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the forum topic type
         /// </summary>
-        public ForumTopicType ForumTopicType
+        public virtual ForumTopicType ForumTopicType
         {
             get
             {
@@ -101,12 +95,15 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// The posts in the topic
         /// </summary>
-        public virtual ICollection<ForumPost> ForumPosts { get; set; }
-
+        public virtual ICollection<ForumPost> ForumPosts
+        {
+            get { return _forumPosts ?? (_forumPosts = new List<ForumPost>()); }
+            protected set { _forumPosts = value; }
+        }
         /// <summary>
         /// Gets the number of replies
         /// </summary>
-        public int NumReplies
+        public virtual int NumReplies
         {
             get
             {
@@ -120,7 +117,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets the first ForumPost
         /// </summary>
-        public ForumPost FirstPost
+        public virtual ForumPost FirstPost
         {
             get
             {
@@ -136,7 +133,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets the last post
         /// </summary>
-        public ForumPost LastPost
+        public virtual ForumPost LastPost
         {
             get
             {
@@ -152,7 +149,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets the last post customer
         /// </summary>
-        public Customer LastPostCustomer
+        public virtual Customer LastPostCustomer
         {
             get
             {

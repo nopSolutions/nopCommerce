@@ -41,7 +41,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
         /// <returns>Download</returns>
-        public Download GetDownloadById(int downloadId)
+        public virtual Download GetDownloadById(int downloadId)
         {
             if (downloadId == 0)
                 return null;
@@ -54,7 +54,7 @@ namespace Nop.Services.Media
         /// Deletes a download
         /// </summary>
         /// <param name="download">Download</param>
-        public void DeleteDownload(Download download)
+        public virtual void DeleteDownload(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException("download");
@@ -66,7 +66,7 @@ namespace Nop.Services.Media
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
-        public void InsertDownload(Download download)
+        public virtual void InsertDownload(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException("download");
@@ -78,7 +78,7 @@ namespace Nop.Services.Media
         /// Updates the download
         /// </summary>
         /// <param name="download">Download</param>
-        public void UpdateDownload(Download download)
+        public virtual void UpdateDownload(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException("download");

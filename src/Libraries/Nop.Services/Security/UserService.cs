@@ -21,12 +21,12 @@ namespace Nop.Services.Security
             this._userSettings = userSettings;
         }
 
-        public User GetUserById(int id) 
+        public virtual User GetUserById(int id) 
         {
             return _userRepository.GetById(id);
         }
 
-        public User GetUserByUsername(string username)
+        public virtual User GetUserByUsername(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
                 return null;
@@ -39,7 +39,7 @@ namespace Nop.Services.Security
             return user;
         }
 
-        public User GetUserByEmail(string email)
+        public virtual User GetUserByEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
                 return null;
@@ -52,7 +52,7 @@ namespace Nop.Services.Security
             return user;
         }
 
-        public IPagedList<User> GetUsers(string email, string username, int pageIndex, int pageSize)
+        public virtual IPagedList<User> GetUsers(string email, string username, int pageIndex, int pageSize)
         {
             var query = _userRepository.Table;
             if (!String.IsNullOrWhiteSpace(email))
@@ -66,7 +66,7 @@ namespace Nop.Services.Security
             return users;
         }
 
-        public void InsertUser(User user)
+        public virtual void InsertUser(User user)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
@@ -74,7 +74,7 @@ namespace Nop.Services.Security
             _userRepository.Insert(user);
         }
 
-        public void UpdateUser(User user)
+        public virtual void UpdateUser(User user)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
@@ -82,7 +82,7 @@ namespace Nop.Services.Security
             _userRepository.Update(user);
         }
 
-        public void DeleteUser(User user)
+        public virtual void DeleteUser(User user)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
@@ -90,7 +90,7 @@ namespace Nop.Services.Security
             _userRepository.Delete(user);
         }
 
-        public bool ValidateUser(string usernameOrEmail, string password)
+        public virtual bool ValidateUser(string usernameOrEmail, string password)
         {
             User user = null;
             if (_userSettings.UsernamesEnabled)
@@ -127,7 +127,7 @@ namespace Nop.Services.Security
             return isValid;
         }
         
-        public UserRegistrationResult RegisterUser(UserRegistrationRequest request)
+        public virtual UserRegistrationResult RegisterUser(UserRegistrationRequest request)
         {
             var result = new UserRegistrationResult();
             if (request == null || !request.IsValid)
@@ -214,7 +214,7 @@ namespace Nop.Services.Security
             return result;
         }
 
-        public PasswordChangeResult ChangePassword(ChangePasswordRequest request)
+        public virtual PasswordChangeResult ChangePassword(ChangePasswordRequest request)
         {
             var result = new PasswordChangeResult();
             if (request == null || !request.IsValid)
@@ -302,7 +302,7 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="newEmail">New email</param>
-        public void SetEmail(User user, string newEmail)
+        public virtual void SetEmail(User user, string newEmail)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
@@ -328,7 +328,7 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="newUsername">New Username</param>
-        public void SetUsername(User user, string newUsername)
+        public virtual void SetUsername(User user, string newUsername)
         {
             if (user == null)
                 throw new ArgumentNullException("user");

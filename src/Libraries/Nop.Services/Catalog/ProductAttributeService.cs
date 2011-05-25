@@ -71,7 +71,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public void DeleteProductAttribute(ProductAttribute productAttribute)
+        public virtual void DeleteProductAttribute(ProductAttribute productAttribute)
         {
             if (productAttribute == null)
                 throw new ArgumentNullException("productAttribute");
@@ -88,7 +88,7 @@ namespace Nop.Services.Catalog
         /// Gets all product attributes
         /// </summary>
         /// <returns>Product attribute collection</returns>
-        public IList<ProductAttribute> GetAllProductAttributes()
+        public virtual IList<ProductAttribute> GetAllProductAttributes()
         {
             string key = PRODUCTATTRIBUTES_ALL_KEY;
             return _cacheManager.Get(key, () =>
@@ -106,7 +106,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <returns>Product attribute </returns>
-        public ProductAttribute GetProductAttributeById(int productAttributeId)
+        public virtual ProductAttribute GetProductAttributeById(int productAttributeId)
         {
             if (productAttributeId == 0)
                 return null;
@@ -123,7 +123,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public void InsertProductAttribute(ProductAttribute productAttribute)
+        public virtual void InsertProductAttribute(ProductAttribute productAttribute)
         {
             if (productAttribute == null)
                 throw new ArgumentNullException("productAttribute");
@@ -139,7 +139,7 @@ namespace Nop.Services.Catalog
         /// Updates the product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public void UpdateProductAttribute(ProductAttribute productAttribute)
+        public virtual void UpdateProductAttribute(ProductAttribute productAttribute)
         {
             if (productAttribute == null)
                 throw new ArgumentNullException("productAttribute");
@@ -159,7 +159,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product variant attribute mapping
         /// </summary>
         /// <param name="productVariantAttribute">Product variant attribute mapping</param>
-        public void DeleteProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
+        public virtual void DeleteProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
         {
             if (productVariantAttribute == null)
                 throw new ArgumentNullException("productVariantAttribute");
@@ -176,7 +176,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantId">The product variant identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        public IList<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId)
+        public virtual IList<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId)
         {
             string key = string.Format(PRODUCTVARIANTATTRIBUTES_ALL_KEY, productVariantId);
 
@@ -196,7 +196,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantAttributeId">Product variant attribute mapping identifier</param>
         /// <returns>Product variant attribute mapping</returns>
-        public ProductVariantAttribute GetProductVariantAttributeById(int productVariantAttributeId)
+        public virtual ProductVariantAttribute GetProductVariantAttributeById(int productVariantAttributeId)
         {
             if (productVariantAttributeId == 0)
                 return null;
@@ -212,7 +212,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product variant attribute mapping
         /// </summary>
         /// <param name="productVariantAttribute">The product variant attribute mapping</param>
-        public void InsertProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
+        public virtual void InsertProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
         {
             if (productVariantAttribute == null)
                 throw new ArgumentNullException("productVariantAttribute");
@@ -228,7 +228,7 @@ namespace Nop.Services.Catalog
         /// Updates the product variant attribute mapping
         /// </summary>
         /// <param name="productVariantAttribute">The product variant attribute mapping</param>
-        public void UpdateProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
+        public virtual void UpdateProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
         {
             if (productVariantAttribute == null)
                 throw new ArgumentNullException("productVariantAttribute");
@@ -248,7 +248,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product variant attribute value
         /// </summary>
         /// <param name="productVariantAttributeValue">Product variant attribute value</param>
-        public void DeleteProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
+        public virtual void DeleteProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
         {
             if (productVariantAttributeValue == null)
                 throw new ArgumentNullException("productVariantAttributeValue");
@@ -265,7 +265,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantAttributeId">The product variant attribute mapping identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        public IList<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId)
+        public virtual IList<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId)
         {
             string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_ALL_KEY, productVariantAttributeId);
             return _cacheManager.Get(key, () =>
@@ -284,7 +284,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
         /// <returns>Product variant attribute value</returns>
-        public ProductVariantAttributeValue GetProductVariantAttributeValueById(int productVariantAttributeValueId)
+        public virtual ProductVariantAttributeValue GetProductVariantAttributeValueById(int productVariantAttributeValueId)
         {
             if (productVariantAttributeValueId == 0)
                 return null;
@@ -301,7 +301,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product variant attribute value
         /// </summary>
         /// <param name="productVariantAttributeValue">The product variant attribute value</param>
-        public void InsertProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
+        public virtual void InsertProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
         {
             if (productVariantAttributeValue == null)
                 throw new ArgumentNullException("productVariantAttributeValue");
@@ -317,7 +317,7 @@ namespace Nop.Services.Catalog
         /// Updates the product variant attribute value
         /// </summary>
         /// <param name="productVariantAttributeValue">The product variant attribute value</param>
-        public void UpdateProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
+        public virtual void UpdateProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
         {
             if (productVariantAttributeValue == null)
                 throw new ArgumentNullException("productVariantAttributeValue");
@@ -337,7 +337,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product variant attribute combination
         /// </summary>
         /// <param name="combination">Product variant attribute combination</param>
-        public void DeleteProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
+        public virtual void DeleteProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
@@ -350,7 +350,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Product variant attribute combination collection</returns>
-        public IList<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId)
+        public virtual IList<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId)
         {
             if (productVariantId == 0)
                 return new List<ProductVariantAttributeCombination>();
@@ -368,7 +368,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantAttributeCombinationId">Product variant attribute combination identifier</param>
         /// <returns>Product variant attribute combination</returns>
-        public ProductVariantAttributeCombination GetProductVariantAttributeCombinationById(int productVariantAttributeCombinationId)
+        public virtual ProductVariantAttributeCombination GetProductVariantAttributeCombinationById(int productVariantAttributeCombinationId)
         {
             if (productVariantAttributeCombinationId == 0)
                 return null;
@@ -381,7 +381,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product variant attribute combination
         /// </summary>
         /// <param name="combination">Product variant attribute combination</param>
-        public void InsertProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
+        public virtual void InsertProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
@@ -393,7 +393,7 @@ namespace Nop.Services.Catalog
         /// Updates a product variant attribute combination
         /// </summary>
         /// <param name="combination">Product variant attribute combination</param>
-        public void UpdateProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
+        public virtual void UpdateProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");

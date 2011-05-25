@@ -35,14 +35,14 @@ namespace Nop.Data.Tests
         public void Can_save_and_load_permissionRecord_with_customerRoles()
         {
             var permissionRecord = GetTestPermissionRecord();
-            permissionRecord.CustomerRoles = new List<CustomerRole>()
-            {
-                new CustomerRole()
-                {
-                    Name = "Administrators",
-                    SystemName = "Administrators"
-                }
-            };
+            permissionRecord.CustomerRoles.Add
+                (
+                    new CustomerRole()
+                    {
+                        Name = "Administrators",
+                        SystemName = "Administrators"
+                    }
+                );
 
 
             var fromDb = SaveAndLoadEntity(permissionRecord);

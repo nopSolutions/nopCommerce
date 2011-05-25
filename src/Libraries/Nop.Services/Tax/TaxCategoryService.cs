@@ -48,7 +48,7 @@ namespace Nop.Services.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public void DeleteTaxCategory(TaxCategory taxCategory)
+        public virtual void DeleteTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
@@ -62,7 +62,7 @@ namespace Nop.Services.Tax
         /// Gets all tax categories
         /// </summary>
         /// <returns>Tax category collection</returns>
-        public IList<TaxCategory> GetAllTaxCategories()
+        public virtual IList<TaxCategory> GetAllTaxCategories()
         {
             string key = string.Format(TAXCATEGORIES_ALL_KEY);
             return _cacheManager.Get(key, () =>
@@ -80,7 +80,7 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <returns>Tax category</returns>
-        public TaxCategory GetTaxCategoryById(int taxCategoryId)
+        public virtual TaxCategory GetTaxCategoryById(int taxCategoryId)
         {
             if (taxCategoryId == 0)
                 return null;
@@ -97,7 +97,7 @@ namespace Nop.Services.Tax
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public void InsertTaxCategory(TaxCategory taxCategory)
+        public virtual void InsertTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
@@ -111,7 +111,7 @@ namespace Nop.Services.Tax
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public void UpdateTaxCategory(TaxCategory taxCategory)
+        public virtual void UpdateTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");

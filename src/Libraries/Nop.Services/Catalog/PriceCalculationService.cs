@@ -129,7 +129,7 @@ namespace Nop.Services.Catalog
         /// <param name="productVariant">Product variant</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <returns>Final price</returns>
-        public decimal GetFinalPrice(ProductVariant productVariant, 
+        public virtual decimal GetFinalPrice(ProductVariant productVariant, 
             bool includeDiscounts)
         {
             var customer = _workContext.CurrentCustomer;
@@ -143,7 +143,7 @@ namespace Nop.Services.Catalog
         /// <param name="customer">The customer</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <returns>Final price</returns>
-        public decimal GetFinalPrice(ProductVariant productVariant, 
+        public virtual decimal GetFinalPrice(ProductVariant productVariant, 
             Customer customer, 
             bool includeDiscounts)
         {
@@ -158,7 +158,7 @@ namespace Nop.Services.Catalog
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <returns>Final price</returns>
-        public decimal GetFinalPrice(ProductVariant productVariant, 
+        public virtual decimal GetFinalPrice(ProductVariant productVariant, 
             Customer customer, 
             decimal additionalCharge, 
             bool includeDiscounts)
@@ -176,7 +176,7 @@ namespace Nop.Services.Catalog
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>Final price</returns>
-        public decimal GetFinalPrice(ProductVariant productVariant, 
+        public virtual decimal GetFinalPrice(ProductVariant productVariant, 
             Customer customer,
             decimal additionalCharge, 
             bool includeDiscounts, 
@@ -217,7 +217,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         /// <returns>Discount amount</returns>
-        public decimal GetDiscountAmount(ProductVariant productVariant)
+        public virtual decimal GetDiscountAmount(ProductVariant productVariant)
         {
             var customer = _workContext.CurrentCustomer;
             return GetDiscountAmount(productVariant, customer, decimal.Zero);
@@ -229,7 +229,7 @@ namespace Nop.Services.Catalog
         /// <param name="productVariant">Product variant</param>
         /// <param name="customer">The customer</param>
         /// <returns>Discount amount</returns>
-        public decimal GetDiscountAmount(ProductVariant productVariant, 
+        public virtual decimal GetDiscountAmount(ProductVariant productVariant, 
             Customer customer)
         {
             return GetDiscountAmount(productVariant, customer, decimal.Zero);
@@ -242,7 +242,7 @@ namespace Nop.Services.Catalog
         /// <param name="customer">The customer</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <returns>Discount amount</returns>
-        public decimal GetDiscountAmount(ProductVariant productVariant, 
+        public virtual decimal GetDiscountAmount(ProductVariant productVariant, 
             Customer customer, 
             decimal additionalCharge)
         {
@@ -258,7 +258,7 @@ namespace Nop.Services.Catalog
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Discount amount</returns>
-        public decimal GetDiscountAmount(ProductVariant productVariant, 
+        public virtual decimal GetDiscountAmount(ProductVariant productVariant, 
             Customer customer,
             decimal additionalCharge, 
             out Discount appliedDiscount)
@@ -275,7 +275,7 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Product quantity</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Discount amount</returns>
-        public decimal GetDiscountAmount(ProductVariant productVariant, 
+        public virtual decimal GetDiscountAmount(ProductVariant productVariant, 
             Customer customer,
             decimal additionalCharge,
             int quantity, 
@@ -307,7 +307,7 @@ namespace Nop.Services.Catalog
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart item sub total</returns>
-        public decimal GetSubTotal(ShoppingCartItem shoppingCartItem, bool includeDiscounts)
+        public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem, bool includeDiscounts)
         {
             return GetUnitPrice(shoppingCartItem, includeDiscounts) * shoppingCartItem.Quantity;
         }
@@ -318,7 +318,7 @@ namespace Nop.Services.Catalog
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item)</returns>
-        public decimal GetUnitPrice(ShoppingCartItem shoppingCartItem, bool includeDiscounts)
+        public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem, bool includeDiscounts)
         {
             var customer = shoppingCartItem.Customer;
             decimal finalPrice = decimal.Zero;
@@ -362,7 +362,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <returns>Discount amount</returns>
-        public decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem)
+        public virtual decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem)
         {
             Discount appliedDiscount;
             return GetDiscountAmount(shoppingCartItem, out appliedDiscount);
@@ -374,7 +374,7 @@ namespace Nop.Services.Catalog
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Discount amount</returns>
-        public decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem, out Discount appliedDiscount)
+        public virtual decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem, out Discount appliedDiscount)
         {
             var customer = shoppingCartItem.Customer;
             appliedDiscount = null;

@@ -8,13 +8,7 @@ namespace Nop.Core.Domain.Forums
     /// </summary>
     public partial class ForumGroup : BaseEntity
     {
-        /// <summary>
-        /// ctor
-        /// </summary>
-        public ForumGroup()
-        {
-            this.Forums = new List<Forum>();
-        }
+        private ICollection<Forum> _forums;
 
         /// <summary>
         /// Gets or sets the name
@@ -44,6 +38,10 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the collection of Forums
         /// </summary>
-        public virtual ICollection<Forum> Forums { get; set; }
+        public virtual ICollection<Forum> Forums
+        {
+            get { return _forums ?? (_forums = new List<Forum>()); }
+            protected set { _forums = value; }
+        }
     }
 }

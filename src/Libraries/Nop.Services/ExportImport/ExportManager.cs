@@ -97,7 +97,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
         /// <returns>Result in XML format</returns>
-        public string ExportManufacturersToXml(IList<Manufacturer> manufacturers)
+        public virtual string ExportManufacturersToXml(IList<Manufacturer> manufacturers)
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
@@ -160,7 +160,7 @@ namespace Nop.Services.ExportImport
         /// Export category list to xml
         /// </summary>
         /// <returns>Result in XML format</returns>
-        public string ExportCategoriesToXml()
+        public virtual string ExportCategoriesToXml()
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
@@ -180,7 +180,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="products">Products</param>
         /// <returns>Result in XML format</returns>
-        public string ExportProductsToXml(IList<Product> products)
+        public virtual string ExportProductsToXml(IList<Product> products)
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
@@ -406,7 +406,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="products">Products</param>
-        public void ExportProductsToXls(string filePath, IList<Product> products)
+        public virtual void ExportProductsToXls(string filePath, IList<Product> products)
         {
             using (var excelHelper = new ExcelHelper(filePath))
             {
@@ -546,7 +546,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>Result in XML format</returns>
-        public string ExportOrdersToXml(IList<Order> orders)
+        public virtual string ExportOrdersToXml(IList<Order> orders)
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
@@ -657,7 +657,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="orders">Orders</param>
-        public void ExportOrdersToXls(string filePath, IList<Order> orders)
+        public virtual void ExportOrdersToXls(string filePath, IList<Order> orders)
         {
             using (var excelHelper = new ExcelHelper(filePath))
             {

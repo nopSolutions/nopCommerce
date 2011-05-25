@@ -52,20 +52,19 @@ namespace Nop.Data.Tests
                 IsTaxExempt = true,
                 TaxCategoryId = 1,
                 AttributeControlType = AttributeControlType.Datepicker,
-                DisplayOrder = 2,
-                CheckoutAttributeValues = new List<CheckoutAttributeValue>()
-                {
+                DisplayOrder = 2
+            };
+            ca.CheckoutAttributeValues.Add
+                (
                     new CheckoutAttributeValue()
                     {
                         Name = "Name 2",
-                        PriceAdjustment= 1, 
+                        PriceAdjustment = 1,
                         WeightAdjustment = 2,
                         IsPreSelected = true,
                         DisplayOrder = 3,
                     }
-                }
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(ca);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");

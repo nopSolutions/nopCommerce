@@ -43,7 +43,7 @@ namespace Nop.Services.Orders
         /// Deletes a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public void DeleteGiftCard(GiftCard giftCard)
+        public virtual void DeleteGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
@@ -56,7 +56,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
         /// <returns>Gift card entry</returns>
-        public GiftCard GetGiftCardById(int giftCardId)
+        public virtual GiftCard GetGiftCardById(int giftCardId)
         {
             if (giftCardId == 0)
                 return null;
@@ -73,7 +73,7 @@ namespace Nop.Services.Orders
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
         /// <param name="giftCardCouponCode">Gift card coupon code; null or string.empty to load all records</param>
         /// <returns>Gift cards</returns>
-        public IList<GiftCard> GetAllGiftCards(DateTime? startTime = null, DateTime? endTime = null,
+        public virtual IList<GiftCard> GetAllGiftCards(DateTime? startTime = null, DateTime? endTime = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = "")
         {
             var query = _giftCardRepository.Table;
@@ -95,7 +95,7 @@ namespace Nop.Services.Orders
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public void InsertGiftCard(GiftCard giftCard)
+        public virtual void InsertGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
@@ -107,7 +107,7 @@ namespace Nop.Services.Orders
         /// Updates the gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public void UpdateGiftCard(GiftCard giftCard)
+        public virtual void UpdateGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
@@ -121,7 +121,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Active gift cards</returns>
-        public IList<GiftCard> GetActiveGiftCardsAppliedByCustomer(Customer customer)
+        public virtual IList<GiftCard> GetActiveGiftCardsAppliedByCustomer(Customer customer)
         {
             var result = new List<GiftCard>();
             if (customer == null)
@@ -145,7 +145,7 @@ namespace Nop.Services.Orders
         /// Generate new gift card code
         /// </summary>
         /// <returns>Result</returns>
-        public string GenerateGiftCardCode()
+        public virtual string GenerateGiftCardCode()
         {
             int length = 13;
             string result = Guid.NewGuid().ToString();

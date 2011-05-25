@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents the product sorting

@@ -88,7 +88,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderId">The order identifier</param>
         /// <returns>Order</returns>
-        public Order GetOrderById(int orderId)
+        public virtual Order GetOrderById(int orderId)
         {
             if (orderId == 0)
                 return null;
@@ -101,7 +101,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
         /// <returns>Order</returns>
-        public Order GetOrderByGuid(Guid orderGuid)
+        public virtual Order GetOrderByGuid(Guid orderGuid)
         {
             if (orderGuid == Guid.Empty)
                 return null;
@@ -117,7 +117,7 @@ namespace Nop.Services.Orders
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
-        public void DeleteOrder(Order order)
+        public virtual void DeleteOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -139,7 +139,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
-        public IPagedList<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
+        public virtual IPagedList<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, string billingEmail, 
             string orderGuid, int pageIndex, int pageSize)
         {
@@ -184,7 +184,7 @@ namespace Nop.Services.Orders
         /// Load all orders
         /// </summary>
         /// <returns>Order collection</returns>
-        public IList<Order> LoadAllOrders()
+        public virtual IList<Order> LoadAllOrders()
         {
             return SearchOrders(null, null, null, null, null, null, null, 0, int.MaxValue);
         }
@@ -194,7 +194,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Order collection</returns>
-        public IList<Order> GetOrdersByCustomerId(int customerId)
+        public virtual IList<Order> GetOrdersByCustomerId(int customerId)
         {
             
             var query = from o in _orderRepository.Table
@@ -211,7 +211,7 @@ namespace Nop.Services.Orders
         /// <param name="authorizationTransactionId">Authorization transaction identifier</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
-        public Order GetOrderByAuthorizationTransactionIdAndPaymentMethodId(string authorizationTransactionId,
+        public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethodId(string authorizationTransactionId,
             string paymentMethodSystemName)
         {
             //TODO remove this method? We need it only in Google Checkout payment method
@@ -229,7 +229,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Order collection</returns>
-        public IList<Order> GetOrdersByAffiliateId(int affiliateId)
+        public virtual IList<Order> GetOrdersByAffiliateId(int affiliateId)
         {
             var query = from o in _orderRepository.Table
                         orderby o.CreatedOnUtc descending
@@ -243,7 +243,7 @@ namespace Nop.Services.Orders
         /// Inserts an order
         /// </summary>
         /// <param name="order">Order</param>
-        public void InsertOrder(Order order)
+        public virtual void InsertOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -255,7 +255,7 @@ namespace Nop.Services.Orders
         /// Updates the order
         /// </summary>
         /// <param name="order">The order</param>
-        public void UpdateOrder(Order order)
+        public virtual void UpdateOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -267,7 +267,7 @@ namespace Nop.Services.Orders
         /// Deletes an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
-        public void DeleteOrderNote(OrderNote orderNote)
+        public virtual void DeleteOrderNote(OrderNote orderNote)
         {
             if (orderNote == null)
                 throw new ArgumentNullException("orderNote");
@@ -284,7 +284,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderProductVariantId">Order product variant identifier</param>
         /// <returns>Order product variant</returns>
-        public OrderProductVariant GetOrderProductVariantById(int orderProductVariantId)
+        public virtual OrderProductVariant GetOrderProductVariantById(int orderProductVariantId)
         {
             if (orderProductVariantId == 0)
                 return null;
@@ -297,7 +297,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderProductVariantGuid">Order product variant identifier</param>
         /// <returns>Order product variant</returns>
-        public OrderProductVariant GetOrderProductVariantByGuid(Guid orderProductVariantGuid)
+        public virtual OrderProductVariant GetOrderProductVariantByGuid(Guid orderProductVariantGuid)
         {
             if (orderProductVariantGuid == Guid.Empty)
                 return null;
@@ -321,7 +321,7 @@ namespace Nop.Services.Orders
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order collection</returns>
-        public IList<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
+        public virtual IList<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
             int? customerId, DateTime? startTime, DateTime? endTime,
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             bool loadDownloableProductsOnly)
@@ -362,7 +362,7 @@ namespace Nop.Services.Orders
         /// Delete an order product variant
         /// </summary>
         /// <param name="orderProductVariant">The order product variant</param>
-        public void DeleteOrderProductVariant(OrderProductVariant orderProductVariant)
+        public virtual void DeleteOrderProductVariant(OrderProductVariant orderProductVariant)
         {
             if (orderProductVariant == null)
                 throw new ArgumentNullException("orderProductVariant");
@@ -378,7 +378,7 @@ namespace Nop.Services.Orders
         /// Deletes a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public void DeleteRecurringPayment(RecurringPayment recurringPayment)
+        public virtual void DeleteRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -392,7 +392,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPaymentId">The recurring payment identifier</param>
         /// <returns>Recurring payment</returns>
-        public RecurringPayment GetRecurringPaymentById(int recurringPaymentId)
+        public virtual RecurringPayment GetRecurringPaymentById(int recurringPaymentId)
         {
             if (recurringPaymentId == 0)
                 return null;
@@ -404,7 +404,7 @@ namespace Nop.Services.Orders
         /// Inserts a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public void InsertRecurringPayment(RecurringPayment recurringPayment)
+        public virtual void InsertRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -416,7 +416,7 @@ namespace Nop.Services.Orders
         /// Updates the recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public void UpdateRecurringPayment(RecurringPayment recurringPayment)
+        public virtual void UpdateRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -432,7 +432,7 @@ namespace Nop.Services.Orders
         /// <param name="initialOrderStatus">Initial order status identifier; null to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payment collection</returns>
-        public IList<RecurringPayment> SearchRecurringPayments(int customerId,
+        public virtual IList<RecurringPayment> SearchRecurringPayments(int customerId,
             int initialOrderId, OrderStatus? initialOrderStatus, bool showHidden = false)
         {
             int? initialOrderStatusId = null;
@@ -468,7 +468,7 @@ namespace Nop.Services.Orders
         /// Deletes a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        public void DeleteReturnRequest(ReturnRequest returnRequest)
+        public virtual void DeleteReturnRequest(ReturnRequest returnRequest)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
@@ -481,7 +481,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
         /// <returns>Return request</returns>
-        public ReturnRequest GetReturnRequestById(int returnRequestId)
+        public virtual ReturnRequest GetReturnRequestById(int returnRequestId)
         {
             if (returnRequestId == 0)
                 return null;
@@ -496,7 +496,7 @@ namespace Nop.Services.Orders
         /// <param name="orderProductVariantId">Order product variant identifier; null to load all entries</param>
         /// <param name="rs">Return request status; null to load all entries</param>
         /// <returns>Return requests</returns>
-        public IList<ReturnRequest> SearchReturnRequests(int customerId,
+        public virtual IList<ReturnRequest> SearchReturnRequests(int customerId,
             int orderProductVariantId, ReturnRequestStatus? rs)
         {
             var query = _returnRequestRepository.Table;

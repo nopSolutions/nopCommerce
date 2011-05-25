@@ -11,47 +11,47 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the log level identifier
         /// </summary>
-        public int LogLevelId { get; set; }
+        public virtual int LogLevelId { get; set; }
 
         /// <summary>
         /// Gets or sets the short message
         /// </summary>
-        public string ShortMessage { get; set; }
+        public virtual string ShortMessage { get; set; }
 
         /// <summary>
         /// Gets or sets the full exception
         /// </summary>
-        public string FullMessage { get; set; }
+        public virtual string FullMessage { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address
         /// </summary>
-        public string IpAddress { get; set; }
+        public virtual string IpAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public virtual int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the page URL
         /// </summary>
-        public string PageUrl { get; set; }
+        public virtual string PageUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the referrer URL
         /// </summary>
-        public string ReferrerUrl { get; set; }
+        public virtual string ReferrerUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the log level
         /// </summary>
-        public LogLevel LogLevel
+        public virtual LogLevel LogLevel
         {
             get
             {

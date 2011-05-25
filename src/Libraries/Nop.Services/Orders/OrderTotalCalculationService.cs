@@ -87,7 +87,7 @@ namespace Nop.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
-        public void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
+        public virtual void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
             out decimal discountAmount, out Discount appliedDiscount,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
         {
@@ -115,7 +115,7 @@ namespace Nop.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
-        public void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart, 
+        public virtual void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart, 
             bool includingTax,
             out decimal discountAmount, out Discount appliedDiscount,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
@@ -136,7 +136,7 @@ namespace Nop.Services.Orders
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         /// <param name="taxRates">Tax rates (of order sub total)</param>
-        public void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
+        public virtual void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
             bool includingTax,
             out decimal discountAmount, out Discount appliedDiscount,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
@@ -282,7 +282,7 @@ namespace Nop.Services.Orders
         /// <param name="orderSubTotal">Order subtotal</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Order discount</returns>
-        public decimal GetOrderSubtotalDiscount(Customer customer,
+        public virtual decimal GetOrderSubtotalDiscount(Customer customer,
             decimal orderSubTotal, out Discount appliedDiscount)
         {
             decimal discountAmount = decimal.Zero;
@@ -315,7 +315,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart)
+        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart)
         {
             bool includingTax = false;
             switch (_workContext.TaxDisplayType)
@@ -336,7 +336,7 @@ namespace Nop.Services.Orders
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax)
+        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax)
         {
             decimal taxRate = decimal.Zero;
             return GetShoppingCartShippingTotal(cart, includingTax, out taxRate);
@@ -349,7 +349,7 @@ namespace Nop.Services.Orders
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="taxRate">Applied tax rate</param>
         /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
+        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
             out decimal taxRate)
         {
             Discount appliedDiscount = null;
@@ -364,7 +364,7 @@ namespace Nop.Services.Orders
         /// <param name="taxRate">Applied tax rate</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shipping total</returns>
-        public decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
+        public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
             out decimal taxRate, out Discount appliedDiscount)
         {
             decimal? shippingTotalWithoutDiscount = null;
@@ -447,7 +447,7 @@ namespace Nop.Services.Orders
         /// <param name="shippingTotal">Shipping total</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shipping discount</returns>
-        public decimal GetShippingDiscount(Customer customer, decimal shippingTotal, out Discount appliedDiscount)
+        public virtual decimal GetShippingDiscount(Customer customer, decimal shippingTotal, out Discount appliedDiscount)
         {
             decimal shippingDiscountAmount = decimal.Zero;
 
@@ -484,7 +484,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>Tax total</returns>
-        public decimal GetTaxTotal(IList<ShoppingCartItem> cart)
+        public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -499,7 +499,7 @@ namespace Nop.Services.Orders
         /// <param name="cart">Shopping cart</param>
         /// <param name="taxRates">Tax rates</param>
         /// <returns>Tax total</returns>
-        public decimal GetTaxTotal(IList<ShoppingCartItem> cart,
+        public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart,
             out SortedDictionary<decimal, decimal> taxRates)
         {
             if (cart == null)
@@ -601,7 +601,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        public decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart)
+        public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart)
         {
             decimal discountAmount = decimal.Zero;
             Discount appliedDiscount = null;
@@ -624,7 +624,7 @@ namespace Nop.Services.Orders
         /// <param name="redeemedRewardPoints">Reward points to redeem</param>
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        public decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
+        public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
             out decimal discountAmount, out Discount appliedDiscount,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount)
@@ -794,7 +794,7 @@ namespace Nop.Services.Orders
         /// <param name="orderTotal">Order total</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Order discount</returns>
-        public decimal GetOrderTotalDiscount(Customer customer, decimal orderTotal, out Discount appliedDiscount)
+        public virtual decimal GetOrderTotalDiscount(Customer customer, decimal orderTotal, out Discount appliedDiscount)
         {
             decimal discountAmount = decimal.Zero;
 
@@ -828,7 +828,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="rewardPoints">Reward points</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertRewardPointsToAmount(int rewardPoints)
+        public virtual decimal ConvertRewardPointsToAmount(int rewardPoints)
         {
             decimal result = decimal.Zero;
             if (rewardPoints <= 0)
@@ -844,7 +844,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <returns>Converted value</returns>
-        public int ConvertAmountToRewardPoints(decimal amount)
+        public virtual int ConvertAmountToRewardPoints(decimal amount)
         {
             int result = 0;
             if (amount <= 0)

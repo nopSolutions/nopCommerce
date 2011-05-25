@@ -30,7 +30,7 @@ namespace Nop.Services.Messages
         /// Inserts a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
-        public void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
+        public virtual void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
         {
             if (newsLetterSubscription == null)
                 throw new ArgumentNullException("newsLetterSubscription");
@@ -51,7 +51,7 @@ namespace Nop.Services.Messages
         /// Updates a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
-        public void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
+        public virtual void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
         {
             if (newsLetterSubscription == null)
                 throw new ArgumentNullException("newsLetterSubscription");
@@ -73,7 +73,7 @@ namespace Nop.Services.Messages
         /// Deletes a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
-        public void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
+        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
         {
             if (newsLetterSubscription == null)
                 throw new ArgumentNullException("newsLetterSubscription");
@@ -86,7 +86,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
         {
             if (newsLetterSubscriptionId == 0)
                 return null;
@@ -100,7 +100,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
         /// <returns>NewsLetter subscription</returns>
-        public NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
         {
             if (newsLetterSubscriptionGuid == Guid.Empty)
                 return null;
@@ -118,7 +118,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="email">The newsletter subscription email</param>
         /// <returns>NewsLetter subscription</returns>
-        public NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email)
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email)
         {
             if (!CommonHelper.IsValidEmail(email))
                 return null;
@@ -140,7 +140,7 @@ namespace Nop.Services.Messages
         /// <param name="email">Email to search or string. Empty to load all records.</param>
         /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
         /// <returns>NewsLetterSubscription entity list</returns>
-        public IList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden = false)
+        public virtual IList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden = false)
         {
             //var query1 = from nls in _newsLetterSubscriptionRepository.Table
             //             from c in _customersRepository.Table
@@ -176,7 +176,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">The newsLetter subscription</param>
         /// <returns>Customer</returns>
-        public Customer GetNewsLetterSubscriptionCustomer(NewsLetterSubscription newsLetterSubscription)
+        public virtual Customer GetNewsLetterSubscriptionCustomer(NewsLetterSubscription newsLetterSubscription)
         {
             //TODO implement get customer by email functionality(customer entity doesn't have Email property anymore
 

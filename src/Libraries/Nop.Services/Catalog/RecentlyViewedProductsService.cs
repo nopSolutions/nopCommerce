@@ -94,7 +94,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="number">Number of products to load</param>
         /// <returns>"recently viewed products" list</returns>
-        public IList<Product> GetRecentlyViewedProducts(int number)
+        public virtual IList<Product> GetRecentlyViewedProducts(int number)
         {
             var products = new List<Product>();
             var productIds = GetRecentlyViewedProductsIds(number);
@@ -111,7 +111,7 @@ namespace Nop.Services.Catalog
         /// Adds a product to a recently viewed products list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public void AddProductToRecentlyViewedList(int productId)
+        public virtual void AddProductToRecentlyViewedList(int productId)
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return;

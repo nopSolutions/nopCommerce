@@ -64,7 +64,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public virtual IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             var exchangeRateProvider = LoadActiveExchangeRateProvider();
             return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
@@ -74,7 +74,7 @@ namespace Nop.Services.Directory
         /// Deletes currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public void DeleteCurrency(Currency currency)
+        public virtual void DeleteCurrency(Currency currency)
         {
             if (currency == null)
                 throw new ArgumentNullException("currency");
@@ -91,7 +91,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
         /// <returns>Currency</returns>
-        public Currency GetCurrencyById(int currencyId)
+        public virtual Currency GetCurrencyById(int currencyId)
         {
             if (currencyId == 0)
                 return null;
@@ -108,7 +108,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="currencyCode">Currency code</param>
         /// <returns>Currency</returns>
-        public Currency GetCurrencyByCode(string currencyCode)
+        public virtual Currency GetCurrencyByCode(string currencyCode)
         {
             if (String.IsNullOrEmpty(currencyCode))
                 return null;
@@ -120,7 +120,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Currency collection</returns>
-        public IList<Currency> GetAllCurrencies(bool showHidden = false)
+        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false)
         {
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
@@ -138,7 +138,7 @@ namespace Nop.Services.Directory
         /// Inserts a currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public void InsertCurrency(Currency currency)
+        public virtual void InsertCurrency(Currency currency)
         {
             if (currency == null)
                 throw new ArgumentNullException("currency");
@@ -152,7 +152,7 @@ namespace Nop.Services.Directory
         /// Updates the currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public void UpdateCurrency(Currency currency)
+        public virtual void UpdateCurrency(Currency currency)
         {
             if (currency == null)
                 throw new ArgumentNullException("currency");
@@ -170,7 +170,7 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="exchangeRate">Currency exchange rate</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertCurrency(decimal amount, decimal exchangeRate)
+        public virtual decimal ConvertCurrency(decimal amount, decimal exchangeRate)
         {
             if (amount != decimal.Zero && exchangeRate != decimal.Zero)
                 return amount * exchangeRate;
@@ -184,7 +184,7 @@ namespace Nop.Services.Directory
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
+        public virtual decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
             decimal result = amount;
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
@@ -203,7 +203,7 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertToPrimaryExchangeRateCurrency(decimal amount, Currency sourceCurrencyCode)
+        public virtual decimal ConvertToPrimaryExchangeRateCurrency(decimal amount, Currency sourceCurrencyCode)
         {
             decimal result = amount;
             var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
@@ -223,7 +223,7 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount, Currency targetCurrencyCode)
+        public virtual decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount, Currency targetCurrencyCode)
         {
             decimal result = amount;
             var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
@@ -243,7 +243,7 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertToPrimaryStoreCurrency(decimal amount, Currency sourceCurrencyCode)
+        public virtual decimal ConvertToPrimaryStoreCurrency(decimal amount, Currency sourceCurrencyCode)
         {
             decimal result = amount;
             var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
@@ -263,7 +263,7 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode)
+        public virtual decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode)
         {
             decimal result = amount;
             var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
@@ -276,7 +276,7 @@ namespace Nop.Services.Directory
         /// Load active exchange rate provider
         /// </summary>
         /// <returns>Active exchange rate provider</returns>
-        public IExchangeRateProvider LoadActiveExchangeRateProvider()
+        public virtual IExchangeRateProvider LoadActiveExchangeRateProvider()
         {
             var exchangeRateProvider = LoadExchangeRateProviderBySystemName(_currencySettings.ActiveExchangeRateProviderSystemName);
             if (exchangeRateProvider == null)
@@ -289,7 +289,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Found exchange rate provider</returns>
-        public IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName)
+        public virtual IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName)
         {
             var providers = LoadAllExchangeRateProviders();
             var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
@@ -300,7 +300,7 @@ namespace Nop.Services.Directory
         /// Load all exchange rate providers
         /// </summary>
         /// <returns>Exchange rate providers</returns>
-        public IList<IExchangeRateProvider> LoadAllExchangeRateProviders()
+        public virtual IList<IExchangeRateProvider> LoadAllExchangeRateProviders()
         {
             var exchangeRateProviders = _pluginFinder.GetPlugins<IExchangeRateProvider>();
             return exchangeRateProviders.OrderBy(tp => tp.FriendlyName).ToList();

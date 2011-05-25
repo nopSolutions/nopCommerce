@@ -42,17 +42,16 @@ namespace Nop.Data.Tests
                                LanguageCulture = "en-Us",
                                FlagImageFileName = "us.png",
                                Published = true,
-                               DisplayOrder = 1,
-                               LocaleStringResources = new List<LocaleStringResource>()
-                                                           {
-                                                               new LocaleStringResource()
-                                                                   {
-                                                                       ResourceName = "ResourceName1",
-                                                                       ResourceValue = "ResourceValue2"
-                                                                   }
-                                                           }
+                               DisplayOrder = 1
                            };
-
+            lang.LocaleStringResources.Add
+                (
+                    new LocaleStringResource()
+                    {
+                        ResourceName = "ResourceName1",
+                        ResourceValue = "ResourceValue2"
+                    }
+                );
             var fromDb = SaveAndLoadEntity(lang);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("English");

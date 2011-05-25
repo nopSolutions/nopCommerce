@@ -86,7 +86,7 @@ namespace Nop.Services.Shipping
         /// Load active shipping rate computation methods
         /// </summary>
         /// <returns>Shipping rate computation methods</returns>
-        public IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods()
+        public virtual IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods()
         {
             var systemNames = _shippingSettings.ActiveShippingRateComputationMethodSystemNames;
             var providers = new List<IShippingRateComputationMethod>();
@@ -103,7 +103,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Found Shipping rate computation method</returns>
-        public IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName)
+        public virtual IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName)
         {
             var providers = LoadAllShippingRateComputationMethods();
             var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
@@ -114,7 +114,7 @@ namespace Nop.Services.Shipping
         /// Load all shipping rate computation methods
         /// </summary>
         /// <returns>Shipping rate computation methods</returns>
-        public IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods()
+        public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods()
         {
             var providers = _pluginFinder.GetPlugins<IShippingRateComputationMethod>();
             return providers.OrderBy(tp => tp.FriendlyName).ToList();
@@ -129,7 +129,7 @@ namespace Nop.Services.Shipping
         /// Deletes a shipping method
         /// </summary>
         /// <param name="shippingMethod">The shipping method</param>
-        public void DeleteShippingMethod(ShippingMethod shippingMethod)
+        public virtual void DeleteShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
                 throw new ArgumentNullException("shippingMethod");
@@ -143,7 +143,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <returns>Shipping method</returns>
-        public ShippingMethod GetShippingMethodById(int shippingMethodId)
+        public virtual ShippingMethod GetShippingMethodById(int shippingMethodId)
         {
             if (shippingMethodId == 0)
                 return null;
@@ -160,7 +160,7 @@ namespace Nop.Services.Shipping
         /// Gets all shipping methods
         /// </summary>
         /// <returns>Shipping method collection</returns>
-        public IList<ShippingMethod> GetAllShippingMethods()
+        public virtual IList<ShippingMethod> GetAllShippingMethods()
         {
             var query = from sm in _shippingMethodRepository.Table
                         orderby sm.DisplayOrder
@@ -174,7 +174,7 @@ namespace Nop.Services.Shipping
         /// Inserts a shipping method
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
-        public void InsertShippingMethod(ShippingMethod shippingMethod)
+        public virtual void InsertShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
                 throw new ArgumentNullException("shippingMethod");
@@ -188,7 +188,7 @@ namespace Nop.Services.Shipping
         /// Updates the shipping method
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
-        public void UpdateShippingMethod(ShippingMethod shippingMethod)
+        public virtual void UpdateShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
                 throw new ArgumentNullException("shippingMethod");
@@ -207,7 +207,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <returns>Shopping cart item weight</returns>
-        public decimal GetShoppingCartItemTotalWeight(ShoppingCartItem shoppingCartItem)
+        public virtual decimal GetShoppingCartItemTotalWeight(ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -233,7 +233,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Shopping cart weight</returns>
-        public decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart)
+        public virtual decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart)
         {
             Customer customer = cart.GetCustomer();
 
@@ -260,7 +260,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Additional shipping charge</returns>
-        public decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
+        public virtual decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
         {
             decimal additionalShippingCharge = decimal.Zero;
             
@@ -280,7 +280,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>A value indicating whether shipping is free</returns>
-        public bool IsFreeShipping(IList<ShoppingCartItem> cart)
+        public virtual bool IsFreeShipping(IList<ShoppingCartItem> cart)
         {
             Customer customer = cart.GetCustomer();
             if (customer != null)
@@ -337,7 +337,7 @@ namespace Nop.Services.Shipping
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
         /// <returns>Shipment package</returns>
-        public GetShippingOptionRequest CreateShippingOptionRequest(IList<ShoppingCartItem> cart,
+        public virtual GetShippingOptionRequest CreateShippingOptionRequest(IList<ShoppingCartItem> cart,
             Address shippingAddress)
         {
             var request = new GetShippingOptionRequest();
@@ -362,7 +362,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <returns>Shipping options</returns>
-        public GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart,
+        public virtual GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart,
             Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "")
         {
             if (cart == null)

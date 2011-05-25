@@ -61,19 +61,18 @@ namespace Nop.Data.Tests
                 RequiresCouponCode = true,
                 CouponCode = "SecretCode",
                 DiscountLimitation = DiscountLimitationType.Unlimited,
-                LimitationTimes = 3,
-                DiscountRequirements = new List<DiscountRequirement>()
-                {
+                LimitationTimes = 3
+            };
+            discount.DiscountRequirements.Add
+                (
                      new DiscountRequirement()
                      {
                          DiscountRequirementRuleSystemName = "BillingCountryIs",
                          SpentAmount = 1,
                          BillingCountryId = 2,
-                         ShippingCountryId =3,
+                         ShippingCountryId = 3,
                      }
-                }
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(discount);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Discount 1");
@@ -98,13 +97,9 @@ namespace Nop.Data.Tests
                 RequiresCouponCode = true,
                 CouponCode = "SecretCode",
                 DiscountLimitation = DiscountLimitationType.Unlimited,
-                LimitationTimes = 3,
-                AppliedToProductVariants = new List<ProductVariant>()
-                {
-                     GetTestProductVariant()
-                }
+                LimitationTimes = 3
             };
-
+            discount.AppliedToProductVariants.Add(GetTestProductVariant());
             var fromDb = SaveAndLoadEntity(discount);
             fromDb.ShouldNotBeNull();
 
@@ -130,13 +125,9 @@ namespace Nop.Data.Tests
                 RequiresCouponCode = true,
                 CouponCode = "SecretCode",
                 DiscountLimitation = DiscountLimitationType.Unlimited,
-                LimitationTimes = 3,
-                AppliedToCategories = new List<Category>()
-                {
-                     GetTestCategory()
-                }
+                LimitationTimes = 3
             };
-
+            discount.AppliedToCategories.Add(GetTestCategory());
             var fromDb = SaveAndLoadEntity(discount);
             fromDb.ShouldNotBeNull();
 

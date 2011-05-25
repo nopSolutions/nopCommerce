@@ -57,7 +57,7 @@ namespace Nop.Services.Localization
         /// Deletes a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        public void DeleteLocaleStringResource(LocaleStringResource localeStringResource)
+        public virtual void DeleteLocaleStringResource(LocaleStringResource localeStringResource)
         {
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
@@ -73,7 +73,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="localeStringResourceId">Locale string resource identifier</param>
         /// <returns>Locale string resource</returns>
-        public LocaleStringResource GetLocaleStringResourceById(int localeStringResourceId)
+        public virtual LocaleStringResource GetLocaleStringResourceById(int localeStringResourceId)
         {
             if (localeStringResourceId == 0)
                 return null;
@@ -88,7 +88,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Locale string resource collection</returns>
-        public Dictionary<string, LocaleStringResource> GetAllResourcesByLanguageId(int languageId)
+        public virtual Dictionary<string, LocaleStringResource> GetAllResourcesByLanguageId(int languageId)
         {
             string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
             return _cacheManager.Get(key, () =>
@@ -107,7 +107,7 @@ namespace Nop.Services.Localization
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        public void InsertLocaleStringResource(LocaleStringResource localeStringResource)
+        public virtual void InsertLocaleStringResource(LocaleStringResource localeStringResource)
         {
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
@@ -122,7 +122,7 @@ namespace Nop.Services.Localization
         /// Updates the locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        public void UpdateLocaleStringResource(LocaleStringResource localeStringResource)
+        public virtual void UpdateLocaleStringResource(LocaleStringResource localeStringResource)
         {
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
@@ -138,7 +138,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="resourceKey">A string representing a ResourceKey.</param>
         /// <returns>A string representing the requested resource string.</returns>
-        public string GetResource(string resourceKey)
+        public virtual string GetResource(string resourceKey)
         {
             if (_workContext.WorkingLanguage != null)
                 return GetResource(resourceKey, _workContext.WorkingLanguage.Id);
@@ -155,7 +155,7 @@ namespace Nop.Services.Localization
         /// <param name="defaultValue">Default value</param>
         /// <param name="returnEmptyIfNotNotFound">A value indicating whether to empty string will be returned if a resource is not found and default value is set to empty string</param>
         /// <returns>A string representing the requested resource string.</returns>
-        public string GetResource(string resourceKey, int languageId,
+        public virtual string GetResource(string resourceKey, int languageId,
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotNotFound = false)
         {
             string result = string.Empty;

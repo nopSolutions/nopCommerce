@@ -52,7 +52,7 @@ namespace Nop.Services.Localization
         /// Deletes a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
-        public void DeleteLocalizedProperty(LocalizedProperty localizedProperty)
+        public virtual void DeleteLocalizedProperty(LocalizedProperty localizedProperty)
         {
             if (localizedProperty == null)
                 throw new ArgumentNullException("localizedProperty");
@@ -68,7 +68,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="localizedPropertyId">Localized property identifier</param>
         /// <returns>Localized property</returns>
-        public LocalizedProperty GetLocalizedPropertyById(int localizedPropertyId)
+        public virtual LocalizedProperty GetLocalizedPropertyById(int localizedPropertyId)
         {
             if (localizedPropertyId == 0)
                 return null;
@@ -83,7 +83,7 @@ namespace Nop.Services.Localization
         /// <param name="entityId">Entity identifier</param>
         /// <param name="localeKeyGroup">Locale key group</param>
         /// <returns>Localized properties</returns>
-        public IList<LocalizedProperty> GetLocalizedProperties(int entityId, string localeKeyGroup)
+        public virtual IList<LocalizedProperty> GetLocalizedProperties(int entityId, string localeKeyGroup)
         {
             if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
                 return new List<LocalizedProperty>();
@@ -105,7 +105,7 @@ namespace Nop.Services.Localization
         /// Inserts a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
-        public void InsertLocalizedProperty(LocalizedProperty localizedProperty)
+        public virtual void InsertLocalizedProperty(LocalizedProperty localizedProperty)
         {
             if (localizedProperty == null)
                 throw new ArgumentNullException("localizedProperty");
@@ -120,7 +120,7 @@ namespace Nop.Services.Localization
         /// Updates the localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
-        public void UpdateLocalizedProperty(LocalizedProperty localizedProperty)
+        public virtual void UpdateLocalizedProperty(LocalizedProperty localizedProperty)
         {
             if (localizedProperty == null)
                 throw new ArgumentNullException("localizedProperty");
@@ -139,7 +139,7 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Ley selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
-        public void SaveLocalizedValue<T>(T entity,
+        public virtual void SaveLocalizedValue<T>(T entity,
             Expression<Func<T, string>> keySelector,
             string localeValue,
             int languageId) where T : BaseEntity, ILocalizedEntity
@@ -147,7 +147,7 @@ namespace Nop.Services.Localization
             SaveLocalizedValue<T, string>(entity, keySelector, localeValue, languageId);
         }
 
-        public void SaveLocalizedValue<T, TPropType>(T entity,
+        public virtual void SaveLocalizedValue<T, TPropType>(T entity,
             Expression<Func<T, TPropType>> keySelector,
             TPropType localeValue,
             int languageId) where T : BaseEntity, ILocalizedEntity

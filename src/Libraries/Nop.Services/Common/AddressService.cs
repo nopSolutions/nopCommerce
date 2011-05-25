@@ -38,7 +38,7 @@ namespace Nop.Services.Common
         /// Deletes an address
         /// </summary>
         /// <param name="address">Address</param>
-        public void DeleteAddress(Address address)
+        public virtual void DeleteAddress(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");
@@ -64,7 +64,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="addressId">Address identifier</param>
         /// <returns>Address</returns>
-        public Address GetAddressById(int addressId)
+        public virtual Address GetAddressById(int addressId)
         {
             if (addressId == 0)
                 return null;
@@ -77,7 +77,7 @@ namespace Nop.Services.Common
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        public void InsertAddress(Address address)
+        public virtual void InsertAddress(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");
@@ -97,7 +97,7 @@ namespace Nop.Services.Common
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
-        public void UpdateAddress(Address address)
+        public virtual void UpdateAddress(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");

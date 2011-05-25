@@ -68,72 +68,71 @@ namespace Nop.Data.Tests
                               Published = true,
                               Deleted = false,
                               CreatedOnUtc = new DateTime(2010, 01, 01),
-                              UpdatedOnUtc = new DateTime(2010, 01, 02),
-                              ProductVariants = new List<ProductVariant>()
-                                                {
-                                                    new ProductVariant
-                                                    {
-                                                        Name = "Product variant name 1",
-                                                        Sku = "sku 1",
-                                                        Description = "description",
-                                                        AdminComment = "adminComment",
-                                                        ManufacturerPartNumber = "manufacturerPartNumber",
-                                                        IsGiftCard = true,
-                                                        GiftCardTypeId = 1,
-                                                        IsDownload = true,
-                                                        DownloadId = 2,
-                                                        UnlimitedDownloads = true,
-                                                        MaxNumberOfDownloads = 3,
-                                                        DownloadExpirationDays = 4,
-                                                        DownloadActivationTypeId = 5,
-                                                        HasSampleDownload = true,
-                                                        SampleDownloadId = 6,
-                                                        HasUserAgreement = true,
-                                                        UserAgreementText = "userAgreementText",
-                                                        IsRecurring = true,
-                                                        RecurringCycleLength = 7,
-                                                        RecurringCyclePeriodId = 8,
-                                                        RecurringTotalCycles = 9,
-                                                        IsShipEnabled = true,
-                                                        IsFreeShipping = true,
-                                                        AdditionalShippingCharge = 10,
-                                                        IsTaxExempt = true,
-                                                        TaxCategoryId = 11,
-                                                        ManageInventoryMethodId = 12,
-                                                        StockQuantity = 13,
-                                                        DisplayStockAvailability = true,
-                                                        DisplayStockQuantity = true,
-                                                        MinStockQuantity = 14,
-                                                        LowStockActivityId = 15,
-                                                        NotifyAdminForQuantityBelow = 16,
-                                                        BackorderModeId = 17,
-                                                        OrderMinimumQuantity = 18,
-                                                        OrderMaximumQuantity = 19,
-                                                        WarehouseId = 20,
-                                                        DisableBuyButton = true,
-                                                        CallForPrice = true,
-                                                        Price = 21,
-                                                        OldPrice = 22,
-                                                        ProductCost = 23,
-                                                        CustomerEntersPrice = true,
-                                                        MinimumCustomerEnteredPrice = 24,
-                                                        MaximumCustomerEnteredPrice = 25,
-                                                        Weight = 26,
-                                                        Length = 27,
-                                                        Width = 28,
-                                                        Height = 29,
-                                                        PictureId = 0,
-                                                        AvailableStartDateTimeUtc = new DateTime(2010, 01, 01),
-                                                        AvailableEndDateTimeUtc = new DateTime(2010, 01, 02),
-                                                        Published = true,
-                                                        Deleted = false,
-                                                        DisplayOrder = 31,
-                                                        CreatedOnUtc = new DateTime(2010, 01, 03),
-                                                        UpdatedOnUtc = new DateTime(2010, 01, 04)
-                                                    }
-                                                }
+                              UpdatedOnUtc = new DateTime(2010, 01, 02)
                           };
-
+            product.ProductVariants.Add
+                (
+                    new ProductVariant
+                    {
+                        Name = "Product variant name 1",
+                        Sku = "sku 1",
+                        Description = "description",
+                        AdminComment = "adminComment",
+                        ManufacturerPartNumber = "manufacturerPartNumber",
+                        IsGiftCard = true,
+                        GiftCardTypeId = 1,
+                        IsDownload = true,
+                        DownloadId = 2,
+                        UnlimitedDownloads = true,
+                        MaxNumberOfDownloads = 3,
+                        DownloadExpirationDays = 4,
+                        DownloadActivationTypeId = 5,
+                        HasSampleDownload = true,
+                        SampleDownloadId = 6,
+                        HasUserAgreement = true,
+                        UserAgreementText = "userAgreementText",
+                        IsRecurring = true,
+                        RecurringCycleLength = 7,
+                        RecurringCyclePeriodId = 8,
+                        RecurringTotalCycles = 9,
+                        IsShipEnabled = true,
+                        IsFreeShipping = true,
+                        AdditionalShippingCharge = 10,
+                        IsTaxExempt = true,
+                        TaxCategoryId = 11,
+                        ManageInventoryMethodId = 12,
+                        StockQuantity = 13,
+                        DisplayStockAvailability = true,
+                        DisplayStockQuantity = true,
+                        MinStockQuantity = 14,
+                        LowStockActivityId = 15,
+                        NotifyAdminForQuantityBelow = 16,
+                        BackorderModeId = 17,
+                        OrderMinimumQuantity = 18,
+                        OrderMaximumQuantity = 19,
+                        WarehouseId = 20,
+                        DisableBuyButton = true,
+                        CallForPrice = true,
+                        Price = 21,
+                        OldPrice = 22,
+                        ProductCost = 23,
+                        CustomerEntersPrice = true,
+                        MinimumCustomerEnteredPrice = 24,
+                        MaximumCustomerEnteredPrice = 25,
+                        Weight = 26,
+                        Length = 27,
+                        Width = 28,
+                        Height = 29,
+                        PictureId = 0,
+                        AvailableStartDateTimeUtc = new DateTime(2010, 01, 01),
+                        AvailableEndDateTimeUtc = new DateTime(2010, 01, 02),
+                        Published = true,
+                        Deleted = false,
+                        DisplayOrder = 31,
+                        CreatedOnUtc = new DateTime(2010, 01, 03),
+                        UpdatedOnUtc = new DateTime(2010, 01, 04)
+                    }
+                );
             var fromDb = SaveAndLoadEntity(product);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
@@ -153,36 +152,35 @@ namespace Nop.Data.Tests
                               Published = true,
                               Deleted = false,
                               CreatedOnUtc = new DateTime(2010, 01, 01),
-                              UpdatedOnUtc = new DateTime(2010, 01, 02),
-                              ProductCategories = new List<ProductCategory>()
-                                                  {
-                                                      new ProductCategory
-                                                      {
-                                                          IsFeaturedProduct = true,
-                                                          DisplayOrder = 1,
-                                                          Category = new Category()
-                                                                     {
-                                                                         Name = "Books",
-                                                                         Description = "Description 1",
-                                                                         MetaKeywords = "Meta keywords",
-                                                                         MetaDescription = "Meta description",
-                                                                         MetaTitle = "Meta title",
-                                                                         SeName = "SE name",
-                                                                         ParentCategoryId = 2,
-                                                                         PictureId = 3,
-                                                                         PageSize = 4,
-                                                                         PriceRanges = "1-3;",
-                                                                         ShowOnHomePage = false,
-                                                                         Published = true,
-                                                                         Deleted = false,
-                                                                         DisplayOrder = 5,
-                                                                         CreatedOnUtc = new DateTime(2010, 01, 01),
-                                                                         UpdatedOnUtc = new DateTime(2010, 01, 02),
-                                                                     }
-                                                      }
-                                                  }
+                              UpdatedOnUtc = new DateTime(2010, 01, 02)
                           };
-
+            product.ProductCategories.Add
+                (
+                    new ProductCategory
+                    {
+                        IsFeaturedProduct = true,
+                        DisplayOrder = 1,
+                        Category = new Category()
+                        {
+                            Name = "Books",
+                            Description = "Description 1",
+                            MetaKeywords = "Meta keywords",
+                            MetaDescription = "Meta description",
+                            MetaTitle = "Meta title",
+                            SeName = "SE name",
+                            ParentCategoryId = 2,
+                            PictureId = 3,
+                            PageSize = 4,
+                            PriceRanges = "1-3;",
+                            ShowOnHomePage = false,
+                            Published = true,
+                            Deleted = false,
+                            DisplayOrder = 5,
+                            CreatedOnUtc = new DateTime(2010, 01, 01),
+                            UpdatedOnUtc = new DateTime(2010, 01, 02),
+                        }
+                    }
+                );
             var fromDb = SaveAndLoadEntity(product);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
@@ -204,36 +202,35 @@ namespace Nop.Data.Tests
                               Published = true,
                               Deleted = false,
                               CreatedOnUtc = new DateTime(2010, 01, 01),
-                              UpdatedOnUtc = new DateTime(2010, 01, 02),
-                              ProductManufacturers = new List<ProductManufacturer>()
-                                                     {
-                                                         new ProductManufacturer
-                                                         {
-                                                             IsFeaturedProduct = true,
-                                                             DisplayOrder = 1,
-                                                             Manufacturer = new Manufacturer()
-                                                                            {
-                                                                                Name = "Name",
-                                                                                Description = "Description 1",
-                                                                                MetaKeywords = "Meta keywords",
-                                                                                MetaDescription = "Meta description",
-                                                                                MetaTitle = "Meta title",
-                                                                                SeName = "SE name",
-                                                                                PictureId = 3,
-                                                                                PageSize = 4,
-                                                                                PriceRanges = "1-3;",
-                                                                                Published = true,
-                                                                                Deleted = false,
-                                                                                DisplayOrder = 5,
-                                                                                CreatedOnUtc =
-                                                                                    new DateTime(2010, 01, 01),
-                                                                                UpdatedOnUtc =
-                                                                                    new DateTime(2010, 01, 02),
-                                                                            }
-                                                         }
-                                                     }
+                              UpdatedOnUtc = new DateTime(2010, 01, 02)
                           };
-
+            product.ProductManufacturers.Add
+                (
+                    new ProductManufacturer
+                    {
+                        IsFeaturedProduct = true,
+                        DisplayOrder = 1,
+                        Manufacturer = new Manufacturer()
+                        {
+                            Name = "Name",
+                            Description = "Description 1",
+                            MetaKeywords = "Meta keywords",
+                            MetaDescription = "Meta description",
+                            MetaTitle = "Meta title",
+                            SeName = "SE name",
+                            PictureId = 3,
+                            PageSize = 4,
+                            PriceRanges = "1-3;",
+                            Published = true,
+                            Deleted = false,
+                            DisplayOrder = 5,
+                            CreatedOnUtc =
+                                new DateTime(2010, 01, 01),
+                            UpdatedOnUtc =
+                                new DateTime(2010, 01, 02),
+                        }
+                    }
+                );
             var fromDb = SaveAndLoadEntity(product);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
@@ -255,22 +252,21 @@ namespace Nop.Data.Tests
                               Published = true,
                               Deleted = false,
                               CreatedOnUtc = new DateTime(2010, 01, 01),
-                              UpdatedOnUtc = new DateTime(2010, 01, 02),
-                              ProductPictures = new List<ProductPicture>()
-                                                {
-                                                    new ProductPicture
-                                                    {
-                                                        DisplayOrder = 1,
-                                                        Picture = new Picture()
-                                                                  {
-                                                                      PictureBinary = new byte[] {1, 2, 3},
-                                                                      MimeType = "image/pjpeg",
-                                                                      IsNew = true
-                                                                  }
-                                                    }
-                                                }
+                              UpdatedOnUtc = new DateTime(2010, 01, 02)
                           };
-
+            product.ProductPictures.Add
+                (
+                    new ProductPicture
+                    {
+                        DisplayOrder = 1,
+                        Picture = new Picture()
+                        {
+                            PictureBinary = new byte[] { 1, 2, 3 },
+                            MimeType = "image/pjpeg",
+                            IsNew = true
+                        }
+                    }
+                );
             var fromDb = SaveAndLoadEntity(product);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");

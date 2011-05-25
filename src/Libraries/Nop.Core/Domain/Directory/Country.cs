@@ -9,66 +9,70 @@ namespace Nop.Core.Domain.Directory
     /// </summary>
     public partial class Country : BaseEntity
     {
-        public Country() 
-        {
-            this.StateProvinces = new List<StateProvince>();
-            this.Addresses = new List<Address>();
-        }
+        private ICollection<StateProvince> _stateProvinces;
+        private ICollection<Address> _addresses;
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether billing is allowed to this country
         /// </summary>
-        public bool AllowsBilling { get; set; }
+        public virtual bool AllowsBilling { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether shipping is allowed to this country
         /// </summary>
-        public bool AllowsShipping { get; set; }
+        public virtual bool AllowsShipping { get; set; }
 
         /// <summary>
         /// Gets or sets the two letter ISO code
         /// </summary>
-        public string TwoLetterIsoCode { get; set; }
+        public virtual string TwoLetterIsoCode { get; set; }
 
         /// <summary>
         /// Gets or sets the three letter ISO code
         /// </summary>
-        public string ThreeLetterIsoCode { get; set; }
+        public virtual string ThreeLetterIsoCode { get; set; }
 
         /// <summary>
         /// Gets or sets the numeric ISO code
         /// </summary>
-        public int NumericIsoCode { get; set; }
+        public virtual int NumericIsoCode { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers in this country must be charged EU VAT
         /// </summary>
-        public bool SubjectToVat { get; set; }
+        public virtual bool SubjectToVat { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
-        public bool Published { get; set; }
+        public virtual bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
        
         /// <summary>
         /// Gets or sets the state/provinces
         /// </summary>
-        public virtual ICollection<StateProvince> StateProvinces { get; set; }
-
+        public virtual ICollection<StateProvince> StateProvinces
+        {
+            get { return _stateProvinces ?? (_stateProvinces = new List<StateProvince>()); }
+            protected set { _stateProvinces = value; }
+        }
         /// <summary>
         /// Gets or sets the addresses
         /// </summary>
-        public virtual ICollection<Address> Addresses { get; set; }
+        public virtual ICollection<Address> Addresses
+        {
+            get { return _addresses ?? (_addresses = new List<Address>()); }
+            protected set { _addresses = value; }
+        }
     }
 
 }

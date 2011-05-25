@@ -9,25 +9,22 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class SpecificationAttributeOption : BaseEntity, ILocalizedEntity
     {
-        public SpecificationAttributeOption() 
-        {
-            this.ProductSpecificationAttributes = new List<ProductSpecificationAttribute>();
-        }
+        private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
 
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
-        public int SpecificationAttributeId { get; set; }
+        public virtual int SpecificationAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
         
         /// <summary>
         /// Gets or sets the specification attribute
@@ -37,6 +34,10 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product specification attribute
         /// </summary>
-        public virtual ICollection<ProductSpecificationAttribute> ProductSpecificationAttributes { get; set; }
+        public virtual ICollection<ProductSpecificationAttribute> ProductSpecificationAttributes
+        {
+            get { return _productSpecificationAttributes ?? (_productSpecificationAttributes = new List<ProductSpecificationAttribute>()); }
+            protected set { _productSpecificationAttributes = value; }
+        }
     }
 }

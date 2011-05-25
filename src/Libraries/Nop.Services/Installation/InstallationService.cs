@@ -460,88 +460,86 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCountriesAndStates()
         {
-            var countries = new List<Country>
-                                {
-                                    new Country
-                                        {
-                                            Name = "United States",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            TwoLetterIsoCode = "US",
-                                            ThreeLetterIsoCode = "USA",
-                                            NumericIsoCode = 840,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 1,
-                                            Published = true,
-                                            StateProvinces = new List<StateProvince>()
-                                            {
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alabama",
-                                                    Abbreviation = "AL",
-                                                    Published = true,
-                                                    DisplayOrder = 1,
-                                                },
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alaska",
-                                                    Abbreviation = "AK",
-                                                    Published = true,
-                                                    DisplayOrder = 1,
-                                                },
-                                                //UNDONE insert other states
-                                                new StateProvince()
-                                                {
-                                                    Name = "New York",
-                                                    Abbreviation = "NY",
-                                                    Published = true,
-                                                    DisplayOrder = 1,
-                                                },
-                                            }
-                                        },
-                                    new Country
-                                        {
-                                            Name = "Canada",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            TwoLetterIsoCode = "CA",
-                                            ThreeLetterIsoCode = "CAN",
-                                            NumericIsoCode = 124,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 2,
-                                            Published = true,
-                                            StateProvinces = new List<StateProvince>()
-                                            {
-                                                new StateProvince()
-                                                {
-                                                    Name = "Alberta",
-                                                    Abbreviation = "AB",
-                                                    Published = true,
-                                                    DisplayOrder = 1,
-                                                },
-                                                new StateProvince()
-                                                {
-                                                    Name = "British Columbia",
-                                                    Abbreviation = "BC",
-                                                    Published = true,
-                                                    DisplayOrder = 1,
-                                                },
-                                                //UNDONE insert other states
-                                            }
-                                        },
-                                    new Country
-                                        {
-                                            Name = "Russia",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            TwoLetterIsoCode = "RU",
-                                            ThreeLetterIsoCode = "RUS",
-                                            NumericIsoCode = 643,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 100,
-                                            Published = true,
-                                        },
-                                };
+            var countries = new List<Country>();
+            var usa = new Country
+            {
+                Name = "United States",
+                AllowsBilling = true,
+                AllowsShipping = true,
+                TwoLetterIsoCode = "US",
+                ThreeLetterIsoCode = "USA",
+                NumericIsoCode = 840,
+                SubjectToVat = false,
+                DisplayOrder = 1,
+                Published = true
+            };
+
+            usa.StateProvinces.Add(new StateProvince()
+            {
+                Name = "Alabama",
+                Abbreviation = "AL",
+                Published = true,
+                DisplayOrder = 1,
+            });
+            usa.StateProvinces.Add(new StateProvince()
+            {
+                Name = "Alaska",
+                Abbreviation = "AK",
+                Published = true,
+                DisplayOrder = 1,
+            });
+            //UNDONE insert other states
+            usa.StateProvinces.Add(new StateProvince()
+            {
+                Name = "New York",
+                Abbreviation = "NY",
+                Published = true,
+                DisplayOrder = 1,
+            });
+            var canada = new Country
+            {
+                Name = "Canada",
+                AllowsBilling = true,
+                AllowsShipping = true,
+                TwoLetterIsoCode = "CA",
+                ThreeLetterIsoCode = "CAN",
+                NumericIsoCode = 124,
+                SubjectToVat = false,
+                DisplayOrder = 2,
+                Published = true
+            };
+
+            canada.StateProvinces.Add(new StateProvince()
+            {
+                Name = "Alberta",
+                Abbreviation = "AB",
+                Published = true,
+                DisplayOrder = 1,
+            });
+            canada.StateProvinces.Add(new StateProvince()
+            {
+                Name = "British Columbia",
+                Abbreviation = "BC",
+                Published = true,
+                DisplayOrder = 1,
+            });
+            var russia = new Country
+            {
+                Name = "Russia",
+                AllowsBilling = true,
+                AllowsShipping = true,
+                TwoLetterIsoCode = "RU",
+                ThreeLetterIsoCode = "RUS",
+                NumericIsoCode = 643,
+                SubjectToVat = false,
+                DisplayOrder = 100,
+                Published = true,
+            };
+
+
+            countries.Add(usa);
+            countries.Add(canada);
+            countries.Add(russia);                               
             countries.ForEach(c => _countryRepository.Insert(c));
 
         }
@@ -645,39 +643,37 @@ namespace Nop.Services.Installation
                 });
             testGuests.ForEach(c => _customerRepository.Insert(c));
 
-            var customerRoles = new List<CustomerRole>
-                                {
-                                    new CustomerRole
-                                        {
-                                            Name = "Administrators",
-                                            Active = true,
-                                            IsSystemRole = true,
-                                            SystemName = SystemCustomerRoleNames.Administrators,
-                                            Customers = new List<Customer>()
-                                            {
-                                                customers.FirstOrDefault()
-                                            }
-                                        },
-                                    new CustomerRole
-                                        {
-                                            Name = "Registered",
-                                            Active = true,
-                                            IsSystemRole = true,
-                                            SystemName = SystemCustomerRoleNames.Registered,
-                                            Customers = new List<Customer>()
-                                            {
-                                                customers.FirstOrDefault()
-                                            }
-                                        },
-                                    new CustomerRole
-                                        {
-                                            Name = "Guests",
-                                            Active = true,
-                                            IsSystemRole = true,
-                                            SystemName = SystemCustomerRoleNames.Guests,
-                                            Customers = testGuests
-                                        }
-                                };
+            var customerRoles = new List<CustomerRole>();
+                           
+            var administrators = new CustomerRole
+            {
+                Name = "Administrators",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Administrators
+            };
+            administrators.Customers.Add(customers.FirstOrDefault());
+
+            var registered = new CustomerRole
+            {
+                Name = "Registered",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Registered
+            };
+            registered.Customers.Add(customers.FirstOrDefault());
+            var guests = new CustomerRole
+            {
+                Name = "Guests",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Guests
+            };
+            testGuests.ToList().ForEach(x => guests.Customers.Add(x));
+
+            customerRoles.Add(administrators);
+            customerRoles.Add(registered);
+            customerRoles.Add(guests);
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
 
             //test users
@@ -1064,96 +1060,97 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallSpecificationAttributes()
         {
-            var specificationAttributes = new List<SpecificationAttribute>
-                                {
-                                    new SpecificationAttribute
-                                        {
-                                            Name = "Screensize",
-                                            DisplayOrder = 1,
-                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                                            {
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "10.0''",
-                                                    DisplayOrder = 3,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "14.1''",
-                                                    DisplayOrder = 4,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "15.4''",
-                                                    DisplayOrder = 5,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "16.0''",
-                                                    DisplayOrder = 6,
-                                                },
-                                            }
-                                        },
-                                    new SpecificationAttribute
-                                        {
-                                            Name = "CPU Type",
-                                            DisplayOrder = 2,
-                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                                            {
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "AMD",
-                                                    DisplayOrder = 1,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "Intel",
-                                                    DisplayOrder = 2,
-                                                },
-                                            }
-                                        },
-                                    new SpecificationAttribute
-                                        {
-                                            Name = "Memory",
-                                            DisplayOrder = 3,
-                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                                            {
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "1 GB",
-                                                    DisplayOrder = 1,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "3 GB",
-                                                    DisplayOrder = 2,
-                                                },
-                                            }
-                                        },
-                                    new SpecificationAttribute
-                                        {
-                                            Name = "Hardrive",
-                                            DisplayOrder = 5,
-                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                                            {
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "160 GB",
-                                                    DisplayOrder = 3,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "250 GB",
-                                                    DisplayOrder = 4,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "320 GB",
-                                                    DisplayOrder = 7,
-                                                },
-                                            }
-                                        },
-                                };
+            var specificationAttributes = new List<SpecificationAttribute>();
+            var screensize = new SpecificationAttribute
+            {
+                Name = "Screensize",
+                DisplayOrder = 1
+            };
+            screensize.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "10.0''",
+                DisplayOrder = 3,
+            });
+
+            screensize.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "14.1''",
+                DisplayOrder = 4,
+            });
+
+            screensize.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "15.4''",
+                DisplayOrder = 5,
+            });
+
+            screensize.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "16.0''",
+                DisplayOrder = 6,
+            });
+
+
+            var cpuType = new SpecificationAttribute
+            {
+                Name = "CPU Type",
+                DisplayOrder = 2
+            };
+            cpuType.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "AMD",
+                DisplayOrder = 1,
+            });
+
+            cpuType.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "Intel",
+                DisplayOrder = 2,
+            });
+
+            var memory = new SpecificationAttribute
+            {
+                Name = "Memory",
+                DisplayOrder = 3
+            };
+            memory.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "1 GB",
+                DisplayOrder = 1,
+            });
+
+            memory.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "3 GB",
+                DisplayOrder = 2,
+            });
+
+            var hardrive = new SpecificationAttribute
+            {
+                Name = "Hardrive",
+                DisplayOrder = 5
+            };
+            hardrive.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "160 GB",
+                DisplayOrder = 1,
+            });
+
+            hardrive.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "250 GB",
+                DisplayOrder = 2,
+            });
+
+            hardrive.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            {
+                Name = "320 GB",
+                DisplayOrder = 3,
+            });
+
+
+            specificationAttributes.AddRange(new[] { screensize, cpuType, memory, hardrive });
+
             specificationAttributes.ForEach(sa => _specificationAttributeRepository.Insert(sa));
 
         }
@@ -1539,8 +1536,7 @@ namespace Nop.Services.Installation
                     Description = "ForumGroup " + a.ToString() + " Description",
                     DisplayOrder = a,
                     CreatedOnUtc = DateTime.UtcNow,
-                    UpdatedOnUtc = DateTime.UtcNow,
-                    Forums = new List<Forum>()
+                    UpdatedOnUtc = DateTime.UtcNow
                 };
 
                 _forumGroupRepository.Insert(forumGroup);
@@ -1559,8 +1555,7 @@ namespace Nop.Services.Installation
                         DisplayOrder = b,
                         CreatedOnUtc = DateTime.UtcNow,
                         UpdatedOnUtc = DateTime.UtcNow,
-                        ForumGroup = forumGroup,
-                        ForumTopics = new List<ForumTopic>()
+                        ForumGroup = forumGroup
                     };
 
                     _forumRepository.Insert(forum);
@@ -1580,8 +1575,7 @@ namespace Nop.Services.Installation
                             LastPostId = 0,
                             LastPostTime = DateTime.UtcNow,
                             CreatedOnUtc = DateTime.UtcNow,
-                            UpdatedOnUtc = DateTime.UtcNow,
-                            ForumPosts = new List<ForumPost>()
+                            UpdatedOnUtc = DateTime.UtcNow
                         };
 
                         _forumTopicRepository.Insert(forumTopic);

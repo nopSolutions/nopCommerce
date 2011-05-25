@@ -8,35 +8,37 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductReview : CustomerContent
     {
+        private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;
+
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        public virtual int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the title
         /// </summary>
-        public string Title { get; set; }
+        public virtual string Title { get; set; }
 
         /// <summary>
         /// Gets or sets the review text
         /// </summary>
-        public string ReviewText { get; set; }
+        public virtual string ReviewText { get; set; }
 
         /// <summary>
         /// Review rating
         /// </summary>
-        public int Rating { get; set; }
+        public virtual int Rating { get; set; }
 
         /// <summary>
         /// Review helpful votes total
         /// </summary>
-        public int HelpfulYesTotal { get; set; }
+        public virtual int HelpfulYesTotal { get; set; }
 
         /// <summary>
         /// Review not helpful votes total
         /// </summary>
-        public int HelpfulNoTotal { get; set; }
+        public virtual int HelpfulNoTotal { get; set; }
 
         /// <summary>
         /// Gets the product
@@ -46,6 +48,10 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets the entries of product review helpfulness
         /// </summary>
-        public virtual ICollection<ProductReviewHelpfulness> ProductReviewHelpfulnessEntries { get; set; }
+        public virtual ICollection<ProductReviewHelpfulness> ProductReviewHelpfulnessEntries
+        {
+            get { return _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>()); }
+            protected set { _productReviewHelpfulnessEntries = value; }
+        }
     }
 }
