@@ -125,6 +125,8 @@
     <Compile Include="Media\DownloadService.cs" />
     <Compile Include="Media\IPictureService.cs" />
     <Compile Include="Media\PictureService.cs" />
+    <Compile Include="Messages\IMessageTokenProviderService.cs" />
+    <Compile Include="Messages\MessageTokenProviderService.cs" />
     <Compile Include="Messages\EmailAccountService.cs" />
     <Compile Include="Messages\EmailSender.cs" />
     <Compile Include="Messages\IEmailAccountService.cs" />

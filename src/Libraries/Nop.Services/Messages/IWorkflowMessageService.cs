@@ -6,6 +6,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Messages
 {
@@ -17,35 +18,38 @@ namespace Nop.Services.Messages
         /// Sends 'New customer' notification message to a store owner
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerRegisteredNotificationMessage(Customer customer, int languageId);
+        int SendCustomerRegisteredNotificationMessage(Customer customer, User user, int languageId);
 
         /// <summary>
         /// Sends a welcome message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerWelcomeMessage(Customer customer, int languageId);
+        int SendCustomerWelcomeMessage(Customer customer, User user, int languageId);
 
         /// <summary>
         /// Sends an email validation message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerEmailValidationMessage(Customer customer, int languageId);
+        int SendCustomerEmailValidationMessage(Customer customer, User user, int languageId);
 
         /// <summary>
         /// Sends password recovery message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId);
-
-
+        int SendCustomerPasswordRecoveryMessage(Customer customer, User user, int languageId);
+        
         #endregion
 
         #region Order workflow
@@ -130,22 +134,24 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <param name="product">Product instance</param>
+        /// <param name="customerEmail">Customer's email</param>
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
         int SendProductEmailAFriendMessage(Customer customer, int languageId,
-            Product product, string friendsEmail, string personalMessage);
+            Product product, string customerEmail, string friendsEmail, string personalMessage);
 
         /// <summary>
         /// Sends wishlist "email a friend" message
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="languageId">Message language identifier</param>
+        /// <param name="customerEmail">Customer's email</param>
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
         int SendWishlistEmailAFriendMessage(Customer customer, int languageId,
-            string friendsEmail, string personalMessage);
+             string customerEmail, string friendsEmail, string personalMessage);
 
         #endregion
 
@@ -182,11 +188,12 @@ namespace Nop.Services.Messages
         /// Sends a "new VAT sumitted" notification to a store owner
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <param name="vatName">Received VAT name</param>
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewVatSubmittedStoreOwnerNotification(Customer customer,
+        int SendNewVatSubmittedStoreOwnerNotification(Customer customer, User user,
             string vatName, string vatAddress, int languageId);
 
         #endregion

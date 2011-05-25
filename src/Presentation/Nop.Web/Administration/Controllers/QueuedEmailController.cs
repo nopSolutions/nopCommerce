@@ -47,8 +47,10 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.SearchEndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, startDateValue, endDateValue,
-               0, model.SearchLoadNotSent, model.SearchMaxSentTries, command.Page - 1, command.PageSize);
+            var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, 
+                startDateValue, endDateValue, 
+                model.SearchLoadNotSent, model.SearchMaxSentTries, 
+                command.Page - 1, command.PageSize);
 			var gridModel = new GridModel<QueuedEmailModel>
 			{
 				Data = queuedEmails.Select(x => x.ToModel()),

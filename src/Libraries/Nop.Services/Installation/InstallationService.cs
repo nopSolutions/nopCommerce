@@ -993,13 +993,13 @@ namespace Nop.Services.Installation
                     SentOnUtc = DateTime.UtcNow
                 }
             };
-            for (var i = 1; i <= 50; i++)
+            for (var i = 1; i <= 10; i++)
             {
                 queuedEmail.Add(
                     new QueuedEmail()
                     {
                         EmailAccountId = 1,
-                        Priority = i,
+                        Priority = 4,
                         From = "admin@test.com",
                         FromName = "Adminstrator",
                         To = "cust@test.com",
@@ -1100,7 +1100,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new StoreInformationSettings()
                 {
                     StoreName = "Your store name",
-                    StoreUrl = "http://www.yourStore.com",
+                    StoreUrl = "http://www.yourStore.com/",
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<RewardPointsSettings>>()
@@ -1135,7 +1135,10 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<MessageTemplatesSettings>>()
                 .SaveSettings(new MessageTemplatesSettings()
                 {
-                    CaseInvariantReplacement = false
+                    CaseInvariantReplacement = false,
+                    Color1 = "#b9babe",
+                    Color2 = "#ebecee",
+                    Color3 = "#dde2e6",
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SMSSettings>>()

@@ -31,7 +31,8 @@ namespace Nop.Services.Messages
                 this._maxTries = int.Parse(maxTriesSttribute.Value);
             }
 
-            var queuedEmails = _queuedEmailService.GetAllQueuedEmails(10000, true, _maxTries);
+            var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null,
+                true, _maxTries, 0, 10000);
             foreach (var queuedEmail in queuedEmails)
             {
                 var bcc = String.IsNullOrWhiteSpace(queuedEmail.Bcc) 

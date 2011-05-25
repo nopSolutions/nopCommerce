@@ -19,5 +19,9 @@ namespace Nop.Core.Domain.Customers
 
         //Other attributes
         public static string LastShippingOption { get { return "LastShippingOption  "; } }
+
+        public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
+
+        public static string AccountActivationToken { get { return "AccountActivationToken"; } }
     }
 }

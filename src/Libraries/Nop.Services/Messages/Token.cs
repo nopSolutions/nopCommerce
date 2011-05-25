@@ -14,5 +14,10 @@ namespace Nop.Services.Messages
 
         public string Key { get { return key; } }
         public string Value { get { return value; } }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", Key, Value);
+        }
     }
 }
