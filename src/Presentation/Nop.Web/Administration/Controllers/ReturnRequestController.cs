@@ -7,14 +7,17 @@ using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -33,6 +36,9 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly LocalizationSettings _localizationSettings;
+        private readonly IUserService _userService;
 
         #endregion Fields
 
@@ -40,13 +46,18 @@ namespace Nop.Admin.Controllers
 
         public ReturnRequestController(IOrderService orderService,
             ICustomerService customerService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, IWorkContext workContext)
+            ILocalizationService localizationService, IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
+            IUserService userService)
         {
             this._orderService = orderService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._workContext = workContext;
+            this._workflowMessageService = workflowMessageService;
+            this._localizationSettings = localizationSettings;
+            this._userService = userService;
         }
 
         #endregion Constructors
@@ -88,7 +99,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Recurring payment
+        #region Methods
 
         //list
         public ActionResult Index()
@@ -135,6 +146,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(ReturnRequestModel model, bool continueEditing)
         {
             var returnRequest = _orderService.GetReturnRequestById(model.Id);
@@ -158,6 +170,23 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             PrepareReturnRequestModel(model, returnRequest, true);
             return View(model);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("notify-customer")]
+        public ActionResult NotifyCustomer(ReturnRequestModel model)
+        {
+            var returnRequest = _orderService.GetReturnRequestById(model.Id);
+            if (returnRequest == null)
+                throw new ArgumentException("No return request found with the specified id");
+
+            var customer = returnRequest.Customer;
+            var user = customer.AssociatedUserId.HasValue ? _userService.GetUserById(customer.AssociatedUserId.Value) : null;
+            var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
+            _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, user, opv, _localizationSettings.DefaultAdminLanguageId);
+            //TODO notify store owner about success or error
+
+            return RedirectToAction("Edit", returnRequest.Id);
         }
 
         //delete

@@ -33,6 +33,8 @@ namespace Nop.Services.Messages
 
         void AddOrderTokens(IList<Token> tokens, Order order, int languageId);
 
+        void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderProductVariant opv);
+
         void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard);
 
         void AddCustomerTokens(IList<Token> tokens, Customer customer, User user);

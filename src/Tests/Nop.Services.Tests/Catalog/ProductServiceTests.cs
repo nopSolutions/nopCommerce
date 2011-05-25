@@ -10,6 +10,7 @@ using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
@@ -28,10 +29,11 @@ namespace Nop.Services.Tests.Catalog
         IRepository<ProductPicture> _productPictureRepository;
         IProductAttributeService _productAttributeService;
         IProductAttributeParser _productAttributeParser;
-        ICacheManager _cacheManager;
+        IWorkflowMessageService _workflowMessageService;
+        LocalizationSettings _localizationSettings;
 
         IProductService _productService;
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -46,12 +48,14 @@ namespace Nop.Services.Tests.Catalog
 
             _productAttributeService = MockRepository.GenerateMock<IProductAttributeService>();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
+            _workflowMessageService = MockRepository.GenerateMock<IWorkflowMessageService>();
+            _localizationSettings = new LocalizationSettings();
 
-            _productService = new ProductService(_cacheManager,
+            _productService = new ProductService(cacheManager,
             _productRepository, _productVariantRepository,
             _relatedProductRepository, _crossSellProductRepository,
             _tierPriceRepository,_productPictureRepository,
-            _productAttributeService, _productAttributeParser);
+            _productAttributeService, _productAttributeParser, _workflowMessageService, _localizationSettings);
         }
 
         //TODO write unit tests for SearchProducts method

@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Services;
@@ -19,6 +20,7 @@ using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
@@ -54,11 +56,13 @@ namespace Nop.Web.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly ICompareProductsService _compareProductsService;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly LocalizationSettings _localizationSettings;
         
         #endregion
 
@@ -74,8 +78,10 @@ namespace Nop.Web.Controllers
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IAuthenticationService authenticationService, IShoppingCartService shoppingCartService,
             IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
+            IWorkflowMessageService workflowMessageService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
-            ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings)
+            ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
+            LocalizationSettings localizationSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -97,11 +103,13 @@ namespace Nop.Web.Controllers
             this._shoppingCartService = shoppingCartService;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._compareProductsService = compareProductsService;
+            this._workflowMessageService = workflowMessageService;
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._localizationSettings = localizationSettings;
         }
 
 		#endregion Constructors 
@@ -1351,7 +1359,7 @@ namespace Nop.Web.Controllers
                         rating = 4;
                     bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
 
-                    _customerContentService.InsertCustomerContent(new ProductReview()
+                    var productReview = new ProductReview()
                     {
                         ProductId = product.Id,
                         CustomerId = _workContext.CurrentCustomer.Id,
@@ -1364,17 +1372,15 @@ namespace Nop.Web.Controllers
                         IsApproved = isApproved,
                         CreatedOnUtc = DateTime.UtcNow,
                         UpdatedOnUtc = DateTime.UtcNow,
-                    });
+                    };
+                    _customerContentService.InsertCustomerContent(productReview);
 
                     //update product totals
                     _productService.UpdateProductReviewTotals(product);
 
                     //notify store owner
                     if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                    {
-                        //UNDONE notification email
-                        //IoC.Resolve<IMessageService>().SendProductReviewNotificationMessage(productReview, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
-                    }
+                        _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
 
 
                     model = PrepareProductReviewsModel(model, product);

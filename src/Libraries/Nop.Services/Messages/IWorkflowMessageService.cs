@@ -154,7 +154,28 @@ namespace Nop.Services.Messages
              string customerEmail, string friendsEmail, string personalMessage);
 
         #endregion
+        
+        #region Return requests
 
+        /// <summary>
+        /// Sends 'New Return Request' message to a store owner
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, User user, OrderProductVariant opv, int languageId);
+        
+
+        /// <summary>
+        /// Sends 'Return Request status changed' message to a customer
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, User user, OrderProductVariant opv, int languageId);
+
+        #endregion
+        
         #region Misc
 
         /// <summary>
