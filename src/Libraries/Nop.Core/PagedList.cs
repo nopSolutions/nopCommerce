@@ -20,7 +20,7 @@ namespace Nop.Core
         {
             int total = source.Count();
             this.TotalCount = total;
-            this.TotalPages = total / pageSize;
+            this.TotalPages = total / pageSize!=0?pageSize:total;
 
             if (total % pageSize > 0)
                 TotalPages++;

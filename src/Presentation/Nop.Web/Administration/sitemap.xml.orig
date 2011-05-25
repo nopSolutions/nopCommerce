@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap>
+    <siteMapNode title="Home" controller="Home" action="Overview">
+        <siteMapNode title="Catalog" nopResource="Admin.Catalog">
+            <siteMapNode title="Categories" nopResource="Admin.Catalog.Categories" controller="Category" action="List">
+                <siteMapNode title="List" nopResource="Admin.Common.List" controller="Category" action="List"/>
+                <siteMapNode title="Tree view" nopResource="Admin.Common.Treeview" controller="Category" action="Tree"/>
+            </siteMapNode>
+            <siteMapNode title="Products" nopResource="Admin.Catalog.Products" controller="Product" action="List">
+                <siteMapNode title="Manage Products" nopResource="Admin.Catalog.Products.Manage" controller="Product" action="List"/>
+            </siteMapNode>
+            <siteMapNode title="Attributes" nopResource="Admin.Catalog.Attributes">
+              <siteMapNode title="Products Attributes" nopResource="Admin.Catalog.Attributes.ProductAttributes" controller="ProductAttribute" action="List"/>
+              <siteMapNode title="Specification Attributes" nopResource="Admin.Catalog.Attributes.SpecificationAttributes" controller="SpecificationAttribute" action="List"/>
+              <siteMapNode title="Checkout Attributes" nopResource="Admin.Catalog.Attributes.CheckoutAttributes" controller="CheckoutAttribute" action="List"/>
+            </siteMapNode>
+        </siteMapNode>
+        <siteMapNode title="Sales" nopResource="Admin.Sales">
+          <siteMapNode title="Orders" nopResource="Admin.Orders" controller="Order" action="List" />
+          <siteMapNode title="Gift Cards" nopResource="Admin.GiftCards" controller="GiftCard" action="List" />
+        </siteMapNode>
+        <siteMapNode title="Customers" nopResource="Admin.Customers">
+          <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />
+          <siteMapNode title="Customers" nopResource="Admin.Customers.Customers" controller="Customer" action="List" />
+          <siteMapNode title="Customer roles" nopResource="Admin.Customers.CustomerRoles" controller="CustomerRole" action="List" />
+        </siteMapNode>
+        <siteMapNode title="Promotions" nopResource="Admin.Promotions">
+          <siteMapNode title="NewsletterSubscriptions" nopResource="Admin.Promotions.NewsletterSubscriptions" controller="NewsLetterSubscription" action="List" />
+          <siteMapNode title="Discounts" nopResource="Admin.Promotions.Discounts" controller="Discount" action="List" />
+        </siteMapNode>
+        <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement">
+            <siteMapNode title="Forums" nopResource="Admin.ContentManagement.Forums">
+                <siteMapNode title="Forums Settings" nopResource="Admin.ContentManagement.Forums.Settings" controller="Forum" action="Settings" />
+                <siteMapNode title="Manage Forums" nopResource="Admin.ContentManagement.Forums.Manage" controller="Forum" action="List" />
+            </siteMapNode>
+        </siteMapNode>
+        <siteMapNode title="Configuration" nopResource="Admin.Configuration">
+            <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
+                <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>
+                <siteMapNode title="Currencies" nopResource="Admin.Configuration.Location.Currencies" controller="Currency" action="List"/>
+            </siteMapNode>
+            <siteMapNode title="Activity Log" nopResource="Admin.Configuration.ActivityLog">
+              <siteMapNode title="Activity Types" nopResource="Admin.Configuration.ActivityLog.ActivityLogType" controller="ActivityLog" action="ListTypes"/>
+              <siteMapNode title="Activity Log" nopResource="Admin.Configuration.ActivityLog.ActivityLog" controller="ActivityLog" action="ListLogs"/>
+            </siteMapNode>          
+          <siteMapNode title="Measures" nopResource="Admin.Configuration.Measures">
+                <siteMapNode title="Weights" nopResource="Admin.Configuration.Measures.Weights" controller="Measure" action="Weights"/>
+                <siteMapNode title="Dimensions" nopResource="Admin.Configuration.Measures.Dimensions" controller="Measure" action="Dimensions"/>
+            </siteMapNode>
+            <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
+            <siteMapNode title="Payment" nopResource="Admin.Configuration.Payment">
+              <siteMapNode title="Payment methods" nopResource="Admin.Configuration.Payment.Methods" controller="Payment" action="Methods"/>
+            </siteMapNode>
+            <siteMapNode title="Tax" nopResource="Admin.Configuration.Tax">
+                <siteMapNode title="Tax settings" nopResource="Admin.Configuration.Tax.Settings" controller="Tax" action="Settings"/>
+                <siteMapNode title="Tax providers" nopResource="Admin.Configuration.Tax.Providers" controller="Tax" action="Providers"/>
+                <siteMapNode title="Tax categories" nopResource="Admin.Configuration.Tax.Categories" controller="Tax" action="Categories"/>
+            </siteMapNode>
+            <siteMapNode title="Shipping" nopResource="Admin.Configuration.Shipping">
+                <siteMapNode title="Shipping settings" nopResource="Admin.Configuration.Shipping.Settings" controller="Shipping" action="Settings"/>
+                <siteMapNode title="Shipping methods" nopResource="Admin.Configuration.Shipping.Methods" controller="Shipping" action="Methods"/>
+                <siteMapNode title="Shipping providers" nopResource="Admin.Configuration.Shipping.Providers" controller="Shipping" action="Providers"/>
+            </siteMapNode>
+        </siteMapNode>
+        <siteMapNode title="System" nopResource="Admin.System">
+            <siteMapNode title="Log" nopResource="Admin.System.Log" controller="Log" action="List" />
+            <siteMapNode title="QueuedEmails" nopResource="Admin.System.QueuedEmails" controller="QueuedEmail" action="List" />
+        </siteMapNode>
+    </siteMapNode>
+</siteMap>
+

@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminAreaRegistration.cs" />
+    <Compile Include="Controllers\ActivityLogController.cs" />
     <Compile Include="Controllers\BaseNopController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CheckoutAttributeController.cs" />
@@ -84,7 +85,6 @@
     <Compile Include="Controllers\ProductReviewController.cs" />
     <Compile Include="Controllers\ReturnRequestController.cs" />
     <Compile Include="Controllers\RecurringPaymentController.cs" />
-    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\GiftCardController.cs" />
     <Compile Include="Controllers\DiscountController.cs" />
     <Compile Include="Controllers\DownloadController.cs" />
@@ -113,6 +113,9 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
+    <Compile Include="Models\ActivityLogModel.cs" />
+    <Compile Include="Models\ActivityLogSearchModel.cs" />
+    <Compile Include="Models\ActivityLogTypeModel.cs" />
     <Compile Include="Models\AddressModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CheckoutAttributeModel.cs" />
@@ -125,9 +128,6 @@
     <Compile Include="Models\ProductReviewModel.cs" />
     <Compile Include="Models\ReturnRequestModel.cs" />
     <Compile Include="Models\RecurringPaymentModel.cs" />
-    <Compile Include="Models\OrderAddressModel.cs" />
-    <Compile Include="Models\OrderListModel.cs" />
-    <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\GiftCardListModel.cs" />
     <Compile Include="Models\GiftCardModel.cs" />
     <Compile Include="Models\DiscountModel.cs" />
@@ -212,7 +212,6 @@
     <Content Include="Content\images\EmptyStar.png" />
     <Content Include="Content\images\ErrorMessage.gif" />
     <Content Include="Content\images\FilledStar.png" />
-    <Content Include="Content\images\GoogleMaps.gif" />
     <Content Include="Content\images\grey_button_bg.gif" />
     <Content Include="Content\images\grid_header_back.png" />
     <Content Include="Content\images\ico-blacklist.png" />
@@ -583,19 +582,10 @@
     <Content Include="Views\GiftCard\_CreateOrUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Order\List.cshtml" />
+    <Content Include="Views\ActivityLog\ListTypes.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Order\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Order\AddressEdit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Order\_CreateOrUpdateAddress.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Order\PartiallyRefundOrderPopup.cshtml" />
+    <Content Include="Views\ActivityLog\ListLogs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\UploadLicenseFilePopup.cshtml" />

@@ -60,6 +60,10 @@
             <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>
             <siteMapNode title="Currencies" nopResource="Admin.Configuration.Location.Currencies" controller="Currency" action="List"/>
           </siteMapNode>
+          <siteMapNode title="Activity Log" nopResource="Admin.Configuration.ActivityLog">
+            <siteMapNode title="Activity Types" nopResource="Admin.Configuration.ActivityLog.ActivityLogType" controller="ActivityLog" action="ListTypes"/>
+            <siteMapNode title="Activity Log" nopResource="Admin.Configuration.ActivityLog.ActivityLog" controller="ActivityLog" action="ListLogs"/>
+          </siteMapNode>
           <siteMapNode title="Measures" nopResource="Admin.Configuration.Measures">
             <siteMapNode title="Weights" nopResource="Admin.Configuration.Measures.Weights" controller="Measure" action="Weights"/>
             <siteMapNode title="Dimensions" nopResource="Admin.Configuration.Measures.Dimensions" controller="Measure" action="Dimensions"/>

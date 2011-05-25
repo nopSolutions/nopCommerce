@@ -2305,7 +2305,180 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
-              <LocaleResource Name="Measures">
+              <LocaleResource Name="ActivityLog">
+                <Value>Activity Log</Value>
+                <Children>
+                  <LocaleResource Name="ActivityLogType">
+                    <Value>Activity Types</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Activity Types</Value>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="Title">
+                        <Value>Activity Types</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Activity Types</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="Name">
+                            <Value>Name</Value>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="Enabled">
+                            <Value>Is Enabled </Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="SaveButton">
+                        <Children>
+                          <LocaleResource Name="Text">
+                            <Value>Save</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>Save changes</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ActivityLog">
+                    <Value>Activity Log</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>View Activity Log</Value>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="Title">
+                        <Value>View Activity Log</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>View Activity Log </Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="CreatedOnFrom">
+                            <Value>Created from</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The creation from date for the search.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="CreatedOnTo">
+                            <Value>Created to</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The creation to date for the search.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="CustomerEmail">
+                            <Value>Customer Email</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>A customer Email.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="ActivityLogType">
+                            <Value>Activity Log Type</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>A customer Email.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="ActivityLogTypeColumn">
+                            <Value>Activity Log Type</Value>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="Customer">
+                            <Value>Customer</Value>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="Comment">
+                            <Value>Message</Value>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="CreatedOn">
+                            <Value>Created On</Value>
+                          </LocaleResource>
+                        </Children>
+                        <Children>
+                          <LocaleResource Name="Delete">
+                            <Value>Delete</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="SearchButton">
+                        <Children>
+                          <LocaleResource Name="Text">
+                            <Value>Search</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>Search for activity log based on the criteria below</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="ClearButton">
+                        <Children>
+                          <LocaleResource Name="Text">
+                            <Value>Clear All</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>Clears activity log</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                    <Children>
+                      <LocaleResource Name="DeleteButton">
+                        <Children>
+                          <LocaleResource Name="Text">
+                            <Value>Delete</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>Delete activity log entry</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+
+                </Children>
+              </LocaleResource>
+            <LocaleResource Name="Measures">
                 <Value>Measures</Value>
                 <Children>
                   <LocaleResource Name="Weights">
