@@ -21,7 +21,7 @@ namespace Nop.Services.Tests.Customers
         {
             var customer = new Customer()
             {
-                CustomerRoles = new List<CustomerRole>()
+                /*CustomerRoles = new List<CustomerRole>()
                 {
                     new CustomerRole()
                     {
@@ -35,9 +35,21 @@ namespace Nop.Services.Tests.Customers
                         Name = "Test name 2",
                         SystemName = "Test system name 2",
                     },
-                }
+                }*/
             };
 
+            customer.CustomerRoles.Add(new CustomerRole()
+            {
+                Active = true,
+                Name = "Test name 1",
+                SystemName = "Test system name 1",
+            });
+            customer.CustomerRoles.Add(new CustomerRole()
+            {
+                Active = false,
+                Name = "Test name 2",
+                SystemName = "Test system name 2",
+            });
             customer.IsInCustomerRole("Test system name 1", false).ShouldBeTrue();
             customer.IsInCustomerRole("Test system name 1", true).ShouldBeTrue();
 
@@ -50,24 +62,20 @@ namespace Nop.Services.Tests.Customers
         [Test]
         public void Can_check_whether_customer_is_admin()
         {
-            var customer = new Customer()
+            var customer = new Customer();
+
+            customer.CustomerRoles.Add(new CustomerRole()
             {
-                CustomerRoles = new List<CustomerRole>()
-                {
-                    new CustomerRole()
-                    {
-                        Active = true,
-                        Name = "Registered",
-                        SystemName = SystemCustomerRoleNames.Registered
-                    },
-                    new CustomerRole()
-                    {
-                        Active = true,
-                        Name = "Guests",
-                        SystemName = SystemCustomerRoleNames.Guests
-                    },
-                }
-            };
+                Active = true,
+                Name = "Registered",
+                SystemName = SystemCustomerRoleNames.Registered
+            });
+            customer.CustomerRoles.Add(new CustomerRole()
+            {
+                Active = true,
+                Name = "Guests",
+                SystemName = SystemCustomerRoleNames.Guests
+            });
 
             customer.IsAdmin().ShouldBeFalse();
 
@@ -83,24 +91,21 @@ namespace Nop.Services.Tests.Customers
         [Test]
         public void Can_check_whether_customer_is_guest()
         {
-            var customer = new Customer()
+            var customer = new Customer();
+
+            customer.CustomerRoles.Add(new CustomerRole()
             {
-                CustomerRoles = new List<CustomerRole>()
-                {
-                    new CustomerRole()
-                    {
-                        Active = true,
-                        Name = "Registered",
-                        SystemName = SystemCustomerRoleNames.Registered
-                    },
-                    new CustomerRole()
-                    {
-                        Active = true,
-                        Name = "Administrators",
-                        SystemName = SystemCustomerRoleNames.Administrators
-                    }
-                }
-            };
+                Active = true,
+                Name = "Registered",
+                SystemName = SystemCustomerRoleNames.Registered
+            });
+
+            customer.CustomerRoles.Add(new CustomerRole()
+            {
+                Active = true,
+                Name = "Administrators",
+                SystemName = SystemCustomerRoleNames.Administrators
+            });
 
             customer.IsGuest().ShouldBeFalse();
 
@@ -111,31 +116,27 @@ namespace Nop.Services.Tests.Customers
                     Name = "Guests",
                     SystemName = SystemCustomerRoleNames.Guests
 
-                    }
+                }
                 );
             customer.IsGuest().ShouldBeTrue();
         }
         [Test]
         public void Can_check_whether_customer_is_registered()
         {
-            var customer = new Customer()
+            var customer = new Customer();
+            customer.CustomerRoles.Add(new CustomerRole()
             {
-                CustomerRoles = new List<CustomerRole>()
-                {
-                    new CustomerRole()
-                    {
-                        Active = true,
-                        Name = "Administrators",
-                        SystemName = SystemCustomerRoleNames.Administrators
-                    },
-                    new CustomerRole()
-                    {
-                        Active = true,
-                        Name = "Guests",
-                        SystemName = SystemCustomerRoleNames.Guests
-                    }
-                }
-            };
+                Active = true,
+                Name = "Administrators",
+                SystemName = SystemCustomerRoleNames.Administrators
+            });
+
+            customer.CustomerRoles.Add(new CustomerRole()
+            {
+                Active = true,
+                Name = "Guests",
+                SystemName = SystemCustomerRoleNames.Guests
+            });
 
             customer.IsRegistered().ShouldBeFalse();
 

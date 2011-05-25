@@ -57,7 +57,7 @@ namespace Nop.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
-        public void DeleteLanguage(Language language)
+        public virtual void DeleteLanguage(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException("language");
@@ -89,7 +89,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Language collection</returns>
-        public IList<Language> GetAllLanguages(bool showHidden = false)
+        public virtual IList<Language> GetAllLanguages(bool showHidden = false)
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
@@ -108,7 +108,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Language</returns>
-        public Language GetLanguageById(int languageId)
+        public virtual Language GetLanguageById(int languageId)
         {
             if (languageId == 0)
                 return null;
@@ -124,7 +124,7 @@ namespace Nop.Services.Localization
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        public void InsertLanguage(Language language)
+        public virtual void InsertLanguage(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException("language");
@@ -139,7 +139,7 @@ namespace Nop.Services.Localization
         /// Updates a language
         /// </summary>
         /// <param name="language">Language</param>
-        public void UpdateLanguage(Language language)
+        public virtual void UpdateLanguage(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException("language");

@@ -8,31 +8,32 @@ namespace Nop.Core.Domain.Security.Permissions
     /// <summary>
     /// Represents a permission record
     /// </summary>
-    public class PermissionRecord : BaseEntity 
+    public class PermissionRecord : BaseEntity
     {
-        public PermissionRecord() 
-        {
-            this.CustomerRoles = new List<CustomerRole>();
-        }
+        private ICollection<CustomerRole> _customerRoles;
 
         /// <summary>
         /// Gets or sets the permission name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the permission system name
         /// </summary>
-        public string SystemName { get; set; }
+        public virtual string SystemName { get; set; }
         
         /// <summary>
         /// Gets or sets the permission category
         /// </summary>
-        public string Category { get; set; }
+        public virtual string Category { get; set; }
         
         /// <summary>
         /// Gets or sets discount usage history
         /// </summary>
-        public virtual ICollection<CustomerRole> CustomerRoles { get; set; }
+        public virtual ICollection<CustomerRole> CustomerRoles
+        {
+            get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
+            protected set { _customerRoles = value; }
+        }   
     }
 }

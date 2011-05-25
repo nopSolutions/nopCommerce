@@ -42,7 +42,7 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="level">Log level</param>
         /// <returns>Result</returns>
-        public bool IsEnabled(LogLevel level)
+        public virtual bool IsEnabled(LogLevel level)
         {
             switch(level)
             {
@@ -57,7 +57,7 @@ namespace Nop.Services.Logging
         /// Deletes a log item
         /// </summary>
         /// <param name="log">Log item</param>
-        public void DeleteLog(Log log)
+        public virtual void DeleteLog(Log log)
         {
             if (log == null)
                 throw new ArgumentNullException("log");
@@ -68,7 +68,7 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Clears a log
         /// </summary>
-        public void ClearLog()
+        public virtual void ClearLog()
         {
             var log = _logRepository.Table.ToList();
             foreach (var logItem in log)
@@ -85,7 +85,7 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item collection</returns>
-        public IPagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc,
+        public virtual IPagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc,
             string message, LogLevel? logLevel, int pageIndex, int pageSize)
         {
             var query = _logRepository.Table;
@@ -111,7 +111,7 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public Log GetLogById(int logId)
+        public virtual Log GetLogById(int logId)
         {
             if (logId == 0)
                 return null;
@@ -128,7 +128,7 @@ namespace Nop.Services.Logging
         /// <param name="fullMessage">The full message</param>
         /// <param name="customer">The customer to associate log record with</param>
         /// <returns>A log item</returns>
-        public Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
+        public virtual Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
             var log = new Log()
             {

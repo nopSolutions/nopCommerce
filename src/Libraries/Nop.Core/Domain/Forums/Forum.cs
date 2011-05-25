@@ -10,79 +10,76 @@ namespace Nop.Core.Domain.Forums
     /// </summary>
     public partial class Forum : BaseEntity
     {
-        /// <summary>
-        /// ctor
-        /// </summary>
-        public Forum()
-        {
-            this.ForumTopics = new List<ForumTopic>();
-        }
+        private ICollection<ForumTopic> _forumTopics;
 
         /// <summary>
         /// Gets or sets the forum group identifier
         /// </summary>
-        public int ForumGroupId { get; set; }
+        public virtual int ForumGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the description
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the number of topics
         /// </summary>
-        public int NumTopics { get; set; }
+        public virtual int NumTopics { get; set; }
 
         /// <summary>
         /// Gets or sets the number of posts
         /// </summary>
-        public int NumPosts { get; set; }
+        public virtual int NumPosts { get; set; }
 
         /// <summary>
         /// Gets or sets the last topic identifier
         /// </summary>
-        public int LastTopicId { get; set; }
+        public virtual int LastTopicId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post identifier
         /// </summary>
-        public int LastPostId { get; set; }
+        public virtual int LastPostId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post customer identifier
         /// </summary>
-        public int LastPostCustomerId { get; set; }
+        public virtual int LastPostCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post date and time
         /// </summary>
-        public DateTime? LastPostTime { get; set; }
+        public virtual DateTime? LastPostTime { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOnUtc { get; set; }
+        public virtual DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of Forums
         /// </summary>
-        public virtual ICollection<ForumTopic> ForumTopics { get; set; }
-
+        public virtual ICollection<ForumTopic> ForumTopics
+        {
+            get { return _forumTopics ?? (_forumTopics = new List<ForumTopic>()); }
+            protected set { _forumTopics = value; }
+        }
         /// <summary>
         /// Gets the ForumGroup
         /// </summary>
@@ -91,7 +88,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets the last topic
         /// </summary>
-        public ForumTopic LastTopic
+        public virtual ForumTopic LastTopic
         {
             get
             {
@@ -106,7 +103,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets the last post
         /// </summary>
-        public ForumPost LastPost
+        public virtual ForumPost LastPost
         {
             get
             {
@@ -122,7 +119,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets the last post customer
         /// </summary>
-        public Customer LastPostCustomer
+        public virtual Customer LastPostCustomer
         {
             get
             {

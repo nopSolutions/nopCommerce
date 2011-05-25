@@ -31,7 +31,7 @@ namespace Nop.Services.Messages
         /// Load all SMS providers
         /// </summary>
         /// <returns>SMS provider list</returns>
-        public IList<ISMSProvider> LoadAllSMSProviders()
+        public virtual IList<ISMSProvider> LoadAllSMSProviders()
         {
             var smsProviders = _pluginFinder.GetPlugins<ISMSProvider>();
             return smsProviders.OrderBy(tp => tp.FriendlyName).ToList();
@@ -42,7 +42,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="systemName">SMS provider system name</param>
         /// <returns>SMS provider</returns>
-        public ISMSProvider LoadSMSProviderBySystemName(string systemName)
+        public virtual ISMSProvider LoadSMSProviderBySystemName(string systemName)
         {
             var providers = LoadAllSMSProviders();
             var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
@@ -53,7 +53,7 @@ namespace Nop.Services.Messages
         /// Load active SMS providers
         /// </summary>
         /// <returns>Active SMS provider list</returns>
-        public IList<ISMSProvider> LoadActiveSMSProviders()
+        public virtual IList<ISMSProvider> LoadActiveSMSProviders()
         {
             return LoadAllSMSProviders()
                 .Where(smsProvider => _smsSettings.ActiveSMSProviderSystemNames.Contains(smsProvider.SystemName, StringComparer.InvariantCultureIgnoreCase))
@@ -65,7 +65,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Number of sent messages</returns>
-        public int SendSMS(string text)
+        public virtual int SendSMS(string text)
         {
             int i = 0;
 

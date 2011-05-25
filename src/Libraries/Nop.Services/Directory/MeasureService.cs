@@ -62,7 +62,7 @@ namespace Nop.Services.Directory
         /// Deletes measure dimension
         /// </summary>
         /// <param name="measureDimension">Measure dimension</param>
-        public void DeleteMeasureDimension(MeasureDimension measureDimension)
+        public virtual void DeleteMeasureDimension(MeasureDimension measureDimension)
         {
             if (measureDimension == null)
                 throw new ArgumentNullException("measureDimension");
@@ -78,7 +78,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="measureDimensionId">Measure dimension identifier</param>
         /// <returns>Measure dimension</returns>
-        public MeasureDimension GetMeasureDimensionById(int measureDimensionId)
+        public virtual MeasureDimension GetMeasureDimensionById(int measureDimensionId)
         {
             if (measureDimensionId == 0)
                 return null;
@@ -95,7 +95,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
         /// <returns>Measure dimension</returns>
-        public MeasureDimension GetMeasureDimensionBySystemKeyword(string systemKeyword)
+        public virtual MeasureDimension GetMeasureDimensionBySystemKeyword(string systemKeyword)
         {
             if (String.IsNullOrEmpty(systemKeyword))
                 return null;
@@ -111,7 +111,7 @@ namespace Nop.Services.Directory
         /// Gets all measure dimensions
         /// </summary>
         /// <returns>Measure dimension collection</returns>
-        public IList<MeasureDimension> GetAllMeasureDimensions()
+        public virtual IList<MeasureDimension> GetAllMeasureDimensions()
         {
             string key = MEASUREDIMENSIONS_ALL_KEY;
             return _cacheManager.Get(key, () =>
@@ -129,7 +129,7 @@ namespace Nop.Services.Directory
         /// Inserts a measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
-        public void InsertMeasureDimension(MeasureDimension measure)
+        public virtual void InsertMeasureDimension(MeasureDimension measure)
         {
             if (measure == null)
                 throw new ArgumentNullException("measure");
@@ -143,7 +143,7 @@ namespace Nop.Services.Directory
         /// Updates the measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
-        public void UpdateMeasureDimension(MeasureDimension measure)
+        public virtual void UpdateMeasureDimension(MeasureDimension measure)
         {
             if (measure == null)
                 throw new ArgumentNullException("measure");
@@ -161,7 +161,7 @@ namespace Nop.Services.Directory
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertDimension(decimal quantity, 
+        public virtual decimal ConvertDimension(decimal quantity, 
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true)
         {
             decimal result = quantity;
@@ -181,7 +181,7 @@ namespace Nop.Services.Directory
         /// <param name="quantity">Quantity</param>
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertToPrimaryMeasureDimension(decimal quantity,
+        public virtual decimal ConvertToPrimaryMeasureDimension(decimal quantity,
             MeasureDimension sourceMeasureDimension)
         {
             decimal result = quantity;
@@ -202,7 +202,7 @@ namespace Nop.Services.Directory
         /// <param name="quantity">Quantity</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertFromPrimaryMeasureDimension(decimal quantity,
+        public virtual decimal ConvertFromPrimaryMeasureDimension(decimal quantity,
             MeasureDimension targetMeasureDimension)
         {
             decimal result = quantity;
@@ -225,7 +225,7 @@ namespace Nop.Services.Directory
         /// Deletes measure weight
         /// </summary>
         /// <param name="measureWeight">Measure weight</param>
-        public void DeleteMeasureWeight(MeasureWeight measureWeight)
+        public virtual void DeleteMeasureWeight(MeasureWeight measureWeight)
         {
             if (measureWeight == null)
                 throw new ArgumentNullException("measureWeight");
@@ -240,7 +240,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="measureWeightId">Measure weight identifier</param>
         /// <returns>Measure weight</returns>
-        public MeasureWeight GetMeasureWeightById(int measureWeightId)
+        public virtual MeasureWeight GetMeasureWeightById(int measureWeightId)
         {
             if (measureWeightId == 0)
                 return null;
@@ -257,7 +257,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
         /// <returns>Measure weight</returns>
-        public MeasureWeight GetMeasureWeightBySystemKeyword(string systemKeyword)
+        public virtual MeasureWeight GetMeasureWeightBySystemKeyword(string systemKeyword)
         {
             if (String.IsNullOrEmpty(systemKeyword))
                 return null;
@@ -273,7 +273,7 @@ namespace Nop.Services.Directory
         /// Gets all measure weights
         /// </summary>
         /// <returns>Measure weight collection</returns>
-        public IList<MeasureWeight> GetAllMeasureWeights()
+        public virtual IList<MeasureWeight> GetAllMeasureWeights()
         {
             string key = MEASUREWEIGHTS_ALL_KEY;
             return _cacheManager.Get(key, () =>
@@ -290,7 +290,7 @@ namespace Nop.Services.Directory
         /// Inserts a measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
-        public void InsertMeasureWeight(MeasureWeight measure)
+        public virtual void InsertMeasureWeight(MeasureWeight measure)
         {
             if (measure == null)
                 throw new ArgumentNullException("measure");
@@ -304,7 +304,7 @@ namespace Nop.Services.Directory
         /// Updates the measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
-        public void UpdateMeasureWeight(MeasureWeight measure)
+        public virtual void UpdateMeasureWeight(MeasureWeight measure)
         {
             if (measure == null)
                 throw new ArgumentNullException("measure");
@@ -322,7 +322,7 @@ namespace Nop.Services.Directory
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertWeight(decimal quantity,
+        public virtual decimal ConvertWeight(decimal quantity,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true)
         {
             decimal result = quantity;
@@ -342,7 +342,7 @@ namespace Nop.Services.Directory
         /// <param name="quantity">Quantity</param>
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertToPrimaryMeasureWeight(decimal quantity, MeasureWeight sourceMeasureWeight)
+        public virtual decimal ConvertToPrimaryMeasureWeight(decimal quantity, MeasureWeight sourceMeasureWeight)
         {
             decimal result = quantity;
             var baseWeightIn = GetMeasureWeightById(_measureSettings.BaseWeightId);
@@ -362,7 +362,7 @@ namespace Nop.Services.Directory
         /// <param name="quantity">Quantity</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <returns>Converted value</returns>
-        public decimal ConvertFromPrimaryMeasureWeight(decimal quantity,
+        public virtual decimal ConvertFromPrimaryMeasureWeight(decimal quantity,
             MeasureWeight targetMeasureWeight)
         {
             decimal result = quantity;

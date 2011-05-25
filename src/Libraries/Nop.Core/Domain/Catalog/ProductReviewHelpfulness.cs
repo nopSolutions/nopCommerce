@@ -10,12 +10,12 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product review identifier
         /// </summary>
-        public int ProductReviewId { get; set; }
+        public virtual int ProductReviewId { get; set; }
 
         /// <summary>
         /// A value indicating whether a review a helpful
         /// </summary>
-        public bool WasHelpful { get; set; }
+        public virtual bool WasHelpful { get; set; }
 
         /// <summary>
         /// Gets the product

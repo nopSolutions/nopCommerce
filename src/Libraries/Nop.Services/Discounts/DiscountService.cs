@@ -112,7 +112,7 @@ namespace Nop.Services.Discounts
         /// Delete discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        public void DeleteDiscount(Discount discount)
+        public virtual void DeleteDiscount(Discount discount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -131,7 +131,7 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Discount</returns>
-        public Discount GetDiscountById(int discountId)
+        public virtual Discount GetDiscountById(int discountId)
         {
             if (discountId == 0)
                 return null;
@@ -150,7 +150,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountType">Discount type; null to load all discount</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discount collection</returns>
-        public IList<Discount> GetAllDiscounts(DiscountType? discountType, bool showHidden = false)
+        public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType, bool showHidden = false)
         { 
             int? discountTypeId = null;
             if (discountType.HasValue)
@@ -185,7 +185,7 @@ namespace Nop.Services.Discounts
         /// Inserts a discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        public void InsertDiscount(Discount discount)
+        public virtual void InsertDiscount(Discount discount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -199,7 +199,7 @@ namespace Nop.Services.Discounts
         /// Updates the discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        public void UpdateDiscount(Discount discount)
+        public virtual void UpdateDiscount(Discount discount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -213,7 +213,7 @@ namespace Nop.Services.Discounts
         /// Delete discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
-        public void DeleteDiscountRequirement(DiscountRequirement discountRequirement)
+        public virtual void DeleteDiscountRequirement(DiscountRequirement discountRequirement)
         {
             if (discountRequirement == null)
                 throw new ArgumentNullException("discountRequirement");
@@ -228,7 +228,7 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Found discount requirement rule</returns>
-        public IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName)
+        public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName)
         {
             var rules = LoadAllDiscountRequirementRules();
             var rule = rules.SingleOrDefault(r => r.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
@@ -239,7 +239,7 @@ namespace Nop.Services.Discounts
         /// Load all discount requirement rules
         /// </summary>
         /// <returns>Discount requirement rules</returns>
-        public IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules()
+        public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules()
         {
             var rules = _pluginFinder.GetPlugins<IDiscountRequirementRule>();
             return rules.OrderBy(drr => drr.FriendlyName).ToList();
@@ -251,7 +251,7 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - requirement is met; otherwise, false</returns>
-        public bool IsDiscountValid(Discount discount, Customer customer)
+        public virtual bool IsDiscountValid(Discount discount, Customer customer)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -309,7 +309,7 @@ namespace Nop.Services.Discounts
         /// Delete discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
-        public void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
+        public virtual void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
             if (discountUsageHistory == null)
                 throw new ArgumentNullException("discountUsageHistory");

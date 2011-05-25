@@ -69,7 +69,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute</returns>
-        public SpecificationAttribute GetSpecificationAttributeById(int specificationAttributeId)
+        public virtual SpecificationAttribute GetSpecificationAttributeById(int specificationAttributeId)
         {
             if (specificationAttributeId == 0)
                 return null;
@@ -86,7 +86,7 @@ namespace Nop.Services.Catalog
         /// Gets specification attributes
         /// </summary>
         /// <returns>Specification attributes</returns>
-        public IList<SpecificationAttribute> GetSpecificationAttributes()
+        public virtual IList<SpecificationAttribute> GetSpecificationAttributes()
         {
             var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder
@@ -99,7 +99,7 @@ namespace Nop.Services.Catalog
         /// Deletes a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public void DeleteSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        public virtual void DeleteSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException("specificationAttribute");
@@ -115,7 +115,7 @@ namespace Nop.Services.Catalog
         /// Inserts a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        public virtual void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException("specificationAttribute");
@@ -131,7 +131,7 @@ namespace Nop.Services.Catalog
         /// Updates the specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        public virtual void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException("specificationAttribute");
@@ -152,7 +152,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="specificationAttributeOptionId">The specification attribute option identifier</param>
         /// <returns>Specification attribute option</returns>
-        public SpecificationAttributeOption GetSpecificationAttributeOptionById(int specificationAttributeOptionId)
+        public virtual SpecificationAttributeOption GetSpecificationAttributeOptionById(int specificationAttributeOptionId)
         {
             if (specificationAttributeOptionId == 0)
                 return null;
@@ -170,7 +170,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute option</returns>
-        public IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
+        public virtual IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
         {
             var query = from sao in _specificationAttributeOptionRepository.Table
                         orderby sao.DisplayOrder
@@ -184,7 +184,7 @@ namespace Nop.Services.Catalog
         /// Deletes a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public void DeleteSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
+        public virtual void DeleteSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
@@ -200,7 +200,7 @@ namespace Nop.Services.Catalog
         /// Inserts a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
+        public virtual void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
@@ -216,7 +216,7 @@ namespace Nop.Services.Catalog
         /// Updates the specification attribute
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public void UpdateSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
+        public virtual void UpdateSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
@@ -236,7 +236,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute</param>
-        public void DeleteProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        public virtual void DeleteProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
@@ -253,7 +253,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId)
+        public virtual IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId)
         {
             return GetProductSpecificationAttributesByProductId(productId, null, null);
         }
@@ -265,7 +265,7 @@ namespace Nop.Services.Catalog
         /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 0 to load attributes with AllowFiltering set to true, null to load all attributes</param>
         /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 0 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId, 
+        public virtual IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId, 
             bool? allowFiltering, bool? showOnProductPage)
         {
             string allowFilteringCacheStr = "null";
@@ -296,7 +296,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productSpecificationAttributeId">Product specification attribute mapping identifier</param>
         /// <returns>Product specification attribute mapping</returns>
-        public ProductSpecificationAttribute GetProductSpecificationAttributeById(int productSpecificationAttributeId)
+        public virtual ProductSpecificationAttribute GetProductSpecificationAttributeById(int productSpecificationAttributeId)
         {
             if (productSpecificationAttributeId == 0)
                 return null;
@@ -309,7 +309,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        public void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        public virtual void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
@@ -325,7 +325,7 @@ namespace Nop.Services.Catalog
         /// Updates the product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        public void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        public virtual void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
@@ -347,7 +347,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryId">Category identifier</param>
         /// <param name="workContext">Work context</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public IList<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, IWorkContext workContext)
+        public virtual IList<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, IWorkContext workContext)
         {
             if (categoryId == 0)
                 throw new ArgumentException("Category identifier could not be null", "categoryId");

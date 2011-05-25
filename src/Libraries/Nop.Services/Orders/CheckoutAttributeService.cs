@@ -58,7 +58,7 @@ namespace Nop.Services.Orders
         /// Deletes a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        public void DeleteCheckoutAttribute(CheckoutAttribute checkoutAttribute)
+        public virtual void DeleteCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
                 throw new ArgumentNullException("checkoutAttribute");
@@ -74,7 +74,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="dontLoadShippableProductRequired">Value indicating whether to do not load attributes for checkout attibutes which require shippable products</param>
         /// <returns>Checkout attribute collection</returns>
-        public IList<CheckoutAttribute> GetAllCheckoutAttributes(bool dontLoadShippableProductRequired)
+        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(bool dontLoadShippableProductRequired)
         {
             string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, dontLoadShippableProductRequired);
             return _cacheManager.Get(key, () =>
@@ -93,7 +93,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute</returns>
-        public CheckoutAttribute GetCheckoutAttributeById(int checkoutAttributeId)
+        public virtual CheckoutAttribute GetCheckoutAttributeById(int checkoutAttributeId)
         {
             if (checkoutAttributeId == 0)
                 return null;
@@ -110,7 +110,7 @@ namespace Nop.Services.Orders
         /// Inserts a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        public void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute)
+        public virtual void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
                 throw new ArgumentNullException("checkoutAttribute");
@@ -125,7 +125,7 @@ namespace Nop.Services.Orders
         /// Updates the checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        public void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute)
+        public virtual void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
                 throw new ArgumentNullException("checkoutAttribute");
@@ -144,7 +144,7 @@ namespace Nop.Services.Orders
         /// Deletes a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public void DeleteCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
+        public virtual void DeleteCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
                 throw new ArgumentNullException("checkoutAttributeValue");
@@ -160,7 +160,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
         /// <returns>Checkout attribute value collection</returns>
-        public IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
+        public virtual IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
             string key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
             return _cacheManager.Get(key, () =>
@@ -179,7 +179,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
         /// <returns>Checkout attribute value</returns>
-        public CheckoutAttributeValue GetCheckoutAttributeValueById(int checkoutAttributeValueId)
+        public virtual CheckoutAttributeValue GetCheckoutAttributeValueById(int checkoutAttributeValueId)
         {
             if (checkoutAttributeValueId == 0)
                 return null;
@@ -196,7 +196,7 @@ namespace Nop.Services.Orders
         /// Inserts a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
+        public virtual void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
                 throw new ArgumentNullException("checkoutAttributeValue");
@@ -211,7 +211,7 @@ namespace Nop.Services.Orders
         /// Updates the checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
+        public virtual void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
                 throw new ArgumentNullException("checkoutAttributeValue");

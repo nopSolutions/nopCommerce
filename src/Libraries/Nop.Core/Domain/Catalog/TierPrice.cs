@@ -9,21 +9,21 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product variant identifier
         /// </summary>
-        public int ProductVariantId { get; set; }
+        public virtual int ProductVariantId { get; set; }
         /// <summary>
         /// Gets or sets the customer role identifier
         /// </summary>
-        public int? CustomerRoleId { get; set; }
+        public virtual int? CustomerRoleId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
         /// </summary>
-        public int Quantity { get; set; }
+        public virtual int Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the price
         /// </summary>
-        public decimal Price { get; set; }
+        public virtual decimal Price { get; set; }
 
         /// <summary>
         /// Gets or sets the product variant

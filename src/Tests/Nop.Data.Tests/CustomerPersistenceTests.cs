@@ -46,8 +46,8 @@ namespace Nop.Data.Tests
         public void Can_save_and_load_customer_with_customerRoles()
         {
             var customer = GetTestCustomer();
-            customer.CustomerRoles = new List<CustomerRole>()
-            {
+            customer.CustomerRoles.Add
+            (
                 new CustomerRole()
                 {
                     Name = "Administrators",
@@ -57,7 +57,7 @@ namespace Nop.Data.Tests
                     IsSystemRole = true,
                     SystemName = "Administrators"
                 }
-            };
+            );
 
 
             var fromDb = SaveAndLoadEntity(customer);
@@ -211,8 +211,8 @@ namespace Nop.Data.Tests
             var customer = GetTestCustomer();
             var productVariant = GetTestProductVariant();
 
-            customer.ShoppingCartItems = new List<ShoppingCartItem>()
-            {
+            customer.ShoppingCartItems.Add
+            (
                 new ShoppingCartItem()
                 {
                     ShoppingCartType = ShoppingCartType.ShoppingCart,
@@ -223,7 +223,7 @@ namespace Nop.Data.Tests
                     UpdatedOnUtc = new DateTime(2010, 01, 02),
                     ProductVariant = GetTestProductVariant()
                 }
-            };
+            );
 
 
             var fromDb = SaveAndLoadEntity(customer);
@@ -238,25 +238,25 @@ namespace Nop.Data.Tests
         public void Can_save_and_load_customer_with_orders()
         {
             var customer = GetTestCustomer();
-            customer.Orders = new List<Order>()
-            {
-                new Order()
-                {
-                    OrderGuid = Guid.NewGuid(),
-                    BillingAddress = new Address()
+            customer.Orders.Add
+                (
+                    new Order()
                     {
-                        Country = new Country()
+                        OrderGuid = Guid.NewGuid(),
+                        BillingAddress = new Address()
                         {
-                            Name = "United States",
-                            TwoLetterIsoCode = "US",
-                            ThreeLetterIsoCode = "USA",
+                            Country = new Country()
+                            {
+                                Name = "United States",
+                                TwoLetterIsoCode = "US",
+                                ThreeLetterIsoCode = "USA",
+                            },
+                            CreatedOnUtc = new DateTime(2010, 01, 01),
                         },
-                        CreatedOnUtc = new DateTime(2010, 01, 01),
-                    },
-                    Deleted = true,
-                    CreatedOnUtc = new DateTime(2010, 01, 01)
-                }
-            };
+                        Deleted = true,
+                        CreatedOnUtc = new DateTime(2010, 01, 01)
+                    }
+               );
 
 
             var fromDb = SaveAndLoadEntity(customer);

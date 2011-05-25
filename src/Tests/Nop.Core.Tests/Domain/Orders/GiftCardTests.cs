@@ -16,26 +16,36 @@ namespace Nop.Core.Tests.Domain.Orders
         [Test]
         public void Can_validate_giftCard()
         {
+
             var gc = new GiftCard()
             {
                 Amount = 100,
-                IsGiftCardActivated = true,
-                GiftCardUsageHistory = new List<GiftCardUsageHistory>()
-                {
-                    new GiftCardUsageHistory()
-                    {
-                         UsedValue = 30
-                    },
-                    new GiftCardUsageHistory()
-                    {
-                         UsedValue = 20
-                    },
-                    new GiftCardUsageHistory()
-                    {
-                         UsedValue = 5
-                    }
-                }
+                IsGiftCardActivated = true
             };
+            gc.GiftCardUsageHistory.Add
+                (
+                    new GiftCardUsageHistory()
+                    {
+                        UsedValue = 30
+                    }
+
+                );
+            gc.GiftCardUsageHistory.Add
+                (
+                    new GiftCardUsageHistory()
+                    {
+                        UsedValue = 20
+                    }
+
+                );
+            gc.GiftCardUsageHistory.Add
+                (
+                    new GiftCardUsageHistory()
+                    {
+                        UsedValue = 5
+                    }
+
+                );
 
             //valid
             gc.IsGiftCardValid().ShouldEqual(true);
@@ -61,23 +71,32 @@ namespace Nop.Core.Tests.Domain.Orders
         {
             var gc = new GiftCard()
             {
-                Amount = 100,
-                GiftCardUsageHistory = new List<GiftCardUsageHistory>()
-                {
-                    new GiftCardUsageHistory()
-                    {
-                         UsedValue = 30
-                    },
-                    new GiftCardUsageHistory()
-                    {
-                         UsedValue = 20
-                    },
-                    new GiftCardUsageHistory()
-                    {
-                         UsedValue = 5
-                    }
-                }
+                Amount = 100
             };
+            gc.GiftCardUsageHistory.Add
+                (
+                    new GiftCardUsageHistory()
+                    {
+                        UsedValue = 30
+                    }
+
+                );
+            gc.GiftCardUsageHistory.Add
+                (
+                    new GiftCardUsageHistory()
+                    {
+                        UsedValue = 20
+                    }
+
+                );
+            gc.GiftCardUsageHistory.Add
+                (
+                    new GiftCardUsageHistory()
+                    {
+                        UsedValue = 5
+                    }
+
+                );
 
             gc.GetGiftCardRemainingAmount().ShouldEqual(45);
         }

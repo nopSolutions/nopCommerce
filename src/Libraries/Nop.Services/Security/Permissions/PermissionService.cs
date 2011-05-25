@@ -50,7 +50,7 @@ namespace Nop.Services.Security.Permissions
         /// Delete a permission
         /// </summary>
         /// <param name="permission">Permission</param>
-        public void DeletePermissionRecord(PermissionRecord permission)
+        public virtual void DeletePermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
                 throw new ArgumentNullException("permission");
@@ -66,7 +66,7 @@ namespace Nop.Services.Security.Permissions
         /// </summary>
         /// <param name="permissionId">Permission identifier</param>
         /// <returns>Permission</returns>
-        public PermissionRecord GetPermissionRecordById(int permissionId)
+        public virtual PermissionRecord GetPermissionRecordById(int permissionId)
         {
             if (permissionId == 0)
                 return null;
@@ -79,7 +79,7 @@ namespace Nop.Services.Security.Permissions
         /// </summary>
         /// <param name="systemName">Permission system name</param>
         /// <returns>Permission</returns>
-        public PermissionRecord GetPermissionRecordBySystemName(string systemName)
+        public virtual PermissionRecord GetPermissionRecordBySystemName(string systemName)
         {
             if (String.IsNullOrWhiteSpace(systemName))
                 return null;
@@ -96,7 +96,7 @@ namespace Nop.Services.Security.Permissions
         /// Gets all permissions
         /// </summary>
         /// <returns>Permissions</returns>
-        public IList<PermissionRecord> GetAllPermissionRecords()
+        public virtual IList<PermissionRecord> GetAllPermissionRecords()
         {
             var query = from cr in _permissionPecordRepository.Table
                         orderby cr.Category, cr.Name
@@ -109,7 +109,7 @@ namespace Nop.Services.Security.Permissions
         /// Inserts a permission
         /// </summary>
         /// <param name="permission">Permission</param>
-        public void InsertPermissionRecord(PermissionRecord permission)
+        public virtual void InsertPermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
                 throw new ArgumentNullException("permission");
@@ -121,7 +121,7 @@ namespace Nop.Services.Security.Permissions
         /// Updates the permission
         /// </summary>
         /// <param name="permission">Permission</param>
-        public void UpdatePermissionRecord(PermissionRecord permission)
+        public virtual void UpdatePermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
                 throw new ArgumentNullException("permission");
@@ -133,7 +133,7 @@ namespace Nop.Services.Security.Permissions
         /// Install permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
-        public void InstallPermissions(IPermissionProvider permissionProvider)
+        public virtual void InstallPermissions(IPermissionProvider permissionProvider)
         {
             //install new permissions
             var permissions = permissionProvider.GetPermissions();
@@ -192,7 +192,7 @@ namespace Nop.Services.Security.Permissions
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public bool Authorize(string permissionRecordSystemName)
+        public virtual bool Authorize(string permissionRecordSystemName)
         {
             if (String.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
@@ -206,7 +206,7 @@ namespace Nop.Services.Security.Permissions
         /// </summary>
         /// <param name="permission">Permission record</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public bool Authorize(PermissionRecord permission)
+        public virtual bool Authorize(PermissionRecord permission)
         {
             if (permission == null)
                 return false;

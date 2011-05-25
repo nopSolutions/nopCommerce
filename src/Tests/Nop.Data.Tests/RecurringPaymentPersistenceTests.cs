@@ -57,17 +57,16 @@ namespace Nop.Data.Tests
                 IsActive = true,
                 Deleted = true,
                 CreatedOnUtc = new DateTime(2010, 01, 02),
-                InitialOrder = GetTestOrder(),
-                RecurringPaymentHistory = new List<RecurringPaymentHistory>()
-                {
-                    new RecurringPaymentHistory()
-                    {
-                        CreatedOnUtc = new DateTime(2010, 01, 03),
-                        //Order = GetTestOrder()
-                    }
-                }
+                InitialOrder = GetTestOrder()
             };
-
+            rp.RecurringPaymentHistory.Add
+                (
+                  new RecurringPaymentHistory()
+                  {
+                      CreatedOnUtc = new DateTime(2010, 01, 03),
+                      //Order = GetTestOrder()
+                  }
+                );
             var fromDb = SaveAndLoadEntity(rp);
             fromDb.ShouldNotBeNull();
 

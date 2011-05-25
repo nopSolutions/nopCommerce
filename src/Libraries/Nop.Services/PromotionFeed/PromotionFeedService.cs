@@ -39,7 +39,7 @@ namespace Nop.Services.PromotionFeed
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Found promotion feed</returns>
-        public IPromotionFeed LoadPromotionFeedBySystemName(string systemName)
+        public virtual IPromotionFeed LoadPromotionFeedBySystemName(string systemName)
         {
             var providers = LoadAllPromotionFeeds();
             var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
@@ -50,7 +50,7 @@ namespace Nop.Services.PromotionFeed
         /// Load all promotion feeds
         /// </summary>
         /// <returns>Promotion feeds</returns>
-        public IList<IPromotionFeed> LoadAllPromotionFeeds()
+        public virtual IList<IPromotionFeed> LoadAllPromotionFeeds()
         {
             var providers = _pluginFinder.GetPlugins<IPromotionFeed>();
             return providers.OrderBy(tp => tp.FriendlyName).ToList();

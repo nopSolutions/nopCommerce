@@ -1,5 +1,4 @@
 using System;
-using Nop.Core;
 
 namespace Nop.Core.Domain.Directory
 {
@@ -27,17 +26,17 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// The three letter ISO code for the Exchange Rate, e.g. USD
         /// </summary>
-        public string CurrencyCode { get; set; }
+        public virtual string CurrencyCode { get; set; }
 
         /// <summary>
         /// The conversion rate of this currency from the base currency
         /// </summary>
-        public decimal Rate { get; set; }
+        public virtual decimal Rate { get; set; }
 
         /// <summary>
         /// When was this exchange rate updated from the data source (the internet data xml feed)
         /// </summary>
-        public DateTime UpdatedOn { get; set; }
+        public virtual DateTime UpdatedOn { get; set; }
 
         
         /// <summary>

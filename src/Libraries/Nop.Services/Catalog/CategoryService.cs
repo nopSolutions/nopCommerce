@@ -64,7 +64,7 @@ namespace Nop.Services.Catalog
         /// Delete category
         /// </summary>
         /// <param name="category">Category</param>
-        public void DeleteCategory(Category category)
+        public virtual void DeleteCategory(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
@@ -78,7 +78,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public IList<Category> GetAllCategories(bool showHidden = false)
+        public virtual IList<Category> GetAllCategories(bool showHidden = false)
         {
             var query = from c in _categoryRepository.Table
                         orderby c.ParentCategoryId, c.DisplayOrder
@@ -105,7 +105,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public IPagedList<Category> GetAllCategories(int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<Category> GetAllCategories(int pageIndex, int pageSize, bool showHidden = false)
         {
             var categories = GetAllCategories(showHidden);
             return new PagedList<Category>(categories, pageIndex, pageSize);
@@ -142,7 +142,7 @@ namespace Nop.Services.Catalog
         /// Gets all categories displayed on the home page
         /// </summary>
         /// <returns>Category collection</returns>
-        public IList<Category> GetAllCategoriesDisplayedOnHomePage()
+        public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage()
         {
             var query = from c in _categoryRepository.Table
                         orderby c.DisplayOrder
@@ -166,7 +166,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Category</returns>
-        public Category GetCategoryById(int categoryId)
+        public virtual Category GetCategoryById(int categoryId)
         {
             if (categoryId == 0)
                 return null;
@@ -188,7 +188,7 @@ namespace Nop.Services.Catalog
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
-        public void InsertCategory(Category category)
+        public virtual void InsertCategory(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
@@ -204,7 +204,7 @@ namespace Nop.Services.Catalog
         /// Updates the category
         /// </summary>
         /// <param name="category">Category</param>
-        public void UpdateCategory(Category category)
+        public virtual void UpdateCategory(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
@@ -232,7 +232,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product category mapping
         /// </summary>
         /// <param name="productCategory">Product category</param>
-        public void DeleteProductCategory(ProductCategory productCategory)
+        public virtual void DeleteProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
@@ -250,7 +250,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryId">Category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product a category mapping collection</returns>
-        public IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId, bool showHidden = false)
+        public virtual IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId, bool showHidden = false)
         {
             if (categoryId == 0)
                 return new List<ProductCategory>();
@@ -276,7 +276,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product category mapping collection</returns>
-        public IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false)
+        public virtual IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false)
         {
             if (productId == 0)
                 return new List<ProductCategory>();
@@ -301,7 +301,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productCategoryId">Product category mapping identifier</param>
         /// <returns>Product category mapping</returns>
-        public ProductCategory GetProductCategoryById(int productCategoryId)
+        public virtual ProductCategory GetProductCategoryById(int productCategoryId)
         {
             if (productCategoryId == 0)
                 return null;
@@ -317,7 +317,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product category mapping
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
-        public void InsertProductCategory(ProductCategory productCategory)
+        public virtual void InsertProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
@@ -333,7 +333,7 @@ namespace Nop.Services.Catalog
         /// Updates the product category mapping 
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
-        public void UpdateProductCategory(ProductCategory productCategory)
+        public virtual void UpdateProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");

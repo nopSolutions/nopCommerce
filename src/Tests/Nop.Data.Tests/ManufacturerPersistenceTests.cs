@@ -68,9 +68,10 @@ namespace Nop.Data.Tests
                 Deleted = false,
                 DisplayOrder = 5,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                UpdatedOnUtc = new DateTime(2010, 01, 02),
-                ProductManufacturers = new List<ProductManufacturer>()
-                {
+                UpdatedOnUtc = new DateTime(2010, 01, 02)
+            };
+            manufacturer.ProductManufacturers.Add
+                (
                     new ProductManufacturer
                     {
                         IsFeaturedProduct = true,
@@ -84,9 +85,7 @@ namespace Nop.Data.Tests
                             UpdatedOnUtc = new DateTime(2010, 01, 02)
                         }
                     }
-                }
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(manufacturer);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name");

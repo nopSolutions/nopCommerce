@@ -11,57 +11,57 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order product variant identifier
         /// </summary>
-        public int OrderProductVariantId { get; set; }
+        public virtual int OrderProductVariantId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public virtual int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
         /// </summary>
-        public int Quantity { get; set; }
+        public virtual int Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the reason to return
         /// </summary>
-        public string ReasonForReturn { get; set; }
+        public virtual string ReasonForReturn { get; set; }
 
         /// <summary>
         /// Gets or sets the requested action
         /// </summary>
-        public string RequestedAction { get; set; }
+        public virtual string RequestedAction { get; set; }
 
         /// <summary>
         /// Gets or sets the customer comments
         /// </summary>
-        public string CustomerComments { get; set; }
+        public virtual string CustomerComments { get; set; }
 
         /// <summary>
         /// Gets or sets the staff notes
         /// </summary>
-        public string StaffNotes { get; set; }
+        public virtual string StaffNotes { get; set; }
 
         /// <summary>
         /// Gets or sets the return status identifier
         /// </summary>
-        public int ReturnRequestStatusId { get; set; }
+        public virtual int ReturnRequestStatusId { get; set; }
         
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of entity update
         /// </summary>
-        public DateTime UpdatedOnUtc { get; set; }
+        public virtual DateTime UpdatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets or sets the return status
         /// </summary>
-        public ReturnRequestStatus ReturnRequestStatus
+        public virtual ReturnRequestStatus ReturnRequestStatus
         {
             get
             {

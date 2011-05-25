@@ -87,7 +87,7 @@ namespace Nop.Services.Forums
         /// Update forum stats
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
-        public void UpdateForumStats(int forumId)
+        public virtual void UpdateForumStats(int forumId)
         {
             if (forumId == 0)
                 return;
@@ -147,7 +147,7 @@ namespace Nop.Services.Forums
         /// Update forum topic stats
         /// </summary>
         /// <param name="Id">The forum topic identifier</param>
-        public void UpdateForumTopicStats(int Id)
+        public virtual void UpdateForumTopicStats(int Id)
         {
             if (Id == 0)
                 return;
@@ -194,7 +194,7 @@ namespace Nop.Services.Forums
         /// Update customer stats
         /// </summary>
         /// <param name="customerId">The customer identifier</param>
-        public void UpdateCustomerStats(int customerId)
+        public virtual void UpdateCustomerStats(int customerId)
         {
             if (customerId == 0)
                 return;
@@ -221,7 +221,7 @@ namespace Nop.Services.Forums
         /// Deletes a forum group
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
-        public void DeleteForumGroup(int forumGroupId)
+        public virtual void DeleteForumGroup(int forumGroupId)
         {
             var forumGroup = GetForumGroupById(forumGroupId);
             if (forumGroup == null)
@@ -238,7 +238,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forum group</returns>
-        public ForumGroup GetForumGroupById(int forumGroupId)
+        public virtual ForumGroup GetForumGroupById(int forumGroupId)
         {
             if (forumGroupId == 0)
                 return null;
@@ -255,7 +255,7 @@ namespace Nop.Services.Forums
         /// Gets all forum groups
         /// </summary>
         /// <returns>Forum groups</returns>
-        public IList<ForumGroup> GetAllForumGroups()
+        public virtual IList<ForumGroup> GetAllForumGroups()
         {
             var query = from fg in _forumGroupRepository.Table
                         orderby fg.DisplayOrder
@@ -267,7 +267,7 @@ namespace Nop.Services.Forums
         /// Inserts a forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        public void InsertForumGroup(ForumGroup forumGroup)
+        public virtual void InsertForumGroup(ForumGroup forumGroup)
         {
             if (forumGroup == null)
                 throw new ArgumentNullException("forumGroup");
@@ -283,7 +283,7 @@ namespace Nop.Services.Forums
         /// Updates the forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        public void UpdateForumGroup(ForumGroup forumGroup)
+        public virtual void UpdateForumGroup(ForumGroup forumGroup)
         {
             if (forumGroup == null)
                 throw new ArgumentNullException("forumGroup");
@@ -299,7 +299,7 @@ namespace Nop.Services.Forums
         /// Deletes a forum
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
-        public void DeleteForum(int forumId)
+        public virtual void DeleteForum(int forumId)
         {
             var forum = GetForumById(forumId);
             if (forum == null)
@@ -340,7 +340,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
         /// <returns>Forum</returns>
-        public Forum GetForumById(int forumId)
+        public virtual Forum GetForumById(int forumId)
         {
             if (forumId == 0)
                 return null;
@@ -358,7 +358,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forums</returns>
-        public IList<Forum> GetAllForumsByGroupId(int forumGroupId)
+        public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
             var query = from f in _forumRepository.Table
                         orderby f.DisplayOrder
@@ -372,7 +372,7 @@ namespace Nop.Services.Forums
         /// Inserts a forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        public void InsertForum(Forum forum)
+        public virtual void InsertForum(Forum forum)
         {
             if (forum == null)
                 throw new ArgumentNullException("forum");
@@ -387,7 +387,7 @@ namespace Nop.Services.Forums
         /// Updates the forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        public void UpdateForum(Forum forum)
+        public virtual void UpdateForum(Forum forum)
         {
             if (forum == null)
                 throw new ArgumentNullException("forum");
@@ -402,7 +402,7 @@ namespace Nop.Services.Forums
         /// Deletes a topic
         /// </summary>
         /// <param name="Id">The topic identifier</param>
-        public void DeleteTopic(int Id)
+        public virtual void DeleteTopic(int Id)
         {
             var forumTopic = GetTopicById(Id);
             if (forumTopic == null)
@@ -437,7 +437,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="Id">The topic identifier</param>
         /// <returns>Topic</returns>
-        public ForumTopic GetTopicById(int Id)
+        public virtual ForumTopic GetTopicById(int Id)
         {
             return GetTopicById(Id, false);
         }
@@ -448,7 +448,7 @@ namespace Nop.Services.Forums
         /// <param name="Id">The topic identifier</param>
         /// <param name="increaseViews">The value indicating whether to increase topic views</param>
         /// <returns>Topic</returns>
-        public ForumTopic GetTopicById(int Id, bool increaseViews)
+        public virtual ForumTopic GetTopicById(int Id, bool increaseViews)
         {
             if (Id == 0)
                 return null;
@@ -480,7 +480,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Topics</returns>
-        public IList<ForumTopic> GetAllTopics(int forumId,
+        public virtual IList<ForumTopic> GetAllTopics(int forumId,
             int customerId, string keywords, ForumSearchType searchType,
             int limitDays, int pageIndex, int pageSize)
         {
@@ -516,7 +516,7 @@ namespace Nop.Services.Forums
         /// <param name="forumId">The forum group identifier</param>
         /// <param name="topicCount">Topic count</param>
         /// <returns>Topics</returns>
-        public IList<ForumTopic> GetActiveTopics(int forumId, int topicCount)
+        public virtual IList<ForumTopic> GetActiveTopics(int forumId, int topicCount)
         {
             var query1 = from ft in _forumTopicRepository.Table
                          where
@@ -538,7 +538,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        public void InsertTopic(ForumTopic forumTopic, bool sendNotifications)
+        public virtual void InsertTopic(ForumTopic forumTopic, bool sendNotifications)
         {
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
@@ -575,7 +575,7 @@ namespace Nop.Services.Forums
         /// Updates the topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        public void UpdateTopic(ForumTopic forumTopic)
+        public virtual void UpdateTopic(ForumTopic forumTopic)
         {
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
@@ -592,7 +592,7 @@ namespace Nop.Services.Forums
         /// <param name="Id">The forum topic identifier</param>
         /// <param name="newForumId">New forum identifier</param>
         /// <returns>Moved topic</returns>
-        public ForumTopic MoveTopic(int Id, int newForumId)
+        public virtual ForumTopic MoveTopic(int Id, int newForumId)
         {
             var forumTopic = GetTopicById(Id);
             if (forumTopic == null)
@@ -624,7 +624,7 @@ namespace Nop.Services.Forums
         /// Deletes a post
         /// </summary>
         /// <param name="forumPostId">The post identifier</param>
-        public void DeletePost(int forumPostId)
+        public virtual void DeletePost(int forumPostId)
         {
             var forumPost = GetPostById(forumPostId);
             if (forumPost == null)
@@ -672,7 +672,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPostId">The post identifier</param>
         /// <returns>Post</returns>
-        public ForumPost GetPostById(int forumPostId)
+        public virtual ForumPost GetPostById(int forumPostId)
         {
             if (forumPostId == 0)
                 return null;
@@ -694,7 +694,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        public PagedList<ForumPost> GetAllPosts(int Id,
+        public virtual PagedList<ForumPost> GetAllPosts(int Id,
             int customerId, string keywords, int pageIndex, int pageSize)
         {
             return GetAllPosts(Id, customerId, keywords, true,
@@ -711,7 +711,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        public PagedList<ForumPost> GetAllPosts(int Id, int customerId,
+        public virtual PagedList<ForumPost> GetAllPosts(int Id, int customerId,
             string keywords, bool ascSort, int pageIndex, int pageSize)
         {
             var query = _forumPostRepository.Table;
@@ -736,7 +736,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPost">The forum post</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        public void InsertPost(ForumPost forumPost, bool sendNotifications)
+        public virtual void InsertPost(ForumPost forumPost, bool sendNotifications)
         {
             if (forumPost == null)
                 throw new ArgumentNullException("forumPost");
@@ -779,7 +779,7 @@ namespace Nop.Services.Forums
         /// Updates the post
         /// </summary>
         /// <param name="forumPost">The forum post</param>
-        public void UpdatePost(ForumPost forumPost)
+        public virtual void UpdatePost(ForumPost forumPost)
         {
             //validation
             if (forumPost == null)
@@ -795,7 +795,7 @@ namespace Nop.Services.Forums
         /// Deletes a private message
         /// </summary>
         /// <param name="forumPrivateMessageId">The private message identifier</param>
-        public void DeletePrivateMessage(int forumPrivateMessageId)
+        public virtual void DeletePrivateMessage(int forumPrivateMessageId)
         {
             var privateMessage = GetPrivateMessageById(forumPrivateMessageId);
             if (privateMessage == null)
@@ -808,7 +808,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPrivateMessageId">The private message identifier</param>
         /// <returns>Private message</returns>
-        public PrivateMessage GetPrivateMessageById(int forumPrivateMessageId)
+        public virtual PrivateMessage GetPrivateMessageById(int forumPrivateMessageId)
         {
             if (forumPrivateMessageId == 0)
                 return null;
@@ -833,7 +833,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        public PagedList<PrivateMessage> GetAllPrivateMessages(int fromCustomerId,
+        public virtual PagedList<PrivateMessage> GetAllPrivateMessages(int fromCustomerId,
             int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex, int pageSize)
         {
@@ -857,7 +857,7 @@ namespace Nop.Services.Forums
         /// Inserts a private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        public void InsertPrivateMessage(PrivateMessage privateMessage)
+        public virtual void InsertPrivateMessage(PrivateMessage privateMessage)
         {
             if (privateMessage == null)
                 throw new ArgumentNullException("privateMessage");
@@ -882,7 +882,7 @@ namespace Nop.Services.Forums
         /// Updates the private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        public void UpdatePrivateMessage(PrivateMessage privateMessage)
+        public virtual void UpdatePrivateMessage(PrivateMessage privateMessage)
         {
             if (privateMessage == null)
                 throw new ArgumentNullException("privateMessage");
@@ -901,7 +901,7 @@ namespace Nop.Services.Forums
         /// Deletes a forum subscription
         /// </summary>
         /// <param name="forumSubscriptionId">The forum subscription identifier</param>
-        public void DeleteSubscription(int forumSubscriptionId)
+        public virtual void DeleteSubscription(int forumSubscriptionId)
         {
             var forumSubscription = GetSubscriptionById(forumSubscriptionId);
             if (forumSubscription == null)
@@ -915,7 +915,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumSubscriptionId">The forum subscription identifier</param>
         /// <returns>Forum subscription</returns>
-        public ForumSubscription GetSubscriptionById(int forumSubscriptionId)
+        public virtual ForumSubscription GetSubscriptionById(int forumSubscriptionId)
         {
             if (forumSubscriptionId == 0)
                 return null;
@@ -937,7 +937,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        public PagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
+        public virtual PagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
             int topicId, int pageIndex, int pageSize)
         {
             var fsQuery = from fs in _forumSubscriptionRepository.Table
@@ -962,7 +962,7 @@ namespace Nop.Services.Forums
         /// Inserts a forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        public void InsertSubscription(ForumSubscription forumSubscription)
+        public virtual void InsertSubscription(ForumSubscription forumSubscription)
         {
             if (forumSubscription == null)
                 throw new ArgumentNullException("forumSubscription");
@@ -974,7 +974,7 @@ namespace Nop.Services.Forums
         /// Updates the forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        public void UpdateSubscription(ForumSubscription forumSubscription)
+        public virtual void UpdateSubscription(ForumSubscription forumSubscription)
         {
             if (forumSubscription == null)
                 throw new ArgumentNullException("forumSubscription");
@@ -988,7 +988,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="forum">Forum</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToCreateTopic(Customer customer, Forum forum)
+        public virtual bool IsCustomerAllowedToCreateTopic(Customer customer, Forum forum)
         {
             if (forum == null)
                 return false;
@@ -1013,7 +1013,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToEditTopic(Customer customer, ForumTopic topic)
+        public virtual bool IsCustomerAllowedToEditTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1044,7 +1044,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToMoveTopic(Customer customer, ForumTopic topic)
+        public virtual bool IsCustomerAllowedToMoveTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1068,7 +1068,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToDeleteTopic(Customer customer, ForumTopic topic)
+        public virtual bool IsCustomerAllowedToDeleteTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1099,7 +1099,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToCreatePost(Customer customer, ForumTopic topic)
+        public virtual bool IsCustomerAllowedToCreatePost(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1124,7 +1124,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToEditPost(Customer customer, ForumPost post)
+        public virtual bool IsCustomerAllowedToEditPost(Customer customer, ForumPost post)
         {
             if (post == null)
                 return false;
@@ -1155,7 +1155,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToDeletePost(Customer customer, ForumPost post)
+        public virtual bool IsCustomerAllowedToDeletePost(Customer customer, ForumPost post)
         {
             if (post == null)
                 return false;
@@ -1185,7 +1185,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToSetTopicPriority(Customer customer)
+        public virtual bool IsCustomerAllowedToSetTopicPriority(Customer customer)
         {
             if (customer == null)
                 return false;
@@ -1205,7 +1205,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public bool IsCustomerAllowedToSubscribe(Customer customer)
+        public virtual bool IsCustomerAllowedToSubscribe(Customer customer)
         {
             if (customer == null)
                 return false;
@@ -1223,7 +1223,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <param name="postId">Post identifier</param>
         /// <returns>Page index</returns>
-        public int CalculateTopicPageIndex(int Id, int pageSize, int postId)
+        public virtual int CalculateTopicPageIndex(int Id, int pageSize, int postId)
         {
             int pageIndex = 0;
             var forumPosts = GetAllPosts(Id, 0,

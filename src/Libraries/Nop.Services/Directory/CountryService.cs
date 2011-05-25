@@ -49,7 +49,7 @@ namespace Nop.Services.Directory
         /// Deletes a country
         /// </summary>
         /// <param name="country">Country</param>
-        public void DeleteCountry(Country country)
+        public virtual void DeleteCountry(Country country)
         {
             if (country == null)
                 throw new ArgumentNullException("country");
@@ -64,7 +64,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        public IList<Country> GetAllCountries(bool showHidden = false)
+        public virtual IList<Country> GetAllCountries(bool showHidden = false)
         {
             string key = string.Format(COUNTRIES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
@@ -83,7 +83,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        public IList<Country> GetAllCountriesForBilling(bool showHidden = false)
+        public virtual IList<Country> GetAllCountriesForBilling(bool showHidden = false)
         {
             string key = string.Format(COUNTRIES_BILLING_KEY, showHidden);
             return _cacheManager.Get(key, () =>
@@ -102,7 +102,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Country collection</returns>
-        public IList<Country> GetAllCountriesForShipping(bool showHidden = false)
+        public virtual IList<Country> GetAllCountriesForShipping(bool showHidden = false)
         {
             string key = string.Format(COUNTRIES_SHIPPING_KEY, showHidden);
             return _cacheManager.Get(key, () =>
@@ -121,7 +121,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
-        public Country GetCountryById(int countryId)
+        public virtual Country GetCountryById(int countryId)
         {
             if (countryId == 0)
                 return null;
@@ -139,7 +139,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="twoLetterIsoCode">Country two letter ISO code</param>
         /// <returns>Country</returns>
-        public Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
+        public virtual Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
             var query = from c in _countryRepository.Table
                         where c.TwoLetterIsoCode == twoLetterIsoCode
@@ -154,7 +154,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="threeLetterIsoCode">Country three letter ISO code</param>
         /// <returns>Country</returns>
-        public Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
+        public virtual Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
             var query = from c in _countryRepository.Table
                         where c.ThreeLetterIsoCode == threeLetterIsoCode
@@ -167,7 +167,7 @@ namespace Nop.Services.Directory
         /// Inserts a country
         /// </summary>
         /// <param name="country">Country</param>
-        public void InsertCountry(Country country)
+        public virtual void InsertCountry(Country country)
         {
             if (country == null)
                 throw new ArgumentNullException("country");
@@ -181,7 +181,7 @@ namespace Nop.Services.Directory
         /// Updates the country
         /// </summary>
         /// <param name="country">Country</param>
-        public void UpdateCountry(Country country)
+        public virtual void UpdateCountry(Country country)
         {
             if (country == null)
                 throw new ArgumentNullException("country");

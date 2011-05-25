@@ -50,7 +50,7 @@ namespace Nop.Services.Configuration
         /// Adds a setting
         /// </summary>
         /// <param name="setting">Setting</param>
-        public void InsertSetting(Setting setting)
+        public virtual void InsertSetting(Setting setting)
         {
             if (setting == null)
                 throw new ArgumentNullException("setting");
@@ -65,7 +65,7 @@ namespace Nop.Services.Configuration
         /// Updates a setting
         /// </summary>
         /// <param name="setting">Setting</param>
-        public void UpdateSetting(Setting setting)
+        public virtual void UpdateSetting(Setting setting)
         {
             if (setting == null)
                 throw new ArgumentNullException("setting");
@@ -85,7 +85,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <param name="settingId">Setting identifer</param>
         /// <returns>Setting</returns>
-        public Setting GetSettingById(int settingId)
+        public virtual Setting GetSettingById(int settingId)
         {
             if (settingId == 0)
                 return null;
@@ -101,7 +101,7 @@ namespace Nop.Services.Configuration
         /// <param name="key">Key</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>Setting value</returns>
-        public T GetSettingByKey<T>(string key, T defaultValue = default(T))
+        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T))
         {
             if (String.IsNullOrEmpty(key))
                 return defaultValue;
@@ -122,7 +122,7 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        public void SetSetting<T>(string key, T value)
+        public virtual void SetSetting<T>(string key, T value)
         {
             var settings = GetAllSettings();
 
@@ -154,7 +154,7 @@ namespace Nop.Services.Configuration
         /// Deletes a setting
         /// </summary>
         /// <param name="setting">Setting</param>
-        public void DeleteSetting(Setting setting)
+        public virtual void DeleteSetting(Setting setting)
         {
             if (setting == null)
                 throw new ArgumentNullException("setting");
@@ -169,7 +169,7 @@ namespace Nop.Services.Configuration
         /// Gets all settings
         /// </summary>
         /// <returns>Setting collection</returns>
-        public IDictionary<string, Setting> GetAllSettings()
+        public virtual IDictionary<string, Setting> GetAllSettings()
         {
             //cache
             string key = string.Format(SETTINGS_ALL_KEY);
@@ -189,7 +189,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="settingInstance">Setting instance</param>
-        public void SaveSetting<T>(T settingInstance) where T : ISettings, new()
+        public virtual void SaveSetting<T>(T settingInstance) where T : ISettings, new()
         {
             //TODO don't use EngineContext.Current.Resolve to load IConfigurationProvider
             //but we should be sure that an appropriate ISettings object will not be cached in IoC tool after updating (by default cached per HTTP request)

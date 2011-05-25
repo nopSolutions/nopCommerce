@@ -10,84 +10,85 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Manufacturer : BaseEntity, ILocalizedEntity
     {
-        public Manufacturer() 
-        {
-            this.ProductManufacturers = new List<ProductManufacturer>();
-        }
+        private ICollection<ProductManufacturer> _productManufacturers;
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the description
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
-        public string MetaKeywords { get; set; }
+        public virtual string MetaKeywords { get; set; }
 
         /// <summary>
         /// Gets or sets the meta description
         /// </summary>
-        public string MetaDescription { get; set; }
+        public virtual string MetaDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the meta title
         /// </summary>
-        public string MetaTitle { get; set; }
+        public virtual string MetaTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the search-engine name
         /// </summary>
-        public string SeName { get; set; }
+        public virtual string SeName { get; set; }
 
         /// <summary>
         /// Gets or sets the parent picture identifier
         /// </summary>
-        public int PictureId { get; set; }
+        public virtual int PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the page size
         /// </summary>
-        public int PageSize { get; set; }
+        public virtual int PageSize { get; set; }
 
         /// <summary>
         /// Gets or sets the available price ranges
         /// </summary>
-        public string PriceRanges { get; set; }
+        public virtual string PriceRanges { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
-        public bool Published { get; set; }
+        public virtual bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public bool Deleted { get; set; }
+        public virtual bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOnUtc { get; set; }
+        public virtual DateTime UpdatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets or sets the product manufacturers
         /// </summary>
-        public virtual ICollection<ProductManufacturer> ProductManufacturers { get; set; }
+        public virtual ICollection<ProductManufacturer> ProductManufacturers
+        {
+            get { return _productManufacturers ?? (_productManufacturers = new List<ProductManufacturer>()); }
+            protected set { _productManufacturers = value; }
+        }
     }
 }

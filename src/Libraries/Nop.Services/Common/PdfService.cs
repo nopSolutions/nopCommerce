@@ -70,7 +70,7 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="lang">Language</param>
         /// <param name="filePath">File path</param>
-        public void PrintOrderToPdf(Order order, Language lang, string filePath)
+        public virtual void PrintOrderToPdf(Order order, Language lang, string filePath)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -515,7 +515,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <param name="filePath">File path</param>
-        public void PrintPackagingSlipsToPdf(IList<Order> orders, string filePath)
+        public virtual void PrintPackagingSlipsToPdf(IList<Order> orders, string filePath)
         {
             if (String.IsNullOrEmpty(filePath))
             {

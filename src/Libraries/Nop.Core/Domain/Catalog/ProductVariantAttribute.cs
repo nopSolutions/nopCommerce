@@ -9,45 +9,42 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductVariantAttribute : BaseEntity, ILocalizedEntity
     {
-        public ProductVariantAttribute() 
-        {
-            this.ProductVariantAttributeValues = new List<ProductVariantAttributeValue>();
-        }
+        private ICollection<ProductVariantAttributeValue> _productVariantAttributeValues;
 
         /// <summary>
         /// Gets or sets the product variant identifier
         /// </summary>
-        public int ProductVariantId { get; set; }
+        public virtual int ProductVariantId { get; set; }
 
         /// <summary>
         /// Gets or sets the product attribute identifier
         /// </summary>
-        public int ProductAttributeId { get; set; }
+        public virtual int ProductAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets a value a text prompt
         /// </summary>
-        public string TextPrompt { get; set; }
+        public virtual string TextPrompt { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is required
         /// </summary>
-        public bool IsRequired { get; set; }
+        public virtual bool IsRequired { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute control type identifier
         /// </summary>
-        public int AttributeControlTypeId { get; set; }
+        public virtual int AttributeControlTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
-        public AttributeControlType AttributeControlType
+        public virtual AttributeControlType AttributeControlType
         {
             get
             {
@@ -72,7 +69,11 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets the product variant attribute values
         /// </summary>
-        public virtual ICollection<ProductVariantAttributeValue> ProductVariantAttributeValues { get; set; }
+        public virtual ICollection<ProductVariantAttributeValue> ProductVariantAttributeValues
+        {
+            get { return _productVariantAttributeValues ?? (_productVariantAttributeValues = new List<ProductVariantAttributeValue>()); }
+            protected set { _productVariantAttributeValues = value; }
+        }
 
     }
 

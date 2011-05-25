@@ -23,8 +23,7 @@ namespace Nop.Data.Tests
                 Description = "Forum Group 1 Description",
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                Forums = new List<Forum>(),
+                UpdatedOnUtc = DateTime.UtcNow
             };
 
             var forumGroupFromDb = SaveAndLoadEntity(forumGroup);
@@ -43,8 +42,7 @@ namespace Nop.Data.Tests
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 NumPosts = 25,
-                NumTopics = 15,
-                ForumTopics = new List<ForumTopic>(),
+                NumTopics = 15
             };
 
             forumGroup.Forums.Add(forum);

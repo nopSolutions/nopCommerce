@@ -8,10 +8,10 @@
         /// <summary>
         /// From
         /// </summary>
-        public decimal? From { get; set; }
+        public virtual decimal? From { get; set; }
         /// <summary>
         /// To
         /// </summary>
-        public decimal? To { get; set; }
+        public virtual decimal? To { get; set; }
     }
 }

@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Domain.Directory
 {
     /// <summary>
@@ -9,21 +8,21 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the system keyword
         /// </summary>
-        public string SystemKeyword { get; set; }
+        public virtual string SystemKeyword { get; set; }
 
         /// <summary>
         /// Gets or sets the ratio
         /// </summary>
-        public decimal Ratio { get; set; }
+        public virtual decimal Ratio { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
     }
 }

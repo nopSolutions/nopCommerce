@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
@@ -9,17 +8,17 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public virtual int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the key
         /// </summary>
-        public string Key { get; set; }
+        public virtual string Key { get; set; }
 
         /// <summary>
         /// Gets or sets the value
         /// </summary>
-        public string Value { get; set; }
+        public virtual string Value { get; set; }
         
         /// <summary>
         /// Gets or sets the customer

@@ -18,21 +18,15 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public partial class Order : BaseEntity
     {
-        #region Ctor
 
-        public Order()
-        {
-            this.DiscountUsageHistory = new List<DiscountUsageHistory>();
-            this.GiftCardUsageHistory = new List<GiftCardUsageHistory>();
-            this.OrderNotes = new List<OrderNote>();
-            this.OrderProductVariants = new List<OrderProductVariant>();
-        }
-
-        #endregion
+        private ICollection<DiscountUsageHistory> _discountUsageHistory;
+        private ICollection<GiftCardUsageHistory> _giftCardUsageHistory;
+        private ICollection<OrderNote> _orderNotes;
+        private ICollection<OrderProductVariant> _orderProductVariant;
 
         #region Utilities
 
-        protected SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
+        protected virtual SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
         {
             var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
             if (String.IsNullOrEmpty(taxRatesStr))
@@ -74,268 +68,268 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public Guid OrderGuid { get; set; }
+        public virtual Guid OrderGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public virtual int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets an order status identifer
         /// </summary>
-        public int OrderStatusId { get; set; }
+        public virtual int OrderStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the shipping status identifier
         /// </summary>
-        public int ShippingStatusId { get; set; }
+        public virtual int ShippingStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the payment status identifier
         /// </summary>
-        public int PaymentStatusId { get; set; }
+        public virtual int PaymentStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method system name
         /// </summary>
-        public string PaymentMethodSystemName { get; set; }
+        public virtual string PaymentMethodSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the currency code of the primary currency (at the moment of order placing)
         /// </summary>
-        public string PrimaryCurrencyCode { get; set; }
+        public virtual string PrimaryCurrencyCode { get; set; }
 
         /// <summary>
         /// Gets or sets the customer currency code (at the moment of order placing)
         /// </summary>
-        public string CustomerCurrencyCode { get; set; }
+        public virtual string CustomerCurrencyCode { get; set; }
 
         /// <summary>
         /// Gets or sets the currency rate
         /// </summary>
-        public decimal CurrencyRate { get; set; }
+        public virtual decimal CurrencyRate { get; set; }
 
         /// <summary>
         /// Gets or sets the customer tax display type identifier
         /// </summary>
-        public int CustomerTaxDisplayTypeId { get; set; }
+        public virtual int CustomerTaxDisplayTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the VAT number (the European Union Value Added Tax)
         /// </summary>
-        public string VatNumber { get; set; }
+        public virtual string VatNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal (incl tax)
         /// </summary>
-        public decimal OrderSubtotalInclTax { get; set; }
+        public virtual decimal OrderSubtotalInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal (excl tax)
         /// </summary>
-        public decimal OrderSubtotalExclTax { get; set; }
+        public virtual decimal OrderSubtotalExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal discount (incl tax)
         /// </summary>
-        public decimal OrderSubTotalDiscountInclTax { get; set; }
+        public virtual decimal OrderSubTotalDiscountInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal discount (excl tax)
         /// </summary>
-        public decimal OrderSubTotalDiscountExclTax { get; set; }
+        public virtual decimal OrderSubTotalDiscountExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order shipping (incl tax)
         /// </summary>
-        public decimal OrderShippingInclTax { get; set; }
+        public virtual decimal OrderShippingInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order shipping (excl tax)
         /// </summary>
-        public decimal OrderShippingExclTax { get; set; }
+        public virtual decimal OrderShippingExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method additional fee (incl tax)
         /// </summary>
-        public decimal PaymentMethodAdditionalFeeInclTax { get; set; }
+        public virtual decimal PaymentMethodAdditionalFeeInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method additional fee (excl tax)
         /// </summary>
-        public decimal PaymentMethodAdditionalFeeExclTax { get; set; }
+        public virtual decimal PaymentMethodAdditionalFeeExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the tax rates
         /// </summary>
-        public string TaxRates { get; set; }
+        public virtual string TaxRates { get; set; }
 
         /// <summary>
         /// Gets or sets the order tax
         /// </summary>
-        public decimal OrderTax { get; set; }
+        public virtual decimal OrderTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order discount (applied to order total)
         /// </summary>
-        public decimal OrderDiscount { get; set; }
+        public virtual decimal OrderDiscount { get; set; }
 
         /// <summary>
         /// Gets or sets the order total
         /// </summary>
-        public decimal OrderTotal { get; set; }
+        public virtual decimal OrderTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the refunded amount
         /// </summary>
-        public decimal RefundedAmount { get; set; }
+        public virtual decimal RefundedAmount { get; set; }
         
         /// <summary>
         /// Gets or sets the checkout attribute description
         /// </summary>
-        public string CheckoutAttributeDescription { get; set; }
+        public virtual string CheckoutAttributeDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the checkout attributes in XML format
         /// </summary>
-        public string CheckoutAttributesXml { get; set; }
+        public virtual string CheckoutAttributesXml { get; set; }
 
         /// <summary>
         /// Gets or sets the customer language identifier
         /// </summary>
-        public int CustomerLanguageId { get; set; }
+        public virtual int CustomerLanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public int? AffiliateId { get; set; }
+        public virtual int? AffiliateId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer IP address
         /// </summary>
-        public string CustomerIp { get; set; }
+        public virtual string CustomerIp { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether storing of credit card number is allowed
         /// </summary>
-        public bool AllowStoringCreditCardNumber { get; set; }
+        public virtual bool AllowStoringCreditCardNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the card type
         /// </summary>
-        public string CardType { get; set; }
+        public virtual string CardType { get; set; }
 
         /// <summary>
         /// Gets or sets the card name
         /// </summary>
-        public string CardName { get; set; }
+        public virtual string CardName { get; set; }
 
         /// <summary>
         /// Gets or sets the card number
         /// </summary>
-        public string CardNumber { get; set; }
+        public virtual string CardNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the masked credit card number
         /// </summary>
-        public string MaskedCreditCardNumber { get; set; }
+        public virtual string MaskedCreditCardNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the card CVV2
         /// </summary>
-        public string CardCvv2 { get; set; }
+        public virtual string CardCvv2 { get; set; }
 
         //TODO perhaps, we need change type of CardExpirationMonth & CardExpirationYear to integer
         /// <summary>
         /// Gets or sets the card expiration month
         /// </summary>
-        public string CardExpirationMonth { get; set; }
+        public virtual string CardExpirationMonth { get; set; }
 
         /// <summary>
         /// Gets or sets the card expiration year
         /// </summary>
-        public string CardExpirationYear { get; set; }
+        public virtual string CardExpirationYear { get; set; }
 
         /// <summary>
         /// Gets or sets the authorization transaction identifier
         /// </summary>
-        public string AuthorizationTransactionId { get; set; }
+        public virtual string AuthorizationTransactionId { get; set; }
 
         /// <summary>
         /// Gets or sets the authorization transaction code
         /// </summary>
-        public string AuthorizationTransactionCode { get; set; }
+        public virtual string AuthorizationTransactionCode { get; set; }
 
         /// <summary>
         /// Gets or sets the authorization transaction result
         /// </summary>
-        public string AuthorizationTransactionResult { get; set; }
+        public virtual string AuthorizationTransactionResult { get; set; }
 
         /// <summary>
         /// Gets or sets the capture transaction identifier
         /// </summary>
-        public string CaptureTransactionId { get; set; }
+        public virtual string CaptureTransactionId { get; set; }
 
         /// <summary>
         /// Gets or sets the capture transaction result
         /// </summary>
-        public string CaptureTransactionResult { get; set; }
+        public virtual string CaptureTransactionResult { get; set; }
 
         /// <summary>
         /// Gets or sets the subscription transaction identifier
         /// </summary>
-        public string SubscriptionTransactionId { get; set; }
+        public virtual string SubscriptionTransactionId { get; set; }
 
         /// <summary>
         /// Gets or sets the purchase order number
         /// </summary>
-        public string PurchaseOrderNumber { get; set; }
+        public virtual string PurchaseOrderNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the paid date and time
         /// </summary>
-        public DateTime? PaidDateUtc { get; set; }
+        public virtual DateTime? PaidDateUtc { get; set; }
         
         /// <summary>
         /// Gets or sets the shipping method
         /// </summary>
-        public string ShippingMethod { get; set; }
+        public virtual string ShippingMethod { get; set; }
 
         /// <summary>
         /// Gets or sets the shipping rate computation method identifier
         /// </summary>
-        public string ShippingRateComputationMethodSystemName { get; set; }
+        public virtual string ShippingRateComputationMethodSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the shipped date and time
         /// </summary>
-        public DateTime? ShippedDateUtc { get; set; }
+        public virtual DateTime? ShippedDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the delivery date and time
         /// </summary>
-        public DateTime? DeliveryDateUtc { get; set; }
+        public virtual DateTime? DeliveryDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the order weight
         /// </summary>
-        public decimal OrderWeight { get; set; }
+        public virtual decimal OrderWeight { get; set; }
 
         /// <summary>
         /// Gets or sets the tracking number of current order
         /// </summary>
-        public string TrackingNumber { get; set; }
+        public virtual string TrackingNumber { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public bool Deleted { get; set; }
+        public virtual bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of order creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         #endregion
 
@@ -369,23 +363,38 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets discount usage history
         /// </summary>
-        public virtual ICollection<DiscountUsageHistory> DiscountUsageHistory { get; set; }
+        public virtual ICollection<DiscountUsageHistory> DiscountUsageHistory
+        {
+            get { return _discountUsageHistory ?? (_discountUsageHistory = new List<DiscountUsageHistory>()); }
+            protected set { _discountUsageHistory = value; }
+        }
 
         /// <summary>
         /// Gets or sets gift card usage history (gift card that were used with this order)
         /// </summary>
-        public virtual ICollection<GiftCardUsageHistory> GiftCardUsageHistory { get; set; }
+        public virtual ICollection<GiftCardUsageHistory> GiftCardUsageHistory
+        {
+            get { return _giftCardUsageHistory ?? (_giftCardUsageHistory = new List<GiftCardUsageHistory>()); }
+            protected set { _giftCardUsageHistory = value; }
+        }
 
         /// <summary>
         /// Gets or sets order notes
         /// </summary>
-        public virtual ICollection<OrderNote> OrderNotes { get; set; }
+        public virtual ICollection<OrderNote> OrderNotes
+        {
+            get { return _orderNotes ?? (_orderNotes = new List<OrderNote>()); }
+            protected set { _orderNotes = value; }
+        }
 
         /// <summary>
         /// Gets or sets order product variants
         /// </summary>
-        public virtual ICollection<OrderProductVariant> OrderProductVariants { get; set; }
-
+        public virtual ICollection<OrderProductVariant> OrderProductVariants
+        {
+            get { return _orderProductVariant ?? (_orderProductVariant = new List<OrderProductVariant>()); }
+            protected set { _orderProductVariant = value; }
+        }
         #endregion
 
         #region Custom properties
@@ -393,7 +402,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order status
         /// </summary>
-        public OrderStatus OrderStatus
+        public virtual OrderStatus OrderStatus
         {
             get
             {
@@ -408,7 +417,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the payment status
         /// </summary>
-        public PaymentStatus PaymentStatus
+        public virtual PaymentStatus PaymentStatus
         {
             get
             {
@@ -423,7 +432,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the shipping status
         /// </summary>
-        public ShippingStatus ShippingStatus
+        public virtual ShippingStatus ShippingStatus
         {
             get
             {
@@ -438,7 +447,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the customer tax display type
         /// </summary>
-        public TaxDisplayType CustomerTaxDisplayType
+        public virtual TaxDisplayType CustomerTaxDisplayType
         {
             get
             {
@@ -453,7 +462,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the applied tax rates
         /// </summary>
-        public SortedDictionary<decimal, decimal> TaxRatesDictionary
+        public virtual SortedDictionary<decimal, decimal> TaxRatesDictionary
         {
             get
             {

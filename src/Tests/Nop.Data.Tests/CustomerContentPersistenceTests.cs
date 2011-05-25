@@ -98,9 +98,10 @@ namespace Nop.Data.Tests
                 IpAddress = "192.168.1.1",
                 IsApproved = true,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                UpdatedOnUtc = new DateTime(2010, 01, 02),
-                ProductReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>()
-                {
+                UpdatedOnUtc = new DateTime(2010, 01, 02)
+            };
+            productReview.ProductReviewHelpfulnessEntries.Add
+                (
                     new ProductReviewHelpfulness
                     {
                         Customer = customer,
@@ -110,9 +111,7 @@ namespace Nop.Data.Tests
                         CreatedOnUtc = new DateTime(2010, 01, 03),
                         UpdatedOnUtc = new DateTime(2010, 01, 04)
                     } 
-                }
-            };
-
+                );
             var fromDb = SaveAndLoadEntity(productReview);
             fromDb.ShouldNotBeNull();
             fromDb.ReviewText.ShouldEqual("A review");
