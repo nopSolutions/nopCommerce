@@ -117,13 +117,13 @@ namespace Nop.Services.Customers
 
         public static string GetDefaultUserAccountEmail(this Customer customer, bool onlyActiveUser = true)
         {
-            var user = GetDefaultUserAccount(customer);
+            var user = GetDefaultUserAccount(customer, onlyActiveUser);
             return user != null ? user.Email : null;
         }
 
         public static string GetDefaultUserAccountUsername(this Customer customer, bool onlyActiveUser = true)
         {
-            var user = GetDefaultUserAccount(customer);
+            var user = GetDefaultUserAccount(customer, onlyActiveUser);
             return user != null ? user.Username : null;
         }
     }

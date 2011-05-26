@@ -233,8 +233,11 @@ namespace Nop.Web.Controllers
                     }
 
                     var customer = _workContext.CurrentCustomer;
-                    //now register 'Customer' entity
-                    _customerService.RegisterCustomer(customer);
+                    if (isApproved)
+                    {
+                        //now register 'Customer' entity
+                        _customerService.RegisterCustomer(customer);
+                    }
                     //associate it with this user
                     customer.AssociatedUsers.Add(registrationResult.User);
                     //properties
@@ -286,7 +289,7 @@ namespace Nop.Web.Controllers
                                 _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription()
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = customer.GetDefaultUserAccountEmail(),
+                                    Email = model.Email,
                                     Active = true,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
@@ -397,7 +400,40 @@ namespace Nop.Web.Controllers
 
             return this.RedirectToAction("Index", "Home");
         }
+        
+        public ActionResult AccountActivation(Guid token, string email)
+        {
+            var user = _userService.GetUserByEmail(email);
+            if (user == null)
+                return RedirectToAction("Index", "Home");
 
+            var customer = user.AssociatedCustomer;
+            if (customer == null)
+                return RedirectToAction("Index", "Home");
+
+            var cToken = user.AssociatedCustomer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken);
+            if (String.IsNullOrEmpty(cToken))
+                return RedirectToAction("Index", "Home");
+
+            if (!cToken.Equals(token.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                return RedirectToAction("Index", "Home");
+
+            //activate user account
+            user.IsApproved = true;
+            _userService.UpdateUser(user);
+            //register 'Customer' entity
+            if (!customer.IsRegistered())
+            {
+                _customerService.RegisterCustomer(customer);
+            }
+            _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, "");
+            //send welcome message
+            _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+            
+            var model = new AccountActivationModel();
+            model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
+            return View(model);
+        }
         #endregion
 
         #region My account

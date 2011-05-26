@@ -182,6 +182,12 @@ namespace Nop.Web.Infrastructure
                             "newsletter/subscriptionactivation/{token}/{active}",
                             new { controller = "Newsletter", action = "SubscriptionActivation" },
                             new[] { "Nop.Web.Controllers" });
+
+            //customer
+            routes.MapRoute("AccountActivation",
+                            "customer/activation/{token}/{email}",
+                            new { controller = "Customer", action = "AccountActivation" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

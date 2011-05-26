@@ -21,6 +21,14 @@
 
   <LocaleResource Name="Account">
     <Children>
+      <LocaleResource Name="AccountActivation">
+        <Value>Account activation</Value>
+        <Children>
+          <LocaleResource Name="Activated">
+            <Value>Your account has been activated</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Administration">
         <Value>Administration</Value>
       </LocaleResource>

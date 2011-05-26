@@ -309,7 +309,8 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var user = customer.GetDefaultUserAccount();
+            //search all users because the latest one could be not approved yet
+            var user = customer.GetDefaultUserAccount(false);
             if (user == null)
                 throw new ArgumentException("Can't load associated user account");
 
