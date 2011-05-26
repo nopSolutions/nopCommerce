@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Web;
 
 namespace Nop.Admin.Views.Shared
 {
-    public class TestMenuPlugin1 : Nop.Core.Web.AdminMenuPlugin
+    public class TestMenuPlugin1 : AdminMenuPlugin
     {
         public TestMenuPlugin1(ILanguageService service)
             : base("TestPlugin1", "TestPlugin1", 2)

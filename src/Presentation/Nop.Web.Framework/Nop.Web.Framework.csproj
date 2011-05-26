@@ -130,6 +130,7 @@
     <Compile Include="Themes\ThemeContext.cs" />
     <Compile Include="UI\DataListExtensions.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
+    <Compile Include="Web\AdminMenuPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

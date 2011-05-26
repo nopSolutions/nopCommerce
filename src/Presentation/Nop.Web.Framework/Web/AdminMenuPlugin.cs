@@ -6,7 +6,7 @@ using System.Text;
 using Nop.Core.Plugins;
 using Telerik.Web.Mvc.UI;
 
-namespace Nop.Core.Web
+namespace Nop.Web.Framework.Web
 {
     public abstract class AdminMenuPlugin : BasePlugin, IAdminMenuPlugin
     {
