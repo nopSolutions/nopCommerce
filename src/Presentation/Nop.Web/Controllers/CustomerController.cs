@@ -243,7 +243,7 @@ namespace Nop.Web.Controllers
                         customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber, out vatName, out vatAddress);
                         //send VAT number admin notification
                         if (!String.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, registrationResult.User, customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
 
                     }
                     //save
@@ -267,16 +267,20 @@ namespace Nop.Web.Controllers
                         _authenticationService.SignIn(registrationResult.User, true);
 
                     //notifications
+                    //UNDONE perhaps, we need to load the latest user account (not default one) to appropriate email methods:
+                    //1. SendCustomerRegisteredNotificationMessage
+                    //2. SendCustomerEmailValidationMessage
+                    //3. SendCustomerWelcomeMessage
                     if (_customerSettings.NotifyNewCustomerRegistration)
-                        _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, registrationResult.User, _localizationSettings.DefaultAdminLanguageId);
+                        _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, _localizationSettings.DefaultAdminLanguageId);
                     if (_userSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                     {
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-                        _workflowMessageService.SendCustomerEmailValidationMessage(customer, registrationResult.User, _workContext.WorkingLanguage.Id);
+                        _workflowMessageService.SendCustomerEmailValidationMessage(customer,  _workContext.WorkingLanguage.Id);
                     }
                     else
                     {
-                        _workflowMessageService.SendCustomerWelcomeMessage(customer, registrationResult.User, _workContext.WorkingLanguage.Id);
+                        _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
                     }
                     switch (_userSettings.UserRegistrationType)
                     {
@@ -433,7 +437,7 @@ namespace Nop.Web.Controllers
                         customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber, out vatName, out vatAddress);
                         //send VAT number admin notification
                         if (!String.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, user, customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
                     }
                 }
                 //save

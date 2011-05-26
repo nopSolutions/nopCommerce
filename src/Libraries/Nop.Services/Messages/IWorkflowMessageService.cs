@@ -18,37 +18,33 @@ namespace Nop.Services.Messages
         /// Sends 'New customer' notification message to a store owner
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerRegisteredNotificationMessage(Customer customer, User user, int languageId);
+        int SendCustomerRegisteredNotificationMessage(Customer customer, int languageId);
 
         /// <summary>
         /// Sends a welcome message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerWelcomeMessage(Customer customer, User user, int languageId);
+        int SendCustomerWelcomeMessage(Customer customer, int languageId);
 
         /// <summary>
         /// Sends an email validation message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerEmailValidationMessage(Customer customer, User user, int languageId);
+        int SendCustomerEmailValidationMessage(Customer customer, int languageId);
 
         /// <summary>
         /// Sends password recovery message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerPasswordRecoveryMessage(Customer customer, User user, int languageId);
+        int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId);
         
         #endregion
 
@@ -163,7 +159,7 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, User user, OrderProductVariant opv, int languageId);
+        int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest,  OrderProductVariant opv, int languageId);
         
 
         /// <summary>
@@ -172,7 +168,7 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, User user, OrderProductVariant opv, int languageId);
+        int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderProductVariant opv, int languageId);
 
         #endregion
         
@@ -209,12 +205,11 @@ namespace Nop.Services.Messages
         /// Sends a "new VAT sumitted" notification to a store owner
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="user">User</param>
         /// <param name="vatName">Received VAT name</param>
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewVatSubmittedStoreOwnerNotification(Customer customer, User user,
+        int SendNewVatSubmittedStoreOwnerNotification(Customer customer,
             string vatName, string vatAddress, int languageId);
 
         #endregion

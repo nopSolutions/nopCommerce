@@ -121,20 +121,20 @@ namespace Nop.Services.Messages
 
         }
         
-        private IList<Token> GenerateTokens(Customer customer, User user)
+        private IList<Token> GenerateTokens(Customer customer)
         {
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer, user);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
             return tokens;
         }
 
-        private IList<Token> GenerateTokens(Customer customer, User user, Product product)
+        private IList<Token> GenerateTokens(Customer customer, Product product)
         {
             var tokens = new List<Token>();
 
             _messageTokenProvider.AddStoreTokens(tokens);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer, user);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
             _messageTokenProvider.AddProductTokens(tokens, product);
 
             return tokens;
@@ -150,12 +150,12 @@ namespace Nop.Services.Messages
             return tokens;
         }
 
-        private IList<Token> GenerateTokens(ReturnRequest returnRequest, User user, OrderProductVariant opv)
+        private IList<Token> GenerateTokens(ReturnRequest returnRequest,  OrderProductVariant opv)
         {
             var tokens = new List<Token>();
 
             _messageTokenProvider.AddStoreTokens(tokens);
-            _messageTokenProvider.AddCustomerTokens(tokens, returnRequest.Customer, user);
+            _messageTokenProvider.AddCustomerTokens(tokens, returnRequest.Customer);
             _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, opv);
 
             return tokens;
@@ -181,7 +181,7 @@ namespace Nop.Services.Messages
             var customer = _newLetterSubscriptionService.GetNewsLetterSubscriptionCustomer(subscription);
             if (customer != null)
             {
-                _messageTokenProvider.AddCustomerTokens(tokens, customer, null);
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
             }
 
             return tokens;
@@ -250,10 +250,9 @@ namespace Nop.Services.Messages
         /// Sends 'New customer' notification message to a store owner
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendCustomerRegisteredNotificationMessage(Customer customer, User user, int languageId)
+        public int SendCustomerRegisteredNotificationMessage(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -264,7 +263,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var customerTokens = GenerateTokens(customer, user);
+            var customerTokens = GenerateTokens(customer);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
@@ -278,15 +277,16 @@ namespace Nop.Services.Messages
         /// Sends a welcome message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendCustomerWelcomeMessage(Customer customer, User user, int languageId)
+        public int SendCustomerWelcomeMessage(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
+
+            var user = customer.GetDefaultUserAccount();
             if (user == null)
-                throw new ArgumentNullException("user");
+                throw new ArgumentException("Can't load associated user account");
 
             languageId = EnsureLanguageIsActive(languageId);
 
@@ -294,7 +294,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var customerTokens = GenerateTokens(customer, user);
+            var customerTokens = GenerateTokens(customer);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = user.Email;
@@ -308,15 +308,16 @@ namespace Nop.Services.Messages
         /// Sends an email validation message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendCustomerEmailValidationMessage(Customer customer, User user, int languageId)
+        public int SendCustomerEmailValidationMessage(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
+
+            var user = customer.GetDefaultUserAccount();
             if (user == null)
-                throw new ArgumentNullException("user");
+                throw new ArgumentException("Can't load associated user account");
 
             languageId = EnsureLanguageIsActive(languageId);
 
@@ -324,7 +325,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var customerTokens = GenerateTokens(customer, user);
+            var customerTokens = GenerateTokens(customer);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = user.Email;
@@ -338,15 +339,16 @@ namespace Nop.Services.Messages
         /// Sends password recovery message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="user">User instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendCustomerPasswordRecoveryMessage(Customer customer, User user, int languageId)
+        public int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
+            
+            var user = customer.GetDefaultUserAccount();
             if (user == null)
-                throw new ArgumentNullException("user");
+                throw new ArgumentException("Can't load associated user account");
 
             languageId = EnsureLanguageIsActive(languageId);
 
@@ -354,7 +356,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var customerTokens = GenerateTokens(customer, user);
+            var customerTokens = GenerateTokens(customer);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = user.Email;
@@ -619,7 +621,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var customerProductTokens = GenerateTokens(customer, null, product);
+            var customerProductTokens = GenerateTokens(customer, product);
             customerProductTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
             //UNDONE use customerEmail
 
@@ -675,7 +677,7 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, User user, OrderProductVariant opv, int languageId)
+        public int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderProductVariant opv, int languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
@@ -686,7 +688,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var orderTokens = GenerateTokens(returnRequest, user, opv);
+            var orderTokens = GenerateTokens(returnRequest, opv);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
@@ -702,10 +704,14 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, User user, OrderProductVariant opv, int languageId)
+        public int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderProductVariant opv, int languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
+
+            var user = returnRequest.Customer.GetDefaultUserAccount();
+            if (user == null)
+                throw new ArgumentException("Can't load associated user account");
 
             languageId = EnsureLanguageIsActive(languageId);
 
@@ -713,7 +719,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var orderTokens = GenerateTokens(returnRequest, user, opv);
+            var orderTokens = GenerateTokens(returnRequest, opv);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = user.Email;
@@ -813,12 +819,11 @@ namespace Nop.Services.Messages
         /// Sends a "new VAT sumitted" notification to a store owner
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="user">User</param>
         /// <param name="vatName">Received VAT name</param>
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendNewVatSubmittedStoreOwnerNotification(Customer customer, User user,
+        public int SendNewVatSubmittedStoreOwnerNotification(Customer customer,
             string vatName, string vatAddress, int languageId)
         {
             if (customer == null)
@@ -830,7 +835,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var vatSubmittedTokens = GenerateTokens(customer, user);
+            var vatSubmittedTokens = GenerateTokens(customer);
             vatSubmittedTokens.Add(new Token("VatValidationResult.Name", vatName));
             vatSubmittedTokens.Add(new Token("VatValidationResult.Address", vatAddress));
 

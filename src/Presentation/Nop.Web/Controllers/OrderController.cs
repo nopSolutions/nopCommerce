@@ -488,7 +488,6 @@ namespace Nop.Web.Controllers
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToAction("Index", "Home");
 
-            var user = _authenticationService.GetAuthenticatedUser();
             int count = 0;
             foreach (var opv in order.OrderProductVariants)
             {
@@ -517,7 +516,7 @@ namespace Nop.Web.Controllers
                     _workContext.CurrentCustomer.ReturnRequests.Add(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     //notify store owner here (email)
-                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, user, opv, _localizationSettings.DefaultAdminLanguageId);
+                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, opv, _localizationSettings.DefaultAdminLanguageId);
 
                     count++;
                 }

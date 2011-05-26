@@ -115,5 +115,16 @@ namespace Nop.Services.Customers
             return user;
         }
 
+        public static string GetDefaultUserAccountEmail(this Customer customer, bool onlyActiveUser = true)
+        {
+            var user = GetDefaultUserAccount(customer);
+            return user != null ? user.Email : null;
+        }
+
+        public static string GetDefaultUserAccountUsername(this Customer customer, bool onlyActiveUser = true)
+        {
+            var user = GetDefaultUserAccount(customer);
+            return user != null ? user.Username : null;
+        }
     }
 }

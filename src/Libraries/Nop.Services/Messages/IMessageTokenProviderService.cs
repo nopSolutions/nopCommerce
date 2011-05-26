@@ -37,7 +37,7 @@ namespace Nop.Services.Messages
 
         void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard);
 
-        void AddCustomerTokens(IList<Token> tokens, Customer customer, User user);
+        void AddCustomerTokens(IList<Token> tokens, Customer customer);
 
         void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription);
 

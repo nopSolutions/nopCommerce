@@ -475,18 +475,18 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.Message", giftCardMesage));
         }
 
-        public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer, User user)
+        public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
         {
-            tokens.Add(new Token("Customer.Email", user != null ? HttpUtility.HtmlEncode(user.Email) : ""));
-            tokens.Add(new Token("Customer.Username", user != null ? HttpUtility.HtmlEncode(user.Username) : ""));
+            tokens.Add(new Token("Customer.Email", HttpUtility.HtmlEncode(customer.GetDefaultUserAccountEmail())));
+            tokens.Add(new Token("Customer.Username", HttpUtility.HtmlEncode(customer.GetDefaultUserAccountUsername())));
             tokens.Add(new Token("Customer.FullName", HttpUtility.HtmlEncode(string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName)))));
             tokens.Add(new Token("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber)));
             tokens.Add(new Token("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString())));
 
 
             //TODO add a method for getting URL
-            tokens.Add(new Token("Customer.PasswordRecoveryURL", user != null ? string.Format("{0}passwordrecovery/?prt={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), user.Email) : ""));
-            tokens.Add(new Token("Customer.AccountActivationURL", user != null ? string.Format("{0}accountactivation/?act={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), user.Email) : ""));
+            tokens.Add(new Token("Customer.PasswordRecoveryURL", string.Format("{0}passwordrecovery/?prt={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.GetDefaultUserAccountEmail())));
+            tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}accountactivation/?act={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.GetDefaultUserAccountEmail())));
             tokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/?guid={1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
         }
 
