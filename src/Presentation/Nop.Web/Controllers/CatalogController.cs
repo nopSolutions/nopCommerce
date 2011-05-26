@@ -424,9 +424,6 @@ namespace Nop.Web.Controllers
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
 
-            model.AddProductReview.AllowAnonymousUsersToReviewProduct = _catalogSettings.AllowAnonymousUsersToReviewProduct;
-            model.AddProductReview.CustomerIsRegistered = _workContext.CurrentCustomer.IsRegistered();
-
             var productReviews = product.ProductReviews.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
             foreach (var pr in productReviews)
             {
@@ -449,7 +446,7 @@ namespace Nop.Web.Controllers
 
             return model;
         }
-
+        
         [NonAction]
         private ProductModel.ProductVariantModel PrepareProductVariantModel(ProductModel.ProductVariantModel model, ProductVariant productVariant)
         {
@@ -1222,8 +1219,6 @@ namespace Nop.Web.Controllers
             var model = new ProductReviewOverviewModel()
             {
                 ProductId = product.Id,
-                AllowAnonymousUsersToReviewProduct = _catalogSettings.AllowAnonymousUsersToReviewProduct,
-                CustomerIsRegistered = _workContext.CurrentCustomer.IsRegistered(),
                 RatingSum = product.ApprovedRatingSum,
                 TotalReviews = product.ApprovedTotalReviews,
                 AllowCustomerReviews = product.AllowCustomerReviews
@@ -1662,6 +1657,83 @@ namespace Nop.Web.Controllers
             };
 
             return PartialView("CompareProductsButton", model);
+        }
+
+        //products email a friend
+        [ChildActionOnly]
+        public ActionResult ProductEmailAFriendButton(int productId)
+        {
+            var model = new ProductEmailAFriendModel()
+            {
+                ProductId = productId,
+                ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled
+            };
+
+            return PartialView("ProductEmailAFriendButton", model);
+        }
+
+        public ActionResult ProductEmailAFriend(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
+                return RedirectToAction("Index", "Home");
+
+            var model = new ProductEmailAFriendModel();
+            model.ProductId = product.Id;
+            model.ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
+            return View(model);
+        }
+
+        [HttpPost, ActionName("ProductEmailAFriend")]
+        [FormValueRequired("send-email")]
+        public ActionResult ProductReviewsSend(int productId, ProductEmailAFriendModel model)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
+                return RedirectToAction("Index", "Home");
+
+            if (ModelState.IsValid)
+            {
+                if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
+                {
+                    ModelState.AddModelError("", _localizationService.GetResource("Products.EmailAFriend.OnlyRegisteredUsers"));
+                }
+                else if (!CommonHelper.IsValidEmail(model.YourEmailAddress))
+                {
+                    ModelState.AddModelError("", "Wrong email address");
+                }
+                else if (!CommonHelper.IsValidEmail(model.FriendEmail))
+                {
+                    ModelState.AddModelError("", "Wrong email address");
+                }
+                else
+                {
+                    //email
+                    _workflowMessageService.SendProductEmailAFriendMessage(_workContext.CurrentCustomer,
+                            _workContext.WorkingLanguage.Id, product,
+                            model.YourEmailAddress, model.FriendEmail, model.PersonalMessage);
+
+                    model.ProductId = product.Id;
+                    model.ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
+                    model.ProductName = product.GetLocalized(x => x.Name);
+                    model.ProductSeName = product.GetSeName();
+
+                    model.SuccessfullySent = true;
+                    model.Result = _localizationService.GetResource("Products.EmailAFriend.SuccessfullySent");
+
+                    return View(model);
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            model.ProductId = product.Id;
+            model.ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+            return View(model);
         }
 
 		#endregion

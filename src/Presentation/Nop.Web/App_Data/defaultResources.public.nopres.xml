@@ -1541,6 +1541,32 @@
       <LocaleResource Name="DownloadSample">
         <Value>Download sample</Value>
       </LocaleResource>
+      <LocaleResource Name="EmailAFriend">
+        <Value>Email a friend</Value>
+        <Children>
+          <LocaleResource Name="Button">
+            <Value>Send email</Value>
+          </LocaleResource>
+          <LocaleResource Name="FriendEmail">
+            <Value>Friend's email</Value>
+          </LocaleResource>
+          <LocaleResource Name="PersonalMessage">
+            <Value>Personal message</Value>
+          </LocaleResource>
+          <LocaleResource Name="OnlyRegisteredUsers">
+            <Value>Only registered customers can use email a friend feature</Value>
+          </LocaleResource>
+          <LocaleResource Name="SuccessfullySent">
+            <Value>Your message has been sent.</Value>
+          </LocaleResource>
+          <LocaleResource Name="Title">
+            <Value>Email a friend</Value>
+          </LocaleResource>
+          <LocaleResource Name="YourEmailAddress">
+            <Value>Your email address</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="EnterProductPrice">
         <Value>Please enter your price</Value>
           <Children>

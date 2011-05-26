@@ -116,8 +116,9 @@
                     }
                     <div class="clear">
                     </div>
-                    <br />
-                    @*TODO ProductEmailAFriendButton*@ &nbsp;
+                    <br />                    
+                    @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id }) 
+                    <text>&nbsp;</text>
                     @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
                     <div class="clear">
                     </div>

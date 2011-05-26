@@ -21,10 +21,6 @@ namespace Nop.Web.Models.Catalog
         public int TotalReviews { get; set; }
 
         public bool AllowCustomerReviews { get; set; }
-
-        public bool CustomerIsRegistered { get; set; }
-
-        public bool AllowAnonymousUsersToReviewProduct { get; set; }
     }
 
     [Validator(typeof(ProductReviewsValidator))]
@@ -82,10 +78,6 @@ namespace Nop.Web.Models.Catalog
 
         [NopResourceDisplayName("Reviews.Fields.Rating")]
         public int Rating { get; set; }
-
-        public bool CustomerIsRegistered { get; set; }
-
-        public bool AllowAnonymousUsersToReviewProduct { get; set; }
 
         public bool SuccessfullyAdded { get; set; }
         public string Result { get; set; }

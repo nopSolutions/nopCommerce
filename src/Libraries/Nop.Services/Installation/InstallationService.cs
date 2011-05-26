@@ -1049,6 +1049,7 @@ namespace Nop.Services.Installation
                     ProductReviewsMustBeApproved = true,
                     AllowAnonymousUsersToReviewProduct = false,
                     NotifyStoreOwnerAboutNewProductReviews = false,
+                    EmailAFriendEnabled = true,
                     AllowAnonymousUsersToEmailAFriend = false,
                     RecentlyViewedProductsNumber = 4,
                     RecentlyViewedProductsEnabled = true,

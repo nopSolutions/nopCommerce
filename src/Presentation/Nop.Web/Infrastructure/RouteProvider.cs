@@ -48,6 +48,12 @@ namespace Nop.Web.Infrastructure
                             "clearcomparelist/",
                             new { controller = "Catalog", action = "ClearCompareList" },
                             new[] { "Nop.Web.Controllers" });
+            
+            //product email a friend
+            routes.MapRoute("ProductEmailAFriend",
+                            "productemailafriend/{productId}",
+                            new { controller = "Catalog", action = "ProductEmailAFriend" },
+                            new[] { "Nop.Web.Controllers" });
 
             //catalog
             routes.MapRoute("Category",

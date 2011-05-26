@@ -1,0 +1,6 @@
+﻿@model ProductEmailAFriendModel
+@using Nop.Web.Models.Catalog
+@if (Model.ProductEmailAFriendEnabled)
+{
+    <input type="button" value="@T("Products.EmailAFriend")" class="productemailafriendbutton" onclick="setLocation('@(@Url.RouteUrl("ProductEmailAFriend", new { productId = Model.ProductId }))')" />
+}
