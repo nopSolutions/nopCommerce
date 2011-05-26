@@ -20,6 +20,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
@@ -68,6 +69,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
+        private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
 
         #endregion
 
@@ -98,7 +100,8 @@ namespace Nop.Services.Installation
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<Discount> discountRepository,
             IRepository<GiftCard> giftCardRepository,
-            IRepository<ShippingMethod> shippingMethodRepository)
+            IRepository<ShippingMethod> shippingMethodRepository,
+            IRepository<ActivityLogType> activityLogTypeRepository)
         {
             this._measureDimensionRepository = measureDimensionRepository;
             this._measureWeightRepository = measureWeightRepository;
@@ -132,6 +135,7 @@ namespace Nop.Services.Installation
             this._giftCardRepository = giftCardRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
+            this._activityLogTypeRepository = activityLogTypeRepository;
         }
 
         #endregion
@@ -1954,6 +1958,32 @@ namespace Nop.Services.Installation
 
         }
 
+        protected virtual void InstallActivityLogTypes()
+        {
+            var activityLogTypes = new List<ActivityLogType>()
+                                      {
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "AddNewCategory",
+                                                  Enabled = true,
+                                                  Name = "Add new category"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditCategory",
+                                                  Enabled = true,
+                                                  Name = "Edit category"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "Delete category",
+                                                  Enabled = true,
+                                                  Name = "Delete category"
+                                              }
+                                      };
+            activityLogTypes.ForEach(alt=>_activityLogTypeRepository.Insert(alt));
+        }
+
         #endregion
 
         #region Methods
@@ -1971,6 +2001,7 @@ namespace Nop.Services.Installation
             InstallMessageTemplates();
             InstallQueuedEmails(); //TODO remove. Just for testing
             InstallSettings();
+            InstallActivityLogTypes();
 
             if (installSampleData)
             {

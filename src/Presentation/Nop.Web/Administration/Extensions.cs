@@ -289,6 +289,16 @@ namespace Nop.Admin
             return AutoMapper.Mapper.Map(model, destination);
         }
 
+        public static ActivityLogTypeModel ToModel(this ActivityLogType entity)
+        {
+            return AutoMapper.Mapper.Map<ActivityLogType, ActivityLogTypeModel>(entity);
+        }
+
+        public static ActivityLogModel ToModel(this ActivityLog entity)
+        {
+            return AutoMapper.Mapper.Map<ActivityLog, ActivityLogModel>(entity);
+        }
+
         #endregion
         
         #region Currencies

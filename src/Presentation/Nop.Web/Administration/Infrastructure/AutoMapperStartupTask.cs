@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using Nop.Admin.Models;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -73,6 +74,13 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<Log, LogModel>();
             Mapper.CreateMap<LogModel, Log>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+            //ActivityLogType
+            ViceVersa<ActivityLogTypeModel, ActivityLogType>();
+            Mapper.CreateMap<ActivityLog, ActivityLogModel>()
+                .ForMember(dest => dest.ActivityLogType,
+                           opt => opt.MapFrom(src => src.ActivityLogType.Name))
+                .ForMember(dest => dest.Customer,
+                           opt => opt.MapFrom(src => src.Customer != null ? src.Customer.Addresses.FirstOrDefault().Email : string.Empty));
             //currencies
             ViceVersa<Currency, CurrencyModel>();
             //locale resource

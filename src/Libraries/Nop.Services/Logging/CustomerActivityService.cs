@@ -104,7 +104,7 @@ namespace Nop.Services.Logging
         /// Gets all activity log type items
         /// </summary>
         /// <returns>Activity log type collection</returns>
-        public List<ActivityLogType> GetAllActivityTypes()
+        public IList<ActivityLogType> GetAllActivityTypes()
         {
             string key = ACTIVITYTYPE_PATTERN_KEY;
             return _cacheManager.Get(key, () =>
@@ -160,7 +160,7 @@ namespace Nop.Services.Logging
                 return null;
 
             var activityTypes = GetAllActivityTypes();
-            var activityType = activityTypes.Find(at => at.SystemKeyword == systemKeyword);
+            var activityType = activityTypes.ToList().Find(at => at.SystemKeyword == systemKeyword);
             if (activityType == null || !activityType.Enabled)
                 return null;
 
@@ -171,7 +171,7 @@ namespace Nop.Services.Logging
             
 
             var activity = new ActivityLog();
-            activity.ActivityLogTypeId = activityType.Id;
+            activity.Id = activityType.Id;
             activity.Customer = _workContext.CurrentCustomer;
             activity.Comment = comment;
             activity.CreatedOn = DateTime.UtcNow;
@@ -209,16 +209,14 @@ namespace Nop.Services.Logging
             DateTime? createdOnTo, string email, string username, int activityLogTypeId,
             int pageIndex, int pageSize)
         {
-            var query = from al in _activityLogRepository.Table
-                        from a in al.Customer.Addresses
+            var query = (from al in _activityLogRepository.Table
+                        from c in al.Customer.Addresses
                         where (!createdOnFrom.HasValue || createdOnFrom.Value <= al.CreatedOn) &&
                         (!createdOnTo.HasValue || createdOnTo.Value >= al.CreatedOn) &&
                         (activityLogTypeId == 0 || activityLogTypeId == al.ActivityLogTypeId) &&
-                        (String.IsNullOrEmpty(email) || a.Email == email) &&
-                        !al.Customer.IsGuest(true) &&
                         !al.Customer.Deleted
-                        orderby al.CreatedOn descending
-                        select al;
+                         select al).Distinct().OrderByDescending(al => al.CreatedOn);
+
             var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
             return activityLog;
         }

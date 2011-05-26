@@ -32,7 +32,7 @@ namespace Nop.Services.Logging
         /// Gets all activity log type items
         /// </summary>
         /// <returns>Activity log type collection</returns>
-        List<ActivityLogType> GetAllActivityTypes();
+        IList<ActivityLogType> GetAllActivityTypes();
         
         /// <summary>
         /// Gets an activity log type item
