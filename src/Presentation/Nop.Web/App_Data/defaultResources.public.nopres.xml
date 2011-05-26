@@ -656,6 +656,41 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="ContactUs">
+    <Value>Contact us</Value>
+    <Children>
+      <LocaleResource Name="Button">
+        <Value>Submit</Value>
+      </LocaleResource>
+      <LocaleResource Name="Email">
+        <Value>Your email</Value>
+        <Children>
+          <LocaleResource Name="Required">
+            <Value>Enter email</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Enquiry">
+        <Value>Enquiry</Value>
+        <Children>
+          <LocaleResource Name="Required">
+            <Value>Enter enquiry</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="FullName">
+        <Value>Your name</Value>
+        <Children>
+          <LocaleResource Name="Required">
+            <Value>Enter your name</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="YourEnquiryHasBeenSent">
+        <Value>Your enquiry has been successfully sent to the store owner.</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Content">
     <Children>
       <LocaleResource Name="CopyrightNotice">
@@ -1549,6 +1584,11 @@
           </LocaleResource>
           <LocaleResource Name="FriendEmail">
             <Value>Friend's email</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Enter friend's email</Value>
+              </LocaleResource>
+            </Children>
           </LocaleResource>
           <LocaleResource Name="PersonalMessage">
             <Value>Personal message</Value>
@@ -1564,6 +1604,11 @@
           </LocaleResource>
           <LocaleResource Name="YourEmailAddress">
             <Value>Your email address</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Enter your email</Value>
+              </LocaleResource>
+            </Children>
           </LocaleResource>
         </Children>
       </LocaleResource>
@@ -2049,6 +2094,11 @@
           </LocaleResource>
           <LocaleResource Name="FriendEmail">
             <Value>Friend's email</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Enter friend's email</Value>
+              </LocaleResource>
+            </Children>
           </LocaleResource>
           <LocaleResource Name="PersonalMessage">
             <Value>Personal message</Value>
@@ -2064,6 +2114,11 @@
           </LocaleResource>
           <LocaleResource Name="YourEmailAddress">
             <Value>Your email address</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Enter your email</Value>
+              </LocaleResource>
+            </Children>
           </LocaleResource>
         </Children>
       </LocaleResource>

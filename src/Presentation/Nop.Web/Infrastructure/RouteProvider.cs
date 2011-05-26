@@ -159,6 +159,13 @@ namespace Nop.Web.Infrastructure
                             "orderdetails/pdf/{orderId}",
                             new { controller = "Order", action = "GetPdfInvoice" },
                             new[] { "Nop.Web.Controllers" });
+
+
+            //contact us
+            routes.MapRoute("ContactUs",
+                            "contactus",
+                            new { controller = "Home", action = "ContactUs" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

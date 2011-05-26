@@ -1103,14 +1103,6 @@ namespace Nop.Web.Controllers
                 {
                     ModelState.AddModelError("", _localizationService.GetResource("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
                 }
-                else if (!CommonHelper.IsValidEmail(model.YourEmailAddress))
-                {
-                    ModelState.AddModelError("", "Wrong email address");
-                }
-                else if (!CommonHelper.IsValidEmail(model.FriendEmail))
-                {
-                    ModelState.AddModelError("", "Wrong email address");
-                }
                 else
                 {
                     //email
