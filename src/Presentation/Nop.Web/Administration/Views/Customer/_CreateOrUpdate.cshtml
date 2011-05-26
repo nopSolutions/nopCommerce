@@ -1,10 +1,8 @@
 ﻿@model Nop.Admin.Models.CustomerModel
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-
 @Html.Telerik().TabStrip().Name("customer-edit").Items(x =>
 {
     var tabInfo = x.Add().Text(T("Admin.Customers.Customers.Info").Text).Content(TabInfo().ToHtmlString());
@@ -42,163 +40,163 @@
             break;
     }
 })
-
 @helper TabInfo()
     { 
-<table class="adminContent">
-    @if (Model.GenderEnabled)
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Gender):
-        </td>
-        <td class="adminData">
-            @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
-            <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
-            
-            @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
-            <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
-        </td>
-    </tr>
-    }
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.FirstName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.FirstName)
-            @Html.ValidationMessageFor(model => model.FirstName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.LastName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.LastName)
-            @Html.ValidationMessageFor(model => model.LastName)
-        </td>
-    </tr>
-    @if (Model.DateOfBirthEnabled)
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DateOfBirth):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DateOfBirth)
-            @Html.ValidationMessageFor(model => model.DateOfBirth)
-        </td>
-    </tr>
-    }
-    @if (Model.CompanyEnabled)
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Company):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Company)
-            @Html.ValidationMessageFor(model => model.Company)
-        </td>
-    </tr>
-    }
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AdminComment):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AdminComment)
-            @Html.ValidationMessageFor(model => model.AdminComment)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsTaxExempt):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsTaxExempt)
-            @Html.ValidationMessageFor(model => model.IsTaxExempt)
-        </td>
-    </tr>
-    @if (Model.AllowCustomersToSetTimeZone)
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.TimeZoneId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
-            @Html.ValidationMessageFor(model => model.TimeZoneId)
-        </td>
-    </tr>
-    }
-    @if (Model.AffiliateId.HasValue && Model.AffiliateId.Value > 0)
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AffiliateId):
-        </td>
-        <td class="adminData">
-            <a href="@Url.Action("Edit", "Affiliate", new { id = @Model.AffiliateId.Value })">@Model.AffiliateId.Value - @T("Admin.Common.View")</a>
-        </td>
-    </tr>
-    }
-    @if (Model.DisplayVatNumber)
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.VatNumber):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.VatNumber) 
-            (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote)) 
-            <button type="submit" name="markVatNumberAsValid" value="markVatNumberAsValid" class="t-button">@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")</button>
-            <button type="submit" name="markVatNumberAsInvalid" value="markVatNumberAsInvalid" class="t-button">@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")</button>
-            @Html.ValidationMessageFor(model => model.VatNumber)
-        </td>
-    </tr>
-    }
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Active):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Active)
-            @Html.ValidationMessageFor(model => model.Active)
-        </td>
-    </tr>
-    @if (!String.IsNullOrEmpty(Model.CreatedOnStr))
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CreatedOnStr):
-        </td>
-        <td class="adminData">
-            @Model.CreatedOnStr
-        </td>
-    </tr>
-    }
-</table>
-    }
+    <table class="adminContent">
+        @if (Model.GenderEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Gender):
+                </td>
+                <td class="adminData">
+                    @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
+                    <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
+                    @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+                    <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FirstName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FirstName)
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LastName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LastName)
+                @Html.ValidationMessageFor(model => model.LastName)
+            </td>
+        </tr>
+        @if (Model.DateOfBirthEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.DateOfBirth):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.DateOfBirth)
+                    @Html.ValidationMessageFor(model => model.DateOfBirth)
+                </td>
+            </tr>
+        }
+        @if (Model.CompanyEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Company):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Company)
+                    @Html.ValidationMessageFor(model => model.Company)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdminComment):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AdminComment)
+                @Html.ValidationMessageFor(model => model.AdminComment)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsTaxExempt):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsTaxExempt)
+                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+            </td>
+        </tr>
+        @if (Model.AllowCustomersToSetTimeZone)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.TimeZoneId):
+                </td>
+                <td class="adminData">
+                    @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+                    @Html.ValidationMessageFor(model => model.TimeZoneId)
+                </td>
+            </tr>
+        }
+        @if (Model.AffiliateId.HasValue && Model.AffiliateId.Value > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AffiliateId):
+                </td>
+                <td class="adminData">
+                    <a href="@Url.Action("Edit", "Affiliate", new { id = @Model.AffiliateId.Value })">@Model.AffiliateId.Value
+                        - @T("Admin.Common.View")</a>
+                </td>
+            </tr>
+        }
+        @if (Model.DisplayVatNumber)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.VatNumber):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.VatNumber)
+                    (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
+                    <button type="submit" name="markVatNumberAsValid" value="markVatNumberAsValid" class="t-button">@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")</button>
+                    <button type="submit" name="markVatNumberAsInvalid" value="markVatNumberAsInvalid"
+                        class="t-button">@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")</button>
+                    @Html.ValidationMessageFor(model => model.VatNumber)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Active):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </td>
+        </tr>
+        @if (!String.IsNullOrEmpty(Model.CreatedOnStr))
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.CreatedOnStr):
+                </td>
+                <td class="adminData">
+                    @Model.CreatedOnStr
+                </td>
+            </tr>
+        }
+    </table>
+}
 @helper TabCustomerRoles()
     {
         if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
         {
             foreach (var customerRole in Model.AvailableCustomerRoles)
             {
-            <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
+    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
             @if (Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))
             {
                 <text>checked="checked"</text>
             }
             />@customerRole.Name
-            <br />
+    <br />
             }
         }
         else
         {
-            @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
+    @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
         }
 }
 @helper TabRewardPoints()
@@ -325,52 +323,88 @@
         </strong>
     </p>
 }
-
 @helper TabUserAccount()
     {
     
+    <p>
+        <b>@T("Admin.Customers.Customers.UserAccount.AssociatedUsers")</b>
+    </p>
     <div>
-        <table class="adminContent">
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AssociatedUserEmail):
-                </td>
-                <td class="adminData">
-                @if (Model.AssociatedUserId.HasValue)
-                {
-                    @Model.AssociatedUserEmail  @:- <a href="@Url.Action("Edit", "User", new { Id = @Model.AssociatedUserId.Value })">@T("Admin.Common.View")</a>
-                    <button type="submit" name="detach-associated-user" value="detach-associated-user" class="t-button">@T("Admin.Customers.Customers.UserAccount.DetachUser")</button>
-                }
-                else
-                {
-                    @T("Admin.Customers.Customers.UserAccount.NoAssociatedUser")
-                }
-                </td>
-            </tr>
-        </table>
+        <script type="text/javascript">
+            function deassociateUser(userId) {
+                //TODO if(confirm('Are you sure?')) {
+                    $.ajax({
+                        cache:false,
+                        type: "POST",
+                        url: "@(Url.Action("DeassociateNewUserAccount", "Customer"))",
+                        data: "userId=" + userId + "&customerId=" + @Model.Id,
+                        success: function (data) {
+                             alert('Successfully deassociated.');
+                             var grid = $("#customer-useraccounts-existing-grid");
+                             grid.data('tGrid').ajaxRequest();
+                        },
+                        error:function (xhr, ajaxOptions, thrownError){
+                            alert('Failed to deassociate user.')
+                        }  
+                    });
+                //}
+            };
+        </script>
+        @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel.UserAccountModel>()
+        .Name("customer-useraccounts-existing-grid")
+        .Columns(columns =>
+        {
+            columns.Bound(x => x.Id)
+                .ClientTemplate("<button type='button' name='deassociateUserAccount' id='deassociateUserAccount' onclick='deassociateUser(<#= Id #>)' class='t-button'>Deassociate</button>")
+                .Title("Deassociate")
+                .Width(50)
+                .Centered();
+            columns.Bound(x => x.Id)
+                .Width(50);
+            columns.Bound(x => x.Email)
+                .Width(200);
+            columns.Bound(x => x.IsLockedOut)
+                .Width(100)
+                .Template(x => x.IsLockedOut.ToString().ToLower())
+                .Centered();
+            columns.Bound(x => x.IsApproved)
+                .Width(100)
+                .Template(x => x.IsApproved.ToString().ToLower())
+                .Centered();
+            columns.Bound(x => x.CreatedOnStr)
+                .Width(100);
+        })
+        .DataBinding(binding =>
+        {
+            binding.Ajax().Select("AssociatedUserSelect", "Customer", new { customerID = Model.Id });
+        })
+        .EnableCustomBinding(true))
     </div>
     <hr />
     <p>
-       <b>@T("Admin.Customers.Customers.UserAccount.AssociateTitle")</b>
+        <b>@T("Admin.Customers.Customers.UserAccount.AssociateTitle")</b>
     </p>
-    <div class="clear"></div>
     <div>
-       <label for="userEmailStartsWith"><strong>Email</strong> contains:</label>
-        @Html.TextBoxFor(model => model.UserEmailStartsWith)
-        <button type="submit" id="search-users" value="searchUsers" class="t-button">Search</button>
+        <label for="userEmailStartsWith">
+            <strong>Email</strong> contains:</label>
+        <input id="useremailstartswith" name="useremailstartswith" type="text" value="">
+        <button type="submit" id="search-users" value="search-users" class="t-button">Search</button>
     </div>
-    <div class="clear"></div>
+    <div class="clear">
+    </div>
+    <div>
         <script type="text/javascript">
             function associateUser(userId) {
-                //if(confirm('Are you sure?')) {
+                //TODO if(confirm('Are you sure?')) {
                     $.ajax({
                         cache:false,
                         type: "POST",
                         url: "@(Url.Action("AssociateNewUserAccount", "Customer"))",
                         data: "userId=" + userId + "&customerId=" + @Model.Id,
                         success: function (data) {
-                             alert('Successfully associated. Refresh the page to see the changes')
-                             //TODO reload page (and stay on 'User account' tab)
+                             alert('Successfully associated.');                             
+                             var grid = $("#customer-useraccounts-existing-grid");
+                             grid.data('tGrid').ajaxRequest();
                         },
                         error:function (xhr, ajaxOptions, thrownError){
                             alert('Failed to associate user.')
@@ -379,8 +413,8 @@
                 //}
             };
         </script>
-    @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel.UserAccountModel>()
-        .Name("customer-useraccounts-grid")
+        @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel.UserAccountModel>()
+        .Name("customer-useraccounts-all-grid")
         .Columns(columns =>
         {
             columns.Bound(x => x.Id)
@@ -406,25 +440,25 @@
         .Pageable(settings => settings.PageSize(10))
         .DataBinding(binding =>
         {
-            binding.Ajax().Select("UserSelect", "Customer");
+            binding.Ajax().Select("UserSelectAll", "Customer");
         })
-        .ClientEvents(events => events.OnDataBinding("onUserListDataBinding"))
+        .ClientEvents(events => events.OnDataBinding("onUserListAllDataBinding"))
         .EnableCustomBinding(true))
-        
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#search-users').click(function () {
-                    var grid = $('#customer-useraccounts-grid').data('tGrid');
+                    var grid = $('#customer-useraccounts-all-grid').data('tGrid');
                     grid.ajaxRequest();
                     return false;
                 });
             });
 
-            function onUserListDataBinding(e) {
+            function onUserListAllDataBinding(e) {
                 var searchModel = {
-                    UserEmailStartsWith: $('#@Html.FieldIdFor(model => model.UserEmailStartsWith)').val()
+                    UserEmailStartsWith: $('#useremailstartswith').val()
                 };
                 e.data = searchModel;
             }
-   </script>
+        </script>
+    </div>
 }

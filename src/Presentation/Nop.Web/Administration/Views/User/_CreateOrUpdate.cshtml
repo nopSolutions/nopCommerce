@@ -7,6 +7,24 @@
 
 
 <table class="adminContent">
+        @if (Model.Id > 0)
+        {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AssociatedCustomerId):
+            </td>
+            <td class="adminData">
+                @if (Model.AssociatedCustomerId.HasValue)
+                {
+                    <a href="@Url.Action("Edit", "Customer", new { id = Model.AssociatedCustomerId.Value})">@T("Admin.Common.View")</a>
+                }
+                else
+                {
+                    <text>WARNING: no associated customer!</text>
+                }
+            </td>
+        </tr>
+        }
     @if (Model.UsernamesEnabled)
     {
         if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)

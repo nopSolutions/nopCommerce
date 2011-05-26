@@ -38,6 +38,7 @@ namespace Nop.Data.Tests
         /// <param name="disposeContext">A value indicating whether to dispose context</param>
         protected T SaveAndLoadEntity<T>(T entity, bool disposeContext = true) where T : BaseEntity
         {
+
             context.Set<T>().Add(entity);
             context.SaveChanges();
 

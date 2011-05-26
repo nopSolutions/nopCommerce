@@ -14,6 +14,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -57,7 +58,7 @@ namespace Nop.Web.Controllers
         private readonly IPdfService _pdfService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IUserService _userService;
+        private readonly IAuthenticationService _authenticationService;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly MeasureSettings _measureSettings;
@@ -76,8 +77,8 @@ namespace Nop.Web.Controllers
             IDateTimeHelper dateTimeHelper, IMeasureService measureService,
             IPaymentService paymentService, ILocalizationService localizationService,
             IPdfService pdfService, ICustomerService customerService,
-            IWorkflowMessageService workflowMessageService, IUserService userService,
-            LocalizationSettings localizationSettings,
+            IWorkflowMessageService workflowMessageService,
+            IAuthenticationService authenticationService, LocalizationSettings localizationSettings,
             MeasureSettings measureSettings, CatalogSettings catalogSettings,
             OrderSettings orderSettings, TaxSettings taxSettings, PdfSettings pdfSettings)
         {
@@ -93,7 +94,7 @@ namespace Nop.Web.Controllers
             this._pdfService = pdfService;
             this._customerService = customerService;
             this._workflowMessageService = workflowMessageService;
-            this._userService = userService;
+            this._authenticationService = authenticationService;
 
             this._localizationSettings = localizationSettings;
             this._measureSettings = measureSettings;
@@ -487,8 +488,7 @@ namespace Nop.Web.Controllers
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToAction("Index", "Home");
 
-            var user = _workContext.CurrentCustomer.AssociatedUserId.HasValue ? _userService.GetUserById(_workContext.CurrentCustomer.AssociatedUserId.Value) : null;
-
+            var user = _authenticationService.GetAuthenticatedUser();
             int count = 0;
             foreach (var opv in order.OrderProductVariants)
             {

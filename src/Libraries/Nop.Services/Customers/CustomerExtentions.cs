@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using System.IO;
 using System.Xml.Serialization;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Customers
 {
@@ -101,5 +102,18 @@ namespace Nop.Services.Customers
 
             }
         }
+
+        public static User GetDefaultUserAccount(this Customer customer, bool onlyActiveUser = true)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+            
+            var user = customer.AssociatedUsers
+                .Where(u => !onlyActiveUser || (u.IsApproved && !u.IsLockedOut))
+                .OrderByDescending(u => u.CreatedOnUtc)
+                .FirstOrDefault();
+            return user;
+        }
+
     }
 }

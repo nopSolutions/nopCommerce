@@ -3491,6 +3491,14 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="SearchEmail">
+                          <Value>Associated user account email</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Filter by email of associated user account.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                       </Children>
                     </LocaleResource>
                     <LocaleResource Name="RewardPoints">
@@ -3555,27 +3563,11 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
-                        <LocaleResource Name="AssociatedUser">
-                          <Value>Associated user</Value>
-                          <Children>
-                            <LocaleResource Name="Hint">
-                              <Value>The user account associated with this customer.</Value>
-                            </LocaleResource>
-                          </Children>
+                        <LocaleResource Name="AssociatedUsers">
+                          <Value>Associated users</Value>
                         </LocaleResource>
                         <LocaleResource Name="AssociateTitle">
                           <Value>Associate the customer with a user account</Value>
-                          <Children>
-                            <LocaleResource Name="Hint">
-                              <Value>The user account associated with this customer.</Value>
-                            </LocaleResource>
-                          </Children>
-                        </LocaleResource>
-                        <LocaleResource Name="DetachUser">
-                          <Value>Detach the user from this customer</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="NoAssociatedUser">
-                          <Value>The customer doesn't have associated user account</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
@@ -5502,6 +5494,14 @@
                         <Children>
                           <LocaleResource Name="Hint">
                             <Value>A value indicating whether a user is locked out</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AssociatedCustomer">
+                        <Value>Associated customer</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The user's associated customer record.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

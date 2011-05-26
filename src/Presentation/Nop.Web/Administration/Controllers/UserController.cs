@@ -160,6 +160,7 @@ namespace Nop.Admin.Controllers
                 Comments = user.Comments,
                 IsApproved = user.IsApproved,
                 IsLockedOut = user.IsLockedOut,
+                AssociatedCustomerId = user.AssociatedCustomerId,
                 CreatedOnStr = _dateTimeHelper.ConvertToUserTime(user.CreatedOnUtc, DateTimeKind.Utc).ToString(),
             };
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
@@ -208,6 +209,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
+            model.AssociatedCustomerId = user.AssociatedCustomerId;
             return View(model);
         }
 
@@ -238,6 +240,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
+            model.AssociatedCustomerId = user.AssociatedCustomerId;
             return View(model);
         }
 

@@ -603,12 +603,12 @@ namespace Nop.Services.Installation
                                     new Customer
                                         {
                                             CustomerGuid = Guid.NewGuid(),
-                                            AssociatedUserId = adminUser.Id,
                                             Active = true,
                                             CreatedOnUtc = DateTime.UtcNow,
                                         }
                                 };
-            customers.FirstOrDefault().AddAddress(new Address()
+            var defaultCustomer = customers.FirstOrDefault();
+            defaultCustomer.AddAddress(new Address()
             {
                 FirstName = "John",
                 LastName = "Smith",
@@ -624,7 +624,7 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             });
-            customers.FirstOrDefault().AddAddress(new Address()
+            defaultCustomer.AddAddress(new Address()
             {
                 FirstName = "test 1",
                 LastName = "test 2",
@@ -640,6 +640,7 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             });
+            defaultCustomer.AssociatedUsers.Add(adminUser);
             customers.ForEach(c => _customerRepository.Insert(c));
 
             var testGuests = new List<Customer>();
@@ -662,7 +663,7 @@ namespace Nop.Services.Installation
                                             SystemName = SystemCustomerRoleNames.Administrators,
                                             Customers = new List<Customer>()
                                             {
-                                                customers.FirstOrDefault()
+                                                defaultCustomer
                                             }
                                         },
                                     new CustomerRole
@@ -673,7 +674,7 @@ namespace Nop.Services.Installation
                                             SystemName = SystemCustomerRoleNames.Registered,
                                             Customers = new List<Customer>()
                                             {
-                                                customers.FirstOrDefault()
+                                                defaultCustomer
                                             }
                                         },
                                     new CustomerRole

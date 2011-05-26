@@ -1,5 +1,6 @@
 ﻿
 using System;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Security
 {
@@ -34,5 +35,8 @@ namespace Nop.Core.Domain.Security
         public virtual DateTime? LastLockedOutDateUtc { get; set; }
         public virtual DateTime? LastPasswordChangeDateUtc { get; set; }
         public virtual int FailedPasswordAttemptCount { get; set; }
+
+        public virtual int? AssociatedCustomerId { get; set; }
+        public virtual Customer AssociatedCustomer { get; set; }
     }
 }

@@ -20,5 +20,8 @@ namespace Nop.Admin.Models
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
         public int[] SearchCustomerRoleIds { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchEmail")]
+        public string SearchEmail { get; set; }
     }
 }

@@ -49,6 +49,9 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Users.Fields.IsLockedOut")]
         public bool IsLockedOut { get; set; }
 
+        [NopResourceDisplayName("Admin.Users.Fields.AssociatedCustomer")]
+        public int? AssociatedCustomerId { get; set; }
+
         [NopResourceDisplayName("Admin.Users.Fields.CreatedOn")]
         public DateTime CreatedOnUtc { get; set; }
 

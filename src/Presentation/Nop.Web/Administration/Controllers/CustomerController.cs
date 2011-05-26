@@ -100,7 +100,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            var customers = _customerService.GetAllCustomers(null,null, null, 0, 10);
+            var customers = _customerService.GetAllCustomers(null,null, null, null, 0, 10);
             var model = new CustomerListModel();
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
@@ -132,10 +132,11 @@ namespace Nop.Admin.Controllers
                 searchCustomerRoleIds.Add(Convert.ToInt32(str1));
             //List<int> converter should be registered
             //var searchCustomerRoleIds = TypeDescriptor.GetConverter(typeof(List<int>)).ConvertFrom(searchCustomerRoleIdsStr) as List<int>;
-            
+
+            string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
 
             var customers = _customerService.GetAllCustomers(null, null, 
-                searchCustomerRoleIds.ToArray(), command.Page - 1, command.PageSize);
+                searchCustomerRoleIds.ToArray(), searchCustomerEmail, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
                 Data = customers.Select(x =>
@@ -167,7 +168,8 @@ namespace Nop.Admin.Controllers
             //if (model.SearchCustomerRoleIds != null)
                 //List<int> converter should be registered
                 //ViewData["searchCustomerRoleIds"] = TypeDescriptor.GetConverter(typeof(List<int>)).ConvertTo(model.SearchCustomerRoleIds, typeof(string)) as string;
-            
+
+            ViewData["searchCustomerEmail"] = model.SearchEmail;
 
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
@@ -175,7 +177,7 @@ namespace Nop.Admin.Controllers
 
             //laod customers
             var customers = _customerService.GetAllCustomers(null, null,
-               model.SearchCustomerRoleIds, 0, 10);
+               model.SearchCustomerRoleIds, model.SearchEmail, 0, 10);
             //customer list
             model.Customers = new GridModel<CustomerModel>
             {
@@ -289,14 +291,6 @@ namespace Nop.Admin.Controllers
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
             model.AddRewardPointsMessage = "Some comment here...";
-            //user account
-            model.AssociatedUserId = customer.AssociatedUserId;
-            if (customer.AssociatedUserId.HasValue)
-            {
-                User associatedUser = _userService.GetUserById(customer.AssociatedUserId.Value);
-                if (associatedUser != null)
-                    model.AssociatedUserEmail = associatedUser.Email;
-            }
 
             return View(model);
         }
@@ -381,14 +375,6 @@ namespace Nop.Admin.Controllers
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
             model.AddRewardPointsMessage = "Some comment here...";
-            //user account
-            model.AssociatedUserId = customer.AssociatedUserId;
-            if (customer.AssociatedUserId.HasValue)
-            {
-                User associatedUser = _userService.GetUserById(customer.AssociatedUserId.Value);
-                if (associatedUser != null)
-                    model.AssociatedUserEmail = associatedUser.Email;
-            }
             return View(model);
         }
         
@@ -655,9 +641,39 @@ namespace Nop.Admin.Controllers
         #region User accounts
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult UserSelect(GridCommand command, CustomerModel model)
+        public ActionResult AssociatedUserSelect(GridCommand command, int customerId)
         {
-            var users = _userService.GetUsers(model.UserEmailStartsWith, null, command.Page - 1, command.PageSize);
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "customerId");
+
+            var users = customer.AssociatedUsers;
+            var gridModel = new GridModel<CustomerModel.UserAccountModel>
+            {
+                Data = users.Select(x =>
+                {
+                    return new CustomerModel.UserAccountModel()
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        IsApproved = x.IsApproved,
+                        IsLockedOut = x.IsLockedOut,
+                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                    };
+                }),
+                Total = users.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult UserSelectAll(GridCommand command, string userEmailStartsWith)
+        {
+            var users = _userService.GetUsers(userEmailStartsWith, null, command.Page - 1, command.PageSize);
+
             var gridModel = new GridModel<CustomerModel.UserAccountModel>
             {
                 Data = users.Select(x =>
@@ -679,59 +695,40 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [HttpPost, ActionName("Edit")]
-        [FormValueRequired("detach-associated-user")]
-        public ActionResult DetachAssociatedUser(CustomerModel model)
-        {
-            ViewData["selectedTab"] = "useraccount";
-
-            var customer = _customerService.GetCustomerById(model.Id);
-            if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
-
-            customer.AssociatedUserId = null;
-            _customerService.UpdateCustomer(customer);
-
-
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
-            //form fields
-            model.GenderEnabled = _formFieldSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
-            //customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.ToList();
-            //reward points gistory
-            model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
-            //user account
-            model.AssociatedUserEmail = null;
-            model.AssociatedUserId = null;
-
-            return View(model);
-        }
 
         [HttpPost]
         public ActionResult AssociateNewUserAccount(int userId, int customerId)
         {
             var user = _userService.GetUserById(userId);
             if (user == null)
-                throw new ArgumentException("No user found with the specified id", "id");
+                throw new ArgumentException("No user found with the specified id", "userId");
 
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                throw new ArgumentException("No customer found with the specified id", "customerId");
 
-            customer.AssociatedUserId = userId;
+            customer.AssociatedUsers.Add(user);
             _customerService.UpdateCustomer(customer);
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult DeassociateNewUserAccount(int userId, int customerId)
+        {
+            var user = _userService.GetUserById(userId);
+            if (user == null)
+                throw new ArgumentException("No user found with the specified id", "userId");
+
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "customerId");
+
+            customer.AssociatedUsers.Remove(user);
+            _customerService.UpdateCustomer(customer);
+
+            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
+        }
         #endregion
     }
 }

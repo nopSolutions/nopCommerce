@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Security;
 using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain;
@@ -26,7 +28,6 @@ namespace Nop.Data.Tests
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
-            fromDb.AssociatedUserId.ShouldEqual(4);
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.TaxDisplayType.ShouldEqual(TaxDisplayType.IncludingTax);
             fromDb.IsTaxExempt.ShouldEqual(true);
@@ -126,7 +127,7 @@ namespace Nop.Data.Tests
         }
 
         [Test]
-        public void Can_save_customer_with_address()
+        public void Can_save_and_load_customer_with_address()
         {
             var customer = GetTestCustomer();
 
@@ -146,7 +147,7 @@ namespace Nop.Data.Tests
         }
 
         [Test]
-        public void Can_save_customer_with_affiliate()
+        public void Can_save_and_load_customer_with_affiliate()
         {
             var customer = GetTestCustomer();
             customer.Affiliate = GetTestAffiliate();
@@ -206,7 +207,7 @@ namespace Nop.Data.Tests
         }
         
         [Test]
-        public void Can_save_customer_with_shopping_cart()
+        public void Can_save_and_load_customer_with_shopping_cart()
         {
             var customer = GetTestCustomer();
             var productVariant = GetTestProductVariant();
@@ -267,6 +268,28 @@ namespace Nop.Data.Tests
             fromDb.Orders.First().Deleted.ShouldEqual(true);
         }
 
+        [Test]
+        public void Can_save_and_load_customer_with_associatedUsers()
+        {
+            var customer = GetTestCustomer();
+            customer.AssociatedUsers.Add
+            (
+                new User()
+                {
+                    Email = "a@b.com",
+                    Password = "password",
+                    CreatedOnUtc = DateTime.UtcNow
+                }
+            );
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
+
+            fromDb.AssociatedUsers.ShouldNotBeNull();
+            (fromDb.AssociatedUsers.Count == 1).ShouldBeTrue();
+            fromDb.AssociatedUsers.First().Email.ShouldEqual("a@b.com");
+        }
+
         protected Affiliate GetTestAffiliate()
         {
             return new Affiliate
@@ -306,7 +329,6 @@ namespace Nop.Data.Tests
             return new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                AssociatedUserId = 4,
                 AdminComment = "some comment here",
                 TaxDisplayType = TaxDisplayType.IncludingTax,
                 IsTaxExempt = true,

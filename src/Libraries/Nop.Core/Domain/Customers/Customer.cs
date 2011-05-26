@@ -8,6 +8,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Discounts;
 using System.Diagnostics;
@@ -29,16 +30,12 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ReturnRequest> _returnRequests;
         private ICollection<Address> _addresses;
         private ICollection<ActivityLog> _activityLog;
+        private ICollection<User> _associatedUsers;
 
         /// <summary>
         /// Gets or sets the customer Guid
         /// </summary>
         public virtual Guid CustomerGuid { get; set; }
-
-        /// <summary>
-        /// Gets or sets the associated user identifier
-        /// </summary>
-        public virtual int? AssociatedUserId { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment
@@ -189,6 +186,7 @@ namespace Nop.Core.Domain.Customers
             get { return _customerContent ?? (_customerContent = new List<CustomerContent>()); }
             protected set { _customerContent = value; }
         }
+
         /// <summary>
         /// Gets or sets the customer roles
         /// </summary>
@@ -268,6 +266,15 @@ namespace Nop.Core.Domain.Customers
         {
             get { return _activityLog ?? (_activityLog = new List<ActivityLog>()); }
             protected set { _activityLog = value; }            
+        }
+
+        /// <summary>
+        /// Gets or sets the associated users
+        /// </summary>
+        public virtual ICollection<User> AssociatedUsers
+        {
+            get { return _associatedUsers ?? (_associatedUsers = new List<User>()); }
+            set { _associatedUsers = value; }
         }
 
         #endregion

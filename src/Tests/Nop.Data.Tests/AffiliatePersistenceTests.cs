@@ -106,7 +106,6 @@ namespace Nop.Data.Tests
             return new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                AssociatedUserId = 4,
                 AdminComment = "some comment here",
                 TaxDisplayType = TaxDisplayType.IncludingTax,
                 Active = true,

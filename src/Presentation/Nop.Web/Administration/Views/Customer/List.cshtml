@@ -30,6 +30,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.SearchEmail)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <button type="submit" name="search-customers" value="search-customers" class="t-button">@T("Admin.Common.Search")</button>
             </td>
@@ -55,7 +63,11 @@
                             .Filterable(false);
                         //hidden column used for filtering
                         columns.Bound(x => x.SearchCustomerRoleIds)
-                            .Width(200)
+                            .Width(50)
+                            .Filterable(false)
+                            .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerEmail)
+                            .Width(50)
                             .Filterable(false)
                             .Hidden(true);
                         columns.Bound(x => x.Active)
@@ -82,6 +94,11 @@
                         if (!String.IsNullOrEmpty(ViewData["searchCustomerRoleIds"] as string))
                         {
                             filters.Add(x => x.SearchCustomerRoleIds).Contains((string)ViewData["searchCustomerRoleIds"]);
+                        }
+                        //customer role ids
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerEmail"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerEmail).Contains((string)ViewData["searchCustomerEmail"]);
                         }
                     }))
                     .EnableCustomBinding(true))

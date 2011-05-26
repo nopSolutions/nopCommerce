@@ -32,6 +32,12 @@ namespace Nop.Data.Mapping.Customers
                 .Map(m => m.ToTable("CustomerAddresses"));
             this.HasOptional<Address>(c => c.BillingAddress);
             this.HasOptional<Address>(c => c.ShippingAddress);
+
+
+            this.HasMany(c => c.AssociatedUsers)
+                .WithOptional(u => u.AssociatedCustomer)
+                .HasForeignKey(u => u.AssociatedCustomerId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

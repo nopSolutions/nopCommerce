@@ -181,7 +181,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No return request found with the specified id");
 
             var customer = returnRequest.Customer;
-            var user = customer.AssociatedUserId.HasValue ? _userService.GetUserById(customer.AssociatedUserId.Value) : null;
+            var user = customer.GetDefaultUserAccount();
             var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
             _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, user, opv, _localizationSettings.DefaultAdminLanguageId);
             //TODO notify store owner about success or error

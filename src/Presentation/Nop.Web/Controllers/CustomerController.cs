@@ -229,7 +229,7 @@ namespace Nop.Web.Controllers
                     //now register 'Customer' entity
                     _customerService.RegisterCustomer(customer);
                     //associate it with this user
-                    customer.AssociatedUserId = registrationResult.User.Id;
+                    customer.AssociatedUsers.Add(registrationResult.User);
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                         customer.TimeZoneId = model.TimeZoneId;

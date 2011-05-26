@@ -58,14 +58,11 @@ namespace Nop.Services
                 var user = _authenticationService.GetAuthenticatedUser();
                 if (user != null)
                 {
-                    customer = _customerService.GetCustomerByAssociatedUserId(user.Id);
-                    if (customer == null)
+                    customer = user.AssociatedCustomer;
+                    if (customer == null || customer.Deleted || !customer.Active)
                     {
-                        //TODO create a registed customer record
-                        //or throw an exception?
-                        //ensure that all validation is skipped (e.g., email validation, etc)
-                        //_customerService.InsertGuestCustomer(); _customerService.RegisterCustomer();
-                        //_customerService.InsertCustomer();
+                        //logout
+                        _authenticationService.SignOut();
                     }
                 }
                 

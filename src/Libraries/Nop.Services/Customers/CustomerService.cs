@@ -73,11 +73,12 @@ namespace Nop.Services.Customers
         /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
         /// <param name="registrationTo">Customer registration to; null to load all customers</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
+        /// <param name="associatedUserEmail">Email of associated user; null to load all customers</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         public PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, int[] customerRoleIds, int pageIndex, int pageSize)
+            DateTime? registrationTo, int[] customerRoleIds, string associatedUserEmail, int pageIndex, int pageSize)
         {
             var query = _customerRepository.Table;
             if (registrationFrom.HasValue)
@@ -88,6 +89,10 @@ namespace Nop.Services.Customers
             if (customerRoleIds != null && customerRoleIds.Length > 0)
             {
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Count() > 0);
+            }
+            if (!String.IsNullOrEmpty(associatedUserEmail))
+            {
+                query = query.Where(c => c.AssociatedUsers.Where(u => u.Email.Contains(associatedUserEmail)).Count() > 0);
             }
             
             query = query.OrderByDescending(c => c.CreatedOnUtc);
@@ -175,25 +180,7 @@ namespace Nop.Services.Customers
             var customer = query.FirstOrDefault();
             return customer;
         }
-
-        /// <summary>
-        /// Gets a customer
-        /// </summary>
-        /// <param name="associatedUserId">User identifier</param>
-        /// <returns>A customer</returns>
-        public Customer GetCustomerByAssociatedUserId(int associatedUserId)
-        {
-            if (associatedUserId == 0)
-                return null;
-
-            var query = from c in _customerRepository.Table
-                        where c.AssociatedUserId == associatedUserId
-                        orderby c.Id
-                        select c;
-            var customer = query.FirstOrDefault();
-            return customer;
-        }
-
+        
         /// <summary>
         /// Insert a guest customer
         /// </summary>
