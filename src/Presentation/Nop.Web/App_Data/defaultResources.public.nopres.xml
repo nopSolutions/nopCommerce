@@ -307,6 +307,61 @@
       <LocaleResource Name="Navigation">
         <Value>My account</Value>
       </LocaleResource>
+      <LocaleResource Name="PasswordRecovery">
+        <Value>Password recovery</Value>
+        <Children>
+          <LocaleResource Name="RecoverButton">
+            <Value>Recover</Value>
+          </LocaleResource>
+          <LocaleResource Name="ChangePasswordButton">
+            <Value>Recover</Value>
+          </LocaleResource>
+          <LocaleResource Name="EmailHasBeenSent">
+            <Value>Email with instructions has been sent to you.</Value>
+          </LocaleResource>
+          <LocaleResource Name="EmailNotFound">
+            <Value>Email not found.</Value>
+          </LocaleResource>
+          <LocaleResource Name="Email">
+            <Value>Your email address</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Enter your email</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="PasswordHasBeenChanged">
+            <Value>Your password has been changed</Value>
+          </LocaleResource>
+          <LocaleResource Name="OldPassword">
+            <Value>Old password</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Old password is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="NewPassword">
+            <Value>New password</Value>
+            <Children>
+              <LocaleResource Name="EnteredPasswordsDoNotMatch">
+                <Value>The new password and confirmation password do not match.</Value>
+              </LocaleResource>
+              <LocaleResource Name="Required">
+                <Value>New password is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="ConfirmNewPassword">
+            <Value>Confirm password</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Password is required.</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Preferences">
         <Value>Preferences</Value>
       </LocaleResource>

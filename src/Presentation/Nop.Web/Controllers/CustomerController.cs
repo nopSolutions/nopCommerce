@@ -1090,5 +1090,97 @@ namespace Nop.Web.Controllers
         #endregion
 
         #endregion
+
+        #region Password recovery
+
+        public ActionResult PasswordRecovery()
+        {
+            var model = new PasswordRecoveryModel();
+            return View(model);
+        }
+
+        [HttpPost, ActionName("PasswordRecovery")]
+        [FormValueRequired("send-email")]
+        public ActionResult PasswordRecoverySend(PasswordRecoveryModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var user = _userService.GetUserByEmail(model.Email);
+                if (user != null && user.AssociatedCustomer != null)
+                {
+                    var passwordRecoveryToken = Guid.NewGuid();
+                    _customerService.SaveCustomerAttribute(user.AssociatedCustomer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
+                    _workflowMessageService.SendCustomerPasswordRecoveryMessage(user.AssociatedCustomer, _workContext.WorkingLanguage.Id);
+
+                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
+                }
+                else
+                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
+
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
+        public ActionResult PasswordRecoveryConfirm(Guid prt, string customerEmail)
+        {
+            var user = _userService.GetUserByEmail(customerEmail);
+            if (user == null || user.AssociatedCustomer == null)
+                return RedirectToAction("Index", "Home");
+
+            var cPrt = user.AssociatedCustomer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
+            if (String.IsNullOrEmpty(cPrt))
+                return RedirectToAction("Index", "Home");
+
+            if (!cPrt.Equals(prt.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                return RedirectToAction("Index", "Home");
+            
+            var model = new PasswordRecoveryConfirmModel();
+            return View(model);
+        }
+
+        [HttpPost, ActionName("PasswordRecoveryConfirm")]
+        [FormValueRequired("set-password")]
+        public ActionResult PasswordRecoveryConfirmPOST(Guid prt, string customerEmail, PasswordRecoveryConfirmModel model)
+        {
+            var user = _userService.GetUserByEmail(customerEmail);
+            if (user == null || user.AssociatedCustomer == null)
+                return RedirectToAction("Index", "Home");
+
+            var cPrt = user.AssociatedCustomer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
+            if (String.IsNullOrEmpty(cPrt))
+                return RedirectToAction("Index", "Home");
+
+            if (!cPrt.Equals(prt.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                return RedirectToAction("Index", "Home");
+            
+            if (ModelState.IsValid)
+            {
+                var response = _userService.ChangePassword(new ChangePasswordRequest(customerEmail, false,
+                    model.NewPassword));
+                if (response.Success)
+                {
+                    _customerService.SaveCustomerAttribute(user.AssociatedCustomer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
+
+                    model.SuccessfullyChanged = true;
+                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
+                }
+                else
+                {
+                    model.Result = response.Errors.FirstOrDefault();
+                }
+
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        #endregion
     }
 }

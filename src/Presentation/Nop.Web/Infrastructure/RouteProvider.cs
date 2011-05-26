@@ -166,6 +166,16 @@ namespace Nop.Web.Infrastructure
                             "contactus",
                             new { controller = "Home", action = "ContactUs" },
                             new[] { "Nop.Web.Controllers" });
+
+            //passwordrecovery
+            routes.MapRoute("PasswordRecovery",
+                            "passwordrecovery",
+                            new { controller = "Customer", action = "PasswordRecovery" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("PasswordRecoveryConfirm",
+                            "passwordrecovery/confirm/{prt}/{customerEmail}",
+                            new { controller = "Customer", action = "PasswordRecoveryConfirm" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority
