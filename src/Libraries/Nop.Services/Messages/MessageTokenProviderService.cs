@@ -494,12 +494,13 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
 
-            const string urlFormat = "{0}newslettersubscriptionactivation.aspx?t={1}&active={2}";
 
-            var activationUrl = String.Format(urlFormat, _storeSettings.StoreUrl, subscription.NewsLetterSubscriptionGuid, 1);
+            const string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}/";
+
+            var activationUrl = String.Format(urlFormat, _webHelper.GetStoreLocation(false), subscription.NewsLetterSubscriptionGuid, "true");
             tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl));
 
-            var deActivationUrl = String.Format("urlFormat", _storeSettings.StoreUrl, subscription.NewsLetterSubscriptionGuid, 0);
+            var deActivationUrl = String.Format(urlFormat, _webHelper.GetStoreLocation(false), subscription.NewsLetterSubscriptionGuid, "false");
             tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deActivationUrl));
         }
 

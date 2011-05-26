@@ -176,6 +176,12 @@ namespace Nop.Web.Infrastructure
                             "passwordrecovery/confirm/{prt}/{customerEmail}",
                             new { controller = "Customer", action = "PasswordRecoveryConfirm" },
                             new[] { "Nop.Web.Controllers" });
+
+            //newsletters
+            routes.MapRoute("NewsletterActivation",
+                            "newsletter/subscriptionactivation/{token}/{active}",
+                            new { controller = "Newsletter", action = "SubscriptionActivation" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

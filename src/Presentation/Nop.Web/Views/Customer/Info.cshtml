@@ -146,7 +146,31 @@
                         <div class="clear">
                         </div>
                     }
-@*TODO add newsletter support*@
+                    @if (Model.NewsletterEnabled)
+                    {
+                        <div class="section-title">
+                            @T("Account.Options")
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div class="section-body">
+                            <table class="table-container">
+                                <tbody>
+                                    <tr class="row">
+                                        <td class="item-name">
+                                            @Html.LabelFor(model => model.Newsletter):
+                                        </td>
+                                        <td class="item-value">
+                                            @Html.EditorFor(model => model.Newsletter)
+                                            @Html.ValidationMessageFor(model => model.Newsletter)
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clear">
+                        </div>
+                    }
                     @if (Model.AllowCustomersToSetTimeZone)
                     {
                         <div class="section-title">

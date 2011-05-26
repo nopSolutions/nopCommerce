@@ -1034,6 +1034,13 @@ namespace Nop.Services.Installation
                     RenderOrderNotes = true,
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<CommonSettings>>()
+                .SaveSettings(new CommonSettings()
+                {
+                    HideNewsletterBox = false,
+                    UseSystemEmailForContactUsForm = true
+                });
+
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
                 .SaveSettings(new CatalogSettings()
                 {

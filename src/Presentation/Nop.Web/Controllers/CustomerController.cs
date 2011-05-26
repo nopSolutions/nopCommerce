@@ -10,6 +10,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
@@ -62,6 +63,8 @@ namespace Nop.Web.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IPictureService _pictureService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
@@ -82,7 +85,8 @@ namespace Nop.Web.Controllers
             IOrderTotalCalculationService orderTotalCalculationService,
             IOrderProcessingService orderProcessingService, IOrderService orderService,
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
-            IPictureService pictureService, MediaSettings mediaSettings,
+            IPictureService pictureService, INewsLetterSubscriptionService newsLetterSubscriptionService,
+            MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
         {
             this._authenticationService = authenticationService;
@@ -109,6 +113,8 @@ namespace Nop.Web.Controllers
             this._currencyService = currencyService;
             this._priceFormatter = priceFormatter;
             this._pictureService = pictureService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
@@ -195,6 +201,7 @@ namespace Nop.Web.Controllers
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
             model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
+            model.NewsletterEnabled = _formFieldSettings.NewsletterEnabled;
             //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
 
@@ -258,6 +265,34 @@ namespace Nop.Web.Controllers
                     //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
                     if (_formFieldSettings.CompanyEnabled)
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+                    if (_formFieldSettings.NewsletterEnabled)
+                    {
+                        //save newsletter value
+                        var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(model.Email);
+                        if (newsletter != null)
+                        {
+                            if (model.Newsletter)
+                            {
+                                newsletter.Active = true;
+                                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
+                            }
+                            else
+                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+                        }
+                        else
+                        {
+                            if (model.Newsletter)
+                            {
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription()
+                                {
+                                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                    Email = customer.GetDefaultUserAccountEmail(),
+                                    Active = true,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                            }
+                        }
+                    }
 
 
                     //TODO migrate shopping cart
@@ -323,6 +358,7 @@ namespace Nop.Web.Controllers
             //form fields
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
             model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
+            model.NewsletterEnabled = _formFieldSettings.NewsletterEnabled;
             //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             return View(model);
@@ -453,6 +489,35 @@ namespace Nop.Web.Controllers
                 //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
                 if (_formFieldSettings.CompanyEnabled)
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+                //newsletter
+                if (_formFieldSettings.NewsletterEnabled)
+                {
+                    //save newsletter value
+                    var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.GetDefaultUserAccountEmail());
+                    if (newsletter != null)
+                    {
+                        if (model.Newsletter)
+                        {
+                            newsletter.Active = true;
+                            _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
+                        }
+                        else
+                            _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+                    }
+                    else
+                    {
+                        if (model.Newsletter)
+                        {
+                            _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription()
+                            {
+                                NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                Email = customer.GetDefaultUserAccountEmail(),
+                                Active = true,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                        }
+                    }
+                }
 
                 return RedirectToAction("info");
             }
@@ -489,6 +554,11 @@ namespace Nop.Web.Controllers
                 //model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
                 model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
 
+                //newsletter
+                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.GetDefaultUserAccountEmail());
+                model.Newsletter = newsletter != null && newsletter.Active;
+
+
                 model.Email = user.Email;
                 model.Username = user.Username;
             }
@@ -502,6 +572,7 @@ namespace Nop.Web.Controllers
             model.GenderEnabled = _formFieldSettings.GenderEnabled;
             //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
+            model.NewsletterEnabled = _formFieldSettings.NewsletterEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
 

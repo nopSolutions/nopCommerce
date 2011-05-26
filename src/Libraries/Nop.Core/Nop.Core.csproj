@@ -81,6 +81,7 @@
     <Compile Include="Domain\Catalog\PriceRange.cs" />
     <Compile Include="Domain\Catalog\ProductExtensions.cs" />
     <Compile Include="Domain\Catalog\SpecificationAttributeOptionFilter.cs" />
+    <Compile Include="Domain\Common\CommonSettings.cs" />
     <Compile Include="Domain\Common\PdfSettings.cs" />
     <Compile Include="Domain\Localization\ILocalizedEnum.cs" />
     <Compile Include="Domain\Logging\ActivityLog.cs" />

@@ -38,6 +38,10 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Company")]
         public string Company { get; set; }
 
+        public bool NewsletterEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.Newsletter")]
+        public bool Newsletter { get; set; }
+
         //time zone
         [NopResourceDisplayName("Account.Fields.TimeZone")]
         public string TimeZoneId { get; set; }

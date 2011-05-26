@@ -177,13 +177,7 @@ namespace Nop.Services.Messages
 
             _messageTokenProvider.AddStoreTokens(tokens);
             _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
-
-            var customer = _newLetterSubscriptionService.GetNewsLetterSubscriptionCustomer(subscription);
-            if (customer != null)
-            {
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            }
-
+            
             return tokens;
         }
 

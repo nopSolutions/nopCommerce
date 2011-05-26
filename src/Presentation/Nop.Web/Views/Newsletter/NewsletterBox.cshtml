@@ -1,0 +1,72 @@
+﻿@model NewsletterBoxModel
+@using Nop.Web.Framework
+@using Nop.Web.Models.Newsletter
+@if (Model.NewsletterBoxEnabled)
+{
+    <div class="block block-newsletter">
+        <div class="title">
+            @T("Newsletter.Title")
+        </div>
+        <div class="clear">
+        </div>
+        <div class="listbox">
+            @using (Html.BeginForm())
+            {
+                <div id="pnl-newsletter-subscribe">
+                    @T("Newsletter.Email"):
+                    @Html.TextBoxFor(x => x.Email)
+                    @Html.ValidationMessageFor(x => x.Email)
+                    <div class="options">
+                        <input id="newsletter-subscribe" type="radio" name="newsletter-subscribe" value="newsletter-subscribe"
+                            checked="checked" />
+                        <label for="newsletter-subscribe">@T("Newsletter.Subscribe")</label>
+                        <input id="newsletter-unsubscribe" type="radio" name="newsletter-subscribe" value="newsletter-unsubscribe" />
+                        <label for="newsletter-nusubscribe">@T("Newsletter.Unsubscribe")</label>
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" name="newsletter-subscribe-button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="newsletterbox-subscribebutton" />
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+                <div id="pnl-newsletter-result">
+                </div>
+            }
+        </div>
+        @*TODO display ajax loader while making AJAX request*@
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $('#newsletter-subscribe-button').click(function () {
+                
+                var subscribe = 'true';
+                if($('#newsletter-unsubscribe').is(':checked')) { 
+                    subscribe = 'false';
+                }
+                var email = $("#@Html.FieldIdFor(model => model.Email)").val();
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("SubscribeNewsletter", "Newsletter"))",
+                    data: "subscribe=" + subscribe + "&email=" +email ,
+                    success: function (data) {
+                        $("#pnl-newsletter-result").html(data.Result);
+                         if (data.Success) {
+                            $('#pnl-newsletter-subscribe').hide();                            
+                         }
+                         else {
+                            $('#pnl-newsletter-result').fadeIn("slow").delay(2000).fadeOut("slow");
+                         }
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to subscribe.');
+                    }  
+                });                
+                return false;
+            });
+        });
+        </script>
+    </div>
+
+}

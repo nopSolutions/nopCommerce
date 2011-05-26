@@ -215,6 +215,9 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+          <LocaleResource Name="Newsletter">
+            <Value>Newsletter</Value>
+          </LocaleResource>
           <LocaleResource Name="Password">
             <Value>Password</Value>
             <Children>
@@ -306,6 +309,9 @@
       </LocaleResource>
       <LocaleResource Name="Navigation">
         <Value>My account</Value>
+      </LocaleResource>
+      <LocaleResource Name="Options">
+        <Value>Options</Value>
       </LocaleResource>
       <LocaleResource Name="PasswordRecovery">
         <Value>Password recovery</Value>
@@ -1288,6 +1294,37 @@
             <Value>Discount:</Value>
           </LocaleResource>
         </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter">
+    <Children>
+      <LocaleResource Name="Email">
+        <Value>Email</Value>
+      </LocaleResource>
+      <LocaleResource Name="Button">
+        <Value>Submit</Value>
+      </LocaleResource>
+      <LocaleResource Name="ResultActivated">
+        <Value>Your subscription has been activated.</Value>
+      </LocaleResource>
+      <LocaleResource Name="ResultDeactivated">
+        <Value>Your subscription has been deactivated.</Value>
+      </LocaleResource>
+      <LocaleResource Name="Subscribe">
+        <Value>Subscribe</Value>
+      </LocaleResource>
+      <LocaleResource Name="SubscribeEmailSent">
+        <Value>Thank you for signing up! A verification email has been sent. We appreciate your interest.</Value>
+      </LocaleResource>
+      <LocaleResource Name="UnsubscribeEmailSent">
+        <Value>A verification email has been sent. Thank you!</Value>
+      </LocaleResource>
+      <LocaleResource Name="Title">
+        <Value>Subscribe to newsletters</Value>
+      </LocaleResource>
+      <LocaleResource Name="Unsubscribe">
+        <Value>Unsubscribe</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

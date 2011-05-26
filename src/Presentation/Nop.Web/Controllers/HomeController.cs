@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
@@ -41,15 +42,16 @@ namespace Nop.Web.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly CommonSettings _commonSettings;
 
         public HomeController(ILanguageService languageService, 
-            ICurrencyService currencyService, ICustomerService customerService,
-            ILocalizationService localizationService,
+            ICurrencyService currencyService, ILocalizationService localizationService,
             IWorkContext workContext, IAuthenticationService authenticationService,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
             UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
-            StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings)
+            StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
+            CommonSettings commonSettings)
         {
             this._languageService = languageService;
             this._currencyService = currencyService;
@@ -65,6 +67,7 @@ namespace Nop.Web.Controllers
             this._catalogSettings = catalogSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._emailAccountSettings = emailAccountSettings;
+            this._commonSettings = commonSettings;
         }
 
         public ActionResult Index()
@@ -204,20 +207,25 @@ namespace Nop.Web.Controllers
                 string email = model.Email.Trim();
                 string fullName = model.FullName;
                 string subject = string.Format("{0}. {1}", _storeInformationSettings.StoreName, "Contact us");
-                string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
                 
-                
-                string from = email;
-                string fromName = fullName;
-
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-                //TODO uncomment below
+
+                string from = null;
+                string fromName = null;
+                string body = null;
                 //required for some SMTP servers
-                //if (this.SettingManager.GetSettingValueBoolean("Email.UseSystemEmailForContactUsForm"))
-                //{
-                //    from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
-                //    body = string.Format("<b>From</b>: {0} - {1}<br /><br />{2}", Server.HtmlEncode(fullName), Server.HtmlEncode(email), body);
-                //}
+                if (_commonSettings.UseSystemEmailForContactUsForm)
+                {
+                    from = emailAccount.Email;
+                    fromName = emailAccount.DisplayName;
+                    body = string.Format("<b>From</b>: {0} - {1}<br /><br />{2}", Server.HtmlEncode(fullName), Server.HtmlEncode(email), body);
+                }
+                else
+                {
+                    from = email;
+                    fromName = fullName;
+                    body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                }
                 var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 _queuedEmailService.InsertQueuedEmail(new QueuedEmail()
                     {
@@ -242,5 +250,6 @@ namespace Nop.Web.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
+
     }
 }
