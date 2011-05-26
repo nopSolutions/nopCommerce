@@ -2041,11 +2041,40 @@
       <LocaleResource Name="CartIsEmpty">
         <Value>The wishlist is empty!</Value>
       </LocaleResource>
-      <LocaleResource Name="EmailButton">
+      <LocaleResource Name="EmailAFriend">
         <Value>Email a friend</Value>
+        <Children>
+          <LocaleResource Name="Button">
+            <Value>Send email</Value>
+          </LocaleResource>
+          <LocaleResource Name="FriendEmail">
+            <Value>Friend's email</Value>
+          </LocaleResource>
+          <LocaleResource Name="PersonalMessage">
+            <Value>Personal message</Value>
+          </LocaleResource>
+          <LocaleResource Name="OnlyRegisteredUsers">
+            <Value>Only registered customers can use email a friend feature</Value>
+          </LocaleResource>
+          <LocaleResource Name="SuccessfullySent">
+            <Value>Your message has been sent.</Value>
+          </LocaleResource>
+          <LocaleResource Name="Title">
+            <Value>Email your wishlist to a friend</Value>
+          </LocaleResource>
+          <LocaleResource Name="YourEmailAddress">
+            <Value>Your email address</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="UpdateCart">
         <Value>Update wishlist</Value>
+      </LocaleResource>
+      <LocaleResource Name="WishlistOf">
+        <Value>Wishlist of {0}</Value>
+      </LocaleResource>
+      <LocaleResource Name="YourWishlistURL">
+        <Value>Your wishlist URL for sharing</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

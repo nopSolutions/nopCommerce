@@ -1714,7 +1714,7 @@ namespace Nop.Web.Controllers
                     //email
                     _workflowMessageService.SendProductEmailAFriendMessage(_workContext.CurrentCustomer,
                             _workContext.WorkingLanguage.Id, product,
-                            model.YourEmailAddress, model.FriendEmail, model.PersonalMessage);
+                            model.YourEmailAddress, model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
                     model.ProductId = product.Id;
                     model.ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;

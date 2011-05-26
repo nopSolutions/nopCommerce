@@ -19,6 +19,9 @@ namespace Nop.Web.Models.ShoppingCart
             Warnings = new List<string>();
         }
 
+        public Guid CustomerGuid { get; set; }
+        public string CustomerFullname { get; set; }
+
         public bool EmailWishlistEnabled { get; set; }
 
         public bool ShowSku { get; set; }

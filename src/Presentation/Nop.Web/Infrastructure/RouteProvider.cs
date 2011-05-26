@@ -100,14 +100,14 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             //wishlist
             routes.MapRoute("Wishlist",
-                            "wishlist/",
-                            new { controller = "ShoppingCart", action = "Wishlist" },
+                            "wishlist/{customerGuid}",
+                            new { controller = "ShoppingCart", action = "Wishlist", customerGuid = UrlParameter.Optional },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("EmailWishlist",
-                            "wishlist/email",
+                            "emailwishlist",
                             new { controller = "ShoppingCart", action = "EmailWishlist" },
                             new[] { "Nop.Web.Controllers" });
-
+            
             //checkout
             routes.MapRoute("Checkout",
                             "checkout/",

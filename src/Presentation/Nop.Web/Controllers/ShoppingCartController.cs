@@ -21,6 +21,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
@@ -61,6 +62,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly IPaymentService _paymentService;
+        private readonly IWorkflowMessageService _workflowMessageService;
         
 
         private readonly MediaSettings _mediaSetting;
@@ -86,6 +88,7 @@ namespace Nop.Web.Controllers
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IOrderTotalCalculationService orderTotalCalculationService,
             ICheckoutAttributeService checkoutAttributeService, IPaymentService paymentService,
+            IWorkflowMessageService workflowMessageService,
             MediaSettings mediaSetting, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings,TaxSettings taxSettings)
@@ -112,6 +115,7 @@ namespace Nop.Web.Controllers
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._checkoutAttributeService = checkoutAttributeService;
             this._paymentService = paymentService;
+            this._workflowMessageService = workflowMessageService;
 
             this._mediaSetting = mediaSetting;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -385,6 +389,9 @@ namespace Nop.Web.Controllers
             #region Simple properties
 
             model.IsEditable = isEditable;
+            var customer = cart.FirstOrDefault().Customer;
+            model.CustomerGuid = customer.CustomerGuid;
+            model.CustomerFullname = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowProductSku;
             
@@ -985,13 +992,18 @@ namespace Nop.Web.Controllers
 
         #region Wishlist
         
-        public ActionResult Wishlist()
+        public ActionResult Wishlist(Guid? customerGuid)
         {
             if (!_shoppingCartSettings.WishlistEnabled)
                 return RedirectToAction("Index", "Home");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
-            var model = PrepareWishlistModel(new WishlistModel(), cart, true);
+            Customer customer = customerGuid.HasValue ? 
+                _customerService.GetCustomerByGuid(customerGuid.Value)
+                : _workContext.CurrentCustomer;
+            if (customer == null)
+                return RedirectToAction("Index", "Home");
+            var cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+            var model = PrepareWishlistModel(new WishlistModel(), cart, !customerGuid.HasValue);
             return View(model);
         }
 
@@ -1063,14 +1075,60 @@ namespace Nop.Web.Controllers
             if (!_shoppingCartSettings.WishlistEnabled || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToAction("Index", "Home");
 
-            //TODO implement email a friend
-            //var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
-            //var model = PrepareWishlistModel(new WishlistModel(), cart, true);
-            //return View(model);
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
-            return Content("TODO implement email a friend");
+            if (cart.Count == 0)
+                return RedirectToAction("Index", "Home");
+
+            var model = new WishlistEmailAFriendModel();
+            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
+            return View(model);
         }
 
-		#endregion
+        [HttpPost, ActionName("EmailWishlist")]
+        [FormValueRequired("send-email")]
+        public ActionResult EmailWishlistSend(WishlistEmailAFriendModel model)
+        {
+            if (!_shoppingCartSettings.WishlistEnabled || !_shoppingCartSettings.EmailWishlistEnabled)
+                return RedirectToAction("Index", "Home");
+            
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+
+            if (cart.Count == 0)
+                return RedirectToAction("Index", "Home");
+
+            if (ModelState.IsValid)
+            {
+                if (_workContext.CurrentCustomer.IsGuest())
+                {
+                    ModelState.AddModelError("", _localizationService.GetResource("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
+                }
+                else if (!CommonHelper.IsValidEmail(model.YourEmailAddress))
+                {
+                    ModelState.AddModelError("", "Wrong email address");
+                }
+                else if (!CommonHelper.IsValidEmail(model.FriendEmail))
+                {
+                    ModelState.AddModelError("", "Wrong email address");
+                }
+                else
+                {
+                    //email
+                    _workflowMessageService.SendWishlistEmailAFriendMessage(_workContext.CurrentCustomer,
+                            _workContext.WorkingLanguage.Id, model.YourEmailAddress,
+                            model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+
+                    model.SuccessfullySent = true;
+                    model.Result = _localizationService.GetResource("Wishlist.EmailAFriend.SuccessfullySent");
+
+                    return View(model);
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        #endregion
     }
 }

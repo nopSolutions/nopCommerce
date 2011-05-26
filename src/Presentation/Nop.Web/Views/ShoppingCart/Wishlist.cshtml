@@ -4,10 +4,18 @@
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 }
-
 <div class="wishlist-page">
     <div class="page-title">
-        <h1>@T("Wishlist")</h1>
+        <h1>
+            @if (Model.IsEditable)
+            {
+                @T("Wishlist")
+            }
+            else
+            {
+                @string.Format(T("Wishlist.WishlistOf").Text, Model.CustomerFullname);
+            }
+        </h1>
     </div>
     <div class="clear">
     </div>
@@ -62,7 +70,7 @@
                                         @T("ShoppingCart.AddToCart")
                                     </span>
                                 </th>
-                            }   
+                            }
                             @if (Model.ShowSku)
                             {
                                 <th>
@@ -177,7 +185,7 @@
                             <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" class="updatewishlistbutton" />
                             @if (Model.EmailWishlistEnabled)
                             {
-                                <input type="button" name="emailafriend" value="@T("Wishlist.EmailButton")" id="emailafriend"  class="updatewishlistbutton" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
+                                <input type="button" name="emailafriend" value="@T("Wishlist.EmailAFriend")" id="emailafriend"  class="updatewishlistbutton" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
                             }
                         </div>
                     }
@@ -189,5 +197,16 @@
                 @T("Wishlist.CartIsEmpty")
             }
         </div>
+        @if (Model.IsEditable && Model.Items.Count > 0)
+        {
+            <div class="shareinfo">
+                <p>
+                    <span class="sharelabel">@T("Wishlist.YourWishlistURL"):</span>
+                </p>
+                <p>
+                    <a href="@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid })" class="sharelink">@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, "http")</a>
+                </p>
+            </div>
+        }
     </div>
 </div>

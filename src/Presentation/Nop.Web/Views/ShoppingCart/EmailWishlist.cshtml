@@ -1,0 +1,63 @@
+﻿@model Nop.Web.Models.ShoppingCart.WishlistEmailAFriendModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+<div class="emailafriend-box">
+    <div class="page-title">
+        <h1>@T("Wishlist.EmailAFriend.Title")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    @if (Model.SuccessfullySent)
+    {
+        @Model.Result
+    }
+    else
+    {
+        <div class="send-email">
+            @using (Html.BeginForm())
+            {
+                <table>
+                    <tr>
+                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                            @Html.LabelFor(model => model.FriendEmail):
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => model.FriendEmail, new { style = "Width: 350px;" })
+                            @Html.ValidationMessageFor(model => model.FriendEmail)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                            @Html.LabelFor(model => model.YourEmailAddress):
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => model.YourEmailAddress, new { style = "Width: 350px;" })
+                            @Html.ValidationMessageFor(model => model.YourEmailAddress)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                            @Html.LabelFor(model => model.PersonalMessage):
+                        </td>
+                        <td>@Html.TextAreaFor(model => model.PersonalMessage, new { style = "Width: 350px; Height: 150px;" })
+                            @Html.ValidationMessageFor(model => model.PersonalMessage)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="message-error" colspan="2">
+                            @Html.ValidationSummary(false)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td style="text-align: left; vertical-align: middle;">
+                            <input type="submit" id="send-email" name="send-email" class="sendemailafriendbutton" value="@T("Wishlist.EmailAFriend.Button")" />
+                        </td>
+                    </tr>
+                </table>
+            }
+        </div>
+    }
+</div>

@@ -654,16 +654,16 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 return 0;
 
-            var customerProductTokens = GenerateTokens(customer, null);
-            customerProductTokens.Add(new Token("Wishlist.URLForCustomer", "UNDONE Not implemented"));
-            customerProductTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
+            var customerTokens = GenerateTokens(customer);
+            customerTokens.Add(new Token("Wishlist.URLForCustomer", "UNDONE Not implemented"));
+            customerTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
             //UNDONE use customerEmail
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = friendsEmail;
             var toName = "";
             return SendNotification(messageTemplate, emailAccount,
-                languageId, customerProductTokens,
+                languageId, customerTokens,
                 toEmail, toName);
         }
 
