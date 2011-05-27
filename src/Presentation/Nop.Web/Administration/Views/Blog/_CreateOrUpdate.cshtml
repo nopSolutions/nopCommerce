@@ -1,0 +1,51 @@
+﻿@model Nop.Admin.Models.BlogPostModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.LanguageId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Title):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Title)
+            @Html.ValidationMessageFor(model => model.Title)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Body):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(x => x.Body, "RichEditor")
+            @Html.ValidationMessageFor(model => model.Body)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AllowComments):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AllowComments)
+            @Html.ValidationMessageFor(model => model.AllowComments)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Tags):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Tags)
+            @Html.ValidationMessageFor(model => model.Tags)
+        </td>
+    </tr>
+</table>

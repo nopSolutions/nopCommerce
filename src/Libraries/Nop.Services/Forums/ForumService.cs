@@ -216,7 +216,7 @@ namespace Nop.Services.Forums
         #endregion
 
         #region Methods
-
+        //TODO pass entities to Delete methods like it's for other services
         /// <summary>
         /// Deletes a forum group
         /// </summary>

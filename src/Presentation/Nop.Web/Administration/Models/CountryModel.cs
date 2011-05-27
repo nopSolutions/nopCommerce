@@ -13,6 +13,7 @@ namespace Nop.Admin.Models
     public class CountryModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.AllowsBilling")]
@@ -22,9 +23,11 @@ namespace Nop.Admin.Models
         public bool AllowsShipping { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.TwoLetterIsoCode")]
+        [AllowHtml]
         public string TwoLetterIsoCode { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.ThreeLetterIsoCode")]
+        [AllowHtml]
         public string ThreeLetterIsoCode { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.NumericIsoCode")]

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using AutoMapper;
 using Nop.Admin.Models;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -134,6 +135,10 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<ForumModel, Forum>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
+            //blogs
+            Mapper.CreateMap<BlogPost, BlogPostModel>();
+            Mapper.CreateMap<BlogPostModel, BlogPost>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
             //customer roles
             ViceVersa<CustomerRole, CustomerRoleModel>();
             //customers

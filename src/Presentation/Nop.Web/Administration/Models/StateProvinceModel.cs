@@ -15,9 +15,11 @@ namespace Nop.Admin.Models
         public int CountryId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Countries.States.Fields.Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Countries.States.Fields.Abbreviation")]
+        [AllowHtml]
         public string Abbreviation { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Countries.States.Fields.Published")]

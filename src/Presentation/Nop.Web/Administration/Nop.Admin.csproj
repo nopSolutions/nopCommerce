@@ -81,6 +81,7 @@
     <Compile Include="Controllers\CheckoutAttributeController.cs" />
     <Compile Include="Controllers\AffiliateController.cs" />
     <Compile Include="Controllers\CampaignController.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\SmsController.cs" />
     <Compile Include="Controllers\MessageTemplateController.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Models\CheckoutAttributeValueModel.cs" />
     <Compile Include="Models\AffiliateModel.cs" />
     <Compile Include="Models\CampaignModel.cs" />
+    <Compile Include="Models\BlogPostModel.cs" />
     <Compile Include="Models\OrderAddressModel.cs" />
     <Compile Include="Models\OrderListModel.cs" />
     <Compile Include="Models\OrderModel.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Validators\CheckoutAttributeValidator.cs" />
     <Compile Include="Validators\AffiliateValidator.cs" />
     <Compile Include="Validators\CampaignValidator.cs" />
+    <Compile Include="Validators\BlogPostValidator.cs" />
     <Compile Include="Validators\MessageTemplateValidator.cs" />
     <Compile Include="Validators\EmailAccountValidator.cs" />
     <Compile Include="Validators\StateProvinceValidator.cs" />
@@ -693,6 +696,18 @@
     <Content Include="Views\Order\List.cshtml" />
     <Content Include="Views\Order\PartiallyRefundOrderPopup.cshtml" />
     <Content Include="Views\Order\_CreateOrUpdateAddress.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Blog\_CreateOrUpdate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Blog\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Blog\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Blog\Edit.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

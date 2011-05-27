@@ -1,0 +1,48 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.BlogPostModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
+        @T("Admin.ContentManagement.Blog.BlogPosts")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.BlogPostModel>()
+                    .Name("blogpost-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Title).Width(150);
+                        columns.Bound(x => x.LanguageName).Width(150);
+                        columns.Bound(x => x.Comments)
+                            .Width(150)
+                            .Centered()
+                            .Template(
+                            @<div>
+                                    @Html.ActionLink(T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - " + @item.Comments, "Comments", new { blogPostId = @item.Id })
+                                </div>
+                            )
+                            .ClientTemplate("<div><a href=\"Comments?blogPostId=<#= Id #>\">" + T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - <#= Comments #>" + "</a></div>");
+                        columns.Bound(x => x.CreatedOn)
+                            .Width(150)
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate("Edit")
+                            .Filterable(false);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Blog"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

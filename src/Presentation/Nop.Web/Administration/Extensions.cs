@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Nop.Admin.Models;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -601,6 +602,25 @@ namespace Nop.Admin
         {
             return AutoMapper.Mapper.Map(model, destination);
         }
+        #endregion
+
+        #region Blog
+
+        public static BlogPostModel ToModel(this BlogPost entity)
+        {
+            return AutoMapper.Mapper.Map<BlogPost, BlogPostModel>(entity);
+        }
+
+        public static BlogPost ToEntity(this BlogPostModel model)
+        {
+            return AutoMapper.Mapper.Map<BlogPostModel, BlogPost>(model);
+        }
+
+        public static BlogPost ToEntity(this BlogPostModel model, BlogPost destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
         #endregion
 
         #region Customers/users/customer roles

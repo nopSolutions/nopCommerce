@@ -2967,6 +2967,81 @@
             <LocaleResource Name="ContentManagement">
             <Value>Content Management</Value>
             <Children>
+              <LocaleResource Name="Blog">
+                <Value>Blog</Value>
+                <Children>
+                  <LocaleResource Name="BlogPosts">
+                    <Value>Blog posts</Value>
+                    <Children>
+                      <LocaleResource Name="AddNew">
+                        <Value>Add a new blog post</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="BackToList">
+                        <Value>back to blog post list</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="EditBlogPostDetails">
+                        <Value>Edit blog post details</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="Language">
+                            <Value>Language</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The language of this blog entry. A customer will only see the blog entries for their selected language.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Title">
+                            <Value>Title</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The title of this blog entry.</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Title is required.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Body">
+                            <Value>Body</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The body of this blog entry.</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Required">
+                                <Value>Body is required.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="AllowComments">
+                            <Value>Allow comments</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>When checked, customers can leave comments about your blog entry.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Tags">
+                            <Value>Tags</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Tags are keywords that this blog post can also be identified by. Enter a comma separated list of the tags to be associated with this blog post.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="CreatedOn">
+                            <Value>Created on</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Comments">
+                            <Value>View comments</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
               <LocaleResource Name="Forums">
                 <Value>Forums</Value>
                 <Children>
