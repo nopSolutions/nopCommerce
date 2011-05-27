@@ -12,6 +12,7 @@ using System.Xml;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
@@ -1156,6 +1157,14 @@ namespace Nop.Services.Installation
                     AllowCustomersToSetTimeZone = false
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<BlogSettings>>()
+                .SaveSettings(new BlogSettings()
+                {
+                    Enabled = true,
+                    PostsPageSize = 10,
+                    AllowNotRegisteredUsersToLeaveComments = false,
+                    NotifyAboutNewBlogComments = false
+                });
             EngineContext.Current.Resolve<IConfigurationProvider<ForumSettings>>()
                 .SaveSettings(new ForumSettings()
                 {

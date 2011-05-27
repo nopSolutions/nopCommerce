@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Blogs
         /// <summary>
         /// Gets or sets a value indicating whether blog is enabled
         /// </summary>
-        public bool BlogEnabled { get; set; }
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Gets or sets the page size for posts

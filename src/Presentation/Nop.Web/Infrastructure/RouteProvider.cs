@@ -15,7 +15,7 @@ namespace Nop.Web.Infrastructure
         {
             //products
             routes.MapRoute("Product",
-                            "product/{productId}/{SeName}",
+                            "p/{productId}/{SeName}",
                             new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("RecentlyViewedProducts",
@@ -57,7 +57,7 @@ namespace Nop.Web.Infrastructure
 
             //catalog
             routes.MapRoute("Category",
-                            "category/{categoryId}/{SeName}",
+                            "c/{categoryId}/{SeName}",
                             new { controller = "Catalog", action = "Category", SeName = UrlParameter.Optional },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("ManufacturerList",
@@ -65,7 +65,7 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Catalog", action = "ManufacturerAll" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("Manufacturer",
-                            "manufacturer/{manufacturerId}/{SeName}",
+                            "m/{manufacturerId}/{SeName}",
                             new { controller = "Catalog", action = "Manufacturer", SeName = UrlParameter.Optional },
                             new[] { "Nop.Web.Controllers" });
 
@@ -187,6 +187,12 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("AccountActivation",
                             "customer/activation/{token}/{email}",
                             new { controller = "Customer", action = "AccountActivation" },
+                            new[] { "Nop.Web.Controllers" });
+
+            //blog
+            routes.MapRoute("Blog",
+                            "blog",
+                            new { controller = "Blog", action = "List" },
                             new[] { "Nop.Web.Controllers" });
         }
 

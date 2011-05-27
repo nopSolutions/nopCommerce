@@ -12,7 +12,10 @@ TODO add URLs*@
         <ul>
             <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a> </li>
             <li><a href="#">About us</a></li>
-            <li><a href="#">Blog</a></li>
+            @if (Model.BlogEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+            }
             <li><a href="#">Forums</a></li>
             @if (Model.RecentlyAddedProductsEnabled)
             {

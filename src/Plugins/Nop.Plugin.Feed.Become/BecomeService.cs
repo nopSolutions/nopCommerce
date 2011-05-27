@@ -132,7 +132,7 @@ namespace Nop.Plugin.Feed.Become
                         string manufacturerPartNumber = pv.ManufacturerPartNumber;
                         string productTitle = pv.FullProductName;
                         //TODO add a method for getting product URL (e.g. SEOHelper.GetProductUrl)
-                        var productUrl = string.Format("{0}product/{1}/{2}", _webHelper.GetStoreLocation(false), p.Id, p.GetSeName());
+                        var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), p.Id, p.GetSeName());
 
                         string imageUrl = string.Empty;
                         var pictures = _pictureService.GetPicturesByProductId(p.Id, 1);

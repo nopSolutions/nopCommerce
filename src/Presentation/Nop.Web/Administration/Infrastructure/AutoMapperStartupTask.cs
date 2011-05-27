@@ -136,6 +136,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
             //blogs
+            ViceVersa<BlogSettings, BlogSettingsModel>();
             Mapper.CreateMap<BlogPost, BlogPostModel>();
             Mapper.CreateMap<BlogPostModel, BlogPost>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());

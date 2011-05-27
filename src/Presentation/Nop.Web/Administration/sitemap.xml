@@ -36,6 +36,7 @@
         </siteMapNode>
         <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement">
           <siteMapNode title="Blog" nopResource="Admin.ContentManagement.Blog">
+            <siteMapNode title="Blog settings" nopResource="Admin.ContentManagement.Blog.Settings" controller="Blog" action="Settings" />
             <siteMapNode title="Blog posts" nopResource="Admin.ContentManagement.Blog.BlogPosts" controller="Blog" action="List" />
           </siteMapNode>
             <siteMapNode title="Forums" nopResource="Admin.ContentManagement.Forums">

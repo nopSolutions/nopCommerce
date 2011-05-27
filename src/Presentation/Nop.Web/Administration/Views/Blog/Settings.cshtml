@@ -1,0 +1,53 @@
+﻿@model Nop.Admin.Models.BlogSettingsModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+            @T("Admin.ContentManagement.Blog.Settings")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Enabled)
+                @Html.ValidationMessageFor(model => model.Enabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PostsPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PostsPageSize)
+                @Html.ValidationMessageFor(model => model.PostsPageSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NotifyAboutNewBlogComments):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NotifyAboutNewBlogComments)
+                @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
+            </td>
+        </tr>
+    </table>
+}

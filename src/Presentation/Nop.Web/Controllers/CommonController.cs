@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -43,6 +44,7 @@ namespace Nop.Web.Controllers
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly CommonSettings _commonSettings;
+        private readonly BlogSettings _blogSettings;
 
         public CommonController(ILanguageService languageService, 
             ICurrencyService currencyService, ILocalizationService localizationService,
@@ -51,7 +53,7 @@ namespace Nop.Web.Controllers
             UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
-            CommonSettings commonSettings)
+            CommonSettings commonSettings, BlogSettings blogSettings)
         {
             this._languageService = languageService;
             this._currencyService = currencyService;
@@ -68,6 +70,7 @@ namespace Nop.Web.Controllers
             this._storeInformationSettings = storeInformationSettings;
             this._emailAccountSettings = emailAccountSettings;
             this._commonSettings = commonSettings;
+            this._blogSettings = blogSettings;
         }
 
         //language
@@ -165,6 +168,8 @@ namespace Nop.Web.Controllers
             var model = new MenuModel()
             {
                 RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
+                BlogEnabled = _blogSettings.Enabled,
+
             };
 
             return PartialView(model);
@@ -179,6 +184,7 @@ namespace Nop.Web.Controllers
                 RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
+                BlogEnabled = _blogSettings.Enabled,
             };
 
             return PartialView(model);

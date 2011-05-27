@@ -4,8 +4,10 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Blogs;
+using Nop.Services.Configuration;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework;
@@ -23,22 +25,45 @@ namespace Nop.Admin.Controllers
         private readonly IBlogService _blogService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ISettingService _settingService;
+
+        private BlogSettings _blogSettings;
 
 		#endregion Fields 
 
 		#region Constructors
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper, ISettingService settingService, BlogSettings blogSettings)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
+            this._settingService = settingService;
+            this._blogSettings = blogSettings;
 		}
 
 		#endregion Constructors 
+        
+        #region Settings
 
-		#region BlogPosts
+        public ActionResult Settings()
+        {
+            var model = _blogSettings.ToModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Settings(BlogSettingsModel model)
+        {
+            _blogSettings = model.ToEntity(_blogSettings);
+            _settingService.SaveSetting(_blogSettings);
+            return RedirectToAction("Settings");
+        }
+
+        #endregion
+
+		#region Blog posts
 
         public ActionResult Index()
         {

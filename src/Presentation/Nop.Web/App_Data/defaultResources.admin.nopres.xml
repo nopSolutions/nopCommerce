@@ -3040,13 +3040,54 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="Settings">
+                    <Value>Blog settings</Value>
+                    <Children>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="Enabled">
+                            <Value>Blog enabled</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Check to enable the blog in your store.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="PostsPageSize">
+                            <Value>Posts page size</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Set the page size for posts.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="AllowNotRegisteredUsersToLeaveComments">
+                            <Value>Allow not registered users to leave comments</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Check to allow not registered users to leave comments.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="NotifyAboutNewBlogComments">
+                            <Value>Notify about new blog comments</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Check to notify store owner about new blog comments.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
               <LocaleResource Name="Forums">
                 <Value>Forums</Value>
                 <Children>
                   <LocaleResource Name="Settings">
-                    <Value>Forums Settings</Value>
+                    <Value>Forums settings</Value>
                     <Children>
                       <LocaleResource Name="Fields">
                         <Children>

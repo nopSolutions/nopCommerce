@@ -526,6 +526,9 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Blog">
+    <Value>Blog</Value>
+  </LocaleResource>
   <LocaleResource Name="Categories">
     <Value>Categories</Value>
     <Children>

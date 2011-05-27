@@ -41,6 +41,7 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Settings
+
         public ActionResult Settings()
         {
             var model = _forumSettings.ToModel();
@@ -55,6 +56,7 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSetting(_forumSettings);
             return RedirectToAction("Settings");
         }
+
         #endregion
 
         #region Create

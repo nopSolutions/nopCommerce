@@ -1560,7 +1560,7 @@ namespace Nop.Web.Controllers
                         writer.WriteEndElement(); // description
                         writer.WriteStartElement("link");
                         //TODO add a method for getting product URL (e.g. SEOHelper.GetProductUrl)
-                        var productUrl = string.Format("{0}product/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
+                        var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
                         writer.WriteCData(productUrl);
                         writer.WriteEndElement(); // link
                         writer.WriteStartElement("pubDate");

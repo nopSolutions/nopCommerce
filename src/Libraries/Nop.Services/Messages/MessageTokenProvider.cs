@@ -516,7 +516,7 @@ namespace Nop.Services.Messages
 
             //TODO add a method for getting URL
             var productSeName = product.SeName; //use GetSeName() method defined in Nop.Web.Framework project
-            var productUrl = string.Format("{0}product/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, productSeName);
+            var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, productSeName);
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl));
         }
 

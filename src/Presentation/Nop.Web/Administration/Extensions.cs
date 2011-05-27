@@ -605,7 +605,23 @@ namespace Nop.Admin
         #endregion
 
         #region Blog
+        //blog settings
+        public static BlogSettingsModel ToModel(this BlogSettings entity)
+        {
+            return AutoMapper.Mapper.Map<BlogSettings, BlogSettingsModel>(entity);
+        }
 
+        public static BlogSettings ToEntity(this BlogSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<BlogSettingsModel, BlogSettings>(model);
+        }
+
+        public static BlogSettings ToEntity(this BlogSettingsModel model, BlogSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        //blog posts
         public static BlogPostModel ToModel(this BlogPost entity)
         {
             return AutoMapper.Mapper.Map<BlogPost, BlogPostModel>(entity);

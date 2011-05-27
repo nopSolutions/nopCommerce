@@ -12,5 +12,6 @@ namespace Nop.Web.Models.Common
         public bool RecentlyAddedProductsEnabled { get; set; }
         public bool RecentlyViewedProductsEnabled { get; set; }
         public bool CompareProductsEnabled { get; set; }
+        public bool BlogEnabled { get; set; }
     }
 }
