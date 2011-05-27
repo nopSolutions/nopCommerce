@@ -1888,7 +1888,7 @@ namespace Nop.Services.Installation
 
         #region Methods
 
-        public void InstallData(bool installSampleData = true)
+        public virtual void InstallData(bool installSampleData = true)
         {
             InstallMeasures();
             InstallTaxCategories();

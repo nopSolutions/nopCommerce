@@ -362,7 +362,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Place order result</returns>
-        public PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest)
+        public virtual PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest)
         {
             //think about moving functionality of processing recurring orders (after the initial order was placed) to ProcessNextRecurringPayment() method
             if (processPaymentRequest == null)
@@ -1237,7 +1237,7 @@ namespace Nop.Services.Orders
         /// Process next recurring psayment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public void ProcessNextRecurringPayment(RecurringPayment recurringPayment)
+        public virtual void ProcessNextRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -1309,7 +1309,7 @@ namespace Nop.Services.Orders
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public IList<string> CancelRecurringPayment(RecurringPayment recurringPayment)
+        public virtual IList<string> CancelRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -1382,7 +1382,7 @@ namespace Nop.Services.Orders
         /// <param name="customerToValidate">Customer</param>
         /// <param name="recurringPayment">Recurring Payment</param>
         /// <returns>value indicating whether a customer can cancel recurring payment</returns>
-        public bool CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment)
+        public virtual bool CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 return false;
@@ -1420,7 +1420,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether shipping is allowed</returns>
-        public bool CanShip(Order order)
+        public virtual bool CanShip(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1439,7 +1439,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        public void Ship(Order order, bool notifyCustomer)
+        public virtual void Ship(Order order, bool notifyCustomer)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1485,7 +1485,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether shipping is delivered</returns>
-        public bool CanDeliver(Order order)
+        public virtual bool CanDeliver(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1504,7 +1504,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        public void Deliver(Order order, bool notifyCustomer)
+        public virtual void Deliver(Order order, bool notifyCustomer)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1552,7 +1552,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether cancel is allowed</returns>
-        public bool CanCancelOrder(Order order)
+        public virtual bool CanCancelOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1568,7 +1568,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        public void CancelOrder(Order order, bool notifyCustomer)
+        public virtual void CancelOrder(Order order, bool notifyCustomer)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1607,7 +1607,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether order can be marked as authorized</returns>
-        public bool CanMarkOrderAsAuthorized(Order order)
+        public virtual bool CanMarkOrderAsAuthorized(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1625,7 +1625,7 @@ namespace Nop.Services.Orders
         /// Marks order as authorized
         /// </summary>
         /// <param name="order">Order</param>
-        public void MarkAsAuthorized(Order order)
+        public virtual void MarkAsAuthorized(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1653,7 +1653,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether capture from admin panel is allowed</returns>
-        public bool CanCapture(Order order)
+        public virtual bool CanCapture(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1674,7 +1674,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A list of errors; empty list if no errors</returns>
-        public IList<string> Capture(Order order)
+        public virtual IList<string> Capture(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1760,7 +1760,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether order can be marked as paid</returns>
-        public bool CanMarkOrderAsPaid(Order order)
+        public virtual bool CanMarkOrderAsPaid(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1780,7 +1780,7 @@ namespace Nop.Services.Orders
         /// Marks order as paid
         /// </summary>
         /// <param name="order">Order</param>
-        public void MarkOrderAsPaid(Order order)
+        public virtual void MarkOrderAsPaid(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1818,7 +1818,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
-        public bool CanRefund(Order order)
+        public virtual bool CanRefund(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1841,7 +1841,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A list of errors; empty list if no errors</returns>
-        public IList<string> Refund(Order order)
+        public virtual IList<string> Refund(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1919,7 +1919,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether order can be marked as refunded</returns>
-        public bool CanRefundOffline(Order order)
+        public virtual bool CanRefundOffline(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1940,7 +1940,7 @@ namespace Nop.Services.Orders
         /// Refunds an order (offline)
         /// </summary>
         /// <param name="order">Order</param>
-        public void RefundOffline(Order order)
+        public virtual void RefundOffline(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1978,7 +1978,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
-        public bool CanPartiallyRefund(Order order, decimal amountToRefund)
+        public virtual bool CanPartiallyRefund(Order order, decimal amountToRefund)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2010,7 +2010,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>A list of errors; empty list if no errors</returns>
-        public IList<string> PartiallyRefund(Order order, decimal amountToRefund)
+        public virtual IList<string> PartiallyRefund(Order order, decimal amountToRefund)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2091,7 +2091,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>A value indicating whether order can be marked as partially refunded</returns>
-        public bool CanPartiallyRefundOffline(Order order, decimal amountToRefund)
+        public virtual bool CanPartiallyRefundOffline(Order order, decimal amountToRefund)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2121,7 +2121,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
-        public void PartiallyRefundOffline(Order order, decimal amountToRefund)
+        public virtual void PartiallyRefundOffline(Order order, decimal amountToRefund)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2158,7 +2158,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether void from admin panel is allowed</returns>
-        public bool CanVoid(Order order)
+        public virtual bool CanVoid(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2181,7 +2181,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Voided order</returns>
-        public IList<string> Void(Order order)
+        public virtual IList<string> Void(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2253,7 +2253,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether order can be marked as voided</returns>
-        public bool CanVoidOffline(Order order)
+        public virtual bool CanVoidOffline(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2274,7 +2274,7 @@ namespace Nop.Services.Orders
         /// Voids order (offline)
         /// </summary>
         /// <param name="order">Order</param>
-        public void VoidOffline(Order order)
+        public virtual void VoidOffline(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2304,7 +2304,7 @@ namespace Nop.Services.Orders
         /// Place order items in current user shopping cart.
         /// </summary>
         /// <param name="order">The order</param>
-        public void ReOrder(Order order)
+        public virtual void ReOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2322,7 +2322,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderProductVariant">Order produvt variant to check</param>
         /// <returns>True if download is allowed; otherwise, false.</returns>
-        public bool IsDownloadAllowed(OrderProductVariant orderProductVariant)
+        public virtual bool IsDownloadAllowed(OrderProductVariant orderProductVariant)
         {
             if (orderProductVariant == null)
                 return false;
@@ -2392,7 +2392,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderProductVariant">Order produvt variant to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
-        public bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant)
+        public virtual bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant)
         {
             if (orderProductVariant == null)
                 return false;
@@ -2409,7 +2409,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        public bool IsReturnRequestAllowed(Order order)
+        public virtual bool IsReturnRequestAllowed(Order order)
         {
             if (!_orderSettings.ReturnRequestsEnabled)
                 return false;
@@ -2427,7 +2427,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order sub-total amount is not reached</returns>
-        public bool ValidateMinOrderSubtotalAmount(IList<ShoppingCartItem> cart)
+        public virtual bool ValidateMinOrderSubtotalAmount(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -2456,7 +2456,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
-        public bool ValidateMinOrderTotalAmount(IList<ShoppingCartItem> cart)
+        public virtual bool ValidateMinOrderTotalAmount(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");

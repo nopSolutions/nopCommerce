@@ -25,7 +25,7 @@ namespace Nop.Services.Messages
         /// Inserts a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>        
-        public void InsertQueuedEmail(QueuedEmail queuedEmail)
+        public virtual void InsertQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
                 throw new ArgumentNullException("queuedEmail");
@@ -37,7 +37,7 @@ namespace Nop.Services.Messages
         /// Updates a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        public void UpdateQueuedEmail(QueuedEmail queuedEmail)
+        public virtual void UpdateQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
                 throw new ArgumentNullException("queuedEmail");
@@ -49,7 +49,7 @@ namespace Nop.Services.Messages
         /// Deleted a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        public void DeleteQueuedEmail(QueuedEmail queuedEmail)
+        public virtual void DeleteQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
                 throw new ArgumentNullException("queuedEmail");
@@ -62,7 +62,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>
         /// <returns>Queued email</returns>
-        public QueuedEmail GetQueuedEmailById(int queuedEmailId)
+        public virtual QueuedEmail GetQueuedEmailById(int queuedEmailId)
         {
             if (queuedEmailId == 0)
                 return null;
@@ -84,7 +84,7 @@ namespace Nop.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Email item list</returns>
-        public IPagedList<QueuedEmail> SearchEmails(string fromEmail, string toEmail, DateTime? startTime, DateTime? endTime, 
+        public virtual IPagedList<QueuedEmail> SearchEmails(string fromEmail, string toEmail, DateTime? startTime, DateTime? endTime, 
             bool loadNotSentItemsOnly, int maxSendTries, int pageIndex, int pageSize)
         {
             fromEmail = (fromEmail ?? String.Empty).Trim();
