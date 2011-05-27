@@ -50,6 +50,8 @@
     <Compile Include="Mapping\Affiliates\AffiliateMap.cs" />
     <Compile Include="Mapping\Catalog\ProductReviewHelpfulnessMap.cs" />
     <Compile Include="Mapping\Common\AddressMap.cs" />
+    <Compile Include="Mapping\Blogs\BlogPostMap.cs" />
+    <Compile Include="Mapping\Blogs\BlogCommentMap.cs" />
     <Compile Include="Mapping\Customers\CustomerAttributeMap.cs" />
     <Compile Include="Mapping\Customers\CustomerRoleMap.cs" />
     <Compile Include="Mapping\Customers\RewardPointsHistoryMap.cs" />

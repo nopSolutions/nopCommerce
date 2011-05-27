@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Localization;
 using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain.Catalog;
@@ -63,8 +65,30 @@ namespace Nop.Data.Tests
                 UpdatedOnUtc = new DateTime(2010, 01, 04)
             };
 
+            var blogComment = new BlogComment
+            {
+                Customer = customer,
+                IpAddress = "192.168.1.1",
+                IsApproved = true,
+                CreatedOnUtc = new DateTime(2010, 01, 03),
+                UpdatedOnUtc = new DateTime(2010, 01, 04),
+                BlogPost = new BlogPost()
+                {
+                    Title = "Title 1",
+                    Body = "Body 1",
+                    AllowComments = true,
+                    CreatedOnUtc = new DateTime(2010, 01, 01),
+                    Language = new Language()
+                    {
+                        Name = "English",
+                        LanguageCulture = "en-Us",
+                    }
+                }
+            };
+
             context.Set<CustomerContent>().Add(productReview);
             context.Set<CustomerContent>().Add(productReviewHelpfulness);
+            context.Set<CustomerContent>().Add(blogComment);
 
             context.SaveChanges();
 
@@ -72,7 +96,7 @@ namespace Nop.Data.Tests
             context = new NopObjectContext(GetTestDbName());
 
             var query = context.Set<CustomerContent>();
-            query.ToList().Count.ShouldEqual(2);
+            query.ToList().Count.ShouldEqual(3);
 
             var dbReviews = query.OfType<ProductReview>().ToList();
             dbReviews.Count().ShouldEqual(1);
@@ -81,6 +105,9 @@ namespace Nop.Data.Tests
             var dbHelpfulnessRecords = query.OfType<ProductReviewHelpfulness>().ToList();
             dbHelpfulnessRecords.Count().ShouldEqual(1);
             dbHelpfulnessRecords.First().WasHelpful.ShouldEqual(true);
+
+            var dbBlogCommentRecords = query.OfType<BlogComment>().ToList();
+            dbBlogCommentRecords.Count().ShouldEqual(1);
         }
 
         [Test]

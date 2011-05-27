@@ -13,21 +13,21 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the subject
         /// </summary>
-        public string Subject { get; set; }
+        public virtual string Subject { get; set; }
 
         /// <summary>
         /// Gets or sets the body
         /// </summary>
-        public string Body { get; set; }
+        public virtual string Body { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
     }
 }

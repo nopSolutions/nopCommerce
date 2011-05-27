@@ -20,6 +20,7 @@ using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services;
 using Nop.Services.Affiliates;
+using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -178,7 +179,10 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerHttpRequest();
 
+            builder.RegisterType<BlogService>().As<IBlogService>().InstancePerHttpRequest();
+
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
+
 
             builder.RegisterType<TelerikLocalizationServiceFactory>().As<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>().InstancePerHttpRequest();
 
