@@ -41,6 +41,7 @@ namespace Nop.Data
         }
 
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CheckoutAttribute> CheckoutAttributes { get; set; }
         public DbSet<CheckoutAttributeValue> CheckoutAttributeValues { get; set; }

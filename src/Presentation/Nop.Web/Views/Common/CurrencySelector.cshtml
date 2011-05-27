@@ -1,7 +1,7 @@
-﻿@model Nop.Web.Models.Home.CurrencySelectorModel
+﻿@model Nop.Web.Models.Common.CurrencySelectorModel
 @if (Model.AvailableCurrencies.Count > 1)
 {
-    using (Ajax.BeginForm("CurrencySelected", "Home", new AjaxOptions { OnComplete = "onCurrencyChangedRequestCompleted();" }, new { id = "form-currencyselector" }))
+    using (Ajax.BeginForm("CurrencySelected", "Common", new AjaxOptions { OnComplete = "onCurrencyChangedRequestCompleted();" }, new { id = "form-currencyselector" }))
     {
         var currencies = Model.AvailableCurrencies.Select(x => new SelectListItem
         {

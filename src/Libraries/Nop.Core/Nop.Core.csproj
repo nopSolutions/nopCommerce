@@ -87,6 +87,7 @@
     <Compile Include="Domain\Logging\ActivityLog.cs" />
     <Compile Include="Domain\Logging\ActivityLogType.cs" />
     <Compile Include="Domain\Media\MediaSettings.cs" />
+    <Compile Include="Domain\Messages\Campaign.cs" />
     <Compile Include="Domain\Security\UserRegistrationType.cs" />
     <Compile Include="Domain\Customers\FormFieldSettings.cs" />
     <Compile Include="Domain\Customers\CustomerNameFormat.cs" />

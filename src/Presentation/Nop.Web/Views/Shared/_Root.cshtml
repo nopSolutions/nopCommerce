@@ -30,17 +30,17 @@
                     <a href="@storeLocation" class="logo">&nbsp; </a>
                 </div>
                 <div class="header-links-wrapper">
-                    @Html.Action("Header", "Home")
+                    @Html.Action("Header", "Common")
                 </div>
                 <div class="header-selectors-wrapper">
                     <div class="header-taxDisplayTypeSelector">
-                        @Html.Action("TaxTypeSelector", "Home")
+                        @Html.Action("TaxTypeSelector", "Common")
                     </div>
                     <div class="header-currencyselector">
-                        @Html.Action("CurrencySelector", "Home")
+                        @Html.Action("CurrencySelector", "Common")
                     </div>
                     <div class="header-languageselector">
-                        @Html.Action("LanguageSelector", "Home")
+                        @Html.Action("LanguageSelector", "Common")
                     </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                         </ul>
                     </div>
                 </div>
-                @Html.Action("Menu", "Home")
+                @Html.Action("Menu", "Common")
             </div>
             @RenderBody()
             <div class="clear">

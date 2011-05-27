@@ -4708,6 +4708,92 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="Campaigns">
+                <Value>Campaigns</Value>
+                <Children>
+                  <LocaleResource Name="AddNew">
+                    <Value>Add a new campaign</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to campaign list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="EditCampaignDetails">
+                    <Value>Edit campaign</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="Name">
+                        <Value>Name</Value>
+                        <Children>
+                          <LocaleResource Name="Required">
+                            <Value>Campaign name is required</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>The name of this campaign.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Subject">
+                        <Value>Subject</Value>
+                        <Children>
+                          <LocaleResource Name="Required">
+                            <Value>Subject is required</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>The subject of your campaign email.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Body">
+                        <Value>Body</Value>
+                        <Children>
+                          <LocaleResource Name="Required">
+                            <Value>Body is required</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>The body of your campaign email.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CreatedOn">
+                        <Value>Created on</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="AllowedTokens">
+                        <Value>Allowed message tokens</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>This is a list of the message tokens you can use in your campaign emails.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="TestEmail">
+                        <Value>Send test email to</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The email address to which you want to send your test email</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="MassEmailSentToCustomers">
+                    <Value>{0} emails have been successfully queued.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="SendMassEmail">
+                    <Value>Send mass email</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="SendTestEmail">
+                    <Value>Send test email</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="TestEmailSentToCustomers">
+                    <Value>Email has been successfully sent.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Warning">
+                    <Value>Make sure you've tested the campaign before sending it out to multiple customers. Save your campaign first by clicking "Save" button.</Value>
+                  </LocaleResource>
+
+                </Children>
+              </LocaleResource>
             </Children>
           </LocaleResource>
             <LocaleResource Name="RecurringPayments">

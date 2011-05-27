@@ -271,7 +271,26 @@ namespace Nop.Admin
         }
 
         #endregion
-        
+
+        #region Campaigns
+
+        public static CampaignModel ToModel(this Campaign entity)
+        {
+            return AutoMapper.Mapper.Map<Campaign, CampaignModel>(entity);
+        }
+
+        public static Campaign ToEntity(this CampaignModel model)
+        {
+            return AutoMapper.Mapper.Map<CampaignModel, Campaign>(model);
+        }
+
+        public static Campaign ToEntity(this CampaignModel model, Campaign destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
         #region Log
 
         public static LogModel ToModel(this Log entity)

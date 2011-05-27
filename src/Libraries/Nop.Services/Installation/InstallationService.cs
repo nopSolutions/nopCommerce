@@ -467,9 +467,7 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCountriesAndStates()
         {
-            var countries = new List<Country>
-                                {
-                                    new Country
+            var cUsa = new Country
                                         {
                                             Name = "United States",
                                             AllowsBilling = true,
@@ -480,33 +478,32 @@ namespace Nop.Services.Installation
                                             SubjectToVat = false,
                                             DisplayOrder = 1,
                                             Published = true,
-                                            StateProvinces = new List<StateProvince>()
-                                            {
-                                                new StateProvince()
+                                        };
+            cUsa.StateProvinces.Add(new StateProvince()
                                                 {
                                                     Name = "Alabama",
                                                     Abbreviation = "AL",
                                                     Published = true,
                                                     DisplayOrder = 1,
-                                                },
+                                                });
+            cUsa.StateProvinces.Add(
                                                 new StateProvince()
                                                 {
                                                     Name = "Alaska",
                                                     Abbreviation = "AK",
                                                     Published = true,
                                                     DisplayOrder = 1,
-                                                },
-                                                //UNDONE insert other states
+                                                });
+            cUsa.StateProvinces.Add(
                                                 new StateProvince()
                                                 {
                                                     Name = "New York",
                                                     Abbreviation = "NY",
                                                     Published = true,
                                                     DisplayOrder = 1,
-                                                },
-                                            }
-                                        },
-                                    new Country
+                                                });
+            //UNDONE insert other states
+            var cCanada = new Country
                                         {
                                             Name = "Canada",
                                             AllowsBilling = true,
@@ -517,25 +514,26 @@ namespace Nop.Services.Installation
                                             SubjectToVat = false,
                                             DisplayOrder = 2,
                                             Published = true,
-                                            StateProvinces = new List<StateProvince>()
-                                            {
-                                                new StateProvince()
+                                        };
+            cCanada.StateProvinces.Add(new StateProvince()
                                                 {
                                                     Name = "Alberta",
                                                     Abbreviation = "AB",
                                                     Published = true,
                                                     DisplayOrder = 1,
-                                                },
-                                                new StateProvince()
+                                                });
+            cCanada.StateProvinces.Add(new StateProvince()
                                                 {
                                                     Name = "British Columbia",
                                                     Abbreviation = "BC",
                                                     Published = true,
                                                     DisplayOrder = 1,
-                                                },
-                                                //UNDONE insert other states
-                                            }
-                                        },
+                                                });
+            //UNDONE insert other states
+            var countries = new List<Country>
+                                {
+                                    cUsa,
+                                    cCanada,
                                     new Country
                                         {
                                             Name = "Russia",
@@ -550,7 +548,6 @@ namespace Nop.Services.Installation
                                         },
                                 };
             countries.ForEach(c => _countryRepository.Insert(c));
-
         }
 
         protected virtual void InstallShippingMethods()
@@ -643,67 +640,36 @@ namespace Nop.Services.Installation
             defaultCustomer.AssociatedUsers.Add(adminUser);
             customers.ForEach(c => _customerRepository.Insert(c));
 
-            var testGuests = new List<Customer>();
-            for (int i = 0; i < 15; i++)
-                testGuests.Add(new Customer
-                {
-                    CustomerGuid = Guid.NewGuid(),
-                    Active = true,
-                    CreatedOnUtc = DateTime.UtcNow,
-                });
-            testGuests.ForEach(c => _customerRepository.Insert(c));
-
-            var customerRoles = new List<CustomerRole>
-                                {
-                                    new CustomerRole
+            var crAdministrators = new CustomerRole
                                         {
                                             Name = "Administrators",
                                             Active = true,
                                             IsSystemRole = true,
                                             SystemName = SystemCustomerRoleNames.Administrators,
-                                            Customers = new List<Customer>()
-                                            {
-                                                defaultCustomer
-                                            }
-                                        },
-                                    new CustomerRole
+                                        };
+            crAdministrators.Customers.Add(defaultCustomer);
+            var crRegistered = new CustomerRole
                                         {
                                             Name = "Registered",
                                             Active = true,
                                             IsSystemRole = true,
                                             SystemName = SystemCustomerRoleNames.Registered,
-                                            Customers = new List<Customer>()
-                                            {
-                                                defaultCustomer
-                                            }
-                                        },
-                                    new CustomerRole
+                                        };
+            crRegistered.Customers.Add(defaultCustomer);
+            var crGuests = new CustomerRole
                                         {
                                             Name = "Guests",
                                             Active = true,
                                             IsSystemRole = true,
                                             SystemName = SystemCustomerRoleNames.Guests,
-                                            Customers = testGuests
-                                        }
+                                        };
+            var customerRoles = new List<CustomerRole>
+                                {
+                                    crAdministrators,
+                                    crRegistered,
+                                    crGuests
                                 };
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
-
-            //test users
-            for (int i = 1; i <= 30; i++)
-            {
-                var testUser = new User()
-                {
-                    UserGuid = Guid.NewGuid(),
-                    Email = string.Format("admin{0}@yourStore.com", i),
-                    Username = string.Format("admin{0}@yourStore.com", i),
-                    Password = "admin",
-                    PasswordFormat = PasswordFormat.Clear,
-                    IsApproved = true,
-                    CreatedOnUtc = DateTime.UtcNow,
-                };
-
-                _userRepository.Insert(testUser);
-            }
         }
 
         protected virtual void InstallEmailAccounts()
@@ -957,70 +923,6 @@ namespace Nop.Services.Installation
                                        },
                                };
             messageTemplates.ForEach(mt => _messageTemplateRepository.Insert(mt));
-
-        }
-
-        protected virtual void InstallQueuedEmails()
-        {
-
-            var queuedEmail = new List<QueuedEmail>()
-            {
-                new QueuedEmail()
-                {
-                    EmailAccountId = 1,
-                    Priority = 1,
-                    From = "admin@test.com",
-                    FromName = "Adminstrator",
-                    To = "cust@test.com",
-                    ToName = "Customer",
-                    CC = "admincc@test.com",
-                    Bcc = "adminbcc@test.com",
-                    Body = "Body",
-                    Subject = "Subject",
-                    CreatedOnUtc = DateTime.UtcNow,
-                    SentTries = 0,
-                    SentOnUtc = null
-                },
-                new QueuedEmail()
-                {
-                    EmailAccountId = 2,
-                    Priority = 2,
-                    From = "admin@test.com",
-                    FromName = "Adminstrator",
-                    To = "cust@test.com",
-                    ToName = "Customer",
-                    CC = "admincc@test.com",
-                    Bcc = "adminbcc@test.com",
-                    Body = "Body",
-                    Subject = "Subject",
-                    CreatedOnUtc = DateTime.UtcNow,
-                    SentTries = 2,
-                    SentOnUtc = DateTime.UtcNow
-                }
-            };
-            for (var i = 1; i <= 10; i++)
-            {
-                queuedEmail.Add(
-                    new QueuedEmail()
-                    {
-                        EmailAccountId = 1,
-                        Priority = 4,
-                        From = "admin@test.com",
-                        FromName = "Adminstrator",
-                        To = "cust@test.com",
-                        ToName = "Customer",
-                        CC = "admincc@test.com",
-                        Bcc = "adminbcc@test.com",
-                        Body = "Body" + i,
-                        Subject = "Subject" + i,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        SentTries = i,
-                        SentOnUtc = null
-                    }
-                );
-            }
-
-            queuedEmail.ForEach(qe => _queuedEmailRepository.Insert(qe));
 
         }
 
@@ -1295,95 +1197,87 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallSpecificationAttributes()
         {
-            var specificationAttributes = new List<SpecificationAttribute>
-                                {
-                                    new SpecificationAttribute
+            var sa1 = new SpecificationAttribute
                                         {
                                             Name = "Screensize",
                                             DisplayOrder = 1,
-                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                                            {
-                                                new SpecificationAttributeOption()
+                                        };
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                                 {
                                                     Name = "10.0''",
                                                     DisplayOrder = 3,
-                                                },
-                                                new SpecificationAttributeOption()
+                                                });
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                                 {
                                                     Name = "14.1''",
                                                     DisplayOrder = 4,
-                                                },
-                                                new SpecificationAttributeOption()
+                                                });
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                                 {
                                                     Name = "15.4''",
                                                     DisplayOrder = 5,
-                                                },
-                                                new SpecificationAttributeOption()
+                                                });
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                                 {
                                                     Name = "16.0''",
                                                     DisplayOrder = 6,
-                                                },
-                                            }
-                                        },
-                                    new SpecificationAttribute
+                                                });
+            var sa2 = new SpecificationAttribute
                                         {
                                             Name = "CPU Type",
                                             DisplayOrder = 2,
-                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                                            {
-                                                new SpecificationAttributeOption()
+                                        };
+            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                                 {
                                                     Name = "AMD",
                                                     DisplayOrder = 1,
-                                                },
-                                                new SpecificationAttributeOption()
+                                                });
+            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                                 {
                                                     Name = "Intel",
                                                     DisplayOrder = 2,
-                                                },
-                                            }
-                                        },
-                                    new SpecificationAttribute
-                                        {
-                                            Name = "Memory",
-                                            DisplayOrder = 3,
-                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                                            {
-                                                new SpecificationAttributeOption()
+                                                });
+            var sa3 = new SpecificationAttribute
+                                    {
+                                        Name = "Memory",
+                                        DisplayOrder = 3,
+                                    };
+            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                                 {
                                                     Name = "1 GB",
                                                     DisplayOrder = 1,
-                                                },
-                                                new SpecificationAttributeOption()
+                                                });
+            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                                 {
                                                     Name = "3 GB",
                                                     DisplayOrder = 2,
-                                                },
-                                            }
-                                        },
-                                    new SpecificationAttribute
+                                                });
+            var sa4 = new SpecificationAttribute
+                                {
+                                    Name = "Hardrive",
+                                    DisplayOrder = 5,
+                                };
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
                                         {
-                                            Name = "Hardrive",
-                                            DisplayOrder = 5,
-                                            SpecificationAttributeOptions = new List<SpecificationAttributeOption>()
-                                            {
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "160 GB",
-                                                    DisplayOrder = 3,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "250 GB",
-                                                    DisplayOrder = 4,
-                                                },
-                                                new SpecificationAttributeOption()
-                                                {
-                                                    Name = "320 GB",
-                                                    DisplayOrder = 7,
-                                                },
-                                            }
-                                        },
+                                            Name = "320 GB",
+                                            DisplayOrder = 7,
+                                        });
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+                                        {
+                                            Name = "250 GB",
+                                            DisplayOrder = 4,
+                                        });
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+                                        {
+                                            Name = "160 GB",
+                                            DisplayOrder = 3,
+                                        });
+            var specificationAttributes = new List<SpecificationAttribute>
+                                {
+                                    sa1,
+                                    sa2,
+                                    sa3,
+                                    sa4
                                 };
             specificationAttributes.ForEach(sa => _specificationAttributeRepository.Insert(sa));
 
@@ -1771,7 +1665,6 @@ namespace Nop.Services.Installation
                     DisplayOrder = a,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
-                    Forums = new List<Forum>()
                 };
 
                 _forumGroupRepository.Insert(forumGroup);
@@ -1791,7 +1684,6 @@ namespace Nop.Services.Installation
                         CreatedOnUtc = DateTime.UtcNow,
                         UpdatedOnUtc = DateTime.UtcNow,
                         ForumGroup = forumGroup,
-                        ForumTopics = new List<ForumTopic>()
                     };
 
                     _forumRepository.Insert(forum);
@@ -1812,7 +1704,6 @@ namespace Nop.Services.Installation
                             LastPostTime = DateTime.UtcNow,
                             CreatedOnUtc = DateTime.UtcNow,
                             UpdatedOnUtc = DateTime.UtcNow,
-                            ForumPosts = new List<ForumPost>()
                         };
 
                         _forumTopicRepository.Insert(forumTopic);
@@ -2008,7 +1899,6 @@ namespace Nop.Services.Installation
             InstallCustomersAndUsers();
             InstallEmailAccounts();
             InstallMessageTemplates();
-            InstallQueuedEmails(); //TODO remove. Just for testing
             InstallSettings();
             InstallActivityLogTypes();
 

@@ -199,7 +199,7 @@ namespace Nop.Services.Customers
             var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
-            customer.CustomerRoles = new List<CustomerRole> { guestRole };
+            customer.CustomerRoles.Add(guestRole);
 
             _customerRepository.Insert(customer);
 
@@ -513,8 +513,6 @@ namespace Nop.Services.Customers
             //    valueStr = (T)xmlS.Deserialize(tr);
             //}
             
-            if (customer.CustomerAttributes == null)
-                customer.CustomerAttributes = new List<CustomerAttribute>();
             var customerAttribute = customer.CustomerAttributes.FirstOrDefault(ca => ca.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
             if (customerAttribute != null)
             {

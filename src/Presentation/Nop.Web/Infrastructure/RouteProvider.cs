@@ -164,7 +164,7 @@ namespace Nop.Web.Infrastructure
             //contact us
             routes.MapRoute("ContactUs",
                             "contactus",
-                            new { controller = "Home", action = "ContactUs" },
+                            new { controller = "Common", action = "ContactUs" },
                             new[] { "Nop.Web.Controllers" });
 
             //passwordrecovery

@@ -69,6 +69,7 @@
     <Compile Include="Mapping\Logging\ActivityLogMap.cs" />
     <Compile Include="Mapping\Logging\ActivityLogTypeMap.cs" />
     <Compile Include="Mapping\Media\DownloadMap.cs" />
+    <Compile Include="Mapping\Messages\CampaignMap.cs" />
     <Compile Include="Mapping\Messages\EmailAccountMap.cs" />
     <Compile Include="Mapping\Messages\MessageTemplateMap.cs" />
     <Compile Include="Mapping\Messages\NewsLetterSubscriptionMap.cs" />

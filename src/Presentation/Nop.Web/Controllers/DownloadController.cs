@@ -17,7 +17,6 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Web.Extensions;
 using Nop.Web.Models;
-using Nop.Web.Models.Home;
 
 namespace Nop.Web.Controllers
 {

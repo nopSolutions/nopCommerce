@@ -527,6 +527,24 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ProductVariant.StockQuantity", HttpUtility.HtmlEncode(productVariant.StockQuantity)));
         }
 
+
+        /// <summary>
+        /// Gets list of allowed (supported) message tokens for campaigns
+        /// </summary>
+        /// <returns>List of allowed (supported) message tokens for campaigns</returns>
+        public string[] GetListOfCampaignAllowedTokens()
+        {
+            var allowedTokens = new List<string>()
+            {
+                "%Store.Name%",
+                "%Store.URL%",
+                "%Store.Email%",
+                "%NewsLetterSubscription.Email%",
+                "%NewsLetterSubscription.ActivationUrl%",
+                "%NewsLetterSubscription.DeactivationUrl%"
+            };
+            return allowedTokens.ToArray();
+        }
         #endregion
     }
 }

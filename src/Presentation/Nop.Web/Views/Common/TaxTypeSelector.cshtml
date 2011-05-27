@@ -1,8 +1,8 @@
-﻿@model Nop.Web.Models.Home.TaxTypeSelectorModel
+﻿@model Nop.Web.Models.Common.TaxTypeSelectorModel
 @using Nop.Core.Domain.Tax
 @if (Model.Enabled)
 {
-    using (Ajax.BeginForm("TaxTypeSelected", "Home", new AjaxOptions { OnComplete = "onTaxTypeChangedRequestCompleted();" }, new { id = "form-taxtypeselector" }))
+    using (Ajax.BeginForm("TaxTypeSelected", "Common", new AjaxOptions { OnComplete = "onTaxTypeChangedRequestCompleted();" }, new { id = "form-taxtypeselector" }))
     {
         var taxTypes = new List<SelectListItem>();
         taxTypes.Add(new SelectListItem()

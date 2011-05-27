@@ -8,9 +8,9 @@ using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Models.Media;
-using Nop.Web.Validators.Home;
+using Nop.Web.Validators.Common;
 
-namespace Nop.Web.Models.Home
+namespace Nop.Web.Models.Common
 {
     [Validator(typeof(ContactUsValidator))]
     public class ContactUsModel : BaseNopModel

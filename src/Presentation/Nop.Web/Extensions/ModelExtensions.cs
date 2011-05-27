@@ -10,7 +10,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
-using Nop.Web.Models.Home;
 
 namespace Nop.Web.Extensions
 {

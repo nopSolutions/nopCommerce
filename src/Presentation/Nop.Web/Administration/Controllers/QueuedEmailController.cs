@@ -22,8 +22,8 @@ namespace Nop.Admin.Controllers
 
 		public QueuedEmailController(IQueuedEmailService queuedEmailService, IDateTimeHelper dateTimeHelper)
 		{
-			_queuedEmailService = queuedEmailService;
-            _dateTimeHelper = dateTimeHelper;
+            this._queuedEmailService = queuedEmailService;
+            this._dateTimeHelper = dateTimeHelper;
 		}
 
         public ActionResult Index()
@@ -84,7 +84,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueExists("save", "save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Save(QueuedEmailModel model, bool continueEditing)
+        public ActionResult Edit(QueuedEmailModel model, bool continueEditing)
         {
             var email = _queuedEmailService.GetQueuedEmailById(model.Id);
             if (email == null)

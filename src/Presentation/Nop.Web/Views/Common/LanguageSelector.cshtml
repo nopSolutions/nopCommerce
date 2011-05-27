@@ -1,7 +1,7 @@
-﻿@model Nop.Web.Models.Home.LanguageSelectorModel
+﻿@model Nop.Web.Models.Common.LanguageSelectorModel
 @if (Model.AvailableLanguages.Count > 1)
 {
-    using (Ajax.BeginForm("LanguageSelected", "Home", new AjaxOptions { OnComplete = "onLanguageChangedRequestCompleted();" }, new { id = "form-languageselector" }))
+    using (Ajax.BeginForm("LanguageSelected", "Common", new AjaxOptions { OnComplete = "onLanguageChangedRequestCompleted();" }, new { id = "form-languageselector" }))
     {
         var languages = Model.AvailableLanguages.Select(x => new SelectListItem
         {

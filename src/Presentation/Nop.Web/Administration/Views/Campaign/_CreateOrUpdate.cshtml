@@ -1,0 +1,84 @@
+﻿@model Nop.Admin.Models.CampaignModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+@if (Model.Id > 0)
+{
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                <b>
+                    @T("Admin.Promotions.Campaigns.Warning")
+                </b>
+                <br />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TestEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TestEmail)
+                @Html.ValidationMessageFor(model => model.TestEmail)
+                &nbsp;&nbsp;
+                <button type="submit" name="send-test-email" value="send-test-email" class="t-button">@T("Admin.Promotions.Campaigns.SendTestEmail")</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+            </td>
+            <td class="adminData">
+                <button type="submit" name="send-mass-email" value="send-mass-email" class="t-button">@T("Admin.Promotions.Campaigns.SendMassEmail")</button>
+            </td>
+        </tr>
+        @if (!String.IsNullOrEmpty(Model.SendEmailResult))
+        {
+            <tr>
+                <td class="adminTitle">
+                </td>
+                <td class="adminData" style="color: red">
+                    @Model.SendEmailResult
+                </td>
+            </tr>
+        }
+    </table>
+    <hr />
+}
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Subject):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Subject)
+            @Html.ValidationMessageFor(model => model.Subject)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Body):
+        </td>
+        <td class="adminData">
+            @Html.TextAreaFor(model => model.Body, new { style = "Width: 550px; Height: 350px;" })
+            @Html.ValidationMessageFor(model => model.Body)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AllowedTokens):
+        </td>
+        <td class="adminData">
+            @Model.AllowedTokens
+        </td>
+    </tr>
+</table>

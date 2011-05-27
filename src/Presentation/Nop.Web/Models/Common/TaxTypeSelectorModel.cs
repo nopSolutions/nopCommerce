@@ -4,9 +4,8 @@ using System.Linq;
 using System.Web;
 using Nop.Core.Domain.Tax;
 using Nop.Web.Framework.Mvc;
-using Nop.Web.Models.Home;
 
-namespace Nop.Web.Models.Home
+namespace Nop.Web.Models.Common
 {
     public class TaxTypeSelectorModel : BaseNopModel
     {

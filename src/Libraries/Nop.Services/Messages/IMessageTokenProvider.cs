@@ -46,5 +46,7 @@ namespace Nop.Services.Messages
         void AddProductTokens(IList<Token> tokens, Product product);
 
         void AddProductVariantTokens(IList<Token> tokens, ProductVariant productVariant);
+
+        string[] GetListOfCampaignAllowedTokens();
     }
 }

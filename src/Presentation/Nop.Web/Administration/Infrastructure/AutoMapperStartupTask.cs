@@ -52,6 +52,11 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<QueuedEmailModel, QueuedEmail>()
                 .ForMember(dest=> dest.CreatedOnUtc, dt=> dt.Ignore())
                 .ForMember(dest => dest.SentOnUtc, dt => dt.Ignore());
+            //campaign
+            Mapper.CreateMap<Campaign, CampaignModel>();
+            Mapper.CreateMap<CampaignModel, Campaign>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+
             //category
             Mapper.CreateMap<Category, CategoryModel>();
             Mapper.CreateMap<CategoryModel, Category>()

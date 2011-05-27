@@ -1,29 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Web;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Security;
-using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Catalog;
-using Nop.Core.Html;
-using Nop.Services.Media;
-using Nop.Services.Orders;
-using Nop.Services.Tax;
 
 namespace Nop.Services.Messages
 {
@@ -34,21 +23,11 @@ namespace Nop.Services.Messages
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ITokenizer _tokenizer;
         private readonly IEmailAccountService _emailAccountService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly ICurrencyService _currencyService;
-        private readonly INewsLetterSubscriptionService _newLetterSubscriptionService;
-        private readonly IWebHelper _webHelper;
 
-        private readonly StoreInformationSettings _storeSettings;
-        private readonly MessageTemplatesSettings _templatesSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly CatalogSettings _catalogSettings;
-        private readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -56,32 +35,17 @@ namespace Nop.Services.Messages
 
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService, ILanguageService languageService,
-            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             ITokenizer tokenizer, IEmailAccountService emailAccountService,
-            IPriceFormatter priceFormatter, INewsLetterSubscriptionService newsLetterSubscriptionService,
-            ICurrencyService currencyService, IMessageTokenProvider messageTokenProvider, IWebHelper webHelper,
-            StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings,
-            EmailAccountSettings emailAccountSettings, CatalogSettings catalogSettings,
-            TaxSettings taxSettings)
+            IMessageTokenProvider messageTokenProvider, EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
             this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
             this._tokenizer = tokenizer;
             this._emailAccountService = emailAccountService;
-            this._priceFormatter = priceFormatter;
-            this._newLetterSubscriptionService = newsLetterSubscriptionService;
-            this._currencyService = currencyService;
             this._messageTokenProvider = messageTokenProvider;
-            this._webHelper = webHelper;
 
-            this._storeSettings = storeSettings;
-            this._templatesSettings = templatesSettings;
             this._emailAccountSettings = emailAccountSettings;
-            this._catalogSettings = catalogSettings;
-            this._taxSettings = taxSettings;
         }
 
         #endregion
@@ -118,7 +82,6 @@ namespace Nop.Services.Messages
 
             _queuedEmailService.InsertQueuedEmail(email);
             return email.Id;
-
         }
         
         private IList<Token> GenerateTokens(Customer customer)

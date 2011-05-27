@@ -5,10 +5,10 @@ using System.Web;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
-namespace Nop.Web.Models.Home
+namespace Nop.Web.Models.Common
 {
-    public class LanguageModel : BaseNopEntityModel
+    public class MenuModel : BaseNopModel
     {
-        public string Name { get; set; }
+        public bool RecentlyAddedProductsEnabled { get; set; }
     }
 }
