@@ -56,6 +56,7 @@ namespace Nop.Services.Orders
         private readonly IEncryptionService _encryptionService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly ISmsService _smsService;
 
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
@@ -91,6 +92,7 @@ namespace Nop.Services.Orders
         /// <param name="encryptionService">Encryption service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
+        /// <param name="smsService">SMS service</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
         /// <param name="taxSettings">Tax settings</param>
@@ -117,6 +119,7 @@ namespace Nop.Services.Orders
             IEncryptionService encryptionService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
+            ISmsService smsService,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
@@ -144,6 +147,7 @@ namespace Nop.Services.Orders
             this._customerService = customerService;
             this._discountService = discountService;
             this._encryptionService = encryptionService;
+            this._smsService = smsService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
@@ -1169,8 +1173,17 @@ namespace Nop.Services.Orders
                             _orderService.UpdateOrder(order);
                         }
 
-                        //UNDONE send SMS
-                        //_smsService.SendOrderPlacedNotification(order);
+                        //send SMS
+                        if (_smsService.SendSms(String.Format("New order(#{0}) has been placed.", order.Id)) > 0)
+                        {
+                            order.OrderNotes.Add(new OrderNote()
+                            {
+                                Note = "\"Order placed\" SMS alert (to store owner) has been sent",
+                                DisplayToCustomer = false,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                            _orderService.UpdateOrder(order);
+                        }
 
                         //check order status
                         CheckOrderStatus(order);

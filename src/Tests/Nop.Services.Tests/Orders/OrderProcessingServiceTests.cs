@@ -64,6 +64,7 @@ namespace Nop.Services.Tests.Orders
         ICustomerService _customerService;
         IEncryptionService _encryptionService;
         IWorkflowMessageService _workflowMessageService;
+        ISmsService _smsService;
         OrderSettings _orderSettings;
         LocalizationSettings _localizationSettings;
 
@@ -132,6 +133,7 @@ namespace Nop.Services.Tests.Orders
             _customerService= MockRepository.GenerateMock<ICustomerService>();
             _encryptionService = MockRepository.GenerateMock<IEncryptionService>();
             _workflowMessageService = MockRepository.GenerateMock<IWorkflowMessageService>();
+            _smsService = MockRepository.GenerateMock<ISmsService>();
 
             _orderSettings = new OrderSettings();
 
@@ -146,7 +148,7 @@ namespace Nop.Services.Tests.Orders
                 _shippingService, _taxService,
                 _customerService, _discountService,
                 _encryptionService, _workContext, _workflowMessageService,
-                _rewardPointsSettings,
+                _smsService, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings);
         }
 

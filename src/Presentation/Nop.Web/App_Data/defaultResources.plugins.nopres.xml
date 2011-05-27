@@ -220,6 +220,94 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Sms">
+        <Children>
+          <LocaleResource Name="Clickatell">
+            <Children>
+              <LocaleResource Name="TestFailed">
+                <Value>Test message sending failed</Value>
+              </LocaleResource>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="ApiId">
+                    <Value>API ID</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Clickatell API ID</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Password">
+                    <Value>Password</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Clickatell password</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="PhoneNumber">
+                    <Value>Phone number</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Your phone number</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Username">
+                    <Value>Username</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Clickatell username</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="TestMessage">
+                    <Value>Message text</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Text of the test message</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="TestSuccess">
+                <Value>Test message was sent</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="Verizon">
+            <Children>
+              <LocaleResource Name="TestFailed">
+                <Value>Test message sending failed</Value>
+              </LocaleResource>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="Email">
+                    <Value>Email</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Verizon email address(e.g. your_phone_number@vtext.com)</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="TestMessage">
+                    <Value>Message text</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Text of the test message</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="TestSuccess">
+                <Value>Test message was sent (queued)</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
     </Children>
   </LocaleResource>
 </Language>

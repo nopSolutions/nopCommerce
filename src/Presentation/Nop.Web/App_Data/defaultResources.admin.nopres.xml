@@ -2478,7 +2478,7 @@
 
                 </Children>
               </LocaleResource>
-            <LocaleResource Name="Measures">
+              <LocaleResource Name="Measures">
                 <Value>Measures</Value>
                 <Children>
                   <LocaleResource Name="Weights">
@@ -2703,6 +2703,36 @@
                             </Children>
                           </LocaleResource>
                         </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="SMSProviders">
+                <Value>SMS providers</Value>
+                <Children>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to SMS provider list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Configure">
+                    <Value>Configure</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="FriendlyName">
+                        <Value>Friendly name</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="SystemName">
+                        <Value>System name</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Version">
+                        <Value>Version</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Author">
+                        <Value>Author</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="IsActive">
+                        <Value>Is active</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

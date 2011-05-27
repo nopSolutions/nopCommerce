@@ -19,6 +19,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Shipping;
@@ -475,6 +476,15 @@ namespace Nop.Admin
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
         {
             return AutoMapper.Mapper.Map<IPaymentMethod, PaymentMethodModel>(entity);
+        }
+
+        #endregion
+
+        #region SMS providers
+
+        public static SmsProviderModel ToModel(this ISmsProvider entity)
+        {
+            return AutoMapper.Mapper.Map<ISmsProvider, SmsProviderModel>(entity);
         }
 
         #endregion

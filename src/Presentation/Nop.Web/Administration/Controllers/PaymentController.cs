@@ -41,7 +41,7 @@ namespace Nop.Admin.Controllers
 
 		#endregion Constructors 
 
-        #region Payment methods methods
+        #region Methods
 
         public ActionResult Methods()
         {

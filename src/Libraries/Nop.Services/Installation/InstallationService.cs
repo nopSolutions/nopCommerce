@@ -1056,10 +1056,10 @@ namespace Nop.Services.Installation
                     Color3 = "#dde2e6",
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<SMSSettings>>()
-                .SaveSettings(new SMSSettings()
+            EngineContext.Current.Resolve<IConfigurationProvider<SmsSettings>>()
+                .SaveSettings(new SmsSettings()
                 {
-                    ActiveSMSProviderSystemNames = new List<string>()
+                    ActiveSmsProviderSystemNames = new List<string>()
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<ShoppingCartSettings>>()

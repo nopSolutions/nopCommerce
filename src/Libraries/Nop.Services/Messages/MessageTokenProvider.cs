@@ -532,7 +532,7 @@ namespace Nop.Services.Messages
         /// Gets list of allowed (supported) message tokens for campaigns
         /// </summary>
         /// <returns>List of allowed (supported) message tokens for campaigns</returns>
-        public string[] GetListOfCampaignAllowedTokens()
+        public virtual string[] GetListOfCampaignAllowedTokens()
         {
             var allowedTokens = new List<string>()
             {

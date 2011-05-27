@@ -11,17 +11,17 @@ namespace Nop.Services.Messages
     /// <summary>
     /// Represents the SMS service
     /// </summary>
-    public partial class SMSService:ISMSService
+    public partial class SmsService:ISmsService
     {
         private readonly IPluginFinder _pluginFinder;
-        private readonly SMSSettings _smsSettings;
+        private readonly SmsSettings _smsSettings;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="smsSettings">SMSSettings instance</param>
-        public SMSService(IPluginFinder pluginFinder, SMSSettings smsSettings)
+        /// <param name="smsSettings">SmsSettings instance</param>
+        public SmsService(IPluginFinder pluginFinder, SmsSettings smsSettings)
         {
             this._pluginFinder = pluginFinder;
             this._smsSettings = smsSettings;
@@ -31,9 +31,9 @@ namespace Nop.Services.Messages
         /// Load all SMS providers
         /// </summary>
         /// <returns>SMS provider list</returns>
-        public virtual IList<ISMSProvider> LoadAllSMSProviders()
+        public virtual IList<ISmsProvider> LoadAllSmsProviders()
         {
-            var smsProviders = _pluginFinder.GetPlugins<ISMSProvider>();
+            var smsProviders = _pluginFinder.GetPlugins<ISmsProvider>();
             return smsProviders.OrderBy(tp => tp.FriendlyName).ToList();
         }
 
@@ -42,9 +42,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="systemName">SMS provider system name</param>
         /// <returns>SMS provider</returns>
-        public virtual ISMSProvider LoadSMSProviderBySystemName(string systemName)
+        public virtual ISmsProvider LoadSmsProviderBySystemName(string systemName)
         {
-            var providers = LoadAllSMSProviders();
+            var providers = LoadAllSmsProviders();
             var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return provider;
         }
@@ -53,10 +53,10 @@ namespace Nop.Services.Messages
         /// Load active SMS providers
         /// </summary>
         /// <returns>Active SMS provider list</returns>
-        public virtual IList<ISMSProvider> LoadActiveSMSProviders()
+        public virtual IList<ISmsProvider> LoadActiveSmsProviders()
         {
-            return LoadAllSMSProviders()
-                .Where(smsProvider => _smsSettings.ActiveSMSProviderSystemNames.Contains(smsProvider.SystemName, StringComparer.InvariantCultureIgnoreCase))
+            return LoadAllSmsProviders()
+                .Where(smsProvider => _smsSettings.ActiveSmsProviderSystemNames.Contains(smsProvider.SystemName, StringComparer.InvariantCultureIgnoreCase))
                 .ToList();
         }
 
@@ -65,13 +65,13 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Number of sent messages</returns>
-        public virtual int SendSMS(string text)
+        public virtual int SendSms(string text)
         {
             int i = 0;
 
-            foreach (var smsProvider in LoadActiveSMSProviders())
+            foreach (var smsProvider in LoadActiveSmsProviders())
             {
-                if (smsProvider.SendSMS(text))
+                if (smsProvider.SendSms(text))
                 {
                     i++;
                 }

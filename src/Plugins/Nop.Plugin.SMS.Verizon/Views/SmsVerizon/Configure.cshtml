@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Sms.Verizon.Models.SmsVerizonModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Email):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Email)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <p>
+                    <strong>Send test message<strong>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TestMessage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TestMessage)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="test-sms" value="test-sms" class="t-button">
+                    Send</button>
+            </td>
+        </tr>
+        @if (!String.IsNullOrEmpty(Model.TestSmsResult))
+        {
+            <tr>
+                <td colspan="2" width="100%" style="color: red">
+                    @Model.TestSmsResult
+                </td>
+            </tr>
+        }
+    </table>
+    
+    
+}

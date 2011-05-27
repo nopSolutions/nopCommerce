@@ -81,6 +81,8 @@
     <Compile Include="Controllers\CheckoutAttributeController.cs" />
     <Compile Include="Controllers\AffiliateController.cs" />
     <Compile Include="Controllers\CampaignController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\SmsController.cs" />
     <Compile Include="Controllers\MessageTemplateController.cs" />
     <Compile Include="Controllers\PromotionFeedController.cs" />
     <Compile Include="Controllers\ProductReviewController.cs" />
@@ -123,6 +125,10 @@
     <Compile Include="Models\CheckoutAttributeValueModel.cs" />
     <Compile Include="Models\AffiliateModel.cs" />
     <Compile Include="Models\CampaignModel.cs" />
+    <Compile Include="Models\OrderAddressModel.cs" />
+    <Compile Include="Models\OrderListModel.cs" />
+    <Compile Include="Models\OrderModel.cs" />
+    <Compile Include="Models\SmsProviderModel.cs" />
     <Compile Include="Models\MessageTemplateModel.cs" />
     <Compile Include="Models\PromotionFeedModel.cs" />
     <Compile Include="Models\StateProvinceModel.cs" />
@@ -215,6 +221,7 @@
     <Content Include="Content\images\EmptyStar.png" />
     <Content Include="Content\images\ErrorMessage.gif" />
     <Content Include="Content\images\FilledStar.png" />
+    <Content Include="Content\images\GoogleMaps.gif" />
     <Content Include="Content\images\grey_button_bg.gif" />
     <Content Include="Content\images\grid_header_back.png" />
     <Content Include="Content\images\ico-blacklist.png" />
@@ -673,6 +680,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Campaign\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Sms\ConfigureProvider.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Sms\Providers.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\AddressEdit.cshtml" />
+    <Content Include="Views\Order\Edit.cshtml" />
+    <Content Include="Views\Order\List.cshtml" />
+    <Content Include="Views\Order\PartiallyRefundOrderPopup.cshtml" />
+    <Content Include="Views\Order\_CreateOrUpdateAddress.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

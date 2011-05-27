@@ -15,6 +15,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Tasks;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Shipping;
@@ -115,6 +116,8 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<ShippingSettings, ShippingSettingsModel>();
             //payment methods
             Mapper.CreateMap<IPaymentMethod, PaymentMethodModel>();
+            //SMS providers
+            Mapper.CreateMap<ISmsProvider, SmsProviderModel>();
             //Promotion feeds
             Mapper.CreateMap<IPromotionFeed, PromotionFeedModel>();
             //newsLetter subscriptions
