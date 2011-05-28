@@ -1,0 +1,85 @@
+﻿@model Nop.Web.Models.Blogs.BlogPostListModel
+@using MvcContrib.UI.Pager;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+}
+@section left {
+    @Html.Action("BlogMonths", "Blog")
+    <div class="clear">
+    </div>
+    @Html.Action("BlogTags", "Blog")
+}
+<div class="blog">
+    <div class="page-title">
+        <table width="100%">
+            <tr>
+                <td style="text-align: left; vertical-align: middle;">
+                    <h1>
+                        @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+                        {
+                            if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
+                            {
+                            @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
+                            }
+                            else
+                            {
+                            @T("Blog")
+                            }
+                        }
+                        else
+                        {
+                            @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
+                        }
+                    </h1>
+                </td>
+                <td style="text-align: right; vertical-align: middle;">
+                    @*UNDONE Blog RSS*@
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="blogposts">
+        @foreach (var item in Model.BlogPosts)
+        {
+            <div class="post">
+                <a class="blogtitle" href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })">
+                    @item.Title</a><span class="blogdate">-
+                        @item.CreatedOn.ToString("D")
+                    </span>
+                <div class="blogbody">
+                    @Html.Raw(item.Body)
+                </div>
+                <div class="clear">
+                </div>
+                <div class="tags">
+                    @if (item.Tags.Count > 0)
+                    {
+                        @T("Blog.Tags") 
+                        <text>:&nbsp;</text>
+                   for (int i = 0; i < item.Tags.Count; i++)
+                   {
+                       var tag = item.Tags[i];
+                        <a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a>
+                                                                           if (i != item.Tags.Count - 1)
+                                                                           {
+                        <text>,&nbsp;</text>
+                                                                           }
+                   }
+                    }
+                </div>
+                @if (item.AllowComments)
+                {
+                    <a href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })" class="blogdetails">
+                        @string.Format(@T("Blog.CommentsLink").Text, item.NumberOfComments)
+                    </a>
+                }
+            </div>
+        }
+    </div>
+    <div class="pager">
+        @*pager*@
+        @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
+    </div>
+</div>

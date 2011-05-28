@@ -528,6 +528,26 @@
   </LocaleResource>
   <LocaleResource Name="Blog">
     <Value>Blog</Value>
+    <Children>
+      <LocaleResource Name="Archive">
+        <Value>Blog archive</Value>
+      </LocaleResource>
+      <LocaleResource Name="FilteredByMonth">
+        <Value>Blog posts of '{0}' '{1}'</Value>
+      </LocaleResource>
+      <LocaleResource Name="TaggedWith">
+        <Value>Blog posts tagged with '{0}'</Value>
+      </LocaleResource>
+      <LocaleResource Name="CommentsLink">
+        <Value>Comments ({0:d})</Value>
+      </LocaleResource>
+      <LocaleResource Name="Tags">
+        <Value>Tags</Value>
+      </LocaleResource>
+      <LocaleResource Name="TagCloud">
+        <Value>Popular blog tags</Value>
+      </LocaleResource>
+    </Children>
   </LocaleResource>
   <LocaleResource Name="Categories">
     <Value>Categories</Value>

@@ -194,6 +194,18 @@ namespace Nop.Web.Infrastructure
                             "blog",
                             new { controller = "Blog", action = "List" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("BlogPost",
+                            "b/{blogPostId}/{SeName}",
+                            new { controller = "Blog", action = "BlogPost", SeName = UrlParameter.Optional },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("BlogByTag",
+                            "blog/tag/{tag}",
+                            new { controller = "Blog", action = "List" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("BlogByMonth",
+                            "blog/month/{month}",
+                            new { controller = "Blog", action = "List" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
@@ -71,6 +72,23 @@ namespace Nop.Web.Framework
             string seName = GetSeName(product.GetLocalized(x => x.SeName));
             if (String.IsNullOrEmpty(seName))
                 seName = GetSeName(product.GetLocalized(x => x.Name));
+            return seName;
+        }
+
+        #endregion
+
+        #region 
+
+        /// <summary>
+        /// Gets blog post SE (search engine) name
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        /// <returns>Blog post SE (search engine) name</returns>
+        public static string GetSeName(this BlogPost blogPost)
+        {
+            if (blogPost == null)
+                throw new ArgumentNullException("blogPost");
+            string seName = GetSeName(blogPost.Title);
             return seName;
         }
 
