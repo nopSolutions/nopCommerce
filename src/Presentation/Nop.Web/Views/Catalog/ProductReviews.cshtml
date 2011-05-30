@@ -106,12 +106,12 @@
                     <div class="clear">
                     </div>
                     <div class="review-text">
-                        @Html.Raw(review.ReviewText)
+                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
                     </div>
                     <div class="clear">
                     </div>
                     <div class="review-info">
-                        @*TODO if allow viewing customer profiles is enabled, then display a link to it*@
+                        @*TODO if allow viewing customer profiles is enabled, then display a link to it (similar to blog comments)*@
                         @T("Reviews.From")<text>:</text> @review.CustomerName
                         <span class="separator">|</span>
                         @T("Reviews.Date")<text>:</text> @review.WrittenOnStr

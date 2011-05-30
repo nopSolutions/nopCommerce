@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -506,7 +507,12 @@ namespace Nop.Services.Messages
 
         public virtual void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
         {
-            tokens.Add(new Token("ProductReview.ProductName", productReview.Product.Name));
+            tokens.Add(new Token("ProductReview.ProductName", HttpUtility.HtmlEncode(productReview.Product.Name)));
+        }
+
+        public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
+        {
+            tokens.Add(new Token("BlogComment.BlogPostTitle", HttpUtility.HtmlEncode(blogComment.BlogPost.Title)));
         }
 
         public virtual void AddProductTokens(IList<Token> tokens, Product product)

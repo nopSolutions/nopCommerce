@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Validators.Blogs;
 
 namespace Nop.Web.Models.Blogs
 {
+    [Validator(typeof(BlogPostValidator))]
     public class BlogPostModel : BaseNopEntityModel
     {
         public BlogPostModel()
         {
             Tags = new List<string>();
+            Comments = new List<BlogCommentModel>();
+            AddNewComment = new AddBlogCommentModel();
         }
 
         public string SeName { get; set; }
@@ -27,5 +32,8 @@ namespace Nop.Web.Models.Blogs
         public DateTime CreatedOn { get; set; }
 
         public IList<string> Tags { get; set; }
+
+        public IList<BlogCommentModel> Comments { get; set; }
+        public AddBlogCommentModel AddNewComment { get; set; }
     }
 }

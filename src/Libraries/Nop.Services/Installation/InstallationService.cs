@@ -68,7 +68,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
-        private readonly IRepository<GiftCard> _giftCardRepository;
+        private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
 
@@ -100,7 +100,7 @@ namespace Nop.Services.Installation
             IRepository<Country> countryRepository,
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<Discount> discountRepository,
-            IRepository<GiftCard> giftCardRepository,
+            IRepository<BlogPost> blogPostRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<ActivityLogType> activityLogTypeRepository)
         {
@@ -133,7 +133,7 @@ namespace Nop.Services.Installation
             this._stateProvinceRepository = stateProvinceRepository;
 
             this._discountRepository = discountRepository;
-            this._giftCardRepository = giftCardRepository;
+            this._blogPostRepository = blogPostRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
@@ -1828,42 +1828,31 @@ namespace Nop.Services.Installation
 
         }
 
-        protected virtual void InstallGiftCards()
+        protected virtual void InstallBlogPosts()
         {
-            //TODO remove after tested
-            var giftCards = new List<GiftCard>
+            var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+            var blogPosts = new List<BlogPost>
                                 {
-                                    new GiftCard
+                                    new BlogPost
                                         {
-                                            GiftCardType = GiftCardType.Virtual,
-                                            Amount = 10,
-                                            IsGiftCardActivated = true,
-                                            GiftCardCouponCode= "GC1",
-                                            RecipientName = "",
-                                            RecipientEmail = "",
-                                            SenderEmail = "",
-                                            SenderName = "",
-                                            Message = "",
-                                            IsRecipientNotified = true,
-                                            CreatedOnUtc = DateTime.UtcNow,
+                                             AllowComments = true,
+                                             LanguageId = defaultLanguage.Id,
+                                             Title = "Online Discount Coupons",
+                                             Body = "<p>Online discount coupons enable access to great offers from some of the world&rsquo;s best sites for Internet shopping. The online coupons are designed to allow compulsive online shoppers to access massive discounts on a variety of products. The regular shopper accesses the coupons in bulk and avails of great festive offers and freebies thrown in from time to time.  The coupon code option is most commonly used when using a shopping cart. The coupon code is entered on the order page just before checking out. Every online shopping resource has a discount coupon submission option to confirm the coupon code. The dedicated web sites allow the shopper to check whether or not a discount is still applicable. If it is, the sites also enable the shopper to calculate the total cost after deducting the coupon amount like in the case of grocery coupons.  Online discount coupons are very convenient to use. They offer great deals and professionally negotiated rates if bought from special online coupon outlets. With a little research and at times, insider knowledge the online discount coupons are a real steal. They are designed to promote products by offering &lsquo;real value for money&rsquo; packages. The coupons are legitimate and help with budgeting, in the case of a compulsive shopper. They are available for special trade show promotions, nightlife, sporting events and dinner shows and just about anything that could be associated with the promotion of a product. The coupons enable the online shopper to optimize net access more effectively. Getting a &lsquo;big deal&rsquo; is not more utopian amidst rising prices. The online coupons offer internet access to the best and cheapest products displayed online. Big discounts are only a code away! By Gaynor Borade (buzzle.com)</p>",
+                                             Tags = "e-commerce, money",
+                                             CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
                                         },
-                                        
-                                    new GiftCard
+                                    new BlogPost
                                         {
-                                            GiftCardType = GiftCardType.Virtual,
-                                            Amount = 20,
-                                            IsGiftCardActivated = true,
-                                            GiftCardCouponCode= "GC2",
-                                            RecipientName = "",
-                                            RecipientEmail = "",
-                                            SenderEmail = "",
-                                            SenderName = "",
-                                            Message = "",
-                                            IsRecipientNotified = true,
-                                            CreatedOnUtc = DateTime.UtcNow,
-                                        }
+                                             AllowComments = true,
+                                             LanguageId = defaultLanguage.Id,
+                                             Title = "Customer Service - Client Service",
+                                             Body = "<p>Managing online business requires different skills and abilities than managing a business in the &lsquo;real world.&rsquo; Customers can easily detect the size and determine the prestige of a business when they have the ability to walk in and take a look around. Not only do &lsquo;real-world&rsquo; furnishings and location tell the customer what level of professionalism to expect, but &quot;real world&quot; personal encounters allow first impressions to be determined by how the business approaches its customer service. When a customer walks into a retail business just about anywhere in the world, that customer expects prompt and personal service, especially with regards to questions that they may have about products they wish to purchase.<br /><br />Customer service or the client service is the service provided to the customer for his satisfaction during and after the purchase. It is necessary to every business organization to understand the customer needs for value added service. So customer data collection is essential. For this, a good customer service is important. The easiest way to lose a client is because of the poor customer service. The importance of customer service changes by product, industry and customer. Client service is an important part of every business organization. Each organization is different in its attitude towards customer service. Customer service requires a superior quality service through a careful design and execution of a series of activities which include people, technology and processes. Good customer service starts with the design and communication between the company and the staff.<br /><br />In some ways, the lack of a physical business location allows the online business some leeway that their &lsquo;real world&rsquo; counterparts do not enjoy. Location is not important, furnishings are not an issue, and most of the visual first impression is made through the professional design of the business website.<br /><br />However, one thing still remains true. Customers will make their first impressions on the customer service they encounter. Unfortunately, in online business there is no opportunity for front- line staff to make a good impression. Every interaction the customer has with the website will be their primary means of making their first impression towards the business and its client service. Good customer service in any online business is a direct result of good website design and planning.</p><p>By Jayashree Pakhare (buzzle.com)</p>",
+                                             Tags = "e-commerce, nopCommerce, asp.net, sample tag, money",
+                                             CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
+                                        },
                                 };
-            giftCards.ForEach(gc => _giftCardRepository.Insert(gc));
+            blogPosts.ForEach(bp => _blogPostRepository.Insert(bp));
 
         }
 
@@ -1919,7 +1908,7 @@ namespace Nop.Services.Installation
                 InstallProducts();
                 InstallForums();
                 InstallDiscounts();
-                InstallGiftCards();
+                InstallBlogPosts();
             }
         }
 

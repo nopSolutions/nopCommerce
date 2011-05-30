@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -8,6 +9,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Blogs;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework;
@@ -26,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ISettingService _settingService;
+        private readonly ICustomerContentService _customerContentService;
 
         private BlogSettings _blogSettings;
 
@@ -34,17 +37,42 @@ namespace Nop.Admin.Controllers
 		#region Constructors
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ISettingService settingService, BlogSettings blogSettings)
+            IDateTimeHelper dateTimeHelper, ISettingService settingService, 
+            ICustomerContentService customerContentService, BlogSettings blogSettings)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._settingService = settingService;
+            this._customerContentService = customerContentService;
             this._blogSettings = blogSettings;
 		}
 
 		#endregion Constructors 
         
+        #region Utilities
+
+        [NonAction]
+        private void PrepareBlogCommentModel(BlogCommentModel model,
+            BlogComment blogComment, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (blogComment == null)
+                throw new ArgumentNullException("blogComment");
+
+            model.Id = blogComment.Id;
+            model.BlogPostId = blogComment.BlogPostId;
+            model.BlogPostTitle = blogComment.BlogPost.Title;
+            model.CustomerId = blogComment.CustomerId;
+            model.IpAddress = blogComment.IpAddress;
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
+        }
+
+        #endregion
+
         #region Settings
 
         public ActionResult Settings()
@@ -180,5 +208,64 @@ namespace Nop.Admin.Controllers
 		}
 
 		#endregion
+
+        #region Comments
+
+        public ActionResult Comments(int? blogPostId)
+        {
+            ViewBag.BlogPostId = blogPostId;
+            var model = new GridModel<BlogCommentModel>();
+            return View(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult Comments(int? blogPostId, GridCommand command)
+        {
+            IList<BlogComment> comments;
+            if (blogPostId.HasValue)
+            {
+                //filter comments by blog
+                var blogPost = _blogService.GetBlogPostById(blogPostId.Value);
+                comments = blogPost.BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
+            }
+            else
+            {
+                //load all blog comments
+                comments = _customerContentService.GetAllCustomerContent<BlogComment>(0, null);
+            }
+
+            var gridModel = new GridModel<BlogCommentModel>
+            {
+                Data = comments.PagedForCommand(command).Select(x =>
+                {
+                    var m = new BlogCommentModel();
+                    PrepareBlogCommentModel(m, x, false);
+                    return m;
+                }),
+                Total = comments.Count,
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+        
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult CommentDelete(int? blogPostId, int id, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var comment = _customerContentService.GetCustomerContentById(id);
+            _customerContentService.DeleteCustomerContent(comment);
+
+            return Comments(blogPostId, command);
+        }
+
+
+        #endregion
     }
 }

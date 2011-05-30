@@ -97,16 +97,16 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
-            var returnRequests = _customerContentService.GetAllCustomerContent<ProductReview>(0, null);
+            var productReviews = _customerContentService.GetAllCustomerContent<ProductReview>(0, null);
             var gridModel = new GridModel<ProductReviewModel>
             {
-                Data = returnRequests.PagedForCommand(command).Select(x =>
+                Data = productReviews.PagedForCommand(command).Select(x =>
                 {
                     var m = new ProductReviewModel();
                     PrepareProductReviewModel(m, x, false);
                     return m;
                 }),
-                Total = returnRequests.Count,
+                Total = productReviews.Count,
             };
             return new JsonResult
             {

@@ -20,15 +20,18 @@ namespace Nop.Admin.Models
         public string LanguageName { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
+        [AllowHtml]
         public virtual string Title { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
+        [AllowHtml]
         public virtual string Body { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AllowComments")]
         public virtual bool AllowComments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags")]
+        [AllowHtml]
         public virtual string Tags { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]

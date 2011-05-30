@@ -2966,7 +2966,7 @@
           </LocaleResource>
             <LocaleResource Name="ContentManagement">
             <Value>Content Management</Value>
-            <Children>
+              <Children>
               <LocaleResource Name="Blog">
                 <Value>Blog</Value>
                 <Children>
@@ -3035,6 +3035,30 @@
                           </LocaleResource>
                           <LocaleResource Name="Comments">
                             <Value>View comments</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Comments">
+                    <Value>Blog comments</Value>
+                    <Children>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="BlogPost">
+                            <Value>Blog post</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Customer">
+                            <Value>Customer</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="IPAddress">
+                            <Value>IP Address</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Comment">
+                            <Value>Comment</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="CreatedOn">
+                            <Value>Created on</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
@@ -3379,7 +3403,7 @@
                 </Children>
               </LocaleResource>
             </Children>
-          </LocaleResource>
+            </LocaleResource>
             <LocaleResource Name="Customers">
             <Value>Customers</Value>
               <Children>

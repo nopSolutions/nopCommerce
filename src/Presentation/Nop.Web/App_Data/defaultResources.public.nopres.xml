@@ -532,20 +532,56 @@
       <LocaleResource Name="Archive">
         <Value>Blog archive</Value>
       </LocaleResource>
-      <LocaleResource Name="FilteredByMonth">
-        <Value>Blog posts of '{0}' '{1}'</Value>
-      </LocaleResource>
-      <LocaleResource Name="TaggedWith">
-        <Value>Blog posts tagged with '{0}'</Value>
+      <LocaleResource Name="Comments">
+        <Value>Comments</Value>
+        <Children>
+          <LocaleResource Name="CommentText">
+            <Value>Comment</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Enter comment</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="CreatedOn">
+            <Value>Created on</Value>
+          </LocaleResource>
+          <LocaleResource Name="LeaveYourComment">
+            <Value>Leave your comment</Value>
+          </LocaleResource>
+          <LocaleResource Name="OnlyRegisteredUsersLeaveComments">
+            <Value>Only registered users can leave comments.</Value>
+          </LocaleResource>
+          <LocaleResource Name="SubmitButton">
+            <Value>New comment</Value>
+          </LocaleResource>
+          <LocaleResource Name="SuccessfullyAdded">
+            <Value>Blog comment is successfully added.</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="CommentsLink">
         <Value>Comments ({0:d})</Value>
       </LocaleResource>
-      <LocaleResource Name="Tags">
-        <Value>Tags</Value>
+      <LocaleResource Name="FilteredByMonth">
+        <Value>Blog posts of '{0}' '{1}'</Value>
+      </LocaleResource>
+      <LocaleResource Name="RSS">
+        <Value>RSS</Value>
+        <Children>
+          <LocaleResource Name="Hint">
+            <Value>Click here to be informed automatically when we add new items to our site</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="TagCloud">
         <Value>Popular blog tags</Value>
+      </LocaleResource>
+      <LocaleResource Name="TaggedWith">
+        <Value>Blog posts tagged with '{0}'</Value>
+      </LocaleResource>
+      <LocaleResource Name="Tags">
+        <Value>Tags</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

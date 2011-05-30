@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -42,6 +43,8 @@ namespace Nop.Services.Messages
         void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription);
 
         void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview);
+
+        void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment);
 
         void AddProductTokens(IList<Token> tokens, Product product);
 

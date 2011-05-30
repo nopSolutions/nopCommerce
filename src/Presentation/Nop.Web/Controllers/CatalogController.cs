@@ -412,7 +412,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private ProductReviewsModel PrepareProductReviewsModel(ProductReviewsModel model, Product product)
+        private void PrepareProductReviewsModel(ProductReviewsModel model, Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -432,7 +432,7 @@ namespace Nop.Web.Controllers
                     Id = pr.Id,
                     CustomerName = "TODO customername/email/username here",
                     Title = pr.Title,
-                    ReviewText = Core.Html.HtmlHelper.FormatText(pr.ReviewText, false, true, false, false, false, false),
+                    ReviewText = pr.ReviewText,
                     Rating = pr.Rating,
                     Helpfulness = new ProductReviewHelpfulnessModel()
                     {
@@ -443,8 +443,6 @@ namespace Nop.Web.Controllers
                     WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
                 });
             }
-
-            return model;
         }
         
         [NonAction]
@@ -1326,7 +1324,7 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var model = new ProductReviewsModel();
-            model = PrepareProductReviewsModel(model, product);
+            PrepareProductReviewsModel(model, product);
             //default value
             model.AddProductReview.Rating = 4;
             return View(model);
@@ -1378,7 +1376,7 @@ namespace Nop.Web.Controllers
                         _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
 
 
-                    model = PrepareProductReviewsModel(model, product);
+                    PrepareProductReviewsModel(model, product);
                     model.AddProductReview.Title = null;
                     model.AddProductReview.ReviewText = null;
 
@@ -1393,7 +1391,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = PrepareProductReviewsModel(model, product);
+            PrepareProductReviewsModel(model, product);
             return View(model);
         }
 

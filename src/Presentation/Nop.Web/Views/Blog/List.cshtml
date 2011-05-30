@@ -33,7 +33,8 @@
                     </h1>
                 </td>
                 <td style="text-align: right; vertical-align: middle;">
-                    @*UNDONE Blog RSS*@
+                    <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })">
+                        <img title="@T("Blog.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Blog.RSS")" style="border-width:0px;" /></a>
                 </td>
             </tr>
         </table>

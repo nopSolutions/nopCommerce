@@ -1,0 +1,64 @@
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.BlogCommentModel>
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+@{
+    int? blogPostId = ViewBag.BlogPostId;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
+        @T("Admin.ContentManagement.Blog.Comments")
+    </div>
+    <div class="options">
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<Nop.Admin.Models.BlogCommentModel>(Model.Data)
+                    .Name("comments-grid")
+                    .DataKeys(x => {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id)
+                            .Width(50);
+                        columns.Bound(x => x.BlogPostTitle)
+                            .Width(200)
+                            .Template(x => Html.ActionLink(x.BlogPostTitle, "Edit", "Blog", new { id = x.BlogPostId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Blog/Edit/<#= BlogPostId #>\"><#= BlogPostTitle #></a>");
+                        columns.Bound(x => x.CustomerId)
+                            .Width(50)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.Comment)
+                            .Width(350)
+                            .Encoded(false)
+                            .Centered();
+                        columns.Bound(x => x.CreatedOn)
+                            .Width(100)
+                            .Centered();
+                        columns.Command(commands =>
+                        {
+                            commands.Delete();                            
+                        }).Width(90);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(2))
+                    .DataBinding(dataBinding => {
+                        var settingBuilder = dataBinding.Ajax();
+                        if (blogPostId.HasValue)
+                        {
+                            settingBuilder = settingBuilder.Select("Comments", "Blog", new { blogPostId = blogPostId.Value });
+                            settingBuilder = settingBuilder.Delete("CommentDelete", "Blog", new { blogPostId = blogPostId.Value });
+                        }
+                        else
+                        {
+                            settingBuilder = settingBuilder.Select("Comments", "Blog");
+                            settingBuilder = settingBuilder.Delete("CommentDelete", "Blog");
+                        }
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

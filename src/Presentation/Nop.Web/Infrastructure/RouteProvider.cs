@@ -17,6 +17,7 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("Product",
                             "p/{productId}/{SeName}",
                             new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional },
+                            new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("RecentlyViewedProducts",
                             "recentlyviewedproducts/",
@@ -35,6 +36,7 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("AddProductToCompare",
                             "compareproducts/add/{productId}",
                             new { controller = "Catalog", action = "AddProductToCompareList" },
+                            new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("CompareProducts",
                             "compareproducts/",
@@ -53,12 +55,14 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("ProductEmailAFriend",
                             "productemailafriend/{productId}",
                             new { controller = "Catalog", action = "ProductEmailAFriend" },
+                            new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
             //catalog
             routes.MapRoute("Category",
                             "c/{categoryId}/{SeName}",
                             new { controller = "Catalog", action = "Category", SeName = UrlParameter.Optional },
+                            new { categoryId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("ManufacturerList",
                             "manufacturer/all/",
@@ -67,6 +71,7 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("Manufacturer",
                             "m/{manufacturerId}/{SeName}",
                             new { controller = "Catalog", action = "Manufacturer", SeName = UrlParameter.Optional },
+                            new { manufacturerId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
             //reviews
@@ -93,6 +98,7 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("AddProductToCart",
                             "cart/addproduct/{productId}",
                             new { controller = "ShoppingCart", action = "AddProductToCart" },
+                            new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("ShoppingCart",
                             "cart/",
@@ -150,10 +156,12 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("OrderDetails",
                             "orderdetails/{orderId}",
                             new { controller = "Order", action = "Details" },
+                            new { orderId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("ReturnRequest",
                             "returnrequest/{orderId}",
                             new { controller = "Order", action = "ReturnRequest" },
+                            new { orderId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("GetOrderPdfInvoice",
                             "orderdetails/pdf/{orderId}",
@@ -188,15 +196,26 @@ namespace Nop.Web.Infrastructure
                             "customer/activation/{token}/{email}",
                             new { controller = "Customer", action = "AccountActivation" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("CustomerProfile",
+                            "profile/{id}",
+                            new { controller = "Profile", action = "Info" },
+                            new[] { "Nop.Web.Controllers" });
+
 
             //blog
             routes.MapRoute("Blog",
                             "blog",
                             new { controller = "Blog", action = "List" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("BlogRSS",
+                            "blog/rss/{languageId}",
+                            new { controller = "Blog", action = "ListRss" },
+                            new { languageId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
             routes.MapRoute("BlogPost",
-                            "b/{blogPostId}/{SeName}",
+                            "blog/{blogPostId}/{SeName}",
                             new { controller = "Blog", action = "BlogPost", SeName = UrlParameter.Optional },
+                            new { blogPostId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("BlogByTag",
                             "blog/tag/{tag}",
@@ -206,6 +225,8 @@ namespace Nop.Web.Infrastructure
                             "blog/month/{month}",
                             new { controller = "Blog", action = "List" },
                             new[] { "Nop.Web.Controllers" });
+
+
         }
 
         public int Priority

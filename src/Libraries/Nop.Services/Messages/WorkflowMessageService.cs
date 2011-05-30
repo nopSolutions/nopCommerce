@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -150,6 +151,16 @@ namespace Nop.Services.Messages
 
             _messageTokenProvider.AddStoreTokens(tokens);
             _messageTokenProvider.AddProductReviewTokens(tokens, productReview);
+
+            return tokens;
+        }
+
+        private IList<Token> GenerateTokens(BlogComment blogComment)
+        {
+            var tokens = new List<Token>();
+
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddBlogCommentTokens(tokens, blogComment);
 
             return tokens;
         }
@@ -804,7 +815,34 @@ namespace Nop.Services.Messages
                 languageId, vatSubmittedTokens,
                 toEmail, toName);
         }
-        
+
+        /// <summary>
+        /// Sends a blog comment notification message to a store owner
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException("blogComment");
+
+            languageId = EnsureLanguageIsActive(languageId);
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Blog.BlogComment", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var blogCommentTokens = GenerateTokens(blogComment);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, blogCommentTokens,
+                toEmail, toName);
+        }
+
         #endregion
 
         #endregion

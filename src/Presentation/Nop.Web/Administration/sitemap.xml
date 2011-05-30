@@ -7,20 +7,20 @@
                 <siteMapNode title="Tree view" nopResource="Admin.Common.Treeview" controller="Category" action="Tree"/>
             </siteMapNode>
             <siteMapNode title="Products" nopResource="Admin.Catalog.Products" controller="Product" action="List">
-                <siteMapNode title="Manage Products" nopResource="Admin.Catalog.Products.Manage" controller="Product" action="List"/>
-              <siteMapNode title="Product Reviews" nopResource="Admin.Catalog.ProductReviews" controller="ProductReview" action="List"/>
+                <siteMapNode title="Manage products" nopResource="Admin.Catalog.Products.Manage" controller="Product" action="List"/>
+              <siteMapNode title="Product reviews" nopResource="Admin.Catalog.ProductReviews" controller="ProductReview" action="List"/>
             </siteMapNode>
             <siteMapNode title="Attributes" nopResource="Admin.Catalog.Attributes">
-              <siteMapNode title="Products Attributes" nopResource="Admin.Catalog.Attributes.ProductAttributes" controller="ProductAttribute" action="List"/>
-              <siteMapNode title="Specification Attributes" nopResource="Admin.Catalog.Attributes.SpecificationAttributes" controller="SpecificationAttribute" action="List"/>
-              <siteMapNode title="Checkout Attributes" nopResource="Admin.Catalog.Attributes.CheckoutAttributes" controller="CheckoutAttribute" action="List"/>
+              <siteMapNode title="Products attributes" nopResource="Admin.Catalog.Attributes.ProductAttributes" controller="ProductAttribute" action="List"/>
+              <siteMapNode title="Specification attributes" nopResource="Admin.Catalog.Attributes.SpecificationAttributes" controller="SpecificationAttribute" action="List"/>
+              <siteMapNode title="Checkout attributes" nopResource="Admin.Catalog.Attributes.CheckoutAttributes" controller="CheckoutAttribute" action="List"/>
             </siteMapNode>
         </siteMapNode>
         <siteMapNode title="Sales" nopResource="Admin.Sales">
           <siteMapNode title="Orders" nopResource="Admin.Orders" controller="Order" action="List" />
           <siteMapNode title="Recurring payments" nopResource="Admin.RecurringPayments" controller="RecurringPayment" action="List" />
           <siteMapNode title="Return requests" nopResource="Admin.ReturnRequests" controller="ReturnRequest" action="List" />
-          <siteMapNode title="Gift Cards" nopResource="Admin.GiftCards" controller="GiftCard" action="List" />
+          <siteMapNode title="Gift cards" nopResource="Admin.GiftCards" controller="GiftCard" action="List" />
         </siteMapNode>
         <siteMapNode title="Customers" nopResource="Admin.Customers">
           <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />
@@ -38,6 +38,7 @@
           <siteMapNode title="Blog" nopResource="Admin.ContentManagement.Blog">
             <siteMapNode title="Blog settings" nopResource="Admin.ContentManagement.Blog.Settings" controller="Blog" action="Settings" />
             <siteMapNode title="Blog posts" nopResource="Admin.ContentManagement.Blog.BlogPosts" controller="Blog" action="List" />
+            <siteMapNode title="Blog comments" nopResource="Admin.ContentManagement.Blog.Comments" controller="Blog" action="Comments"/>
           </siteMapNode>
             <siteMapNode title="Forums" nopResource="Admin.ContentManagement.Forums">
                 <siteMapNode title="Forums settings" nopResource="Admin.ContentManagement.Forums.Settings" controller="Forum" action="Settings" />
