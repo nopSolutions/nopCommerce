@@ -87,6 +87,9 @@
     <Compile Include="Domain\Catalog\SpecificationAttributeOptionFilter.cs" />
     <Compile Include="Domain\Common\CommonSettings.cs" />
     <Compile Include="Domain\Common\PdfSettings.cs" />
+    <Compile Include="Domain\News\NewsComment.cs" />
+    <Compile Include="Domain\News\NewsItem.cs" />
+    <Compile Include="Domain\News\NewsSettings.cs" />
     <Compile Include="Domain\Localization\ILocalizedEnum.cs" />
     <Compile Include="Domain\Logging\ActivityLog.cs" />
     <Compile Include="Domain\Logging\ActivityLogType.cs" />

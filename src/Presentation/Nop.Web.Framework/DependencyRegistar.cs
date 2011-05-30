@@ -35,6 +35,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
@@ -180,6 +181,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerHttpRequest();
 
             builder.RegisterType<BlogService>().As<IBlogService>().InstancePerHttpRequest();
+            builder.RegisterType<NewsService>().As<INewsService>().InstancePerHttpRequest();
 
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
 

@@ -52,6 +52,8 @@
     <Compile Include="Mapping\Common\AddressMap.cs" />
     <Compile Include="Mapping\Blogs\BlogPostMap.cs" />
     <Compile Include="Mapping\Blogs\BlogCommentMap.cs" />
+    <Compile Include="Mapping\News\NewsCommentMap.cs" />
+    <Compile Include="Mapping\News\NewsItemMap.cs" />
     <Compile Include="Mapping\Customers\CustomerAttributeMap.cs" />
     <Compile Include="Mapping\Customers\CustomerRoleMap.cs" />
     <Compile Include="Mapping\Customers\RewardPointsHistoryMap.cs" />

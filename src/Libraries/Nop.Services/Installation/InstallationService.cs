@@ -24,6 +24,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
@@ -69,6 +70,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
+        private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
 
@@ -101,6 +103,7 @@ namespace Nop.Services.Installation
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<Discount> discountRepository,
             IRepository<BlogPost> blogPostRepository,
+            IRepository<NewsItem> newsItemRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<ActivityLogType> activityLogTypeRepository)
         {
@@ -134,6 +137,7 @@ namespace Nop.Services.Installation
 
             this._discountRepository = discountRepository;
             this._blogPostRepository = blogPostRepository;
+            this._newsItemRepository = newsItemRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
@@ -1840,7 +1844,7 @@ namespace Nop.Services.Installation
                                              Title = "Online Discount Coupons",
                                              Body = "<p>Online discount coupons enable access to great offers from some of the world&rsquo;s best sites for Internet shopping. The online coupons are designed to allow compulsive online shoppers to access massive discounts on a variety of products. The regular shopper accesses the coupons in bulk and avails of great festive offers and freebies thrown in from time to time.  The coupon code option is most commonly used when using a shopping cart. The coupon code is entered on the order page just before checking out. Every online shopping resource has a discount coupon submission option to confirm the coupon code. The dedicated web sites allow the shopper to check whether or not a discount is still applicable. If it is, the sites also enable the shopper to calculate the total cost after deducting the coupon amount like in the case of grocery coupons.  Online discount coupons are very convenient to use. They offer great deals and professionally negotiated rates if bought from special online coupon outlets. With a little research and at times, insider knowledge the online discount coupons are a real steal. They are designed to promote products by offering &lsquo;real value for money&rsquo; packages. The coupons are legitimate and help with budgeting, in the case of a compulsive shopper. They are available for special trade show promotions, nightlife, sporting events and dinner shows and just about anything that could be associated with the promotion of a product. The coupons enable the online shopper to optimize net access more effectively. Getting a &lsquo;big deal&rsquo; is not more utopian amidst rising prices. The online coupons offer internet access to the best and cheapest products displayed online. Big discounts are only a code away! By Gaynor Borade (buzzle.com)</p>",
                                              Tags = "e-commerce, money",
-                                             CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
+                                             CreatedOnUtc = DateTime.UtcNow,
                                         },
                                     new BlogPost
                                         {
@@ -1856,6 +1860,35 @@ namespace Nop.Services.Installation
 
         }
 
+        protected virtual void InstallNews()
+        {
+            var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+            var news = new List<NewsItem>
+                                {
+                                    new NewsItem
+                                        {
+                                             AllowComments = true,
+                                             LanguageId = defaultLanguage.Id,
+                                             Title = "nopCommerce new release!",
+                                             Short = "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!<br /><br />nopCommerce is a fully customizable shopping cart. It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
+                                             Full = "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p><p>For full feature list go to <a href=\"http://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
+                                             Published  = true,
+                                             CreatedOnUtc = DateTime.UtcNow,
+                                        },
+                                    new NewsItem
+                                        {
+                                             AllowComments = true,
+                                             LanguageId = defaultLanguage.Id,
+                                             Title = "New online store is open!",
+                                             Short = "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.",
+                                             Full = "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
+                                             Published  = true,
+                                             CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
+                                        },
+                                };
+            news.ForEach(n => _newsItemRepository.Insert(n));
+
+        }
         protected virtual void InstallActivityLogTypes()
         {
             var activityLogTypes = new List<ActivityLogType>()
@@ -1909,6 +1942,7 @@ namespace Nop.Services.Installation
                 InstallForums();
                 InstallDiscounts();
                 InstallBlogPosts();
+                InstallNews();
             }
         }
 

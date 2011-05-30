@@ -37,7 +37,7 @@ namespace Nop.Core.Domain.Blogs
         public virtual string Tags { get; set; }
 
         /// <summary>
-        /// Gets or sets the date and time of product creation
+        /// Gets or sets the date and time of entity creation
         /// </summary>
         public virtual DateTime CreatedOnUtc { get; set; }
 
@@ -51,7 +51,7 @@ namespace Nop.Core.Domain.Blogs
         }
         
         /// <summary>
-        /// Gets or sets the blog post
+        /// Gets or sets the language
         /// </summary>
         public virtual Language Language { get; set; }
 

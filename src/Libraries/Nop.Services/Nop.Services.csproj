@@ -85,6 +85,8 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
+    <Compile Include="News\NewsService.cs" />
+    <Compile Include="News\INewsService.cs" />
     <Compile Include="Customers\CustomerExtentions.cs" />
     <Compile Include="Directory\UpdateExchangeRateTask.cs" />
     <Compile Include="Directory\IExchangeRateProvider.cs" />
