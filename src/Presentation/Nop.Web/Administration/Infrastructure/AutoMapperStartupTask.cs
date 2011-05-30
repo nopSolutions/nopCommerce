@@ -11,6 +11,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
@@ -139,6 +140,11 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<BlogSettings, BlogSettingsModel>();
             Mapper.CreateMap<BlogPost, BlogPostModel>();
             Mapper.CreateMap<BlogPostModel, BlogPost>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+            //news
+            ViceVersa<NewsSettings, NewsSettingsModel>();
+            Mapper.CreateMap<NewsItem, NewsItemModel>();
+            Mapper.CreateMap<NewsItemModel, NewsItem>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
             //customer roles
             ViceVersa<CustomerRole, CustomerRoleModel>();

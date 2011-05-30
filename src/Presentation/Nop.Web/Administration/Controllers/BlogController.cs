@@ -54,7 +54,7 @@ namespace Nop.Admin.Controllers
 
         [NonAction]
         private void PrepareBlogCommentModel(BlogCommentModel model,
-            BlogComment blogComment, bool excludeProperties)
+            BlogComment blogComment)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -211,21 +211,21 @@ namespace Nop.Admin.Controllers
 
         #region Comments
 
-        public ActionResult Comments(int? blogPostId)
+        public ActionResult Comments(int? filterByBlogPostId)
         {
-            ViewBag.BlogPostId = blogPostId;
+            ViewBag.FilterByBlogPostId = filterByBlogPostId;
             var model = new GridModel<BlogCommentModel>();
             return View(model);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Comments(int? blogPostId, GridCommand command)
+        public ActionResult Comments(int? filterByBlogPostId, GridCommand command)
         {
             IList<BlogComment> comments;
-            if (blogPostId.HasValue)
+            if (filterByBlogPostId.HasValue)
             {
                 //filter comments by blog
-                var blogPost = _blogService.GetBlogPostById(blogPostId.Value);
+                var blogPost = _blogService.GetBlogPostById(filterByBlogPostId.Value);
                 comments = blogPost.BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
             }
             else
@@ -239,7 +239,7 @@ namespace Nop.Admin.Controllers
                 Data = comments.PagedForCommand(command).Select(x =>
                 {
                     var m = new BlogCommentModel();
-                    PrepareBlogCommentModel(m, x, false);
+                    PrepareBlogCommentModel(m, x);
                     return m;
                 }),
                 Total = comments.Count,
@@ -251,7 +251,7 @@ namespace Nop.Admin.Controllers
         }
         
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult CommentDelete(int? blogPostId, int id, GridCommand command)
+        public ActionResult CommentDelete(int? filterByBlogPostId, int id, GridCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -262,7 +262,7 @@ namespace Nop.Admin.Controllers
             var comment = _customerContentService.GetCustomerContentById(id);
             _customerContentService.DeleteCustomerContent(comment);
 
-            return Comments(blogPostId, command);
+            return Comments(filterByBlogPostId, command);
         }
 
 

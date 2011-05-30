@@ -35,6 +35,11 @@
           <siteMapNode title="Promotion feeds" nopResource="Admin.Promotions.Feeds" controller="PromotionFeed" action="List" />
         </siteMapNode>
         <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement">
+          <siteMapNode title="News" nopResource="Admin.ContentManagement.News">
+            <siteMapNode title="News settings" nopResource="Admin.ContentManagement.News.Settings" controller="News" action="Settings" />
+            <siteMapNode title="News items" nopResource="Admin.ContentManagement.News.NewsItems" controller="News" action="List" />
+            <siteMapNode title="News comments" nopResource="Admin.ContentManagement.News.Comments" controller="News" action="Comments"/>
+          </siteMapNode>
           <siteMapNode title="Blog" nopResource="Admin.ContentManagement.Blog">
             <siteMapNode title="Blog settings" nopResource="Admin.ContentManagement.Blog.Settings" controller="Blog" action="Settings" />
             <siteMapNode title="Blog posts" nopResource="Admin.ContentManagement.Blog.BlogPosts" controller="Blog" action="List" />

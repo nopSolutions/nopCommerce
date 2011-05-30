@@ -7,6 +7,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.News;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework
@@ -77,7 +78,7 @@ namespace Nop.Web.Framework
 
         #endregion
 
-        #region 
+        #region Blog / news
 
         /// <summary>
         /// Gets blog post SE (search engine) name
@@ -89,6 +90,19 @@ namespace Nop.Web.Framework
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost");
             string seName = GetSeName(blogPost.Title);
+            return seName;
+        }
+
+        /// <summary>
+        /// Gets news item SE (search engine) name
+        /// </summary>
+        /// <param name="newsItem">News item</param>
+        /// <returns>News item SE (search engine) name</returns>
+        public static string GetSeName(this NewsItem newsItem)
+        {
+            if (newsItem == null)
+                throw new ArgumentNullException("newsItem");
+            string seName = GetSeName(newsItem.Title);
             return seName;
         }
 

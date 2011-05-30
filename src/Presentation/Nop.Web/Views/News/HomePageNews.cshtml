@@ -1,0 +1,46 @@
+﻿@model NewsItemListModel
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Infrastructure
+@using Nop.Services.Catalog
+@using Nop.Web.Models.News
+@if (Model.NewsItems.Count > 0)
+{
+    <div class="newslist">
+        <div class="title">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="text-align: left; vertical-align: middle;">
+                        @T("News")
+                    </td>
+                    <td style="text-align: right; vertical-align: middle;">
+                        <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })">
+                            <img title="@T("News.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("News.RSS")" style="border-width:0px;" /></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="newsitems">
+            @foreach (var item in Model.NewsItems)
+            {
+                <div class="item">
+                    <a class="newstitle" href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })">
+                        @item.Title</a> <span class="newsdate">-
+                            @item.CreatedOn.ToString("D")
+                        </span>
+                    <div class="newsdetails">
+                        @Html.Raw(item.Short)
+                    </div>
+                    <a href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })" class="readmore">
+                        @T("News.MoreInfo")</a>
+                </div>
+            }
+            <div class="viewall">
+                <a href="@Url.RouteUrl("NewsArchive")">
+                    @T("News.ViewAll")</a>
+            </div>
+        </div>
+    </div>
+
+}

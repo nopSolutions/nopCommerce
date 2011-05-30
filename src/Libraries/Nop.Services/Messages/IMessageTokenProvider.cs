@@ -11,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
@@ -45,6 +46,8 @@ namespace Nop.Services.Messages
         void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview);
 
         void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment);
+
+        void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment);
 
         void AddProductTokens(IList<Token> tokens, Product product);
 

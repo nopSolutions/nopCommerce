@@ -16,6 +16,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
@@ -633,6 +634,41 @@ namespace Nop.Admin
         }
 
         public static BlogPost ToEntity(this BlogPostModel model, BlogPost destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region News
+        //News settings
+        public static NewsSettingsModel ToModel(this NewsSettings entity)
+        {
+            return AutoMapper.Mapper.Map<NewsSettings, NewsSettingsModel>(entity);
+        }
+
+        public static NewsSettings ToEntity(this NewsSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<NewsSettingsModel, NewsSettings>(model);
+        }
+
+        public static NewsSettings ToEntity(this NewsSettingsModel model, NewsSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        //news items
+        public static NewsItemModel ToModel(this NewsItem entity)
+        {
+            return AutoMapper.Mapper.Map<NewsItem, NewsItemModel>(entity);
+        }
+
+        public static NewsItem ToEntity(this NewsItemModel model)
+        {
+            return AutoMapper.Mapper.Map<NewsItemModel, NewsItem>(model);
+        }
+
+        public static NewsItem ToEntity(this NewsItemModel model, NewsItem destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }

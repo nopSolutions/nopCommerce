@@ -1,10 +1,10 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.BlogPostModel>
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.NewsItemModel>
 @using Telerik.Web.Mvc.UI
 @using Nop.Web.Framework
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
-        @T("Admin.ContentManagement.Blog.BlogPosts")
+        @T("Admin.ContentManagement.News.NewsItems")
     </div>
     <div class="options">
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
@@ -13,8 +13,8 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.BlogPostModel>()
-                    .Name("blogpost-grid")
+            @(Html.Telerik().Grid<Nop.Admin.Models.NewsItemModel>()
+                    .Name("newsitem-grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
@@ -25,10 +25,14 @@
                             .Centered()
                             .Template(
                             @<div>
-                                    @Html.ActionLink(T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - " + @item.Comments, "Comments", new { filterByBlogPostId = @item.Id })
+                                    @Html.ActionLink(T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text + " - " + @item.Comments, "Comments", new { filterByNewsItemId = @item.Id })
                                 </div>
                             )
-                            .ClientTemplate("<div><a href=\"Comments?filterByBlogPostId=<#= Id #>\">" + T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - <#= Comments #>" + "</a></div>");
+                            .ClientTemplate("<div><a href=\"Comments?filterByNewsItemId=<#= Id #>\">" + T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text + " - <#= Comments #>" + "</a></div>");
+                        columns.Bound(x => x.Published)
+                            .Width(100)
+                            .Template(x => x.Published.ToString().ToLower())
+                            .Centered();
                         columns.Bound(x => x.CreatedOn)
                             .Width(150)
                             .Centered();
@@ -41,7 +45,7 @@
                             .Filterable(false);
                     })
                     .Pageable(settings => settings.Total(Model.Total).PageSize(10))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Blog"))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "News"))
                     .EnableCustomBinding(true))
         </td>
     </tr>

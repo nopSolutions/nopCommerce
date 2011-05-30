@@ -1,0 +1,18 @@
+﻿@model Nop.Admin.Models.NewsItemModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
+            @T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails") - @Model.Title @Html.ActionLink("(" + T("Admin.ContentManagement.News.NewsItems.BackToList") + ")", "List")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+            <span id="newsitem-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}
+@Html.DeleteConfirmation("newsitem-delete")

@@ -1,13 +1,13 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.BlogCommentModel>
+﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.NewsCommentModel>
 @using Telerik.Web.Mvc.UI
 @using Nop.Web.Framework
 @{
-    int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
+    int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
 }
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
-        @T("Admin.ContentManagement.Blog.Comments")
+        @T("Admin.ContentManagement.News.Comments")
     </div>
     <div class="options">
     </div>
@@ -15,7 +15,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.BlogCommentModel>(Model.Data)
+            @(Html.Telerik().Grid<Nop.Admin.Models.NewsCommentModel>(Model.Data)
                     .Name("comments-grid")
                     .DataKeys(x => {
                         x.Add(y => y.Id).RouteKey("Id");
@@ -24,15 +24,18 @@
                     {
                         columns.Bound(x => x.Id)
                             .Width(50);
-                        columns.Bound(x => x.BlogPostTitle)
+                        columns.Bound(x => x.NewsItemTitle)
                             .Width(200)
-                            .Template(x => Html.ActionLink(x.BlogPostTitle, "Edit", "Blog", new { id = x.BlogPostId }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/Blog/Edit/<#= BlogPostId #>\"><#= BlogPostTitle #></a>");
+                            .Template(x => Html.ActionLink(x.NewsItemTitle, "Edit", "News", new { id = x.NewsItemId }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/News/Edit/<#= NewsItemId #>\"><#= NewsItemTitle #></a>");
                         columns.Bound(x => x.CustomerId)
                             .Width(50)
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
                             .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
-                        columns.Bound(x => x.Comment)
+                        columns.Bound(x => x.CommentTitle)
+                            .Width(150)
+                            .Centered();
+                        columns.Bound(x => x.CommentText)
                             .Width(350)
                             .Encoded(false)
                             .Centered();
@@ -50,15 +53,15 @@
                     .Pageable(settings => settings.Total(Model.Total).PageSize(10))
                     .DataBinding(dataBinding => {
                         var settingBuilder = dataBinding.Ajax();
-                        if (filterByBlogPostId.HasValue)
+                        if (filterByNewsItemId.HasValue)
                         {
-                            settingBuilder = settingBuilder.Select("Comments", "Blog", new { filterByBlogPostId = filterByBlogPostId.Value });
-                            settingBuilder = settingBuilder.Delete("CommentDelete", "Blog", new { filterByBlogPostId = filterByBlogPostId.Value });
+                            settingBuilder = settingBuilder.Select("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
+                            settingBuilder = settingBuilder.Delete("CommentDelete", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
                         }
                         else
                         {
-                            settingBuilder = settingBuilder.Select("Comments", "Blog");
-                            settingBuilder = settingBuilder.Delete("CommentDelete", "Blog");
+                            settingBuilder = settingBuilder.Select("Comments", "News");
+                            settingBuilder = settingBuilder.Delete("CommentDelete", "News");
                         }
                     })
                     .EnableCustomBinding(true))

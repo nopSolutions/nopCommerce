@@ -1,0 +1,272 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Nop.Admin.Models;
+using Nop.Core;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.News;
+using Nop.Services.Configuration;
+using Nop.Services.Customers;
+using Nop.Services.Helpers;
+using Nop.Services.Localization;
+using Nop.Services.News;
+using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
+using Telerik.Web.Mvc;
+using Telerik.Web.Mvc.UI;
+
+namespace Nop.Admin.Controllers
+{
+	[AdminAuthorize]
+    public class NewsController : BaseNopController
+	{
+		#region Fields
+
+        private readonly INewsService _newsService;
+        private readonly ILanguageService _languageService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ISettingService _settingService;
+        private readonly ICustomerContentService _customerContentService;
+
+        private NewsSettings _newsSettings;
+
+		#endregion Fields 
+
+		#region Constructors
+
+        public NewsController(INewsService newsService, ILanguageService languageService,
+            IDateTimeHelper dateTimeHelper, ISettingService settingService,
+            ICustomerContentService customerContentService, NewsSettings newsSettings)
+        {
+            this._newsService = newsService;
+            this._languageService = languageService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._settingService = settingService;
+            this._customerContentService = customerContentService;
+            this._newsSettings = newsSettings;
+		}
+
+		#endregion Constructors 
+        
+        #region Utilities
+
+        [NonAction]
+        private void PrepareNewsCommentModel(NewsCommentModel model,
+            NewsComment newsComment)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (newsComment == null)
+                throw new ArgumentNullException("newsComment");
+
+            model.Id = newsComment.Id;
+            model.NewsItemId = newsComment.NewsItemId;
+            model.NewsItemTitle = newsComment.NewsItem.Title;
+            model.CustomerId = newsComment.CustomerId;
+            model.IpAddress = newsComment.IpAddress;
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CommentTitle = newsComment.CommentTitle;
+            model.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
+        }
+
+        #endregion
+
+        #region Settings
+
+        public ActionResult Settings()
+        {
+            var model = _newsSettings.ToModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Settings(NewsSettingsModel model)
+        {
+            _newsSettings = model.ToEntity(_newsSettings);
+            _settingService.SaveSetting(_newsSettings);
+            return RedirectToAction("Settings");
+        }
+
+        #endregion
+
+        #region News items
+
+        public ActionResult Index()
+        {
+            return RedirectToAction("List");
+        }
+
+        public ActionResult List()
+        {
+            var news = _newsService.GetAllNews(0, null, null, 0, 10, true);
+            var gridModel = new GridModel<NewsItemModel>
+            {
+                Data = news.Select(x =>
+                {
+                    var m = x.ToModel();
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    m.LanguageName = x.Language.Name;
+                    m.Comments = x.NewsComments.Count;
+                    return m;
+                }),
+                Total = news.TotalCount
+            };
+            return View(gridModel);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult List(GridCommand command)
+        {
+            var news = _newsService.GetAllNews(0, null, null, command.Page - 1, command.PageSize, true);
+            var gridModel = new GridModel<NewsItemModel>
+            {
+                Data = news.Select(x =>
+                {
+                    var m = x.ToModel();
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    m.LanguageName = x.Language.Name;
+                    m.Comments = x.NewsComments.Count;
+                    return m;
+                }),
+                Total = news.TotalCount
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        public ActionResult Create()
+        {
+            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            var model = new NewsItemModel();
+            return View(model);
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Create(NewsItemModel model, bool continueEditing)
+        {
+            //decode body
+            model.Full = HttpUtility.HtmlDecode(model.Full);
+
+            if (ModelState.IsValid)
+            {
+                var newsItem = model.ToEntity();
+                newsItem.CreatedOnUtc = DateTime.UtcNow;
+                _newsService.InsertNews(newsItem);
+                return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            return View(model);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var newsItem = _newsService.GetNewsById(id);
+            if (newsItem == null)
+                throw new ArgumentException("No news item found with the specified id", "id");
+
+            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            var model = newsItem.ToModel();
+            return View(model);
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult Edit(NewsItemModel model, bool continueEditing)
+        {
+            var newsItem = _newsService.GetNewsById(model.Id);
+            if (newsItem == null)
+                throw new ArgumentException("No news item found with the specified id");
+
+            //decode body
+            model.Full = HttpUtility.HtmlDecode(model.Full);
+
+            if (ModelState.IsValid)
+            {
+                newsItem = model.ToEntity(newsItem);
+                _newsService.UpdateNews(newsItem);
+                return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var newsItem = _newsService.GetNewsById(id);
+            if (newsItem == null)
+                throw new ArgumentException("No news item found with the specified id", "id");
+            _newsService.DeleteNews(newsItem);
+            return RedirectToAction("List");
+        }
+
+        #endregion
+
+        #region Comments
+
+        public ActionResult Comments(int? filterByNewsItemId)
+        {
+            ViewBag.FilterByNewsItemId = filterByNewsItemId;
+            var model = new GridModel<NewsCommentModel>();
+            return View(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult Comments(int? filterByNewsItemId, GridCommand command)
+        {
+            IList<NewsComment> comments;
+            if (filterByNewsItemId.HasValue)
+            {
+                //filter comments by news item
+                var newsItem = _newsService.GetNewsById(filterByNewsItemId.Value);
+                comments = newsItem.NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
+            }
+            else
+            {
+                //load all news comments
+                comments = _customerContentService.GetAllCustomerContent<NewsComment>(0, null);
+            }
+
+            var gridModel = new GridModel<NewsCommentModel>
+            {
+                Data = comments.PagedForCommand(command).Select(x =>
+                {
+                    var m = new NewsCommentModel();
+                    PrepareNewsCommentModel(m, x);
+                    return m;
+                }),
+                Total = comments.Count,
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult CommentDelete(int? filterByNewsItemId, int id, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var comment = _customerContentService.GetCustomerContentById(id);
+            _customerContentService.DeleteCustomerContent(comment);
+
+            return Comments(filterByNewsItemId, command);
+        }
+
+
+        #endregion
+    }
+}

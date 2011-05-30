@@ -1364,6 +1364,64 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="News">
+    <Value>News</Value>
+    <Children>
+      <LocaleResource Name="Archive">
+        <Value>News archive</Value>
+      </LocaleResource>
+      <LocaleResource Name="Comments">
+        <Value>Comments</Value>
+        <Children>
+          <LocaleResource Name="CommentText">
+            <Value>Title</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Enter comment title</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="CommentTitle">
+            <Value>Comment</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Enter comment text</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="CreatedOn">
+            <Value>Created on</Value>
+          </LocaleResource>
+          <LocaleResource Name="LeaveYourComment">
+            <Value>Leave your comment</Value>
+          </LocaleResource>
+          <LocaleResource Name="OnlyRegisteredUsersLeaveComments">
+            <Value>Only registered users can leave comments.</Value>
+          </LocaleResource>
+          <LocaleResource Name="SubmitButton">
+            <Value>New comment</Value>
+          </LocaleResource>
+          <LocaleResource Name="SuccessfullyAdded">
+            <Value>News comment is successfully added.</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="MoreInfo">
+        <Value>details</Value>
+      </LocaleResource>
+      <LocaleResource Name="RSS">
+        <Value>RSS</Value>
+        <Children>
+          <LocaleResource Name="Hint">
+            <Value>Click here to be informed automatically when we add new items to our site</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="ViewAll">
+        <Value>[View News Archive]</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Newsletter">
     <Children>
       <LocaleResource Name="Email">

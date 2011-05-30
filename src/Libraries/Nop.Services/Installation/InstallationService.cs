@@ -1166,8 +1166,18 @@ namespace Nop.Services.Installation
                 {
                     Enabled = true,
                     PostsPageSize = 10,
-                    AllowNotRegisteredUsersToLeaveComments = false,
+                    AllowNotRegisteredUsersToLeaveComments = true,
                     NotifyAboutNewBlogComments = false
+                });
+            EngineContext.Current.Resolve<IConfigurationProvider<NewsSettings>>()
+                .SaveSettings(new NewsSettings()
+                {
+                    Enabled = true,
+                    AllowNotRegisteredUsersToLeaveComments = true,
+                    NotifyAboutNewNewsComments = false,
+                    ShowNewsOnMainPage = true,
+                    MainPageNewsCount = 3,
+                    NewsArchivePageSize = 10,
                 });
             EngineContext.Current.Resolve<IConfigurationProvider<ForumSettings>>()
                 .SaveSettings(new ForumSettings()

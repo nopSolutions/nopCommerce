@@ -11,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
@@ -513,6 +514,11 @@ namespace Nop.Services.Messages
         public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
         {
             tokens.Add(new Token("BlogComment.BlogPostTitle", HttpUtility.HtmlEncode(blogComment.BlogPost.Title)));
+        }
+
+        public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
+        {
+            tokens.Add(new Token("NewsComment.NewsTitle", HttpUtility.HtmlEncode(newsComment.NewsItem.Title)));
         }
 
         public virtual void AddProductTokens(IList<Token> tokens, Product product)

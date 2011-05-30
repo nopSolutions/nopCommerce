@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -220,6 +221,14 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId);
+
+        /// <summary>
+        /// Sends a news comment notification message to a store owner
+        /// </summary>
+        /// <param name="newsComment">News comment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId);
 
         #endregion
     }

@@ -3402,6 +3402,176 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="News">
+                  <Value>News</Value>
+                  <Children>
+                    <LocaleResource Name="Comments">
+                      <Value>News comments</Value>
+                      <Children>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="NewsItem">
+                              <Value>News item</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Customer">
+                              <Value>Customer</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="IPAddress">
+                              <Value>IP Address</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="CommentTitle">
+                              <Value>Comment title</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="CommentText">
+                              <Value>Comment text</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="CreatedOn">
+                              <Value>Created on</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="NewsItems">
+                      <Value>News items</Value>
+                      <Children>
+                        <LocaleResource Name="AddNew">
+                          <Value>Add a new news item</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="BackToList">
+                          <Value>back to news item list</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="EditNewsItemDetails">
+                          <Value>Edit news item details</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Language">
+                              <Value>Language</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The language of this news entry. A customer will only see the news entries for their selected language.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Title">
+                              <Value>Title</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The title of this news entry.</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Required">
+                                  <Value>Title is required.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Short">
+                              <Value>Short description</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The short description of this news entry.</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Required">
+                                  <Value>Short description is required.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Full">
+                              <Value>Full description</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The full description of this news entry.</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Required">
+                                  <Value>Full description is required.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="AllowComments">
+                              <Value>Allow comments</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>When checked, customers can leave comments about your news entry.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Published">
+                              <Value>Published</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Determines whether the news item is published (visible) in your store.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="CreatedOn">
+                              <Value>Created on</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Comments">
+                              <Value>View comments</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Settings">
+                      <Value>News settings</Value>
+                      <Children>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Enabled">
+                              <Value>News enabled</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Check to enable the news in your store.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="AllowNotRegisteredUsersToLeaveComments">
+                              <Value>Allow not registered users to leave comments</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Check to allow not registered users to leave comments.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="NotifyAboutNewNewsComments">
+                              <Value>Notify about new news comments</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Check to notify store owner about new news comments.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="ShowNewsOnMainPage">
+                              <Value>Show on home page</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Check to display your news items on your store home page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="MainPageNewsCount">
+                              <Value>Number of items to display</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The number of news items to display on your home page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="NewsArchivePageSize">
+                              <Value>News archive page size</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>A number of news displayed on one page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
             </Children>
             </LocaleResource>
             <LocaleResource Name="Customers">

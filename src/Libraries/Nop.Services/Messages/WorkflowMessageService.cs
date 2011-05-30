@@ -7,6 +7,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
@@ -165,6 +166,15 @@ namespace Nop.Services.Messages
             return tokens;
         }
 
+        private IList<Token> GenerateTokens(NewsComment newsComment)
+        {
+            var tokens = new List<Token>();
+
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddNewsCommentTokens(tokens, newsComment);
+
+            return tokens;
+        }
         private IList<Token> GenerateTokens(ProductVariant productVariant)
         {
             var tokens = new List<Token>();
@@ -840,6 +850,33 @@ namespace Nop.Services.Messages
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
                 languageId, blogCommentTokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends a news comment notification message to a store owner
+        /// </summary>
+        /// <param name="newsComment">News comment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId)
+        {
+            if (newsComment == null)
+                throw new ArgumentNullException("newsComment");
+
+            languageId = EnsureLanguageIsActive(languageId);
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("News.NewsComment", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var newsCommentTokens = GenerateTokens(newsComment);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, newsCommentTokens,
                 toEmail, toName);
         }
 

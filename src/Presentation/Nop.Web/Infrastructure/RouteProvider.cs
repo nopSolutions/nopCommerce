@@ -227,6 +227,22 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
 
 
+            //news
+            routes.MapRoute("NewsArchive",
+                            "news",
+                            new { controller = "News", action = "List" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("NewsRSS",
+                            "news/rss/{languageId}",
+                            new { controller = "News", action = "ListRss" },
+                            new { languageId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("NewsItem",
+                            "news/{newsItemId}/{SeName}",
+                            new { controller = "News", action = "NewsItem", SeName = UrlParameter.Optional },
+                            new { newsItemId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
         }
 
         public int Priority

@@ -11,6 +11,11 @@ namespace Nop.Core.Domain.News
     public partial class NewsComment : CustomerContent
     {
         /// <summary>
+        /// Gets or sets the comment title
+        /// </summary>
+        public string CommentTitle { get; set; }
+
+        /// <summary>
         /// Gets or sets the comment text
         /// </summary>
         public string CommentText { get; set; }

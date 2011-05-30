@@ -14,6 +14,7 @@ namespace Nop.Data.Mapping.News
             //this.HasKey(pr => pr.Id);
 
             this.Property(nc => nc.CommentText).IsMaxLength();
+            this.Property(nc => nc.CommentTitle).IsMaxLength();
 
             this.HasRequired(nc => nc.NewsItem)
                 .WithMany(n => n.NewsComments)
