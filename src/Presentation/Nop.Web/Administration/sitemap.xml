@@ -75,8 +75,10 @@
           <siteMapNode title="SMS Providers" nopResource="Admin.Configuration.SMSProviders" controller="SMS" action="Providers"/>
           <siteMapNode title="Settings" nopResource="Admin.Configuration.Settings">
             <siteMapNode title="Catalog settings" nopResource="Admin.Configuration.Settings.Catalog" controller="Setting" action="Catalog"/>
+            <siteMapNode title="Customer and user settings" nopResource="Admin.Configuration.Settings.CustomerUser" controller="Setting" action="CustomerUser" />
             <siteMapNode title="Shopping cart settings" nopResource="Admin.Configuration.Settings.ShoppingCart" controller="Setting" action="ShoppingCart"/>
             <siteMapNode title="Order settings" nopResource="Admin.Configuration.Settings.Order" controller="Setting" action="Order"/>
+            <siteMapNode title="Media settings" nopResource="Admin.Configuration.Settings.Media" controller="Setting" action="Media" />
             <siteMapNode title="Tax settings" nopResource="Admin.Configuration.Settings.Tax" controller="Setting" action="Tax"/>
             <siteMapNode title="Shipping settings" nopResource="Admin.Configuration.Settings.Shipping" controller="Setting" action="Shipping"/>
             <siteMapNode title="Reward points" nopResource="Admin.Configuration.Settings.RewardPoints" controller="Setting" action="RewardPoints"/>

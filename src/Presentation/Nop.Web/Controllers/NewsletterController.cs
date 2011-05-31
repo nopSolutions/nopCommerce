@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -17,11 +18,12 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
 
         private readonly CommonSettings _commonSettings;
+        private readonly CustomerSettings _customerSettings;
 
         public NewsletterController(ILocalizationService localizationService,
             IWorkContext workContext, INewsLetterSubscriptionService newsLetterSubscriptionService,
             IWorkflowMessageService workflowMessageService,
-            CommonSettings commonSettings)
+            CommonSettings commonSettings, CustomerSettings customerSettings)
         {
             this._localizationService = localizationService;
             this._workContext = workContext;
@@ -29,15 +31,16 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
 
             this._commonSettings = commonSettings;
+            this._customerSettings = customerSettings;
         }
 
         [ChildActionOnly]
         public ActionResult NewsletterBox()
         {
-            return PartialView(new NewsletterBoxModel()
-                {
-                    NewsletterBoxEnabled = !_commonSettings.HideNewsletterBox
-                });
+            if (_customerSettings.HideNewsletterBlock)
+                return Content("");
+
+            return PartialView(new NewsletterBoxModel());
         }
 
         [HttpPost]
@@ -128,6 +131,5 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
-
     }
 }

@@ -42,7 +42,7 @@ namespace Nop.Admin.Controllers
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
 
-        #endregion Fields
+        #endregion
 
         #region Constructors
 

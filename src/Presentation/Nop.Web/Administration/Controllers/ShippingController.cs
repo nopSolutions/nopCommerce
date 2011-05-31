@@ -27,7 +27,7 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

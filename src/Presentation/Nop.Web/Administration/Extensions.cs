@@ -15,6 +15,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
@@ -825,6 +826,46 @@ namespace Nop.Admin
             return AutoMapper.Mapper.Map<ShoppingCartSettingsModel, ShoppingCartSettings>(model);
         }
         public static ShoppingCartSettings ToEntity(this ShoppingCartSettingsModel model, ShoppingCartSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static MediaSettingsModel ToModel(this MediaSettings entity)
+        {
+            return AutoMapper.Mapper.Map<MediaSettings, MediaSettingsModel>(entity);
+        }
+        public static MediaSettings ToEntity(this MediaSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<MediaSettingsModel, MediaSettings>(model);
+        }
+        public static MediaSettings ToEntity(this MediaSettingsModel model, MediaSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        //customer/user settings
+        public static CustomerUserSettingsModel.CustomerSettingsModel ToModel(this CustomerSettings entity)
+        {
+            return AutoMapper.Mapper.Map<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>(entity);
+        }
+        public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<CustomerUserSettingsModel.CustomerSettingsModel, CustomerSettings>(model);
+        }
+        public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model, CustomerSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+        public static CustomerUserSettingsModel.UserSettingsModel ToModel(this UserSettings entity)
+        {
+            return AutoMapper.Mapper.Map<UserSettings, CustomerUserSettingsModel.UserSettingsModel>(entity);
+        }
+        public static UserSettings ToEntity(this CustomerUserSettingsModel.UserSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<CustomerUserSettingsModel.UserSettingsModel, UserSettings>(model);
+        }
+        public static UserSettings ToEntity(this CustomerUserSettingsModel.UserSettingsModel model, UserSettings destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }

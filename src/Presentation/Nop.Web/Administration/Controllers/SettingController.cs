@@ -11,8 +11,10 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Blogs;
@@ -22,6 +24,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -41,6 +44,7 @@ namespace Nop.Admin.Controllers
         private readonly IAddressService _addressService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ICurrencyService _currencyService;
+        private readonly IPictureService _pictureService;
 
         private BlogSettings _blogSettings;
         private ForumSettings _forumSettings;
@@ -52,20 +56,25 @@ namespace Nop.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private OrderSettings _orderSettings;
         private ShoppingCartSettings _shoppingCartSettings;
+        private MediaSettings _mediaSettings;
+        private CustomerSettings _customerSettings;
+        private UserSettings _userSettings;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 
         public SettingController(ISettingService settingService,
             ICountryService countryService, IStateProvinceService stateProvinceService,
             IAddressService addressService, ITaxCategoryService taxCategoryService,
-            ICurrencyService currencyService, BlogSettings blogSettings,
+            ICurrencyService currencyService, IPictureService pictureService, 
+            BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
             CurrencySettings currencySettings, OrderSettings orderSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings, MediaSettings mediaSettings,
+            CustomerSettings customerSettings, UserSettings userSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -73,6 +82,7 @@ namespace Nop.Admin.Controllers
             this._addressService = addressService;
             this._taxCategoryService = taxCategoryService;
             this._currencyService = currencyService;
+            this._pictureService = pictureService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -84,6 +94,9 @@ namespace Nop.Admin.Controllers
             this._currencySettings = currencySettings;
             this._orderSettings = orderSettings;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._mediaSettings = mediaSettings;
+            this._customerSettings = customerSettings;
+            this._userSettings = userSettings;
         }
 
 		#endregion Constructors 
@@ -375,6 +388,53 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("ShoppingCart");
         }
 
+
+
+
+        public ActionResult Media()
+        {
+            var model = _mediaSettings.ToModel();
+            model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
+            return View(model);
+        }
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult Media(MediaSettingsModel model)
+        {
+            _mediaSettings = model.ToEntity(_mediaSettings);
+            _settingService.SaveSetting(_mediaSettings);
+            return RedirectToAction("Media");
+        }
+        [HttpPost, ActionName("Media")]
+        [FormValueRequired("change-picture-storage")]
+        public ActionResult ChangePictureStorage()
+        {
+            _pictureService.StoreInDb = !_pictureService.StoreInDb;
+            return RedirectToAction("Media");
+        }
+
+
+
+        public ActionResult CustomerUser()
+        {
+            //merge settings
+            var model = new CustomerUserSettingsModel();
+            model.CustomerSettings = _customerSettings.ToModel();
+            model.UserSettings = _userSettings.ToModel();
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult CustomerUser(CustomerUserSettingsModel model)
+        {
+            _customerSettings = model.CustomerSettings.ToEntity(_customerSettings);
+            _settingService.SaveSetting(_customerSettings);
+
+
+            _userSettings = model.UserSettings.ToEntity(_userSettings);
+            _settingService.SaveSetting(_userSettings);
+
+            return RedirectToAction("CustomerUser");
+        }
         #endregion
     }
 }

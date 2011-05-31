@@ -19,7 +19,7 @@ namespace Nop.Admin.Controllers
 		private readonly ILanguageService _languageService;
 		private ILocalizationService _localizationService;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

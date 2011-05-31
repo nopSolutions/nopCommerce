@@ -27,7 +27,7 @@ namespace Nop.Admin.Controllers
         private PaymentSettings _paymentSettings;
         private readonly ISettingService _settingService;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

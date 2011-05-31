@@ -26,7 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly ILogger _logger;
         private readonly IAuthenticationService _authenticationService;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

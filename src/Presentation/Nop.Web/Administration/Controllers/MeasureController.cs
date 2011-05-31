@@ -20,7 +20,7 @@ namespace Nop.Admin.Controllers
         private readonly MeasureSettings _measureSettings;
         private readonly ISettingService _settingService;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

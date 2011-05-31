@@ -34,7 +34,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly LocalizationSettings _localizationSettings;
 
-        #endregion Fields
+        #endregion
 
         #region Constructors
 

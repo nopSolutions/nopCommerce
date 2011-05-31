@@ -6,15 +6,11 @@ namespace Nop.Core.Domain.Customers
     public class CustomerSettings : ISettings
     {
         /// <summary>
-        /// Gets or sets a value indicating whether anonymous checkout allowed
-        /// </summary>
-        public bool AnonymousCheckoutAllowed { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to upload avatars.
         /// </summary>
         public bool AllowCustomersToUploadAvatars { get; set; }
 
+        //TODO move AvatarMaximumSizeBytes to MediaSettings class
         /// <summary>
         /// Gets or sets a maximum avatar size (in bytes)
         /// </summary>
@@ -76,8 +72,13 @@ namespace Nop.Core.Domain.Customers
         public bool CompanyEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Newsletter' is enabled
+        /// Gets or sets a value indicating whether 'Newsletter' form field is enabled
         /// </summary>
         public bool NewsletterEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to hide newsletter box
+        /// </summary>
+        public bool HideNewsletterBlock { get; set; }
     }
 }

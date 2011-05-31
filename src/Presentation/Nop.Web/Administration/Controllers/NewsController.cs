@@ -30,7 +30,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerContentService _customerContentService;
 
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

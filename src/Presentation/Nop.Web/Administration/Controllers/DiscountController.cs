@@ -31,7 +31,7 @@ namespace Nop.Admin.Controllers
         private readonly IWebHelper _webHelper;
         private readonly IDateTimeHelper _dateTimeHelper;
 
-        #endregion Fields
+        #endregion
 
         #region Constructors
 

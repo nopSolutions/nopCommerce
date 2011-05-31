@@ -15,7 +15,5 @@ namespace Nop.Web.Models.Newsletter
     public class NewsletterBoxModel : BaseNopModel
     {
         public string Email { get; set; }
-
-        public bool NewsletterBoxEnabled { get; set; }
     }
 }

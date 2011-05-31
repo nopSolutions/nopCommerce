@@ -15,7 +15,7 @@ namespace Nop.Admin.Controllers
 
 		private readonly ICustomerService _customerService;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

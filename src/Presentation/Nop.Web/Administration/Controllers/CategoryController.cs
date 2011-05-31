@@ -35,8 +35,9 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IExportManager _exportManager;
         private readonly IWorkContext _workContext;
-        #endregion Fields
 
+        #endregion
+        
         #region Constructors
 
         public CategoryController(ICategoryService categoryService, IManufacturerService manufacturerService,

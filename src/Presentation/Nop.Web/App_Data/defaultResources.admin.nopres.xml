@@ -1808,7 +1808,7 @@
             </LocaleResource>
             <LocaleResource Name="Configuration">
             <Value>Configuration</Value>
-            <Children>
+              <Children>
               <LocaleResource Name="EmailAccounts">
                 <Value>Email Accounts</Value>
                 <Children>
@@ -2795,6 +2795,139 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="CustomerUser">
+                    <Value>Customer and user settings</Value>
+                    <Children>
+                      <LocaleResource Name="AllowCustomersToUploadAvatars">
+                        <Value>Allow customers to upload avatars</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether customers are allowed to upload avatars.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DefaultAvatarEnabled">
+                        <Value>Default avatar enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether to display default user avatar.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowCustomersLocation">
+                        <Value>Show customers location</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether customers location is shown.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowCustomersJoinDate">
+                        <Value>Show customers join date</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether to show customers join date.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AllowViewingProfiles">
+                        <Value>Allow viewing customer profiles</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether to viewing profiles of customers are allowed.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="NotifyNewCustomerRegistration">
+                        <Value>Notify about new customer registration</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Notify the store owner when a new customer is registered.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="HideDownloadableProductsTab">
+                        <Value>Hide 'Downloadable products' tab</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to hide 'Downloadable products' tab on 'My account' page</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CustomerNameFormat">
+                        <Value>Customer name format</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Customer name format.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="GenderEnabled">
+                        <Value>'Gender' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set if 'Gender' is enabled.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DateOfBirthEnabled">
+                        <Value>'Date of Birth' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set if 'Date of Birth' is enabled.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CompanyEnabled">
+                        <Value>'Company' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set if 'Company' is enabled.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="NewsletterEnabled">
+                        <Value>'Newsletter' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set if 'Newsletter' is enabled</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="HideNewsletterBlock">
+                        <Value>Hide newsletter box</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want to hide the newsletter subscription box.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="UsernamesEnabled">
+                        <Value>'Usernames' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to use usernames for login/registration instead of emails. WARNING: not recommended to change in production environment.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AllowUsersToChangeUsernames">
+                        <Value>Allow customers to change their usernames</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether customers are allowed to change their usernames.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="UserRegistrationType">
+                        <Value>Registration method</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Determines customer registration method. Standard - mode where vistors can register and no approval is required. Email Validation - mode where user must respond to validation email that is sent to them before they are activated. Admin Approval - mode where vistors can register but admin approval is required. Disabled - mode where registration is disabled</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Forums">
                   <Value>Forums settings</Value>
                     <Children>
@@ -2896,6 +3029,95 @@
                         </LocaleResource>
                       </Children>
                 </LocaleResource>
+                  <LocaleResource Name="Media">
+                    <Value>Media settings</Value>
+                    <Children>
+                      <LocaleResource Name="PicturesStoredIntoDatabase">
+                        <Value>Pictures are stored into...</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A value indicating whether pictures are stored in database or file system.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Change">
+                            <Value>Change</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Database">
+                            <Value>database</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="FileSystem">
+                            <Value>file system</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Change">
+                            <Value>Change</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AvatarPictureSize">
+                        <Value>Avatar image size</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default size (pixels) for avatar images.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ProductThumbPictureSize">
+                        <Value>Product thumbnail image size</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default size (pixels) for product thumbnail images.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ProductDetailsPictureSize">
+                        <Value>Product detail image size</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default size (pixels) for product detail images.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ProductVariantPictureSize">
+                        <Value>Product variant detail image size</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default size (pixels) for product variant images.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CategoryThumbPictureSize">
+                        <Value>Category thumbnail image size</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default size (pixels) for product thumbnail images on category pages.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ManufacturerThumbPictureSize">
+                        <Value>Manufacturer thumbnail image size</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default size (pixels) for product thumbnail images on manufacturer pages.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CartThumbPictureSize">
+                        <Value>Cart/Wishlist thumbnail image size</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default size (pixels) for product thumbnail images on the shopping cart and wishlist.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MaximumImageSize">
+                        <Value>Maximum image size</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The maximum image size (longest side) allowed for image uploads.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="News">
                   <Value>News settings</Value>
                     <Children>
@@ -3553,7 +3775,7 @@
                 </Children>
               </LocaleResource>
             </Children>
-          </LocaleResource>
+            </LocaleResource>
             <LocaleResource Name="ContentManagement">
             <Value>Content Management</Value>
               <Children>

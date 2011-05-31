@@ -1,42 +1,40 @@
 ﻿@model NewsletterBoxModel
 @using Nop.Web.Framework
 @using Nop.Web.Models.Newsletter
-@if (Model.NewsletterBoxEnabled)
-{
-    <div class="block block-newsletter">
-        <div class="title">
-            @T("Newsletter.Title")
-        </div>
-        <div class="clear">
-        </div>
-        <div class="listbox">
-            @using (Html.BeginForm())
-            {
-                <div id="pnl-newsletter-subscribe">
-                    @T("Newsletter.Email"):
-                    @Html.TextBoxFor(x => x.Email)
-                    @Html.ValidationMessageFor(x => x.Email)
-                    <div class="options">
-                        <input id="newsletter-subscribe" type="radio" name="newsletter-subscribe" value="newsletter-subscribe"
-                            checked="checked" />
-                        <label for="newsletter-subscribe">@T("Newsletter.Subscribe")</label>
-                        <input id="newsletter-unsubscribe" type="radio" name="newsletter-subscribe" value="newsletter-unsubscribe" />
-                        <label for="newsletter-nusubscribe">@T("Newsletter.Unsubscribe")</label>
-                    </div>
-                    <div class="clear">
-                    </div>
-                    <div class="buttons">
-                        <input type="submit" name="newsletter-subscribe-button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="newsletterbox-subscribebutton" />
-                    </div>
+<div class="block block-newsletter">
+    <div class="title">
+        @T("Newsletter.Title")
+    </div>
+    <div class="clear">
+    </div>
+    <div class="listbox">
+        @using (Html.BeginForm())
+        {
+            <div id="pnl-newsletter-subscribe">
+                @T("Newsletter.Email"):
+                @Html.TextBoxFor(x => x.Email)
+                @Html.ValidationMessageFor(x => x.Email)
+                <div class="options">
+                    <input id="newsletter-subscribe" type="radio" name="newsletter-subscribe" value="newsletter-subscribe"
+                        checked="checked" />
+                    <label for="newsletter-subscribe">@T("Newsletter.Subscribe")</label>
+                    <input id="newsletter-unsubscribe" type="radio" name="newsletter-subscribe" value="newsletter-unsubscribe" />
+                    <label for="newsletter-nusubscribe">@T("Newsletter.Unsubscribe")</label>
                 </div>
                 <div class="clear">
                 </div>
-                <div id="pnl-newsletter-result">
+                <div class="buttons">
+                    <input type="submit" name="newsletter-subscribe-button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="newsletterbox-subscribebutton" />
                 </div>
-            }
-        </div>
-        @*TODO display ajax loader while making AJAX request*@
-        <script type="text/javascript">
+            </div>
+            <div class="clear">
+            </div>
+            <div id="pnl-newsletter-result">
+            </div>
+        }
+    </div>
+    @*TODO display ajax loader while making AJAX request*@
+    <script type="text/javascript">
         $(document).ready(function () {
             $('#newsletter-subscribe-button').click(function () {
                 
@@ -66,7 +64,5 @@
                 return false;
             });
         });
-        </script>
-    </div>
-
-}
+    </script>
+</div>

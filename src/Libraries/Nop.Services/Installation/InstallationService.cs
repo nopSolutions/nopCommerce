@@ -1020,7 +1020,6 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<CommonSettings>>()
                 .SaveSettings(new CommonSettings()
                 {
-                    HideNewsletterBox = false,
                     UseSystemEmailForContactUsForm = true,
                     SitemapIncludeCategories = true,
                     SitemapIncludeManufacturers = true,
@@ -1061,7 +1060,6 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<CustomerSettings>>()
                 .SaveSettings(new CustomerSettings()
                 {
-                    AnonymousCheckoutAllowed = false,
                     AllowCustomersToUploadAvatars = false,
                     AvatarMaximumSizeBytes = 20000,
                     DefaultAvatarEnabled = true,
@@ -1075,7 +1073,8 @@ namespace Nop.Services.Installation
                     GenderEnabled = true,
                     DateOfBirthEnabled = true,
                     NewsletterEnabled = true,
-                    CompanyEnabled = true
+                    CompanyEnabled = true,
+                    HideNewsletterBlock = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<MediaSettings>>()

@@ -43,7 +43,7 @@ namespace Nop.Admin.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly IAffiliateService _affiliateService;
 
-        #endregion Fields
+        #endregion
 
         #region Constructors
 

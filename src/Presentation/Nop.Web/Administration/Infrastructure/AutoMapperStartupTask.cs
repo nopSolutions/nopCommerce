@@ -10,6 +10,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
@@ -178,6 +179,9 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<RewardPointsSettings, RewardPointsSettingsModel>();
             ViceVersa<OrderSettings, OrderSettingsModel>();
             ViceVersa<ShoppingCartSettings, ShoppingCartSettingsModel>();
+            ViceVersa<MediaSettings, MediaSettingsModel>();
+            ViceVersa<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>();
+            ViceVersa<UserSettings, CustomerUserSettingsModel.UserSettingsModel>();
         }
 
         protected virtual void ViceVersa<T1, T2>()

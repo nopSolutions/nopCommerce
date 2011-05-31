@@ -1,0 +1,108 @@
+﻿@model MediaSettingsModel
+@using Nop.Admin.Models;
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.Media")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+@Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PicturesStoredIntoDatabase):
+            </td>
+            <td class="adminData">
+                @if (Model.PicturesStoredIntoDatabase)
+                {
+                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Database")
+                }
+                else
+                {
+                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
+                }
+                
+            <button type="submit" name="change-picture-storage" value="change-picture-storage" class="t-button">@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvatarPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AvatarPictureSize)
+                @Html.ValidationMessageFor(model => model.AvatarPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.ProductThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductDetailsPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductDetailsPictureSize)
+                @Html.ValidationMessageFor(model => model.ProductDetailsPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductVariantPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductVariantPictureSize)
+                @Html.ValidationMessageFor(model => model.ProductVariantPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CategoryThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CategoryThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.CategoryThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ManufacturerThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ManufacturerThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.ManufacturerThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CartThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CartThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.CartThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MaximumImageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MaximumImageSize)
+                @Html.ValidationMessageFor(model => model.MaximumImageSize)
+            </td>
+        </tr>
+    </table>
+}

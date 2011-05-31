@@ -26,7 +26,7 @@ namespace Nop.Admin.Controllers
 
         private readonly IPromotionFeedService _promotionFeedService;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

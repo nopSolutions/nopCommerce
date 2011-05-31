@@ -22,7 +22,7 @@ namespace Nop.Admin.Controllers
         private SmsSettings _smsSettings;
         private readonly ISettingService _settingService;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 

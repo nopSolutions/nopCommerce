@@ -34,7 +34,7 @@ namespace Nop.Admin.Controllers
         private readonly IPictureService _pictureService;
         private readonly ITaxCategoryService _taxCategoryService;
 
-        #endregion Fields 
+        #endregion
 
 		#region Constructors
 

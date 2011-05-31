@@ -29,7 +29,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerContentService _customerContentService;
 
-        #endregion Fields 
+        #endregion
 
 		#region Constructors
 

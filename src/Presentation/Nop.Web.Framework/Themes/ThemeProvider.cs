@@ -16,7 +16,7 @@ namespace Nop.Web.Framework.Themes
         private readonly IList<ThemeConfiguration> _themeConfigurations = new List<ThemeConfiguration>();
         private string basePath = string.Empty;
 
-		#endregion Fields 
+		#endregion
 
 		#region Constructors
 
