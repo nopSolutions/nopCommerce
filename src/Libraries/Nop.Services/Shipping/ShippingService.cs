@@ -159,15 +159,33 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets all shipping methods
         /// </summary>
+        /// <param name="filterByCountryId">The country indentifier to filter by</param>
         /// <returns>Shipping method collection</returns>
-        public virtual IList<ShippingMethod> GetAllShippingMethods()
+        public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            var query = from sm in _shippingMethodRepository.Table
-                        orderby sm.DisplayOrder
-                        select sm;
+            if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
+            {
+                var query1 = from sm in _shippingMethodRepository.Table
+                             where
+                             sm.RestrictedCountries.Select(c => c.Id).Contains(filterByCountryId.Value)
+                             select sm.Id;
 
-            var shippingMethods = query.ToList();
-            return shippingMethods;
+                var query2 = from sm in _shippingMethodRepository.Table
+                             where !query1.Contains(sm.Id)
+                             orderby sm.DisplayOrder
+                             select sm;
+
+                var shippingMethods = query2.ToList();
+                return shippingMethods;
+            }
+            else
+            {
+                var query = from sm in _shippingMethodRepository.Table
+                            orderby sm.DisplayOrder
+                            select sm;
+                var shippingMethods = query.ToList();
+                return shippingMethods;
+            }
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Core.Domain.Directory
 {
@@ -11,6 +12,8 @@ namespace Nop.Core.Domain.Directory
     {
         private ICollection<StateProvince> _stateProvinces;
         private ICollection<Address> _addresses;
+        private ICollection<ShippingMethod> _restrictedShippingMethods;
+
 
         /// <summary>
         /// Gets or sets the name
@@ -72,6 +75,15 @@ namespace Nop.Core.Domain.Directory
         {
             get { return _addresses ?? (_addresses = new List<Address>()); }
             protected set { _addresses = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the restricted shipping methods
+        /// </summary>
+        public virtual ICollection<ShippingMethod> RestrictedShippingMethods
+        {
+            get { return _restrictedShippingMethods ?? (_restrictedShippingMethods = new List<ShippingMethod>()); }
+            protected set { _restrictedShippingMethods = value; }
         }
     }
 

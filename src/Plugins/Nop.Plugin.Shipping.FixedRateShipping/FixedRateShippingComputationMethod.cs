@@ -52,27 +52,14 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
 
             var response = new GetShippingOptionResponse();
 
-            if (getShippingOptionRequest.Items == null)
+            if (getShippingOptionRequest.Items == null || getShippingOptionRequest.Items.Count == 0)
             {
                 response.AddError("No shipment items");
                 return response;
             }
 
-            if (getShippingOptionRequest.ShippingAddress == null)
-            {
-                response.AddError("Shipping address is not set");
-                return response;
-            }
-
-            if (getShippingOptionRequest.ShippingAddress.Country == null)
-            {
-                response.AddError("Shipping country is not set");
-                return response;
-            }
-            
-            //TODO uncomment vode below after "restricting shipping by country" is implemented
-            //var shippingMethods = this.ShippingService.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
-            var shippingMethods = this._shippingService.GetAllShippingMethods();
+            int? restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null) ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
+            var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();
@@ -95,16 +82,9 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
-            //if (getShippingOptionRequest.Items == null)
-            //    return null;
-            //if (getShippingOptionRequest.ShippingAddress == null)
-            //    return null;
-            //if (getShippingOptionRequest.ShippingAddress.Country == null)
-            //    return null;
-
-            //TODO uncomment vode below after "restricting shipping by country" is implemented
-            //var shippingMethods = this.ShippingService.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
-            var shippingMethods = this._shippingService.GetAllShippingMethods();
+            int? restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null) ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
+            var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId);
+            
             var rates = new List<decimal>();
             foreach (var shippingMethod in shippingMethods)
             {

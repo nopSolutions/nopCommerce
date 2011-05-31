@@ -1,5 +1,6 @@
 
 using System;
+using System.Linq;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping
@@ -21,6 +22,16 @@ namespace Nop.Services.Shipping
                 if (srcm.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             return false;
+        }
+
+        public static bool CountryRestrictionExists(this ShippingMethod shippingMethod,
+            int countryId)
+        {
+            if (shippingMethod == null)
+                throw new ArgumentNullException("shippingMethod");
+
+            bool result = shippingMethod.RestrictedCountries.ToList().Find(c => c.Id == countryId) != null;
+            return result;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nop.Core.Domain.Shipping;
 using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain;
@@ -42,7 +43,7 @@ namespace Nop.Data.Tests
         }
 
         [Test]
-        public void Can_save_and_load_language_with_localeStringResources()
+        public void Can_save_and_load_country_with_states()
         {
             var country = new Country
             {
@@ -72,6 +73,37 @@ namespace Nop.Data.Tests
             fromDb.StateProvinces.ShouldNotBeNull();
             (fromDb.StateProvinces.Count == 1).ShouldBeTrue();
             fromDb.StateProvinces.First().Name.ShouldEqual("California");
+        }
+
+        [Test]
+        public void Can_save_and_load_country_with_restrictions()
+        {
+            var country = new Country
+            {
+                Name = "United States",
+                AllowsBilling = true,
+                AllowsShipping = true,
+                TwoLetterIsoCode = "US",
+                ThreeLetterIsoCode = "USA",
+                NumericIsoCode = 1,
+                SubjectToVat = true,
+                Published = true,
+                DisplayOrder = 1
+            };
+            country.RestrictedShippingMethods.Add
+                (
+                    new ShippingMethod()
+                    {
+                        Name = "By train",
+                    }
+                );
+            var fromDb = SaveAndLoadEntity(country);
+            fromDb.ShouldNotBeNull();
+            fromDb.Name.ShouldEqual("United States");
+
+            fromDb.RestrictedShippingMethods.ShouldNotBeNull();
+            (fromDb.RestrictedShippingMethods.Count == 1).ShouldBeTrue();
+            fromDb.RestrictedShippingMethods.First().Name.ShouldEqual("By train");
         }
     }
 }

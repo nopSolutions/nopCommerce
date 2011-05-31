@@ -130,6 +130,7 @@
     <Compile Include="Models\BlogPostModel.cs" />
     <Compile Include="Models\BlogSettingsModel.cs" />
     <Compile Include="Models\BlogCommentModel.cs" />
+    <Compile Include="Models\ShippingMethodRestrictionModel.cs" />
     <Compile Include="Models\NewsCommentModel.cs" />
     <Compile Include="Models\NewsItemModel.cs" />
     <Compile Include="Models\NewsSettingsModel.cs" />
@@ -739,6 +740,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\News\Comments.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\Restrictions.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

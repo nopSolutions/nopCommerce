@@ -72,7 +72,11 @@ namespace Nop.Data.Tests
                 );
             var fromDb = SaveAndLoadEntity(emailAccount);
             fromDb.ShouldNotBeNull();
-            fromDb.Email.ShouldEqual("admin@yourstore.com");
+
+
+            fromDb.QueuedEmails.ShouldNotBeNull();
+            (fromDb.QueuedEmails.Count == 1).ShouldBeTrue();
+            fromDb.QueuedEmails.First().From.ShouldEqual("From");
         }
 
     }

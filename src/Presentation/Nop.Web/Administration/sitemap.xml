@@ -62,6 +62,7 @@
           <siteMapNode title="Shipping" nopResource="Admin.Configuration.Shipping">
             <siteMapNode title="Shipping settings" nopResource="Admin.Configuration.Shipping.Settings" controller="Shipping" action="Settings"/>
             <siteMapNode title="Shipping methods" nopResource="Admin.Configuration.Shipping.Methods" controller="Shipping" action="Methods"/>
+            <siteMapNode title="Shipping method restrictions" nopResource="Admin.Configuration.Shipping.Restrictions" controller="Shipping" action="Restrictions"/>
             <siteMapNode title="Shipping providers" nopResource="Admin.Configuration.Shipping.Providers" controller="Shipping" action="Providers"/>
           </siteMapNode>
           <siteMapNode title="Location" nopResource="Admin.Configuration.Location">

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Nop.Core.Domain.Directory;
+
 namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
@@ -5,6 +8,8 @@ namespace Nop.Core.Domain.Shipping
     /// </summary>
     public partial class ShippingMethod : BaseEntity
     {
+        private ICollection<Country> _restrictedCountries;
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -20,5 +25,13 @@ namespace Nop.Core.Domain.Shipping
         /// </summary>
         public virtual int DisplayOrder { get; set; }
 
+        /// <summary>
+        /// Gets or sets the restricted countries
+        /// </summary>
+        public virtual ICollection<Country> RestrictedCountries
+        {
+            get { return _restrictedCountries ?? (_restrictedCountries = new List<Country>()); }
+            protected set { _restrictedCountries = value; }
+        }
     }
 }

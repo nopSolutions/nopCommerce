@@ -289,5 +289,81 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+        #region Restrictions
+
+        public ActionResult Restrictions()
+        {
+            var model = new ShippingMethodRestrictionModel();
+
+            var countries = _countryService.GetAllCountries(true);
+            var shippingMethods = _shippingService.GetAllShippingMethods();
+            foreach (var country in countries)
+            {
+                model.AvailableCountries.Add(new CountryModel()
+                    {
+                        Id = country.Id,
+                        Name = country.Name
+                    });
+            }
+            foreach (var sm in shippingMethods)
+            {
+                model.AvailableShippingMethods.Add(new ShippingMethodModel()
+                {
+                    Id = sm.Id,
+                    Name = sm.Name
+                });
+            }
+            foreach (var country in countries)
+                foreach (var shippingMethod in shippingMethods)
+                {
+                    bool restricted = shippingMethod.CountryRestrictionExists(country.Id);
+                    if (!model.Restricted.ContainsKey(country.Id))
+                        model.Restricted[country.Id] = new Dictionary<int, bool>();
+                    model.Restricted[country.Id][shippingMethod.Id] = restricted;
+                }
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Restrictions")]
+        public ActionResult RestrictionSave(FormCollection form)
+        {
+            var countries = _countryService.GetAllCountries(true);
+            var shippingMethods = _shippingService.GetAllShippingMethods();
+
+
+            foreach (var shippingMethod in shippingMethods)
+            {
+                string formKey = "restrict_" + shippingMethod.Id;
+                var countryIdsToRestrict = form[formKey] != null ? form[formKey].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+
+                foreach (var country in countries)
+                {
+
+                    bool restrict = countryIdsToRestrict.Contains(country.Id);
+                    if (restrict)
+                    {
+                        if (shippingMethod.RestrictedCountries.Where(c => c.Id == country.Id).FirstOrDefault() == null)
+                        {
+                            shippingMethod.RestrictedCountries.Add(country);
+                            _shippingService.UpdateShippingMethod(shippingMethod);
+                        }
+                    }
+                    else
+                    {
+                        if (shippingMethod.RestrictedCountries.Where(c => c.Id == country.Id).FirstOrDefault() != null)
+                        {
+                            shippingMethod.RestrictedCountries.Remove(country);
+                            _shippingService.UpdateShippingMethod(shippingMethod);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Restrictions");
+        }
+
+        #endregion
     }
 }

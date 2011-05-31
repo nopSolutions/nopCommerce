@@ -2665,6 +2665,20 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="Restrictions">
+                    <Value>Shipping method restrictions</Value>
+                    <Children>
+                        <LocaleResource Name="Country">
+                          <Value>Country</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Description">
+                          <Value>
+                            Please mark the checkbox(es) for the country or countries in which you want the
+                            shipping method(s) not available
+                          </Value>
+                        </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Settings">
                     <Value>Shipping settings</Value>
                     <Children>
