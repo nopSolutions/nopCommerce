@@ -27,9 +27,6 @@ namespace Nop.Admin.Controllers
         private readonly ITaxCategoryService _taxCategoryService;
         private TaxSettings _taxSettings;
         private readonly ISettingService _settingService;
-        private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IAddressService _addressService;
 
 	    #endregion Fields 
 
@@ -37,16 +34,12 @@ namespace Nop.Admin.Controllers
 
         public TaxController(ITaxService taxService,
             ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
-            ISettingService settingService, ICountryService countryService, 
-            IStateProvinceService stateProvinceService, IAddressService addressService)
+            ISettingService settingService)
 		{
             this._taxService = taxService;
             this._taxCategoryService = taxCategoryService;
             this._taxSettings = taxSettings;
             this._settingService = settingService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressService = addressService;
 		}
 
 		#endregion Constructors 
@@ -195,86 +188,6 @@ namespace Nop.Admin.Controllers
             return Categories(command);
         }
 
-        #endregion
-
-        #region Tax settings
-
-        public ActionResult Settings()
-        {
-            var model = _taxSettings.ToModel();
-            model.TaxBasedOnValues = _taxSettings.TaxBasedOn.ToSelectList();
-            model.TaxDisplayTypeValues = _taxSettings.TaxDisplayType.ToSelectList();
-
-            //tax categories
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.ShippingTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
-            foreach (var tc in taxCategories)
-                model.ShippingTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == _taxSettings.ShippingTaxClassId });
-            model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
-            foreach (var tc in taxCategories)
-                model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == _taxSettings.PaymentMethodAdditionalFeeTaxClassId });
-
-            //EU VAT countries
-            model.EuVatShopCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
-                model.EuVatShopCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = c.Id == _taxSettings.EuVatShopCountryId });
-
-            //default tax address
-            var defaultAddress = _taxSettings.DefaultTaxAddressId > 0
-                                     ? _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId)
-                                     : null;
-            if (defaultAddress != null)
-                model.DefaultTaxAddress = defaultAddress.ToModel();
-            else
-                model.DefaultTaxAddress = new AddressModel();
-
-            model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
-                model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (defaultAddress != null && c.Id == defaultAddress.CountryId) });
-
-            var states = defaultAddress != null && defaultAddress.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(defaultAddress.Country.Id, true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
-            {
-                foreach (var s in states)
-                    model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == defaultAddress.StateProvinceId) });
-            }
-            else
-                model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
-            model.DefaultTaxAddress.FirstNameDisabled = true;
-            model.DefaultTaxAddress.LastNameDisabled = true;
-            model.DefaultTaxAddress.EmailDisabled = true;
-            model.DefaultTaxAddress.CompanyDisabled = true;
-            model.DefaultTaxAddress.CityDisabled = true;
-            model.DefaultTaxAddress.Address1Disabled = true;
-            model.DefaultTaxAddress.Address2Disabled = true;
-            model.DefaultTaxAddress.PhoneNumberDisabled = true;
-            model.DefaultTaxAddress.FaxNumberDisabled = true;
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult Settings(TaxSettingsModel model)
-        {
-            _taxSettings = model.ToEntity(_taxSettings);
-
-            var defaultAddress = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId) ??
-                                         new Core.Domain.Common.Address()
-                                         {
-                                             CreatedOnUtc = DateTime.UtcNow,
-                                         };
-            defaultAddress = model.DefaultTaxAddress.ToEntity(defaultAddress);
-            if (defaultAddress.Id > 0)
-                _addressService.UpdateAddress(defaultAddress);
-            else
-                _addressService.InsertAddress(defaultAddress);
-
-            _taxSettings.DefaultTaxAddressId = defaultAddress.Id;
-            _settingService.SaveSetting(_taxSettings);
-
-            return RedirectToAction("Settings");
-        }
-           
         #endregion
     }
 }

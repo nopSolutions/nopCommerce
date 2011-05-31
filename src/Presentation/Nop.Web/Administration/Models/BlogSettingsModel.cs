@@ -6,16 +6,16 @@ namespace Nop.Admin.Models
 {
     public class BlogSettingsModel
     {
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Settings.Fields.Enabled")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.Enabled")]
         public bool Enabled { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Settings.Fields.PostsPageSize")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.PostsPageSize")]
         public int PostsPageSize { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Settings.Fields.AllowNotRegisteredUsersToLeaveComments")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.AllowNotRegisteredUsersToLeaveComments")]
         public bool AllowNotRegisteredUsersToLeaveComments { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Settings.Fields.NotifyAboutNewBlogComments")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.NotifyAboutNewBlogComments")]
         public bool NotifyAboutNewBlogComments { get; set; }
     }
 }

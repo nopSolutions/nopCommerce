@@ -7,16 +7,16 @@ namespace Nop.Admin.Models
 {
     public class ShippingSettingsModel
     {
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Settings.Fields.FreeShippingOverXEnabled")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.FreeShippingOverXEnabled")]
         public bool FreeShippingOverXEnabled { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Settings.Fields.FreeShippingOverXValue")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.FreeShippingOverXValue")]
         public decimal FreeShippingOverXValue { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Settings.Fields.EstimateShippingEnabled")]
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.EstimateShippingEnabled")]
         public bool EstimateShippingEnabled { get; set; }
-        
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Settings.Fields.ShippingOriginAddress")]
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")]
         public AddressModel ShippingOriginAddress { get; set; }
     }
 }

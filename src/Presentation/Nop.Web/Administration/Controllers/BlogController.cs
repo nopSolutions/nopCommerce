@@ -27,25 +27,19 @@ namespace Nop.Admin.Controllers
         private readonly IBlogService _blogService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ISettingService _settingService;
         private readonly ICustomerContentService _customerContentService;
 
-        private BlogSettings _blogSettings;
-
-		#endregion Fields 
+        #endregion Fields 
 
 		#region Constructors
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ISettingService settingService, 
-            ICustomerContentService customerContentService, BlogSettings blogSettings)
+            IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
-            this._settingService = settingService;
             this._customerContentService = customerContentService;
-            this._blogSettings = blogSettings;
 		}
 
 		#endregion Constructors 
@@ -69,24 +63,6 @@ namespace Nop.Admin.Controllers
             model.IpAddress = blogComment.IpAddress;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc).ToString();
             model.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
-        }
-
-        #endregion
-
-        #region Settings
-
-        public ActionResult Settings()
-        {
-            var model = _blogSettings.ToModel();
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult Settings(BlogSettingsModel model)
-        {
-            _blogSettings = model.ToEntity(_blogSettings);
-            _settingService.SaveSetting(_blogSettings);
-            return RedirectToAction("Settings");
         }
 
         #endregion

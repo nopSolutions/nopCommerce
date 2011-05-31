@@ -14,18 +14,14 @@ namespace Nop.Admin.Controllers
     public class ForumController : BaseNopController
     {
         private readonly IForumService _forumService;
-        private ForumSettings _forumSettings;
-        private readonly ISettingService _settingService;
 
-        public ForumController(IForumService forumService,
-            ForumSettings forumSettings, ISettingService settingService)
+        public ForumController(IForumService forumService)
         {
             _forumService = forumService;
-            _forumSettings = forumSettings;
-            _settingService = settingService;
         }
 
-        #region Methods
+        #region List
+
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -37,24 +33,6 @@ namespace Nop.Admin.Controllers
                 .Select(x => x.ToModel())
                 .ToList();
             return View(forumGroupsModel);
-        }
-        #endregion
-
-        #region Settings
-
-        public ActionResult Settings()
-        {
-            var model = _forumSettings.ToModel();
-            model.ForumEditorValues = _forumSettings.ForumEditor.ToSelectList();
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult Settings(ForumSettingsModel model)
-        {
-            _forumSettings = model.ToEntity(_forumSettings);
-            _settingService.SaveSetting(_forumSettings);
-            return RedirectToAction("Settings");
         }
 
         #endregion

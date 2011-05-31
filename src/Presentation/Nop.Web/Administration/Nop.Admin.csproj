@@ -82,6 +82,7 @@
     <Compile Include="Controllers\AffiliateController.cs" />
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\SettingController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -393,7 +394,7 @@
     <Content Include="Views\Tax\Categories.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Tax\Settings.cshtml" />
+    <Content Include="Views\Setting\Tax.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shipping\Methods.cshtml" />
@@ -416,12 +417,12 @@
     <Content Include="Views\Forum\EditForum.cshtml" />
     <Content Include="Views\Forum\EditForumGroup.cshtml" />
     <Content Include="Views\Forum\List.cshtml" />
-    <Content Include="Views\Forum\Settings.cshtml" />
+    <Content Include="Views\Setting\Forum.cshtml" />
     <Content Include="Views\Forum\_CreateOrUpdateForum.cshtml" />
     <Content Include="Views\Forum\_CreateOrUpdateForumGroup.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shipping\Settings.cshtml" />
+    <Content Include="Views\Setting\Shipping.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payment\ConfigureMethod.cshtml" />
@@ -721,13 +722,13 @@
     <Content Include="Views\Blog\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Blog\Settings.cshtml" />
+    <Content Include="Views\Setting\Blog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Blog\Comments.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\News\Settings.cshtml" />
+    <Content Include="Views\Setting\News.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\News\_CreateOrUpdate.cshtml" />

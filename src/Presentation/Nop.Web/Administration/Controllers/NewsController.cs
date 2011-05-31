@@ -27,25 +27,20 @@ namespace Nop.Admin.Controllers
         private readonly INewsService _newsService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ISettingService _settingService;
         private readonly ICustomerContentService _customerContentService;
 
-        private NewsSettings _newsSettings;
 
 		#endregion Fields 
 
 		#region Constructors
 
         public NewsController(INewsService newsService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ISettingService settingService,
-            ICustomerContentService customerContentService, NewsSettings newsSettings)
+            IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService)
         {
             this._newsService = newsService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
-            this._settingService = settingService;
             this._customerContentService = customerContentService;
-            this._newsSettings = newsSettings;
 		}
 
 		#endregion Constructors 
@@ -70,24 +65,6 @@ namespace Nop.Admin.Controllers
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc).ToString();
             model.CommentTitle = newsComment.CommentTitle;
             model.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
-        }
-
-        #endregion
-
-        #region Settings
-
-        public ActionResult Settings()
-        {
-            var model = _newsSettings.ToModel();
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult Settings(NewsSettingsModel model)
-        {
-            _newsSettings = model.ToEntity(_newsSettings);
-            _settingService.SaveSetting(_newsSettings);
-            return RedirectToAction("Settings");
         }
 
         #endregion
