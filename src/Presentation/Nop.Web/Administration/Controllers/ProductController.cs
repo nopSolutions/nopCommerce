@@ -163,6 +163,8 @@ namespace Nop.Admin.Controllers
                 foreach (var variant in variants)
                 {
                     var variantModel = variant.ToModel();
+                    if (String.IsNullOrEmpty(variantModel.Name))
+                        variantModel.Name = "Unnamed";
                     model.ProductVariantModels.Add(variantModel);
                 }
             }
@@ -250,7 +252,12 @@ namespace Nop.Admin.Controllers
             var model = new ProductListModel();
             model.Products = new GridModel<ProductModel>
             {
-                Data = products.Select(x => x.ToModel()),
+                Data = products.Select(x =>
+                {
+                    var productModel = x.ToModel();
+                    PrepareVariantsModel(productModel, x);
+                    return productModel;
+                }),
                 Total = products.TotalCount
             };
             //categories
@@ -443,7 +450,28 @@ namespace Nop.Admin.Controllers
             _productService.DeleteProduct(product);
             return RedirectToAction("List");
         }
-        
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult GetVariants(int productId)
+        {
+            var variants = _productService.GetProductVariantsByProductId(productId, true);
+
+            var gridModel = new GridModel<ProductVariantModel>()
+            {
+                Data = variants.Select(x =>
+                {
+                    var variantModel = x.ToModel();
+                    if (String.IsNullOrEmpty(variantModel.Name))
+                        variantModel.Name = "Unnamed";
+                    return variantModel;
+                }),
+                Total = variants.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
         #endregion
         
         #region Product categories

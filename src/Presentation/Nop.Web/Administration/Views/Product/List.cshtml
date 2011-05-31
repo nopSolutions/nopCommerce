@@ -1,4 +1,5 @@
-﻿@model Nop.Admin.Models.ProductListModel
+﻿@model ProductListModel
+@using Nop.Admin.Models
 @using Telerik.Web.Mvc.UI
 @using Nop.Web.Framework
 @using (Html.BeginForm())
@@ -58,13 +59,13 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel>(Model.Products.Data)
+                @(Html.Telerik().Grid<ProductModel>(Model.Products.Data)
                     .Name("products-grid")
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.Published)
-                            .Width("100px")
+                            .Width(100)
                             .Template(x => x.Published.ToString().ToLower())
                             .Centered();
                         columns.Bound(x => x.Id)
@@ -74,10 +75,59 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
-                    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
-                    .EnableCustomBinding(true))
+                    .DetailView(details => details.ClientTemplate(
+                            Html.Telerik().Grid<ProductVariantModel>()
+                            .Name("variants-grid-<#= Id #>")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(pv => pv.Name)
+                                .Template(pv => Html.ActionLink(pv.Name, "Edit", "ProductVariant", new { id = pv.Id }, new { }))
+                                .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= Id #>\"><#= Name #></a>");
+                                columns.Bound(pv => pv.Sku).Width(100);
+                                columns.Bound(pv => pv.Price).Width(100);
+                                columns.Bound(pv => pv.StockQuantity).Width(100);
+                                columns.Bound(pv => pv.Published)
+                                .Width(100)
+                                .Template(pv => pv.Published.ToString().ToLower())
+                                .Centered();
+                            })
+                            .DataBinding(dataBinding => dataBinding.Ajax()
+                                .Select("GetVariants", "Product", new
+                                {
+                                    productId =
+                                        "<#= Id #>"
+                                }))
+                            .ToHtmlString()
+                        )
+                        .Template(
+
+
+                            @<text>
+                            @(Html.Telerik().Grid(item.ProductVariantModels)
+                                    .Name("variants-grid-" + item.Id)
+                                    .Columns(columns =>
+                                    {
+                                        columns.Bound(pv => pv.Name)
+                                        .Template(pv => Html.ActionLink(pv.Name, "Edit", "ProductVariant", new { id = pv.Id }, new { }))
+                                        .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= Id #>\"><#= Name #></a>");
+                                        columns.Bound(pv => pv.Sku).Width(100);
+                                        columns.Bound(pv => pv.Price).Width(100);
+                                        columns.Bound(pv => pv.StockQuantity).Width(100);
+                                        columns.Bound(pv => pv.Published)
+                                        .Width(100)
+                                        .Template(pv => pv.Published.ToString().ToLower())
+                                        .Centered();
+                                    })
+                            )
+                            </text>
+
+
+                                            )
+                                            )
+                                            .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10))
+                                            .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
+                                            .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                                            .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
@@ -99,5 +149,5 @@
             };
             e.data = searchModel;
         }
-   </script>
+    </script>
 }
