@@ -2287,6 +2287,20 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Sitemap">
+    <Value>Sitemap</Value>
+    <Children>
+      <LocaleResource Name="Categories">
+        <Value>Categories</Value>
+      </LocaleResource>
+      <LocaleResource Name="Manufacturers">
+        <Value>Manufacturers</Value>
+      </LocaleResource>
+      <LocaleResource Name="Products">
+        <Value>Products</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Tax">
     <Children>
       <LocaleResource Name="Exclusive">

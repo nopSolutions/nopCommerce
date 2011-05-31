@@ -43,6 +43,7 @@ using Nop.Services.Security;
 using Nop.Services.Security.Permissions;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Services.Topics;
 using Nop.Web.Framework;
 using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc.Routes;
@@ -181,6 +182,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerHttpRequest();
 
             builder.RegisterType<BlogService>().As<IBlogService>().InstancePerHttpRequest();
+            builder.RegisterType<TopicService>().As<ITopicService>().InstancePerHttpRequest();
             builder.RegisterType<NewsService>().As<INewsService>().InstancePerHttpRequest();
 
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();

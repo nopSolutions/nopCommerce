@@ -30,6 +30,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
 using Nop.Core.IO;
 using Nop.Data;
@@ -70,6 +71,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
+        private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
@@ -103,6 +105,7 @@ namespace Nop.Services.Installation
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<Discount> discountRepository,
             IRepository<BlogPost> blogPostRepository,
+            IRepository<Topic> topicRepository,
             IRepository<NewsItem> newsItemRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<ActivityLogType> activityLogTypeRepository)
@@ -137,6 +140,7 @@ namespace Nop.Services.Installation
 
             this._discountRepository = discountRepository;
             this._blogPostRepository = blogPostRepository;
+            this._topicRepository = topicRepository;
             this._newsItemRepository = newsItemRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
@@ -931,6 +935,78 @@ namespace Nop.Services.Installation
 
         }
 
+        protected virtual void InstallTopics()
+        {
+            var topics = new List<Topic>
+                               {
+                                   new Topic
+                                       {
+                                           SystemName = "AboutUs",
+                                           IncludeInSitemap  =false, 
+                                           Title = "About Us",
+                                           Body = "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>"
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "CheckoutAsGuestOrRegister",
+                                           IncludeInSitemap  =false, 
+                                           Title = "",
+                                           Body = "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>"
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "ConditionsOfUse",
+                                           IncludeInSitemap  =false, 
+                                           Title = "Conditions of use",
+                                           Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>"
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "ContactUs",
+                                           IncludeInSitemap  =false, 
+                                           Title = "",
+                                           Body = "<p>Put your contact information here. You can edit this in the admin site.</p>"
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "ForumWelcomeMessage",
+                                           IncludeInSitemap  =false, 
+                                           Title = "Forums",
+                                           Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>"
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "HomePageText",
+                                           IncludeInSitemap  =false, 
+                                           Title = "Welcome to our store",
+                                           Body = "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>You can sign in using admin@admin.com and the password admin. If you have questions, see the <a href=\"http://www.nopcommerce.com/documentation.aspx\">Documentation</a>, or post in the <a href=\"http://www.nopcommerce.com/boards/\">Forums</a> at <a href=\"http://www.nopcommerce.com\">nopCommerce.com</a></p>"
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "LoginRegistrationInfo",
+                                           IncludeInSitemap  =false, 
+                                           Title = "About login / registration",
+                                           Body = "<p>Put your login / registration information here. You can edit this in the admin site.</p>"
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "PrivacyInfo",
+                                           IncludeInSitemap  =false, 
+                                           Title = "Privacy policy",
+                                           Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>"
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "ShippingInfo",
+                                           IncludeInSitemap  =false, 
+                                           Title = "Shipping & Returns",
+                                           Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>"
+                                       },
+                               };
+            topics.ForEach(t => _topicRepository.Insert(t));
+
+        }
+
         protected virtual void InstallSettings()
         {
             EngineContext.Current.Resolve<IConfigurationProvider<PdfSettings>>()
@@ -945,7 +1021,11 @@ namespace Nop.Services.Installation
                 .SaveSettings(new CommonSettings()
                 {
                     HideNewsletterBox = false,
-                    UseSystemEmailForContactUsForm = true
+                    UseSystemEmailForContactUsForm = true,
+                    SitemapIncludeCategories = true,
+                    SitemapIncludeManufacturers = true,
+                    SitemapIncludeProducts = false,
+                    SitemapIncludeTopics = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
@@ -1899,6 +1979,7 @@ namespace Nop.Services.Installation
             news.ForEach(n => _newsItemRepository.Insert(n));
 
         }
+
         protected virtual void InstallActivityLogTypes()
         {
             var activityLogTypes = new List<ActivityLogType>()
@@ -1940,6 +2021,7 @@ namespace Nop.Services.Installation
             InstallCustomersAndUsers();
             InstallEmailAccounts();
             InstallMessageTemplates();
+            InstallTopics();
             InstallSettings();
             InstallActivityLogTypes();
 

@@ -15,11 +15,13 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Topics;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models;
@@ -29,6 +31,10 @@ namespace Nop.Web.Controllers
 {
     public class CommonController : BaseNopController
     {
+        private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly ITopicService _topicService;
         private readonly ILanguageService _languageService;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
@@ -46,7 +52,9 @@ namespace Nop.Web.Controllers
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
 
-        public CommonController(ILanguageService languageService, 
+        public CommonController(ICategoryService categoryService, IProductService productService,
+            IManufacturerService manufacturerService, ITopicService topicService,
+            ILanguageService languageService,
             ICurrencyService currencyService, ILocalizationService localizationService,
             IWorkContext workContext, IAuthenticationService authenticationService,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
@@ -55,6 +63,10 @@ namespace Nop.Web.Controllers
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings, BlogSettings blogSettings)
         {
+            this._categoryService = categoryService;
+            this._productService = productService;
+            this._manufacturerService = manufacturerService;
+            this._topicService = topicService;
             this._languageService = languageService;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
@@ -79,14 +91,14 @@ namespace Nop.Web.Controllers
         {
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x=> x.ToModel()).ToList();
+            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
             return PartialView(model);
         }
 
         public ActionResult LanguageSelected(int customerlanguage)
         {
             var language = _languageService.GetLanguageById(customerlanguage);
-            if(language != null)
+            if (language != null)
             {
                 _workContext.WorkingLanguage = language;
             }
@@ -160,7 +172,7 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
-        
+
         //menu
         [ChildActionOnly]
         public ActionResult Menu()
@@ -208,7 +220,7 @@ namespace Nop.Web.Controllers
                 string email = model.Email.Trim();
                 string fullName = model.FullName;
                 string subject = string.Format("{0}. {1}", _storeInformationSettings.StoreName, "Contact us");
-                
+
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
 
                 string from = null;
@@ -251,5 +263,34 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //sitemap page
+        public ActionResult Sitemap()
+        {
+            //UNDONE Add a setting to disable sitemap
+            var model = new SitemapModel();
+            if (_commonSettings.SitemapIncludeCategories)
+            {
+                var categories = _categoryService.GetAllCategories();
+                model.Categories = categories.Select(x => x.ToModel()).ToList();
+            }
+            if (_commonSettings.SitemapIncludeManufacturers)
+            {
+                var manufacturers = _manufacturerService.GetAllManufacturers();
+                model.Manufacturers = manufacturers.Select(x => x.ToModel()).ToList();
+            }
+            if (_commonSettings.SitemapIncludeProducts)
+            {
+                //limit product to 200 until paging is supported on this page
+                var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, null, false, 0, null,
+                     ProductSortingEnum.Position, 0, 200);
+                model.Products = products.Select(x => x.ToModel()).ToList();
+            }
+            if (_commonSettings.SitemapIncludeTopics)
+            {
+                var topics = _topicService.GetAllTopic().ToList().FindAll(t => t.IncludeInSitemap);
+                model.Topics = topics.Select(x => x.ToModel()).ToList();
+            }
+            return View(model);
+        }
     }
 }

@@ -2,25 +2,25 @@
 @using Telerik.Web.Mvc.UI
 @{
     var clientId = (ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty));
+    var random = new Random().Next();
 }
 @(Html.Telerik().Editor().Name(clientId)
 /*.Encode(false) weird. Settings "Encode(false)" doesn't work on category & product details page
 Now we have to manually decode values*/
+/*TODO 'View Generated HTML' button doesn't work when we several languages enabled (hence several editorson the same page)*/
 .Value(Model)
 .Tools(tools => tools
-.Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource(event)" }))))
+.Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource" + random + "(event)" }))))
 <script type="text/javascript">
     var htmlSourcePopup;
 
-    function viewRichHtmlEditorSource(e) {
+    
+    function viewRichHtmlEditorSource@(random)(e) {
         e = $.Event(e);
-
         e.stopPropagation();
         e.preventDefault();
-
         var editor = $('#@(clientId)').data('tEditor');
         var html = editor.value();
-
         if (!htmlSourcePopup) {
             htmlSourcePopup =
                 $('<div class="html-view">' +

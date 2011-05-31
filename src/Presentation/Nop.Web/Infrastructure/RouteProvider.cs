@@ -243,6 +243,20 @@ namespace Nop.Web.Infrastructure
                             new { newsItemId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
+            //topics
+            routes.MapRoute("Topic",
+                            "t/{SystemName}",
+                            new { controller = "Topic", action = "TopicDetails" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("TopicPopup",
+                            "t-popup/{SystemName}",
+                            new { controller = "Topic", action = "TopicDetailsPopup" },
+                            new[] { "Nop.Web.Controllers" });
+            //sitemap
+            routes.MapRoute("Sitemap",
+                            "sitemap",
+                            new { controller = "Common", action = "SiteMap" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

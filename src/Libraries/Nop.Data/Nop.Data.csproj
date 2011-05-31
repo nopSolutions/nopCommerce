@@ -120,6 +120,7 @@
     <Compile Include="Mapping\Configuration\SettingMap.cs" />
     <Compile Include="Mapping\Shipping\ShippingMethodMap.cs" />
     <Compile Include="Mapping\Tax\TaxCategoryMap.cs" />
+    <Compile Include="Mapping\Topics\TopicMap.cs" />
     <Compile Include="NopObjectContext.cs" />
     <Compile Include="EfRepository.cs" />
     <Compile Include="IRepository.cs" />

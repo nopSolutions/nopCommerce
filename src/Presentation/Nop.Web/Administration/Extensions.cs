@@ -21,6 +21,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Topics;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
@@ -288,6 +289,25 @@ namespace Nop.Admin
         }
 
         public static Campaign ToEntity(this CampaignModel model, Campaign destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Topics
+
+        public static TopicModel ToModel(this Topic entity)
+        {
+            return AutoMapper.Mapper.Map<Topic, TopicModel>(entity);
+        }
+
+        public static Topic ToEntity(this TopicModel model)
+        {
+            return AutoMapper.Mapper.Map<TopicModel, Topic>(model);
+        }
+
+        public static Topic ToEntity(this TopicModel model, Topic destination)
         {
             return AutoMapper.Mapper.Map(model, destination);
         }

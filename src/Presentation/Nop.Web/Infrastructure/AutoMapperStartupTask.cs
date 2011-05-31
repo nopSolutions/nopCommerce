@@ -3,6 +3,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Topics;
 using Nop.Core.Tasks;
 using Nop.Services.Localization;
 using Nop.Web.Extensions;
@@ -10,6 +11,8 @@ using Nop.Web.Framework;
 using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
+using Nop.Web.Models.Topics;
+
 namespace Nop.Web.Infrastructure
 {
     public class AutoMapperStartupTask : IStartupTask
@@ -63,6 +66,14 @@ namespace Nop.Web.Infrastructure
             Mapper.CreateMap<Address, AddressModel>();
             Mapper.CreateMap<AddressModel, Address>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+
+            //topic
+            Mapper.CreateMap<Topic, TopicModel>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.GetLocalized(x => x.Title)))
+                .ForMember(dest => dest.Body, opt => opt.MapFrom(src => src.GetLocalized(x => x.Body)))
+                .ForMember(dest => dest.MetaKeywords, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaKeywords)))
+                .ForMember(dest => dest.MetaDescription, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaDescription)))
+                .ForMember(dest => dest.MetaTitle, opt => opt.MapFrom(src => src.GetLocalized(x => x.MetaTitle)));
 
         }
 

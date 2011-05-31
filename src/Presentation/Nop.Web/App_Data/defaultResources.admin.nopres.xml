@@ -3586,6 +3586,105 @@
                     </LocaleResource>
                   </Children>
                 </LocaleResource>
+              <LocaleResource Name="Topics">
+                <Value>Topics</Value>
+                <Children>
+                  <LocaleResource Name="Info">
+                    <Value>Topic Info</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="AddNew">
+                    <Value>Add a new topic</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to topic list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="EditTopicDetails">
+                    <Value>Edit topic details</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="SystemName">
+                        <Value>System name</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>System name of this topic.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Required">
+                            <Value>Enter system name.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="URL">
+                        <Value>URL</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The URL of this topic.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="IncludeInSitemap">
+                        <Value>Include in sitemap</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to include this topic in the sitemap.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Body">
+                        <Value>Body</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The body of your topic.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Title">
+                        <Value>Title</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The title of your topic.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MetaKeywords">
+                        <Value>Meta keywords</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Meta keywords to be added to topic page header.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MetaDescription">
+                        <Value>Meta description</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Meta description to be added to topic page header.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MetaTitle">
+                        <Value>Meta title</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Override the page title. The default is the name of the topic.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="SeName">
+                        <Value>Search engine friendly page name</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the category ID). The default is the name of category.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Info">
+                    <Value>Info</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
             </Children>
             </LocaleResource>
             <LocaleResource Name="Customers">

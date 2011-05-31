@@ -676,6 +676,8 @@ namespace Nop.Web.Controllers
             _workContext.CurrentCustomer.CheckoutAttributes = selectedAttributes;
             _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
+            //TODO redirect to login page with 'Checkout as guest' question (if required)
+
             return RedirectToRoute("Checkout");
         }
 

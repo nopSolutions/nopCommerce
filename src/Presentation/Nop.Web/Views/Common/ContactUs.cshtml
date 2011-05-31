@@ -3,9 +3,7 @@
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 }
 <div class="contact-form">
-    <div>
-        @*UNDONE ContactUs topic here*@
-    </div>
+    @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
     <div class="clear">
     </div>
     @if (Model.SuccessfullySent)

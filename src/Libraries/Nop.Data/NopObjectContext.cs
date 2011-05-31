@@ -24,6 +24,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Security.Permissions;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping.Localization;
 
@@ -102,6 +103,7 @@ namespace Nop.Data
         public DbSet<StateProvince> StateProvinces { get; set; }
         public DbSet<TaxCategory> TaxCategories { get; set; }
         public DbSet<TierPrice> TierPrices { get; set; }
+        public DbSet<Topic> Topics { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ForumGroup> ForumGroups { get; set; }
         public DbSet<Forum> Forums { get; set; }

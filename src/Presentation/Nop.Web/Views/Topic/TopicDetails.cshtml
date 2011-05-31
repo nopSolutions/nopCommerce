@@ -1,0 +1,30 @@
+﻿@model TopicModel
+@using Nop.Web.Models.Topics
+@{
+    var isPopup = ViewBag.IsPopup;
+    if (isPopup == null || isPopup == false)
+    {
+        Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+    }
+    else
+    {
+        /*pop-up windows*/
+        Layout = null;
+    }
+}
+
+@*TODO render meta properties (keywords, description, title)*@
+<div class="topicpage">
+    @if (!String.IsNullOrEmpty(Model.Title))
+    {
+        <div class="page-title">
+            <h1>
+                @Model.Title</h1>
+        </div>
+        <div class="clear">
+        </div>
+    }
+    <div class="topicpage-body">
+        @Html.Raw(Model.Body)
+    </div>
+</div>

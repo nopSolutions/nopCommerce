@@ -1,6 +1,19 @@
 ﻿@{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
 }
-@*TODO HomePageCategories*@ @*TODO HomePageProducts*@ @*TODO BestSellers*@
+@Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })
+<div class="clear">
+</div>
+@*TODO HomePageCategories*@
+<div class="clear">
+</div>
+@*TODO HomePageProducts*@
+<div class="clear">
+</div>
+@*TODO BestSellers*@
+<div class="clear">
+</div>
 @Html.Action("HomePageNews", "News")
+<div class="clear">
+</div>
 @*TODO HomePagePoll*@

@@ -226,6 +226,8 @@
     <Compile Include="Tax\ITaxService.cs" />
     <Compile Include="Tax\TaxCategoryService.cs" />
     <Compile Include="Tax\TaxService.cs" />
+    <Compile Include="Topics\ITopicService.cs" />
+    <Compile Include="Topics\TopicService.cs" />
     <Compile Include="Web References\EuropaCheckVatService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
+using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework

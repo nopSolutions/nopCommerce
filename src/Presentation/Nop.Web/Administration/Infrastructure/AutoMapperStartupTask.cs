@@ -16,6 +16,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Topics;
 using Nop.Core.Tasks;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
@@ -59,6 +60,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<Campaign, CampaignModel>();
             Mapper.CreateMap<CampaignModel, Campaign>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+            //topcis
+            ViceVersa<Topic, TopicModel>();
 
             //category
             Mapper.CreateMap<Category, CategoryModel>();

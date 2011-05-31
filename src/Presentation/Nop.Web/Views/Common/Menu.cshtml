@@ -2,6 +2,7 @@
 @{
     var storeLocation = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
 }
+@*UNDONE localize*@
 <ul class="topmenu">
     <li><a href="@storeLocation">Home page</a></li>
     @if (Model.RecentlyAddedProductsEnabled)

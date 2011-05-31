@@ -1,0 +1,16 @@
+﻿@model TopicModel
+@using Nop.Web.Models.Topics
+<div class="htmlcontent">
+    @if (!String.IsNullOrEmpty(Model.Title))
+    {
+        <div class="htmlcontent-title">
+            <h2 class="htmlcontent-header">
+                @Model.Title</h2>
+        </div>
+        <div class="clear">
+        </div>
+    }
+    <div class="htmlcontent-body">
+        @Html.Raw(Model.Body)
+    </div>
+</div>
