@@ -1,0 +1,233 @@
+﻿@model CatalogSettingsModel
+@using Nop.Admin.Models
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.Catalog")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
+            $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
+            $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
+            $("#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)").click(toggleRecentlyAddedProducts);
+
+            toggleShowCategoryProductNumberIncludingSubcategories();
+            toggleEmailAFriend();
+            toggleRecentlyViewedProducts();
+            toggleRecentlyAddedProducts();
+        });
+
+        function toggleShowCategoryProductNumberIncludingSubcategories() {
+            if (getE('@Html.FieldIdFor(model => model.ShowCategoryProductNumber)').checked) {
+                $('#pnlShowCategoryProductNumberIncludingSubcategories').show();
+            }
+            else {
+                $('#pnlShowCategoryProductNumberIncludingSubcategories').hide();
+            }
+        }
+
+        function toggleEmailAFriend() {
+            if (getE('@Html.FieldIdFor(model => model.EmailAFriendEnabled)').checked) {
+                $('#pnlAllowAnonymousUsersToEmailAFriend').show();
+            }
+            else {
+                $('#pnlAllowAnonymousUsersToEmailAFriend').hide();
+            }
+        }
+
+        function toggleRecentlyViewedProducts() {
+            if (getE('@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)').checked) {
+                $('#pnlRecentlyViewedProductsNumber').show();
+            }
+            else {
+                $('#pnlRecentlyViewedProductsNumber').hide();
+            }
+        }
+
+        function toggleRecentlyAddedProducts() {
+            if (getE('@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)').checked) {
+                $('#pnlRecentlyAddedProductsNumber').show();
+            }
+            else {
+                $('#pnlRecentlyAddedProductsNumber').hide();
+            }
+        }
+        
+    </script>
+    
+@Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.HidePricesForNonRegistered):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.HidePricesForNonRegistered)
+                @Html.ValidationMessageFor(model => model.HidePricesForNonRegistered)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowProductSku):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowProductSku)
+                @Html.ValidationMessageFor(model => model.ShowProductSku)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowManufacturerPartNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowManufacturerPartNumber)
+                @Html.ValidationMessageFor(model => model.ShowManufacturerPartNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowProductSorting):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowProductSorting)
+                @Html.ValidationMessageFor(model => model.AllowProductSorting)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowProductViewModeChanging):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowProductViewModeChanging)
+                @Html.ValidationMessageFor(model => model.AllowProductViewModeChanging)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowCategoryProductNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowCategoryProductNumber)
+                @Html.ValidationMessageFor(model => model.ShowCategoryProductNumber)
+            </td>
+        </tr>
+        <tr id="pnlShowCategoryProductNumberIncludingSubcategories">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowCategoryProductNumberIncludingSubcategories):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+                @Html.ValidationMessageFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CategoryBreadcrumbEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CategoryBreadcrumbEnabled)
+                @Html.ValidationMessageFor(model => model.CategoryBreadcrumbEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductReviewsMustBeApproved):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductReviewsMustBeApproved)
+                @Html.ValidationMessageFor(model => model.ProductReviewsMustBeApproved)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowAnonymousUsersToReviewProduct):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowAnonymousUsersToReviewProduct)
+                @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToReviewProduct)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NotifyStoreOwnerAboutNewProductReviews):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EmailAFriendEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EmailAFriendEnabled)
+                @Html.ValidationMessageFor(model => model.EmailAFriendEnabled)
+            </td>
+        </tr>
+        <tr id="pnlAllowAnonymousUsersToEmailAFriend">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowAnonymousUsersToEmailAFriend):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowAnonymousUsersToEmailAFriend)
+                @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailAFriend)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecentlyViewedProductsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecentlyViewedProductsEnabled)
+                @Html.ValidationMessageFor(model => model.RecentlyViewedProductsEnabled)
+            </td>
+        </tr>
+        <tr id="pnlRecentlyViewedProductsNumber">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecentlyViewedProductsNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecentlyViewedProductsNumber)
+                @Html.ValidationMessageFor(model => model.RecentlyViewedProductsNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecentlyAddedProductsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecentlyAddedProductsEnabled)
+                @Html.ValidationMessageFor(model => model.RecentlyAddedProductsEnabled)
+            </td>
+        </tr>
+        <tr id="pnlRecentlyAddedProductsNumber">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecentlyAddedProductsNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecentlyAddedProductsNumber)
+                @Html.ValidationMessageFor(model => model.RecentlyAddedProductsNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CompareProductsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CompareProductsEnabled)
+                @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
+            </td>
+        </tr>
+    </table>
+}

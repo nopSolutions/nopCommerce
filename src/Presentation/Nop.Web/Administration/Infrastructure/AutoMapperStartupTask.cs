@@ -111,14 +111,10 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<ITaxProvider, TaxProviderModel>();
             //tax categories
             ViceVersa<TaxCategory, TaxCategoryModel>();
-            //tax settings
-            ViceVersa<TaxSettings, TaxSettingsModel>();
             //shipping methods
             ViceVersa<ShippingMethod, ShippingMethodModel>();
             //shipping rate computation methods
             Mapper.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
-            //shipping settings
-            ViceVersa<ShippingSettings, ShippingSettingsModel>();
             //payment methods
             Mapper.CreateMap<IPaymentMethod, PaymentMethodModel>();
             //SMS providers
@@ -130,7 +126,6 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
             //forums
-            ViceVersa<ForumSettings, ForumSettingsModel>();
             Mapper.CreateMap<ForumGroup, ForumGroupModel>();
             Mapper.CreateMap<ForumGroupModel, ForumGroup>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
@@ -140,12 +135,10 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore());
             //blogs
-            ViceVersa<BlogSettings, BlogSettingsModel>();
             Mapper.CreateMap<BlogPost, BlogPostModel>();
             Mapper.CreateMap<BlogPostModel, BlogPost>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
             //news
-            ViceVersa<NewsSettings, NewsSettingsModel>();
             Mapper.CreateMap<NewsItem, NewsItemModel>();
             Mapper.CreateMap<NewsItemModel, NewsItem>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
@@ -174,6 +167,17 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<GiftCardModel, GiftCard>()
                 .ForMember(dest => dest.IsRecipientNotified, dt => dt.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+
+            //Settings
+            ViceVersa<TaxSettings, TaxSettingsModel>();
+            ViceVersa<NewsSettings, NewsSettingsModel>();
+            ViceVersa<ForumSettings, ForumSettingsModel>();
+            ViceVersa<BlogSettings, BlogSettingsModel>();
+            ViceVersa<ShippingSettings, ShippingSettingsModel>();
+            ViceVersa<CatalogSettings, CatalogSettingsModel>();
+            ViceVersa<RewardPointsSettings, RewardPointsSettingsModel>();
+            ViceVersa<OrderSettings, OrderSettingsModel>();
+            ViceVersa<ShoppingCartSettings, ShoppingCartSettingsModel>();
         }
 
         protected virtual void ViceVersa<T1, T2>()

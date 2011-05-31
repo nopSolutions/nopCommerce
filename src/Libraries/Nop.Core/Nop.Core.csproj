@@ -97,7 +97,6 @@
     <Compile Include="Domain\Media\MediaSettings.cs" />
     <Compile Include="Domain\Messages\Campaign.cs" />
     <Compile Include="Domain\Security\UserRegistrationType.cs" />
-    <Compile Include="Domain\Customers\FormFieldSettings.cs" />
     <Compile Include="Domain\Customers\CustomerNameFormat.cs" />
     <Compile Include="Domain\Customers\SystemCustomerAttributeNames.cs" />
     <Compile Include="Domain\Directory\ExchangeRate.cs" />

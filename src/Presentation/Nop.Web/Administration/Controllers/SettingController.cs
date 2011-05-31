@@ -6,10 +6,13 @@ using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Blogs;
@@ -37,38 +40,51 @@ namespace Nop.Admin.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressService _addressService;
         private readonly ITaxCategoryService _taxCategoryService;
+        private readonly ICurrencyService _currencyService;
 
         private BlogSettings _blogSettings;
         private ForumSettings _forumSettings;
         private NewsSettings _newsSettings;
         private ShippingSettings _shippingSettings;
         private TaxSettings _taxSettings;
+        private CatalogSettings _catalogSettings;
+        private RewardPointsSettings _rewardPointsSettings;
+        private readonly CurrencySettings _currencySettings;
+        private OrderSettings _orderSettings;
+        private ShoppingCartSettings _shoppingCartSettings;
 
 		#endregion Fields 
 
 		#region Constructors
 
-        public SettingController(ISettingService settingService,  
+        public SettingController(ISettingService settingService,
             ICountryService countryService, IStateProvinceService stateProvinceService,
             IAddressService addressService, ITaxCategoryService taxCategoryService,
-            BlogSettings blogSettings,
-            ForumSettings forumSettings,
-            NewsSettings newsSettings,
-            ShippingSettings shippingSettings,
-            TaxSettings taxSettings)
+            ICurrencyService currencyService, BlogSettings blogSettings,
+            ForumSettings forumSettings, NewsSettings newsSettings,
+            ShippingSettings shippingSettings, TaxSettings taxSettings,
+            CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
+            CurrencySettings currencySettings, OrderSettings orderSettings,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._addressService = addressService;
             this._taxCategoryService = taxCategoryService;
+            this._currencyService = currencyService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
             this._newsSettings = newsSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
-		}
+            this._catalogSettings = catalogSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
+            this._currencySettings = currencySettings;
+            this._orderSettings = orderSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
+        }
 
 		#endregion Constructors 
         
@@ -258,6 +274,105 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSetting(_taxSettings);
 
             return RedirectToAction("Tax");
+        }
+
+
+
+
+        public ActionResult Catalog()
+        {
+            var model = _catalogSettings.ToModel();
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult Catalog(CatalogSettingsModel model)
+        {
+            _catalogSettings = model.ToEntity(_catalogSettings);
+            _settingService.SaveSetting(_catalogSettings);
+            return RedirectToAction("Catalog");
+        }
+
+
+
+        public ActionResult RewardPoints()
+        {
+            var model = _rewardPointsSettings.ToModel();
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult RewardPoints(RewardPointsSettingsModel model)
+        {
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+
+            if (ModelState.IsValid)
+            {
+                _rewardPointsSettings = model.ToEntity(_rewardPointsSettings);
+                _settingService.SaveSetting(_rewardPointsSettings);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
+
+
+        public ActionResult Order()
+        {
+            var model = _orderSettings.ToModel();
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+
+            //parse return request actions
+            for (int i = 0; i < _orderSettings.ReturnRequestActions.Count; i++)
+            {
+                model.ReturnRequestActionsParsed += _orderSettings.ReturnRequestActions[i];
+                if (i != _orderSettings.ReturnRequestActions.Count - 1)
+                    model.ReturnRequestActionsParsed += ",";
+            }
+            //parse return request reasons
+            for (int i = 0; i < _orderSettings.ReturnRequestReasons.Count; i++)
+            {
+                model.ReturnRequestReasonsParsed += _orderSettings.ReturnRequestReasons[i];
+                if (i != _orderSettings.ReturnRequestReasons.Count - 1)
+                    model.ReturnRequestReasonsParsed += ",";
+            }
+
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult Order(OrderSettingsModel model)
+        {
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            _orderSettings = model.ToEntity(_orderSettings);
+
+            //parse return request actions
+            _orderSettings.ReturnRequestActions.Clear();
+            foreach (var returnAction in model.ReturnRequestActionsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                _orderSettings.ReturnRequestActions.Add(returnAction);
+            //parse return request reasons
+            _orderSettings.ReturnRequestReasons.Clear();
+            foreach (var returnReason in model.ReturnRequestReasonsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                _orderSettings.ReturnRequestReasons.Add(returnReason);
+        
+            _settingService.SaveSetting(_orderSettings);
+            return RedirectToAction("Order");
+        }
+
+
+
+
+        public ActionResult ShoppingCart()
+        {
+            var model = _shoppingCartSettings.ToModel();
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult ShoppingCart(ShoppingCartSettingsModel model)
+        {
+            _shoppingCartSettings = model.ToEntity(_shoppingCartSettings);
+            _settingService.SaveSetting(_shoppingCartSettings);
+            return RedirectToAction("ShoppingCart");
         }
 
         #endregion

@@ -1,0 +1,94 @@
+﻿@model RewardPointsSettingsModel
+@using Nop.Web.Framework;
+@using Nop.Admin.Models;
+@using Telerik.Web.Mvc.UI;
+@using Nop.Core.Domain.Orders;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.RewardPoints")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+@Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle" colspan="2">
+                @T("Admin.Configuration.Settings.RewardPoints.Description")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Enabled)
+                @Html.ValidationMessageFor(model => model.Enabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ExchangeRate):
+            </td>
+            <td class="adminData">
+                @T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")
+                @Html.EditorFor(model => model.ExchangeRate)
+                @Model.PrimaryStoreCurrencyCode
+                @Html.ValidationMessageFor(model => model.ExchangeRate)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+                @T("Admin.Configuration.Settings.RewardPoints.Earning")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PointsForRegistration):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PointsForRegistration)
+                @Html.ValidationMessageFor(model => model.PointsForRegistration)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PointsForPurchases_Amount):
+            </td>
+            <td class="adminData">
+                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")
+                @Html.EditorFor(model => model.PointsForPurchases_Amount)
+                @Model.PrimaryStoreCurrencyCode
+                &nbsp;
+                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")
+                @Html.EditorFor(model => model.PointsForPurchases_Points)
+                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")
+                @Html.ValidationMessageFor(model => model.PointsForPurchases_Amount)
+                @Html.ValidationMessageFor(model => model.PointsForPurchases_Points)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PointsForPurchases_Awarded):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.PointsForPurchases_Awarded, ((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList())
+                @Html.ValidationMessageFor(model => model.PointsForPurchases_Awarded)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PointsForPurchases_Canceled):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.PointsForPurchases_Canceled, ((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList())
+                @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
+            </td>
+        </tr>
+    </table>
+}

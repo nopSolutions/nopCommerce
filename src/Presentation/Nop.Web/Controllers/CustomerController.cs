@@ -45,7 +45,6 @@ namespace Nop.Web.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly FormFieldSettings _formFieldSettings;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
@@ -76,7 +75,7 @@ namespace Nop.Web.Controllers
         public CustomerController(IAuthenticationService authenticationService,
             IUserService userService, UserSettings userSettings, IDateTimeHelper dateTimeHelper,
             DateTimeSettings dateTimeSettings, TaxSettings taxSettings,
-            FormFieldSettings formFieldSettings, ILocalizationService localizationService,
+            ILocalizationService localizationService,
             IWorkContext workContext, ICustomerService customerService,
             ITaxService taxService, RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings, ForumSettings forumSettings,
@@ -95,7 +94,6 @@ namespace Nop.Web.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
-            this._formFieldSettings = formFieldSettings;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._customerService = customerService;
@@ -199,10 +197,10 @@ namespace Nop.Web.Controllers
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
-            model.GenderEnabled = _formFieldSettings.GenderEnabled;
-            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
-            model.NewsletterEnabled = _formFieldSettings.NewsletterEnabled;
-            //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
+            model.GenderEnabled = _customerSettings.GenderEnabled;
+            model.CompanyEnabled = _customerSettings.CompanyEnabled;
+            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
+            //model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
 
             return View(model);
@@ -260,15 +258,15 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateCustomer(customer);
 
                     //form fields
-                    if (_formFieldSettings.GenderEnabled)
+                    if (_customerSettings.GenderEnabled)
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-                    //if (_formFieldSettings.DateOfBirthEnabled)
+                    //if (_customerSettings.DateOfBirthEnabled)
                     //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
-                    if (_formFieldSettings.CompanyEnabled)
+                    if (_customerSettings.CompanyEnabled)
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
-                    if (_formFieldSettings.NewsletterEnabled)
+                    if (_customerSettings.NewsletterEnabled)
                     {
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(model.Email);
@@ -359,10 +357,10 @@ namespace Nop.Web.Controllers
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
-            model.GenderEnabled = _formFieldSettings.GenderEnabled;
-            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
-            model.NewsletterEnabled = _formFieldSettings.NewsletterEnabled;
-            //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
+            model.GenderEnabled = _customerSettings.GenderEnabled;
+            model.CompanyEnabled = _customerSettings.CompanyEnabled;
+            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
+            //model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             return View(model);
         }
@@ -516,17 +514,17 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(customer);
 
                 //form fields
-                if (_formFieldSettings.GenderEnabled)
+                if (_customerSettings.GenderEnabled)
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
                 _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
                 _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
                 //TODO save DateOfBirth (if enabled)
-                //if (_formFieldSettings.DateOfBirthEnabled)
+                //if (_customerSettings.DateOfBirthEnabled)
                 //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
-                if (_formFieldSettings.CompanyEnabled)
+                if (_customerSettings.CompanyEnabled)
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
                 //newsletter
-                if (_formFieldSettings.NewsletterEnabled)
+                if (_customerSettings.NewsletterEnabled)
                 {
                     //save newsletter value
                     var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.GetDefaultUserAccountEmail());
@@ -605,10 +603,10 @@ namespace Nop.Web.Controllers
             }
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.GenderEnabled = _formFieldSettings.GenderEnabled;
-            //model.DateOfBirthEnabled = _formFieldSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _formFieldSettings.CompanyEnabled;
-            model.NewsletterEnabled = _formFieldSettings.NewsletterEnabled;
+            model.GenderEnabled = _customerSettings.GenderEnabled;
+            //model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _customerSettings.CompanyEnabled;
+            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
 

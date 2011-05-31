@@ -1,0 +1,100 @@
+﻿@model ShoppingCartSettingsModel
+@using Nop.Admin.Models;
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.ShoppingCart")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+@Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MaximumShoppingCartItems):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MaximumShoppingCartItems)
+                @Html.ValidationMessageFor(model => model.MaximumShoppingCartItems)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MaximumWishlistItems):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MaximumWishlistItems)
+                @Html.ValidationMessageFor(model => model.MaximumWishlistItems)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowProductImagesOnShoppingCart):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowProductImagesOnShoppingCart)
+                @Html.ValidationMessageFor(model => model.ShowProductImagesOnShoppingCart)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowProductImagesOnWishList):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowProductImagesOnWishList)
+                @Html.ValidationMessageFor(model => model.ShowProductImagesOnWishList)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowDiscountBox):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowDiscountBox)
+                @Html.ValidationMessageFor(model => model.ShowDiscountBox)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowGiftCardBox):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowGiftCardBox)
+                @Html.ValidationMessageFor(model => model.ShowGiftCardBox)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CrossSellsNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CrossSellsNumber)
+                @Html.ValidationMessageFor(model => model.CrossSellsNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.WishlistEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.WishlistEnabled)
+                @Html.ValidationMessageFor(model => model.WishlistEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EmailWishlistEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EmailWishlistEnabled)
+                @Html.ValidationMessageFor(model => model.EmailWishlistEnabled)
+            </td>
+        </tr>
+    </table>
+}

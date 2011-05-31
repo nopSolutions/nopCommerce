@@ -1,4 +1,5 @@
-﻿@model Nop.Admin.Models.BlogSettingsModel
+﻿@model BlogSettingsModel
+@using Nop.Admin.Models;
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
@@ -12,6 +13,7 @@
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
         </div>
     </div>
+@Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">

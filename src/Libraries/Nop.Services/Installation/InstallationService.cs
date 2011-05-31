@@ -1071,7 +1071,11 @@ namespace Nop.Services.Installation
                     NotifyNewCustomerRegistration = false,
                     HideDownloadableProductsTab = false,
                     DownloadableProductsValidateUser = false,
-                    CustomerNameFormat = CustomerNameFormat.ShowEmails
+                    CustomerNameFormat = CustomerNameFormat.ShowEmails,
+                    GenderEnabled = true,
+                    DateOfBirthEnabled = true,
+                    NewsletterEnabled = true,
+                    CompanyEnabled = true
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<MediaSettings>>()
@@ -1086,14 +1090,6 @@ namespace Nop.Services.Installation
                     CartThumbPictureSize = 80,
                     MaximumImageSize = 1280,
                     DefaultPictureZoomEnabled = false,
-                });
-            EngineContext.Current.Resolve<IConfigurationProvider<FormFieldSettings>>()
-                .SaveSettings(new FormFieldSettings()
-                {
-                    GenderEnabled = true,
-                    DateOfBirthEnabled = true,
-                    NewsletterEnabled = true,
-                    CompanyEnabled = true
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()

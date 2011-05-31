@@ -2645,7 +2645,156 @@
                           </Children>
                         </LocaleResource>
                       </Children>
-                </LocaleResource>
+                  </LocaleResource>
+                  <LocaleResource Name="Catalog">
+                    <Value>Catalog settings</Value>
+                    <Children>
+                      <LocaleResource Name="HidePricesForNonRegistered">
+                        <Value>Hide prices for non-registered customers</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to disable product prices for all non-registered customers so that anyone browsing the site cant see prices. And 'Add to cart'/'Add to wishlist' buttons will be hidden.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowProductSku">
+                        <Value>Show SKU</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to show product SKU in public store.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowManufacturerPartNumber">
+                        <Value>Show manufacturer part number</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to show manufacturer part numbers in public store.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AllowProductSorting">
+                        <Value>Allow product sorting</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enable product sorting option on category/manufacturer details page.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AllowProductViewModeChanging">
+                        <Value>Allow view mode changing</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enable the option to change view mode on category/manufacturer details page.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowCategoryProductNumber">
+                        <Value>Show the number of distinct products besides each category</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to show the number of products besides each category (category navigation block).</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowCategoryProductNumberIncludingSubcategories">
+                        <Value>Include subcategories (number of distinct products)</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to including when showing the number of products besides each category.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CategoryBreadcrumbEnabled">
+                        <Value>Category breadcrumb enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to show category breadcrumb.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ProductReviewsMustBeApproved">
+                        <Value>Product reviews must be approved</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if product reviews must be approved by administrator.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AllowAnonymousUsersToReviewProduct">
+                        <Value>Allow anonymous users to write product reviews</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow anonymous users to write product reviews.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="NotifyStoreOwnerAboutNewProductReviews">
+                        <Value>Notify about new product reviews</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to notify store owner about new product reviews.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="EmailAFriendEnabled">
+                        <Value>'Email a friend' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow customers to use the 'Email a friend' option in your store</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AllowAnonymousUsersToEmailAFriend">
+                        <Value>Allow anonymous users to email a friend</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want to allow anonymous users to email a friend.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="RecentlyViewedProductsNumber">
+                        <Value>Number of 'Recently viewed products'</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The number of 'Recently viewed products' to display when 'Recently viewed products' option is enabled.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="RecentlyViewedProductsEnabled">
+                        <Value>'Recently viewed products' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow customers to use the 'Recently viewed products' feature in your store</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="RecentlyAddedProductsNumber">
+                        <Value>Number of 'Recently added products'</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The number of 'Recently added products' to display when 'Recently added products' option is enabled.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="RecentlyAddedProductsEnabled">
+                        <Value>Recently added products' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow customers to use the 'Recently added products' feature in your store</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CompareProductsEnabled">
+                        <Value>'Compare Products' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow customers to use the 'Compare Products' option in your store</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Forums">
                   <Value>Forums settings</Value>
                     <Children>
@@ -2800,6 +2949,168 @@
                         </LocaleResource>
                       </Children>
                 </LocaleResource>
+                  <LocaleResource Name="Order">
+                    <Value>Order settings</Value>
+                    <Children>
+                      <LocaleResource Name="IsReOrderAllowed">
+                        <Value>Is re-order allowed</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want to allow customers to make re-orders.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MinOrderSubtotalAmount">
+                        <Value>Min order sub-total amount</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Min order total amount.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MinOrderTotalAmount">
+                        <Value>Min order total amount</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter minimum order total amount.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AnonymousCheckoutAllowed">
+                        <Value>Anonymous checkout allowed</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enable anonymous checkout (customers are not required to login/register when purchasing products)</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="TermsOfServiceEnabled">
+                        <Value>Terms of service</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Require customers to accept or decline terms of service before processing the order</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="OnePageCheckoutEnabled">
+                        <Value>Use one page checkout</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>One page checkout is a single web page your customers can use to buy a products/service from you.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ReturnRequestsDescription1">
+                        <Value>The returns system will allow your customers to request a return on items they've purchased. These are also known as RMA requests.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="ReturnRequestsDescription2">
+                        <Value>NOTE: This option is available for completed orders.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="ReturnRequestsEnabled">
+                        <Value>Enable Returns System</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want to allow customers to submit return requests for items they've previously purchased.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ReturnRequestReasons">
+                        <Value>Return reasons</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A comma-separated list of reasons a customer will be able to choose when submitting a return request.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ReturnRequestActions">
+                        <Value>Return action</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>A comma-separated list of actions a customer will be able to choose when submitting a return request.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="RewardPoints">
+                    <Value>Reward points</Value>
+                    <Children>
+                      <LocaleResource Name="Description">
+                        <Value>The Reward Points Program allows customers to earn points for certain actions they take on the site. Points are awarded based on making purchases and customer actions such as registration.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Earning">
+                        <Value>Earning Reward Points</Value>
+                        <Children>
+                          <LocaleResource Name="Hint1">
+                            <Value>Each</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint2">
+                            <Value>spent will earn</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint3">
+                            <Value>reward points.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Enabled">
+                        <Value>Enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want to enable the Reward Points Program.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ExchangeRate">
+                        <Value>Exchange rate</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Specify reward points exchange rate.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint2">
+                            <Value>1 reward point =</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="PointsForRegistration">
+                        <Value>Points for registration</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Specify number of points awarded for registration.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="PointsForPurchases_Amount">
+                        <Value>Points for purchases</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Specify number of points awarded for purchases.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="PointsForPurchases_Awarded">
+                        <Value>Awarded order status</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Points are awarded when the order status is...</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Pending">
+                            <Value>Order status could not be set to Pending</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="PointsForPurchases_Canceled">
+                        <Value>Canceled order status</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Points are canceled when the order status is...</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Pending">
+                            <Value>Order status could not be set to Pending</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Shipping">
                   <Value>Shipping settings</Value>
                   <Children>
@@ -2837,6 +3148,83 @@
                         </LocaleResource>
                       </Children>
                 </LocaleResource>
+                  <LocaleResource Name="ShoppingCart">
+                    <Value>Shopping cart settings</Value>
+                    <Children>
+                      <LocaleResource Name="MaximumShoppingCartItems">
+                        <Value>Maximum shopping cart items</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Maximum number of distinct products allowed in a shopping cart.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MaximumWishlistItems">
+                        <Value>Maximum wishlist items</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Maximum number of distinct products allowed in a wishlist.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowProductImagesOnShoppingCart">
+                        <Value>Show product images on cart</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Determines whether product images should are displayed in your store shopping cart.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowProductImagesOnWishList">
+                        <Value>Show product images on wishlist</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Determines whether product images should are displayed on customer wishlists.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowDiscountBox">
+                        <Value>Show discount box</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want the discount coupon box to be displayed on shopping cart page</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ShowGiftCardBox">
+                        <Value>Show gift card box</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want the gift card coupon box to be displayed on shopping cart page</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CrossSellsNumber">
+                        <Value>Number of 'Cross-Sells'</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The number of 'Cross-Sells' to display on shopping cart page; 0 if you don't want to load cross-sells</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="WishlistEnabled">
+                        <Value>'Wishlist' Enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enable customer wishlists in your store.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="EmailWishlistEnabled">
+                        <Value>Allow customers to email their wishlists</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow customers to email their wishlists to friends.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Tax">
                   <Value>Tax settings</Value>
                     <Children>

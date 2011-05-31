@@ -426,26 +426,7 @@ namespace Nop.Admin
         }
 
         #endregion
-
-        #region Tax settings
-
-        public static TaxSettingsModel ToModel(this TaxSettings entity)
-        {
-            return AutoMapper.Mapper.Map<TaxSettings, TaxSettingsModel>(entity);
-        }
-
-        public static TaxSettings ToEntity(this TaxSettingsModel model)
-        {
-            return AutoMapper.Mapper.Map<TaxSettingsModel, TaxSettings>(model);
-        }
-
-        public static TaxSettings ToEntity(this TaxSettingsModel model, TaxSettings destination)
-        {
-            return AutoMapper.Mapper.Map(model, destination);
-        }
-
-        #endregion
-
+        
         #region Shipping rate computation method
 
         public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
@@ -473,26 +454,7 @@ namespace Nop.Admin
         }
 
         #endregion
-
-        #region Shipping settings
-
-        public static ShippingSettingsModel ToModel(this ShippingSettings entity)
-        {
-            return AutoMapper.Mapper.Map<ShippingSettings, ShippingSettingsModel>(entity);
-        }
-
-        public static ShippingSettings ToEntity(this ShippingSettingsModel model)
-        {
-            return AutoMapper.Mapper.Map<ShippingSettingsModel, ShippingSettings>(model);
-        }
-
-        public static ShippingSettings ToEntity(this ShippingSettingsModel model, ShippingSettings destination)
-        {
-            return AutoMapper.Mapper.Map(model, destination);
-        }
-
-        #endregion
-
+        
         #region Payment methods
 
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
@@ -578,21 +540,7 @@ namespace Nop.Admin
         #endregion
 
         #region Forums
-        //forum settings
-        public static ForumSettingsModel ToModel(this ForumSettings entity)
-        {
-            return AutoMapper.Mapper.Map<ForumSettings, ForumSettingsModel>(entity);
-        }
 
-        public static ForumSettings ToEntity(this ForumSettingsModel model)
-        {
-            return AutoMapper.Mapper.Map<ForumSettingsModel, ForumSettings>(model);
-        }
-
-        public static ForumSettings ToEntity(this ForumSettingsModel model, ForumSettings destination)
-        {
-            return AutoMapper.Mapper.Map(model, destination);
-        }
         //forum groups
         public static ForumGroupModel ToModel(this ForumGroup entity)
         {
@@ -626,21 +574,6 @@ namespace Nop.Admin
         #endregion
 
         #region Blog
-        //blog settings
-        public static BlogSettingsModel ToModel(this BlogSettings entity)
-        {
-            return AutoMapper.Mapper.Map<BlogSettings, BlogSettingsModel>(entity);
-        }
-
-        public static BlogSettings ToEntity(this BlogSettingsModel model)
-        {
-            return AutoMapper.Mapper.Map<BlogSettingsModel, BlogSettings>(model);
-        }
-
-        public static BlogSettings ToEntity(this BlogSettingsModel model, BlogSettings destination)
-        {
-            return AutoMapper.Mapper.Map(model, destination);
-        }
 
         //blog posts
         public static BlogPostModel ToModel(this BlogPost entity)
@@ -661,21 +594,6 @@ namespace Nop.Admin
         #endregion
 
         #region News
-        //News settings
-        public static NewsSettingsModel ToModel(this NewsSettings entity)
-        {
-            return AutoMapper.Mapper.Map<NewsSettings, NewsSettingsModel>(entity);
-        }
-
-        public static NewsSettings ToEntity(this NewsSettingsModel model)
-        {
-            return AutoMapper.Mapper.Map<NewsSettingsModel, NewsSettings>(model);
-        }
-
-        public static NewsSettings ToEntity(this NewsSettingsModel model, NewsSettings destination)
-        {
-            return AutoMapper.Mapper.Map(model, destination);
-        }
 
         //news items
         public static NewsItemModel ToModel(this NewsItem entity)
@@ -782,6 +700,134 @@ namespace Nop.Admin
         }
 
 
+        #endregion
+
+        #region Settings
+
+        public static TaxSettingsModel ToModel(this TaxSettings entity)
+        {
+            return AutoMapper.Mapper.Map<TaxSettings, TaxSettingsModel>(entity);
+        }
+        public static TaxSettings ToEntity(this TaxSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<TaxSettingsModel, TaxSettings>(model);
+        }
+        public static TaxSettings ToEntity(this TaxSettingsModel model, TaxSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static ShippingSettingsModel ToModel(this ShippingSettings entity)
+        {
+            return AutoMapper.Mapper.Map<ShippingSettings, ShippingSettingsModel>(entity);
+        }
+        public static ShippingSettings ToEntity(this ShippingSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<ShippingSettingsModel, ShippingSettings>(model);
+        }
+        public static ShippingSettings ToEntity(this ShippingSettingsModel model, ShippingSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static ForumSettingsModel ToModel(this ForumSettings entity)
+        {
+            return AutoMapper.Mapper.Map<ForumSettings, ForumSettingsModel>(entity);
+        }
+        public static ForumSettings ToEntity(this ForumSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<ForumSettingsModel, ForumSettings>(model);
+        }
+        public static ForumSettings ToEntity(this ForumSettingsModel model, ForumSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static BlogSettingsModel ToModel(this BlogSettings entity)
+        {
+            return AutoMapper.Mapper.Map<BlogSettings, BlogSettingsModel>(entity);
+        }
+        public static BlogSettings ToEntity(this BlogSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<BlogSettingsModel, BlogSettings>(model);
+        }
+        public static BlogSettings ToEntity(this BlogSettingsModel model, BlogSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static NewsSettingsModel ToModel(this NewsSettings entity)
+        {
+            return AutoMapper.Mapper.Map<NewsSettings, NewsSettingsModel>(entity);
+        }
+        public static NewsSettings ToEntity(this NewsSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<NewsSettingsModel, NewsSettings>(model);
+        }
+        public static NewsSettings ToEntity(this NewsSettingsModel model, NewsSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static CatalogSettingsModel ToModel(this CatalogSettings entity)
+        {
+            return AutoMapper.Mapper.Map<CatalogSettings, CatalogSettingsModel>(entity);
+        }
+        public static CatalogSettings ToEntity(this CatalogSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<CatalogSettingsModel, CatalogSettings>(model);
+        }
+        public static CatalogSettings ToEntity(this CatalogSettingsModel model, CatalogSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static RewardPointsSettingsModel ToModel(this RewardPointsSettings entity)
+        {
+            return AutoMapper.Mapper.Map<RewardPointsSettings, RewardPointsSettingsModel>(entity);
+        }
+        public static RewardPointsSettings ToEntity(this RewardPointsSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<RewardPointsSettingsModel, RewardPointsSettings>(model);
+        }
+        public static RewardPointsSettings ToEntity(this RewardPointsSettingsModel model, RewardPointsSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static OrderSettingsModel ToModel(this OrderSettings entity)
+        {
+            return AutoMapper.Mapper.Map<OrderSettings, OrderSettingsModel>(entity);
+        }
+        public static OrderSettings ToEntity(this OrderSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<OrderSettingsModel, OrderSettings>(model);
+        }
+        public static OrderSettings ToEntity(this OrderSettingsModel model, OrderSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
+
+
+        public static ShoppingCartSettingsModel ToModel(this ShoppingCartSettings entity)
+        {
+            return AutoMapper.Mapper.Map<ShoppingCartSettings, ShoppingCartSettingsModel>(entity);
+        }
+        public static ShoppingCartSettings ToEntity(this ShoppingCartSettingsModel model)
+        {
+            return AutoMapper.Mapper.Map<ShoppingCartSettingsModel, ShoppingCartSettings>(model);
+        }
+        public static ShoppingCartSettings ToEntity(this ShoppingCartSettingsModel model, ShoppingCartSettings destination)
+        {
+            return AutoMapper.Mapper.Map(model, destination);
+        }
         #endregion
     }
 
