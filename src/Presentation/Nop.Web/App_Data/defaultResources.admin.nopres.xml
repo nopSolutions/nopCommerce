@@ -4672,6 +4672,77 @@
                     </LocaleResource>
                   </Children>
                 </LocaleResource>
+                <LocaleResource Name="Reports">
+                  <Value>Customer reports</Value>
+                  <Children>
+                    <LocaleResource Name="RunReport">
+                      <Value>Run report</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="BestBy">
+                      <Children>
+                        <LocaleResource Name="BestByNumberOfOrders">
+                          <Value>Top 20 customers by number of orders</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="BestByOrderTotal">
+                          <Value>Top 20 customers by order total</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="StartDate">
+                          <Value>Start date</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The start date for the search</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="EndDate">
+                          <Value>End date</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The end date for the search.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderStatus">
+                          <Value>Order status</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Search by a specific order status e.g. Complete.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="PaymentStatus">
+                          <Value>Payment status</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Search by a specific payment status e.g. Paid.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="ShippingStatus">
+                          <Value>Shipping status</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Customer">
+                              <Value>Customer</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="OrderTotal">
+                              <Value>Order total</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="OrderCount">
+                              <Value>Number of orders</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
               </Children>
             </LocaleResource>
             <LocaleResource Name="Download">
@@ -6117,6 +6188,9 @@
             </LocaleResource>
             <LocaleResource Name="SalesReport">
               <Value>Sales report</Value>
+              <LocaleResource Name="RunReport">
+                <Value>Run report</Value>
+              </LocaleResource>
               <Children>
                 <LocaleResource Name="StartDate">
                   <Value>Start date</Value>

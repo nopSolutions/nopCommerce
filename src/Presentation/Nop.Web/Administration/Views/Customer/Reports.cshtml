@@ -1,0 +1,29 @@
+﻿@model CustomerReports
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+@using Nop.Admin.Models
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
+        @T("Admin.Customers.Reports")
+    </div>
+    <div class="options">
+    </div>
+</div>
+@Html.Telerik().TabStrip().Name("customer-reports").Items(x =>
+{
+    x.Add().Text(T("Admin.Customers.Reports.BestBy.BestByOrderTotal").Text).Content(TabBestByOrderTotal().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders").Text).Content(TabBestByNumberOfOrders().ToHtmlString());
+})
+@helper TabBestByOrderTotal()
+    {
+        var dataDictAttributes = new ViewDataDictionary();
+        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "bestbyordertotal";
+        @Html.Partial("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributes)
+}
+@helper TabBestByNumberOfOrders()
+    {
+        var dataDictAttributes = new ViewDataDictionary();
+        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
+        @Html.Partial("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributes)
+}

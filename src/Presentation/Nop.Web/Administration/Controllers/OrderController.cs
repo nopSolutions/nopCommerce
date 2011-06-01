@@ -33,7 +33,8 @@ namespace Nop.Admin.Controllers
     {
         #region Fields
 
-		private readonly IOrderService _orderService;
+        private readonly IOrderService _orderService;
+        private readonly IOrderReportService _orderReportService;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
@@ -58,7 +59,8 @@ namespace Nop.Admin.Controllers
 
         #region Ctor
 
-        public OrderController(IOrderService orderService, IOrderProcessingService orderProcessingService,
+        public OrderController(IOrderService orderService, 
+            IOrderReportService orderReportService, IOrderProcessingService orderProcessingService,
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter, ILocalizationService localizationService,
             IWorkContext workContext, ICurrencyService currencyService,
             IEncryptionService encryptionService, IPaymentService paymentService,
@@ -69,6 +71,7 @@ namespace Nop.Admin.Controllers
             MeasureSettings measureSettings, PdfSettings pdfSettings)
 		{
             this._orderService = orderService;
+            this._orderReportService = orderReportService;
             this._orderProcessingService = orderProcessingService;
             this._dateTimeHelper = dateTimeHelper;
             this._priceFormatter = priceFormatter;
@@ -1171,7 +1174,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Sales report
+        #region Reports
 
         public ActionResult SalesReport()
         {
@@ -1198,11 +1201,11 @@ namespace Nop.Admin.Controllers
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
 
-            var orders = _orderService.OrderProductVariantReport(startDateValue, endDateValue, 
+            var items = _orderReportService.OrderProductVariantReport(startDateValue, endDateValue, 
                 orderStatus, paymentStatus);
             var gridModel = new GridModel<SalesReportLineModel>
             {
-                Data = orders.Select(x =>
+                Data = items.Select(x =>
                 {
                     var m = new SalesReportLineModel()
                     {
@@ -1215,7 +1218,7 @@ namespace Nop.Admin.Controllers
                         m.ProductVariantFullName = productVariant.Product.Name + " " + productVariant.Name;
                     return m;
                 }),
-                Total = orders.Count
+                Total = items.Count
             };
             return new JsonResult
             {

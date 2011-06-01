@@ -8,6 +8,8 @@ using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
@@ -20,6 +22,8 @@ using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework;
 using Telerik.Web.Mvc;
+using Nop.Core.Domain.Shipping;
+using Nop.Services.Catalog;
 
 namespace Nop.Admin.Controllers
 {
@@ -29,6 +33,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly ICustomerReportService _customerReportService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly DateTimeSettings _dateTimeSettings;
@@ -41,20 +46,23 @@ namespace Nop.Admin.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
+        private readonly IPriceFormatter _priceFormatter;
 
         #endregion
 
         #region Constructors
 
-        public CustomerController(ICustomerService customerService, IDateTimeHelper dateTimeHelper,
+        public CustomerController(ICustomerService customerService,
+            ICustomerReportService customerReportService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
             ICountryService countryService, IStateProvinceService stateProvinceService, 
             IAddressService addressService,
             IUserService userService, CustomerSettings customerSettings,
-            ITaxService taxService, IWorkContext workContext)
+            ITaxService taxService, IWorkContext workContext, IPriceFormatter priceFormatter)
         {
             this._customerService = customerService;
+            this._customerReportService = customerReportService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._dateTimeSettings = dateTimeSettings;
@@ -67,6 +75,7 @@ namespace Nop.Admin.Controllers
             this._customerSettings = customerSettings;
             this._taxService = taxService;
             this._workContext = workContext;
+            this._priceFormatter = priceFormatter;
         }
 
         #endregion Constructors
@@ -729,6 +738,111 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
+        #endregion
+
+        #region Reports
+
+        public ActionResult Reports()
+        {
+            var model = new CustomerReports();
+            model.BestCustomersByNumberOfOrders = new BestCustomersReportModel();
+            model.BestCustomersByNumberOfOrders.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.BestCustomersByNumberOfOrders.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByNumberOfOrders.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+            model.BestCustomersByNumberOfOrders.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            model.BestCustomersByOrderTotal = new BestCustomersReportModel();
+            model.BestCustomersByOrderTotal.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.BestCustomersByOrderTotal.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByOrderTotal.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.BestCustomersByOrderTotal.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByOrderTotal.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+            model.BestCustomersByOrderTotal.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+
+            return View(model);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ReportBestCustomersByOrderTotalList(GridCommand command, BestCustomersReportModel model)
+        {
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+
+
+            var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
+                orderStatus, paymentStatus, shippingStatus, 1);
+            var gridModel = new GridModel<BestCustomerReportLineModel>
+            {
+                Data = items.Select(x =>
+                {
+                    var m = new BestCustomerReportLineModel()
+                    {
+                        CustomerId = x.CustomerId,
+                        OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
+                        OrderCount = x.OrderCount,
+                    };
+                    var customer = _customerService.GetCustomerById(x.CustomerId);
+                    if (customer != null)
+                        m.CustomerName = customer.IsGuest() ?  "Guest" : string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                    return m;
+                }),
+                Total = items.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ReportBestCustomersByNumberOfOrdersList(GridCommand command, BestCustomersReportModel model)
+        {
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+
+
+            var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
+                orderStatus, paymentStatus, shippingStatus, 2);
+            var gridModel = new GridModel<BestCustomerReportLineModel>
+            {
+                Data = items.Select(x =>
+                {
+                    var m = new BestCustomerReportLineModel()
+                    {
+                        CustomerId = x.CustomerId,
+                        OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
+                        OrderCount = x.OrderCount,
+                    };
+                    var customer = _customerService.GetCustomerById(x.CustomerId);
+                    if (customer != null)
+                        m.CustomerName = customer.IsGuest() ? "Guest" : string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                    return m;
+                }),
+                Total = items.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+        
         #endregion
     }
 }

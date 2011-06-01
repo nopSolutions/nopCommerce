@@ -133,6 +133,9 @@
     <Compile Include="Models\BlogSettingsModel.cs" />
     <Compile Include="Models\BlogCommentModel.cs" />
     <Compile Include="Models\CatalogSettingsModel.cs" />
+    <Compile Include="Models\BestCustomersReportModel.cs" />
+    <Compile Include="Models\BestCustomerReportLineModel.cs" />
+    <Compile Include="Models\CustomerReportsModel.cs" />
     <Compile Include="Models\SalesReportLineModel.cs" />
     <Compile Include="Models\SalesReportModel.cs" />
     <Compile Include="Models\ProductTagModel.cs" />
@@ -801,6 +804,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\SalesReport.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Customer\Reports.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Customer\_ReportBestCustomersByOrderTotal.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Customer\_ReportBestCustomersByNumberOfOrders.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

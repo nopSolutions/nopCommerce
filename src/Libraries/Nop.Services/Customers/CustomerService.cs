@@ -5,6 +5,8 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Services.Localization;
@@ -30,7 +32,6 @@ namespace Nop.Services.Customers
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly CustomerSettings _customerSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         
         #endregion
@@ -44,20 +45,17 @@ namespace Nop.Services.Customers
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
-        /// <param name="customerSettings">Customer settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerAttribute> customerAttributeRepository,
-            CustomerSettings customerSettings,
             RewardPointsSettings rewardPointsSettings)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._customerAttributeRepository = customerAttributeRepository;
-            this._customerSettings = customerSettings;
             this._rewardPointsSettings = rewardPointsSettings;
         }
 

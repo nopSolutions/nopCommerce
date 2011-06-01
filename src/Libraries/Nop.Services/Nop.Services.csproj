@@ -87,6 +87,8 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
+    <Compile Include="Customers\ICustomerReportService.cs" />
+    <Compile Include="Customers\CustomerReportService.cs" />
     <Compile Include="News\NewsService.cs" />
     <Compile Include="News\INewsService.cs" />
     <Compile Include="Customers\CustomerExtentions.cs" />
@@ -160,6 +162,8 @@
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\CheckoutAttributeParser.cs" />
     <Compile Include="Orders\CheckoutAttributeService.cs" />
+    <Compile Include="Orders\IOrderReportService.cs" />
+    <Compile Include="Orders\OrderReportService.cs" />
     <Compile Include="Orders\IOrderProcessingService.cs" />
     <Compile Include="Orders\OrderProcessingService.cs" />
     <Compile Include="Orders\IOrderService.cs" />

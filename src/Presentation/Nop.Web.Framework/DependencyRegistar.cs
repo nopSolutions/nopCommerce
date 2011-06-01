@@ -124,6 +124,7 @@ namespace Nop.Web.Framework
             
             builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
+            builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerHttpRequest();
             builder.RegisterType<PermissionService>().As<IPermissionService>().InstancePerHttpRequest();
 
             builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();
@@ -159,6 +160,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<GiftCardService>().As<IGiftCardService>().InstancePerHttpRequest();
             builder.RegisterType<OrderService>().As<IOrderService>().InstancePerHttpRequest();
+            builder.RegisterType<OrderReportService>().As<IOrderReportService>().InstancePerHttpRequest();
             builder.RegisterType<OrderProcessingService>().As<IOrderProcessingService>().InstancePerHttpRequest();
             builder.RegisterType<OrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerHttpRequest();
             builder.RegisterType<ShoppingCartService>().As<IShoppingCartService>().InstancePerHttpRequest();

@@ -1,0 +1,101 @@
+﻿@model BestCustomersReportModel
+@using Nop.Admin.Models;
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StartDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StartDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EndDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.EndDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderStatusId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PaymentStatusId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippingStatusId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" id="search-best-customers-numberoforders-grid" class="t-button">@T("Admin.Customers.Reports.RunReport")</button>
+            </td>
+        </tr>
+    </table>
+    <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<BestCustomerReportLineModel>()
+                                .Name("best-customers-numberoforders-grid")
+                .ClientEvents(events => events.OnDataBinding("bestCustomersNumberOfOrdersOnDataBinding"))
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.CustomerName);
+                    columns.Bound(x => x.OrderTotal);
+                    columns.Bound(x => x.OrderCount);
+                    columns.Bound(x => x.CustomerId)
+                        .Template(x => Html.ActionLink(@T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
+                        .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>")
+                        .Width(50)
+                        .Centered()
+                        .Title("View");
+                })
+                .DataBinding(dataBinding => dataBinding.Ajax().Select("ReportBestCustomersByNumberOfOrdersList", "Customer"))
+                .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+    
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#search-best-customers-numberoforders-grid').click(function () {
+                var grid = $('#best-customers-numberoforders-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+
+        });
+
+        function bestCustomersNumberOfOrdersOnDataBinding(e) {
+        var searchModel = {
+            StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+            EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+            OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
+            PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
+            ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val()
+                };
+        e.data = searchModel;
+    }
+
+    </script>    </div>

@@ -47,6 +47,11 @@
                 @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
             </td>
         </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" id="btnSearch" class="t-button">@T("Admin.SalesReport.RunReport")</button>
+            </td>
+        </tr>
     </table>
      <p>
     </p>
@@ -75,7 +80,17 @@
     </table>
     
     <script type="text/javascript">
-      
+
+        $(document).ready(function () {
+
+            $('#btnSearch').click(function () {
+                var grid = $('#salesreport-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+
+        });
+
     function onDataBinding(e) {
         var searchModel = {
                 StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
