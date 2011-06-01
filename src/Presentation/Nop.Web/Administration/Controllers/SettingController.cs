@@ -7,6 +7,7 @@ using Nop.Admin.Models;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
@@ -435,6 +436,96 @@ namespace Nop.Admin.Controllers
 
             return RedirectToAction("CustomerUser");
         }
+
+
+
+
+
+
+        //all settings
+        public ActionResult AllSettings()
+        {
+            var settings = _settingService.GetAllSettings().Select(x => x.Value).OrderBy(x => x.Name).ToList();
+            var model = new GridModel<SettingModel>
+            {
+                Data = settings.Take(20).Select(x => 
+                {
+                    return new SettingModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Value = x.Value
+                    };
+                }),
+                Total = settings.Count
+            };
+            return View(model);
+        }
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult AllSettings(GridCommand command)
+        {
+            var settings = _settingService.GetAllSettings().Select(x => x.Value).OrderBy(x => x.Name)
+                .Select(x => 
+                {
+                    return new SettingModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Value = x.Value
+                    };
+                })
+                .ForCommand(command);
+
+            var model = new GridModel<SettingModel>
+            {
+                Data = settings.PagedForCommand(command),
+                Total = settings.Count()
+            };
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult SettingUpdate(SettingModel model, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("AllSettings");
+            }
+
+            _settingService.SetSetting(model.Name, model.Value);
+
+            return AllSettings(command);
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult SettingAdd([Bind(Exclude = "Id")] SettingModel model, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            _settingService.SetSetting(model.Name, model.Value);
+            
+            return AllSettings(command);
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult SettingDelete(int id, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var setting = _settingService.GetSettingById(id);
+            _settingService.DeleteSetting(setting);
+            
+            return AllSettings(command);
+        }
+
         #endregion
     }
 }

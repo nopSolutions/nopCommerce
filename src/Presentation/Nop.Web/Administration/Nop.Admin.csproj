@@ -133,6 +133,7 @@
     <Compile Include="Models\BlogSettingsModel.cs" />
     <Compile Include="Models\BlogCommentModel.cs" />
     <Compile Include="Models\CatalogSettingsModel.cs" />
+    <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\CustomerUserSettingsModel.cs" />
     <Compile Include="Models\MediaSettingsModel.cs" />
     <Compile Include="Models\ShoppingCartSettingsModel.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Validators\AffiliateValidator.cs" />
     <Compile Include="Validators\CampaignValidator.cs" />
     <Compile Include="Validators\BlogPostValidator.cs" />
+    <Compile Include="Validators\SettingValidator.cs" />
     <Compile Include="Validators\RewardPointsSettingsValidator.cs" />
     <Compile Include="Validators\TopicValidator.cs" />
     <Compile Include="Validators\NewsItemValidator.cs" />
@@ -784,6 +786,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Setting\CustomerUser.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setting\AllSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -1,0 +1,49 @@
+﻿@model Telerik.Web.Mvc.GridModel<SettingModel>
+@using Nop.Admin.Models;
+@using Telerik.Web.Mvc.UI;
+@using System.Linq;
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+        @T("Admin.Configuration.Settings.AllSettings")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid(Model.Data)
+                    .Name("settings-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id).Hidden(true);
+                        columns.Bound(x => x.Name).EditorTemplateName("String").Width(300);
+                        columns.Bound(x => x.Value).EditorTemplateName("String");
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        }).Width(180);
+
+                    })
+                    .ToolBar(x => x.Insert())
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .Filterable()
+                    .Pageable(settings => settings.PageSize(20).Total(Model.Total))
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("AllSettings", "Setting")
+                            .Update("SettingUpdate", "Setting")
+                            .Delete("SettingDelete", "Setting")
+                            .Insert("SettingAdd", "Setting");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

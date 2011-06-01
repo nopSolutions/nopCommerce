@@ -144,7 +144,6 @@ namespace Nop.Services.Configuration
                               {
                                   Name = key,
                                   Value = valueStr,
-                                  Description = string.Empty
                               };
                 InsertSetting(setting);
             }

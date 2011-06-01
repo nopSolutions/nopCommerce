@@ -2609,6 +2609,26 @@
               <LocaleResource Name="Settings">
                 <Value>Settings</Value>
                 <Children>
+                  <LocaleResource Name="AllSettings">
+                    <Value>All settings (advanced)</Value>
+                    <Children>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="Name">
+                            <Value>Setting name</Value>
+                            <Children>
+                              <LocaleResource Name="Required">
+                                <Value>Please provide a setting name.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Value">
+                            <Value>Value</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Blog">
                   <Value>Blog settings</Value>
                   <Children>

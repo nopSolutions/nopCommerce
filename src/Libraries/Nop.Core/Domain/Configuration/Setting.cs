@@ -7,10 +7,9 @@ namespace Nop.Core.Domain.Configuration
     {
         public Setting() { }
         
-        public Setting(string name, string value, string description = "") {
+        public Setting(string name, string value) {
             this.Name = name;
             this.Value = value;
-            this.Description = description;
         }
         
         /// <summary>
@@ -22,11 +21,6 @@ namespace Nop.Core.Domain.Configuration
         /// Gets or sets the value
         /// </summary>
         public virtual string Value { get; set; }
-
-        /// <summary>
-        /// Gets or sets the description
-        /// </summary>
-        public string Description { get; set; }
 
         /// <summary>
         /// Returns the setting value as the specified type
