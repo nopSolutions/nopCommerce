@@ -47,6 +47,7 @@ namespace Nop.Admin.Controllers
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IProductService _productService;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -63,7 +64,7 @@ namespace Nop.Admin.Controllers
             IEncryptionService encryptionService, IPaymentService paymentService,
             IMeasureService measureService, IPdfService pdfService,
             IAddressService addressService, ICountryService countryService,
-            IStateProvinceService stateProvinceService,
+            IStateProvinceService stateProvinceService, IProductService productService,
             CurrencySettings currencySettings, TaxSettings taxSettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings)
 		{
@@ -81,6 +82,7 @@ namespace Nop.Admin.Controllers
             this._addressService = addressService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
+            this._productService = productService;
 
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -1164,6 +1166,61 @@ namespace Nop.Admin.Controllers
             _orderService.DeleteOrderNote(orderNote);
 
             return OrderNotesSelect(orderId, command);
+        }
+
+
+        #endregion
+
+        #region Sales report
+
+        public ActionResult SalesReport()
+        {
+            var model = new SalesReportModel();
+            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult SalesReportList(GridCommand command, SalesReportModel model)
+        {
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+
+
+            var orders = _orderService.OrderProductVariantReport(startDateValue, endDateValue, 
+                orderStatus, paymentStatus);
+            var gridModel = new GridModel<SalesReportLineModel>
+            {
+                Data = orders.Select(x =>
+                {
+                    var m = new SalesReportLineModel()
+                    {
+                        ProductVariantId = x.ProductVariantId,
+                        TotalPrice = _priceFormatter.FormatPrice(x.TotalPrice, true, false),
+                        TotalQuantity = x.TotalQuantity,
+                    };
+                    var productVariant = _productService.GetProductVariantById(x.ProductVariantId);
+                    if (productVariant != null)
+                        m.ProductVariantFullName = productVariant.Product.Name + " " + productVariant.Name;
+                    return m;
+                }),
+                Total = orders.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
         }
 
 

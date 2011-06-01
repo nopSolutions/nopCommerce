@@ -518,6 +518,65 @@ namespace Nop.Services.Orders
 
         #endregion
 
+        #region Reports
+
+
+        /// <summary>
+        /// Get order product variant sales report
+        /// </summary>
+        /// <param name="startTime">Order start time; null to load all</param>
+        /// <param name="endTime">Order end time; null to load all</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <returns>Result</returns>
+        public IList<OrderProductVariantReportLine> OrderProductVariantReport(DateTime? startTime,
+            DateTime? endTime, OrderStatus? os, PaymentStatus? ps)
+        {
+            int? orderStatusId = null;
+            if (os.HasValue)
+                orderStatusId = (int)os.Value;
+
+            int? paymentStatusId = null;
+            if (ps.HasValue)
+                paymentStatusId = (int)ps.Value;
+
+            var query1 = from opv in _opvRepository.Table
+                         select opv;
+
+            if (startTime.HasValue)
+                query1 = query1.Where(opv => startTime.Value <= opv.Order.CreatedOnUtc);
+            if (endTime.HasValue)
+                query1 = query1.Where(opv => endTime.Value >= opv.Order.CreatedOnUtc);
+            if (orderStatusId.HasValue)
+                query1 = query1.Where(opv => orderStatusId == opv.Order.OrderStatusId);
+            if (paymentStatusId.HasValue)
+                query1 = query1.Where(opv => paymentStatusId == opv.Order.PaymentStatusId);
+            query1 = query1.Where(opv => !opv.Order.Deleted);
+
+            var query2 = from opv in query1
+                         group opv by opv.ProductVariantId into g
+                         select new
+                         {
+                             ProductVariantId = g.Key,
+                             TotalPrice = g.Sum(x => x.PriceExclTax),
+                             TotalQuantity = g.Sum(x => x.Quantity)
+                         };
+            query2 = query2.OrderByDescending(x => x.TotalPrice);
+
+            var result = query2.ToList().Select(x =>
+            {
+                return new OrderProductVariantReportLine()
+                         {
+                             ProductVariantId = x.ProductVariantId,
+                             TotalPrice = x.TotalPrice,
+                             TotalQuantity = x.TotalQuantity
+                         };
+            }).ToList();
+            return result;
+        }
+
+        #endregion
+
         #endregion
     }
 }

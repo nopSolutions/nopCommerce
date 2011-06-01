@@ -23,6 +23,7 @@
           <siteMapNode title="Recurring payments" nopResource="Admin.RecurringPayments" controller="RecurringPayment" action="List" />
           <siteMapNode title="Return requests" nopResource="Admin.ReturnRequests" controller="ReturnRequest" action="List" />
           <siteMapNode title="Gift cards" nopResource="Admin.GiftCards" controller="GiftCard" action="List" />
+          <siteMapNode title="Sales report" nopResource="Admin.SalesReport" controller="Order" action="SalesReport" />
         </siteMapNode>
         <siteMapNode title="Customers" nopResource="Admin.Customers">
           <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />

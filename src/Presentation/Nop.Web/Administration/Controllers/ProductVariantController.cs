@@ -327,7 +327,7 @@ namespace Nop.Admin.Controllers
                 {
                     var variantModel = x.ToModel();
                     //Full product variant name
-                    variantModel.Name = x.Product.Name + x.Name;
+                    variantModel.Name = x.Product.Name + " " + x.Name;
                     return variantModel;
                 }),
                 Total = variants.Count
