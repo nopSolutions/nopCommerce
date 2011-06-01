@@ -1,0 +1,44 @@
+﻿@model Telerik.Web.Mvc.GridModel<ProductVariantModel>
+@using Nop.Admin.Models
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+            @T("Admin.Catalog.LowStockReport.Manage")
+        </div>
+        <div class="options">
+        </div>
+    </div>
+
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ProductVariantModel>(Model.Data)
+                    .Name("productvariants-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(pv => pv.Name);
+                        columns.Bound(pv => pv.Sku).Width(100);
+                        columns.Bound(pv => pv.Price).Width(100);
+                        columns.Bound(pv => pv.StockQuantity).Width(100);
+                        columns.Bound(pv => pv.Published)
+                        .Width(100)
+                        .Template(pv => pv.Published.ToString().ToLower())
+                        .Centered();
+                                columns.Bound(x => x.Id)
+                                    .Width(50)
+                                    .Centered()
+                                    .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                                    .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                                    .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(20))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("LowStockReportList", "ProductVariant"))
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+}

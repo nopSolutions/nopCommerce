@@ -13,6 +13,7 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Tax;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -297,7 +298,46 @@ namespace Nop.Admin.Controllers
             _productService.DeleteProductVariant(variant);
             return RedirectToAction("Edit", "Product", new { id = productId });
         }
-        
+
+        public ActionResult LowStockReport()
+        {
+            var variants = _productService.GetLowStockProductVariants().Take(20).ToList();
+            var model = new GridModel<ProductVariantModel>()
+            {
+                Data = variants.Select(x =>
+                {
+                    var variantModel = x.ToModel();
+                    //Full product variant name
+                    variantModel.Name = x.Product.Name + x.Name;
+                    return variantModel;
+                }),
+                Total = variants.Count
+            };
+
+            return View(model);
+        }
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult LowStockReportList(GridCommand command)
+        {
+            var variants = _productService.GetLowStockProductVariants();
+
+            var model = new GridModel<ProductVariantModel>()
+            {
+                Data = variants.PagedForCommand(command).Select(x =>
+                {
+                    var variantModel = x.ToModel();
+                    //Full product variant name
+                    variantModel.Name = x.Product.Name + x.Name;
+                    return variantModel;
+                }),
+                Total = variants.Count
+            };
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
         #endregion
 
         #region Tier prices

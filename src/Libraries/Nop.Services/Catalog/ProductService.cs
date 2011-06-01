@@ -479,6 +479,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual IList<ProductVariant> GetLowStockProductVariants()
         {
+            //perhapd, ensure that pv.ManageInventoryMethod != ManageInventoryMethod.DontManageStock
             var query = from pv in _productVariantRepository.Table
                         orderby pv.MinStockQuantity
                         where !pv.Deleted &&

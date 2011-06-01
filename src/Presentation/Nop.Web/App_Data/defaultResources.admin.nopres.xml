@@ -560,6 +560,14 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
+                    <LocaleResource Name="LowStockReport">
+                      <Value>Low stock report</Value>
+                      <Children>
+                        <LocaleResource Name="Manage">
+                          <Value>Low stock product variant</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="ProductReviews">
                       <Value>Product reviews</Value>
                       <Children>
