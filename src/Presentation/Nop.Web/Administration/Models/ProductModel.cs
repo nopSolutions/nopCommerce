@@ -61,6 +61,9 @@ namespace Nop.Admin.Models
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowCustomerReviews")]
         public bool AllowCustomerReviews { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
+        public string ProductTags { get; set; }
+        
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
 

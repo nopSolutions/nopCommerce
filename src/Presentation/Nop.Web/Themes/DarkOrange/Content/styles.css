@@ -4080,8 +4080,23 @@ textarea
 .producttags-box
 {
 	padding: 5px 5px 5px 5px;
-	clear: both;
 	color: #555;
+}
+.producttags-box .title
+{
+	padding: 10px 10px 10px 0px;
+	font-weight: bold;
+	text-transform: uppercase;
+	clear: both;
+	font-size: 1.1em;
+	color: #ff9933;
+}
+.producttags-box .producttags-list
+{
+}
+.producttags-box .producttags-list a
+{
+    text-decoration: underline;
 }
 
 .tier-prices

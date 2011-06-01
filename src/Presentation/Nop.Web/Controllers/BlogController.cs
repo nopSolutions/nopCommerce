@@ -82,54 +82,6 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected int GetFontSize(double weight, double mean, double stdDev)
-        {
-            double factor = (weight - mean);
-
-            if (factor != 0 && stdDev != 0) factor /= stdDev;
-
-            return (factor > 2) ? 150 :
-                (factor > 1) ? 120 :
-                (factor > 0.5) ? 100 :
-                (factor > -0.5) ? 90 :
-                (factor > -1) ? 85 :
-                (factor > -2) ? 80 :
-                75;
-        }
-
-        [NonAction]
-        protected double Mean(IEnumerable<double> values)
-        {
-            double sum = 0;
-            int count = 0;
-
-            foreach (double d in values)
-            {
-                sum += d;
-                count++;
-            }
-
-            return sum / count;
-        }
-
-        [NonAction]
-        protected double StdDev(IEnumerable<double> values, out double mean)
-        {
-            mean = Mean(values);
-            double sumOfDiffSquares = 0;
-            int count = 0;
-
-            foreach (double d in values)
-            {
-                double diff = (d - mean);
-                sumOfDiffSquares += diff * diff;
-                count++;
-            }
-
-            return Math.Sqrt(sumOfDiffSquares / count);
-        }
-
-        [NonAction]
         private void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (blogPost == null)
@@ -346,37 +298,22 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return Content("");
 
-            var model = new List<BlogPostTagModel>();
+            var model = new BlogPostTagListModel();
 
-            //get all tags
-            var blogPostTags = _blogService.GetAllBlogPostTags(_workContext.WorkingLanguage.Id).ToList();
+            //get tags
+            var tags = _blogService.GetAllBlogPostTags(_workContext.WorkingLanguage.Id)
+                .OrderByDescending(x => x.BlogPostCount)
+                .Take(15)
+                .ToList();
             //sorting
-            blogPostTags.Sort(new BlogTagComparer());
+            tags = tags.OrderBy(x => x.Name).ToList();
 
-            int maxItems = 15;
-            for (int i = 0; i < blogPostTags.Count; i++)
-            {
-                BlogPostTag blogTag = blogPostTags[i];
-                if (i < maxItems)
-                {
-                    model.Add(new BlogPostTagModel()
-                        {
-                            Name = blogTag.Name,
-                            BlogPostCount = blogTag.BlogPostCount
-                        });
-                }
-            }
-
-            //font sizes (move appropriate font size calculations to the view)
-            double mean = 0;
-            var itemWeights = new List<double>();
-            foreach (var blogTag in model)
-                itemWeights.Add(blogTag.BlogPostCount);
-            double stdDev = StdDev(itemWeights, out mean);
-            foreach (var blogPost in model)
-            {
-                blogPost.FontSizePercent = GetFontSize(blogPost.BlogPostCount, mean, stdDev);
-            }
+            foreach (var tag in tags)
+                model.Tags.Add(new BlogPostTagModel()
+                    {
+                        Name = tag.Name,
+                        BlogPostCount = tag.BlogPostCount
+                    });
 
             return PartialView(model);
         }
@@ -437,21 +374,6 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        #endregion
-
-        #region Nested classes
-
-        protected class BlogTagComparer : IComparer<BlogPostTag>
-        {
-            public int Compare(BlogPostTag x, BlogPostTag y)
-            {
-                if (y == null || String.IsNullOrEmpty(y.Name))
-                    return -1;
-                if (x == null || String.IsNullOrEmpty(x.Name))
-                    return 1;
-                return x.Name.CompareTo(y.Name);
-            }
-        }
         #endregion
     }
 }

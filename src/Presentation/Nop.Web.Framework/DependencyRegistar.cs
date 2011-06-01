@@ -110,6 +110,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerHttpRequest();
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerHttpRequest();
+            builder.RegisterType<ProductTagService>().As<IProductTagService>().InstancePerHttpRequest();
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerHttpRequest();
 
             builder.RegisterType<AffiliateService>().As<IAffiliateService>().InstancePerHttpRequest();

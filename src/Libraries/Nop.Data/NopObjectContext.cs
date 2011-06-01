@@ -85,6 +85,7 @@ namespace Nop.Data
         public DbSet<ProductReview> ProductReviews { get; set; }
         public DbSet<ProductReviewHelpfulness> ProductReviewHelpfulness { get; set; }
         public DbSet<ProductSpecificationAttribute> ProductSpecificationAttributes { get; set; }
+        public DbSet<ProductTag> ProductTags { get; set; }
         public DbSet<ProductVariantAttribute> ProductVariantAttributes { get; set; }
         public DbSet<ProductVariantAttributeCombination> ProductVariantAttributeCombinations { get; set; }
         public DbSet<ProductVariantAttributeValue> ProductVariantAttributeValues { get; set; }

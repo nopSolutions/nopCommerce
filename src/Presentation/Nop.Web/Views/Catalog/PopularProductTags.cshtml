@@ -1,10 +1,10 @@
-﻿@model BlogPostTagListModel
-@using Nop.Web.Models.Blogs
+﻿@model PopularProductTagsModel
+@using Nop.Web.Models.Catalog
 @if (Model.Tags.Count > 0)
 {
-    <div class="block block-popular-blogtags">
+    <div class="block block-popular-tags">
         <div class="title">
-            @T("Blog.TagCloud")
+            @T("Products.Tags.Popular")
         </div>
         <div class="clear">
         </div>
@@ -13,11 +13,13 @@
                 <ul>
                     @foreach (var item in Model.Tags)
                     {
-                        <li><a href="@Url.RouteUrl("BlogByTag", new { tag = item.Name })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a>
+                        <li><a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.Name })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a>&nbsp;&nbsp;
                         </li>
                     }
                 </ul>
             </div>
         </div>
     </div>
+
+    
 }

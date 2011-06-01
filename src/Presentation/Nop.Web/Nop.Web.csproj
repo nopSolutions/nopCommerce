@@ -111,9 +111,13 @@
     <Compile Include="Models\Blogs\BlogCommentModel.cs" />
     <Compile Include="Models\Blogs\BlogPostYearMonthModel.cs" />
     <Compile Include="Models\Blogs\AddBlogCommentModel.cs" />
+    <Compile Include="Models\Blogs\BlogPostTagListModel.cs" />
+    <Compile Include="Models\Catalog\ProductsByTagModel.cs" />
+    <Compile Include="Models\Catalog\PopularProductTagsModel.cs" />
     <Compile Include="Models\Catalog\CategoryModel.cs" />
     <Compile Include="Models\Catalog\CategoryNavigationModel.cs" />
     <Compile Include="Models\Catalog\AddToCompareListModel.cs" />
+    <Compile Include="Models\Catalog\ProductTagModel.cs" />
     <Compile Include="Models\Catalog\ProductEmailAFriendModel.cs" />
     <Compile Include="Models\Catalog\ProductSpecificationModel.cs" />
     <Compile Include="Models\Catalog\ProductReviewModel.cs" />
@@ -1129,6 +1133,9 @@
     <Content Include="Views\Topic\TopicBlock.cshtml" />
     <Content Include="Views\Topic\TopicDetails.cshtml" />
     <Content Include="Views\Common\Sitemap.cshtml" />
+    <Content Include="Views\Catalog\ProductTags.cshtml" />
+    <Content Include="Views\Catalog\PopularProductTags.cshtml" />
+    <Content Include="Views\Catalog\ProductsByTag.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

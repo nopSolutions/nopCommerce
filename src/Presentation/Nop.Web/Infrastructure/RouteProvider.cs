@@ -257,6 +257,13 @@ namespace Nop.Web.Infrastructure
                             "sitemap",
                             new { controller = "Common", action = "SiteMap" },
                             new[] { "Nop.Web.Controllers" });
+
+            //product tags
+            routes.MapRoute("ProductsByTag",
+                            "productag/{productTagId}/{SeName}",
+                            new { controller = "Catalog", action = "ProductsByTag", SeName = UrlParameter.Optional },
+                            new { productTagId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

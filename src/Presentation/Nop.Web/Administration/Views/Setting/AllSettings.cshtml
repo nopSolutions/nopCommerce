@@ -19,7 +19,6 @@
                     })
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Id).Hidden(true);
                         columns.Bound(x => x.Name).EditorTemplateName("String").Width(300);
                         columns.Bound(x => x.Value).EditorTemplateName("String");
                         columns.Command(commands =>

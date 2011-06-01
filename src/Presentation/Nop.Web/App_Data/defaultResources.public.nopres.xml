@@ -1916,6 +1916,17 @@
       <LocaleResource Name="Specs">
         <Value>Products specifications</Value>
       </LocaleResource>
+      <LocaleResource Name="Tags">
+        <Value>Product tags</Value>
+        <Children>
+          <LocaleResource Name="ProductsTaggedWith">
+            <Value>Products tagged with '{0}'</Value>
+          </LocaleResource>
+          <LocaleResource Name="Popular">
+            <Value>Popular tags</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="TierPrices">
         <Value>PRICE BREAKS - The more you buy, the more you save</Value>
         <Children>

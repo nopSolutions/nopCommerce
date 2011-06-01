@@ -157,5 +157,16 @@ namespace Nop.Services.Catalog
 
             return stockMessage;
         }
+
+
+        public static bool ProductTagExists(this Product product,
+            int productTagId)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            bool result = product.ProductTags.ToList().Find(pt => pt.Id == productTagId) != null;
+            return result;
+        }
     }
 }

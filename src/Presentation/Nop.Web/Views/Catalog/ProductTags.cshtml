@@ -1,0 +1,25 @@
+﻿@model IList<ProductTagModel>
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@if (Model != null && Model.Count > 0)
+{
+    <div class="producttags-box">
+        <div class="title">
+            @T("Products.Tags")
+        </div>
+        <div class="clear">
+        </div>
+        <div class="producttags-list">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <a href="@Url.RouteUrl("ProductsByTag", new { productTagId = Model[i].Id, SeName = Model[i].Name })" class="producttag">
+                @Model[i].Name</a> <text>(</text>@(Model[i].ProductCount)<text>)</text>
+        if (i != Model.Count - 1)
+        {
+            <text>, </text>
+        }
+        }
+        </div>
+    </div>
+
+}

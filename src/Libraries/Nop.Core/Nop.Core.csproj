@@ -81,6 +81,7 @@
     <Compile Include="Domain\Blogs\BlogComment.cs" />
     <Compile Include="Domain\Blogs\BlogPostTag.cs" />
     <Compile Include="Domain\Catalog\CatalogSettings.cs" />
+    <Compile Include="Domain\Catalog\ProductTag.cs" />
     <Compile Include="Domain\Catalog\ProductReviewHelpfulness.cs" />
     <Compile Include="Domain\Catalog\PriceRange.cs" />
     <Compile Include="Domain\Catalog\ProductExtensions.cs" />

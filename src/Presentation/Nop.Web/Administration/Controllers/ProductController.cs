@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
@@ -33,6 +34,7 @@ namespace Nop.Admin.Controllers
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IPictureService _pictureService;
         private readonly ITaxCategoryService _taxCategoryService;
+        private readonly IProductTagService _productTagService;
 
         #endregion
 
@@ -43,7 +45,7 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext, ILanguageService languageService, 
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
-            ITaxCategoryService taxCategoryService)
+            ITaxCategoryService taxCategoryService, IProductTagService productTagService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -55,6 +57,7 @@ namespace Nop.Admin.Controllers
             this._specificationAttributeService = specificationAttributeService;
             this._pictureService = pictureService;
             this._taxCategoryService = taxCategoryService;
+            this._productTagService = productTagService;
         }
 
         #endregion Constructors 
@@ -170,6 +173,26 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        private void PrepareTags(ProductModel model, Product product)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (product != null)
+            {
+                var result = new StringBuilder();
+                for (int i = 0; i < product.ProductTags.Count; i++)
+                {
+                    var pt = product.ProductTags.ToList()[i];
+                    result.Append(pt.Name);
+                    if (i != product.ProductTags.Count - 1)
+                        result.Append(", ");
+                }
+                model.ProductTags = result.ToString();
+            }
+        }
+
 
 
         [NonAction]
@@ -231,6 +254,78 @@ namespace Nop.Admin.Controllers
             model.HideDisplayOrderProperty = true;
         }
 
+        [NonAction]
+        private string[] ParseProductTags(string productTags)
+        {
+            var result = new List<string>();
+            if (!String.IsNullOrWhiteSpace(productTags))
+            {
+                string[] values = productTags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string val1 in values)
+                    if (!String.IsNullOrEmpty(val1.Trim()))
+                        result.Add(val1.Trim());
+            }
+            return result.ToArray();
+        }
+
+        private void SaveProductTags(Product product, string[] productTags)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            //product tags
+            var existingProductTags = product.ProductTags.OrderByDescending(pt => pt.ProductCount).ToList();
+            var productTagsToDelete = new List<ProductTag>();
+            foreach (var existingProductTag in existingProductTags)
+            {
+                bool found = false;
+                foreach (string newProductTag in productTags)
+                {
+                    if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    productTagsToDelete.Add(existingProductTag);
+                }
+            }
+            foreach (var productTag in productTagsToDelete)
+            {
+                product.ProductTags.Remove(productTag);
+                //ensure product is saved before updating totals
+                _productService.UpdateProduct(product);
+                _productTagService.UpdateProductTagTotals(productTag);
+            }
+            foreach (string productTagName in productTags)
+            {
+                ProductTag productTag = null;
+                var productTag2 = _productTagService.GetProductTagByName(productTagName);
+                if (productTag2 == null)
+                {
+                    //add new product tag
+                    productTag = new ProductTag()
+                    {
+                        Name = productTagName,
+                        ProductCount = 0
+                    };
+                    _productTagService.InsertProductTag(productTag);
+                }
+                else
+                {
+                    productTag = productTag2;
+                }
+                if (!product.ProductTagExists(productTag.Id))
+                {
+                    product.ProductTags.Add(productTag);
+                    //ensure product is saved before updating totals
+                    _productService.UpdateProduct(product);
+                    _productTagService.UpdateProductTagTotals(productTag);
+                }
+            }
+        }
         #endregion
 
         #region Methods
@@ -298,27 +393,8 @@ namespace Nop.Admin.Controllers
             if (pv != null)
                 return RedirectToAction("Edit", "ProductVariant", new { id = pv.Id });
             
-            var products = _productService.SearchProducts(0,
-                0, null, null, null, 0, 0, string.Empty, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, 10, true);
-
-            model.Products = new GridModel<ProductModel>
-            {
-                Data = products.Select(x => x.ToModel()),
-                Total = products.TotalCount
-            };
-            //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var c in _categoryService.GetAllCategories(true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString(), Selected = c.Id == model.SearchCategoryId });
-
-            //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var m in _manufacturerService.GetAllManufacturers(true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString(), Selected = m.Id == model.SearchManufacturerId });
-
-            return View(model);
+            //not found
+            return List();
         }
 
         //create product
@@ -360,6 +436,7 @@ namespace Nop.Admin.Controllers
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.InsertProduct(product);
                 UpdateLocales(product, model);
+                SaveProductTags(product, ParseProductTags(model.ProductTags));
 
                 //default product variant
                 var variant = model.FirstProductVariantModel.ToEntity();
@@ -404,6 +481,8 @@ namespace Nop.Admin.Controllers
                     locale.MetaTitle = product.GetLocalized(x => x.MetaTitle, languageId, false);
                     locale.SeName = product.GetLocalized(x => x.SeName, languageId, false);
                 });
+
+            PrepareTags(model, product);
             PrepareVariantsModel(model, product);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
@@ -430,10 +509,12 @@ namespace Nop.Admin.Controllers
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.UpdateProduct(product);
                 UpdateLocales(product, model);
+                SaveProductTags(product, ParseProductTags(model.ProductTags));
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            PrepareTags(model, product);
             PrepareVariantsModel(model, product);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
@@ -985,8 +1066,7 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
-
-
+        
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductSpecAttrList(GridCommand command, int productId)
         {
@@ -1053,6 +1133,70 @@ namespace Nop.Admin.Controllers
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
 
             return ProductSpecAttrList(command, productId);
+        }
+
+        #endregion
+
+        #region Product tags
+
+        public ActionResult ProductTags()
+        {
+            var tags = _productTagService.GetAllProductTags();
+            var model = new GridModel<ProductTagModel>
+            {
+                Data = tags.Take(20).Select(x =>
+                {
+                    return new ProductTagModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        ProductCount = x.ProductCount
+                    };
+                }),
+                Total = tags.Count
+            };
+            return View(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductTags(GridCommand command)
+        {
+            var tags = _productTagService.GetAllProductTags()
+                .Select(x =>
+                {
+                    return new ProductTagModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        ProductCount = x.ProductCount
+                    };
+                })
+                .ForCommand(command);
+
+            var model = new GridModel<ProductTagModel>
+            {
+                Data = tags.PagedForCommand(command),
+                Total = tags.Count()
+            };
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductTagDelete(int id, GridCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var tag = _productTagService.GetProductById(id);
+            _productTagService.DeleteProductTag(tag);
+
+            return ProductTags(command);
         }
 
         #endregion

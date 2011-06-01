@@ -787,6 +787,14 @@
                                   </LocaleResource>
                                 </Children>
                               </LocaleResource>
+                              <LocaleResource Name="ProductTags">
+                                <Value>Product tags</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Product tags are keywords that this product can also be identified by. Enter a comma separated list of the tags to be associated with this products. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
                               <LocaleResource Name="Published">
                                 <Value>Published</Value>
                                 <Children>
@@ -1595,6 +1603,21 @@
                               </Children>
                           </LocaleResource>
                         </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="ProductTags">
+                      <Value>Product tags</Value>
+                      <Children>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Name">
+                              <Value>Tag name</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="ProductCount">
+                              <Value>Tagged products</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
                 </Children>
             </LocaleResource>

@@ -75,6 +75,7 @@
     <Compile Include="AffiliatePersistenceTests.cs" />
     <Compile Include="CampaignPersistenceTests.cs" />
     <Compile Include="BlogPostPersistenceTests.cs" />
+    <Compile Include="ProductTagPersistenceTests.cs" />
     <Compile Include="TopicPersistenceTests.cs" />
     <Compile Include="NewsPersistenceTests.cs" />
     <Compile Include="ForumGroupPersistenceTests.cs" />

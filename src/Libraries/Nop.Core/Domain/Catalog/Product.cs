@@ -15,6 +15,7 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductPicture> _productPictures;
         private ICollection<ProductReview> _productReviews;
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
+        private ICollection<ProductTag> _productTags;
 
         /// <summary>
         /// Gets or sets the name
@@ -157,6 +158,15 @@ namespace Nop.Core.Domain.Catalog
         {
             get { return _productSpecificationAttributes ?? (_productSpecificationAttributes = new List<ProductSpecificationAttribute>()); }
             protected set { _productSpecificationAttributes = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the product specification attribute
+        /// </summary>
+        public virtual ICollection<ProductTag> ProductTags
+        {
+            get { return _productTags ?? (_productTags = new List<ProductTag>()); }
+            protected set { _productTags = value; }
         }
 
     }

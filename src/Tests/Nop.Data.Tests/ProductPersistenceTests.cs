@@ -278,5 +278,35 @@ namespace Nop.Data.Tests
             fromDb.ProductPictures.First().Picture.ShouldNotBeNull();
             fromDb.ProductPictures.First().Picture.MimeType.ShouldEqual("image/pjpeg");
         }
+
+        [Test]
+        public void Can_save_and_load_product_with_productTags()
+        {
+            var product = new Product
+            {
+                Name = "Name 1",
+                Published = true,
+                Deleted = false,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                UpdatedOnUtc = new DateTime(2010, 01, 02)
+            };
+            product.ProductTags.Add
+                (
+                    new ProductTag
+                    {
+                        Name = "Tag name 1",
+                        ProductCount = 1
+                    }
+                );
+            var fromDb = SaveAndLoadEntity(product);
+            fromDb.ShouldNotBeNull();
+            fromDb.Name.ShouldEqual("Name 1");
+
+
+            fromDb.ProductTags.ShouldNotBeNull();
+            (fromDb.ProductTags.Count == 1).ShouldBeTrue();
+            fromDb.ProductTags.First().Name.ShouldEqual("Tag name 1");
+        }
+
     }
 }
