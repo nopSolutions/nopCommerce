@@ -668,7 +668,6 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            //TODO previously entered values should rendred (currently they're cleared)
             //model
             var model = new CheckoutPaymentInfoModel();
             string actionName;

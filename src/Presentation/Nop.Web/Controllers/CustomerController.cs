@@ -308,20 +308,16 @@ namespace Nop.Web.Controllers
                     //3. SendCustomerWelcomeMessage
                     if (_customerSettings.NotifyNewCustomerRegistration)
                         _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, _localizationSettings.DefaultAdminLanguageId);
-                    if (_userSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
-                    {
-                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-                        _workflowMessageService.SendCustomerEmailValidationMessage(customer,  _workContext.WorkingLanguage.Id);
-                    }
-                    else
-                    {
-                        _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
-                    }
+                    
                     switch (_userSettings.UserRegistrationType)
                     {
                         case UserRegistrationType.EmailValidation:
                             {
-                                //UNDONE send email validation email to a user (not a customer)
+                                //email validation message
+                                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
+                                _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
+
+                                //result
                                 return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
                             }
                             break;
@@ -332,7 +328,9 @@ namespace Nop.Web.Controllers
                             break;
                         case UserRegistrationType.Standard:
                             {
-                                //TODO send SendCustomerWelcomeMessage
+                                //send customer welcome message
+                                _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+
                                 return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
                             }
                             break;
@@ -476,83 +474,88 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", "Username is not provided.");
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                //username 
-                if (_userSettings.UsernamesEnabled &&
-                    this._userSettings.AllowUsersToChangeUsernames)
+                if (ModelState.IsValid)
                 {
-                    if (!user.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
-                        //TODO handle an error if an exception is thrown
-                        _userService.SetUsername(user, model.Username);
-                }
-                //email
-                if (!user.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
-                    //TODO handle an error if an exception is thrown
-                    _userService.SetEmail(user, model.Email);
-
-                //properties
-                if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                    customer.TimeZoneId = model.TimeZoneId;
-                //VAT number
-                if (_taxSettings.EuVatEnabled)
-                {
-                    var prevVatNumber = customer.VatNumber;
-                    customer.VatNumber = model.VatNumber;
-                    if (prevVatNumber != model.VatNumber)
+                    //username 
+                    if (_userSettings.UsernamesEnabled &&
+                        this._userSettings.AllowUsersToChangeUsernames)
                     {
-                        string vatName = string.Empty;
-                        string vatAddress = string.Empty;
-                        customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber, out vatName, out vatAddress);
-                        //send VAT number admin notification
-                        if (!String.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                        if (!user.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                            _userService.SetUsername(user, model.Username);
                     }
-                }
-                //save
-                _customerService.UpdateCustomer(customer);
+                    //email
+                    if (!user.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                        _userService.SetEmail(user, model.Email);
 
-                //form fields
-                if (_customerSettings.GenderEnabled)
-                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-                //TODO save DateOfBirth (if enabled)
-                //if (_customerSettings.DateOfBirthEnabled)
-                //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
-                if (_customerSettings.CompanyEnabled)
-                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
-                //newsletter
-                if (_customerSettings.NewsletterEnabled)
-                {
-                    //save newsletter value
-                    var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.GetDefaultUserAccountEmail());
-                    if (newsletter != null)
+                    //properties
+                    if (_dateTimeSettings.AllowCustomersToSetTimeZone)
+                        customer.TimeZoneId = model.TimeZoneId;
+                    //VAT number
+                    if (_taxSettings.EuVatEnabled)
                     {
-                        if (model.Newsletter)
+                        var prevVatNumber = customer.VatNumber;
+                        customer.VatNumber = model.VatNumber;
+                        if (prevVatNumber != model.VatNumber)
                         {
-                            newsletter.Active = true;
-                            _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
+                            string vatName = string.Empty;
+                            string vatAddress = string.Empty;
+                            customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber, out vatName, out vatAddress);
+                            //send VAT number admin notification
+                            if (!String.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                                _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                        }
+                    }
+                    //save
+                    _customerService.UpdateCustomer(customer);
+
+                    //form fields
+                    if (_customerSettings.GenderEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
+                    //TODO save DateOfBirth (if enabled)
+                    //if (_customerSettings.DateOfBirthEnabled)
+                    //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+                    if (_customerSettings.CompanyEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+                    //newsletter
+                    if (_customerSettings.NewsletterEnabled)
+                    {
+                        //save newsletter value
+                        var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.GetDefaultUserAccountEmail());
+                        if (newsletter != null)
+                        {
+                            if (model.Newsletter)
+                            {
+                                newsletter.Active = true;
+                                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
+                            }
+                            else
+                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
                         }
                         else
-                            _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-                    }
-                    else
-                    {
-                        if (model.Newsletter)
                         {
-                            _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription()
+                            if (model.Newsletter)
                             {
-                                NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                Email = customer.GetDefaultUserAccountEmail(),
-                                Active = true,
-                                CreatedOnUtc = DateTime.UtcNow
-                            });
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription()
+                                {
+                                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                    Email = customer.GetDefaultUserAccountEmail(),
+                                    Active = true,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                            }
                         }
                     }
-                }
 
-                return RedirectToAction("info");
+                    return RedirectToAction("info");
+                }
+            }
+            catch (Exception exc)
+            {
+                ModelState.AddModelError("", exc.Message);
             }
 
 
