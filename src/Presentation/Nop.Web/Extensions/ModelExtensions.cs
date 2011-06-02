@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using AutoMapper;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
@@ -20,52 +21,52 @@ namespace Nop.Web.Extensions
         //category
         public static CategoryModel ToModel(this Category entity)
         {
-            return AutoMapper.Mapper.Map<Category, CategoryModel>(entity);
+            return Mapper.Map<Category, CategoryModel>(entity);
         }
 
         //manufacturer
         public static ManufacturerModel ToModel(this Manufacturer entity)
         {
-            return AutoMapper.Mapper.Map<Manufacturer, ManufacturerModel>(entity);
+            return Mapper.Map<Manufacturer, ManufacturerModel>(entity);
         }
 
         //language
         public static LanguageModel ToModel(this Language entity)
         {
-            return AutoMapper.Mapper.Map<Language, LanguageModel>(entity);
+            return Mapper.Map<Language, LanguageModel>(entity);
         }
 
 
         //currency
         public static CurrencyModel ToModel(this Currency entity)
         {
-            return AutoMapper.Mapper.Map<Currency, CurrencyModel>(entity);
+            return Mapper.Map<Currency, CurrencyModel>(entity);
         }
 
         //product
         public static ProductModel ToModel(this Product entity)
         {
-            return AutoMapper.Mapper.Map<Product, ProductModel>(entity);
+            return Mapper.Map<Product, ProductModel>(entity);
         }
 
         //address
         public static AddressModel ToModel(this Address entity)
         {
-            return AutoMapper.Mapper.Map<Address, AddressModel>(entity);
+            return Mapper.Map<Address, AddressModel>(entity);
         }
         public static Address ToEntity(this AddressModel model)
         {
-            return AutoMapper.Mapper.Map<AddressModel, Address>(model);
+            return Mapper.Map<AddressModel, Address>(model);
         }
         public static Address ToEntity(this AddressModel model, Address destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         //topics
         public static TopicModel ToModel(this Topic entity)
         {
-            return AutoMapper.Mapper.Map<Topic, TopicModel>(entity);
+            return Mapper.Map<Topic, TopicModel>(entity);
         }
     }
 }

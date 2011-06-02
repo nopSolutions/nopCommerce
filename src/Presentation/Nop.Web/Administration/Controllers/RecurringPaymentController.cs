@@ -56,51 +56,56 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private RecurringPaymentModel PrepareRecurringPaymentModel(RecurringPayment recurringPayment, bool includeHistory)
+        private void PrepareRecurringPaymentModel(RecurringPaymentModel model, 
+            RecurringPayment recurringPayment, bool includeHistory)
         {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
-
-            var model = new RecurringPaymentModel()
-                    {
-                        Id = recurringPayment.Id,
-                        CycleLength = recurringPayment.CycleLength,
-                        CyclePeriodId = recurringPayment.CyclePeriodId,
-                        CyclePeriodStr = recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService, _workContext),
-                        TotalCycles = recurringPayment.TotalCycles,
-                        StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
-                        IsActive = recurringPayment.IsActive,
-                        NextPaymentDate = recurringPayment.NextPaymentDate.HasValue ? _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString() : "",
-                        CyclesRemaining = recurringPayment.CyclesRemaining,
-                        InitialOrderId = recurringPayment.InitialOrder.Id,
-                        PaymentType = _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).GetLocalizedEnum(_localizationService, _workContext),
-                        CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment),
-                    };
+            
+            model.Id = recurringPayment.Id;
+            model.CycleLength = recurringPayment.CycleLength;
+            model.CyclePeriodId = recurringPayment.CyclePeriodId;
+            model.CyclePeriodStr = recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService, _workContext);
+            model.TotalCycles = recurringPayment.TotalCycles;
+            model.StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString();
+            model.IsActive = recurringPayment.IsActive;
+            model.NextPaymentDate = recurringPayment.NextPaymentDate.HasValue ? _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString() : "";
+            model.CyclesRemaining = recurringPayment.CyclesRemaining;
+            model.InitialOrderId = recurringPayment.InitialOrder.Id;
+            model.PaymentType = _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).GetLocalizedEnum(_localizationService, _workContext);
+            model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
+                    
             if (includeHistory)
                 foreach (var rph in recurringPayment.RecurringPaymentHistory.OrderBy(x => x.CreatedOnUtc))
-                    model.History.Add(PrepareRecurringPaymentHistoryModel(rph));
-            return model;
+                {
+                    var rphModel = new RecurringPaymentModel.RecurringPaymentHistoryModel();
+                    PrepareRecurringPaymentHistoryModel(rphModel, rph);
+                    model.History.Add(rphModel);
+                }
         }
 
         [NonAction]
-        private RecurringPaymentModel.RecurringPaymentHistoryModel PrepareRecurringPaymentHistoryModel(RecurringPaymentHistory history)
+        private void PrepareRecurringPaymentHistoryModel(RecurringPaymentModel.RecurringPaymentHistoryModel model,
+            RecurringPaymentHistory history)
         {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
             if (history == null)
                 throw new ArgumentNullException("history");
 
             var order = _orderService.GetOrderById(history.OrderId);
 
-            var model = new RecurringPaymentModel.RecurringPaymentHistoryModel()
-            {
-                Id = history.Id,
-                OrderId = history.OrderId,
-                RecurringPaymentId = history.RecurringPaymentId,
-                OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(history.CreatedOnUtc, DateTimeKind.Utc)
-            };
-            return model;
+            model.Id = history.Id;
+            model.OrderId = history.OrderId;
+            model.RecurringPaymentId = history.RecurringPaymentId;
+            model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(history.CreatedOnUtc, DateTimeKind.Utc);
         }
 
         #endregion
@@ -127,7 +132,9 @@ namespace Nop.Admin.Controllers
             {
                 Data = payments.PagedForCommand(command).Select(x =>
                 {
-                    return PrepareRecurringPaymentModel(x, false);
+                    var m = new RecurringPaymentModel();
+                    PrepareRecurringPaymentModel(m, x, false);
+                    return m;
                 }),
                 Total = payments.Count,
             };
@@ -143,7 +150,8 @@ namespace Nop.Admin.Controllers
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null || payment.Deleted)
                 throw new ArgumentException("No recurring payment found with the specified id", "id");
-            var model = PrepareRecurringPaymentModel(payment, true);
+            var model = new RecurringPaymentModel();
+            PrepareRecurringPaymentModel(model, payment, true);
             return View(model);
         }
 
@@ -187,7 +195,8 @@ namespace Nop.Admin.Controllers
             var historyModel = payment.RecurringPaymentHistory.OrderBy(x => x.CreatedOnUtc)
                 .Select(x =>
                 {
-                    var m = PrepareRecurringPaymentHistoryModel(x);
+                    var m = new RecurringPaymentModel.RecurringPaymentHistoryModel();
+                    PrepareRecurringPaymentHistoryModel(m, x);
                     return m;
                 })
                 .ToList();
@@ -216,13 +225,15 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.ProcessNextRecurringPayment(payment);
-                var model = PrepareRecurringPaymentModel(payment, true);
+                var model = new RecurringPaymentModel();
+                PrepareRecurringPaymentModel(model, payment, true);
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareRecurringPaymentModel(payment, true);
+                var model = new RecurringPaymentModel();
+                PrepareRecurringPaymentModel(model, payment, true);
                 model.ProcessPaymentErrors.Add(exc.Message);
                 return View(model);
             }
@@ -241,14 +252,16 @@ namespace Nop.Admin.Controllers
             try
             {
                 var errors = _orderProcessingService.CancelRecurringPayment(payment);
-                var model = PrepareRecurringPaymentModel(payment, true);
+                var model = new RecurringPaymentModel();
+                PrepareRecurringPaymentModel(model, payment, true);
                 model.ProcessPaymentErrors = errors.ToList();
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareRecurringPaymentModel(payment, true);
+                var model = new RecurringPaymentModel();
+                PrepareRecurringPaymentModel(model, payment, true);
                 model.ProcessPaymentErrors.Add(exc.Message);
                 return View(model);
             }

@@ -100,35 +100,33 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private AffiliateModel.AffiliatedOrderModel PrepareAffiliatedOrderModel(Order order)
+        private void PrepareAffiliatedOrderModel(AffiliateModel.AffiliatedOrderModel model, Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
-
-            var model = new AffiliateModel.AffiliatedOrderModel()
-            {
-                Id = order.Id,
-                OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc)
-            };
-            return model;
+            
+            if (model == null)
+                throw new ArgumentNullException("model");
+            
+            model.Id = order.Id;
+            model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
         }
 
         [NonAction]
-        private AffiliateModel.AffiliatedCustomerModel PrepareAffiliatedCustomerModel(Customer customer)
+        private void PrepareAffiliatedCustomerModel(AffiliateModel.AffiliatedCustomerModel model, Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var model = new AffiliateModel.AffiliatedCustomerModel()
-            {
-                Id = customer.Id,
-                Name = customer.GetFullName(),
-            };
-            return model;
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.Id = customer.Id;
+            model.Name = customer.GetFullName();
         }
 
         #endregion
@@ -262,7 +260,12 @@ namespace Nop.Admin.Controllers
             {
                 Data = affiliate.AffiliatedOrders
                     .OrderBy(x => x.CreatedOnUtc).PagedForCommand(command)
-                    .Select(x => PrepareAffiliatedOrderModel(x)),
+                    .Select(x =>
+                    {
+                        var m = new AffiliateModel.AffiliatedOrderModel();
+                        PrepareAffiliatedOrderModel(m, x);
+                        return m;
+                    }),
                 Total = affiliate.AffiliatedOrders.Count
             };
 
@@ -283,7 +286,12 @@ namespace Nop.Admin.Controllers
             {
                 Data = affiliate.AffiliatedCustomers
                     .OrderBy(x => x.CreatedOnUtc).PagedForCommand(command)
-                    .Select(x => PrepareAffiliatedCustomerModel(x)),
+                    .Select(x =>
+                    {
+                        var m = new AffiliateModel.AffiliatedCustomerModel();
+                        PrepareAffiliatedCustomerModel(m, x);
+                        return m;
+                    }),
                 Total = affiliate.AffiliatedCustomers.Count
             };
 

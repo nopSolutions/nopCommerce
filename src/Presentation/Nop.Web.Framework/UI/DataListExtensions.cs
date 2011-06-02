@@ -19,7 +19,7 @@ namespace Nop.Web.Framework.UI
                 return new HtmlString("");
 
             var sb = new StringBuilder();
-            sb.Append("<table width=\"100%\">");
+            sb.Append("<table>");
 
             int cellIndex = 0;
 

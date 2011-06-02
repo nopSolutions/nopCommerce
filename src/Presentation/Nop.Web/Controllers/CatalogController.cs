@@ -1281,21 +1281,7 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(0,
                 0, null, null, null, productId, 0, null, false,
                 0, null, ProductSortingEnum.Position, 0, int.MaxValue);
-            var model = products.Select(x =>
-            {
-                var m = x.ToModel();
-                //price
-                m.ProductPrice = PrepareProductPriceModel(x);
-                //picture
-                var picture = x.GetDefaultProductPicture(_pictureService);
-                if (picture != null)
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
-                else
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
-                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
-                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
-                return m;
-            })
+            var model = products.Select(x => PrepareProductOverviewModel(x))
             .ToList();
 
             return PartialView(model);
@@ -1480,21 +1466,7 @@ namespace Nop.Web.Controllers
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
             var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
-            var model = products.Select(x =>
-            {
-                var m = x.ToModel();
-                //price
-                m.ProductPrice = PrepareProductPriceModel(x);
-                //picture
-                var picture = x.GetDefaultProductPicture(_pictureService);
-                if (picture != null)
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
-                else
-                    m.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
-                m.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), m.Name);
-                m.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), m.Name);
-                return m;
-            })
+            var model = products.Select(x => PrepareProductOverviewModel(x))
             .ToList();
 
             return PartialView(model);
@@ -1521,7 +1493,7 @@ namespace Nop.Web.Controllers
             {
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
                 foreach (var product in products)
-                    model.Add(PrepareProductDetailsPageModel(product));
+                    model.Add(PrepareProductOverviewModel(product));
             }
             return PartialView(model);
         }

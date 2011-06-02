@@ -98,25 +98,25 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        private OrderModel PrepareOrderDetailsModel(Order order)
+        private void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var model = new OrderModel()
-            {
-                Id = order.Id,
-                OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                OrderGuid = order.OrderGuid,
-                CustomerId = order.CustomerId,
-                CustomerIp = order.CustomerIp,
-                VatNumber = order.VatNumber,
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
-                DisplayPdfInvoice = _pdfSettings.Enabled,
-                AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType,
-                TaxDisplayType = _taxSettings.TaxDisplayType,
-                AffiliateId = order.AffiliateId
-            };
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.Id = order.Id;
+            model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.OrderGuid = order.OrderGuid;
+            model.CustomerId = order.CustomerId;
+            model.CustomerIp = order.CustomerIp;
+            model.VatNumber = order.VatNumber;
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+            model.DisplayPdfInvoice = _pdfSettings.Enabled;
+            model.AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType;
+            model.TaxDisplayType = _taxSettings.TaxDisplayType;
+            model.AffiliateId = order.AffiliateId;
             
             #region Order totals
 
@@ -362,8 +362,6 @@ namespace Nop.Admin.Controllers
             }
             model.HasDownloadableProducts = hasDownloadableItems;
             #endregion
-
-            return model;
         }
 
         #endregion
@@ -450,7 +448,8 @@ namespace Nop.Admin.Controllers
             if (order == null || order.Deleted)
                 throw new ArgumentException("No order found with the specified id", "id");
 
-            var model = PrepareOrderDetailsModel(order);
+            var model = new OrderModel();
+            PrepareOrderDetailsModel(model, order);
 
             return View(model);
         }
@@ -466,13 +465,15 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.CancelOrder(order, true);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -489,14 +490,16 @@ namespace Nop.Admin.Controllers
             try
             {
                 var errors = _orderProcessingService.Capture(order);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors = errors.ToList();
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -514,13 +517,15 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.MarkOrderAsPaid(order);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -537,14 +542,16 @@ namespace Nop.Admin.Controllers
             try
             {
                 var errors = _orderProcessingService.Refund(order);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors = errors.ToList();
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -561,13 +568,15 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.RefundOffline(order);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -584,14 +593,16 @@ namespace Nop.Admin.Controllers
             try
             {
                 var errors = _orderProcessingService.Void(order);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors = errors.ToList();
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -608,13 +619,15 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.VoidOffline(order);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -647,7 +660,7 @@ namespace Nop.Admin.Controllers
                 _orderService.UpdateOrder(order);
             }
 
-            model = PrepareOrderDetailsModel(order);
+            PrepareOrderDetailsModel(model, order);
             return View(model);
         }
 
@@ -672,8 +685,8 @@ namespace Nop.Admin.Controllers
             order.OrderDiscount = model.OrderTotalDiscountValue;
             order.OrderTotal = model.OrderTotalValue;
             _orderService.UpdateOrder(order);
-            
-            model = PrepareOrderDetailsModel(order);
+
+            PrepareOrderDetailsModel(model, order);
             return View(model);
         }
         
@@ -720,7 +733,7 @@ namespace Nop.Admin.Controllers
             _orderService.UpdateOrder(order);
 
             ViewData["selectedTab"] = "shippinginfo";
-            model = PrepareOrderDetailsModel(order);
+            PrepareOrderDetailsModel(model, order);
             return View(model);
         }
 
@@ -737,13 +750,15 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.Ship(order, true);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -762,13 +777,15 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.Deliver(order, true);
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 return View(model);
             }
             catch (Exception exc)
             {
                 //error
-                var model = PrepareOrderDetailsModel(order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -780,7 +797,8 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
-            var model = PrepareOrderDetailsModel(order);
+            var model = new OrderModel();
+            PrepareOrderDetailsModel(model, order);
 
             return View(model);
         }
@@ -815,13 +833,13 @@ namespace Nop.Admin.Controllers
                     ViewBag.RefreshPage = true;
                     ViewBag.btnId = btnId;
 
-                    model = PrepareOrderDetailsModel(order);
+                    PrepareOrderDetailsModel(model, order);
                     return View(model);
                 }
                 else
                 {
                     //error
-                    model = PrepareOrderDetailsModel(order);
+                    PrepareOrderDetailsModel(model, order);
                     model.ChangePaymentStatusErrors = errors.ToList();
                     return View(model);
                 }
@@ -829,7 +847,7 @@ namespace Nop.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                model = PrepareOrderDetailsModel(order);
+                PrepareOrderDetailsModel(model, order);
                 model.ChangePaymentStatusErrors.Add(exc.Message);
                 return View(model);
             }
@@ -890,7 +908,8 @@ namespace Nop.Admin.Controllers
                 _orderService.DeleteOrderProductVariant(orderProductVariant);
             }
 
-            var model = PrepareOrderDetailsModel(order);
+            var model = new OrderModel();
+            PrepareOrderDetailsModel(model, order);
             return View(model);
         }
 
@@ -917,7 +936,8 @@ namespace Nop.Admin.Controllers
 
             _orderService.DeleteOrderProductVariant(orderProductVariant);
 
-            var model = PrepareOrderDetailsModel(order);
+            var model = new OrderModel();
+            PrepareOrderDetailsModel(model, order);
             return View(model);
         }
         
@@ -945,7 +965,8 @@ namespace Nop.Admin.Controllers
             orderProductVariant.IsDownloadActivated = !orderProductVariant.IsDownloadActivated;
             _orderService.UpdateOrder(order);
 
-            var model = PrepareOrderDetailsModel(order);
+            var model = new OrderModel();
+            PrepareOrderDetailsModel(model, order);
             return View(model);
         }
 
