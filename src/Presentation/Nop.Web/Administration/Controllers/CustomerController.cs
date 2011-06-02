@@ -842,6 +842,42 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ReportRegisteredCustomersList(GridCommand command)
+        {
+            var report = new List<RegisteredCustomerReportLineModel>();
+            report.Add(new RegisteredCustomerReportLineModel()
+            {
+                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.7days"),
+                Customers = _customerReportService.GetRegisteredCustomersReport(7)
+            });
+
+            report.Add(new RegisteredCustomerReportLineModel()
+            {
+                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.14days"),
+                Customers = _customerReportService.GetRegisteredCustomersReport(14)
+            });
+            report.Add(new RegisteredCustomerReportLineModel()
+            {
+                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.month"),
+                Customers = _customerReportService.GetRegisteredCustomersReport(30)
+            });
+            report.Add(new RegisteredCustomerReportLineModel()
+            {
+                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year"),
+                Customers = _customerReportService.GetRegisteredCustomersReport(365)
+            });
+            var gridModel = new GridModel<RegisteredCustomerReportLineModel>
+            {
+                Data = report,
+                Total = report.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
         
         #endregion
     }

@@ -1,0 +1,19 @@
+﻿@model Telerik.Web.Mvc.GridModel<RegisteredCustomerReportLineModel>
+@using Nop.Admin.Models;
+@using Telerik.Web.Mvc.UI
+@using Nop.Web.Framework
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<RegisteredCustomerReportLineModel>()
+                .Name("registered-customers-grid")
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Period);
+                    columns.Bound(x => x.Customers);
+                })
+                .DataBinding(dataBinding => dataBinding.Ajax().Select("ReportRegisteredCustomersList", "Customer"))
+                .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

@@ -4741,6 +4741,35 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="RegisteredCustomers">
+                      <Value>Registered customers</Value>
+                      <Children>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Period">
+                              <Value>Period</Value>
+                              <Children>
+                                <LocaleResource Name="7days">
+                                  <Value>In the last 7 days</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="14days">
+                                  <Value>In the last 14 days</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="month">
+                                  <Value>In the last month</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="year">
+                                  <Value>In the last year</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Customers">
+                              <Value>Count</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                   </Children>
                 </LocaleResource>
               </Children>

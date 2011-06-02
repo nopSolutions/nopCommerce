@@ -14,6 +14,7 @@
 {
     x.Add().Text(T("Admin.Customers.Reports.BestBy.BestByOrderTotal").Text).Content(TabBestByOrderTotal().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders").Text).Content(TabBestByNumberOfOrders().ToHtmlString());
+    x.Add().Text(T("Admin.Customers.Reports.RegisteredCustomers").Text).Content(TabRegisteredCustomers().ToHtmlString());
 })
 @helper TabBestByOrderTotal()
     {
@@ -26,4 +27,10 @@
         var dataDictAttributes = new ViewDataDictionary();
         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
         @Html.Partial("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributes)
+}
+@helper TabRegisteredCustomers()
+    {
+        var dataDictAttributes = new ViewDataDictionary();
+        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "registeredcustomers";
+        @Html.Partial("_ReportRegisteredCustomers", dataDictAttributes)
 }

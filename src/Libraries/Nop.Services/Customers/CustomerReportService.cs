@@ -9,6 +9,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
@@ -22,7 +23,8 @@ namespace Nop.Services.Customers
 
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
+        private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         
         #endregion
 
@@ -33,14 +35,16 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="customerAttributeRepository">Customer attribute repository</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="dateTimeHelper">Date time helper</param>
         public CustomerReportService(IRepository<Customer> customerRepository,
-            IRepository<Order> orderRepository,
-            IRepository<CustomerAttribute> customerAttributeRepository)
+            IRepository<Order> orderRepository, ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper)
         {
             this._customerRepository = customerRepository;
             this._orderRepository = orderRepository;
-            this._customerAttributeRepository = customerAttributeRepository;
+            this._customerService = customerService;
+            this._dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -119,6 +123,30 @@ namespace Nop.Services.Customers
                 };
             }).ToList();
             return result;
+        }
+
+        /// <summary>
+        /// Gets a report of customers registered in the last days
+        /// </summary>
+        /// <param name="days">Customers registered in the last days</param>
+        /// <returns>Number of registered customers</returns>
+        public virtual int GetRegisteredCustomersReport(int days)
+        {
+            DateTime date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
+
+            var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            if (registeredCustomerRole == null)
+                return 0;
+
+            var query = from c in _customerRepository.Table
+                        from cr in c.CustomerRoles
+                        where !c.Deleted &&
+                        cr.Id == registeredCustomerRole.Id &&
+                        c.CreatedOnUtc >= date 
+                        //&& c.CreatedOnUtc <= DateTime.UtcNow
+                        select c;
+            int count = query.Count();
+            return count;
         }
 
         #endregion
