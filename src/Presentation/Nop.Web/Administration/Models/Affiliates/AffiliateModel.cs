@@ -49,7 +49,7 @@ namespace Nop.Admin.Models.Affiliates
             public string OrderTotal { get; set; }
 
             [NopResourceDisplayName("Admin.Affiliates.Orders.CreatedOn")]
-            public string CreatedOn { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
 
         public class AffiliatedCustomerModel : BaseNopEntityModel

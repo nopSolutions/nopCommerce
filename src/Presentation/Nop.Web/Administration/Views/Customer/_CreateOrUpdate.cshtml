@@ -166,14 +166,14 @@
                 @Html.ValidationMessageFor(model => model.Active)
             </td>
         </tr>
-        @if (!String.IsNullOrEmpty(Model.CreatedOnStr))
+        @if (Model.Id > 0)
         {
             <tr>
                 <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.CreatedOnStr):
+                    @Html.NopLabelFor(model => model.CreatedOn):
                 </td>
                 <td class="adminData">
-                    @Model.CreatedOnStr
+                    @Html.DisplayFor(model => model.CreatedOn)
                 </td>
             </tr>
         }
@@ -215,7 +215,7 @@
         columns.Bound(x => x.Points);
         columns.Bound(x => x.PointsBalance).ReadOnly();
         columns.Bound(x => x.Message);
-        columns.Bound(x => x.CreatedOnStr).ReadOnly();
+        columns.Bound(x => x.CreatedOn).ReadOnly();
     }))
     <div class="clear">
     </div>
@@ -371,7 +371,7 @@
                 .Width(100)
                 .Template(x => x.IsApproved.ToString().ToLower())
                 .Centered();
-            columns.Bound(x => x.CreatedOnStr)
+            columns.Bound(x => x.CreatedOn)
                 .Width(100);
         })
         .DataBinding(binding =>
@@ -434,7 +434,7 @@
                 .Width(100)
                 .Template(x => x.IsApproved.ToString().ToLower())
                 .Centered();
-            columns.Bound(x => x.CreatedOnStr)
+            columns.Bound(x => x.CreatedOn)
                 .Width(100);
         })
         .Pageable(settings => settings.PageSize(10))

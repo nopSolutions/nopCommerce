@@ -51,7 +51,7 @@
                             columns.Bound(x => x.RemainingAmountStr);
                             columns.Bound(x => x.GiftCardCouponCode);
                             columns.Bound(x => x.IsGiftCardActivated);
-                            columns.Bound(x => x.CreatedOnStr);
+                            columns.Bound(x => x.CreatedOn);
                             columns.Bound(x => x.Id)
                                 .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                                 .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")

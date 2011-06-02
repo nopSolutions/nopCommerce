@@ -98,7 +98,7 @@ namespace Nop.Admin.Controllers
                     var m = x.ToModel();
                     m.RemainingAmountStr = _priceFormatter.FormatPrice(x.GetGiftCardRemainingAmount(), true, false);
                     m.AmountStr = _priceFormatter.FormatPrice(x.Amount, true, false);
-                    m.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     return m;
                 }),
                 Total = giftCards.Count()
@@ -140,7 +140,7 @@ namespace Nop.Admin.Controllers
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
 
             return View(model);
         }
@@ -154,7 +154,7 @@ namespace Nop.Admin.Controllers
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
 
             if (ModelState.IsValid)
             {
@@ -183,7 +183,7 @@ namespace Nop.Admin.Controllers
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
 
             try
             {
@@ -234,7 +234,7 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         OrderId = x.UsedWithOrderId,
                         UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 })
                 .ToList();

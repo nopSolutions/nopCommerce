@@ -148,8 +148,7 @@ namespace Nop.Admin.Controllers
             if (currency == null) 
                 throw new ArgumentException("No currency found with the specified id", "id");
             var model = currency.ToModel();
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(model.CreatedOnUtc, DateTimeKind.Utc).ToString();
-            model.UpdatedOnStr = _dateTimeHelper.ConvertToUserTime(model.UpdatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(model.CreatedOnUtc, DateTimeKind.Utc);
             return View(model);
         }
 
@@ -167,6 +166,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(model.CreatedOnUtc, DateTimeKind.Utc);
             return View(model);
         }
         

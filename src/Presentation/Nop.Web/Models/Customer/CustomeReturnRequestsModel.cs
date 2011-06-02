@@ -31,7 +31,7 @@ namespace Nop.Web.Models.Customer
             public string ReturnAction { get; set; }
             public string Comments { get; set; }
 
-            public string CreatedOn { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
         #endregion
     }

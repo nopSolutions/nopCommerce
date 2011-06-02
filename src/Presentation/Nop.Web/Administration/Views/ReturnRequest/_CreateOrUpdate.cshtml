@@ -1,8 +1,6 @@
 ﻿@model ReturnRequestModel
-
 @using Nop.Core.Domain.Orders;
 @using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 <table class="adminContent">
@@ -19,7 +17,7 @@
             @Html.NopLabelFor(model => model.ProductName):
         </td>
         <td class="adminData">
-            @Html.ActionLink(Model.ProductName, "Edit", "ProductVariant", new { id = Model.ProductVariantId }, new { })            
+            @Html.ActionLink(Model.ProductName, "Edit", "ProductVariant", new { id = Model.ProductVariantId }, new { })
         </td>
     </tr>
     <tr>
@@ -94,10 +92,10 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.LabelFor(model => model.CreatedOn):
+                @Html.NopLabelFor(model => model.CreatedOn):
             </td>
             <td class="adminData">
-                @Model.CreatedOn
+                @Html.DisplayFor(model => model.CreatedOn)
             </td>
         </tr>
 </table>

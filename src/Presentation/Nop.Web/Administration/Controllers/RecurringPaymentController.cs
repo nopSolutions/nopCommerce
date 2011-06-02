@@ -98,7 +98,7 @@ namespace Nop.Admin.Controllers
                 OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                 PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                 ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(history.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                CreatedOn = _dateTimeHelper.ConvertToUserTime(history.CreatedOnUtc, DateTimeKind.Utc)
             };
             return model;
         }

@@ -26,7 +26,7 @@ namespace Nop.Web.Models.Order
 
         public bool DisplayPdfInvoice { get; set; }
 
-        public string CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public string OrderStatus { get; set; }
 
@@ -107,7 +107,7 @@ namespace Nop.Web.Models.Order
         public class OrderNote : BaseNopModel
         {
             public string Note { get; set; }
-            public string CreatedOn { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
 		#endregion
     }

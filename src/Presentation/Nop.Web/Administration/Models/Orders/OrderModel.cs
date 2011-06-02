@@ -180,7 +180,7 @@ namespace Nop.Admin.Models.Orders
 
         //creation date
         [NopResourceDisplayName("Admin.Orders.Fields.CreatedOn")]
-        public string CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         //checkout attributes
         public string CheckoutAttributeInfo { get; set; }
@@ -278,7 +278,7 @@ namespace Nop.Admin.Models.Orders
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Note")]
             public string Note { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.CreatedOn")]
-            public string CreatedOn { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
 
         public class UploadLicenseModel : BaseNopModel

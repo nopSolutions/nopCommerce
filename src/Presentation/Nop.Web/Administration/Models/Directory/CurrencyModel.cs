@@ -42,10 +42,7 @@ namespace Nop.Admin.Models.Directory
         public DateTime UpdatedOnUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.CreatedOn")]
-        public string CreatedOnStr { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.UpdatedOn")]
-        public string UpdatedOnStr { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.IsPrimaryExchangeRateCurrency")]
         public bool IsPrimaryExchangeRateCurrency { get; set; }

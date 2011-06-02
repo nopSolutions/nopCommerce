@@ -28,7 +28,7 @@
                         <br />
                         @string.Format(T("Account.CustomerReturnRequests.Action").Text, item.ReturnAction)
                         <br />
-                        @string.Format(T("Account.CustomerReturnRequests.Date").Text, item.CreatedOn)
+                        @string.Format(T("Account.CustomerReturnRequests.Date").Text, item.CreatedOn.ToString())
                         @if (!String.IsNullOrEmpty(item.Comments))
                         {
                             <br />

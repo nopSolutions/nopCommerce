@@ -468,8 +468,8 @@ namespace Nop.Services.Installation
                 CustomFormatting = "",
                 Published = true,
                 DisplayOrder = 2,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                UpdatedOnUtc = new DateTime(2010, 01, 02),
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
             };
             _currencyRepository.Insert(currencyUsd);
         }
@@ -1845,56 +1845,6 @@ namespace Nop.Services.Installation
                                             EndDateUtc = new DateTime(2020,1,1),
                                             RequiresCouponCode = true,
                                             CouponCode = "456",
-                                        },
-                                    new Discount
-                                        {
-                                            Name = "test discount 1. TODO remove",
-                                            DiscountType = DiscountType.AssignedToCategories,
-                                            DiscountLimitation = DiscountLimitationType.Unlimited,
-                                            UsePercentage = false,
-                                            DiscountAmount = 10,
-                                            StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
-                                        },
-                                    new Discount
-                                        {
-                                            Name = "test discount 2. TODO remove",
-                                            DiscountType = DiscountType.AssignedToCategories,
-                                            DiscountLimitation = DiscountLimitationType.Unlimited,
-                                            UsePercentage = false,
-                                            DiscountAmount = 10,
-                                            StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
-                                        },
-                                    new Discount
-                                        {
-                                            Name = "test discount 3. TODO remove",
-                                            DiscountType = DiscountType.AssignedToCategories,
-                                            DiscountLimitation = DiscountLimitationType.Unlimited,
-                                            UsePercentage = false,
-                                            DiscountAmount = 10,
-                                            StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
-                                        },
-                                    new Discount
-                                        {
-                                            Name = "test discount 4. TODO remove",
-                                            DiscountType = DiscountType.AssignedToSkus,
-                                            DiscountLimitation = DiscountLimitationType.Unlimited,
-                                            UsePercentage = false,
-                                            DiscountAmount = 10,
-                                            StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
-                                        },
-                                    new Discount
-                                        {
-                                            Name = "test discount 5. TODO remove",
-                                            DiscountType = DiscountType.AssignedToSkus,
-                                            DiscountLimitation = DiscountLimitationType.Unlimited,
-                                            UsePercentage = false,
-                                            DiscountAmount = 10,
-                                            StartDateUtc = new DateTime(2010,1,1),
-                                            EndDateUtc = new DateTime(2020,1,1),
                                         },
                                 };
             discounts.ForEach(d => _discountRepository.Insert(d));

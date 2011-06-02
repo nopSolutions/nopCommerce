@@ -111,7 +111,7 @@ namespace Nop.Admin.Controllers
                 CustomerId = order.CustomerId,
                 CustomerIp = order.CustomerIp,
                 VatNumber = order.VatNumber,
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString(),
+                CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                 DisplayPdfInvoice = _pdfSettings.Enabled,
                 AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType,
                 TaxDisplayType = _taxSettings.TaxDisplayType,
@@ -418,7 +418,7 @@ namespace Nop.Admin.Controllers
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                         CustomerEmail = x.BillingAddress.Email,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 }),
                 Total = orders.TotalCount
@@ -1116,7 +1116,7 @@ namespace Nop.Admin.Controllers
                     OrderId = orderNote.OrderId,
                     DisplayToCustomer = orderNote.DisplayToCustomer,
                     Note = Core.Html.HtmlHelper.FormatText(orderNote.Note, false, true, false, false, false, false),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }
 

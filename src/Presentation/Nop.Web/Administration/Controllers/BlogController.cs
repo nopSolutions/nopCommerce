@@ -62,7 +62,7 @@ namespace Nop.Admin.Controllers
             model.BlogPostTitle = blogComment.BlogPost.Title;
             model.CustomerId = blogComment.CustomerId;
             model.IpAddress = blogComment.IpAddress;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
             model.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
         }
 

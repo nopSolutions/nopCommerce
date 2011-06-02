@@ -75,25 +75,14 @@
             @Html.ValidationMessageFor(model => model.DisplayOrder)
         </td>
     </tr>
-    @if (Model.CreatedOnUtc > DateTime.MinValue)
+    @if (Model.Id > 0)
     {
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CreatedOnStr):
+                @Html.NopLabelFor(model => model.CreatedOn):
             </td>
             <td class="adminData">
-                @Html.DisplayFor(model => model.CreatedOnStr)
-            </td>
-        </tr>
-    }
-    @if (Model.UpdatedOnUtc > DateTime.MinValue)
-    {
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.UpdatedOnStr):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.UpdatedOnStr)
+                @Html.DisplayFor(model => model.CreatedOn)
             </td>
         </tr>
     }

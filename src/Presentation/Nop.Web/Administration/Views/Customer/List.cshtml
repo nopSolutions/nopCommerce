@@ -75,7 +75,7 @@
                              .Template(x => x.Active.ToString().ToLower())
                              .Centered()
                              .Filterable(false);
-                        columns.Bound(x => x.CreatedOnStr)
+                        columns.Bound(x => x.CreatedOn)
                             .Width(100)
                             .Filterable(false);
                         columns.Bound(x => x.Id)

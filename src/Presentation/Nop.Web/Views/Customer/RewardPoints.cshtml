@@ -30,7 +30,7 @@
                 @if (Model.RewardPoints.Count > 0)
                 {
                     @Html.Grid(Model.RewardPoints).Columns(column => {
-                       column.For(rph => rph.CreatedOnStr).Named(T("RewardPoints.Fields.Date").Text).Attributes(style => "width:20%;");
+                       column.For(rph => rph.CreatedOn).Named(T("RewardPoints.Fields.Date").Text).Attributes(style => "width:20%;");
                        column.For(rph => rph.Points).Named(T("RewardPoints.Fields.Points").Text).Attributes(style => "width:20%;");
                        column.For(rph => rph.PointsBalance).Named(T("RewardPoints.Fields.PointsBalance").Text).Attributes(style => "width:20%;");
                        column.For(rph => rph.Message).Named(T("RewardPoints.Fields.Message").Text).Attributes(style => "width:40%;");

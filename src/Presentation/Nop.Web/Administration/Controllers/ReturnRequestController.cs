@@ -87,7 +87,7 @@ namespace Nop.Admin.Controllers
             model.CustomerId = returnRequest.CustomerId;
             model.Quantity = returnRequest.Quantity;
             model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
             if (!excludeProperties)
             {
                 model.ReasonForReturn = returnRequest.ReasonForReturn;

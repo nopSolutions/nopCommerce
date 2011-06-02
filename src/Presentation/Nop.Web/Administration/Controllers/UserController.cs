@@ -67,7 +67,7 @@ namespace Nop.Admin.Controllers
                         Username = x.Username,
                         IsApproved = x.IsApproved,
                         IsLockedOut = x.IsLockedOut,
-                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 }),
                 Total = users.TotalCount
@@ -90,7 +90,7 @@ namespace Nop.Admin.Controllers
                         Username = x.Username,
                         IsApproved = x.IsApproved,
                         IsLockedOut = x.IsLockedOut,
-                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 }),
                 Total = users.TotalCount
@@ -162,7 +162,7 @@ namespace Nop.Admin.Controllers
                 IsApproved = user.IsApproved,
                 IsLockedOut = user.IsLockedOut,
                 AssociatedCustomerId = user.AssociatedCustomerId,
-                CreatedOnStr = _dateTimeHelper.ConvertToUserTime(user.CreatedOnUtc, DateTimeKind.Utc).ToString(),
+                CreatedOn = _dateTimeHelper.ConvertToUserTime(user.CreatedOnUtc, DateTimeKind.Utc),
             };
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;

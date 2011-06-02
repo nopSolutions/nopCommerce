@@ -93,12 +93,7 @@ namespace Nop.Admin.Models.Customers
 
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
-        public DateTime CreatedOnUtc { get; set; }
-
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
-        public string CreatedOnStr { get; set; }
-        
-
+        public DateTime CreatedOn { get; set; }
 
 
 
@@ -149,7 +144,7 @@ namespace Nop.Admin.Models.Customers
             public string Message { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Date")]
-            public string CreatedOnStr { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
 
         public class UserAccountModel : BaseNopEntityModel
@@ -164,7 +159,7 @@ namespace Nop.Admin.Models.Customers
             public bool IsLockedOut { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.CreatedOn")]
-            public string CreatedOnStr { get; set; }
+            public DateTime CreatedOn { get; set; }
 
         }
         #endregion

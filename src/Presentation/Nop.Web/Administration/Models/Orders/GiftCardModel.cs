@@ -56,7 +56,7 @@ namespace Nop.Admin.Models.Orders
         public string RecepientNotificationError { get; set; }
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.CreatedOn")]
-        public string CreatedOnStr { get; set; }
+        public DateTime CreatedOn { get; set; }
 
 
         #region Nested classes
@@ -70,7 +70,7 @@ namespace Nop.Admin.Models.Orders
             public int OrderId { get; set; }
 
             [NopResourceDisplayName("Admin.GiftCards.History.CreatedOn")]
-            public string CreatedOn { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
 
         #endregion

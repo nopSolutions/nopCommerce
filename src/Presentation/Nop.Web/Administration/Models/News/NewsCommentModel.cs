@@ -32,7 +32,7 @@ namespace Nop.Admin.Models.News
         public string CommentText { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.CreatedOn")]
-        public string CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
     }
 }

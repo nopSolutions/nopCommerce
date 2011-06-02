@@ -83,7 +83,7 @@ namespace Nop.Admin.Models.Discounts
             public int OrderId { get; set; }
 
             [NopResourceDisplayName("Admin.Promotions.Discounts.History.CreatedOn")]
-            public string CreatedOn { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
 
         #endregion

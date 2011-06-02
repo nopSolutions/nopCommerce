@@ -2213,14 +2213,6 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
-                          <LocaleResource Name="UpdatedOn">
-                            <Value>Updated on</Value>
-                            <Children>
-                              <LocaleResource Name="Hint">
-                                <Value>The date/time the currency was updated.</Value>
-                              </LocaleResource>
-                            </Children>
-                          </LocaleResource>
                           <LocaleResource Name="ExchangeRateProvider">
                             <Value>Current exchange rate provider:</Value>
                             <LocaleResource Name="Hint">
@@ -5685,7 +5677,7 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
-                  <LocaleResource Name="Admin.Orders.Products.ReturnRequests">
+                  <LocaleResource Name="ReturnRequests">
                     <Value>Return request(s): </Value>
                   </LocaleResource>
                   
@@ -6204,7 +6196,7 @@
                     <Value>Date</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Date when the return request has been submitted</Value>
+                        <Value>Date when the return request has been submitted.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

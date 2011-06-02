@@ -861,7 +861,7 @@ namespace Nop.Web.Controllers
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel()
                 {
                     Id = order.Id,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString(),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                     IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order)
                 };
@@ -922,7 +922,7 @@ namespace Nop.Web.Controllers
                     ReturnAction = returnRequest.RequestedAction,
                     ReturnReason = returnRequest.ReasonForReturn,
                     Comments = returnRequest.CustomerComments,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc).ToString(),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
                 };
                 model.Items.Add(itemModel);
 
@@ -957,7 +957,7 @@ namespace Nop.Web.Controllers
                 {
                     OrderProductVariantGuid = item.OrderProductVariantGuid,
                     OrderId = item.OrderId,
-                    CreatedOnStr = _dateTimeHelper.ConvertToUserTime(item.Order.CreatedOnUtc, DateTimeKind.Utc).ToString("d"),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(item.Order.CreatedOnUtc, DateTimeKind.Utc),
                     ProductSeName = item.ProductVariant.Product.GetSeName(),
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductVariant.ProductId
@@ -1022,7 +1022,7 @@ namespace Nop.Web.Controllers
                     Points = rph.Points,
                     PointsBalance = rph.PointsBalance,
                     Message = rph.Message,
-                    CreatedOnStr = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }
             int rewardPointsBalance = customer.GetRewardPointsBalance();

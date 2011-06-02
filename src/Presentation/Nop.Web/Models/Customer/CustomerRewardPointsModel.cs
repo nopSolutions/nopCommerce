@@ -32,7 +32,7 @@ namespace Nop.Web.Models.Customer
             public string Message { get; set; }
 
             [NopResourceDisplayName("RewardPoints.Fields.Date")]
-            public string CreatedOnStr { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
 
         #endregion

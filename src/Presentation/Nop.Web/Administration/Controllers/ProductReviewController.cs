@@ -70,7 +70,7 @@ namespace Nop.Admin.Controllers
             model.CustomerId = productReview.CustomerId;
             model.IpAddress = productReview.IpAddress;
             model.Rating = productReview.Rating;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
             if (!excludeProperties)
             {
                 model.Title = productReview.Title;

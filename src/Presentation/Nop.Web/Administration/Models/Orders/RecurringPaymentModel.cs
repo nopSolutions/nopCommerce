@@ -76,7 +76,7 @@ namespace Nop.Admin.Models.Orders
             public string ShippingStatus { get; set; }
 
             [NopResourceDisplayName("Admin.RecurringPayments.History.CreatedOn")]
-            public string CreatedOn { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
 
         #endregion

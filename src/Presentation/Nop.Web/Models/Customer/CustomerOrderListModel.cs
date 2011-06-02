@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
@@ -25,7 +26,7 @@ namespace Nop.Web.Models.Customer
             public string OrderTotal { get; set; }
             public bool IsReturnRequestAllowed { get; set; }
             public string OrderStatus { get; set; }
-            public string CreatedOn { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
         public class RecurringOrderModel : BaseNopEntityModel
         {

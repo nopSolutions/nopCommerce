@@ -270,7 +270,7 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         DiscountId = x.DiscountId,
                         OrderId = x.OrderId,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 })
                 .ToList();

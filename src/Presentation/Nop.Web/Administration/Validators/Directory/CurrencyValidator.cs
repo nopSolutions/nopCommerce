@@ -13,6 +13,7 @@ namespace Nop.Admin.Validators.Directory
     {
         public CurrencyValidator(ILocalizationService localizationService)
         {
+            //TODO localize
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Location.Currencies.Fields.Name.Required"))
                 .Length(1, 50).WithMessage("Name must be less than or equal to 50 characters");

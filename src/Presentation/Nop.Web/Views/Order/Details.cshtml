@@ -38,7 +38,7 @@
                     </tr>
                     <tr>
                         <td class="smallText">
-                            @T("Order.OrderDate"): @Model.CreatedOn
+                            @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
                         </td>
                         <td align="right" class="smallText">
                             @T("Order.OrderTotal"): @Model.OrderTotal
@@ -476,7 +476,7 @@
                         {
                             <tr>
                                 <td style="width:20%;">
-                                    @item.CreatedOn
+                                    @item.CreatedOn.ToString()
                                 </td>
                                 <td style="width:80%;">
                                     <div style="padding-left: 10px; padding-right: 10px; text-align: left;">

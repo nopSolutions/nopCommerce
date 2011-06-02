@@ -54,9 +54,6 @@ namespace Nop.Admin.Models.Security
         public int? AssociatedCustomerId { get; set; }
 
         [NopResourceDisplayName("Admin.Users.Fields.CreatedOn")]
-        public DateTime CreatedOnUtc { get; set; }
-
-        [NopResourceDisplayName("Admin.Users.Fields.CreatedOn")]
-        public string CreatedOnStr { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

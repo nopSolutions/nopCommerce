@@ -124,7 +124,7 @@ namespace Nop.Admin.Controllers
                     var model1 = x.ToModel();
                     model1.FullName = x.GetFullName();
                     model1.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
-                    model1.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
+                    model1.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     return model1;
                 }),
                 Total = customers.TotalCount
@@ -155,7 +155,7 @@ namespace Nop.Admin.Controllers
                     var model = x.ToModel();
                     model.FullName = x.GetFullName();
                     model.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
-                    model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
+                    model.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     return model;
                 }),
                 Total = customers.TotalCount
@@ -197,7 +197,7 @@ namespace Nop.Admin.Controllers
                     var model1 = x.ToModel();
                     model1.FullName = x.GetFullName();
                     model1.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
-                    model1.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
+                    model1.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     return model1;
                 }),
                 Total = customers.TotalCount
@@ -289,7 +289,7 @@ namespace Nop.Admin.Controllers
             model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
             model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
             model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -374,7 +374,7 @@ namespace Nop.Admin.Controllers
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -447,7 +447,7 @@ namespace Nop.Admin.Controllers
                         Points = rph.Points,
                         PointsBalance = rph.PointsBalance,
                         Message = rph.Message,
-                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
                     });
             } 
             var gridModel = new GridModel<CustomerModel.RewardPointsHistoryModel>
@@ -669,7 +669,7 @@ namespace Nop.Admin.Controllers
                         Email = x.Email,
                         IsApproved = x.IsApproved,
                         IsLockedOut = x.IsLockedOut,
-                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 }),
                 Total = users.Count
@@ -695,7 +695,7 @@ namespace Nop.Admin.Controllers
                         Email = x.Email,
                         IsApproved = x.IsApproved,
                         IsLockedOut = x.IsLockedOut,
-                        CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 }),
                 Total = users.TotalCount

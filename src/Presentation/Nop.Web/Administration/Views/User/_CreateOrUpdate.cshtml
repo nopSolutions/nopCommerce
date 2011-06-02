@@ -120,14 +120,14 @@
             @Html.ValidationMessageFor(model => model.IsLockedOut)
         </td>
     </tr>
-    @if (!String.IsNullOrEmpty(Model.CreatedOnStr))
+    @if (Model.Id > 0)
     {
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CreatedOnStr):
+            @Html.NopLabelFor(model => model.CreatedOn):
         </td>
         <td class="adminData">
-            @Model.CreatedOnStr
+            @Html.DisplayFor(model => model.CreatedOn)
         </td>
     </tr>
     }

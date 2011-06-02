@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
@@ -35,6 +36,6 @@ namespace Nop.Admin.Models.Catalog
         public bool IsApproved { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.CreatedOn")]
-        public string CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

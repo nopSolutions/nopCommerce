@@ -112,7 +112,7 @@ namespace Nop.Admin.Controllers
                 PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                 ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                 OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc)
             };
             return model;
         }

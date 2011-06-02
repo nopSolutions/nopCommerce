@@ -28,7 +28,7 @@ namespace Nop.Admin.Models.Blogs
         public string Comment { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")]
-        public string CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
     }
 }

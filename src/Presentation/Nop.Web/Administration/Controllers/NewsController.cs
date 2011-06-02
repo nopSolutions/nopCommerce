@@ -63,7 +63,7 @@ namespace Nop.Admin.Controllers
             model.NewsItemTitle = newsComment.NewsItem.Title;
             model.CustomerId = newsComment.CustomerId;
             model.IpAddress = newsComment.IpAddress;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc).ToString();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
             model.CommentTitle = newsComment.CommentTitle;
             model.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
         }

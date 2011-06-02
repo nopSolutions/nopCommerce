@@ -116,7 +116,7 @@ namespace Nop.Web.Controllers
             var model = new OrderDetailsModel();
 
             model.Id = order.Id;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString("D");
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
             model.IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order);
@@ -281,7 +281,7 @@ namespace Nop.Web.Controllers
                 model.OrderNotes.Add(new OrderDetailsModel.OrderNote()
                 {
                     Note = Nop.Core.Html.HtmlHelper.FormatText(orderNote.Note, false, true, false, false, false, false),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc).ToString()
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }
 

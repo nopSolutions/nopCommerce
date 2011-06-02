@@ -102,6 +102,7 @@
                             columns.Bound(x => x.PaymentStatus);
                             columns.Bound(x => x.ShippingStatus);
                             columns.Bound(x => x.CustomerEmail);
+                            columns.Bound(x => x.CreatedOn);
                             columns.Bound(x => x.Id)
                                 .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", new { id = x.Id }))
                                 .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")

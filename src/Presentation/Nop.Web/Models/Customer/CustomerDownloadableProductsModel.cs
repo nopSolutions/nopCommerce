@@ -33,7 +33,7 @@ namespace Nop.Web.Models.Customer
             public int DownloadId { get; set; }
             public int LicenseId { get; set; }
 
-            public string CreatedOnStr { get; set; }
+            public DateTime CreatedOn { get; set; }
         }
         #endregion
     }

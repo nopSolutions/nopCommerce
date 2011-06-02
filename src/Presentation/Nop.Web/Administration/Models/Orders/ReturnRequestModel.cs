@@ -52,6 +52,6 @@ namespace Nop.Admin.Models.Orders
         public string ReturnRequestStatusStr { get; set; }
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.CreatedOn")]
-        public string CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }
