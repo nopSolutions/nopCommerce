@@ -1100,7 +1100,7 @@ namespace Nop.Services.Installation
                     PrimaryStoreCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
                     PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
                     ActiveExchangeRateProviderSystemName = "CurrencyExchange.McExchange",
-                    AutoUpdateEnabled = true,
+                    AutoUpdateEnabled = false,
                     LastUpdateTime = 0
                 });
 

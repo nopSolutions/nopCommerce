@@ -20,32 +20,35 @@ namespace Nop.Services.Directory
         /// <param name="node">Xml node that represents a task description</param>
         public void Execute(XmlNode node)
         {
-            var a = EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>().Settings;
-            if (EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>().Settings.AutoUpdateEnabled)
+            //UNDONE Autofac issue - can't be resolved
+            var currencySettings = EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>().Settings;
+            if (currencySettings.AutoUpdateEnabled)
                 return;
 
-            long lastUpdateTimeTicks = EngineContext.Current.Resolve<CurrencySettings>().LastUpdateTime;
+            long lastUpdateTimeTicks = currencySettings.LastUpdateTime;
             DateTime lastUpdateTime = DateTime.FromBinary(lastUpdateTimeTicks);
             lastUpdateTime = DateTime.SpecifyKind(lastUpdateTime, DateTimeKind.Utc);
             if (lastUpdateTime.AddHours(1) < DateTime.UtcNow)
             {
                 //update rates each one hour
                 var currencyService = EngineContext.Current.Resolve<ICurrencyService>();
-                var exchangeRates = currencyService.GetCurrencyLiveRates(currencyService.GetCurrencyById(EngineContext.Current.Resolve<CurrencySettings>().PrimaryExchangeRateCurrencyId).CurrencyCode);
+                var exchangeRates = currencyService.GetCurrencyLiveRates(currencyService.GetCurrencyById(currencySettings.PrimaryExchangeRateCurrencyId).CurrencyCode);
 
                 foreach (var exchageRate in exchangeRates)
                 {
-                    Currency currency = EngineContext.Current.Resolve<ICurrencyService>().GetCurrencyByCode(exchageRate.CurrencyCode);
+                    var currency = currencyService.GetCurrencyByCode(exchageRate.CurrencyCode);
                     if (currency != null)
                     {
                         currency.Rate = exchageRate.Rate;
                         currency.UpdatedOnUtc = DateTime.UtcNow;
-                        EngineContext.Current.Resolve<ICurrencyService>().UpdateCurrency(currency);
+                        currencyService.UpdateCurrency(currency);
                     }
                 }
 
                 //save new update time value
-                EngineContext.Current.Resolve<CurrencySettings>().LastUpdateTime = DateTime.UtcNow.ToBinary();
+                currencySettings.LastUpdateTime = DateTime.UtcNow.ToBinary();
+                var settingService = EngineContext.Current.Resolve<ISettingService>();
+                settingService.SaveSetting(currencySettings);
             }
         }
     }

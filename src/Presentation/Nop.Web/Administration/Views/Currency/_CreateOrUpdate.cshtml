@@ -4,7 +4,6 @@
 @{
     var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures).ToList();
 }
-@Html.Telerik().ScriptRegistrar().Globalization(true)
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 <table class="adminContent">
