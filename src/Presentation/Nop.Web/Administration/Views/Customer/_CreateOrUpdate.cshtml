@@ -7,12 +7,20 @@
 {
     var tabInfo = x.Add().Text(T("Admin.Customers.Customers.Info").Text).Content(TabInfo().ToHtmlString());
     var tabCustomerRoles = x.Add().Text(T("Admin.Customers.Customers.CustomerRoles").Text).Content(TabCustomerRoles().ToHtmlString());
+
+
+    TabStripItemBuilder tabOrders = null;
+    if (Model.Id > 0)
+        tabOrders = x.Add().Text(T("Admin.Customers.Customers.Orders").Text).Content(TabOrders().ToHtmlString());
+    
     TabStripItemBuilder tabRewardPoints = null;
     if (Model.DisplayRewardPointsHistory)
         tabRewardPoints = x.Add().Text(T("Admin.Customers.Customers.RewardPoints").Text).Content(TabRewardPoints().ToHtmlString());
+    
     TabStripItemBuilder tabAddresses = null;
     if (Model.Id > 0)
         tabAddresses = x.Add().Text(T("Admin.Customers.Customers.Addresses").Text).Content(TabAddresses().ToHtmlString());
+    
     TabStripItemBuilder tabUserAccount = null;
     if (Model.Id > 0)
         tabUserAccount = x.Add().Text(T("Admin.Customers.Customers.UserAccount").Text).Content(TabUserAccount().ToHtmlString());
@@ -25,6 +33,9 @@
             break;
         case "customerroles":
             tabCustomerRoles.Selected(true);
+            break;
+        case "orders":
+            tabOrders.Selected(true);
             break;
         case "rewardpoints":
             tabRewardPoints.Selected(true);
@@ -198,6 +209,33 @@
         {
     @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
         }
+}
+
+@helper TabOrders()
+    { 
+    
+    @(Html.Telerik().Grid<CustomerModel.OrderModel>()
+                    .Name("order-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id)
+                            .Width(100)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.Id }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Order/Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>");
+                        columns.Bound(x => x.OrderStatus).Width(200);
+                        columns.Bound(x => x.PaymentStatus).Width(200);
+                        columns.Bound(x => x.ShippingStatus).Width(200);
+                        columns.Bound(x => x.OrderTotal).Width(200);
+                        columns.Bound(x => x.CreatedOn).Width(200);
+
+                    })
+                    .Pageable(settings => settings.PageSize(20))
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("OrderList", "Customer", new { customerId = Model.Id });
+                    })
+                    .EnableCustomBinding(true))
+        
 }
 @helper TabRewardPoints()
     {

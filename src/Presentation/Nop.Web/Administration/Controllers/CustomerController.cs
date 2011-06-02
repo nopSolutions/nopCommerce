@@ -26,6 +26,7 @@ using Telerik.Web.Mvc;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Admin.Models.Common;
+using Nop.Services.Orders;
 
 namespace Nop.Admin.Controllers
 {
@@ -49,6 +50,7 @@ namespace Nop.Admin.Controllers
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IOrderService _orderService;
 
         #endregion
 
@@ -59,9 +61,10 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
             ICountryService countryService, IStateProvinceService stateProvinceService, 
-            IAddressService addressService,
-            IUserService userService, CustomerSettings customerSettings,
-            ITaxService taxService, IWorkContext workContext, IPriceFormatter priceFormatter)
+            IAddressService addressService, IUserService userService, 
+            CustomerSettings customerSettings, ITaxService taxService, 
+            IWorkContext workContext, IPriceFormatter priceFormatter,
+            IOrderService orderService)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -78,6 +81,7 @@ namespace Nop.Admin.Controllers
             this._taxService = taxService;
             this._workContext = workContext;
             this._priceFormatter = priceFormatter;
+            this._orderService = orderService;
         }
 
         #endregion Constructors
@@ -740,6 +744,39 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
+        #endregion
+
+        #region Orders
+        
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult OrderList(int customerId, GridCommand command)
+        {
+            var orders = _orderService.GetOrdersByCustomerId(customerId);
+
+            var model = new GridModel<CustomerModel.OrderModel>
+            {
+                Data = orders.OrderBy(x => x.CreatedOnUtc).PagedForCommand(command)
+                    .Select(order =>
+                    {
+                        var orderModel = new CustomerModel.OrderModel();
+                        orderModel.Id = order.Id;
+                        orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+                        orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                        return orderModel;
+                    }),
+                Total = orders.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+
         #endregion
 
         #region Reports

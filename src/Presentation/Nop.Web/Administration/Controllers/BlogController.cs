@@ -45,29 +45,6 @@ namespace Nop.Admin.Controllers
 
 		#endregion Constructors 
         
-        #region Utilities
-
-        [NonAction]
-        private void PrepareBlogCommentModel(BlogCommentModel model,
-            BlogComment blogComment)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (blogComment == null)
-                throw new ArgumentNullException("blogComment");
-
-            model.Id = blogComment.Id;
-            model.BlogPostId = blogComment.BlogPostId;
-            model.BlogPostTitle = blogComment.BlogPost.Title;
-            model.CustomerId = blogComment.CustomerId;
-            model.IpAddress = blogComment.IpAddress;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
-            model.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
-        }
-
-        #endregion
-
 		#region Blog posts
 
         public ActionResult Index()
@@ -213,11 +190,17 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new GridModel<BlogCommentModel>
             {
-                Data = comments.PagedForCommand(command).Select(x =>
+                Data = comments.PagedForCommand(command).Select(blogComment =>
                 {
-                    var m = new BlogCommentModel();
-                    PrepareBlogCommentModel(m, x);
-                    return m;
+                    var commentModel = new BlogCommentModel();
+                    commentModel.Id = blogComment.Id;
+                    commentModel.BlogPostId = blogComment.BlogPostId;
+                    commentModel.BlogPostTitle = blogComment.BlogPost.Title;
+                    commentModel.CustomerId = blogComment.CustomerId;
+                    commentModel.IpAddress = blogComment.IpAddress;
+                    commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
+                    commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
+                    return commentModel;
                 }),
                 Total = comments.Count,
             };

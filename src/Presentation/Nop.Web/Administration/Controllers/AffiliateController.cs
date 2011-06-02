@@ -98,37 +98,7 @@ namespace Nop.Admin.Controllers
             else
                 model.Address.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
         }
-
-        [NonAction]
-        private void PrepareAffiliatedOrderModel(AffiliateModel.AffiliatedOrderModel model, Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-            
-            if (model == null)
-                throw new ArgumentNullException("model");
-            
-            model.Id = order.Id;
-            model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
-        }
-
-        [NonAction]
-        private void PrepareAffiliatedCustomerModel(AffiliateModel.AffiliatedCustomerModel model, Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.Id = customer.Id;
-            model.Name = customer.GetFullName();
-        }
-
+        
         #endregion
 
         #region Methods
@@ -256,17 +226,25 @@ namespace Nop.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
+            var orders = affiliate.AffiliatedOrders
+                .Where(o => !o.Deleted)
+                .OrderBy(x => x.CreatedOnUtc)
+                .ToList();
             var model = new GridModel<AffiliateModel.AffiliatedOrderModel>
             {
-                Data = affiliate.AffiliatedOrders
-                    .OrderBy(x => x.CreatedOnUtc).PagedForCommand(command)
-                    .Select(x =>
+                Data = orders.PagedForCommand(command)
+                    .Select(order =>
                     {
-                        var m = new AffiliateModel.AffiliatedOrderModel();
-                        PrepareAffiliatedOrderModel(m, x);
-                        return m;
+                        var orderModel = new AffiliateModel.AffiliatedOrderModel();
+                        orderModel.Id = order.Id;
+                        orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+                        orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                        return orderModel;
                     }),
-                Total = affiliate.AffiliatedOrders.Count
+                Total = orders.Count
             };
 
             return new JsonResult
@@ -282,17 +260,21 @@ namespace Nop.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
+            var customers = affiliate.AffiliatedCustomers
+                .Where(c => !c.Deleted)
+                .OrderBy(x => x.CreatedOnUtc)
+                .ToList();
             var model = new GridModel<AffiliateModel.AffiliatedCustomerModel>
             {
-                Data = affiliate.AffiliatedCustomers
-                    .OrderBy(x => x.CreatedOnUtc).PagedForCommand(command)
-                    .Select(x =>
+                Data = customers.PagedForCommand(command)
+                    .Select(customer =>
                     {
-                        var m = new AffiliateModel.AffiliatedCustomerModel();
-                        PrepareAffiliatedCustomerModel(m, x);
-                        return m;
+                        var customerModel = new AffiliateModel.AffiliatedCustomerModel();
+                        customerModel.Id = customer.Id;
+                        customerModel.Name = customer.GetFullName();
+                        return customerModel;
                     }),
-                Total = affiliate.AffiliatedCustomers.Count
+                Total = customers.Count
             };
 
             return new JsonResult

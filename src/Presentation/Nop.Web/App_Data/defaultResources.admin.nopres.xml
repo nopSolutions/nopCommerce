@@ -98,9 +98,6 @@
                   <LocaleResource Name="PaymentStatus">
                     <Value>Payment status</Value>
                   </LocaleResource>
-                  <LocaleResource Name="ProcessNextPayment">
-                    <Value>Process next payment (create a new order)</Value>
-                  </LocaleResource>
                   <LocaleResource Name="ShippingStatus">
                     <Value>Shipping status</Value>
                   </LocaleResource>
@@ -4580,6 +4577,29 @@
                               <Value>Filter by email of associated user account.</Value>
                             </LocaleResource>
                           </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Orders">
+                      <Value>Orders</Value>
+                      <Children>
+                        <LocaleResource Name="CreatedOn">
+                          <Value>Created on</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Order">
+                          <Value>Order</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderStatus">
+                          <Value>Order status</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="OrderTotal">
+                          <Value>Order total</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="PaymentStatus">
+                          <Value>Payment status</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="ShippingStatus">
+                          <Value>Shipping status</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>

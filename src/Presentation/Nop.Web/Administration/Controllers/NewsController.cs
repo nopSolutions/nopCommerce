@@ -46,30 +46,6 @@ namespace Nop.Admin.Controllers
 
 		#endregion Constructors 
         
-        #region Utilities
-
-        [NonAction]
-        private void PrepareNewsCommentModel(NewsCommentModel model,
-            NewsComment newsComment)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (newsComment == null)
-                throw new ArgumentNullException("newsComment");
-
-            model.Id = newsComment.Id;
-            model.NewsItemId = newsComment.NewsItemId;
-            model.NewsItemTitle = newsComment.NewsItem.Title;
-            model.CustomerId = newsComment.CustomerId;
-            model.IpAddress = newsComment.IpAddress;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
-            model.CommentTitle = newsComment.CommentTitle;
-            model.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
-        }
-
-        #endregion
-
         #region News items
 
         public ActionResult Index()
@@ -215,11 +191,18 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new GridModel<NewsCommentModel>
             {
-                Data = comments.PagedForCommand(command).Select(x =>
+                Data = comments.PagedForCommand(command).Select(newsComment =>
                 {
-                    var m = new NewsCommentModel();
-                    PrepareNewsCommentModel(m, x);
-                    return m;
+                    var commentModel = new NewsCommentModel();
+                    commentModel.Id = newsComment.Id;
+                    commentModel.NewsItemId = newsComment.NewsItemId;
+                    commentModel.NewsItemTitle = newsComment.NewsItem.Title;
+                    commentModel.CustomerId = newsComment.CustomerId;
+                    commentModel.IpAddress = newsComment.IpAddress;
+                    commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
+                    commentModel.CommentTitle = newsComment.CommentTitle;
+                    commentModel.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
+                    return commentModel;
                 }),
                 Total = comments.Count,
             };
