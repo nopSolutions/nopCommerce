@@ -32,11 +32,13 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             containerManager.UpdateContainer(x =>
             {
                 var drTypes = typeFinder.FindClassesOfType<IDependencyRegistar>();
-                foreach (var t in drTypes)
-                {
-                    dynamic dependencyRegistar = Activator.CreateInstance(t);
+                var drInstances = new List<IDependencyRegistar>();
+                foreach (var drType in drTypes)
+                    drInstances.Add((IDependencyRegistar)Activator.CreateInstance(drType));
+                //sort
+                drInstances = drInstances.AsQueryable().OrderBy(t => t.Order).ToList();
+                foreach (var dependencyRegistar in drInstances)
                     dependencyRegistar.Register(x, typeFinder);
-                }
             });
 
             //other dependencies

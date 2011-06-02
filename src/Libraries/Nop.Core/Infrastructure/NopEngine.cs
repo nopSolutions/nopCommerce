@@ -53,16 +53,11 @@ namespace Nop.Core.Infrastructure
             var startUpTaskTypes = typeFinder.FindClassesOfType<IStartupTask>();
             var startUpTasks = new List<IStartupTask>();
             foreach (var startUpTaskType in startUpTaskTypes)
-            {
-                var startUpTask = ((IStartupTask)Activator.CreateInstance(startUpTaskType));
-                startUpTasks.Add(startUpTask);
-            }
-
+                startUpTasks.Add((IStartupTask)Activator.CreateInstance(startUpTaskType));
+            //sort
             startUpTasks = startUpTasks.AsQueryable().OrderBy(st => st.Order).ToList();
             foreach (var startUpTask in startUpTasks)
-            {
                 startUpTask.Execute();
-            }
         }
 
         private void StartScheduledTasks(NopConfig config)
@@ -138,6 +133,5 @@ namespace Nop.Core.Infrastructure
         }
 
         #endregion
-
     }
 }

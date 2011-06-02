@@ -203,6 +203,11 @@ namespace Nop.Web.Framework
             builder.RegisterType<EmbeddedViewResolver>().As<IEmbeddedViewResolver>().SingleInstance();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
         }
+
+        public int Order
+        {
+            get { return 0; }
+        }
     }
 
 
