@@ -275,7 +275,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(int id)
         {
             var category = _categoryService.GetCategoryById(id);
-            if (category == null) 
+            if (category == null || category.Deleted) 
                 throw new ArgumentException("No category found with the specified id", "id");
             var model = category.ToModel();
             //parent categories
@@ -308,7 +308,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(CategoryModel model, bool continueEditing)
         {
             var category = _categoryService.GetCategoryById(model.Id);
-            if (category == null)
+            if (category == null || category.Deleted)
                 throw new ArgumentException("No category found with the specified id");
 
             //decode description

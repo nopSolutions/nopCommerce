@@ -141,7 +141,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(int id)
         {
             var payment = _orderService.GetRecurringPaymentById(id);
-            if (payment == null)
+            if (payment == null || payment.Deleted)
                 throw new ArgumentException("No recurring payment found with the specified id", "id");
             var model = PrepareRecurringPaymentModel(payment, true);
             return View(model);
@@ -152,7 +152,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(RecurringPaymentModel model, bool continueEditing)
         {
             var payment = _orderService.GetRecurringPaymentById(model.Id);
-            if (payment == null)
+            if (payment == null || payment.Deleted)
                 throw new ArgumentException("No recurring payment found with the specified id");
 
             payment.CycleLength = model.CycleLength;

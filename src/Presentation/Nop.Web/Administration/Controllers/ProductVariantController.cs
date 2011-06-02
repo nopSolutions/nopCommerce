@@ -223,7 +223,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(int id)
         {
             var variant = _productService.GetProductVariantById(id);
-            if (variant == null) 
+            if (variant == null || variant.Deleted)
                 throw new ArgumentException("No product variant found with the specified id", "id");
             var model = variant.ToModel();
             //locales
@@ -246,7 +246,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(ProductVariantModel model, bool continueEditing)
         {
             var variant = _productService.GetProductVariantById(model.Id);
-            if (variant == null)
+            if (variant == null || variant.Deleted)
                 throw new ArgumentException("No product variant found with the specified id");
             if (ModelState.IsValid)
             {

@@ -274,7 +274,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(int id)
         {
             var customer = _customerService.GetCustomerById(id);
-            if (customer == null) 
+            if (customer == null || customer.Deleted)
                 throw new ArgumentException("No customer found with the specified id", "id");
             
             var model = customer.ToModel();
@@ -311,7 +311,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(CustomerModel model, bool continueEditing)
         {
             var customer = _customerService.GetCustomerById(model.Id);
-            if (customer == null)
+            if (customer == null || customer.Deleted)
                 throw new ArgumentException("No customer found with the specified id", "id");
 
             if (ModelState.IsValid)

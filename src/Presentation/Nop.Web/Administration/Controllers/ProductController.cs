@@ -468,7 +468,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(int id)
         {
             var product = _productService.GetProductById(id);
-            if (product == null)
+            if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id", "id");
 
             var model = product.ToModel();
@@ -496,7 +496,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(ProductModel model, bool continueEditing)
         {
             var product = _productService.GetProductById(model.Id);
-            if (product == null)
+            if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
 
             //decode description

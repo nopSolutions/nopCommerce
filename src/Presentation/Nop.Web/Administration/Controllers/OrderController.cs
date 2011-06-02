@@ -447,7 +447,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(int id)
         {
             var order = _orderService.GetOrderById(id);
-            if (order == null)
+            if (order == null || order.Deleted)
                 throw new ArgumentException("No order found with the specified id", "id");
 
             var model = PrepareOrderDetailsModel(order);

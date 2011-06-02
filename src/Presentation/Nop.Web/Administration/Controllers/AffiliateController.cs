@@ -208,7 +208,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(int id)
         {
             var affiliate = _affiliateService.GetAffiliateById(id);
-            if (affiliate == null)
+            if (affiliate == null || affiliate.Deleted)
                 throw new ArgumentException("No affiliate found with the specified id", "id");
 
             var model = new AffiliateModel();
@@ -220,7 +220,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(AffiliateModel model, bool continueEditing)
         {
             var affiliate = _affiliateService.GetAffiliateById(model.Id);
-            if (affiliate == null)
+            if (affiliate == null || affiliate.Deleted)
                 throw new ArgumentException("No affiliate found with the specified id");
 
             if (ModelState.IsValid)
