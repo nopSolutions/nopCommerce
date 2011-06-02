@@ -1,7 +1,4 @@
-﻿@model Nop.Admin.Models.ActivityLogSearchModel
-           
-@using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+﻿@model ActivityLogSearchModel
 
 @using (Html.BeginForm())
 {
@@ -54,7 +51,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.ActivityLogModel>()
+                @(Html.Telerik().Grid<ActivityLogModel>()
                         .Name("activityLog-grid")
                         .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                         .Columns(columns =>

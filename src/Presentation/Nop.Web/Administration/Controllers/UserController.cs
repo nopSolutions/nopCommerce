@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Admin.Models.Security;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;

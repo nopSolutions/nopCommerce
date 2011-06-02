@@ -1,8 +1,8 @@
 ﻿@model SalesReportModel
        
-@using Nop.Admin.Models;    
+    
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 
 @using (Html.BeginForm())
 {
@@ -58,7 +58,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.SalesReportLineModel>()
+                @(Html.Telerik().Grid<SalesReportLineModel>()
                         .Name("salesreport-grid")
                         .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                         .Columns(columns =>

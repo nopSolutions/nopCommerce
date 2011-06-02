@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Admin.Models.Logging;
 using Nop.Core.Domain.Logging;
 using Nop.Services.Helpers;
 using Nop.Services.Logging;

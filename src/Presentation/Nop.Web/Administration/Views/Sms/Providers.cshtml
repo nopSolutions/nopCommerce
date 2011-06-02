@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.SmsProviderModel>
+﻿@model Telerik.Web.Mvc.GridModel<SmsProviderModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
@@ -10,7 +10,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.SmsProviderModel>()
+            @(Html.Telerik().Grid<SmsProviderModel>()
                     .Name("smsproviders-grid")
                     .DataKeys(x =>
                     {

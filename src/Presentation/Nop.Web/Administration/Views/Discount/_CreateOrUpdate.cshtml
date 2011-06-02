@@ -1,9 +1,8 @@
-﻿@model Nop.Admin.Models.DiscountModel
-@using Nop.Web.Framework;
+﻿@model DiscountModel
+
 @using Nop.Core.Domain.Discounts;
-@using Nop.Core;
 @using Telerik.Web.Mvc.UI;
-@using Nop.Admin.Models;
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("discount-edit").Items(x =>

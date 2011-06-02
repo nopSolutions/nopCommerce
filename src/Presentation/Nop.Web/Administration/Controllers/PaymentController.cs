@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models;
+using Nop.Admin.Models.Payments;
 using Nop.Core;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;

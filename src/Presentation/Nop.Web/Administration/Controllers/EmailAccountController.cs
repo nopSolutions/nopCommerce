@@ -4,6 +4,7 @@ using System.Net.Mail;
 using System.Web.Mvc;
 
 using Nop.Admin.Models;
+using Nop.Admin.Models.Messages;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Configuration;

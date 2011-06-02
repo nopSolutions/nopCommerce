@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.AffiliateModel>
+﻿@model Telerik.Web.Mvc.GridModel<AffiliateModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
@@ -13,7 +13,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.AffiliateModel>()
+            @(Html.Telerik().Grid<AffiliateModel>()
                     .Name("affiliates-grid")
                     .Columns(columns =>
                     {

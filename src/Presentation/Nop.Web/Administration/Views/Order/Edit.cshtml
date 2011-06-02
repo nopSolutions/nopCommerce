@@ -1,5 +1,5 @@
-﻿@model Nop.Admin.Models.OrderModel
-@using Nop.Web.Framework;
+﻿@model OrderModel
+
 @using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Tax;
 @using Nop.Core.Domain.Catalog;
@@ -1289,7 +1289,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.OrderModel.OrderNote>().Name("ordernotes-grid")
+                @(Html.Telerik().Grid<OrderModel.OrderNote>().Name("ordernotes-grid")
         .DataKeys(keys =>
         {
             keys.Add(x => x.Id).RouteKey("orderNoteId");

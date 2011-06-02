@@ -1,7 +1,7 @@
-﻿@model Nop.Admin.Models.ProductVariantModel
-@using Nop.Web.Framework;
+﻿@model ProductVariantModel
+
 @using Telerik.Web.Mvc.UI;
-@using Nop.Admin.Models;
+
 @using Nop.Core.Domain.Catalog;
 @using Nop.Admin;
 @Html.ValidationSummary(false)
@@ -22,7 +22,7 @@
     {
         if (Model.Id > 0)
         {
-    @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.TierPriceModel>()
+    @(Html.Telerik().Grid<ProductVariantModel.TierPriceModel>()
             .Name("tierprices-grid")
                 .DataKeys(keys =>
                 {
@@ -115,7 +115,7 @@
 }
 @helper TabAttributes()
     {
-    @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.ProductVariantAttributeModel>()
+    @(Html.Telerik().Grid<ProductVariantModel.ProductVariantAttributeModel>()
                 .Name("productvariantattributes-grid")
                 .DataKeys(keys =>
                 {

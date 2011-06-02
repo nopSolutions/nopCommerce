@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.CountryModel>
+﻿@model Telerik.Web.Mvc.GridModel<CountryModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
@@ -13,7 +13,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.CountryModel>()
+            @(Html.Telerik().Grid<CountryModel>()
                     .Name("countries-grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>

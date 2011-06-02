@@ -2,8 +2,8 @@
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
 }
 
-@model Nop.Admin.Models.CategoryModel.AddCategoryProductModel
-@using Nop.Web.Framework;
+@model CategoryModel.AddCategoryProductModel
+
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
@@ -60,7 +60,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel>(Model.Products.Data)
+                @(Html.Telerik().Grid<ProductModel>(Model.Products.Data)
                     .Name("products-grid")
                     .Columns(columns =>
                     {

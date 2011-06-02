@@ -1,7 +1,7 @@
-﻿@model Nop.Admin.Models.CategoryModel
-@using Nop.Web.Framework;
+﻿@model CategoryModel
+
 @using Telerik.Web.Mvc.UI;
-@using Nop.Admin.Models;
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("category-edit").Items(x =>
@@ -225,7 +225,7 @@
             <table class="adminContent">
                 <tr>
                     <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.CategoryModel.CategoryProductModel>()
+            @(Html.Telerik().Grid<CategoryModel.CategoryProductModel>()
                 .Name("products-grid")
                     .DataKeys(keys =>
                     {

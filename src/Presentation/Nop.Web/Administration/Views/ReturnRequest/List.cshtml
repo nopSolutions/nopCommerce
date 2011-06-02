@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.ReturnRequestModel>
+﻿@model Telerik.Web.Mvc.GridModel<ReturnRequestModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" />
@@ -12,7 +12,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.ReturnRequestModel>(Model.Data)
+            @(Html.Telerik().Grid<ReturnRequestModel>(Model.Data)
                     .Name("returnrequests-grid")
                     .Columns(columns =>
                     {

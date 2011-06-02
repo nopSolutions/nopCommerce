@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.NewsItemModel>
+﻿@model Telerik.Web.Mvc.GridModel<NewsItemModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
@@ -13,7 +13,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.NewsItemModel>()
+            @(Html.Telerik().Grid<NewsItemModel>()
                     .Name("newsitem-grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>

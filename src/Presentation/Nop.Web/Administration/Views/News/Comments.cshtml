@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.NewsCommentModel>
+﻿@model Telerik.Web.Mvc.GridModel<NewsCommentModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 @{
     int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
 }
@@ -15,7 +15,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.NewsCommentModel>(Model.Data)
+            @(Html.Telerik().Grid<NewsCommentModel>(Model.Data)
                     .Name("comments-grid")
                     .DataKeys(x => {
                         x.Add(y => y.Id).RouteKey("Id");

@@ -1,6 +1,6 @@
-﻿@model Nop.Admin.Models.CustomerListModel
+﻿@model CustomerListModel
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -48,7 +48,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel>(Model.Customers.Data)
+                @(Html.Telerik().Grid<CustomerModel>(Model.Customers.Data)
                     .Name("customers-grid")
                     .Columns(columns =>
                     {

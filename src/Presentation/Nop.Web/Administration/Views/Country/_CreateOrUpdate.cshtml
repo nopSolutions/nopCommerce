@@ -1,5 +1,5 @@
-﻿@model Nop.Admin.Models.CountryModel
-@using Nop.Web.Framework;
+﻿@model CountryModel
+
 @using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
@@ -103,7 +103,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.StateProvinceModel>()
+                @(Html.Telerik().Grid<StateProvinceModel>()
                     .Name("states-grid")
                     .DataKeys(x =>
                     {

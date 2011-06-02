@@ -1,7 +1,5 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.ActivityLogTypeModel>
+﻿@model Telerik.Web.Mvc.GridModel<ActivityLogTypeModel>
            
-@using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
 
 @using (Html.BeginForm("SaveTypes","ActivityLog"))
 {
@@ -19,7 +17,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.ActivityLogTypeModel>()
+                @(Html.Telerik().Grid<ActivityLogTypeModel>()
                 .Name("activityLogType-grid")
                 .BindTo(Model.Data)
                         .Columns(columns =>

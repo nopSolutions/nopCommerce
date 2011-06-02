@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Admin;
 using Nop.Admin.Models;
+using Nop.Admin.Models.Directory;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;

@@ -1,8 +1,8 @@
-﻿@model Nop.Admin.Models.CheckoutAttributeModel
-@using Nop.Web.Framework;
+﻿@model CheckoutAttributeModel
+
 @using Nop.Core.Domain.Catalog;
 @using Telerik.Web.Mvc.UI;
-@using Nop.Admin.Models;
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("checkoutattribute-edit").Items(x =>
@@ -147,7 +147,7 @@
             <table class="adminContent">
                 <tr>
                     <td>
-                        @(Html.Telerik().Grid<Nop.Admin.Models.CheckoutAttributeValueModel>()
+                        @(Html.Telerik().Grid<CheckoutAttributeValueModel>()
                         .Name("checkoutattributevalues-grid")
                             .DataKeys(x =>
                             {

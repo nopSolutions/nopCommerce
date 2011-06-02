@@ -1,9 +1,9 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.LogModel>
+﻿@model Telerik.Web.Mvc.GridModel<LogModel>
 @using Telerik.Web.Mvc.UI
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.LogModel>()
+            @(Html.Telerik().Grid<LogModel>()
                     .Name("log-grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>

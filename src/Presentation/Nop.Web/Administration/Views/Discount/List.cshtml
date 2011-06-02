@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.DiscountModel>
+﻿@model Telerik.Web.Mvc.GridModel<DiscountModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
@@ -13,7 +13,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.DiscountModel>(Model.Data)
+            @(Html.Telerik().Grid<DiscountModel>(Model.Data)
                     .Name("discounts-grid")
                     .Columns(columns =>
                     {

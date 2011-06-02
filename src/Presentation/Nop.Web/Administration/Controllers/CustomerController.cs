@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Admin.Models.Customers;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -24,6 +25,7 @@ using Nop.Web.Framework;
 using Telerik.Web.Mvc;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
+using Nop.Admin.Models.Common;
 
 namespace Nop.Admin.Controllers
 {

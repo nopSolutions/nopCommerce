@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.TaxProviderModel>
+﻿@model Telerik.Web.Mvc.GridModel<TaxProviderModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
@@ -10,7 +10,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.TaxProviderModel>()
+            @(Html.Telerik().Grid<TaxProviderModel>()
                     .Name("taxProviders-grid")
                     .DataKeys(x =>
                     {

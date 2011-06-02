@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.BlogPostModel>
+﻿@model Telerik.Web.Mvc.GridModel<BlogPostModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
@@ -13,7 +13,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.BlogPostModel>()
+            @(Html.Telerik().Grid<BlogPostModel>()
                     .Name("blogpost-grid")
                     .BindTo(Model.Data)
                     .Columns(columns =>

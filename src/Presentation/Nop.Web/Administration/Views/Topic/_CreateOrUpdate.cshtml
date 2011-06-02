@@ -1,8 +1,7 @@
-﻿@model Nop.Admin.Models.TopicModel
-@using Nop.Web.Framework;
+﻿@model TopicModel
+
 @using Telerik.Web.Mvc.UI;
-@using Nop.Admin.Models;
-@using Nop.Core;
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("topic-edit").Items(x =>

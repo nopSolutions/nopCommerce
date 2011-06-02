@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.CategoryModel>
+﻿@model Telerik.Web.Mvc.GridModel<CategoryModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
@@ -14,7 +14,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.CategoryModel>(Model.Data)
+            @(Html.Telerik().Grid<CategoryModel>(Model.Data)
                     .Name("categories-grid")
                     .Columns(columns =>
                     {

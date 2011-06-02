@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.MessageTemplateModel>
+﻿@model Telerik.Web.Mvc.GridModel<MessageTemplateModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
@@ -12,7 +12,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.MessageTemplateModel>(Model.Data)
+            @(Html.Telerik().Grid<MessageTemplateModel>(Model.Data)
                     .Name("templates-grid")
                     .Columns(columns =>
                     {

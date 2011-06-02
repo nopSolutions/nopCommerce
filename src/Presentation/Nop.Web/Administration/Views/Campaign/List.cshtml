@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.CampaignModel>
+﻿@model Telerik.Web.Mvc.GridModel<CampaignModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
@@ -13,7 +13,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.CampaignModel>(Model.Data)
+            @(Html.Telerik().Grid<CampaignModel>(Model.Data)
                     .Name("campaigns-grid")
                     .Columns(columns =>
                     {

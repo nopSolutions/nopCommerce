@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.PromotionFeedModel>
+﻿@model Telerik.Web.Mvc.GridModel<PromotionFeedModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
@@ -10,7 +10,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.PromotionFeedModel>()
+            @(Html.Telerik().Grid<PromotionFeedModel>()
                     .Name("feeds-grid")
                     .DataKeys(x =>
                     {

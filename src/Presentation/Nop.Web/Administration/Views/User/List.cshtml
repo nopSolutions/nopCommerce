@@ -1,6 +1,6 @@
-﻿    @model Nop.Admin.Models.UserListModel
+﻿@model UserListModel
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -45,7 +45,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.UserModel>(Model.Users.Data)
+                @(Html.Telerik().Grid<UserModel>(Model.Users.Data)
                     .Name("users-grid")
                     .Columns(columns =>
                     {

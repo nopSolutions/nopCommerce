@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 
 using Nop.Admin.Models;
+using Nop.Admin.Models.Messages;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 

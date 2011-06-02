@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 
 using Nop.Admin.Models;
+using Nop.Admin.Models.Messages;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;

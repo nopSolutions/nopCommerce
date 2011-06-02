@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 
 using Nop.Admin.Models;
+using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Admin.Models.News;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;

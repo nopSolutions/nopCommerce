@@ -1,6 +1,6 @@
-﻿@model Telerik.Web.Mvc.GridModel<Nop.Admin.Models.ProductAttributeModel>
+﻿@model Telerik.Web.Mvc.GridModel<ProductAttributeModel>
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
@@ -13,7 +13,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.ProductAttributeModel>(Model.Data)
+            @(Html.Telerik().Grid<ProductAttributeModel>(Model.Data)
                     .Name("productattributes-grid")
                     .Columns(columns =>
                     {

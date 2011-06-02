@@ -1,7 +1,7 @@
-﻿@model Nop.Admin.Models.OrderListModel
+﻿@model OrderListModel
            
 @using Telerik.Web.Mvc.UI
-@using Nop.Web.Framework
+
 
 @using (Html.BeginForm())
 {
@@ -91,7 +91,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Admin.Models.OrderModel>()
+                @(Html.Telerik().Grid<OrderModel>()
                         .Name("orders-grid")
                 .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                         .Columns(columns =>

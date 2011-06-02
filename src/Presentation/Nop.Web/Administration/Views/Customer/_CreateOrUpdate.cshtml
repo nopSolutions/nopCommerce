@@ -1,5 +1,5 @@
-﻿@model Nop.Admin.Models.CustomerModel
-@using Nop.Web.Framework;
+﻿@model CustomerModel
+
 @using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
@@ -201,7 +201,7 @@
 }
 @helper TabRewardPoints()
     {
-    @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel.RewardPointsHistoryModel>().Name("customer-rewardpoints-grid")
+    @(Html.Telerik().Grid<CustomerModel.RewardPointsHistoryModel>().Name("customer-rewardpoints-grid")
     .DataKeys(keys =>
     {
         keys.Add(x => x.Id).RouteKey("rewardPointsHistoryId");
@@ -279,7 +279,7 @@
 }
 @helper TabAddresses()
     {
-    @(Html.Telerik().Grid<Nop.Admin.Models.AddressModel>().Name("customer-addresses-grid")
+    @(Html.Telerik().Grid<AddressModel>().Name("customer-addresses-grid")
     .DataKeys(keys =>
     {
         keys.Add(x => x.Id).RouteKey("addressId");
@@ -350,7 +350,7 @@
                 //}
             };
         </script>
-        @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel.UserAccountModel>()
+        @(Html.Telerik().Grid<CustomerModel.UserAccountModel>()
         .Name("customer-useraccounts-existing-grid")
         .Columns(columns =>
         {
@@ -413,7 +413,7 @@
                 //}
             };
         </script>
-        @(Html.Telerik().Grid<Nop.Admin.Models.CustomerModel.UserAccountModel>()
+        @(Html.Telerik().Grid<CustomerModel.UserAccountModel>()
         .Name("customer-useraccounts-all-grid")
         .Columns(columns =>
         {

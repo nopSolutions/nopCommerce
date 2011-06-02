@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models;
+using Nop.Admin.Models.Localization;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Web.Framework;

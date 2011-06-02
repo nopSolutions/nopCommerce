@@ -1,5 +1,5 @@
-﻿@model Nop.Admin.Models.ProductVariantModel.ProductVariantAttributeValueListModel
-@using Nop.Web.Framework;
+﻿@model ProductVariantModel.ProductVariantAttributeValueListModel
+
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
@@ -15,7 +15,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.ProductVariantModel.ProductVariantAttributeValueModel>()
+            @(Html.Telerik().Grid<ProductVariantModel.ProductVariantAttributeValueModel>()
                             .Name("pvav-grid")
                             .DataKeys(x =>
                             {

@@ -1,7 +1,7 @@
-﻿@model Nop.Admin.Models.ProductModel
-@using Nop.Web.Framework;
+﻿@model ProductModel
+
 @using Telerik.Web.Mvc.UI;
-@using Nop.Admin.Models;
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("product-edit").Items(x =>
@@ -258,7 +258,7 @@
     {
         if (Model.NumberOfAvailableCategories > 0)
         {
-                @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductCategoryModel>()
+                @(Html.Telerik().Grid<ProductModel.ProductCategoryModel>()
                     .Name("productcategories-grid")
                        .DataKeys(keys =>
                        {
@@ -318,7 +318,7 @@
     {
         if (Model.NumberOfAvailableManufacturers > 0)
         {
-                @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductManufacturerModel>()
+                @(Html.Telerik().Grid<ProductModel.ProductManufacturerModel>()
                     .Name("productmanufacturers-grid")
                        .DataKeys(keys =>
                        {
@@ -380,7 +380,7 @@
             <table class="adminContent">
                 <tr>
                     <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.RelatedProductModel>()
+            @(Html.Telerik().Grid<ProductModel.RelatedProductModel>()
                 .Name("relatedproducts-grid")
                     .DataKeys(keys =>
                     {
@@ -445,7 +445,7 @@
             <table class="adminContent">
                 <tr>
                     <td>
-            @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.CrossSellProductModel>()
+            @(Html.Telerik().Grid<ProductModel.CrossSellProductModel>()
                 .Name("crosssellproducts-grid")
                     .DataKeys(keys =>
                     {
@@ -502,7 +502,7 @@
         if (Model.Id > 0)
         {
             <div>
-            @(Html.Telerik().Grid<Nop.Admin.Models.ProductModel.ProductPictureModel>()
+            @(Html.Telerik().Grid<ProductModel.ProductPictureModel>()
                     .Name("productpictures-grid")
                     .DataKeys(x =>
                     {
@@ -606,7 +606,7 @@
         if (Model.Id > 0)
         {
             <div>
-        @(Html.Telerik().Grid<Nop.Admin.Models.ProductSpecificationAttributeModel>()
+        @(Html.Telerik().Grid<ProductSpecificationAttributeModel>()
                     .Name("specificationattributes-grid")
                     .DataKeys(x =>
                     {
