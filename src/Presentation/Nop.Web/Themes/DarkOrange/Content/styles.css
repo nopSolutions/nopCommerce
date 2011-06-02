@@ -2145,11 +2145,11 @@ textarea
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
-	PRODUCTS IN LINES 1 - TEMPLATE
+	PRODUCTS IN LINES - TEMPLATE
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-.product-list1
+.product-list
 {
 	width: 520px;
 	margin: 0 auto 0 auto;
@@ -2157,7 +2157,7 @@ textarea
 	list-style-type:none;
 }
 
-.product-list1 .item-box
+.product-list .item-box
 {
 	text-align: left;
 	clear: both;
@@ -2165,7 +2165,7 @@ textarea
 	margin-bottom: 10px;
 }
 
-.product-list1 .product-item
+.product-list .product-item
 {
 	width: 520px;
 	height: 177px;
@@ -2174,7 +2174,7 @@ textarea
 	position: relative;
 }
 
-.product-list1 .product-item .product-title
+.product-list .product-item .product-title
 {
 	font-weight: bold;
 	font-size: 12px;
@@ -2182,7 +2182,7 @@ textarea
 	padding-left: 10px;
 }
 
-.product-list1 .product-item .product-title a
+.product-list .product-item .product-title a
 {
 	background: url('images/deal_box_hr.gif') no-repeat 100% 0;
 	display: block;
@@ -2192,13 +2192,13 @@ textarea
 	padding: 4px 10px 8px 0px;
 }
 
-.product-list1 .product-item .picture
+.product-list .product-item .picture
 {
 	float: left;
 	margin: 10px 0 10px 10px;
 }
 
-.product-list1 .product-item .description
+.product-list .product-item .description
 {
 	padding: 0px 0 0 10px;
 	margin: 10px 150px 0px 140px;
@@ -2207,7 +2207,7 @@ textarea
 	color: #555;
 }
 
-.product-list1 .product-item .add-info
+.product-list .product-item .add-info
 {
 	float: right;
 	text-align: right;
@@ -2216,37 +2216,25 @@ textarea
 	right: 5px;
 }
 
-.product-list1 .product-item .prices
+.product-list .product-item .prices
 {
 
 }
 
-.product-list1 .product-item .prices .productPrice
+.product-list .product-item .prices .productPrice
 {
 	color: green;
 }
 
-.product-list1 .product-item .prices .oldproductPrice
+.product-list .product-item .prices .oldproductPrice
 {
 	color: Red;
 	text-decoration: line-through;
 }
 
-.product-list1 .product-item .buttons
+.product-list .product-item .buttons
 {
 	padding-top: 20px;
-}
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-
-	PRODUCTS IN LINES 2 - TEMPLATE
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-.product-list2
-{
-	margin-bottom: 15px;
-	padding: 0px;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
