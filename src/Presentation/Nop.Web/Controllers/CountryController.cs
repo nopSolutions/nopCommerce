@@ -10,6 +10,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Tax;
 using Nop.Web.Controllers;
 using Nop.Web.Framework;
@@ -23,15 +24,18 @@ namespace Nop.Web.Controllers
 
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly ILocalizationService _localizationService;
 
 	    #endregion
 
 		#region Constructors
 
-        public CountryController(ICountryService countryService, IStateProvinceService stateProvinceService)
+        public CountryController(ICountryService countryService, IStateProvinceService stateProvinceService,
+            ILocalizationService localizationService)
 		{
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
+            this._localizationService = localizationService;
 		}
 
 		#endregion Constructors 
@@ -50,7 +54,7 @@ namespace Nop.Web.Controllers
             var result = (from s in states
                          select new { id = s.Id, name = s.Name }).ToList();
             if (addEmptyStateIfRequired && result.Count == 0)
-                result.Insert(0, new { id = 0, name = "Other (Non US)" });
+                result.Insert(0, new { id = 0, name = _localizationService.GetResource("Address.OtherNonUS") });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

@@ -192,10 +192,10 @@ namespace Nop.Web.Controllers
 
             //new address model
             model.NewAddress = new AddressModel();
-            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountriesForShipping())
                 model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
-            model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+            model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
             
             return View(model);
         }
@@ -259,7 +259,7 @@ namespace Nop.Web.Controllers
 
             //new address model
             //countries
-            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries())
                 model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.NewAddress.CountryId) });
             //states
@@ -270,7 +270,7 @@ namespace Nop.Web.Controllers
                     model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.NewAddress.StateProvinceId) });
             }
             else
-                model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+                model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
 
 
             return View(model);
@@ -299,10 +299,10 @@ namespace Nop.Web.Controllers
 
             //new address model
             model.NewAddress = new AddressModel();
-            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountriesForBilling())
                 model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
-            model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+            model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
 
             return View(model);
         }
@@ -359,7 +359,7 @@ namespace Nop.Web.Controllers
 
             //new address model
             //countries
-            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries())
                 model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.NewAddress.CountryId) });
             //states
@@ -370,7 +370,7 @@ namespace Nop.Web.Controllers
                     model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.NewAddress.StateProvinceId) });
             }
             else
-                model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+                model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
 
 
             return View(model);

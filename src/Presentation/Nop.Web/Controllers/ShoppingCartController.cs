@@ -262,7 +262,7 @@ namespace Nop.Web.Controllers
             if (model.EstimateShipping.Enabled)
             {
                 //countries
-                model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+                model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries())
                     model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.EstimateShipping.CountryId) });
                 //states
@@ -273,7 +273,7 @@ namespace Nop.Web.Controllers
                         model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.EstimateShipping.StateProvinceId) });
                 }
                 else
-                    model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+                    model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
             }
 
             #endregion

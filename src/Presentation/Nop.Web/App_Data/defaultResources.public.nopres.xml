@@ -524,6 +524,12 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="OtherNonUS">
+        <Value>Other (Non US)</Value>
+      </LocaleResource>
+      <LocaleResource Name="SelectCountry">
+        <Value>Select country</Value>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Blog">

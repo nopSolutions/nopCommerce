@@ -49,6 +49,7 @@ namespace Nop.Admin.Controllers
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ICurrencyService _currencyService;
         private readonly IPictureService _pictureService;
+        private readonly ILocalizationService _localizationService;
 
         private BlogSettings _blogSettings;
         private ForumSettings _forumSettings;
@@ -72,6 +73,7 @@ namespace Nop.Admin.Controllers
             ICountryService countryService, IStateProvinceService stateProvinceService,
             IAddressService addressService, ITaxCategoryService taxCategoryService,
             ICurrencyService currencyService, IPictureService pictureService, 
+            ILocalizationService localizationService,
             BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
@@ -87,6 +89,7 @@ namespace Nop.Admin.Controllers
             this._taxCategoryService = taxCategoryService;
             this._currencyService = currencyService;
             this._pictureService = pictureService;
+            this._localizationService = localizationService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -169,7 +172,7 @@ namespace Nop.Admin.Controllers
             else
                 model.ShippingOriginAddress = new AddressModel();
 
-            model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
                 model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (originAddress != null && c.Id == originAddress.CountryId) });
 
@@ -180,7 +183,7 @@ namespace Nop.Admin.Controllers
                     model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == originAddress.StateProvinceId) });
             }
             else
-                model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+                model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.ShippingOriginAddress.FirstNameDisabled = true;
             model.ShippingOriginAddress.LastNameDisabled = true;
             model.ShippingOriginAddress.EmailDisabled = true;
@@ -234,7 +237,7 @@ namespace Nop.Admin.Controllers
                 model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == _taxSettings.PaymentMethodAdditionalFeeTaxClassId });
 
             //EU VAT countries
-            model.EuVatShopCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            model.EuVatShopCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
                 model.EuVatShopCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = c.Id == _taxSettings.EuVatShopCountryId });
 
@@ -247,7 +250,7 @@ namespace Nop.Admin.Controllers
             else
                 model.DefaultTaxAddress = new AddressModel();
 
-            model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
                 model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (defaultAddress != null && c.Id == defaultAddress.CountryId) });
 
@@ -258,7 +261,7 @@ namespace Nop.Admin.Controllers
                     model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == defaultAddress.StateProvinceId) });
             }
             else
-                model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = "Other (Non US)", Value = "0" });
+                model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.DefaultTaxAddress.FirstNameDisabled = true;
             model.DefaultTaxAddress.LastNameDisabled = true;
             model.DefaultTaxAddress.EmailDisabled = true;

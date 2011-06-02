@@ -18,57 +18,57 @@ namespace Nop.Admin.Models.Common
             AvailableStates = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.FirstName")]
+        [NopResourceDisplayName("Admin.Address.Fields.FirstName")]
         [AllowHtml]
         public string FirstName { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.LastName")]
+        [NopResourceDisplayName("Admin.Address.Fields.LastName")]
         [AllowHtml]
         public string LastName { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.Email")]
+        [NopResourceDisplayName("Admin.Address.Fields.Email")]
         [AllowHtml]
         public string Email { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.Company")]
+        [NopResourceDisplayName("Admin.Address.Fields.Company")]
         [AllowHtml]
         public string Company { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.Country")]
+        [NopResourceDisplayName("Admin.Address.Fields.Country")]
         public int? CountryId { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.Country")]
+        [NopResourceDisplayName("Admin.Address.Fields.Country")]
         [AllowHtml]
         public string CountryName { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.StateProvince")]
+        [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
         public int? StateProvinceId { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.StateProvince")]
+        [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
         [AllowHtml]
         public string StateProvinceName { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.City")]
+        [NopResourceDisplayName("Admin.Address.Fields.City")]
         [AllowHtml]
         public string City { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.Address1")]
+        [NopResourceDisplayName("Admin.Address.Fields.Address1")]
         [AllowHtml]
         public string Address1 { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.Address2")]
+        [NopResourceDisplayName("Admin.Address.Fields.Address2")]
         [AllowHtml]
         public string Address2 { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.ZipPostalCode")]
+        [NopResourceDisplayName("Admin.Address.Fields.ZipPostalCode")]
         [AllowHtml]
         public string ZipPostalCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.PhoneNumber")]
+        [NopResourceDisplayName("Admin.Address.Fields.PhoneNumber")]
         [AllowHtml]
         public string PhoneNumber { get; set; }
 
-        [NopResourceDisplayName("Admin.Common.Address.Fields.FaxNumber")]
+        [NopResourceDisplayName("Admin.Address.Fields.FaxNumber")]
         [AllowHtml]
         public string FaxNumber { get; set; }
 
