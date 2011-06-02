@@ -77,25 +77,15 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
-
-        public DateTime CreatedOnUtc { get; set; }
-
-        public DateTime UpdatedOnUtc { get; set; }
-
+        
         public IList<CategoryLocalizedModel> Locales { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Breadcrumb")]
         public string Breadcrumb { get; set; }
-
-
-
-
-
+        
         //discounts
         public List<Discount> AvailableDiscounts { get; set; }
         public int[] SelectedDiscountIds { get; set; }
-
-
 
 
         #region Nested classes

@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Forums
     {
         public ForumGroupModel()
         {
-            Forums = new List<Forum>();
+            ForumModels = new List<ForumModel>();
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")]
@@ -31,11 +31,9 @@ namespace Nop.Admin.Models.Forums
         public int DisplayOrder { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn")]
-        public DateTime CreatedOnUtc { get; set; }
-
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.UpdatedOn")]
-        public DateTime UpdatedOnUtc { get; set; }
-
-        public List<Forum> Forums { get; set; }
+        public DateTime CreatedOn { get; set; }
+        
+        //use ForumModel
+        public IList<ForumModel> ForumModels { get; set; }
     }
 }

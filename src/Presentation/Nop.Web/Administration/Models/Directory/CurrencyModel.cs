@@ -36,12 +36,6 @@ namespace Nop.Admin.Models.Directory
         public int DisplayOrder { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.CreatedOn")]
-        public DateTime CreatedOnUtc { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.UpdatedOn")]
-        public DateTime UpdatedOnUtc { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Location.Currencies.Fields.IsPrimaryExchangeRateCurrency")]

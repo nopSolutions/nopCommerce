@@ -15,6 +15,6 @@ namespace Nop.Admin.Models.Messages
         public bool Active { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")]
-        public DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

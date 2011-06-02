@@ -6,6 +6,7 @@ using Nop.Admin.Models.Forums;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Configuration;
 using Nop.Services.Forums;
+using Nop.Services.Helpers;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -15,10 +16,12 @@ namespace Nop.Admin.Controllers
     public class ForumController : BaseNopController
     {
         private readonly IForumService _forumService;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
-        public ForumController(IForumService forumService)
+        public ForumController(IForumService forumService, IDateTimeHelper dateTimeHelper)
         {
-            _forumService = forumService;
+            this._forumService = forumService;
+            this._dateTimeHelper = dateTimeHelper;
         }
 
         #region List
@@ -31,7 +34,18 @@ namespace Nop.Admin.Controllers
         public ActionResult List()
         {
             var forumGroupsModel = _forumService.GetAllForumGroups()
-                .Select(x => x.ToModel())
+                .Select(fg =>
+                {
+                    var forumGroupModel = fg.ToModel();
+                    forumGroupModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(fg.CreatedOnUtc, DateTimeKind.Utc);
+                    foreach (var f in fg.Forums.OrderBy(x=>x.DisplayOrder))
+                    {
+                        var forumModel = f.ToModel();
+                        forumModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(f.CreatedOnUtc, DateTimeKind.Utc);
+                        forumGroupModel.ForumModels.Add(forumModel);
+                    }
+                    return forumGroupModel;
+                })
                 .ToList();
             return View(forumGroupsModel);
         }
@@ -49,9 +63,9 @@ namespace Nop.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.CreatedOnUtc = DateTime.UtcNow;
-                model.UpdatedOnUtc = DateTime.UtcNow;
                 var forumGroup = model.ToEntity();
+                forumGroup.CreatedOnUtc = DateTime.UtcNow;
+                forumGroup.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.InsertForumGroup(forumGroup);
                 return continueEditing ? RedirectToAction("EditForumGroup", new { forumGroup.Id }) : RedirectToAction("List");
             }
@@ -73,9 +87,9 @@ namespace Nop.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.CreatedOnUtc = DateTime.UtcNow;
-                model.UpdatedOnUtc = DateTime.UtcNow;
                 var forum = model.ToEntity();
+                forum.CreatedOnUtc = DateTime.UtcNow;
+                forum.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.InsertForum(forum);
                 return continueEditing ? RedirectToAction("EditForum", new { forum.Id }) : RedirectToAction("List");
             }
@@ -103,8 +117,8 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                model.UpdatedOnUtc = DateTime.UtcNow;
                 forumGroup = model.ToEntity(forumGroup);
+                forumGroup.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.UpdateForumGroup(forumGroup);
                 return continueEditing ? RedirectToAction("EditForumGroup", forumGroup.Id) : RedirectToAction("List");
             }
@@ -129,8 +143,8 @@ namespace Nop.Admin.Controllers
             var forum = _forumService.GetForumById(model.Id);
             if (ModelState.IsValid)
             {
-                model.UpdatedOnUtc = DateTime.UtcNow;
                 forum = model.ToEntity(forum);
+                forum.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.UpdateForum(forum);
 
                 return continueEditing ? RedirectToAction("EditForum", forum.Id) : RedirectToAction("List");

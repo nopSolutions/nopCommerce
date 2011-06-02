@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Nop.Admin.Models.ForumGroupModel>
+﻿@model IEnumerable<ForumGroupModel>
 @using Telerik.Web.Mvc.UI;
 
 <div class="section-header">
@@ -21,7 +21,7 @@
                 {
                     columns.Bound(x => x.Name);
                     columns.Bound(x => x.DisplayOrder).Width(150).Centered();
-                    columns.Bound(x => x.CreatedOnUtc).Width(200).Centered();
+                    columns.Bound(x => x.CreatedOn).Width(200).Centered();
                     columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()
@@ -31,13 +31,13 @@
                 })
                 .DetailView(detailView => detailView.Template(
                     @<text>
-                        @(Html.Telerik().Grid(item.Forums.OrderBy(x => x.DisplayOrder))
+                        @(Html.Telerik().Grid(item.ForumModels)
                             .Name("forums_" + item.Id)
                             .Columns(columns =>
                             {
                                 columns.Bound(x => x.Name);
                                 columns.Bound(x => x.DisplayOrder).Width(150).Centered();
-                                columns.Bound(x => x.CreatedOnUtc).Width(200).Centered();
+                                columns.Bound(x => x.CreatedOn).Width(200).Centered();
                                 columns.Bound(x => x.Id)
                                         .Width(50)
                                         .Centered()

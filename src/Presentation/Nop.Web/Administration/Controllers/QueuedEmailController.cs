@@ -52,11 +52,17 @@ namespace Nop.Admin.Controllers
                 startDateValue, endDateValue, 
                 model.SearchLoadNotSent, model.SearchMaxSentTries, 
                 command.Page - 1, command.PageSize);
-			var gridModel = new GridModel<QueuedEmailModel>
-			{
-				Data = queuedEmails.Select(x => x.ToModel()),
-				Total = queuedEmails.TotalCount
-			};
+            var gridModel = new GridModel<QueuedEmailModel>
+            {
+                Data = queuedEmails.Select(x => {
+                    var m = x.ToModel();
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    if (x.SentOnUtc.HasValue)
+                        m.SentOn = _dateTimeHelper.ConvertToUserTime(x.SentOnUtc.Value, DateTimeKind.Utc);
+                    return m;
+                }),
+                Total = queuedEmails.TotalCount
+            };
 			return new JsonResult
 			{
 				Data = gridModel
@@ -79,7 +85,11 @@ namespace Nop.Admin.Controllers
 			var email = _queuedEmailService.GetQueuedEmailById(id);
 			if (email == null) 
                 throw new ArgumentException("No email found with the specified id", "id");
-			return View(email.ToModel());
+            var model = email.ToModel();
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
+            if (email.SentOnUtc.HasValue)
+                model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
+            return View(model);
 		}
 
         [HttpPost, ActionName("Edit")]
@@ -102,6 +112,9 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
+            if (email.SentOnUtc.HasValue)
+                model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
             return View(model);
 		}
         
@@ -154,6 +167,7 @@ namespace Nop.Admin.Controllers
                     _queuedEmailService.DeleteQueuedEmail(queuedEmail);
                 }
             }
+            //TODO refresh page
             return View(model);
         }
 	}

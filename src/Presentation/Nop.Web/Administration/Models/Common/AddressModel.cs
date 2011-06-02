@@ -72,8 +72,6 @@ namespace Nop.Admin.Models.Common
         [AllowHtml]
         public string FaxNumber { get; set; }
 
-        public DateTime CreatedOnUtc { get; set; }
-
 
 
         public IList<SelectListItem> AvailableCountries { get; set; }

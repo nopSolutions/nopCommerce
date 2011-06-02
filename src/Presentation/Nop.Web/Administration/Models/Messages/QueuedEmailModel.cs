@@ -51,14 +51,14 @@ namespace Nop.Admin.Models.Messages
         public string Body { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOn")]
-        public DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentTries")]
         public int SentTries { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentOnUtc")]
-        [DisplayFormatAttribute(DataFormatString="Sent on {0}", NullDisplayText="Not sent yet")]
-        public DateTime? SentOnUtc { get; set; }
+        [DisplayFormatAttribute(DataFormatString="{0}", NullDisplayText="Not sent yet")]
+        public DateTime? SentOn { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccountName")]
         [AllowHtml]

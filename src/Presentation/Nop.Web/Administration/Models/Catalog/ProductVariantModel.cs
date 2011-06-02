@@ -207,9 +207,6 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        public DateTime CreatedOnUtc { get; set; }
-        public DateTime UpdatedOnUtc { get; set; }
-
         #endregion
 
         #region Nested classes

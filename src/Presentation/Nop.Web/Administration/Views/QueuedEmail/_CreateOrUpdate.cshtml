@@ -90,10 +90,10 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CreatedOnUtc):
+            @Html.NopLabelFor(model => model.CreatedOn):
         </td>
         <td class="adminData">
-            @Html.DisplayFor(model => model.CreatedOnUtc)
+            @Html.DisplayFor(model => model.CreatedOn)
         </td>
     </tr>
     <tr>
@@ -107,10 +107,17 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SentOnUtc):
+            @Html.NopLabelFor(model => model.SentOn):
         </td>
         <td class="adminData">
-            @Html.DisplayFor(model => model.SentOnUtc)
+            @if (Model.SentOn.HasValue)
+            {
+                @Html.DisplayFor(model => model.SentOn)
+            }
+            else
+            {
+                <text>Not sent yet</text>
+            }
         </td>
     </tr>
     <tr>

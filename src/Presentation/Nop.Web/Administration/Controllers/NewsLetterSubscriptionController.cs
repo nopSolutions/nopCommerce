@@ -4,6 +4,7 @@ using System.Web.Mvc;
 
 using Nop.Admin.Models;
 using Nop.Admin.Models.Messages;
+using Nop.Services.Helpers;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 
@@ -15,10 +16,13 @@ namespace Nop.Admin.Controllers
 	public class NewsLetterSubscriptionController : BaseNopController
 	{
 		private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+		private readonly IDateTimeHelper _dateTimeHelper;
 
-        public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService)
+        public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IDateTimeHelper dateTimeHelper)
 		{
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._dateTimeHelper = dateTimeHelper;
 		}
 
         public ActionResult Index()
@@ -28,22 +32,32 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult List()
 		{
-            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty);
-			var gridModel = new GridModel<NewsLetterSubscriptionModel>
-			{
-				Data = newsletterSubscriptions.Select(x => x.ToModel()),
-				Total = newsletterSubscriptions.Count()
-			};
+            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty, true);
+            var gridModel = new GridModel<NewsLetterSubscriptionModel>
+            {
+                Data = newsletterSubscriptions.Select(x => 
+                {
+                    var m = x.ToModel();
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    return m;
+                }),
+                Total = newsletterSubscriptions.Count()
+            };
 			return View(gridModel);
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult List(GridCommand command)
 		{
-            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty);
+            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty, true);
             var gridModel = new GridModel<NewsLetterSubscriptionModel>
             {
-                Data = newsletterSubscriptions.Select(x => x.ToModel()),
+                Data = newsletterSubscriptions.Select(x =>
+                {
+                    var m = x.ToModel();
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    return m;
+                }),
                 Total = newsletterSubscriptions.Count()
             };
             return new JsonResult

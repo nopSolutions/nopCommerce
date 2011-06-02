@@ -521,9 +521,6 @@
                                     <LocaleResource Name="CreatedOn">
                                         <Value>Created on</Value>
                                     </LocaleResource>
-                                    <LocaleResource Name="UpdatedOn">
-                                        <Value>Updated on</Value>
-                                    </LocaleResource>
                                     <LocaleResource Name="Picture">
                                         <Value>Picture</Value>
                                         <Children>
@@ -3957,10 +3954,7 @@
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="CreatedOn">
-                            <Value>Created On</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="UpdatedOn">
-                            <Value>Updated On</Value>
+                            <Value>Created on</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
@@ -4019,10 +4013,7 @@
                             </Children>
                           </LocaleResource>
                           <LocaleResource Name="CreatedOn">
-                            <Value>Created On</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="UpdatedOn">
-                            <Value>Updated On</Value>
+                            <Value>Created on</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

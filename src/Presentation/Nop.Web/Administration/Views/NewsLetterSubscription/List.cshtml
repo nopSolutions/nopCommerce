@@ -17,7 +17,7 @@
                     {
                         columns.Bound(x => x.Email);
                         columns.Bound(x => x.Active);
-                        columns.Bound(x => x.CreatedOnUtc);
+                        columns.Bound(x => x.CreatedOn);
                     })
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "NewsLetterSubscription"))
                     .EnableCustomBinding(true))

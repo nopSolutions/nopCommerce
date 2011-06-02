@@ -64,14 +64,7 @@ namespace Nop.Admin.Models.Catalog
         
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
-
-        public DateTime CreatedOnUtc { get; set; }
-
-        public DateTime UpdatedOnUtc { get; set; }
-
-
-
-
+        
 
 
         public IList<ProductLocalizedModel> Locales { get; set; }

@@ -30,6 +30,6 @@ namespace Nop.Admin.Models.Logging
         [AllowHtml]
         public string ReferrerUrl { get; set; }
 
-        public DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

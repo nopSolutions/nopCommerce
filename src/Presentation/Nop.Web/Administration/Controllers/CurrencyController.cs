@@ -131,9 +131,9 @@ namespace Nop.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.CreatedOnUtc = DateTime.UtcNow;
-                model.UpdatedOnUtc = DateTime.UtcNow;
                 var currency = model.ToEntity();
+                currency.CreatedOnUtc = DateTime.UtcNow;
+                currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.InsertCurrency(currency);
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
             }
@@ -148,17 +148,19 @@ namespace Nop.Admin.Controllers
             if (currency == null) 
                 throw new ArgumentException("No currency found with the specified id", "id");
             var model = currency.ToModel();
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(model.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
             return View(model);
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(CurrencyModel model, bool continueEditing)
         {
+            var currency = _currencyService.GetCurrencyById(model.Id);
+            if (currency == null)
+                throw new ArgumentException("No currency found with the specified id");
+
             if (ModelState.IsValid)
             {
-                var currency = _currencyService.GetCurrencyById(model.Id);
-                model.CreatedOnUtc = currency.CreatedOnUtc;
                 currency = model.ToEntity(currency);
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.UpdateCurrency(currency);
@@ -166,7 +168,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(model.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
             return View(model);
         }
         
