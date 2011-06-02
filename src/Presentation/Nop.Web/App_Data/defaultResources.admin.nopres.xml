@@ -5710,9 +5710,6 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
-            <LocaleResource Name="Sales">
-            <Value>Sales</Value>
-          </LocaleResource>
             <LocaleResource Name="Picture">
             <Children>
               <LocaleResource Name="RemovePicture">
@@ -6224,12 +6221,15 @@
                 </LocaleResource>
             </Children>
             </LocaleResource>
+            <LocaleResource Name="Sales">
+              <Value>Sales</Value>
+            </LocaleResource>
             <LocaleResource Name="SalesReport">
               <Value>Sales report</Value>
-              <LocaleResource Name="RunReport">
-                <Value>Run report</Value>
-              </LocaleResource>
               <Children>
+                <LocaleResource Name="RunReport">
+                  <Value>Run report</Value>
+                </LocaleResource>
                 <LocaleResource Name="StartDate">
                   <Value>Start date</Value>
                   <Children>

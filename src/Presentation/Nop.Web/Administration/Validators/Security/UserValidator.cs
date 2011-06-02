@@ -8,7 +8,7 @@ namespace Nop.Admin.Validators.Security
     {
         public UserValidator(ILocalizationService localizationService)
         {
-            //UNDONE store 'UsernamesEnabled' and 'AllowUsersToChangeUsernames' as hidden fields; otherwise, they always be false.
+            //we store 'UsernamesEnabled' and 'AllowUsersToChangeUsernames' as hidden fields; otherwise, they always be false.
             RuleFor(x => x.Username)
                 .NotNull()
                 .WithMessage(localizationService.GetResource("Admin.Users.Fields.Username.Required"))

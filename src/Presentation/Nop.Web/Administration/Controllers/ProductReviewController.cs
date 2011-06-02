@@ -32,22 +32,17 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerContentService _customerContentService;
         private readonly IProductService _productService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
 
         #endregion Fields
 
         #region Constructors
 
         public ProductReviewController(ICustomerContentService customerContentService,
-            IProductService productService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, IWorkContext workContext)
+            IProductService productService, IDateTimeHelper dateTimeHelper)
         {
             this._customerContentService = customerContentService;
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
         }
 
         #endregion Constructors

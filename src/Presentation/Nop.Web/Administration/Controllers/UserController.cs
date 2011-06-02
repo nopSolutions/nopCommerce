@@ -115,9 +115,8 @@ namespace Nop.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                //UNDONE set password format
                 var registrationRequest = new UserRegistrationRequest(model.Email,
-                    model.Username, model.Password, PasswordFormat.Clear, model.SecurityQuestion,
+                    model.Username, model.Password, PasswordFormat.Hashed, model.SecurityQuestion,
                     model.SecurityAnswer, model.IsApproved);
 
                 var registrationResult = _userService.RegisterUser(registrationRequest);

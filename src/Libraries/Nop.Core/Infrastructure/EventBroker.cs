@@ -131,7 +131,6 @@ namespace Nop.Core.Infrastructure
             HttpApplication application = sender as HttpApplication;
             if (application != null)
             {
-                //TODO inject IWebHelper
                 IWebHelper webHelper = new WebHelper();
                 return webHelper.IsStaticResource(application.Request);
             }

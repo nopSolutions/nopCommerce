@@ -214,8 +214,6 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            //TODO pass and save customer attributes as argument
-
             //add to 'Registered' role
             var registeredRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
             if (registeredRole == null)
@@ -244,7 +242,6 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            //TODO save current language, currency, tax display type, etc
             _customerRepository.Insert(customer);
         }
 

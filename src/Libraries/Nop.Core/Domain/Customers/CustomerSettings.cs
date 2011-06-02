@@ -10,7 +10,6 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public bool AllowCustomersToUploadAvatars { get; set; }
 
-        //TODO move AvatarMaximumSizeBytes to MediaSettings class
         /// <summary>
         /// Gets or sets a maximum avatar size (in bytes)
         /// </summary>

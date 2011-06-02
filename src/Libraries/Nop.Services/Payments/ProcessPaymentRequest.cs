@@ -37,7 +37,6 @@ namespace Nop.Services.Payments
 
         #region Payment method specific properties 
 
-        //TODO perhaps, we should use derived classes for them (for example,  public class GoogleProcessPaymentRequest : ProcessPaymentRequest)
         /// <summary>
         /// Gets or sets a credit card type (Visa, Master Card, etc...)
         /// </summary>

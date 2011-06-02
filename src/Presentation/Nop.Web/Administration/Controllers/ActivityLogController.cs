@@ -13,7 +13,8 @@ using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-    public class ActivityLogController : Controller
+    [AdminAuthorize]
+    public class ActivityLogController : BaseNopController
     {
         #region Fields
 

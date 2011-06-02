@@ -19,6 +19,7 @@ namespace Nop.Web.Framework.UI
                 return new HtmlString("");
 
             var sb = new StringBuilder();
+            //UNDONE support custom attributes
             sb.Append("<table>");
 
             int cellIndex = 0;
@@ -29,7 +30,7 @@ namespace Nop.Web.Framework.UI
                     sb.Append("<tr>");
 
                 sb.Append("<td");
-                //UNDONE support custom attribute
+                //UNDONE support custom attributes
                 sb.Append(">");
                 
                 sb.Append(template(item).ToHtmlString());

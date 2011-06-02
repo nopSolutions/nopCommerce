@@ -16,6 +16,6 @@
         /// <summary>
         /// Html Editor
         /// </summary>
-        HtmlEditor = 30,    //TODO think whether we need this editor type?
+        HtmlEditor = 30,    //remove HtmlEditor.
     }
 }

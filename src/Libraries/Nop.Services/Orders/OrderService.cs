@@ -204,26 +204,6 @@ namespace Nop.Services.Orders
             var orders = query.ToList();
             return orders;
         }
-
-        /// <summary>
-        /// Gets an order by authorization transaction identifier
-        /// </summary>
-        /// <param name="authorizationTransactionId">Authorization transaction identifier</param>
-        /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>Order</returns>
-        public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethodId(string authorizationTransactionId,
-            string paymentMethodSystemName)
-        {
-            //TODO remove this method? We need it only in Google Checkout payment method
-            var query = from o in _orderRepository.Table
-                        orderby o.CreatedOnUtc descending
-                        where o.AuthorizationTransactionId == authorizationTransactionId &&
-                        o.PaymentMethodSystemName == paymentMethodSystemName
-                        select o;
-            var order = query.FirstOrDefault();
-            return order;
-        }
-
         /// <summary>
         /// Gets all orders by affiliate identifier
         /// </summary>
@@ -439,9 +419,7 @@ namespace Nop.Services.Orders
             if (initialOrderStatus.HasValue)
                 initialOrderStatusId = (int)initialOrderStatus.Value;
 
-            //TODO test (new implementation)
             var query1 = from rp in _recurringPaymentRepository.Table
-                         //join o in _orderRepository.Table on rp.InitialOrderId equals o.Id
                          join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
                          where
                          (!rp.Deleted && !rp.InitialOrder.Deleted && !c.Deleted) &&

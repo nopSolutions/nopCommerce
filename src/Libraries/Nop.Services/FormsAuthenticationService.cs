@@ -31,7 +31,7 @@ namespace Nop.Services
             this._userService = userService;
             this._userSettings = userSettings;
             //TODO set correct timespan
-            ExpirationTimeSpan = TimeSpan.FromHours(6);
+            ExpirationTimeSpan = TimeSpan.FromHours(24);
         }
 
         public TimeSpan ExpirationTimeSpan { get; set; }

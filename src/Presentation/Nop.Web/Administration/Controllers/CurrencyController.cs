@@ -17,7 +17,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class CurrencyController : Controller
+    public class CurrencyController :  BaseNopController
     {
         #region Fields
 

@@ -65,15 +65,6 @@ namespace Nop.Services.Orders
         IList<Order> GetOrdersByCustomerId(int customerId);
 
         /// <summary>
-        /// Gets an order by authorization transaction identifier
-        /// </summary>
-        /// <param name="authorizationTransactionId">Authorization transaction identifier</param>
-        /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>Order</returns>
-        Order GetOrderByAuthorizationTransactionIdAndPaymentMethodId(string authorizationTransactionId,
-           string paymentMethodSystemName);
-
-        /// <summary>
         /// Gets all orders by affiliate identifier
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>

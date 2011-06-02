@@ -79,7 +79,7 @@ namespace Nop.Services.Directory
             if (currency == null)
                 throw new ArgumentNullException("currency");
 
-            //TODO load all customers (currency.Customers property) and set new currency to them
+            //TODO load all customers (currency.Customers property) and set new currency to a new one
 
             _currencyRepository.Delete(currency);
 

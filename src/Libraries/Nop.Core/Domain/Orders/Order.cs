@@ -240,7 +240,6 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public virtual string CardCvv2 { get; set; }
 
-        //TODO perhaps, we need change type of CardExpirationMonth & CardExpirationYear to integer
         /// <summary>
         /// Gets or sets the card expiration month
         /// </summary>

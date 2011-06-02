@@ -8,7 +8,8 @@ using Nop.Core.Plugins;
 using Nop.Services.Tax;
 
 namespace Nop.Plugin.Tax.Free
-{/// <summary>
+{
+    /// <summary>
     /// Free tax provider
     /// </summary>
     public class FreeTaxProvider : BasePlugin, ITaxProvider

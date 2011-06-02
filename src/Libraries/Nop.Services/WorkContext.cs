@@ -19,6 +19,7 @@ namespace Nop.Services
     public partial class WorkContext : IWorkContext
     {
         private const string CustomerCookieName = "Nop.customer";
+        private const string IsAdminKey = "NopCommerce.IsAdmin";
 
         private readonly HttpContextBase _httpContext;
         private readonly ICustomerService _customerService;
@@ -29,6 +30,7 @@ namespace Nop.Services
         private readonly CurrencySettings _currencySettings;
 
         private Customer _cachedCustomer;
+        private bool _cachedIsAdmin;
 
         public WorkContext(HttpContextBase httpContext,
             ICustomerService customerService,
@@ -88,7 +90,9 @@ namespace Nop.Services
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
                     //TODO we should not create guest customer if request is made by search engine?
-                    //perhaps, use a single built-in system record for it
+                    //perhaps, use a single built-in system record for search engines (don't allow it to be registered, etc)
+
+                    //TODO set current language and currency?
                     customer = _customerService.InsertGuestCustomer();
                 }
 
@@ -180,9 +184,9 @@ namespace Nop.Services
         {
             get
             {
-                //TODO return primary store currency when we're in admin area/mode
-                //if (this.IsAdmin)
-                //    return _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                //return primary store currency when we're in admin area/mode
+                if (this.IsAdmin)
+                    return _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
                 if (this.CurrentCustomer != null &&
                     this.CurrentCustomer.Currency != null &&
@@ -224,6 +228,18 @@ namespace Nop.Services
 
                 this.CurrentCustomer.TaxDisplayType = value;
                 _customerService.UpdateCustomer(this.CurrentCustomer);
+            }
+        }
+
+        public bool IsAdmin
+        {
+            get
+            {
+                return _cachedIsAdmin;
+            }
+            set
+            {
+                _cachedIsAdmin = value;
             }
         }
     }

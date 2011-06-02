@@ -13,8 +13,7 @@
     {
         var item = new SelectListItem()
         {
-            /*UNDONE display breadcrumb*/
-            Text = c.Name,
+            Text = c.GetCategoryBreadCrumb(_categoryService),
             Value = c.Id.ToString()
         };
         categoryList.Add(item);

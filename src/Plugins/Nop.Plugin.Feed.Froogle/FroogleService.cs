@@ -139,7 +139,7 @@ namespace Nop.Plugin.Feed.Froogle
                         writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
                         var currency = GetUsedCurrency();
                         decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(productVariant.Price, currency);
-                        //UNDONE should we round product prices?
+                       
                         writer.WriteElementString("g", "price", googleBaseNamespace, price.ToString(new CultureInfo("en-US", false).NumberFormat));
 
                         //uncomment and set your product_type attribute

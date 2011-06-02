@@ -388,7 +388,6 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Store.Name", _storeSettings.StoreName));
             tokens.Add(new Token("Store.URL", _storeSettings.StoreUrl));
-            //TODO perhaps, we should better add a new "_storeSettings.StoreEmail" setting
             var defaultEmailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
             if (defaultEmailAccount == null)
                 defaultEmailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
@@ -447,7 +446,7 @@ namespace Nop.Services.Messages
                 tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
             }
 
-            //TODO add a method for getting order URL (e.g. SEOHelper.GetOrderUrl)
+            //TODO add a method for getting URL (e.g. SEOHelper.GetOrderUrl)
             tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id)));
         }
 
@@ -527,7 +526,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.ShortDescription", product.ShortDescription));
 
             //TODO add a method for getting URL
-            var productSeName = product.SeName; //use GetSeName() method defined in Nop.Web.Framework project
+            var productSeName = product.SeName; //TODO use GetSeName() method defined in Nop.Web.Framework project
             var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, productSeName);
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl));
         }

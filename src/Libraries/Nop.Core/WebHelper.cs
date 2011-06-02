@@ -442,7 +442,7 @@ namespace Nop.Core
         {
             string result = string.Empty;
             if (HttpContext.Current != null && HttpContext.Current.Request.QueryString[name] != null)
-                result = HttpContext.Current.Request.QueryString[name].ToString();
+                result = HttpContext.Current.Request.QueryString[name];
             return result;
         }
 

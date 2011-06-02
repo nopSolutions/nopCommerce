@@ -179,8 +179,6 @@ namespace Nop.Services.Messages
         public virtual Customer GetNewsLetterSubscriptionCustomer(NewsLetterSubscription newsLetterSubscription)
         {
             //TODO remove this method.
-            //TODO implement get customer by email functionality(customer entity doesn't have Email property anymore
-
             throw new NotImplementedException();
         }
 
