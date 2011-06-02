@@ -6,7 +6,9 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.Manual.Models;
+using Nop.Plugin.Payments.Manual.Validators;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -16,11 +18,14 @@ namespace Nop.Plugin.Payments.Manual.Controllers
     public class PaymentManualController : BaseNopPaymentController
     {
         private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
         private readonly ManualPaymentSettings _manualPaymentSettings;
 
-        public PaymentManualController(ISettingService settingService, ManualPaymentSettings manualPaymentSettings)
+        public PaymentManualController(ISettingService settingService, 
+            ILocalizationService localizationService, ManualPaymentSettings manualPaymentSettings)
         {
             this._settingService = settingService;
+            this._localizationService = localizationService;
             this._manualPaymentSettings = manualPaymentSettings;
         }
         
@@ -58,7 +63,8 @@ namespace Nop.Plugin.Payments.Manual.Controllers
         public ActionResult PaymentInfo()
         {
             var model = new PaymentInfoModel();
-
+            
+            //CC types
             model.CreditCardTypes.Add(new SelectListItem()
                 {
                     Text = "Visa",
@@ -80,6 +86,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 Value = "Amex",
             });
             
+            //years
             for (int i = 0; i < 15; i++)
             {
                 string year = Convert.ToString(DateTime.Now.Year + i);
@@ -90,6 +97,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 });
             }
 
+            //months
             for (int i = 1; i <= 12; i++)
             {
                 string text = (i < 10) ? "0" + i.ToString() : i.ToString();
@@ -100,18 +108,41 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 });
             }
 
+            //set postback values
+            var form = this.Request.Form;
+            model.CardholderName = form["cardholdername"];
+            model.CardNumber = form["cardnumber"];
+            model.CardCode = form["cardcode"];
+            var selectedCcType = model.CreditCardTypes.Where(x => x.Value.Equals(form["creditcardtype"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (selectedCcType != null)
+                selectedCcType.Selected = true;
+            var selectedMonth = model.ExpireMonths.Where(x => x.Value.Equals(form["creditcardexpiremonth"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (selectedMonth != null)
+                selectedMonth.Selected = true;
+            var selectedYear = model.ExpireYears.Where(x => x.Value.Equals(form["creditcardexpireyear"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (selectedYear != null)
+                selectedYear.Selected = true;
+
             return View("Nop.Plugin.Payments.Manual.Views.PaymentManual.PaymentInfo", model);
         }
 
         public override IList<string> ValidatePaymentForm(FormCollection form)
         {
-            var warnigns = new List<string>();
-            //UNDONE validate form
-            string creditCardType = form["creditcardtype"];
-            string creditCardName = form["cardholdername"];
-            string creditCardNumber = form["cardnumber"];
-            string creditCardCvv2 = form["cardcode"];
-            return warnigns;
+            var warnings = new List<string>();
+
+            //validate
+            var validator = new PaymentInfoValidator(_localizationService);
+            var model = new PaymentInfoModel()
+            {
+                CardholderName = form["cardholdername"],
+                CardNumber = form["cardnumber"],
+                CardCode = form["cardcode"],
+            };
+            var validationResult = validator.Validate(model);
+            if (!validationResult.IsValid)
+                foreach (var error in validationResult.Errors)
+                    warnings.Add(error.ErrorMessage);
+            return warnings;
         }
 
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)

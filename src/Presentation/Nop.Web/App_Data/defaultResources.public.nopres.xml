@@ -1597,12 +1597,27 @@
     <Children>
       <LocaleResource Name="CardCode">
         <Value>Card code</Value>
+        <Children>
+          <LocaleResource Name="Required">
+            <Value>Enter card code</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="CardholderName">
         <Value>Cardholder name</Value>
+        <Children>
+          <LocaleResource Name="Required">
+            <Value>Enter cardholder name</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="CardNumber">
         <Value>Card number</Value>
+        <Children>
+          <LocaleResource Name="Required">
+            <Value>Enter card number</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="ExpirationDate">
         <Value>Expiration date</Value>

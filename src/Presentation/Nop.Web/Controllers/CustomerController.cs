@@ -216,10 +216,9 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //register 'User' entity
-                //UNDONE set password format
                 bool isApproved = _userSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new UserRegistrationRequest(model.Email,
-                    model.Username, model.Password, PasswordFormat.Clear, "",
+                    model.Username, model.Password, PasswordFormat.Hashed, "",
                     "", isApproved);
                 var registrationResult = _userService.RegisterUser(registrationRequest);
                 if (registrationResult.Success)
@@ -1065,7 +1064,8 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var changePasswordRequest = new ChangePasswordRequest(user.Email, true, model.NewPassword, model.OldPassword);
+                var changePasswordRequest = new ChangePasswordRequest(user.Email,
+                    true, PasswordFormat.Hashed, model.NewPassword, model.OldPassword);
                 var changePasswordResult = _userService.ChangePassword(changePasswordRequest);
                 if (changePasswordResult.Success)
                 {
@@ -1265,8 +1265,8 @@ namespace Nop.Web.Controllers
             
             if (ModelState.IsValid)
             {
-                var response = _userService.ChangePassword(new ChangePasswordRequest(customerEmail, false,
-                    model.NewPassword));
+                var response = _userService.ChangePassword(new ChangePasswordRequest(customerEmail, 
+                    false, PasswordFormat.Hashed, model.NewPassword));
                 if (response.Success)
                 {
                     _customerService.SaveCustomerAttribute(user.AssociatedCustomer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");

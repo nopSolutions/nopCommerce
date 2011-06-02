@@ -269,7 +269,7 @@ namespace Nop.Services.Security
             //at this point request is valid
             if (requestIsValid)
             {
-                switch (user.PasswordFormat)
+                switch (request.NewPasswordFormat)
                 {
                     case PasswordFormat.Clear:
                         {
@@ -291,6 +291,7 @@ namespace Nop.Services.Security
                     default:
                         break;
                 }
+                user.PasswordFormat = request.NewPasswordFormat;
                 UpdateUser(user);
             }
 

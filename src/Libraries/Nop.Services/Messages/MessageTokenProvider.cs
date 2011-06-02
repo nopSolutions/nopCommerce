@@ -119,7 +119,7 @@ namespace Nop.Services.Messages
                     productName = opv.ProductVariant.Product.GetLocalized(x => x.Name);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
-                //UNDONE download link
+                //UNDONE add download link
                 //if (IoC.Resolve<IOrderService>().IsDownloadAllowed(opv))
                 //{
                 //    string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoC.Resolve<IDownloadService>().GetDownloadUrl(opv), _localizationService.GetResource("Messages.Order.Products(s).Download", languageId));

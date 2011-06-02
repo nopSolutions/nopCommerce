@@ -224,7 +224,8 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No user found with the specified id");
             if (ModelState.IsValid)
             {
-                var changePassRequest = new ChangePasswordRequest(model.Email, false, model.Password);
+                var changePassRequest = new ChangePasswordRequest(model.Email,
+                    false, PasswordFormat.Hashed, model.Password);
                 var changePassResult = _userService.ChangePassword(changePassRequest);
                 if (changePassResult.Success)
                 {
