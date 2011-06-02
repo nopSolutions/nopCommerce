@@ -276,7 +276,7 @@ namespace Nop.Services.Messages
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = user.Email;
-            var toName = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+            var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, customerTokens, 
                 toEmail, toName);
@@ -308,7 +308,7 @@ namespace Nop.Services.Messages
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = user.Email;
-            var toName = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+            var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, customerTokens,
                 toEmail, toName);
@@ -339,7 +339,7 @@ namespace Nop.Services.Messages
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = user.Email;
-            var toName = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+            var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, customerTokens,
                 toEmail, toName);
@@ -702,7 +702,7 @@ namespace Nop.Services.Messages
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = user.Email;
-            var toName = string.Format("{0} {1}", returnRequest.Customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), returnRequest.Customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+            var toName = returnRequest.Customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, orderTokens,
                 toEmail, toName);

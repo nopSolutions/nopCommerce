@@ -481,7 +481,7 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Customer.Email", HttpUtility.HtmlEncode(customer.GetDefaultUserAccountEmail())));
             tokens.Add(new Token("Customer.Username", HttpUtility.HtmlEncode(customer.GetDefaultUserAccountUsername())));
-            tokens.Add(new Token("Customer.FullName", HttpUtility.HtmlEncode(string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName)))));
+            tokens.Add(new Token("Customer.FullName", HttpUtility.HtmlEncode(customer.GetFullName())));
             tokens.Add(new Token("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber)));
             tokens.Add(new Token("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString())));
 

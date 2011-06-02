@@ -126,5 +126,14 @@ namespace Nop.Services.Customers
             var user = GetDefaultUserAccount(customer, onlyActiveUser);
             return user != null ? user.Username : null;
         }
+
+        public static string GetFullName(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+            var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+            var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+            return (string.Format("{0} {1}", firstName, lastName));
+        }
     }
 }

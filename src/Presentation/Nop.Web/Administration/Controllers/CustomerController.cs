@@ -122,7 +122,7 @@ namespace Nop.Admin.Controllers
                 Data = customers.Select(x =>
                 {
                     var model1 = x.ToModel();
-                    model1.FullName = string.Format("{0} {1}", x.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), x.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                    model1.FullName = x.GetFullName();
                     model1.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
                     model1.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
                     return model1;
@@ -153,7 +153,7 @@ namespace Nop.Admin.Controllers
                 Data = customers.Select(x =>
                 {
                     var model = x.ToModel();
-                    model.FullName = string.Format("{0} {1}", x.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), x.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                    model.FullName = x.GetFullName();
                     model.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
                     model.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
                     return model;
@@ -195,7 +195,7 @@ namespace Nop.Admin.Controllers
                 Data = customers.Select(x =>
                 {
                     var model1 = x.ToModel();
-                    model1.FullName = string.Format("{0} {1}", x.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), x.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                    model1.FullName = x.GetFullName();
                     model1.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
                     model1.CreatedOnStr = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToString();
                     return model1;
@@ -795,7 +795,7 @@ namespace Nop.Admin.Controllers
                     };
                     var customer = _customerService.GetCustomerById(x.CustomerId);
                     if (customer != null)
-                        m.CustomerName = customer.IsGuest() ?  "Guest" : string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                        m.CustomerName = customer.IsGuest() ? "Guest" : customer.GetFullName();
                     return m;
                 }),
                 Total = items.Count
@@ -834,7 +834,7 @@ namespace Nop.Admin.Controllers
                     };
                     var customer = _customerService.GetCustomerById(x.CustomerId);
                     if (customer != null)
-                        m.CustomerName = customer.IsGuest() ? "Guest" : string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                        m.CustomerName = customer.IsGuest() ? "Guest" : customer.GetFullName();
                     return m;
                 }),
                 Total = items.Count

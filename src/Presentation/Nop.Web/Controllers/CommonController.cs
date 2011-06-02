@@ -207,7 +207,7 @@ namespace Nop.Web.Controllers
         {
             var model = new ContactUsModel();
             model.Email = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
-            model.FullName = _workContext.CurrentCustomer != null ? string.Format("{0} {1}", _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastName)) : null;
+            model.FullName = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetFullName() : null;
             return View(model);
         }
 

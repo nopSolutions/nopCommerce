@@ -126,7 +126,7 @@ namespace Nop.Admin.Controllers
             var model = new AffiliateModel.AffiliatedCustomerModel()
             {
                 Id = customer.Id,
-                Name = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
+                Name = customer.GetFullName(),
             };
             return model;
         }

@@ -391,7 +391,7 @@ namespace Nop.Web.Controllers
             model.IsEditable = isEditable;
             var customer = cart.FirstOrDefault().Customer;
             model.CustomerGuid = customer.CustomerGuid;
-            model.CustomerFullname = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+            model.CustomerFullname = customer.GetFullName();
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowProductSku;
             

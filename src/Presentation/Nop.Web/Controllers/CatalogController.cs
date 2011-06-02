@@ -570,11 +570,7 @@ namespace Nop.Web.Controllers
                 model.GiftCard.GiftCardType = productVariant.GiftCardType;
                 var customer = _workContext.CurrentCustomer;
                 if (customer != null)
-                {
-                    var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                    var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                    model.GiftCard.SenderName = firstName + lastName;
-                }
+                    model.GiftCard.SenderName = customer.GetFullName();
                 var user = _authenticationService.GetAuthenticatedUser();
                 if (user != null)
                     model.GiftCard.SenderEmail = user.Email;
