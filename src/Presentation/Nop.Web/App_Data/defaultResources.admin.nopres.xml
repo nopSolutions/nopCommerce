@@ -6503,7 +6503,7 @@
 
                         </Children>
                     </LocaleResource>
-                  <LocaleResource Name="SystemInfo">
+                    <LocaleResource Name="SystemInfo">
                     <Value>System information</Value>
                     <Children>
                       <LocaleResource Name="ASPNETInfo">
@@ -6529,6 +6529,9 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                    <LocaleResource Name="Warnings">
+                      <Value>Warnings</Value>
+                    </LocaleResource>             
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Telerik">

@@ -1116,9 +1116,13 @@ table.order-edit td
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+.system-warnings ul
+{
+    padding-left: 5px;
+}
 .system-warnings .inprogress, .system-warnings .pass, .system-warnings .fail, .system-warnings .warning
 {
-    padding-left: 35px;
+    padding-left: 40px;
     display: block;
     min-height: 35px;
     font-size: 120%;

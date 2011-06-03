@@ -17,6 +17,8 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Payments;
+using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -29,18 +31,33 @@ namespace Nop.Admin.Controllers
 	{
 		#region Fields
 
-        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IPaymentService _paymentService;
+        private readonly IShippingService _shippingService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IMeasureService _measureService;
+        private readonly IWebHelper _webHelper;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly CurrencySettings _currencySettings;
+        private readonly MeasureSettings _measureSettings;
 
 	    #endregion
 
 		#region Constructors
 
-        public CommonController(IDateTimeHelper dateTimeHelper,
-            StoreInformationSettings storeInformationSettings)
-		{
-            this._dateTimeHelper = dateTimeHelper;
+        public CommonController(IPaymentService paymentService, IShippingService shippingService, 
+            ICurrencyService currencyService, 
+            IMeasureService measureService, IWebHelper webHelper,
+            StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
+            MeasureSettings measureSettings)
+        {
+            this._paymentService = paymentService;
+            this._shippingService = shippingService;
+            this._currencyService = currencyService;
+            this._measureService = measureService;
+            this._webHelper = webHelper;
             this._storeInformationSettings = storeInformationSettings;
+            this._currencySettings = currencySettings;
+            this._measureSettings = measureSettings;
 		}
 
 		#endregion Constructors 
@@ -70,6 +87,118 @@ namespace Nop.Admin.Controllers
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
             //Environment.GetEnvironmentVariable("USERNAME");
+            return View(model);
+        }
+
+        public ActionResult Warnings()
+        {
+            var model = new List<SystemWarningModel>();
+
+            //store URL
+            if (!String.IsNullOrEmpty(_storeInformationSettings.StoreUrl) &&
+                _storeInformationSettings.StoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase))
+                model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Pass,
+                        Text = "Specified store URL matches this store URL",
+                    });
+            else
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = string.Format("Specified store URL ({0}) doesn't match this store URL ({1})", _storeInformationSettings.StoreUrl, _webHelper.GetStoreLocation(false))
+                });
+
+
+            //primary exchange rate currency
+            var perCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            if (perCurrency != null)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = "Primary exchange rate currency is set",
+                });
+            else
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = "Primary exchange rate currency is not set"
+                });
+
+
+            //primary store currency
+            var pscCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            if (pscCurrency != null)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = "Primary store currency is set",
+                });
+            else
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = "Primary store currency is not set"
+                });
+
+
+            //base measure weight
+            var bWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
+            if (bWeight != null)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = "Default weight is set",
+                });
+            else
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = "Default weight is not set"
+                });
+
+
+            //base dimension weight
+            var bDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
+            if (bDimension != null)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = "Default dimension is set",
+                });
+            else
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = "Default dimension is not set"
+                });
+
+            //shipping rate coputation methods
+            if (_shippingService.LoadActiveShippingRateComputationMethods()
+                .Where(x => x.ShippingRateComputationMethodType == ShippingRateComputationMethodType.Offline)
+                .Count() > 1)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = "Only one offline shipping rate computation method is recommended to use"
+                });
+
+            //payment methods
+            if (_paymentService.LoadActivePaymentMethods()
+                .Count() > 0)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = "Payment methods are OK"
+                });
+            else
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = "You don't have active payment methods"
+                });
+
+
             return View(model);
         }
 
