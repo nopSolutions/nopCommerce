@@ -911,15 +911,8 @@ table.stats td.customerstatistics
 
 table.stats td.bestsellers
 {
-	width: 65%;
+	width: 100%;
 	vertical-align: top;
-}
-
-table.stats td.searchterms
-{
-	padding-left: 5px;
-	width: 35%;
-	vertical-align: top;	
 }
 
 .statisticsTitle

@@ -4783,6 +4783,14 @@
                 </LocaleResource>
               </Children>
             </LocaleResource>
+            <LocaleResource Name="Dashboard">
+              <Value>Dashboard</Value>
+              <Children>
+                <LocaleResource Name="StoreStatistics">
+                  <Value>Store Statistics</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
             <LocaleResource Name="Download">
             <Children>
               <LocaleResource Name="DownloadUploadedFile">
@@ -4973,6 +4981,9 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+            <LocaleResource Name="NopCommerceNews">
+              <Value>NopCommerce News</Value>
+            </LocaleResource>
             <LocaleResource Name="Orders">
             <Value>Orders</Value>
             <Children>
@@ -6272,6 +6283,52 @@
                     </LocaleResource>
                     <LocaleResource Name="TotalPrice">
                       <Value>Total price (excl tax)</Value>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+                <LocaleResource Name="Average">
+                  <Value>Order totals</Value>
+                  <Children>
+                    <LocaleResource Name="OrderStatus">
+                      <Value>Order Status</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SumTodayOrders">
+                      <Value>Today</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SumThisWeekOrders">
+                      <Value>This Week</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SumThisMonthOrders">
+                      <Value>This Month</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SumThisYearOrders">
+                      <Value>This Year</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SumAllTimeOrders">
+                      <Value>All time</Value>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+                <LocaleResource Name="Incomplete">
+                  <Value>Incomplete orders</Value>
+                  <Children>
+                    <LocaleResource Name="Item">
+                      <Value>Item</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Total">
+                      <Value>Total</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Count">
+                      <Value>Count</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="TotalUnpaidOrders">
+                      <Value>Total unpaid orders (pending payment status)</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="TotalNotShippedOrders">
+                      <Value>Total not yet shipped orders</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="TotalIncompleteOrders">
+                      <Value>Total incomplete orders (pending order status)</Value>
                     </LocaleResource>
                   </Children>
                 </LocaleResource>

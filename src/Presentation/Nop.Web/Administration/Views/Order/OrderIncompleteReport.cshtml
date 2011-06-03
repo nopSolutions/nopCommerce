@@ -1,0 +1,19 @@
+﻿@model IList<OrderIncompleteReportLineModel>
+@using Telerik.Web.Mvc;
+@using Telerik.Web.Mvc.UI
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid(Model)
+                .Name("incomplete-order-report-grid")
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Item).Width(200);
+                    columns.Bound(x => x.Total);
+                    columns.Bound(x => x.Count);
+                })
+                .DataBinding(dataBinding => dataBinding.Ajax().Select("OrderIncompleteReportList", "Order"))
+                .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

@@ -1209,7 +1209,6 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-
         [GridAction(EnableCustomBinding = true)]
         public ActionResult SalesReportList(GridCommand command, SalesReportModel model)
         {
@@ -1249,6 +1248,102 @@ namespace Nop.Admin.Controllers
         }
 
 
+        [NonAction]
+        protected virtual IList<OrderAverageReportLineSummaryModel> GetOrderAverageReportModel()
+        {
+            var report = new List<OrderAverageReportLineSummary>();
+            report.Add(_orderReportService.OrderAverageReport(OrderStatus.Pending));
+            report.Add(_orderReportService.OrderAverageReport(OrderStatus.Processing));
+            report.Add(_orderReportService.OrderAverageReport(OrderStatus.Complete));
+            report.Add(_orderReportService.OrderAverageReport(OrderStatus.Cancelled));
+            var model = report.Select(x =>
+            {
+                return new OrderAverageReportLineSummaryModel()
+                {
+                    OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    SumTodayOrders = _priceFormatter.FormatPrice(x.SumTodayOrders, true, false),
+                    SumThisWeekOrders = _priceFormatter.FormatPrice(x.SumThisWeekOrders, true, false),
+                    SumThisMonthOrders = _priceFormatter.FormatPrice(x.SumThisMonthOrders, true, false),
+                    SumThisYearOrders = _priceFormatter.FormatPrice(x.SumThisYearOrders, true, false),
+                    SumAllTimeOrders = _priceFormatter.FormatPrice(x.SumAllTimeOrders, true, false),
+                };
+            }).ToList();
+
+            return model;
+        }
+        [ChildActionOnly]
+        public ActionResult OrderAverageReport()
+        {
+            var model = GetOrderAverageReportModel();
+            return PartialView(model);
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult OrderAverageReportList(GridCommand command)
+        {
+            var model = GetOrderAverageReportModel();
+            var gridModel = new GridModel<OrderAverageReportLineSummaryModel>
+            {
+                Data = model,
+                Total = model.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [NonAction]
+        protected virtual IList<OrderIncompleteReportLineModel> GetOrderIncompleteReportModel()
+        {
+            var model = new List<OrderIncompleteReportLineModel>();
+            //not paid
+            var psPending = _orderReportService.GetOrderAverageReportLine(null, PaymentStatus.Pending, null, null, null);
+            model.Add(new OrderIncompleteReportLineModel()
+            {
+                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
+                Count = psPending.CountOrders,
+                Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false)
+            });
+            //not shipped
+            var ssPending = _orderReportService.GetOrderAverageReportLine(null, null, ShippingStatus.NotYetShipped, null, null);
+            model.Add(new OrderIncompleteReportLineModel()
+            {
+                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
+                Count = ssPending.CountOrders,
+                Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false)
+            });
+            //pending
+            var osPending = _orderReportService.GetOrderAverageReportLine(OrderStatus.Pending, null, null, null, null);
+            model.Add(new OrderIncompleteReportLineModel()
+            {
+                Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
+                Count = osPending.CountOrders,
+                Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false)
+            });
+
+            return model;
+        }
+        [ChildActionOnly]
+        public ActionResult OrderIncompleteReport()
+        {
+            var model = GetOrderIncompleteReportModel();
+            return PartialView(model);
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult OrderIncompleteReportList(GridCommand command)
+        {
+            var model = GetOrderIncompleteReportModel();
+            var gridModel = new GridModel<OrderIncompleteReportLineModel>
+            {
+                Data = model,
+                Total = model.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+        
         #endregion
     }
 }

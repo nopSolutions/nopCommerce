@@ -1,1 +1,59 @@
-﻿
+﻿<div class="section-title">
+    <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" />
+    @T("Admin.Dashboard")
+</div>
+<table class="dashboard">
+    <tr>
+        <td class="maincol">
+            <div class="section-header">
+                <div class="title">
+                    <img src="@Url.Content("~/Administration/Content/images/ico-stat1.gif")" />
+                    @T("Admin.Dashboard.StoreStatistics")
+                </div>
+            </div>
+            <table class="stats">
+                <tbody>
+                    <tr>
+                        <td class="orderaveragereport">
+                            <div class="statisticsTitle">
+                                @T("Admin.SalesReport.Average")
+                            </div>
+                            @Html.Action("OrderAverageReport", "Order")
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="stats">
+                <tbody>
+                    <tr>
+                        <td class="orderstatistics">
+                            <div class="statisticsTitle">
+                                @T("Admin.SalesReport.Incomplete")
+                            </div>
+                            @Html.Action("OrderIncompleteReport", "Order")
+                        </td>
+                        <td class="customerstatistics">
+                        <div class="statisticsTitle">
+                            @T("Admin.Customers.Reports.RegisteredCustomers")
+                        </div>
+                            @Html.Action("ReportRegisteredCustomers", "Customer")
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="stats">
+                <tr>
+                    <td class="bestsellers">
+                        <div class="statisticsTitle">
+                            @T("Admin.SalesReport.BestSellers")
+                        </div>
+                        <text>UNDONE BestSellersStat</text>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td class="rightcol">
+            @Html.Action("NopCommerceNews", "Home")
+        </td>
+    </tr>
+</table>

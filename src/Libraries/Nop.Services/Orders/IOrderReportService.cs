@@ -22,5 +22,25 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         IList<OrderProductVariantReportLine> OrderProductVariantReport(DateTime? startTime,
             DateTime? endTime, OrderStatus? os, PaymentStatus? ps);
+
+        
+        /// <summary>
+        /// Get order average report
+        /// </summary>
+        /// <param name="os">Order status</param>
+        /// <param name="ps">Payment status</param>
+        /// <param name="ss">Shipping status</param>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <returns>Result</returns>
+        OrderAverageReportLine GetOrderAverageReportLine(OrderStatus? os,
+            PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc);
+        
+        /// <summary>
+        /// Get order average report
+        /// </summary>
+        /// <param name="os">Order status</param>
+        /// <returns>Result</returns>
+        OrderAverageReportLineSummary OrderAverageReport(OrderStatus os);
     }
 }

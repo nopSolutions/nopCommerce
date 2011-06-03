@@ -1,7 +1,5 @@
 ﻿@model CustomerReports
 @using Telerik.Web.Mvc.UI
-
-
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
@@ -20,17 +18,15 @@
     {
         var dataDictAttributes = new ViewDataDictionary();
         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "bestbyordertotal";
-        @Html.Partial("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributes)
+    @Html.Partial("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributes)
 }
 @helper TabBestByNumberOfOrders()
     {
         var dataDictAttributes = new ViewDataDictionary();
         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
-        @Html.Partial("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributes)
+    @Html.Partial("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributes)
 }
 @helper TabRegisteredCustomers()
     {
-        var dataDictAttributes = new ViewDataDictionary();
-        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "registeredcustomers";
-        @Html.Partial("_ReportRegisteredCustomers", dataDictAttributes)
+    @Html.Action("ReportRegisteredCustomers")
 }

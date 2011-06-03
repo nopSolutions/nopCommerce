@@ -1,0 +1,36 @@
+﻿@model SyndicationFeed
+@using System.ServiceModel.Syndication;
+<div class="nop-news">
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-news.gif")" />
+            @T("Admin.NopCommerceNews")
+        </div>
+    </div>
+    <div class="newsitem">
+        @foreach (var item in Model.Items)
+        {
+            <div class="newstitle">
+                @if (item.Links.Count > 0)
+                {
+                    <a href='@(item.Links[0].Uri.OriginalString)'>@item.Title.Text</a>
+                }
+                else
+                {
+                    @item.Title.Text
+                }</div>
+            <div class="newsdate">
+                @item.PublishDate.ToString("d")
+            </div>
+            <div class="newsdetails">
+                @Html.Raw(@item.Summary.Text)
+            </div>
+            
+        }
+    </div>
+    <div class="clear">
+    </div>
+    <div class="adv">
+        @*UNDONE Add 'Hide advertisements' button *@
+    </div>
+</div>

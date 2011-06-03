@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <siteMap>
     <siteMapNode title="Home" controller="Home" action="Overview">
+        <siteMapNode title="Dashboard" nopResource="Admin.Dashboard" controller="Home" action="Index"/>
         <siteMapNode title="Catalog" nopResource="Admin.Catalog">
             <siteMapNode title="Categories" nopResource="Admin.Catalog.Categories" controller="Category" action="List">
                 <siteMapNode title="List" nopResource="Admin.Common.List" controller="Category" action="List"/>

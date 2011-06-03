@@ -89,6 +89,8 @@
     <Compile Include="Domain\Common\CommonSettings.cs" />
     <Compile Include="Domain\Common\PdfSettings.cs" />
     <Compile Include="Domain\Customers\BestCustomerReportLine.cs" />
+    <Compile Include="Domain\Orders\OrderAverageReportLine.cs" />
+    <Compile Include="Domain\Orders\OrderAverageReportLineSummary.cs" />
     <Compile Include="Domain\Orders\OrderProductVariantReportLine.cs" />
     <Compile Include="Domain\Topics\Topic.cs" />
     <Compile Include="Domain\News\NewsComment.cs" />

@@ -784,6 +784,7 @@ namespace Nop.Admin.Controllers
         public ActionResult Reports()
         {
             var model = new CustomerReports();
+            //customers by number of orders
             model.BestCustomersByNumberOfOrders = new BestCustomersReportModel();
             model.BestCustomersByNumberOfOrders.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.BestCustomersByNumberOfOrders.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -792,6 +793,7 @@ namespace Nop.Admin.Controllers
             model.BestCustomersByNumberOfOrders.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
             model.BestCustomersByNumberOfOrders.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
+            //customers by order total
             model.BestCustomersByOrderTotal = new BestCustomersReportModel();
             model.BestCustomersByOrderTotal.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.BestCustomersByOrderTotal.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -799,8 +801,7 @@ namespace Nop.Admin.Controllers
             model.BestCustomersByOrderTotal.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             model.BestCustomersByOrderTotal.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
             model.BestCustomersByOrderTotal.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-
-
+            
             return View(model);
         }
 
@@ -882,8 +883,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ReportRegisteredCustomersList(GridCommand command)
+        [NonAction]
+        protected virtual IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
         {
             var report = new List<RegisteredCustomerReportLineModel>();
             report.Add(new RegisteredCustomerReportLineModel()
@@ -907,10 +908,23 @@ namespace Nop.Admin.Controllers
                 Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year"),
                 Customers = _customerReportService.GetRegisteredCustomersReport(365)
             });
+
+            return report;
+        }
+        [ChildActionOnly]
+        public ActionResult ReportRegisteredCustomers()
+        {
+            var model = GetReportRegisteredCustomersModel();
+            return PartialView(model);
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ReportRegisteredCustomersList(GridCommand command)
+        {
+            var model = GetReportRegisteredCustomersModel();
             var gridModel = new GridModel<RegisteredCustomerReportLineModel>
             {
-                Data = report,
-                Total = report.Count
+                Data = model,
+                Total = model.Count
             };
             return new JsonResult
             {

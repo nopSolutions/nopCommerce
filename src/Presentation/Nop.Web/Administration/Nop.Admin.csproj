@@ -40,6 +40,7 @@
     <Reference Include="FluentValidation">
       <HintPath>..\..\..\packages\FluentValidation.2.0.0.0\lib\NET35\FluentValidation.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\..\..\Program Files\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll</HintPath>
@@ -133,6 +134,8 @@
     <Compile Include="Models\Affiliates\AffiliateModel.cs" />
     <Compile Include="Models\Messages\CampaignModel.cs" />
     <Compile Include="Models\Blogs\BlogPostModel.cs" />
+    <Compile Include="Models\Orders\OrderIncompleteReportLineModel.cs" />
+    <Compile Include="Models\Orders\OrderAverageReportLineSummaryModel.cs" />
     <Compile Include="Models\Settings\BlogSettingsModel.cs" />
     <Compile Include="Models\Blogs\BlogCommentModel.cs" />
     <Compile Include="Models\Settings\CatalogSettingsModel.cs" />
@@ -821,13 +824,22 @@
     <Content Include="Views\Customer\_ReportBestCustomersByNumberOfOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Customer\_ReportRegisteredCustomers.cshtml" />
+    <Content Include="Views\Customer\ReportRegisteredCustomers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Common\SystemInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Common\Warnings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\OrderAverageReport.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\OrderIncompleteReport.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\NopCommerceNews.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

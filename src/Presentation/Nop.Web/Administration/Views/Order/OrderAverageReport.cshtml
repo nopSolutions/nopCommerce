@@ -1,0 +1,22 @@
+﻿@model IList<OrderAverageReportLineSummaryModel>
+@using Telerik.Web.Mvc;
+@using Telerik.Web.Mvc.UI
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid(Model)
+                .Name("average-order-report-grid")
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.OrderStatus);
+                    columns.Bound(x => x.SumTodayOrders);
+                    columns.Bound(x => x.SumThisWeekOrders);
+                    columns.Bound(x => x.SumThisMonthOrders);
+                    columns.Bound(x => x.SumThisYearOrders);
+                    columns.Bound(x => x.SumAllTimeOrders);
+                })
+                .DataBinding(dataBinding => dataBinding.Ajax().Select("OrderAverageReportList", "Order"))
+                .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>
