@@ -12,7 +12,6 @@ namespace Nop.Admin.Validators.Catalog
     {
         public ProductVariantValidator(ILocalizationService localizationService)
         {
-            //TODO add required rules
         }
     }
 }

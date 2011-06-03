@@ -24,7 +24,7 @@ namespace Nop.Web.Controllers
     {
         public ActionResult Info(int id)
         {
-            return Content("TODO how profile - " + id);
+            return Content("TODO show profile - " + id);
         }
     }
 }

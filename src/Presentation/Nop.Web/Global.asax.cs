@@ -103,6 +103,7 @@ namespace Nop.Web
         protected void SetWorkingTheme()
         {
             //TODO:Get "WorkingTheme" to persist throught the session (cookie?).
+            //Allow store owner to manage themes (Whether it's active or not)
             var defaultTheme = EngineContext.Current.Resolve<IThemeProvider>().GetThemeConfigurations().Where(x => x.IsDefault).FirstOrDefault();
             EngineContext.Current.Resolve<IThemeContext>().WorkingTheme = defaultTheme == null ? string.Empty : defaultTheme.ThemeName;
         }

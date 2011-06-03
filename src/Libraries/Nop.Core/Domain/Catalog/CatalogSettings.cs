@@ -99,5 +99,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether "Compare products" feature is enabled
         /// </summary>
         public bool CompareProductsEnabled { get; set; }
+
+        public int ProductSearchTermMinimumLength { get; set; }
     }
 }

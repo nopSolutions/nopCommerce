@@ -1,0 +1,28 @@
+﻿<div class="searchbox">
+    @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new { onsubmit = "return check_small_search_form()" }))
+    {
+        <ul>
+            <li>
+                <input type="text" onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" class="searchboxtext" id="small-searchterms"
+                value="@T("Search.SearchBox.Tooltip")" name="q" />&nbsp; </li>
+            <li>
+                <input type="submit" class="searchboxbutton" id="btn-small-search" value="@T("Search")" />
+            </li>
+        </ul>
+
+                                                                                     /*TODO move to public.js*/
+        <script type="text/javascript">
+
+            function check_small_search_form() {
+                var search_terms = $("#small-searchterms");
+                if (search_terms.val() == "") {
+                    alert('@T("Search.EnterSearchTerms")');
+                    search_terms.focus();
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+    }
+</div>

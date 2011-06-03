@@ -21,8 +21,6 @@ namespace Nop.Web.Models.Catalog
 
         public string ProductSeName { get; set; }
 
-        public bool ProductEmailAFriendEnabled { get; set; }
-
         [AllowHtml]
         [NopResourceDisplayName("Products.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }

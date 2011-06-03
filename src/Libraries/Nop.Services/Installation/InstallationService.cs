@@ -1033,6 +1033,7 @@ namespace Nop.Services.Installation
                     RecentlyAddedProductsNumber = 4,
                     RecentlyAddedProductsEnabled = true,
                     CompareProductsEnabled = true,
+                    ProductSearchTermMinimumLength = 3,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

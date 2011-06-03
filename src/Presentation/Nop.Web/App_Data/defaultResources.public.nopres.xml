@@ -2136,6 +2136,50 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Search">
+    <Value>Search</Value>
+    <Children>
+      <LocaleResource Name="EnterSearchTerms">
+        <Value>Please enter some search keyword</Value>
+      </LocaleResource>
+      <LocaleResource Name="SearchBox">
+        <Children>
+          <LocaleResource Name="Tooltip">
+            <Value>Search store</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="SearchTermMinimumLengthIsNCharacters">
+        <Value>Search term minimum length is {0} characters</Value>
+      </LocaleResource>
+      <LocaleResource Name="SearchTerm">
+        <Value>Search keyword</Value>
+      </LocaleResource>
+      <LocaleResource Name="Category">
+        <Value>Category</Value>
+      </LocaleResource>
+      <LocaleResource Name="Manufacturer">
+        <Value>Manufacturer</Value>
+      </LocaleResource>
+      <LocaleResource Name="SearchInDescriptions">
+        <Value>Search In product descriptions</Value>
+      </LocaleResource>
+      <LocaleResource Name="AdvancedSearch">
+        <Value>Advanced search</Value>
+      </LocaleResource>
+      <LocaleResource Name="PriceRange">
+        <Value>Price range</Value>
+        <Children>
+          <LocaleResource Name="From">
+            <Value>From</Value>
+          </LocaleResource>
+          <LocaleResource Name="To">
+            <Value>to</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart">
     <Value>Shopping cart</Value>
     <Children>

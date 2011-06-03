@@ -49,8 +49,7 @@ namespace Nop.Admin.Infrastructure
     {
         public void Execute()
         {
-            //TODO remove 'CreatedOnUtc' ignore mappings 
-            //because now presentation layer models have 'CreatedOn' property and core entities have 'CreatedOnUtc' property (distinct names)
+            //TODO remove 'CreatedOnUtc' ignore mappings because now presentation layer models have 'CreatedOn' property and core entities have 'CreatedOnUtc' property (distinct names)
 
 
             //address

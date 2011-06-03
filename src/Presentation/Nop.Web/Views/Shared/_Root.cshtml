@@ -45,20 +45,7 @@
                 </div>
             </div>
             <div class="headermenu">
-                <div class="searchbox">
-                    <!-- UNDONE add focus js (nopCommerce 1.90) -->
-                    <div class="searchbox">
-                        <ul>
-                            <li>
-                                <input type="text" onkeydown="if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('btnSearch').click();return false;}} else {return true}; "
-                                    onfocus="if(this.value=='Search store')this.value=''" class="searchboxtext" id="txtSearchTerms"
-                                    value="Search store" name="txtSearchTerms" />&nbsp; </li>
-                            <li>
-                                <input type="submit" class="searchboxbutton" id="btnSearch" value="Search" name="btnSearch" />
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                @Html.Partial("~/Views/Catalog/_SearchBox.cshtml")
                 @Html.Action("Menu", "Common")
             </div>
             @RenderBody()

@@ -264,6 +264,12 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Catalog", action = "ProductsByTag", SeName = UrlParameter.Optional },
                             new { productTagId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            
+            //product search
+            routes.MapRoute("ProductSearch",
+                            "search/",
+                            new { controller = "Catalog", action = "Search" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

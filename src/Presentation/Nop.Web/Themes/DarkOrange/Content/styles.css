@@ -699,6 +699,7 @@ textarea
 	border: solid 1px #d3d3d3;
 	vertical-align: top;
 	font-size: 12px;
+	width: 100%;
 }
 
 .searchboxtext

@@ -63,7 +63,7 @@ namespace Nop.Web.Models.Catalog
         public SpecificationFilterModel SpecificationFilter { get; set; }
 
         /// <summary>
-        /// Product sorting
+        /// Order by
         /// </summary>
         [NopResourceDisplayName("Categories.OrderBy")]
         public int OrderBy { get; set; }

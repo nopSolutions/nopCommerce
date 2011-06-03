@@ -10,7 +10,7 @@
         <li><a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a>
         </li>
     }
-    <li><a href="#">Search</a> </li>
+    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
     <li><a href="@Url.Action("myaccount", "customer")">My account</a></li>
     @if (Model.BlogEnabled)
     {

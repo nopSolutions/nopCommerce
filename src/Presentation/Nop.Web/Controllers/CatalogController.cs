@@ -1301,6 +1301,127 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
+        public ActionResult CrossSellProducts()
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+
+            var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
+            var model = products.Select(x => PrepareProductOverviewModel(x))
+            .ToList();
+
+            return PartialView(model);
+        }
+
+        //recently viewed products
+        public ActionResult RecentlyViewedProducts()
+        {
+            var model = new List<ProductModel>();
+            if (_catalogSettings.RecentlyViewedProductsEnabled)
+            {
+                var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+                foreach (var product in products)
+                    model.Add(PrepareProductOverviewModel(product));
+            }
+            return View(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult RecentlyViewedProductsBlock()
+        {
+            var model = new List<ProductModel>();
+            if (_catalogSettings.RecentlyViewedProductsEnabled)
+            {
+                var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+                foreach (var product in products)
+                    model.Add(PrepareProductOverviewModel(product));
+            }
+            return PartialView(model);
+        }
+
+        //recently added products
+        public ActionResult RecentlyAddedProducts()
+        {
+            var model = new List<ProductModel>();
+            if (_catalogSettings.RecentlyAddedProductsEnabled)
+            {
+                var products = _productService.SearchProducts(0, 0, null, null,
+                    null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
+                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
+                foreach (var product in products)
+                    model.Add(PrepareProductOverviewModel(product));
+            }
+            return View(model);
+        }
+
+        public ActionResult RecentlyAddedProductsRss()
+        {
+            if (_catalogSettings.RecentlyAddedProductsEnabled)
+            {
+                var products = _productService.SearchProducts(0, 0, null, null,
+                    null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
+                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
+                
+                var sb = new StringBuilder();
+                var settings = new XmlWriterSettings
+                {
+                    Encoding = Encoding.UTF8
+                };
+                using (var writer = XmlWriter.Create(sb, settings))
+                {
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("rss");
+                    writer.WriteAttributeString("version", "2.0");
+                    writer.WriteStartElement("channel");
+                    writer.WriteElementString("title", string.Format("{0}: Recently added products", _storeInformationSettings.StoreName));
+                    writer.WriteElementString("link", _webHelper.GetStoreLocation(false));
+                    writer.WriteElementString("description", "Information about products");
+                    writer.WriteElementString("copyright", string.Format("Copyright {0} by {1}", DateTime.Now.Year, _storeInformationSettings.StoreName));
+
+                    foreach (var product in products)
+                    {
+                        writer.WriteStartElement("item");
+                        
+                        writer.WriteStartElement("title");
+                        writer.WriteCData(product.GetLocalized(x => x.Name, _workContext));
+                        writer.WriteEndElement(); // title
+                        writer.WriteStartElement("author");
+                        writer.WriteCData(_storeInformationSettings.StoreName);
+                        writer.WriteEndElement(); // author
+                        writer.WriteStartElement("description");
+                        writer.WriteCData(product.GetLocalized(x => x.ShortDescription, _workContext));
+                        writer.WriteEndElement(); // description
+                        writer.WriteStartElement("link");
+                        //TODO add a method for getting product URL (e.g. SEOHelper.GetProductUrl)
+                        var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
+                        writer.WriteCData(productUrl);
+                        writer.WriteEndElement(); // link
+                        writer.WriteStartElement("pubDate");
+                        writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc)));
+                        writer.WriteEndElement(); // pubDate
+
+
+                        writer.WriteEndElement(); // item
+                    }
+
+                    writer.WriteEndElement(); // channel
+                    writer.WriteEndElement(); // rss
+                    writer.WriteEndDocument();
+                }
+
+                return this.Content(sb.ToString(), "text/xml");
+            }
+
+            return Content("");
+        }
+
+		#endregion
+
+        #region Product tags
+
+
+        //Product tags
+
+        [ChildActionOnly]
         public ActionResult ProductTags(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -1309,7 +1430,7 @@ namespace Nop.Web.Controllers
 
             var model = product.ProductTags
                 .OrderByDescending(x => x.ProductCount)
-                .Select(x => 
+                .Select(x =>
                 {
                     var ptModel = new ProductTagModel()
                     {
@@ -1323,6 +1444,103 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
+
+        [ChildActionOnly]
+        public ActionResult PopularProductTags()
+        {
+            var model = new PopularProductTagsModel();
+
+            //get all tags
+            var tags = _productTagService.GetAllProductTags()
+                .OrderByDescending(x => x.ProductCount)
+                .Take(15)
+                .ToList();
+            //sorting
+            tags = tags.OrderBy(x => x.Name).ToList();
+
+            foreach (var tag in tags)
+                model.Tags.Add(new ProductTagModel()
+                {
+                    Id = tag.Id,
+                    Name = tag.Name,
+                    ProductCount = tag.ProductCount
+                });
+
+            return PartialView(model);
+        }
+
+        public ActionResult ProductsByTag(int productTagId, PagingFilteringModel command)
+        {
+            var productTag = _productTagService.GetProductById(productTagId);
+            if (productTag == null)
+                return RedirectToAction("Index", "Home");
+
+            if (command.PageSize <= 0) command.PageSize = 4;
+            if (command.PageNumber <= 0) command.PageNumber = 1;
+
+            var model = new ProductsByTagModel()
+            {
+                TagName = productTag.Name
+            };
+
+
+            //sorting
+            model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
+            if (model.AllowProductFiltering)
+            {
+                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
+                {
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
+
+                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
+                    model.AvailableSortOptions.Add(new SelectListItem()
+                    {
+                        Text = sortValue,
+                        Value = sortUrl,
+                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
+                    });
+                }
+            }
+
+
+            //view mode
+            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            if (model.AllowProductViewModeChanging)
+            {
+                var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                //grid
+                model.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
+                    Selected = command.ViewMode == "grid"
+                });
+                //list
+                model.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Categories.ViewMode.List"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
+                    Selected = command.ViewMode == "list"
+                });
+            }
+
+
+            //products
+            var products = _productService.SearchProducts(0, 0, false, null, null,
+                0, productTag.Id, string.Empty, false, _workContext.WorkingLanguage.Id, null,
+                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
+            model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
+
+            model.PagingFilteringContext.LoadPagedList(products);
+            model.PagingFilteringContext.ViewMode = command.ViewMode;
+            return View(model);
+        }
+
+
+        #endregion
+
+        #region Product reviews
 
         //products reviews
         public ActionResult ProductReviews(int productId)
@@ -1460,119 +1678,80 @@ namespace Nop.Web.Controllers
             });
         }
 
+        #endregion
+
+        #region Email a friend
+
+        //products email a friend
         [ChildActionOnly]
-        public ActionResult CrossSellProducts()
+        public ActionResult ProductEmailAFriendButton(int productId)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            if (!_catalogSettings.EmailAFriendEnabled)
+                return Content("");
+            var model = new ProductEmailAFriendModel()
+            {
+                ProductId = productId
+            };
 
-            var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
-            var model = products.Select(x => PrepareProductOverviewModel(x))
-            .ToList();
-
-            return PartialView(model);
+            return PartialView("ProductEmailAFriendButton", model);
         }
 
-        //recently viewed products
-        public ActionResult RecentlyViewedProducts()
+        public ActionResult ProductEmailAFriend(int productId)
         {
-            var model = new List<ProductModel>();
-            if (_catalogSettings.RecentlyViewedProductsEnabled)
-            {
-                var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
-                foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product));
-            }
+            var product = _productService.GetProductById(productId);
+            if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
+                return RedirectToAction("Index", "Home");
+
+            var model = new ProductEmailAFriendModel();
+            model.ProductId = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
             return View(model);
         }
 
-        [ChildActionOnly]
-        public ActionResult RecentlyViewedProductsBlock()
+        [HttpPost, ActionName("ProductEmailAFriend")]
+        [FormValueRequired("send-email")]
+        public ActionResult ProductEmailAFriendSend(int productId, ProductEmailAFriendModel model)
         {
-            var model = new List<ProductModel>();
-            if (_catalogSettings.RecentlyViewedProductsEnabled)
-            {
-                var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
-                foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product));
-            }
-            return PartialView(model);
-        }
+            var product = _productService.GetProductById(productId);
+            if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
+                return RedirectToAction("Index", "Home");
 
-        //recently added products
-        public ActionResult RecentlyAddedProducts()
-        {
-            var model = new List<ProductModel>();
-            if (_catalogSettings.RecentlyAddedProductsEnabled)
+            if (ModelState.IsValid)
             {
-                var products = _productService.SearchProducts(0, 0, null, null,
-                    null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
-                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
-                foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product));
-            }
-            return View(model);
-        }
-
-        public ActionResult RecentlyAddedProductsRss()
-        {
-            if (_catalogSettings.RecentlyAddedProductsEnabled)
-            {
-                var products = _productService.SearchProducts(0, 0, null, null,
-                    null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
-                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
-                
-                var sb = new StringBuilder();
-                var settings = new XmlWriterSettings
+                if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
                 {
-                    Encoding = Encoding.UTF8
-                };
-                using (var writer = XmlWriter.Create(sb, settings))
-                {
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement("rss");
-                    writer.WriteAttributeString("version", "2.0");
-                    writer.WriteStartElement("channel");
-                    writer.WriteElementString("title", string.Format("{0}: Recently added products", _storeInformationSettings.StoreName));
-                    writer.WriteElementString("link", _webHelper.GetStoreLocation(false));
-                    writer.WriteElementString("description", "Information about products");
-                    writer.WriteElementString("copyright", string.Format("Copyright {0} by {1}", DateTime.Now.Year, _storeInformationSettings.StoreName));
-
-                    foreach (var product in products)
-                    {
-                        writer.WriteStartElement("item");
-                        
-                        writer.WriteStartElement("title");
-                        writer.WriteCData(product.GetLocalized(x => x.Name, _workContext));
-                        writer.WriteEndElement(); // title
-                        writer.WriteStartElement("author");
-                        writer.WriteCData(_storeInformationSettings.StoreName);
-                        writer.WriteEndElement(); // author
-                        writer.WriteStartElement("description");
-                        writer.WriteCData(product.GetLocalized(x => x.ShortDescription, _workContext));
-                        writer.WriteEndElement(); // description
-                        writer.WriteStartElement("link");
-                        //TODO add a method for getting product URL (e.g. SEOHelper.GetProductUrl)
-                        var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
-                        writer.WriteCData(productUrl);
-                        writer.WriteEndElement(); // link
-                        writer.WriteStartElement("pubDate");
-                        writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc)));
-                        writer.WriteEndElement(); // pubDate
-
-
-                        writer.WriteEndElement(); // item
-                    }
-
-                    writer.WriteEndElement(); // channel
-                    writer.WriteEndElement(); // rss
-                    writer.WriteEndDocument();
+                    ModelState.AddModelError("", _localizationService.GetResource("Products.EmailAFriend.OnlyRegisteredUsers"));
                 }
+                else
+                {
+                    //email
+                    _workflowMessageService.SendProductEmailAFriendMessage(_workContext.CurrentCustomer,
+                            _workContext.WorkingLanguage.Id, product,
+                            model.YourEmailAddress, model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
-                return this.Content(sb.ToString(), "text/xml");
+                    model.ProductId = product.Id;
+                    model.ProductName = product.GetLocalized(x => x.Name);
+                    model.ProductSeName = product.GetSeName();
+
+                    model.SuccessfullySent = true;
+                    model.Result = _localizationService.GetResource("Products.EmailAFriend.SuccessfullySent");
+
+                    return View(model);
+                }
             }
 
-            return Content("");
+            //If we got this far, something failed, redisplay form
+            model.ProductId = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+            return View(model);
         }
+
+        #endregion
+
+        #region Comparing products
 
         //compare products
         public ActionResult AddProductToCompareList(int productId)
@@ -1583,7 +1762,7 @@ namespace Nop.Web.Controllers
 
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToAction("Index", "Home");
-            
+
             _compareProductsService.AddProductToCompareList(productId);
 
             return RedirectToRoute("CompareProducts");
@@ -1635,184 +1814,113 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             _compareProductsService.ClearCompareProducts();
-            
+
             return RedirectToRoute("CompareProducts");
         }
 
         [ChildActionOnly]
         public ActionResult CompareProductsButton(int productId)
         {
+            if (!_catalogSettings.CompareProductsEnabled)
+                return Content("");
+
             var model = new AddToCompareListModel()
             {
-                ProductId = productId,
-                CompareProductsEnabled = _catalogSettings.CompareProductsEnabled
+                ProductId = productId
             };
 
             return PartialView("CompareProductsButton", model);
         }
 
-        //products email a friend
-        [ChildActionOnly]
-        public ActionResult ProductEmailAFriendButton(int productId)
+        #endregion
+
+        #region Searching
+
+        public ActionResult Search(SearchModel model, SearchPagingFilteringModel command)
         {
-            var model = new ProductEmailAFriendModel()
+            if (model == null)
+                model = new SearchModel();
+
+            //TODO set default search page size (currently set to 6)
+            if (command.PageSize <= 0) command.PageSize = 6;
+            if (command.PageNumber <= 0) command.PageNumber = 1;
+            if (model.Q == null)
+                model.Q = "";
+            model.Q = model.Q.Trim();
+
+            var categories = _categoryService.GetAllCategories();
+            if (categories.Count > 0)
             {
-                ProductId = productId,
-                ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled
-            };
+                model.AvailableCategories.Add(new SelectListItem()
+                    {
+                         Value = "0",
+                         Text = _localizationService.GetResource("Common.All")
+                    });
+                foreach(var c in categories)
+                    model.AvailableCategories.Add(new SelectListItem()
+                        {
+                            Value = c.Id.ToString(),
+                            Text = c.GetCategoryBreadCrumb(_categoryService),
+                            Selected = model.Cid == c.Id
+                        });
+            }
 
-            return PartialView("ProductEmailAFriendButton", model);
-        }
-
-        public ActionResult ProductEmailAFriend(int productId)
-        {
-            var product = _productService.GetProductById(productId);
-            if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
-                return RedirectToAction("Index", "Home");
-
-            var model = new ProductEmailAFriendModel();
-            model.ProductId = product.Id;
-            model.ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
-            model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
-            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
-            return View(model);
-        }
-
-        [HttpPost, ActionName("ProductEmailAFriend")]
-        [FormValueRequired("send-email")]
-        public ActionResult ProductReviewsSend(int productId, ProductEmailAFriendModel model)
-        {
-            var product = _productService.GetProductById(productId);
-            if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
-                return RedirectToAction("Index", "Home");
-
-            if (ModelState.IsValid)
+            var manufacturers = _manufacturerService.GetAllManufacturers();
+            if (manufacturers.Count > 0)
             {
-                if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
+                model.AvailableManufacturers.Add(new SelectListItem()
                 {
-                    ModelState.AddModelError("", _localizationService.GetResource("Products.EmailAFriend.OnlyRegisteredUsers"));
+                    Value = "0",
+                    Text = _localizationService.GetResource("Common.All")
+                });
+                foreach (var m in manufacturers)
+                    model.AvailableManufacturers.Add(new SelectListItem()
+                    {
+                        Value = m.Id.ToString(),
+                        Text = m.Name,
+                        Selected = model.Mid == m.Id
+                    });
+            }
+
+            IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
+            if (!String.IsNullOrWhiteSpace(model.Q))
+            {
+                if (model.Q.Length < _catalogSettings.ProductSearchTermMinimumLength)
+                {
+                    model.Warning = string.Format(_localizationService.GetResource("Search.SearchTermMinimumLengthIsNCharacters"), _catalogSettings.ProductSearchTermMinimumLength);
                 }
                 else
                 {
-                    //email
-                    _workflowMessageService.SendProductEmailAFriendMessage(_workContext.CurrentCustomer,
-                            _workContext.WorkingLanguage.Id, product,
-                            model.YourEmailAddress, model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
-
-                    model.ProductId = product.Id;
-                    model.ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
-                    model.ProductName = product.GetLocalized(x => x.Name);
-                    model.ProductSeName = product.GetSeName();
-
-                    model.SuccessfullySent = true;
-                    model.Result = _localizationService.GetResource("Products.EmailAFriend.SuccessfullySent");
-
-                    return View(model);
-                }
-            }
-
-            //If we got this far, something failed, redisplay form
-            model.ProductId = product.Id;
-            model.ProductEmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
-            model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
-            return View(model);
-        }
-
-        //Product tags
-        [ChildActionOnly]
-        public ActionResult PopularProductTags()
-        {
-            var model = new PopularProductTagsModel();
-
-            //get all tags
-            var tags = _productTagService.GetAllProductTags()
-                .OrderByDescending(x => x.ProductCount)
-                .Take(15)
-                .ToList();
-            //sorting
-            tags = tags.OrderBy(x => x.Name).ToList();
-
-            foreach (var tag in tags)
-                model.Tags.Add(new ProductTagModel()
-                {
-                    Id = tag.Id,
-                    Name = tag.Name,
-                    ProductCount = tag.ProductCount
-                });
-
-            return PartialView(model);
-        }
-
-        public ActionResult ProductsByTag(int productTagId, PagingFilteringModel command)
-        {
-            var productTag = _productTagService.GetProductById(productTagId);
-            if (productTag == null)
-                return RedirectToAction("Index", "Home");
-
-            if (command.PageSize <= 0) command.PageSize = 4;
-            if (command.PageNumber <= 0) command.PageNumber = 1;
-
-            var model = new ProductsByTagModel()
-            {
-                TagName = productTag.Name
-            };
-
-
-            //sorting
-            model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
-            if (model.AllowProductFiltering)
-            {
-                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
-                {
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
-
-                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.AvailableSortOptions.Add(new SelectListItem()
+                    decimal? minPriceConverted = null;
+                    decimal? maxPriceConverted = null;
+                    //min price
+                    if (!string.IsNullOrEmpty(model.Pf))
                     {
-                        Text = sortValue,
-                        Value = sortUrl,
-                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
-                    });
+                        decimal minPrice = decimal.Zero;
+                        if (decimal.TryParse(model.Pf, out minPrice))
+                            minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(minPrice, _workContext.WorkingCurrency);
+                    }
+                    //max price
+                    if (!string.IsNullOrEmpty(model.Pt))
+                    {
+                        decimal maxPrice = decimal.Zero;
+                        if (decimal.TryParse(model.Pt, out maxPrice))
+                            maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(maxPrice, _workContext.WorkingCurrency);
+                    }
+
+                    //products
+                    products = _productService.SearchProducts(model.Cid, model.Mid, null,
+                        minPriceConverted, maxPriceConverted, 0, 0,
+                        model.Q, model.Sid, _workContext.WorkingLanguage.Id, null,
+                    ProductSortingEnum.Position, command.PageNumber - 1, command.PageSize);
+                    model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
                 }
             }
-            
-
-            //view mode
-            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
-            if (model.AllowProductViewModeChanging)
-            {
-                var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                //grid
-                model.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = command.ViewMode == "grid"
-                });
-                //list
-                model.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Categories.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = command.ViewMode == "list"
-                });
-            }
-            
-
-            //products
-            var products = _productService.SearchProducts(0, 0, false, null, null,
-                0, productTag.Id, string.Empty, false, _workContext.WorkingLanguage.Id, null,
-                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
-            model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = command.ViewMode;
             return View(model);
         }
 
-		#endregion
+        #endregion
     }
 }

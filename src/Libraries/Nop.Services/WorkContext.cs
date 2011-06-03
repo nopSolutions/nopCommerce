@@ -61,7 +61,7 @@ namespace Nop.Services
                 if (user != null)
                 {
                     customer = user.AssociatedCustomer;
-                    if (customer == null || customer.Deleted || !customer.Active)
+                    if (customer == null || customer.Deleted || !customer.Active || !customer.IsRegistered())
                     {
                         //logout
                         _authenticationService.SignOut();

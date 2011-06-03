@@ -13,7 +13,5 @@ namespace Nop.Web.Models.Catalog
     public class AddToCompareListModel : BaseNopModel
     {
         public int ProductId { get; set; }
-
-        public bool CompareProductsEnabled { get; set; }
     }
 }

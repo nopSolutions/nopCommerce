@@ -2,7 +2,6 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Framework;
 @using Nop.Web.Models.Checkout;
-@*TODO check all link URLs*@
 <div class="order-progress">
     <ul>
         <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Cart ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.RouteUrl("ShoppingCart") : null)>@T("Checkout.Progress.Cart")</a>
