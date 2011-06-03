@@ -1,0 +1,65 @@
+﻿@model SystemInfoModel
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+        @T("Admin.System.SystemInfo")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.NopVersion):
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.NopVersion)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.OperatingSystem):
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.OperatingSystem)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AspNetInfo):
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.AspNetInfo)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsFullTrust):
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.IsFullTrust)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ServerTimeZone):
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.ServerTimeZone)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ServerLocalTime):
+        </td>
+        <td class="adminData">
+            @Model.ServerLocalTime.ToString("F")
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.UtcTime):
+        </td>
+        <td class="adminData">
+            @Model.UtcTime.ToString("F")
+        </td>
+    </tr>
+</table>

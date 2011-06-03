@@ -3,8 +3,8 @@
     {
         <ul>
             <li>
-                <input type="text" onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" class="searchboxtext" id="small-searchterms"
-                value="@T("Search.SearchBox.Tooltip")" name="q" />&nbsp; </li>
+                <input type="text" class="searchboxtext" id="small-searchterms"
+                value="@T("Search.SearchBox.Tooltip")" name="q"  onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" onblur="if(this.value=='') {this.value = '@T("Search.SearchBox.Tooltip")';}" />&nbsp; </li>
             <li>
                 <input type="submit" class="searchboxbutton" id="btn-small-search" value="@T("Search")" />
             </li>

@@ -1081,6 +1081,7 @@ namespace Nop.Services.Installation
                 {
                     StoreName = "Your store name",
                     StoreUrl = "http://www.yourStore.com/",
+                    CurrentVersion = "2.00"
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<RewardPointsSettings>>()

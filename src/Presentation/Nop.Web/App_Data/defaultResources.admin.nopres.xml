@@ -6503,6 +6503,32 @@
 
                         </Children>
                     </LocaleResource>
+                  <LocaleResource Name="SystemInfo">
+                    <Value>System information</Value>
+                    <Children>
+                      <LocaleResource Name="ASPNETInfo">
+                        <Value>ASP.NET info</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="IsFullTrust">
+                        <Value>Is full trust level</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="NopVersion">
+                        <Value>nopCommerce version</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="OperatingSystem">
+                        <Value>Operating system:</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="ServerLocalTime">
+                        <Value>Server local time:</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="ServerTimeZone">
+                        <Value>Server time zone:</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="UTCTime">
+                        <Value>Greenwich mean time (GMT/UTC):</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Telerik">

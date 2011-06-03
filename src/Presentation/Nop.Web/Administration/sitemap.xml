@@ -95,6 +95,7 @@
         <siteMapNode title="System" nopResource="Admin.System">
             <siteMapNode title="Log" nopResource="Admin.System.Log" controller="Log" action="List" />
             <siteMapNode title="QueuedEmails" nopResource="Admin.System.QueuedEmails" controller="QueuedEmail" action="List" />
+          <siteMapNode title="System information" nopResource="Admin.System.SystemInfo" controller="Common" action="SystemInfo" />
         </siteMapNode>
     </siteMapNode>
 </siteMap>
