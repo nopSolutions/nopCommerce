@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICollectionTExtensions.cs" />
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Caching\Extensions.cs" />
     <Compile Include="Caching\ICacheManager.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Domain\StoreInformationSettings.cs" />
     <Compile Include="GenericComparer.cs" />
     <Compile Include="Data\IRepository.cs" />
+    <Compile Include="IPersistentCollection.cs" />
     <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\Permissions\DefaultPermissionRecord.cs" />
     <Compile Include="Domain\Security\Permissions\PermissionRecord.cs" />
@@ -209,6 +211,7 @@
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
     <Compile Include="NopEventArgs.cs" />
+    <Compile Include="PersistentCollection.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
     <Compile Include="Plugins\BasePluginAttribute.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />

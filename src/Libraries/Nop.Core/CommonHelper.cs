@@ -230,5 +230,7 @@ namespace Nop.Core
                     result += c.ToString();
             return result;
         }
+
+        public static bool OneToManyCollectionWrapperEnabled { get; set; }
     }
 }
