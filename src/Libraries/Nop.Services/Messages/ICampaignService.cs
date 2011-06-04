@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using Nop.Core.Domain.Messages;
-using Nop.Data;
+
 using Nop.Core;
 
 namespace Nop.Services.Messages

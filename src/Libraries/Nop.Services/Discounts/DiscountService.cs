@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Nop.Core.Caching;
+using Nop.Core.Data;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Data;
+
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 

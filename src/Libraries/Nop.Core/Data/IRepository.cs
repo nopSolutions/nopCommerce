@@ -1,9 +1,10 @@
-
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Nop.Core;
 
-
-namespace Nop.Data
+namespace Nop.Core.Data
 {
     /// <summary>
     /// Repository

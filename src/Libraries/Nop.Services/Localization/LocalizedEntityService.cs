@@ -6,8 +6,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
-using Nop.Data;
+
 
 namespace Nop.Services.Localization
 {

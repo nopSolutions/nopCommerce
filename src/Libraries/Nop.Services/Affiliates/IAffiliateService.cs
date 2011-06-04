@@ -7,7 +7,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
-using Nop.Data;
+
 using Nop.Services.Localization;
 
 namespace Nop.Services.Affiliates

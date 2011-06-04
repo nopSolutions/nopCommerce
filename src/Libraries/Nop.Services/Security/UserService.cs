@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Security;
-using Nop.Data;
+
 
 namespace Nop.Services.Security
 {

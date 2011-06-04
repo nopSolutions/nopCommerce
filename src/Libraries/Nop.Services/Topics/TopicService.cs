@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Data;
 using Nop.Core.Domain.Topics;
-using Nop.Data;
 
 namespace Nop.Services.Topics
 {

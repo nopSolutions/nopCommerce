@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Topics;
-using Nop.Data;
+
 
 namespace Nop.Services.Topics
 {

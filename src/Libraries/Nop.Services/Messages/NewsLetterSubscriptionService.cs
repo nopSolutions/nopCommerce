@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
-using Nop.Data;
+
 
 namespace Nop.Services.Messages
 {

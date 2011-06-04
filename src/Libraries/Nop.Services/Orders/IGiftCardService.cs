@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Nop.Data;
+
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Customers;
 using System.Xml;

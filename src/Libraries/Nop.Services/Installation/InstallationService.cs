@@ -11,6 +11,7 @@ using System.Web.Hosting;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -33,7 +34,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
 using Nop.Core.IO;
-using Nop.Data;
+
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Helpers;

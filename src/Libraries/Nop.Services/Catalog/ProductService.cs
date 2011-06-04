@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Data;
+
 using Nop.Core;
 using Nop.Services.Customers;
 using Nop.Services.Messages;

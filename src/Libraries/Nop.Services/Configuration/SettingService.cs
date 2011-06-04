@@ -6,9 +6,10 @@ using System.ComponentModel;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Data;
+
 
 namespace Nop.Services.Configuration
 {

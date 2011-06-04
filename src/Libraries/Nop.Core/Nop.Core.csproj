@@ -140,6 +140,7 @@
     <Compile Include="Domain\Shipping\ShippingStatus.cs" />
     <Compile Include="Domain\StoreInformationSettings.cs" />
     <Compile Include="GenericComparer.cs" />
+    <Compile Include="Data\IRepository.cs" />
     <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\Permissions\DefaultPermissionRecord.cs" />
     <Compile Include="Domain\Security\Permissions\PermissionRecord.cs" />

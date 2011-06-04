@@ -4,7 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
-using Nop.Data;
+
 
 namespace Nop.Services.Blogs
 {

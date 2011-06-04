@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -18,7 +19,7 @@ using Nop.Services.Discounts;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
-using Nop.Data;
+
 using Nop.Core.Caching;
 
 namespace Nop.Services.Shipping

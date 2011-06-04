@@ -8,7 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Data;
+
 using Nop.Services.Localization;
 
 namespace Nop.Services.Customers

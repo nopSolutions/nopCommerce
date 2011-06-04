@@ -14,6 +14,7 @@ using Autofac.Integration.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;

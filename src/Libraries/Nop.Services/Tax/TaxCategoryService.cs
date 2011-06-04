@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
-using Nop.Data;
+using Nop.Core.Data;
 using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Tax
