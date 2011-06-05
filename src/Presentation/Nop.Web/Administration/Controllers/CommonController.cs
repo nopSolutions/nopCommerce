@@ -18,6 +18,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -30,41 +31,45 @@ using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
+    [AdminAuthorize]
     public class CommonController : BaseNopController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly IPaymentService _paymentService;
         private readonly IShippingService _shippingService;
         private readonly ICurrencyService _currencyService;
         private readonly IMeasureService _measureService;
+        private readonly ICustomerService _customerService;
         private readonly IWebHelper _webHelper;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
-	    #endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-        public CommonController(IPaymentService paymentService, IShippingService shippingService, 
-            ICurrencyService currencyService, 
-            IMeasureService measureService, IWebHelper webHelper,
+        public CommonController(IPaymentService paymentService, IShippingService shippingService,
+            ICurrencyService currencyService, IMeasureService measureService,
+            ICustomerService customerService, IWebHelper webHelper,
             StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
-            MeasureSettings measureSettings)
+            MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
             this._currencyService = currencyService;
             this._measureService = measureService;
+            this._customerService = customerService;
             this._webHelper = webHelper;
             this._storeInformationSettings = storeInformationSettings;
             this._currencySettings = currencySettings;
             this._measureSettings = measureSettings;
-		}
+            this._dateTimeHelper = dateTimeHelper;
+        }
 
-		#endregion
+        #endregion
 
         #region Methods
 
@@ -202,6 +207,67 @@ namespace Nop.Admin.Controllers
                     Text = "You don't have active payment methods"
                 });
 
+
+            return View(model);
+        }
+
+        public ActionResult Maintenance()
+        {
+            var model = new MaintenanceModel();
+            model.DeleteGuests.EndDate = DateTime.UtcNow.AddDays(-7);
+            model.DeleteGuests.OnlyWithoutShoppingCart = true;
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("delete-guests")]
+        public ActionResult MaintenanceDeleteGuests(MaintenanceModel model)
+        {
+            DateTime? startDateValue = (model.DeleteGuests.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.DeleteGuests.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            model.DeleteGuests.NumberOfDeletedCustomers = _customerService.DeleteGuestCustomers(startDateValue, endDateValue, model.DeleteGuests.OnlyWithoutShoppingCart);
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("delete-exported-files")]
+        public ActionResult MaintenanceDeleteFiles(MaintenanceModel model)
+        {
+            DateTime? startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+
+            model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
+            string path = string.Format("{0}content\\files\\exportimport\\", this.Request.PhysicalApplicationPath);
+            foreach (var fullPath in System.IO.Directory.GetFiles(path))
+            {
+                try
+                {
+                    var fileName = Path.GetFileName(fullPath);
+                    if (fileName.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+
+                    var info = new FileInfo(fullPath);
+                    if ((!startDateValue.HasValue || startDateValue.Value < info.CreationTimeUtc)&&
+                        (!endDateValue.HasValue || info.CreationTimeUtc < endDateValue.Value))
+                    {
+                        System.IO.File.Delete(fullPath);
+                        model.DeleteExportedFiles.NumberOfDeletedFiles++;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    //TODO log exception
+                }
+            }
 
             return View(model);
         }

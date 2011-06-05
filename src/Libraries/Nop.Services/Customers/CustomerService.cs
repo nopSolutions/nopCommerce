@@ -245,8 +245,7 @@ namespace Nop.Services.Customers
 
             _customerRepository.Insert(customer);
         }
-
-
+        
         /// <summary>
         /// Updates the customer
         /// </summary>
@@ -293,6 +292,44 @@ namespace Nop.Services.Customers
                 customer.CheckoutAttributes = "";
             }
             UpdateCustomer(customer);
+        }
+
+
+        /// <summary>
+        /// Delete guest customer records
+        /// </summary>
+        /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
+        /// <param name="registrationTo">Customer registration to; null to load all customers</param>
+        /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
+        /// <returns>Number of deleted customers</returns>
+        public virtual int DeleteGuestCustomers(DateTime? registrationFrom,
+            DateTime? registrationTo, bool onlyWithoutShoppingCart)
+        {
+            var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
+            if (guestRole == null)
+                throw new NopException("'Guests' role could not be loaded");
+
+            var query = _customerRepository.Table;
+            if (registrationFrom.HasValue)
+                query = query.Where(c => registrationFrom.Value <= c.CreatedOnUtc);
+            if (registrationTo.HasValue)
+                query = query.Where(c => registrationTo.Value >= c.CreatedOnUtc);
+            query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Contains(guestRole.Id));
+            if (onlyWithoutShoppingCart)
+                query = query.Where(c => c.ShoppingCartItems.Count() == 0);
+            //no orders
+            query = query.Where(c => c.Orders.Count() == 0);
+            //no customer content
+            query = query.Where(c => c.CustomerContent.Count() == 0);
+            //UNDONE ensure that customers doesn't have forum posts or topics
+            
+
+            var customers = query.ToList();
+            //delete from database
+            foreach (var c in customers)
+                _customerRepository.Delete(c);
+            int numberOfCustomers = customers.Count;
+            return numberOfCustomers;
         }
 
         #endregion

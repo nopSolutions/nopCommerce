@@ -1,0 +1,99 @@
+﻿@model MaintenanceModel
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" />
+        @T("Admin.System.Maintenance")
+    </div>
+    <div class="options">
+    </div>
+</div>
+@using (Html.BeginForm())
+{
+    <table width="100%">
+        <tr>
+            <td colspan="2">
+                <b>@T("Admin.System.Maintenance.DeleteGuests")</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DeleteGuests.StartDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DeleteGuests.StartDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DeleteGuests.EndDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.DeleteGuests.EndDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DeleteGuests.OnlyWithoutShoppingCart):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.DeleteGuests.OnlyWithoutShoppingCart)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="delete-guests" value="delete-guests" class="t-button">@T("Admin.Common.Delete")</button>
+            </td>
+        </tr>
+        @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
+        {
+            <tr>
+                <td colspan="2">
+                    <b>@string.Format(@T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)</b>
+                </td>
+            </tr>
+        }
+    </table>
+    <p>
+        <br />
+        <hr />
+        <br />
+    </p>
+    <table width="100%">
+        <tr>
+            <td colspan="2">
+                <b>@T("Admin.System.Maintenance.DeleteExportedFiles")</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DeleteExportedFiles.StartDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DeleteExportedFiles.StartDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DeleteExportedFiles.EndDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.DeleteExportedFiles.EndDate)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="delete-exported-files" value="delete-exported-files"
+                    class="t-button">@T("Admin.Common.Delete")</button>
+            </td>
+        </tr>
+        @if (Model.DeleteExportedFiles.NumberOfDeletedFiles.HasValue)
+        {
+            <tr>
+                <td colspan="2">
+                    <b>@string.Format(@T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)</b>
+                </td>
+            </tr>
+        }
+    </table>
+    //UNDONE backup/restore support
+}

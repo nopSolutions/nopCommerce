@@ -102,14 +102,14 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             try
             {
                 string fileName = string.Format("froogle_{0}_{1}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = string.Format("{0}content\\files\\feeds\\{1}", Request.PhysicalApplicationPath, fileName);
+                string filePath = string.Format("{0}content\\files\\exportimport\\{1}", Request.PhysicalApplicationPath, fileName);
                 using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
                     var feed = _promotionFeedService.LoadPromotionFeedBySystemName("PromotionFeed.Froogle");
                     feed.GenerateFeed(fs);
                 }
 
-                string clickhereStr = string.Format("<a href=\"{0}content/files/feeds/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), fileName, _localizationService.GetResource("Plugins.Feed.Froogle.ClickHere"));
+                string clickhereStr = string.Format("<a href=\"{0}content/files/exportimport/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), fileName, _localizationService.GetResource("Plugins.Feed.Froogle.ClickHere"));
                 string result = string.Format(_localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult"), clickhereStr);
                 model.GenerateFeedResult = result;
             }

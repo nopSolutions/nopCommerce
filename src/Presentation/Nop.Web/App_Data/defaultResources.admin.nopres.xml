@@ -6337,6 +6337,67 @@
             <LocaleResource Name="System">
                 <Value>System</Value>
                 <Children>
+                    <LocaleResource Name="Maintenance">
+                      <Value>Maintenance</Value>
+                      <Children>
+                        <LocaleResource Name="DeleteExportedFiles">
+                          <Value>Deleting old exported files</Value>
+                          <Children>
+                            <LocaleResource Name="StartDate">
+                              <Value>Start date</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The start date for the search</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="EndDate">
+                              <Value>End date</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The end date for the search.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="TotalDeleted">
+                              <Value>{0} files were deleted</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="DeleteGuests">
+                          <Value>Deleting guest customers</Value>
+                          <Children>
+                            <LocaleResource Name="StartDate">
+                              <Value>Start date</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The start date for the search</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="EndDate">
+                              <Value>End date</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The end date for the search.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="OnlyWithoutShoppingCart">
+                              <Value>Only without shopping cart</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>A value indicating whether we needto find customers without shopping cart/wishlist. If unchecked, then all customers will be found.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="TotalDeleted">
+                              <Value>{0} customers were deleted</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="QueuedEmails">
                         <Value>Message Queue</Value>
                         <Children>

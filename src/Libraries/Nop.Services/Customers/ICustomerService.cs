@@ -85,6 +85,16 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
         void ResetCheckoutData(Customer customer, bool clearCouponCodes = false);
+        
+        /// <summary>
+        /// Delete guest customer records
+        /// </summary>
+        /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
+        /// <param name="registrationTo">Customer registration to; null to load all customers</param>
+        /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
+        /// <returns>Number of deleted customers</returns>
+        int DeleteGuestCustomers(DateTime? registrationFrom,
+            DateTime? registrationTo, bool onlyWithoutShoppingCart);
 
         #endregion
 

@@ -783,7 +783,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Reports()
         {
-            var model = new CustomerReports();
+            var model = new CustomerReportsModel();
             //customers by number of orders
             model.BestCustomersByNumberOfOrders = new BestCustomersReportModel();
             model.BestCustomersByNumberOfOrders.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();

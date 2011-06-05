@@ -122,6 +122,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
+    <Compile Include="Models\Common\MaintenanceModel.cs" />
     <Compile Include="Models\Common\SystemWarningModel.cs" />
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Logging\ActivityLogModel.cs" />
@@ -840,6 +841,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\NopCommerceNews.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\Maintenance.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
