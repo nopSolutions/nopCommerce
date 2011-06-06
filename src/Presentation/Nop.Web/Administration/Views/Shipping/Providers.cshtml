@@ -19,13 +19,16 @@
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.FriendlyName).Width(150).ReadOnly();
-                        //TODO add ClientTemplate for Configuration link
+                        columns.Bound(x => x.FriendlyName)
+                            .Width(150)
+                            .ReadOnly();
                         columns.Template(
                                 @<div>
                                     @Html.ActionLink(T("Admin.Configuration.Shipping.Providers.Configure").Text, "ConfigureProvider", new { systemName = @item.SystemName })
                                 </div>
-                            ).Width(100)
+                            )
+                            .ClientTemplate("<a href=\"ConfigureProvider?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Shipping.Providers.Configure").Text + "</a>")
+                            .Width(100)
                             .Centered()
                             .Title(T("Admin.Configuration.Shipping.Providers.Configure").Text);
                         columns.Bound(x => x.SystemName).Width(150).ReadOnly();

@@ -19,26 +19,46 @@
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.FriendlyName).Width(150).ReadOnly();
-                        //TODO add ClientTemplate for Configuration link
+                        columns.Bound(x => x.FriendlyName)
+                            .Width(150)
+                            .ReadOnly();
                         columns.Template(
                                 @<div>
                                     @Html.ActionLink(T("Admin.Configuration.Payment.Methods.Configure").Text, "ConfigureMethod", new { systemName = @item.SystemName })
                                 </div>
-                            ).Width(100)
+                            )
+                            .ClientTemplate("<a href=\"ConfigureMethod?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Payment.Methods.Configure").Text + "</a>")
+                            .Width(100)
                             .Centered()
                             .Title(T("Admin.Configuration.Payment.Methods.Configure").Text);
                         columns.Bound(x => x.SystemName).Width(150).ReadOnly();
-                        //TODO display Version and Author?
+                        //display Version and Author?
                         //columns.Bound(x => x.Version).Width(100).ReadOnly();
                         //columns.Bound(x => x.Author).Width(100).ReadOnly();
-                        columns.Bound(x => x.SupportCapture).Width(100).ReadOnly();
-                        columns.Bound(x => x.SupportRefund).Width(100).ReadOnly();
-                        columns.Bound(x => x.SupportPartiallyRefund).Width(100).ReadOnly();
-                        columns.Bound(x => x.SupportVoid).Width(100).ReadOnly();
-                        columns.Bound(x => x.RecurringPaymentType).Width(100).ReadOnly();
-                        columns.Bound(x => x.DisplayOrder).Width(100).ReadOnly();
-                        columns.Bound(x => x.IsActive).Width(100);
+                        columns.Bound(x => x.SupportCapture)
+                            .Template(x => x.SupportCapture.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.SupportRefund)
+                            .Template(x => x.SupportRefund.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.SupportPartiallyRefund)
+                            .Template(x => x.SupportPartiallyRefund.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.SupportVoid)
+                            .Template(x => x.SupportVoid.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.RecurringPaymentType)
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.IsActive)
+                            .Width(100);
                         columns.Command(commands =>
                         {
                             commands.Edit();
