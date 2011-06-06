@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <siteMap>
     <siteMapNode title="Home" controller="Home" action="Overview">
-        <siteMapNode title="Dashboard" nopResource="Admin.Dashboard" controller="Home" action="Index"/>
-        <siteMapNode title="Catalog" nopResource="Admin.Catalog">
-            <siteMapNode title="Categories" nopResource="Admin.Catalog.Categories" controller="Category" action="List">
+        <siteMapNode title="Dashboard" nopResource="Admin.Dashboard" controller="Home" action="Index" ImageUrl="~/Administration/Content/images/ico-dashboard.png" />
+        <siteMapNode title="Catalog" nopResource="Admin.Catalog" ImageUrl="~/Administration/Content/images/ico-catalog.png" >
+            <siteMapNode title="Categories" nopResource="Admin.Catalog.Categories">
                 <siteMapNode title="List" nopResource="Admin.Common.List" controller="Category" action="List"/>
                 <siteMapNode title="Tree view" nopResource="Admin.Common.Treeview" controller="Category" action="Tree"/>
             </siteMapNode>
-            <siteMapNode title="Products" nopResource="Admin.Catalog.Products" controller="Product" action="List">
+            <siteMapNode title="Products" nopResource="Admin.Catalog.Products">
               <siteMapNode title="Manage products" nopResource="Admin.Catalog.Products.Manage" controller="Product" action="List"/>
               <siteMapNode title="Product reviews" nopResource="Admin.Catalog.ProductReviews" controller="ProductReview" action="List"/>
               <siteMapNode title="Product tags" nopResource="Admin.Catalog.ProductTags" controller="Product" action="ProductTags"/>
@@ -19,27 +19,27 @@
               <siteMapNode title="Checkout attributes" nopResource="Admin.Catalog.Attributes.CheckoutAttributes" controller="CheckoutAttribute" action="List"/>
             </siteMapNode>
         </siteMapNode>
-        <siteMapNode title="Sales" nopResource="Admin.Sales">
+        <siteMapNode title="Sales" nopResource="Admin.Sales" ImageUrl="~/Administration/Content/images/ico-sales.png">
           <siteMapNode title="Orders" nopResource="Admin.Orders" controller="Order" action="List" />
           <siteMapNode title="Recurring payments" nopResource="Admin.RecurringPayments" controller="RecurringPayment" action="List" />
           <siteMapNode title="Return requests" nopResource="Admin.ReturnRequests" controller="ReturnRequest" action="List" />
           <siteMapNode title="Gift cards" nopResource="Admin.GiftCards" controller="GiftCard" action="List" />
           <siteMapNode title="Bestsellers" nopResource="Admin.SalesReport.Bestsellers" controller="Order" action="BestsellersReport" />
         </siteMapNode>
-        <siteMapNode title="Customers" nopResource="Admin.Customers">
+        <siteMapNode title="Customers" nopResource="Admin.Customers" ImageUrl="~/Administration/Content/images/ico-customers.png" >
           <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />
           <siteMapNode title="Customers" nopResource="Admin.Customers.Customers" controller="Customer" action="List" />
           <siteMapNode title="Customer roles" nopResource="Admin.Customers.CustomerRoles" controller="CustomerRole" action="List" />
           <siteMapNode title="Customer reports" nopResource="Admin.Customers.Reports" controller="Customer" action="Reports" />
         </siteMapNode>
-        <siteMapNode title="Promotions" nopResource="Admin.Promotions">
+        <siteMapNode title="Promotions" nopResource="Admin.Promotions" ImageUrl="~/Administration/Content/images/ico-promotions.png">
           <siteMapNode title="Affiliates" nopResource="Admin.Affiliates" controller="Affiliate" action="List" />
           <siteMapNode title="Newsletter subscriptions" nopResource="Admin.Promotions.NewsletterSubscriptions" controller="NewsLetterSubscription" action="List" />
           <siteMapNode title="Campaigns" nopResource="Admin.Promotions.Campaigns" controller="Campaign" action="List" />
           <siteMapNode title="Discounts" nopResource="Admin.Promotions.Discounts" controller="Discount" action="List" />
           <siteMapNode title="Promotion feeds" nopResource="Admin.Promotions.Feeds" controller="PromotionFeed" action="List" />
         </siteMapNode>
-        <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement">
+        <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement" ImageUrl="~/Administration/Content/images/ico-content.png">
           <siteMapNode title="News" nopResource="Admin.ContentManagement.News">
             <siteMapNode title="News items" nopResource="Admin.ContentManagement.News.NewsItems" controller="News" action="List" />
             <siteMapNode title="News comments" nopResource="Admin.ContentManagement.News.Comments" controller="News" action="Comments"/>
@@ -52,7 +52,7 @@
           <siteMapNode title="Manage forums" nopResource="Admin.ContentManagement.Forums" controller="Forum" action="List" />
           <siteMapNode title="Message templates" nopResource="Admin.ContentManagement.MessageTemplates" controller="MessageTemplate" action="List" />
         </siteMapNode>
-        <siteMapNode title="Configuration" nopResource="Admin.Configuration">
+        <siteMapNode title="Configuration" nopResource="Admin.Configuration" ImageUrl="~/Administration/Content/images/ico-configuration.png">
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
           <siteMapNode title="Payment methods" nopResource="Admin.Configuration.Payment.Methods" controller="Payment" action="Methods"/>
           <siteMapNode title="Tax" nopResource="Admin.Configuration.Tax">
@@ -93,12 +93,16 @@
             <siteMapNode title="All settings (settings)" nopResource="Admin.Configuration.Settings.AllSettings" controller="Setting" action="AllSettings"/>
           </siteMapNode>
         </siteMapNode>
-        <siteMapNode title="System" nopResource="Admin.System">
+        <siteMapNode title="System" nopResource="Admin.System" ImageUrl="~/Administration/Content/images/ico-system.png">
             <siteMapNode title="Log" nopResource="Admin.System.Log" controller="Log" action="List" />
             <siteMapNode title="QueuedEmails" nopResource="Admin.System.QueuedEmails" controller="QueuedEmail" action="List" />
             <siteMapNode title="Maintenance" nopResource="Admin.System.Maintenance" controller="Common" action="Maintenance" />
             <siteMapNode title="Warnings" nopResource="Admin.System.Warnings" controller="Common" action="Warnings" />
             <siteMapNode title="System information" nopResource="Admin.System.SystemInfo" controller="Common" action="SystemInfo" />
+        </siteMapNode>
+        <siteMapNode title="Help" nopResource="Admin.Help" ImageUrl="~/Administration/Content/images/ico-help.png">
+          <siteMapNode title="Help topics" nopResource="Admin.Help.Topics" url="http://www.nopcommerce.com/documentation.aspx" />
+          <siteMapNode title="Community forums" nopResource="Admin.Help.Forums" url="http://www.nopcommerce.com/boards/" />
         </siteMapNode>
     </siteMapNode>
 </siteMap>

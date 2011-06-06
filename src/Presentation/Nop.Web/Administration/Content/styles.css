@@ -66,6 +66,17 @@ a img
 	border: 0;
 }
 
+/**/
+.header-menu a
+{
+	font-weight: normal;
+}
+
+.header-menu a:hover
+{
+	font-weight: bold;
+}
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
 	IMAGES

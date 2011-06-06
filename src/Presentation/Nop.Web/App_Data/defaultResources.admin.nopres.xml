@@ -2353,8 +2353,6 @@
                           <LocaleResource Name="Name">
                             <Value>Name</Value>
                           </LocaleResource>
-                        </Children>
-                        <Children>
                           <LocaleResource Name="Enabled">
                             <Value>Is Enabled </Value>
                           </LocaleResource>
@@ -2429,7 +2427,6 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
-
                 </Children>
               </LocaleResource>
               <LocaleResource Name="Measures">
@@ -4928,6 +4925,17 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+            <LocaleResource Name="Help">
+              <Value>Help</Value>
+              <Children>
+                <LocaleResource Name="Topics">
+                  <Value>Help topics</Value>
+                </LocaleResource>
+                <LocaleResource Name="Forums">
+                  <Value>Community forums</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
             <LocaleResource Name="NopCommerceNews">
               <Value>NopCommerce News</Value>
             </LocaleResource>
