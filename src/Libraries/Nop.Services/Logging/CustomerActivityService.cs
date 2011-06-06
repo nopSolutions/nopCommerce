@@ -90,10 +90,9 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Deletes an activity log type item
         /// </summary>
-        /// <param name="activityLogTypeId">Activity log type identifier</param>
-        public virtual void DeleteActivityType(int activityLogTypeId)
+        /// <param name="activityLogType">Activity log type</param>
+        public virtual void DeleteActivityType(ActivityLogType activityLogType)
         {
-            ActivityLogType activityLogType = _activityLogTypeRepository.GetById(activityLogTypeId);
             if (activityLogType == null)
                 throw new ArgumentNullException("activityLogType");
 
@@ -156,8 +155,7 @@ namespace Nop.Services.Logging
         public virtual ActivityLog InsertActivity(string systemKeyword, 
             string comment, params object[] commentParams)
         {
-            if (_workContext.CurrentCustomer== null ||
-                _workContext.CurrentCustomer.IsGuest())
+            if (_workContext.CurrentCustomer == null)
                 return null;
 
             var activityTypes = GetAllActivityTypes();
@@ -172,10 +170,10 @@ namespace Nop.Services.Logging
             
 
             var activity = new ActivityLog();
-            activity.Id = activityType.Id;
+            activity.ActivityLogType = activityType;
             activity.Customer = _workContext.CurrentCustomer;
             activity.Comment = comment;
-            activity.CreatedOn = DateTime.UtcNow;
+            activity.CreatedOnUtc = DateTime.UtcNow;
 
             _activityLogRepository.Insert(activity);
 
@@ -185,14 +183,13 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Deletes an activity log item
         /// </summary>
-        /// <param name="activityLogId">Activity log type identifier</param>
-        public virtual void DeleteActivity(int activityLogId)
+        /// <param name="activityLog">Activity log type</param>
+        public virtual void DeleteActivity(ActivityLog activityLog)
         {
-            ActivityLog activityLogType = _activityLogRepository.GetById(activityLogId);
-            if (activityLogType == null)
+            if (activityLog == null)
                 throw new ArgumentNullException("activityLog");
 
-            _activityLogRepository.Delete(activityLogType);
+            _activityLogRepository.Delete(activityLog);
         }
 
         /// <summary>
@@ -210,13 +207,14 @@ namespace Nop.Services.Logging
             DateTime? createdOnTo, string email, string username, int activityLogTypeId,
             int pageIndex, int pageSize)
         {
-            var query = (from al in _activityLogRepository.Table
-                        from c in al.Customer.Addresses
-                        where (!createdOnFrom.HasValue || createdOnFrom.Value <= al.CreatedOn) &&
-                        (!createdOnTo.HasValue || createdOnTo.Value >= al.CreatedOn) &&
+            //UNDONE search by email and username
+            var query = from al in _activityLogRepository.Table
+                        where (!createdOnFrom.HasValue || createdOnFrom.Value <= al.CreatedOnUtc) &&
+                        (!createdOnTo.HasValue || createdOnTo.Value >= al.CreatedOnUtc) &&
                         (activityLogTypeId == 0 || activityLogTypeId == al.ActivityLogTypeId) &&
                         !al.Customer.Deleted
-                         select al).Distinct().OrderByDescending(al => al.CreatedOn);
+                        orderby al.CreatedOnUtc descending
+                        select al;
 
             var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
             return activityLog;

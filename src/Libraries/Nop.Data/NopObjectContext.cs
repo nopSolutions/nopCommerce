@@ -42,6 +42,8 @@ namespace Nop.Data
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
 
+        public DbSet<ActivityLogType> ActivityLogType { get; set; }
+        public DbSet<ActivityLog> ActivityLog { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<BlogComment> BlogComments { get; set; }
@@ -61,6 +63,10 @@ namespace Nop.Data
         public DbSet<DiscountUsageHistory> DiscountUsageHistory { get; set; }
         public DbSet<Download> Downloads { get; set; }
         public DbSet<EmailAccount> EmailAccounts { get; set; }
+        public DbSet<ForumGroup> ForumGroups { get; set; }
+        public DbSet<ForumPost> ForumPosts { get; set; }
+        public DbSet<Forum> Forums { get; set; }
+        public DbSet<ForumTopic> ForumTopics { get; set; }
         public DbSet<GiftCard> GiftCards { get; set; }
         public DbSet<GiftCardUsageHistory> GiftCardUsageHistory { get; set; }
         public DbSet<Language> Languages { get; set; }
@@ -106,12 +112,6 @@ namespace Nop.Data
         public DbSet<TierPrice> TierPrices { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<ForumGroup> ForumGroups { get; set; }
-        public DbSet<Forum> Forums { get; set; }
-        public DbSet<ForumTopic> ForumTopics { get; set; }
-        public DbSet<ForumPost> ForumPosts { get; set; }
-        public DbSet<ActivityLogType> ActivityLogType { get; set; }
-        public DbSet<ActivityLog> ActivityLog { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -9,6 +9,7 @@ namespace Nop.Core.Domain.Logging
     public partial class ActivityLog : BaseEntity
     {
         #region Properties
+
         /// <summary>
         /// Gets or sets the activity log type identifier
         /// </summary>
@@ -27,7 +28,8 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOn { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
+
         #endregion
 
         #region Navigation Properties

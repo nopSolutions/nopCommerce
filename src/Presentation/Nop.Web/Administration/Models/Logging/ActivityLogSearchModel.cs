@@ -9,6 +9,10 @@ namespace Nop.Admin.Models.Logging
 {
     public class ActivityLogSearchModel : BaseNopModel
     {
+        public ActivityLogSearchModel()
+        {
+            ActivityLogType = new List<SelectListItem>();
+        }
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnFrom")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnFrom { get; set; }

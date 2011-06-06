@@ -1,15 +1,16 @@
 ﻿@model ActivityLogSearchModel
+@using Telerik.Web.Mvc;
+@using Telerik.Web.Mvc.UI;
 
 @using (Html.BeginForm())
 {
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
-            @T("Admin.Configuration.ActivityLog.ActivityLog.Title")
+            @T("Admin.Configuration.ActivityLog.ActivityLog")
         </div>
         <div class="options">
-            <button type="submit" id="btnSearch"  name="search" value="search" class="t-button">@T("Admin.Configuration.ActivityLog.ActivityLog.SearchButton.Text")</button>
-            <a href="@Url.Action("ClearAll")" class="t-button">@T("Admin.Configuration.ActivityLog.ActivityLog.ClearButton.Text")</a>
+            <a href="@Url.Action("ClearAll")" class="t-button">@T("Admin.Common.Clear")</a>
         </div>
     </div>
     <p>
@@ -44,7 +45,12 @@
                 @Html.NopLabelFor(model => model.ActivityLogTypeId):
             </td>
             <td class="adminData">
-                @Html.DropDownList("ActivityLogTypeId", Model.ActivityLogType, new { @class = "adminInput" })
+                @Html.DropDownList("ActivityLogTypeId", Model.ActivityLogType)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
             </td>
         </tr>
     </table>    
@@ -53,40 +59,33 @@
             <td>
                 @(Html.Telerik().Grid<ActivityLogModel>()
                         .Name("activityLog-grid")
+                        .DataKeys(x =>
+                        {
+                            x.Add(y => y.Id).RouteKey("Id");
+                        })
                         .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                         .Columns(columns =>
                         {
-                            columns.Bound(x => x.ActivityLogType)
+                            columns.Bound(x => x.ActivityLogTypeName)
                                 .Centered();
-                        })
-                        .Columns(columns =>
-                        {
-                            columns.Bound(x => x)
-                                .Template(x => Html.ActionLink(x.Customer, "Edit", "Customer", new { id = x.CustomerId }, null))
-                                .ClientTemplate(Html.ActionLink("<#= Customer #>", "Edit", "Customer", new { id = "<#=CustomerId#>" }, null).ToString())
-                                .HeaderTemplate(T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer").Text)
-                                .Centered();
-                        })
-                        .Columns(columns =>
-                        {
+                            columns.Bound(x => x.CustomerId)
+                                .Template(x => Html.ActionLink(x.CustomerName + " (" + T("Admin.Common.View").Text + ")", "Edit", "Customer", new { id = x.CustomerId }, new { }))
+                                .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\"><#= CustomerName #> (" + T("Admin.Common.View").Text + ")</a>");
                             columns.Bound(x => x.Comment)
-                                .Centered();
-                        })
-                        .Columns(columns =>
-                        {
+                                .Centered();                        
                             columns.Bound(x => x.CreatedOn)
                                 .Centered();
-                        })
-                        .Columns(columns =>
-                        {
-                            columns.Bound(x => x.Id)
-                                .Template(x => Html.ActionLink(T("Admin.Configuration.ActivityLog.ActivityLog.DeleteButton.Text").Text, "DeleteLog", new { id = x.Id.ToString() }, new { @class = "t-button" }))
-                                .ClientTemplate("<a class=\"t-button\" href=\"DeleteLog/<#= Id #>\">" + T("Admin.Configuration.ActivityLog.ActivityLog.DeleteButton.Text").Text + "</a>")
-                                .Centered()
-                                .Filterable(false);
+                            columns.Command(commands =>
+                            {
+                                commands.Delete();
+                            }).Width(90);
                         })
                         .Pageable(settings => settings.PageSize(10))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("ListLogs", "ActivityLog", Model))
+                        .DataBinding(dataBinding =>
+                        {
+                            dataBinding.Ajax().Select("ListLogs", "ActivityLog")
+                                .Delete("AcivityLogDelete", "ActivityLog");
+                        })
                         .EnableCustomBinding(true))
             </td>
         </tr>

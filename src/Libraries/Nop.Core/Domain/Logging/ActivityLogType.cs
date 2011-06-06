@@ -8,13 +8,8 @@ namespace Nop.Core.Domain.Logging
     /// </summary>
     public partial class ActivityLogType : BaseEntity
     {
-        #region Ctor
-        public ActivityLogType()
-        {
-            this.ActivityLog = new List<ActivityLog>();
-        }
-        #endregion
-
+        private ICollection<ActivityLog> _activityLog;
+        
         #region Properties
 
         /// <summary>
@@ -39,7 +34,11 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets the activity log
         /// </summary>
-        public virtual ICollection<ActivityLog> ActivityLog { get; set; }
+        public virtual ICollection<ActivityLog> ActivityLog
+        {
+            get { return _activityLog ?? (_activityLog = new List<ActivityLog>()); }
+            protected set { _activityLog = value; }
+        }
 
         #endregion
     }

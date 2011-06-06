@@ -9,13 +9,14 @@ namespace Nop.Data.Mapping.Logging
         {
             this.ToTable("ActivityLog");
             this.HasKey(al => al.Id);
-            this.Property(al => al.Comment).IsRequired().HasMaxLength(4000);
+            this.Property(al => al.Comment).IsRequired().IsMaxLength();
 
             this.HasRequired(al => al.ActivityLogType)
                 .WithMany(alt => alt.ActivityLog)
                 .HasForeignKey(al => al.ActivityLogTypeId);
+
             this.HasRequired(al => al.Customer)
-                .WithMany(alt => alt.ActivityLog)
+                .WithMany(c => c.ActivityLog)
                 .HasForeignKey(al => al.CustomerId);
         }
     }

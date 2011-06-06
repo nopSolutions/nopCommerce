@@ -9,7 +9,6 @@ namespace Nop.Core.Domain.Localization
     /// </summary>
     public partial class Language : BaseEntity
     {
-        private ICollection<Customer> _customers;
         private ICollection<LocaleStringResource> _localeStringResources;
         private ICollection<LocalizedProperty> _localizedProperties;
 

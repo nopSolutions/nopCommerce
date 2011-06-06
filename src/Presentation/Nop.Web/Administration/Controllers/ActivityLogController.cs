@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Admin.Models.Logging;
 using Nop.Core.Domain.Logging;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
@@ -33,6 +34,7 @@ namespace Nop.Admin.Controllers
 		#endregion Constructors 
 
         #region Activity log types
+
         public ActionResult ListTypes()
         {
             var activityLogTypeModel = _customerActivityService.GetAllActivityTypes().Select(x => x.ToModel());
@@ -69,13 +71,14 @@ namespace Nop.Admin.Controllers
                 if (Int32.TryParse(key,out id))
                 {
                     var activityType = _customerActivityService.GetActivityTypeById(id);
-                    activityType.Enabled = formCollection["checkBox_"+key.ToString()].Equals("false") ? false : true;
+                    activityType.Enabled = formCollection["checkBox_"+key].Equals("false") ? false : true;
                     _customerActivityService.UpdateActivityType(activityType);
                 }
 
             }
             return RedirectToAction("ListTypes");
         }
+
         #endregion
         
         #region Activity log
@@ -83,22 +86,24 @@ namespace Nop.Admin.Controllers
         public ActionResult ListLogs()
         {
             var activityLogSearchModel = new ActivityLogSearchModel();
-            activityLogSearchModel.ActivityLogType = _customerActivityService.GetAllActivityTypes().Select(x =>
-                                                    {
-                                                        return new SelectListItem()
-                                                        {
-                                                            Selected = false,
-                                                            Value = x.Id.ToString(),
-                                                            Text = x.Name
-                                                        };
-                                                    }).ToList();
             activityLogSearchModel.ActivityLogType.Add(new SelectListItem()
             {
                 Value = "0",
-                Selected = true,
                 Text = "All"
             });
-            activityLogSearchModel.ActivityLogType.ToList().Sort((a, b) => a.Text.CompareTo(b.Text));
+
+
+            foreach (var at in _customerActivityService.GetAllActivityTypes()
+                .OrderBy(x=>x.Name)
+                .Select(x =>
+                {
+                    return new SelectListItem()
+                    {
+                        Value = x.Id.ToString(),
+                        Text = x.Name
+                    };
+                }))
+                activityLogSearchModel.ActivityLogType.Add(at);
             return View(activityLogSearchModel);
         }
 
@@ -109,21 +114,37 @@ namespace Nop.Admin.Controllers
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
 
             DateTime? endDateValue = (model.CreatedOnTo == null) ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone);
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var activityLogModel = _customerActivityService.GetAllActivities(startDateValue, endDateValue, model.CustomerEmail, null, model.ActivityLogTypeId, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<ActivityLogModel>
             {
-                Data = activityLogModel.Select(x => x.ToModel()),
+                Data = activityLogModel.Select(x =>
+                {
+                    var m = x.ToModel();
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    return m;
+                    
+                }),
                 Total = activityLogModel.TotalCount
             };
             return new JsonResult { Data = gridModel};;
         }
-        
-        public ActionResult DeleteLog(int id)
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult AcivityLogDelete(int id, GridCommand command)
         {
-            _customerActivityService.DeleteActivity(id);
-            return RedirectToAction("ListLogs");
+            if (!ModelState.IsValid)
+            {
+                //TODO:Find out how telerik handles errors
+                return new JsonResult { Data = "error" };
+            }
+
+            var activityLog = _customerActivityService.GetActivityById(id);
+            _customerActivityService.DeleteActivity(activityLog);
+
+            //UNDONE pass and return current ActivityLogSearchModel
+            return ListLogs(command, new ActivityLogSearchModel());
         }
 
         public ActionResult ClearAll()
@@ -131,6 +152,7 @@ namespace Nop.Admin.Controllers
             _customerActivityService.ClearAllActivities();
             return RedirectToAction("ListLogs");
         }
+
         #endregion
 
     }

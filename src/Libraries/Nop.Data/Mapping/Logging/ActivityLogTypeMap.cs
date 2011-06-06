@@ -10,8 +10,8 @@ namespace Nop.Data.Mapping.Logging
             this.ToTable("ActivityLogType");
             this.HasKey(alt => alt.Id);
 
-            this.Property(alt => alt.SystemKeyword).IsRequired().HasMaxLength(50);
-            this.Property(alt => alt.Name).IsRequired().HasMaxLength(100);
+            this.Property(alt => alt.SystemKeyword).IsRequired().HasMaxLength(100);
+            this.Property(alt => alt.Name).IsRequired().HasMaxLength(200);
         }
     }
 }

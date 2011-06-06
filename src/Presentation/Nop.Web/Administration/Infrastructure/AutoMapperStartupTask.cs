@@ -37,6 +37,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Tasks;
+using Nop.Services.Customers;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
@@ -112,10 +113,10 @@ namespace Nop.Admin.Infrastructure
             //ActivityLogType
             ViceVersa<ActivityLogTypeModel, ActivityLogType>();
             Mapper.CreateMap<ActivityLog, ActivityLogModel>()
-                .ForMember(dest => dest.ActivityLogType,
+                .ForMember(dest => dest.ActivityLogTypeName,
                            opt => opt.MapFrom(src => src.ActivityLogType.Name))
-                .ForMember(dest => dest.Customer,
-                           opt => opt.MapFrom(src => src.Customer != null ? src.Customer.Addresses.FirstOrDefault().Email : string.Empty));
+                .ForMember(dest => dest.CustomerName,
+                           opt => opt.MapFrom(src => src.Customer.GetFullName()));
             //currencies
             ViceVersa<Currency, CurrencyModel>();
             //locale resource

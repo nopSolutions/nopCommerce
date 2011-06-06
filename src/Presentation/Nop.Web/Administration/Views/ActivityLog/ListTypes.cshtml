@@ -1,7 +1,8 @@
-﻿@model Telerik.Web.Mvc.GridModel<ActivityLogTypeModel>
-           
+﻿@model GridModel<ActivityLogTypeModel>
+@using Telerik.Web.Mvc;
+@using Telerik.Web.Mvc.UI;
 
-@using (Html.BeginForm("SaveTypes","ActivityLog"))
+@using (Html.BeginForm("SaveTypes", "ActivityLog"))
 {
     <div class="section-header">
         <div class="title">
@@ -9,7 +10,7 @@
             @T("Admin.Configuration.ActivityLog.ActivityLogType.Title")
         </div>
         <div class="options">
-            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Configuration.ActivityLog.ActivityLogType.SaveButton.Text")</button>
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
         </div>
     </div>
     <p>
@@ -25,9 +26,9 @@
                             columns.Bound(x => x.Name)
                                 .Centered()
                                 .Width("50%");
-                            columns.Bound(x => x)
+                            columns.Bound(x => x.Enabled)
                                 .Centered()
-                                .Template(x => Html.CheckBox("checkBox_"+x.Id.ToString(), x.Enabled, new { id = x.Id, @class="checkboxGroups" }))
+                                .Template(x => Html.CheckBox("checkBox_" + x.Id.ToString(), x.Enabled, new { id = x.Id, @class = "checkboxGroups" }))
                                 .Title(T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled").Text + "&nbsp<input id='mastercheckbox' type='checkbox'/>")
                                 .Width("50%")
                                 .HtmlAttributes(new { style = "text-align:center" })

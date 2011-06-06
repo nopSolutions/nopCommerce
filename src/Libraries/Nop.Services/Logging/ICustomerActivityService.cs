@@ -25,8 +25,8 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Deletes an activity log type item
         /// </summary>
-        /// <param name="activityLogTypeId">Activity log type identifier</param>
-        void DeleteActivityType(int activityLogTypeId);
+        /// <param name="activityLogType">Activity log type</param>
+        void DeleteActivityType(ActivityLogType activityLogType);
         
         /// <summary>
         /// Gets all activity log type items
@@ -61,8 +61,8 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Deletes an activity log item
         /// </summary>
-        /// <param name="activityLogId">Activity log type identifier</param>
-        void DeleteActivity(int activityLogId);
+        /// <param name="activityLog">Activity log</param>
+        void DeleteActivity(ActivityLog activityLog);
 
         /// <summary>
         /// Gets all activity log items

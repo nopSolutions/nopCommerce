@@ -1784,6 +1784,9 @@
                   <LocaleResource Name="Cancel">
                     <Value>Cancel</Value>
                   </LocaleResource>
+                  <LocaleResource Name="Clear">
+                    <Value>Clear</Value>
+                  </LocaleResource>
                   <LocaleResource Name="DeleteConfirmationParam">
                     <Value>Are you sure you want to delete "{0}"?</Value>
                   </LocaleResource>
@@ -2337,8 +2340,6 @@
                       <LocaleResource Name="Hint">
                         <Value>Activity Types</Value>
                       </LocaleResource>
-                    </Children>
-                    <Children>
                       <LocaleResource Name="Title">
                         <Value>Activity Types</Value>
                         <Children>
@@ -2347,8 +2348,6 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
-                    </Children>
-                    <Children>
                       <LocaleResource Name="Fields">
                         <Children>
                           <LocaleResource Name="Name">
@@ -2362,36 +2361,9 @@
                         </Children>
                       </LocaleResource>
                     </Children>
-                    <Children>
-                      <LocaleResource Name="SaveButton">
-                        <Children>
-                          <LocaleResource Name="Text">
-                            <Value>Save</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Hint">
-                            <Value>Save changes</Value>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
-                    </Children>
                   </LocaleResource>
                   <LocaleResource Name="ActivityLog">
                     <Value>Activity Log</Value>
-                    <Children>
-                      <LocaleResource Name="Hint">
-                        <Value>View Activity Log</Value>
-                      </LocaleResource>
-                    </Children>
-                    <Children>
-                      <LocaleResource Name="Title">
-                        <Value>View Activity Log</Value>
-                        <Children>
-                          <LocaleResource Name="Hint">
-                            <Value>View Activity Log </Value>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
-                    </Children>
                     <Children>
                       <LocaleResource Name="Fields">
                         <Children>
@@ -2452,47 +2424,6 @@
                         <Children>
                           <LocaleResource Name="CreatedOn">
                             <Value>Created On</Value>
-                          </LocaleResource>
-                        </Children>
-                        <Children>
-                          <LocaleResource Name="Delete">
-                            <Value>Delete</Value>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
-                    </Children>
-                    <Children>
-                      <LocaleResource Name="SearchButton">
-                        <Children>
-                          <LocaleResource Name="Text">
-                            <Value>Search</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Hint">
-                            <Value>Search for activity log based on the criteria below</Value>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
-                    </Children>
-                    <Children>
-                      <LocaleResource Name="ClearButton">
-                        <Children>
-                          <LocaleResource Name="Text">
-                            <Value>Clear All</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Hint">
-                            <Value>Clears activity log</Value>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
-                    </Children>
-                    <Children>
-                      <LocaleResource Name="DeleteButton">
-                        <Children>
-                          <LocaleResource Name="Text">
-                            <Value>Delete</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Hint">
-                            <Value>Delete activity log entry</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
