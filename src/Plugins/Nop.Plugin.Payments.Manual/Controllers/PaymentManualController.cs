@@ -110,16 +110,16 @@ namespace Nop.Plugin.Payments.Manual.Controllers
 
             //set postback values
             var form = this.Request.Form;
-            model.CardholderName = form["cardholdername"];
-            model.CardNumber = form["cardnumber"];
-            model.CardCode = form["cardcode"];
-            var selectedCcType = model.CreditCardTypes.Where(x => x.Value.Equals(form["creditcardtype"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            model.CardholderName = form["CardholderName"];
+            model.CardNumber = form["CardNumber"];
+            model.CardCode = form["CardCode"];
+            var selectedCcType = model.CreditCardTypes.Where(x => x.Value.Equals(form["CreditCardType"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
             if (selectedCcType != null)
                 selectedCcType.Selected = true;
-            var selectedMonth = model.ExpireMonths.Where(x => x.Value.Equals(form["creditcardexpiremonth"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            var selectedMonth = model.ExpireMonths.Where(x => x.Value.Equals(form["ExpireMonth"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
             if (selectedMonth != null)
                 selectedMonth.Selected = true;
-            var selectedYear = model.ExpireYears.Where(x => x.Value.Equals(form["creditcardexpireyear"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            var selectedYear = model.ExpireYears.Where(x => x.Value.Equals(form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
             if (selectedYear != null)
                 selectedYear.Selected = true;
 
@@ -134,9 +134,9 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             var validator = new PaymentInfoValidator(_localizationService);
             var model = new PaymentInfoModel()
             {
-                CardholderName = form["cardholdername"],
-                CardNumber = form["cardnumber"],
-                CardCode = form["cardcode"],
+                CardholderName = form["CardholderName"],
+                CardNumber = form["CardNumber"],
+                CardCode = form["CardCode"],
             };
             var validationResult = validator.Validate(model);
             if (!validationResult.IsValid)
@@ -148,12 +148,12 @@ namespace Nop.Plugin.Payments.Manual.Controllers
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();
-            paymentInfo.CreditCardType = form["creditcardtype"];
-            paymentInfo.CreditCardName = form["cardholdername"];
-            paymentInfo.CreditCardNumber = form["cardnumber"];
-            paymentInfo.CreditCardExpireMonth = !String.IsNullOrEmpty(form["creditcardexpiremonth"]) ? int.Parse(form["creditcardexpiremonth"]) : 0;
-            paymentInfo.CreditCardExpireYear = !String.IsNullOrEmpty(form["creditcardexpireyear"]) ? int.Parse(form["creditcardexpireyear"]) : 0;
-            paymentInfo.CreditCardCvv2 = form["cardcode"];
+            paymentInfo.CreditCardType = form["CreditCardType"];
+            paymentInfo.CreditCardName = form["CardholderName"];
+            paymentInfo.CreditCardNumber = form["CardNumber"];
+            paymentInfo.CreditCardExpireMonth = int.Parse(form["ExpireMonth"]);
+            paymentInfo.CreditCardExpireYear = int.Parse(form["ExpireYear"]);
+            paymentInfo.CreditCardCvv2 = form["CardCode"];
             return paymentInfo;
         }
     }

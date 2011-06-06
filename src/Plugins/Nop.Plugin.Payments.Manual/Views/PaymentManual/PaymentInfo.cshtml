@@ -9,7 +9,7 @@
             @Html.NopLabelFor(model => model.CreditCardTypes, false):
         </td>
         <td>
-            @Html.DropDownList("creditcardtype", Model.CreditCardTypes, new { @class = "dropdownlists" })
+            @Html.DropDownListFor(model => model.CreditCardType, Model.CreditCardTypes, new { @class = "dropdownlists" })
         </td>
     </tr>
     <tr>
@@ -32,12 +32,12 @@
     </tr>
     <tr>
         <td>
-            @Html.NopLabelFor(model => model.ExpirationDate, false):
+            @Html.NopLabelFor(model => model.ExpireMonth, false):
         </td>
         <td>
-            @Html.DropDownList("creditcardexpiremonth", Model.ExpireMonths)
+            @Html.DropDownListFor(model => model.ExpireMonth, Model.ExpireMonths)
             /
-            @Html.DropDownList("creditcardexpireyear", Model.ExpireYears)
+            @Html.DropDownListFor(model => model.ExpireYear, Model.ExpireYears)
         </td>
     </tr>
     <tr>
