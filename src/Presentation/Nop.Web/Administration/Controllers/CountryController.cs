@@ -79,7 +79,12 @@ namespace Nop.Admin.Controllers
         
         public ActionResult Create()
         {
-            return View(new CountryModel());
+            var model = new CountryModel();
+            //default values
+            model.Published = true;
+            model.AllowsBilling = true;
+            model.AllowsShipping = true;
+            return View(model);
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]

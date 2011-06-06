@@ -89,8 +89,11 @@ namespace Nop.Admin.Controllers
 		}
 
 		public ActionResult Create()
-		{
-			return View(new EmailAccountModel());
+        {
+            var model = new EmailAccountModel();
+            //default values
+            model.Port = 25;
+			return View(model);
 		}
         
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]

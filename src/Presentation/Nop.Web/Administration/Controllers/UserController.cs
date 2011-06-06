@@ -106,6 +106,9 @@ namespace Nop.Admin.Controllers
             var model = new UserModel();
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
+
+            //default values
+            model.IsApproved = true;
             return View(model);
         }
 

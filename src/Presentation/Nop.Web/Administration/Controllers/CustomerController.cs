@@ -225,6 +225,9 @@ namespace Nop.Admin.Controllers
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
 
+            //default value
+            model.Active = true;
+
             return View(model);
         }
 

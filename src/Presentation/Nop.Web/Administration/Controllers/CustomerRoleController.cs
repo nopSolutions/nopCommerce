@@ -62,7 +62,10 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
-            return View(new CustomerRoleModel());
+            var model = new CustomerRoleModel();
+            //default values
+            model.Active = true;
+            return View(model);
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]

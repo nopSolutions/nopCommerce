@@ -96,6 +96,8 @@ namespace Nop.Admin.Controllers
         {
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new BlogPostModel();
+            //default values
+            model.AllowComments = true;
             return View(model);
         }
 

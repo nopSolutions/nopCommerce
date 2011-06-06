@@ -97,6 +97,9 @@ namespace Nop.Admin.Controllers
         {
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new NewsItemModel();
+            //default values
+            model.Published = true;
+            model.AllowComments = true;
             return View(model);
         }
 

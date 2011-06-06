@@ -67,7 +67,10 @@ namespace Nop.Admin.Controllers
         
         public ActionResult Create()
         {
-            return View(new LanguageModel());
+            var model = new LanguageModel();
+            //default values
+            model.Published = true;
+            return View(model);
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]

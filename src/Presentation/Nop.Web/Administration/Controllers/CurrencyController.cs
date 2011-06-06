@@ -122,8 +122,11 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
-            var currencyModel = new CurrencyModel();
-            return View(currencyModel);
+            var model = new CurrencyModel();
+            //default values
+            model.Published = true;
+            model.Rate = 1;
+            return View(model);
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
