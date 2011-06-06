@@ -1035,6 +1035,8 @@ namespace Nop.Services.Installation
                     RecentlyAddedProductsEnabled = true,
                     CompareProductsEnabled = true,
                     ProductSearchTermMinimumLength = 3,
+                    ShowBestsellersOnHomepage = false,
+                    NumberOfBestsellersOnHomepage = 3,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

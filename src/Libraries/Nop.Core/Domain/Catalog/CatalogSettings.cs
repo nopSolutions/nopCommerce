@@ -100,6 +100,19 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool CompareProductsEnabled { get; set; }
 
+        /// <summary>
+        /// Gets or sets a minimum search term length
+        /// </summary>
         public int ProductSearchTermMinimumLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show bestsellers on home page
+        /// </summary>
+        public bool ShowBestsellersOnHomepage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of bestsellers on home page
+        /// </summary>
+        public int NumberOfBestsellersOnHomepage { get; set; }
     }
 }

@@ -84,11 +84,9 @@ namespace Nop.Web.Framework
         public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string actionName, string buttonsSelector = null) where T : BaseNopEntityModel
         {
             if (String.IsNullOrEmpty(actionName))
-            {
                 actionName = "Delete";
-            }
 
-            var modalId = helper.DeleteConfirmationModelId().ToHtmlString();
+            var modalId = MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation").ToHtmlString();
 
             //there's an issue in Telerik (ScriptRegistrar.Current implemenation)
             //it's a little hack to ensure ScriptRegistrar.Current is loaded
@@ -126,11 +124,6 @@ namespace Nop.Web.Framework
                 .Content(helper.Partial("Delete", deleteConfirmationModel).ToHtmlString()).ToHtmlString();
 
             return MvcHtmlString.Create(window);
-        }
-
-        public static MvcHtmlString DeleteConfirmationModelId<T>(this HtmlHelper<T> helper) where T : BaseNopEntityModel
-        {
-            return MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation");
         }
 
         public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)

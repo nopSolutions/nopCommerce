@@ -5,11 +5,10 @@ using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Orders
 {
-
     /// <summary>
-    /// Represents an order product variant report line
+    /// Represents a best sellers report line
     /// </summary>
-    public partial class OrderProductVariantReportLine
+    public partial class BestsellersReportLine
     {
         /// <summary>
         /// Gets or sets the product variant identifier
@@ -17,13 +16,14 @@ namespace Nop.Core.Domain.Orders
         public int ProductVariantId { get; set; }
 
         /// <summary>
-        /// Gets or sets the price excluding tax
+        /// Gets or sets the total amount
         /// </summary>
-        public decimal TotalPrice { get; set; }
+        public decimal TotalAmount { get; set; }
 
         /// <summary>
-        /// Gets or sets the quantity
+        /// Gets or sets the total quantity
         /// </summary>
         public int TotalQuantity { get; set; }
+
     }
 }

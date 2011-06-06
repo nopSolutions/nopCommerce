@@ -20,11 +20,13 @@
             $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
             $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
             $("#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)").click(toggleRecentlyAddedProducts);
+            $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
 
             toggleShowCategoryProductNumberIncludingSubcategories();
             toggleEmailAFriend();
             toggleRecentlyViewedProducts();
             toggleRecentlyAddedProducts();
+            toggleBestsellersOnHomepage();
         });
 
         function toggleShowCategoryProductNumberIncludingSubcategories() {
@@ -60,6 +62,15 @@
             }
             else {
                 $('#pnlRecentlyAddedProductsNumber').hide();
+            }
+        }
+
+        function toggleBestsellersOnHomepage() {
+            if (getE('@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)').checked) {
+                $('#pnlNumberOfBestsellersOnHomepage').show();
+            }
+            else {
+                $('#pnlNumberOfBestsellersOnHomepage').hide();
             }
         }
         
@@ -227,6 +238,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CompareProductsEnabled)
                 @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowBestsellersOnHomepage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowBestsellersOnHomepage)
+                @Html.ValidationMessageFor(model => model.ShowBestsellersOnHomepage)
+            </td>
+        </tr>
+        <tr id="pnlNumberOfBestsellersOnHomepage">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NumberOfBestsellersOnHomepage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NumberOfBestsellersOnHomepage)
+                @Html.ValidationMessageFor(model => model.NumberOfBestsellersOnHomepage)
             </td>
         </tr>
     </table>

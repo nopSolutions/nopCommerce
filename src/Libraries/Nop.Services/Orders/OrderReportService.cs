@@ -38,6 +38,8 @@ namespace Nop.Services.Orders
 
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderProductVariant> _opvRepository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductVariant> _productVariantRepository;
 
         private readonly IDateTimeHelper _dateTimeHelper;
 
@@ -50,13 +52,19 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderRepository">Order repository</param>
         /// <param name="opvRepository">Order product variant repository</param>
+        /// <param name="productRepository">Product repository</param>
+        /// <param name="productVariantRepository">Product variant repository</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
         public OrderReportService(IRepository<Order> orderRepository,
             IRepository<OrderProductVariant> opvRepository,
+            IRepository<Product> productRepository,
+            IRepository<ProductVariant> productVariantRepository,
             IDateTimeHelper dateTimeHelper)
         {
             this._orderRepository = orderRepository;
             this._opvRepository = opvRepository;
+            this._productRepository = productRepository;
+            this._productVariantRepository = productVariantRepository;
             this._dateTimeHelper = dateTimeHelper;
         }
 
@@ -64,60 +72,6 @@ namespace Nop.Services.Orders
 
         #region Methods
         
-        /// <summary>
-        /// Get order product variant sales report
-        /// </summary>
-        /// <param name="startTime">Order start time; null to load all</param>
-        /// <param name="endTime">Order end time; null to load all</param>
-        /// <param name="os">Order status; null to load all records</param>
-        /// <param name="ps">Order payment status; null to load all records</param>
-        /// <returns>Result</returns>
-        public virtual IList<OrderProductVariantReportLine> OrderProductVariantReport(DateTime? startTime,
-            DateTime? endTime, OrderStatus? os, PaymentStatus? ps)
-        {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            var query1 = from opv in _opvRepository.Table
-                         select opv;
-
-            if (startTime.HasValue)
-                query1 = query1.Where(opv => startTime.Value <= opv.Order.CreatedOnUtc);
-            if (endTime.HasValue)
-                query1 = query1.Where(opv => endTime.Value >= opv.Order.CreatedOnUtc);
-            if (orderStatusId.HasValue)
-                query1 = query1.Where(opv => orderStatusId == opv.Order.OrderStatusId);
-            if (paymentStatusId.HasValue)
-                query1 = query1.Where(opv => paymentStatusId == opv.Order.PaymentStatusId);
-            query1 = query1.Where(opv => !opv.Order.Deleted);
-
-            var query2 = from opv in query1
-                         group opv by opv.ProductVariantId into g
-                         select new
-                         {
-                             ProductVariantId = g.Key,
-                             TotalPrice = g.Sum(x => x.PriceExclTax),
-                             TotalQuantity = g.Sum(x => x.Quantity)
-                         };
-            query2 = query2.OrderByDescending(x => x.TotalPrice);
-
-            var result = query2.ToList().Select(x =>
-            {
-                return new OrderProductVariantReportLine()
-                         {
-                             ProductVariantId = x.ProductVariantId,
-                             TotalPrice = x.TotalPrice,
-                             TotalQuantity = x.TotalQuantity
-                         };
-            }).ToList();
-            return result;
-        }
-
         /// <summary>
         /// Get order average report
         /// </summary>
@@ -224,6 +178,92 @@ namespace Nop.Services.Orders
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 
             return item;
+        }
+
+        /// <summary>
+        /// Get best sellers report
+        /// </summary>
+        /// <param name="startTime">Order start time; null to load all</param>
+        /// <param name="endTime">Order end time; null to load all</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="recordsToReturn">Records to return</param>
+        /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Result</returns>
+        public virtual IList<BestsellersReportLine> BestSellersReport(DateTime? startTime,
+            DateTime? endTime, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
+            int recordsToReturn = 5, int orderBy = 1, bool showHidden = false)
+        {
+            int? orderStatusId = null;
+            if (os.HasValue)
+                orderStatusId = (int)os.Value;
+
+            int? paymentStatusId = null;
+            if (ps.HasValue)
+                paymentStatusId = (int)ps.Value;
+
+            int? shippingStatusId = null;
+            if (ss.HasValue)
+                shippingStatusId = (int)ss.Value;
+
+
+            var query1 = from opv in _opvRepository.Table
+                         join o in _orderRepository.Table on opv.OrderId equals o.Id
+                         join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
+                         join p in _productRepository.Table on pv.ProductId equals p.Id
+                         where (!startTime.HasValue || startTime.Value <= o.CreatedOnUtc) &&
+                         (!endTime.HasValue || endTime.Value >= o.CreatedOnUtc) &&
+                         (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
+                         (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
+                         (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
+                         (!o.Deleted) &&
+                         (!p.Deleted) &&
+                         (!pv.Deleted) &&
+                         (showHidden || p.Published) &&
+                         (showHidden || pv.Published)
+                         select opv;
+
+            var query2 = from opv in query1
+                         group opv by opv.ProductVariantId into g
+                         select new
+                         {
+                             ProductVariantId = g.Key,
+                             TotalAmount = g.Sum(x => x.PriceExclTax),
+                             TotalQuantity = g.Sum(x => x.Quantity),
+                         };
+            
+            switch (orderBy)
+            {
+                case 1:
+                    {
+                        query2 = query2.OrderByDescending(x => x.TotalQuantity);
+                    }
+                    break;
+                case 2:
+                    {
+                        query2 = query2.OrderByDescending(x => x.TotalAmount);
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("Wrong orderBy parameter", "orderBy");
+            }
+
+            if (recordsToReturn != 0 && recordsToReturn != int.MaxValue)
+                query2 = query2.Take(recordsToReturn);
+
+            var result = query2.ToList().Select(x =>
+            {
+                return new BestsellersReportLine()
+                {
+                    ProductVariantId = x.ProductVariantId,
+                    TotalAmount = x.TotalAmount,
+                    TotalQuantity = x.TotalQuantity
+                };
+            }).ToList();
+
+            return result;
         }
 
         #endregion

@@ -2836,6 +2836,22 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="ShowBestsellersOnHomepage">
+                        <Value>Show best sellers on home page</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to show best sellers on home page.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="NumberOfBestsellersOnHomepage">
+                        <Value>Number of best sellers on home page</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The number of best sellers on home page to display when 'Show best sellers on home page' option is enabled.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="CustomerUser">
@@ -6236,53 +6252,63 @@
               <Value>Sales</Value>
             </LocaleResource>
             <LocaleResource Name="SalesReport">
-              <Value>Sales report</Value>
               <Children>
-                <LocaleResource Name="RunReport">
-                  <Value>Run report</Value>
-                </LocaleResource>
-                <LocaleResource Name="StartDate">
-                  <Value>Start date</Value>
+                <LocaleResource Name="Bestsellers">
+                  <Value>Bestsellers</Value>
                   <Children>
-                    <LocaleResource Name="Hint">
-                      <Value>The start date for the search</Value>
+                    <LocaleResource Name="ByAmount">
+                      <Value>Bestsellers by amount</Value>
                     </LocaleResource>
-                  </Children>
-                </LocaleResource>
-                <LocaleResource Name="EndDate">
-                  <Value>End date</Value>
-                  <Children>
-                    <LocaleResource Name="Hint">
-                      <Value>The end date for the search.</Value>
+                    <LocaleResource Name="ByQuantity">
+                      <Value>Bestsellers by quantity</Value>
                     </LocaleResource>
-                  </Children>
-                </LocaleResource>
-                <LocaleResource Name="OrderStatus">
-                  <Value>Order status</Value>
-                  <Children>
-                    <LocaleResource Name="Hint">
-                      <Value>Search by a specific order status e.g. Complete.</Value>
+                    <LocaleResource Name="RunReport">
+                      <Value>Run report</Value>
                     </LocaleResource>
-                  </Children>
-                </LocaleResource>
-                <LocaleResource Name="PaymentStatus">
-                  <Value>Payment status</Value>
-                  <Children>
-                    <LocaleResource Name="Hint">
-                      <Value>Search by a specific payment status e.g. Paid.</Value>
+                    <LocaleResource Name="StartDate">
+                      <Value>Start date</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The start date for the search</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
-                  </Children>
-                </LocaleResource>
-                <LocaleResource Name="Fields">
-                  <Children>
-                    <LocaleResource Name="Name">
-                      <Value>Name</Value>
+                    <LocaleResource Name="EndDate">
+                      <Value>End date</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The end date for the search.</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
-                    <LocaleResource Name="TotalQuantity">
-                      <Value>Total quantity</Value>
+                    <LocaleResource Name="OrderStatus">
+                      <Value>Order status</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Search by a specific order status e.g. Complete.</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
-                    <LocaleResource Name="TotalPrice">
-                      <Value>Total price (excl tax)</Value>
+                    <LocaleResource Name="PaymentStatus">
+                      <Value>Payment status</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Search by a specific payment status e.g. Paid.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Fields">
+                      <Children>
+                        <LocaleResource Name="Name">
+                          <Value>Name</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="TotalQuantity">
+                          <Value>Total quantity</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="TotalAmount">
+                          <Value>Total amount (excl tax)</Value>
+                        </LocaleResource>
+                      </Children>
                     </LocaleResource>
                   </Children>
                 </LocaleResource>

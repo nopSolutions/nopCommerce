@@ -144,8 +144,8 @@
     <Compile Include="Models\Customers\BestCustomerReportLineModel.cs" />
     <Compile Include="Models\Customers\RegisteredCustomerReportLineModel.cs" />
     <Compile Include="Models\Customers\CustomerReportsModel.cs" />
-    <Compile Include="Models\Orders\SalesReportLineModel.cs" />
-    <Compile Include="Models\Orders\SalesReportModel.cs" />
+    <Compile Include="Models\Orders\BestsellersReportLineModel.cs" />
+    <Compile Include="Models\Orders\BestsellersReportModel.cs" />
     <Compile Include="Models\Catalog\ProductTagModel.cs" />
     <Compile Include="Models\Settings\SettingModel.cs" />
     <Compile Include="Models\Settings\CustomerUserSettingsModel.cs" />
@@ -813,7 +813,7 @@
     <Content Include="Views\ProductVariant\LowStockReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Order\SalesReport.cshtml" />
+    <Content Include="Views\Order\BestsellersReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Customer\Reports.cshtml" />
@@ -844,6 +844,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Common\Maintenance.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\BestsellersBriefReportByQuantity.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\BestsellersBriefReportByAmount.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

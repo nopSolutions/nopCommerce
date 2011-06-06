@@ -1,4 +1,4 @@
-﻿@model SalesReportModel
+﻿@model BestsellersReportModel
        
     
 @using Telerik.Web.Mvc.UI
@@ -9,7 +9,7 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" />
-            @T("Admin.SalesReport")
+            @T("Admin.SalesReport.Bestsellers")
         </div>
         <div class="options">
         </div>
@@ -49,7 +49,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" id="btnSearch" class="t-button">@T("Admin.SalesReport.RunReport")</button>
+                <button type="submit" id="btnSearch" class="t-button">@T("Admin.SalesReport.Bestsellers.RunReport")</button>
             </td>
         </tr>
     </table>
@@ -58,14 +58,14 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<SalesReportLineModel>()
+                @(Html.Telerik().Grid<BestsellersReportLineModel>()
                         .Name("salesreport-grid")
                         .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                         .Columns(columns =>
                         {
                             columns.Bound(x => x.ProductVariantFullName);
                             columns.Bound(x => x.TotalQuantity);
-                            columns.Bound(x => x.TotalPrice);
+                            columns.Bound(x => x.TotalAmount);
                             columns.Bound(x => x.ProductVariantId)
                                 .Template(x => Html.ActionLink(@T("Admin.Common.View").Text, "Edit", "ProductVariant", new { id = x.ProductVariantId }, new { }))
                                 .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= ProductVariantId #>\">" + T("Admin.Common.View").Text + "</a>")
@@ -73,7 +73,7 @@
                                 .Centered()
                                 .Title("View");
                         })
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("SalesReportList", "Order"))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("BestsellersReportList", "Order"))
                         .EnableCustomBinding(true))
             </td>
         </tr>

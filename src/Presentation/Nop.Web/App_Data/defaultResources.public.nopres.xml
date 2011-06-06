@@ -532,6 +532,9 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Bestsellers">
+    <Value>Bestsellers</Value>
+  </LocaleResource>
   <LocaleResource Name="Blog">
     <Value>Blog</Value>
     <Children>

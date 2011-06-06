@@ -1198,9 +1198,73 @@ namespace Nop.Admin.Controllers
 
         #region Reports
 
-        public ActionResult SalesReport()
+        [NonAction]
+        protected IList<BestsellersReportLineModel> GetBestsellersBriefReportModel(int recordsToReturn, int orderBy)
         {
-            var model = new SalesReportModel();
+            var report = _orderReportService.BestSellersReport(null, null,
+                null, null, null, recordsToReturn, orderBy, true);
+
+            var model = report.Select(x =>
+            {
+                var m = new BestsellersReportLineModel()
+                {
+                    ProductVariantId = x.ProductVariantId,
+                    TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
+                    TotalQuantity = x.TotalQuantity,
+                };
+                var productVariant = _productService.GetProductVariantById(x.ProductVariantId);
+                if (productVariant != null)
+                    m.ProductVariantFullName = productVariant.Product.Name + " " + productVariant.Name;
+                return m;
+            }).ToList();
+
+            return model;
+        }
+        public ActionResult BestsellersBriefReportByQuantity()
+        {
+            var model = GetBestsellersBriefReportModel(5, 1);
+            return PartialView(model);
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult BestsellersBriefReportByQuantityList(GridCommand command)
+        {
+            var model = GetBestsellersBriefReportModel(5, 1);
+            var gridModel = new GridModel<BestsellersReportLineModel>
+            {
+                Data = model,
+                Total = model.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+        public ActionResult BestsellersBriefReportByAmount()
+        {
+            var model = GetBestsellersBriefReportModel(5, 2);
+            return PartialView(model);
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult BestsellersBriefReportByAmountList(GridCommand command)
+        {
+            var model = GetBestsellersBriefReportModel(5, 2);
+            var gridModel = new GridModel<BestsellersReportLineModel>
+            {
+                Data = model,
+                Total = model.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+
+
+
+        public ActionResult BestsellersReport()
+        {
+            var model = new BestsellersReportModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
@@ -1210,7 +1274,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult SalesReportList(GridCommand command, SalesReportModel model)
+        public ActionResult BestsellersReportList(GridCommand command, BestsellersReportModel model)
         {
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -1222,16 +1286,17 @@ namespace Nop.Admin.Controllers
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
 
-            var items = _orderReportService.OrderProductVariantReport(startDateValue, endDateValue, 
-                orderStatus, paymentStatus);
-            var gridModel = new GridModel<SalesReportLineModel>
+            //return first 100 records
+            var items = _orderReportService.BestSellersReport(startDateValue, endDateValue,
+                orderStatus, paymentStatus, null, 100, 2, true);
+            var gridModel = new GridModel<BestsellersReportLineModel>
             {
                 Data = items.Select(x =>
                 {
-                    var m = new SalesReportLineModel()
+                    var m = new BestsellersReportLineModel()
                     {
                         ProductVariantId = x.ProductVariantId,
-                        TotalPrice = _priceFormatter.FormatPrice(x.TotalPrice, true, false),
+                        TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
                         TotalQuantity = x.TotalQuantity,
                     };
                     var productVariant = _productService.GetProductVariantById(x.ProductVariantId);
@@ -1320,7 +1385,6 @@ namespace Nop.Admin.Controllers
                 Count = osPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false)
             });
-
             return model;
         }
         [ChildActionOnly]

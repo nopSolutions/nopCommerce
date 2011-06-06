@@ -7,25 +7,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class SalesReportModel : BaseNopModel
+    public class BestsellersReportModel : BaseNopModel
     {
-        public SalesReportModel()
+        public BestsellersReportModel()
         {
             AvailableOrderStatuses = new List<SelectListItem>();
             AvailablePaymentStatuses = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.SalesReport.StartDate")]
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? StartDate { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.EndDate")]
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.OrderStatus")]
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.OrderStatus")]
         public int OrderStatusId { get; set; }
-        [NopResourceDisplayName("Admin.SalesReport.PaymentStatus")]
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
         public int PaymentStatusId { get; set; }
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }

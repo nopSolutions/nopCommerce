@@ -58,6 +58,7 @@ namespace Nop.Web.Controllers
         private readonly ICompareProductsService _compareProductsService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IProductTagService _productTagService;
+        private readonly IOrderReportService _orderReportService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -80,6 +81,7 @@ namespace Nop.Web.Controllers
             IAuthenticationService authenticationService, IShoppingCartService shoppingCartService,
             IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
+            IOrderReportService orderReportService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings)
@@ -106,6 +108,7 @@ namespace Nop.Web.Controllers
             this._compareProductsService = compareProductsService;
             this._workflowMessageService = workflowMessageService;
             this._productTagService = productTagService;
+            this._orderReportService = orderReportService;
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
@@ -1412,6 +1415,45 @@ namespace Nop.Web.Controllers
             }
 
             return Content("");
+        }
+
+        [ChildActionOnly]
+        public ActionResult HomepageBestSellers()
+        {
+            if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
+                return Content("");
+
+            var products = new List<Product>();
+            var report = _orderReportService.BestSellersReport(null, null, null, null, null,
+                _catalogSettings.NumberOfBestsellersOnHomepage);
+            foreach (var line in report)
+            {
+                var productVariant = _productService.GetProductVariantById(line.ProductVariantId);
+                if (productVariant != null)
+                {
+                    var product = productVariant.Product;
+                    if (product != null)
+                    {
+                        bool contains = false;
+                        foreach (var p in products)
+                        {
+                            if (p.Id == product.Id)
+                            {
+                                contains = true;
+                                break;
+                            }
+                        }
+                        if (!contains)
+                            products.Add(product);
+                    }
+                }
+            }
+
+            var model = products
+                .Select(x => PrepareProductOverviewModel(x))
+                .ToList();
+
+            return PartialView(model);
         }
 
 		#endregion

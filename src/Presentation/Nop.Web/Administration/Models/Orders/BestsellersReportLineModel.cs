@@ -14,16 +14,16 @@ using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class SalesReportLineModel : BaseNopModel
+    public class BestsellersReportLineModel : BaseNopModel
     {
         public int ProductVariantId { get; set; }
-        [NopResourceDisplayName("Admin.SalesReport.Fields.Name")]
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Fields.Name")]
         public string ProductVariantFullName { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Fields.TotalQuantity")]
-        public decimal TotalQuantity { get; set; }
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Fields.TotalAmount")]
+        public string TotalAmount { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Fields.TotalPrice")]
-        public string TotalPrice { get; set; }
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")]
+        public decimal TotalQuantity { get; set; }
     }
 }

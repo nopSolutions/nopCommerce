@@ -59,5 +59,11 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CompareProductsEnabled")]
         public bool CompareProductsEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowBestsellersOnHomepage")]
+        public bool ShowBestsellersOnHomepage { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NumberOfBestsellersOnHomepage")]
+        public int NumberOfBestsellersOnHomepage { get; set; }
     }
 }

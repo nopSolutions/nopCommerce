@@ -2002,7 +2002,7 @@ textarea
 	width: 520px;
 }
 
-.bestsellers .boxtitle
+.bestsellers .title
 {
 	padding: 10px 10px 10px 0px;
 	margin: 0 0 0 10px;
@@ -2020,7 +2020,7 @@ textarea
 	vertical-align: text-top;
 }
 
-.bestsellers .product-item
+.bestsellers .item
 {
 	text-align: center;
 	margin: 10px 10px 10px 10px;
@@ -2028,7 +2028,7 @@ textarea
 	height: 150px;
 }
 
-.bestsellers .product-item .product-title
+.bestsellers .item .product-title
 {
 	margin-bottom: 5px;
 	margin-top: 5px;
@@ -2037,7 +2037,7 @@ textarea
 	font-size:12px;
 }
 
-.bestsellers .product-item .picture
+.bestsellers .item .picture
 {
 	text-align: center;
 }

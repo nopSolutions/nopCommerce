@@ -45,9 +45,15 @@
                 <tr>
                     <td class="bestsellers">
                         <div class="statisticsTitle">
-                            @T("Admin.SalesReport.BestSellers")
+                            @T("Admin.SalesReport.BestSellers.ByQuantity")
                         </div>
-                        <text>UNDONE BestSellersStat</text>
+                            @Html.Action("BestsellersBriefReportByQuantity", "Order")
+                    </td>
+                    <td class="bestsellers">
+                        <div class="statisticsTitle">
+                            @T("Admin.SalesReport.BestSellers.ByAmount")
+                        </div>
+                            @Html.Action("BestsellersBriefReportByAmount", "Order")
                     </td>
                 </tr>
             </table>
