@@ -208,13 +208,16 @@ namespace Nop.Services.Logging
             int pageIndex, int pageSize)
         {
             //UNDONE search by email and username
-            var query = from al in _activityLogRepository.Table
-                        where (!createdOnFrom.HasValue || createdOnFrom.Value <= al.CreatedOnUtc) &&
-                        (!createdOnTo.HasValue || createdOnTo.Value >= al.CreatedOnUtc) &&
-                        (activityLogTypeId == 0 || activityLogTypeId == al.ActivityLogTypeId) &&
-                        !al.Customer.Deleted
-                        orderby al.CreatedOnUtc descending
-                        select al;
+
+            var query = _activityLogRepository.Table;
+            if (createdOnFrom.HasValue)
+                query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
+            if (createdOnTo.HasValue)
+                query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
+            if (activityLogTypeId > 0)
+                query = query.Where(al => activityLogTypeId == al.ActivityLogTypeId);
+            query = query.Where(al => !al.Customer.Deleted);
+            query = query.OrderByDescending(al => al.CreatedOnUtc);
 
             var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
             return activityLog;
