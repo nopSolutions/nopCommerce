@@ -14,7 +14,7 @@ namespace Nop.Core.Domain.Blogs
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int LanguageId { get; set; }
+        public virtual int LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the blog post title

@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Blogs
         /// <summary>
         /// Gets or sets the comment text
         /// </summary>
-        public string CommentText { get; set; }
+        public virtual string CommentText { get; set; }
 
         /// <summary>
         /// Gets or sets the blog post identifier

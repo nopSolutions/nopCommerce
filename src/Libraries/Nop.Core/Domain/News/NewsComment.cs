@@ -13,12 +13,12 @@ namespace Nop.Core.Domain.News
         /// <summary>
         /// Gets or sets the comment title
         /// </summary>
-        public string CommentTitle { get; set; }
+        public virtual string CommentTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the comment text
         /// </summary>
-        public string CommentText { get; set; }
+        public virtual string CommentText { get; set; }
 
         /// <summary>
         /// Gets or sets the news item identifier

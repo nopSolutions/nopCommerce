@@ -13,27 +13,27 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the description
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public DateTime UpdatedOnUtc { get; set; }
+        public virtual DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of Forums

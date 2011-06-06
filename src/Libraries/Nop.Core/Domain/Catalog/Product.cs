@@ -50,12 +50,12 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the meta description
         /// </summary>
-        public string MetaDescription { get; set; }
+        public virtual string MetaDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the meta title
         /// </summary>
-        public string MetaTitle { get; set; }
+        public virtual string MetaTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the search-engine name

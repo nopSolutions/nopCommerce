@@ -14,7 +14,7 @@ namespace Nop.Core.Domain.News
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int LanguageId { get; set; }
+        public virtual int LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the news title
@@ -24,12 +24,12 @@ namespace Nop.Core.Domain.News
         /// <summary>
         /// Gets or sets the short text
         /// </summary>
-        public string Short { get; set; }
+        public virtual string Short { get; set; }
 
         /// <summary>
         /// Gets or sets the full text
         /// </summary>
-        public string Full { get; set; }
+        public virtual string Full { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the news item is published

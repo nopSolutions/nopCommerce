@@ -47,7 +47,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the parent category identifier
         /// </summary>
-        public int ParentCategoryId { get; set; }
+        public virtual int ParentCategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the picture identifier
