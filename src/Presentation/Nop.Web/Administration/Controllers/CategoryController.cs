@@ -12,6 +12,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security.Permissions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -36,6 +37,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IExportManager _exportManager;
         private readonly IWorkContext _workContext;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
         
@@ -45,7 +47,8 @@ namespace Nop.Admin.Controllers
             IProductService productService,  ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
-            IExportManager exportManager, IWorkContext workContext)
+            IExportManager exportManager, IWorkContext workContext,
+            ICustomerActivityService customerActivityService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -57,6 +60,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._exportManager = exportManager;
             this._workContext = workContext;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion Constructors
@@ -261,6 +265,9 @@ namespace Nop.Admin.Controllers
                 }
                 _categoryService.UpdateCategory(category);
 
+                //activity log
+                //TODO add activity log to all other pages
+                _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
 
                 return continueEditing ? RedirectToAction("Edit", new { id = category.Id }) : RedirectToAction("List");
             }
@@ -352,6 +359,9 @@ namespace Nop.Admin.Controllers
                 }
                 _categoryService.UpdateCategory(category);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditCategory", _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
+
                 return continueEditing ? RedirectToAction("Edit", category.Id) : RedirectToAction("List");
             }
 
@@ -377,6 +387,11 @@ namespace Nop.Admin.Controllers
         {
             var category = _categoryService.GetCategoryById(id);
             _categoryService.DeleteCategory(category);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteCategory", _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
+
+
             return RedirectToAction("List");
         }
         

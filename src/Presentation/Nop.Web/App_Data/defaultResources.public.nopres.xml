@@ -421,6 +421,19 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog">
+    <Children>
+      <LocaleResource Name="AddNewCategory">
+        <Value>Added a new category ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteCategory">
+        <Value>Deleted a category ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditCategory">
+        <Value>Edited a category ('{0}')</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Address">
     <Value>Address</Value>
     <Children>

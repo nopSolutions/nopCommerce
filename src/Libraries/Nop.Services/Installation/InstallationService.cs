@@ -1922,7 +1922,7 @@ namespace Nop.Services.Installation
                                               {
                                                   SystemKeyword = "AddNewCategory",
                                                   Enabled = true,
-                                                  Name = "Add new category"
+                                                  Name = "Add a new category"
                                               },
                                           new ActivityLogType
                                               {
@@ -1932,7 +1932,7 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
-                                                  SystemKeyword = "Delete category",
+                                                  SystemKeyword = "DeleteCategory",
                                                   Enabled = true,
                                                   Name = "Delete category"
                                               }
