@@ -312,6 +312,9 @@ namespace Nop.Admin.Models.Catalog
 
         #endregion
 
+        public string PrimaryStoreCurrencyCode { get; set; }
+        public string BaseDimensionIn { get; set; }
+        public string BaseWeightIn { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ProductName")]
         public string ProductName { get; set; }
 

@@ -58,6 +58,7 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.GiftCards.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
+        public string PrimaryStoreCurrencyCode { get; set; }
 
         #region Nested classes
 

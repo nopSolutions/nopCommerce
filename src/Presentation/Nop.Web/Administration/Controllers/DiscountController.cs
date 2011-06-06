@@ -7,9 +7,11 @@ using Nop.Admin.Models;
 using Nop.Admin.Models.Discounts;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -31,19 +33,23 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
 
         #endregion
 
         #region Constructors
 
         public DiscountController(IDiscountService discountService, 
-            ILocalizationService localizationService, IWebHelper webHelper,
-            IDateTimeHelper dateTimeHelper)
+            ILocalizationService localizationService, ICurrencyService currencyService,
+            IWebHelper webHelper, IDateTimeHelper dateTimeHelper, CurrencySettings currencySettings)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
+            this._currencyService = currencyService;
             this._webHelper = webHelper;
             this._dateTimeHelper = dateTimeHelper;
+            this._currencySettings = currencySettings;
         }
 
         #endregion Constructors
@@ -69,6 +75,7 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.AvailableDiscountRequirementRules.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
             var discountRules = _discountService.LoadAllDiscountRequirementRules();
             foreach (var discountRule in discountRules)

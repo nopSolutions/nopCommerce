@@ -27,9 +27,11 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment")]
         public decimal PriceAdjustment { get; set; }
+        public string PrimaryStoreCurrencyCode { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment")]
         public decimal WeightAdjustment { get; set; }
+        public string BaseWeightIn { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected")]
         public bool IsPreSelected { get; set; }

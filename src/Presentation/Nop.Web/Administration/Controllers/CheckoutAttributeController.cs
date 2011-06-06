@@ -7,8 +7,10 @@ using Nop.Admin.Models;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
@@ -29,6 +31,10 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IWorkContext _workContext;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
+        private readonly IMeasureService _measureService;
+        private readonly MeasureSettings _measureSettings;
 
         #endregion
 
@@ -36,8 +42,9 @@ namespace Nop.Admin.Controllers
 
         public CheckoutAttributeController(ICheckoutAttributeService checkoutAttributeService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService, ITaxCategoryService taxCategoryService, 
-            IWorkContext workContext)
+            ILocalizationService localizationService, ITaxCategoryService taxCategoryService,
+            IWorkContext workContext, ICurrencyService currencyService, CurrencySettings currencySettings,
+            IMeasureService measureService, MeasureSettings measureSettings)
         {
             this._checkoutAttributeService = checkoutAttributeService;
             this._languageService = languageService;
@@ -45,6 +52,10 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._taxCategoryService = taxCategoryService;
             this._workContext = workContext;
+            this._currencyService = currencyService;
+            this._currencySettings = currencySettings;
+            this._measureService = measureService;
+            this._measureSettings = measureSettings;
         }
 
         #endregion Constructors
@@ -248,6 +259,9 @@ namespace Nop.Admin.Controllers
         {
             var model = new CheckoutAttributeValueModel();
             model.CheckoutAttributeId = checkoutAttributeId;
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -259,6 +273,9 @@ namespace Nop.Admin.Controllers
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
             if (checkoutAttribute == null)
                 throw new ArgumentException("No checkout attribute found with the specified id");
+
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
 
             if (ModelState.IsValid)
             {
@@ -283,6 +300,9 @@ namespace Nop.Admin.Controllers
             if (cav == null)
                 throw new ArgumentException("No checkout attribute value found with the specified id", "id");
             var model = cav.ToModel();
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -298,6 +318,9 @@ namespace Nop.Admin.Controllers
             var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(model.Id);
             if (cav == null)
                 throw new ArgumentException("No checkout attribute value found with the specified id");
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+
             if (ModelState.IsValid)
             {
                 cav = model.ToEntity(cav);

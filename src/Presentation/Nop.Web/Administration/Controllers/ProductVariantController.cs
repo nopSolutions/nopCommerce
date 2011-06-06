@@ -7,10 +7,12 @@ using Nop.Admin.Models;
 using Nop.Admin.Models.Catalog;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Tax;
@@ -34,6 +36,10 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeService _productAttributeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IWorkContext _workContext;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
+        private readonly IMeasureService _measureService;
+        private readonly MeasureSettings _measureSettings;
         #endregion
 
         #region Constructors
@@ -42,7 +48,9 @@ namespace Nop.Admin.Controllers
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, ICustomerService customerService,
             ILocalizationService localizationService, IProductAttributeService productAttributeService,
-            ITaxCategoryService taxCategoryService, IWorkContext workContext)
+            ITaxCategoryService taxCategoryService, IWorkContext workContext,
+            ICurrencyService currencyService, CurrencySettings currencySettings,
+            IMeasureService measureService, MeasureSettings measureSettings)
         {
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
@@ -53,6 +61,10 @@ namespace Nop.Admin.Controllers
             this._productAttributeService = productAttributeService;
             this._taxCategoryService = taxCategoryService;
             this._workContext = workContext;
+            this._currencyService = currencyService;
+            this._currencySettings = currencySettings;
+            this._measureService = measureService;
+            this._measureSettings = measureSettings;
         }
         
         #endregion
@@ -114,6 +126,10 @@ namespace Nop.Admin.Controllers
             model.AvailableWarehouses.Add(new SelectListItem() { Text = "---", Value = "0" });
             //foreach (var wh in warehouses)
             //    model.AvailableWarehouses.Add(new SelectListItem() { Text = wh.Name, Value = wh.Id.ToString(), Selected = variant != null && !setPredefinedValues && wh.Id == variant.WarehouseId });
+
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
 
             if (setPredefinedValues)
             {

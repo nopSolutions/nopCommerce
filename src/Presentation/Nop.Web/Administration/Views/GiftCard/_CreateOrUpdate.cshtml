@@ -39,7 +39,7 @@
                 @Html.NopLabelFor(model => model.Amount):
             </td>
             <td class="adminData">
-                @Html.Telerik().NumericTextBoxFor(model => model.Amount).MinValue(0)
+                @Html.Telerik().NumericTextBoxFor(model => model.Amount).MinValue(0)  [@Model.PrimaryStoreCurrencyCode]
                 @Html.ValidationMessageFor(model => model.Amount)
             </td>
         </tr>

@@ -7,10 +7,12 @@ using Nop.Admin.Models;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -34,6 +36,8 @@ namespace Nop.Admin.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
 
         #endregion
 
@@ -41,13 +45,16 @@ namespace Nop.Admin.Controllers
 
         public GiftCardController(IGiftCardService giftCardService,
             IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,
-            IDateTimeHelper dateTimeHelper, LocalizationSettings localizationSettings)
+            IDateTimeHelper dateTimeHelper, LocalizationSettings localizationSettings,
+            ICurrencyService currencyService, CurrencySettings currencySettings)
         {
             this._giftCardService = giftCardService;
             this._priceFormatter = priceFormatter;
             this._workflowMessageService = workflowMessageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationSettings = localizationSettings;
+            this._currencyService = currencyService;
+            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -112,6 +119,8 @@ namespace Nop.Admin.Controllers
         public ActionResult Create()
         {
             var model = new GiftCardModel();
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+
             return View(model);
         }
 
@@ -127,6 +136,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             return View(model);
         }
 
@@ -141,6 +151,7 @@ namespace Nop.Admin.Controllers
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
             return View(model);
         }
@@ -155,6 +166,7 @@ namespace Nop.Admin.Controllers
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
             if (ModelState.IsValid)
             {
@@ -184,6 +196,7 @@ namespace Nop.Admin.Controllers
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
             try
             {

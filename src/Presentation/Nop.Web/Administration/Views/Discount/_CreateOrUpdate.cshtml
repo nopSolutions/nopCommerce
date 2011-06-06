@@ -9,7 +9,10 @@
 {
     x.Add().Text(T("Admin.Promotions.Discounts.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Promotions.Discounts.Requirements").Text).Content(TabRequirements().ToHtmlString());
-    x.Add().Text(T("Admin.Promotions.Discounts.History").Text).Content(TabHistory().ToHtmlString());
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Promotions.Discounts.History").Text).Content(TabHistory().ToHtmlString());
+    }
 })
 @helper TabInfo()
     {
@@ -96,7 +99,7 @@
                 @Html.NopLabelFor(model => model.DiscountAmount):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.DiscountAmount)
+                @Html.EditorFor(model => model.DiscountAmount) [@Model.PrimaryStoreCurrencyCode]
                 @Html.ValidationMessageFor(model => model.DiscountAmount)
             </td>
         </tr>

@@ -52,7 +52,7 @@
             @Html.NopLabelFor(model => model.PriceAdjustment):
         </td>
         <td class="adminData">
-            @Html.EditorFor(model => model.PriceAdjustment)
+            @Html.EditorFor(model => model.PriceAdjustment) [@Model.PrimaryStoreCurrencyCode]
             @Html.ValidationMessageFor(model => model.PriceAdjustment)
         </td>
     </tr>
@@ -61,7 +61,7 @@
             @Html.NopLabelFor(model => model.WeightAdjustment):
         </td>
         <td class="adminData">
-            @Html.EditorFor(model => model.WeightAdjustment)
+            @Html.EditorFor(model => model.WeightAdjustment) [@Model.BaseWeightIn]
             @Html.ValidationMessageFor(model => model.WeightAdjustment)
         </td>
     </tr>
