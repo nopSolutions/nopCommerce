@@ -215,6 +215,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("send-email")]
         public ActionResult ContactUsSend(ContactUsModel model)
         {
+            //ajax form
             if (ModelState.IsValid)
             {
                 string email = model.Email.Trim();
@@ -238,7 +239,6 @@ namespace Nop.Web.Controllers
                     from = email;
                     fromName = fullName;
                 }
-                var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 _queuedEmailService.InsertQueuedEmail(new QueuedEmail()
                     {
                         From = from,
@@ -251,16 +251,11 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = DateTime.UtcNow,
                         EmailAccountId = emailAccount.Id
                     });
-
-
-                model.SuccessfullySent = true;
-                model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
-
-                return View(model);
+                
+                return Content(_localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent"));
             }
 
-            //If we got this far, something failed, redisplay form
-            return View(model);
+            return Content(ModelState.Values.FirstOrDefault().Errors.FirstOrDefault().ErrorMessage);
         }
 
         //sitemap page

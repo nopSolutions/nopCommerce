@@ -518,6 +518,8 @@
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\flash\uploadify.swf" />
+    <Content Include="Content\Images\ajax_loader_big.gif" />
+    <Content Include="Content\Images\ajax_loader_small.gif" />
     <Content Include="Content\Images\defaultAvatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
     <Content Include="Content\Images\flags\ae.png" />

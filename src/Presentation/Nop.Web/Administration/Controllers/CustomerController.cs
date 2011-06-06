@@ -470,7 +470,7 @@ namespace Nop.Admin.Controllers
         {
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                throw new ArgumentException("No customer found with the specified id");
 
             customer.AddRewardPointsHistoryEntry(addRewardPointsValue, addRewardPointsMessage);
             _customerService.UpdateCustomer(customer);
