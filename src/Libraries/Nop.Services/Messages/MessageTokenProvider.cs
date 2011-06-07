@@ -25,6 +25,7 @@ using Nop.Services.Catalog;
 using Nop.Core.Html;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.Seo;
 using Nop.Services.Tax;
 
 namespace Nop.Services.Messages
@@ -526,7 +527,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.ShortDescription", product.ShortDescription));
 
             //TODO add a method for getting URL
-            var productSeName = product.SeName; //TODO use GetSeName() method defined in Nop.Web.Framework project
+            var productSeName = product.GetSeName();
             var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, productSeName);
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl));
         }

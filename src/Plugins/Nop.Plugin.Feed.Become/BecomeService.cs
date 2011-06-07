@@ -17,6 +17,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Media;
 using Nop.Services.PromotionFeed;
+using Nop.Services.Seo;
 using Nop.Web.Framework;
 
 namespace Nop.Plugin.Feed.Become

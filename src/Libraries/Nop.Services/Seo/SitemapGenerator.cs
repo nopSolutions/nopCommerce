@@ -67,8 +67,7 @@ namespace Nop.Services.Seo
             foreach (var category in categories)
             {
                 //TODO add a method for getting URL
-                var seName = category.SeName; //TODO use GetSeName() method defined in Nop.Web.Framework project
-                var url = string.Format("{0}c/{1}/{2}", _webHelper.GetStoreLocation(false), category.Id, seName);
+                var url = string.Format("{0}c/{1}/{2}", _webHelper.GetStoreLocation(false), category.Id, category.GetSeName());
                 var updateFrequency = UpdateFrequency.Weekly;
                 var updateTime = category.UpdatedOnUtc;
                 WriteUrlLocation(url, updateFrequency, updateTime);
@@ -83,8 +82,7 @@ namespace Nop.Services.Seo
             foreach (var manufacturer in manufacturers)
             {
                 //TODO add a method for getting URL
-                var seName = manufacturer.SeName; //TODO use GetSeName() method defined in Nop.Web.Framework project
-                var url = string.Format("{0}m/{1}/{2}", _webHelper.GetStoreLocation(false), manufacturer.Id, seName);
+                var url = string.Format("{0}m/{1}/{2}", _webHelper.GetStoreLocation(false), manufacturer.Id, manufacturer.GetSeName());
                 var updateFrequency = UpdateFrequency.Weekly;
                 var updateTime = manufacturer.UpdatedOnUtc;
                 WriteUrlLocation(url, updateFrequency, updateTime);
@@ -97,8 +95,7 @@ namespace Nop.Services.Seo
             foreach (var product in products)
             {
                 //TODO add a method for getting URL
-                var seName = product.SeName; //TODO use GetSeName() method defined in Nop.Web.Framework project
-                var url = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, seName);
+                var url = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
                 var updateFrequency = UpdateFrequency.Weekly;
                 var updateTime = product.UpdatedOnUtc;
                 WriteUrlLocation(url, updateFrequency, updateTime);

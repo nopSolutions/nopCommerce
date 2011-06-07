@@ -218,6 +218,7 @@
     <Compile Include="Security\UserService.cs" />
     <Compile Include="Directory\StateProvinceService.cs" />
     <Compile Include="Seo\BaseSitemapGenerator.cs" />
+    <Compile Include="Seo\SeoExtensions.cs" />
     <Compile Include="Seo\ISitemapGenerator.cs" />
     <Compile Include="Seo\SitemapGenerator.cs" />
     <Compile Include="Seo\UpdateFrequency.cs" />

@@ -22,6 +22,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Seo;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;

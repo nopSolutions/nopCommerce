@@ -28,6 +28,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;

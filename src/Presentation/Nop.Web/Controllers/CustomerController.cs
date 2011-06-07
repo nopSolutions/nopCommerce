@@ -24,6 +24,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
