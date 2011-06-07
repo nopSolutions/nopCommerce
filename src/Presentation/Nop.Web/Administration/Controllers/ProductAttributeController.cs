@@ -136,8 +136,8 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = productAttribute.GetLocalized(x => x.Name, languageId, false);
-                locale.Description = productAttribute.GetLocalized(x => x.Description, languageId, false);
+                locale.Name = productAttribute.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Description = productAttribute.GetLocalized(x => x.Description, languageId, false, false);
             });
 
             return View(model);

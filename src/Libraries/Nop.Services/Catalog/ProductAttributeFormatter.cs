@@ -89,11 +89,11 @@ namespace Nop.Services.Catalog
                         {
                             if (pva.AttributeControlType == AttributeControlType.MultilineTextbox)
                             {
-                                pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext), HtmlHelper.FormatText(valueStr, false, true, true, false, false, false));
+                                pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), HtmlHelper.FormatText(valueStr, false, true, true, false, false, false));
                             }
                             else
                             {
-                                pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext), valueStr);
+                                pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
                             }
                         }
                         else
@@ -104,7 +104,7 @@ namespace Nop.Services.Catalog
                                 var pvaValue = _productAttributeService.GetProductVariantAttributeValueById(pvaId);
                                 if (pvaValue != null)
                                 {
-                                    pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext), pvaValue.GetLocalized(a => a.Name, _workContext));
+                                    pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), pvaValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                     if (renderPrices)
                                     {
                                         decimal taxRate = decimal.Zero;

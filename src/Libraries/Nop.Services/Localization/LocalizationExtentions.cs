@@ -16,26 +16,41 @@ namespace Nop.Services.Localization
             Expression<Func<T, string>> keySelector)
             where T : BaseEntity, ILocalizedEntity
         {
-            return GetLocalized(entity, keySelector, EngineContext.Current.Resolve<IWorkContext>());
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            return GetLocalized(entity, keySelector, workContext.WorkingLanguage.Id);
         }
-
-        public static string GetLocalized<T>(this T entity,
-            Expression<Func<T, string>> keySelector, IWorkContext workContext)
-            where T : BaseEntity, ILocalizedEntity
-        {
-            int languageId = workContext.WorkingLanguage.Id;
-            return GetLocalized(entity, keySelector, languageId);
-        }
-
+        /// <summary>
+        /// Get localized property of an entity
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <param name="keySelector">Key selector</param>
+        /// <param name="languageId">Lanagueg identifier</param>
+        /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
+        /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
+        /// <returns>Localized property</returns>
         public static string GetLocalized<T>(this T entity, 
-            Expression<Func<T, string>> keySelector, int languageId, bool returnDefaultValue = true) 
+            Expression<Func<T, string>> keySelector, int languageId, 
+            bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true) 
             where T : BaseEntity, ILocalizedEntity
         {
-            return GetLocalized<T, string>(entity, keySelector, languageId, returnDefaultValue);
+            return GetLocalized<T, string>(entity, keySelector, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
+        /// <summary>
+        /// Get localized property of an entity
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <param name="keySelector">Key selector</param>
+        /// <param name="languageId">Lanagueg identifier</param>
+        /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
+        /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
+        /// <returns>Localized property</returns>
         public static TPropType GetLocalized<T, TPropType>(this T entity,
-            Expression<Func<T, TPropType>> keySelector, int languageId, bool returnDefaultValue = true)
+            Expression<Func<T, TPropType>> keySelector, int languageId, 
+            bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where T : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
@@ -66,17 +81,29 @@ namespace Nop.Services.Localization
 
             if (languageId != 0)
             {
-                //localized value
-                var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
-                var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
-                var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
-                    lp.LocaleKeyGroup == localeKeyGroup &&
-                    lp.LocaleKey == localeKey);
-
-                if (prop != null)
+                //ensure that we have at least two published languages
+                bool loadLocalizedValue = true;
+                if (ensureTwoPublishedLanguages)
                 {
-                    resultStr = prop.LocaleValue;
-                    result = CommonHelper.To<TPropType>(resultStr);
+                    var lService = EngineContext.Current.Resolve<ILanguageService>();
+                    var totalPublishedLanguages = lService.GetAllLanguages(false).Count;
+                    loadLocalizedValue = totalPublishedLanguages >= 2;
+                }
+
+                //localized value
+                if (loadLocalizedValue)
+                {
+                    var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
+                    var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
+                    var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
+                        lp.LocaleKeyGroup == localeKeyGroup &&
+                        lp.LocaleKey == localeKey);
+
+                    if (prop != null)
+                    {
+                        resultStr = prop.LocaleValue;
+                        result = CommonHelper.To<TPropType>(resultStr);
+                    }
                 }
             }
 

@@ -307,12 +307,12 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = category.GetLocalized(x => x.Name, languageId, false);
-                locale.Description = category.GetLocalized(x => x.Description, languageId, false);
-                locale.MetaKeywords = category.GetLocalized(x => x.MetaKeywords, languageId, false);
-                locale.MetaDescription = category.GetLocalized(x => x.MetaDescription, languageId, false);
-                locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false);
-                locale.SeName = category.GetLocalized(x => x.SeName, languageId, false);
+                locale.Name = category.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Description = category.GetLocalized(x => x.Description, languageId, false, false);
+                locale.MetaKeywords = category.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaDescription = category.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = category.GetLocalized(x => x.SeName, languageId, false, false);
             });
             //discounts
             PrepareDiscountModel(model, category, false);

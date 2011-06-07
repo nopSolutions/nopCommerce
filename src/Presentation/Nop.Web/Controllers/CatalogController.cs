@@ -1385,13 +1385,13 @@ namespace Nop.Web.Controllers
                         writer.WriteStartElement("item");
                         
                         writer.WriteStartElement("title");
-                        writer.WriteCData(product.GetLocalized(x => x.Name, _workContext));
+                        writer.WriteCData(product.GetLocalized(x => x.Name));
                         writer.WriteEndElement(); // title
                         writer.WriteStartElement("author");
                         writer.WriteCData(_storeInformationSettings.StoreName);
                         writer.WriteEndElement(); // author
                         writer.WriteStartElement("description");
-                        writer.WriteCData(product.GetLocalized(x => x.ShortDescription, _workContext));
+                        writer.WriteCData(product.GetLocalized(x => x.ShortDescription));
                         writer.WriteEndElement(); // description
                         writer.WriteStartElement("link");
                         //TODO add a method for getting product URL (e.g. SEOHelper.GetProductUrl)

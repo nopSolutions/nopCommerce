@@ -246,8 +246,8 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = variant.GetLocalized(x => x.Name, languageId, false);
-                locale.Description = variant.GetLocalized(x => x.Description, languageId, false);
+                locale.Name = variant.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Description = variant.GetLocalized(x => x.Description, languageId, false, false);
             });
             //common
             PrepareProductModel(model, variant.Product);
@@ -653,7 +653,7 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = pvav.GetLocalized(x => x.Name, languageId, false);
+                locale.Name = pvav.GetLocalized(x => x.Name, languageId, false, false);
             });
 
             return View(model);

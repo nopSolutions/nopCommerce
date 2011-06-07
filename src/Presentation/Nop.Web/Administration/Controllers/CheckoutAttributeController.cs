@@ -187,8 +187,8 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = checkoutAttribute.GetLocalized(x => x.Name, languageId, false);
-                locale.TextPrompt = checkoutAttribute.GetLocalized(x => x.TextPrompt, languageId, false);
+                locale.Name = checkoutAttribute.GetLocalized(x => x.Name, languageId, false, false);
+                locale.TextPrompt = checkoutAttribute.GetLocalized(x => x.TextPrompt, languageId, false, false);
             });
             PrepareCheckoutAttributeModel(model, checkoutAttribute, false);
 
@@ -242,7 +242,7 @@ namespace Nop.Admin.Controllers
                         //locales
                         //AddLocales(_languageService, model.Locales, (locale, languageId) =>
                         //{
-                        //    locale.Name = x.GetLocalized(y => y.Name, languageId, false);
+                        //    locale.Name = x.GetLocalized(y => y.Name, languageId, false, false);
                         //});
                         return model;
                     }),
@@ -306,7 +306,7 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = cav.GetLocalized(x => x.Name, languageId, false);
+                locale.Name = cav.GetLocalized(x => x.Name, languageId, false, false);
             });
 
             return View(model);

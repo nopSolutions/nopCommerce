@@ -368,10 +368,10 @@ namespace Nop.Services.Catalog
                         result.Add(new SpecificationAttributeOptionFilter()
                             {
                                 SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id,
-                                SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(sa => sa.Name, workContext),
+                                SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(sa => sa.Name, workContext.WorkingLanguage.Id),
                                 DisplayOrder = psa.SpecificationAttributeOption.SpecificationAttribute.DisplayOrder,
                                 SpecificationAttributeOptionId = specificationAttributeOptionId,
-                                SpecificationAttributeOptionName = psa.SpecificationAttributeOption.GetLocalized(sao => sao.Name, workContext)
+                                SpecificationAttributeOptionName = psa.SpecificationAttributeOption.GetLocalized(sao => sao.Name, workContext.WorkingLanguage.Id)
                             });
                     }
                 }

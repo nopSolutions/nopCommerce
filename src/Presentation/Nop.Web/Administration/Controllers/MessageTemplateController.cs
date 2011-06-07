@@ -131,11 +131,11 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.BccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, languageId, false);
-                locale.Subject = messageTemplate.GetLocalized(x => x.Subject, languageId, false);
-                locale.Body = messageTemplate.GetLocalized(x => x.Body, languageId, false);
+                locale.BccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, languageId, false, false);
+                locale.Subject = messageTemplate.GetLocalized(x => x.Subject, languageId, false, false);
+                locale.Body = messageTemplate.GetLocalized(x => x.Body, languageId, false, false);
 
-                var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false);
+                var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false, false);
                 locale.EmailAccountId = emailAccountId > 0 ? emailAccountId : _emailAccountSettings.DefaultEmailAccountId;
             });
 

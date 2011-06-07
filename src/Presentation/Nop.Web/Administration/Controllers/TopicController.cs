@@ -161,11 +161,11 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Title = topic.GetLocalized(x => x.Title, languageId, false);
-                locale.Body = topic.GetLocalized(x => x.Body, languageId, false);
-                locale.MetaKeywords = topic.GetLocalized(x => x.MetaKeywords, languageId, false);
-                locale.MetaDescription = topic.GetLocalized(x => x.MetaDescription, languageId, false);
-                locale.MetaTitle = topic.GetLocalized(x => x.MetaTitle, languageId, false);
+                locale.Title = topic.GetLocalized(x => x.Title, languageId, false, false);
+                locale.Body = topic.GetLocalized(x => x.Body, languageId, false, false);
+                locale.MetaKeywords = topic.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaDescription = topic.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaTitle = topic.GetLocalized(x => x.MetaTitle, languageId, false, false);
             });
 
             return View(model);

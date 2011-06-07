@@ -82,11 +82,11 @@ namespace Nop.Services.Orders
                     {
                         if (ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
-                            caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext), HtmlHelper.FormatText(valueStr, false, true, true, false, false, false));
+                            caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), HtmlHelper.FormatText(valueStr, false, true, true, false, false, false));
                         }
                         else
                         {
-                            caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext), valueStr);
+                            caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
                         }
                     }
                     else
@@ -97,7 +97,7 @@ namespace Nop.Services.Orders
                             var caValue = _checkoutAttributeService.GetCheckoutAttributeValueById(caId);
                             if (caValue != null)
                             {
-                                caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext), caValue.GetLocalized(a => a.Name, _workContext));
+                                caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), caValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                 if (renderPrices)
                                 {
                                     decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(caValue, customer);

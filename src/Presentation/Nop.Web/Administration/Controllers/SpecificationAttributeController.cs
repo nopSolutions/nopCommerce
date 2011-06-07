@@ -134,7 +134,7 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = specificationAttribute.GetLocalized(x => x.Name, languageId, false);
+                locale.Name = specificationAttribute.GetLocalized(x => x.Name, languageId, false, false);
             });
 
             return View(model);
@@ -186,7 +186,7 @@ namespace Nop.Admin.Controllers
                         //locales
                         //AddLocales(_languageService, model.Locales, (locale, languageId) =>
                         //{
-                        //    locale.Name = x.GetLocalized(y => y.Name, languageId, false);
+                        //    locale.Name = x.GetLocalized(y => y.Name, languageId, false, false);
                         //});
                         return model;
                     }),
@@ -241,7 +241,7 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = sao.GetLocalized(x => x.Name, languageId, false);
+                locale.Name = sao.GetLocalized(x => x.Name, languageId, false, false);
             });
 
             return View(model);
