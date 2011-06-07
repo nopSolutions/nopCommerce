@@ -1013,6 +1013,15 @@ namespace Nop.Services.Installation
                     SitemapIncludeTopics = true,
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<SeoSettings>>()
+                .SaveSettings(new SeoSettings()
+                {
+                    PageTitleSeparator = ". ",
+                    DefaultTitle = "Your store",
+                    DefaultMetaKeywords = "",
+                    DefaultMetaDescription = ""
+                });
+
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
                 .SaveSettings(new CatalogSettings()
                 {

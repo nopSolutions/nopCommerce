@@ -1,6 +1,9 @@
 ﻿@model SearchModel
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Search").Text);
 }
 @using MvcContrib.UI.Pager;
 @using MvcContrib.Pagination;

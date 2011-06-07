@@ -2,6 +2,9 @@
 @using Nop.Web.Models.Checkout
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ShoppingCart").Text);
 }
 @Html.Partial("~/Views/Checkout/CheckoutProgress.cshtml", new CheckoutProgressModel() { CheckoutProgressStep = CheckoutProgressStep.Cart }, new ViewDataDictionary())
 <div class="shoppingcart-page">

@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Common.ContactUsModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ContactUs").Text);
 }
 <div class="contact-form">
     @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })

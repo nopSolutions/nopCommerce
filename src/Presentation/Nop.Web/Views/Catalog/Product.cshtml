@@ -2,6 +2,11 @@
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
+    //title, meta
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    
     //render page depending on how many variants we have
     var hasMultipleVariants = Model.ProductVariantModels.Count > 1;
     var defaultProductVariant = Model.ProductVariantModels.Count == 1 ? Model.ProductVariantModels[0] : null;

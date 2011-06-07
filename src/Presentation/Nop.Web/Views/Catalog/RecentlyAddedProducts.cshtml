@@ -1,6 +1,9 @@
 ﻿@model IList<Nop.Web.Models.Catalog.ProductModel>
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.RecentlyAddedProducts").Text);
 }
 @using Nop.Core;
 @using Nop.Core.Infrastructure;

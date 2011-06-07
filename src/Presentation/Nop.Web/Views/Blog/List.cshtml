@@ -2,6 +2,9 @@
 @using MvcContrib.UI.Pager;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Blog").Text);
 }
 @section left {
     @Html.Action("BlogMonths", "Blog")

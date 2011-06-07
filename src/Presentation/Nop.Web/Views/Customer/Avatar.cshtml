@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Customer.CustomerAvatarModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
 }
 @using Nop.Web.Framework;
 @section left

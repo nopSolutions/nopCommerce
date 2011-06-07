@@ -1609,6 +1609,79 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="PageTitle">
+    <Children>
+      <LocaleResource Name="Account">
+        <Value>Account</Value>
+      </LocaleResource>
+      <LocaleResource Name="AccountActivation">
+        <Value>Account Activation</Value>
+      </LocaleResource>
+      <LocaleResource Name="Blog">
+        <Value>Blog</Value>
+      </LocaleResource>
+      <LocaleResource Name="Checkout">
+        <Value>Checkout</Value>
+      </LocaleResource>
+      <LocaleResource Name="CompareProducts">
+        <Value>Compare Products</Value>
+      </LocaleResource>
+      <LocaleResource Name="ContactUs">
+        <Value>Contact Us</Value>
+      </LocaleResource>
+      <LocaleResource Name="Login">
+        <Value>Login</Value>
+      </LocaleResource>
+      <LocaleResource Name="Manufactures">
+        <Value>Manufactures</Value>
+      </LocaleResource>
+      <LocaleResource Name="NewsArchive">
+        <Value>News Archive</Value>
+      </LocaleResource>
+      <LocaleResource Name="OrderDetails">
+        <Value>Order Details</Value>
+      </LocaleResource>
+      <LocaleResource Name="PasswordRecovery">
+        <Value>Password Recovery</Value>
+      </LocaleResource>
+      <LocaleResource Name="ProductEmailAFriend">
+        <Value>Email A Friend</Value>
+      </LocaleResource>
+      <LocaleResource Name="ProductReviews">
+        <Value>Product Reviews</Value>
+      </LocaleResource>
+      <LocaleResource Name="ProductsByTag">
+        <Value>Products tagged with '{0}'</Value>
+      </LocaleResource>
+      <LocaleResource Name="RecentlyAddedProducts">
+        <Value>Recently Added Products</Value>
+      </LocaleResource>
+      <LocaleResource Name="RecentlyViewedProducts">
+        <Value>Recently Viewed Products</Value>
+      </LocaleResource>
+      <LocaleResource Name="Register">
+        <Value>Register</Value>
+      </LocaleResource>
+      <LocaleResource Name="ReturnItems">
+        <Value>Return Item(s)</Value>
+      </LocaleResource>
+      <LocaleResource Name="Search">
+        <Value>Search</Value>
+      </LocaleResource>
+      <LocaleResource Name="ShoppingCart">
+        <Value>Shopping Cart</Value>
+      </LocaleResource>
+      <LocaleResource Name="Sitemap">
+        <Value>Sitemap</Value>
+      </LocaleResource>
+      <LocaleResource Name="Wishlist">
+        <Value>Wishlist</Value>
+      </LocaleResource>
+      <LocaleResource Name="WishlistEmailAFriend">
+        <Value>Email wishlist to a friend</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="Payment">
     <Children>
       <LocaleResource Name="CardCode">

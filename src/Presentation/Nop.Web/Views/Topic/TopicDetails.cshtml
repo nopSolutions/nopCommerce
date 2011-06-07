@@ -11,6 +11,10 @@
         /*pop-up windows*/
         Layout = null;
     }
+
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
 }
 
 @*TODO render meta properties (keywords, description, title)*@

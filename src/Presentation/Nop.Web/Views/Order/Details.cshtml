@@ -4,6 +4,9 @@
 @using Nop.Services.Localization
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
 }
 <div class="order-details">
     <table width="100%">

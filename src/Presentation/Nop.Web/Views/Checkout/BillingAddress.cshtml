@@ -5,6 +5,9 @@
 @using Nop.Web.Framework.UI
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
 <div class="checkout-page">
     @Html.Partial("~/Views/Checkout/CheckoutProgress.cshtml", new CheckoutProgressModel() { CheckoutProgressStep = CheckoutProgressStep.Address }, new ViewDataDictionary())

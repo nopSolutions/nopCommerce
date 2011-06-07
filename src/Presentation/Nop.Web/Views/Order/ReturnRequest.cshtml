@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Order.SubmitReturnRequestModel
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ReturnItems").Text);
 }
 <div class="return-request">
     <div class="info">

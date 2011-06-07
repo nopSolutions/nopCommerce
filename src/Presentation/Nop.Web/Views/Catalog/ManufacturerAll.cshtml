@@ -1,6 +1,9 @@
 ﻿@model IList<ManufacturerModel>
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Manufactures").Text);
 }
 @using Nop.Core;
 @using Nop.Core.Infrastructure;

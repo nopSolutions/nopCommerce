@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Catalog.ManufacturerModel
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
 }
 @using MvcContrib.UI.Pager;
 @using MvcContrib.Pagination;

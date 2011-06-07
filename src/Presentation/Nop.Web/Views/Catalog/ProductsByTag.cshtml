@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Catalog.ProductsByTagModel
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+
+    //title
+    Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
 }
 @using MvcContrib.UI.Pager;
 @using MvcContrib.Pagination;

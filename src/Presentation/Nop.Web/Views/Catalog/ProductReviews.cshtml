@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Catalog.ProductReviewsModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ProductReviews").Text);
 }
 <div class="product-reviews-page">
     <div class="page-title">

@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Common\SeoSettings.cs" />
     <Compile Include="Domain\Orders\BestsellersReportLine.cs" />
     <Compile Include="ICollectionTExtensions.cs" />
     <Compile Include="BaseEntity.cs" />

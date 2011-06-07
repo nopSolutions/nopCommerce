@@ -128,6 +128,9 @@
     <Compile Include="Themes\ThemableRazorViewEngine.cs" />
     <Compile Include="Themes\ThemeProvider.cs" />
     <Compile Include="Themes\ThemeContext.cs" />
+    <Compile Include="UI\LayoutExtensions.cs" />
+    <Compile Include="UI\IPageTitleBuilder.cs" />
+    <Compile Include="UI\PageTitleBuilder.cs" />
     <Compile Include="UI\DataListExtensions.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
     <Compile Include="Web\AdminMenuPlugin.cs" />

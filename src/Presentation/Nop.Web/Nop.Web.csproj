@@ -1030,7 +1030,9 @@
     <Content Include="Views\Shared\_ColumnsThree.cshtml" />
     <Content Include="Views\Shared\_ColumnsTwo.cshtml" />
     <Content Include="Views\Shared\_Root.cshtml" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
