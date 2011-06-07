@@ -74,7 +74,7 @@ namespace Nop.Services.Topics
         /// Gets all topics
         /// </summary>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopic()
+        public virtual IList<Topic> GetAllTopics()
         {
             var query = from t in _topicRepository.Table
                         orderby t.SystemName

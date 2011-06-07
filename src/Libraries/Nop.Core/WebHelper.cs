@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
-using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core
 {

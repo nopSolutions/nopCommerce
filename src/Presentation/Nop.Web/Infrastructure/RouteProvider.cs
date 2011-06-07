@@ -252,10 +252,14 @@ namespace Nop.Web.Infrastructure
                             "t-popup/{SystemName}",
                             new { controller = "Topic", action = "TopicDetailsPopup" },
                             new[] { "Nop.Web.Controllers" });
-            //sitemap
+            //sitemaps
             routes.MapRoute("Sitemap",
                             "sitemap",
-                            new { controller = "Common", action = "SiteMap" },
+                            new { controller = "Common", action = "Sitemap" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("SitemapSEO",
+                            "sitemapseo",
+                            new { controller = "Common", action = "SitemapSeo" },
                             new[] { "Nop.Web.Controllers" });
 
             //product tags

@@ -1006,6 +1006,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new CommonSettings()
                 {
                     UseSystemEmailForContactUsForm = true,
+                    SitemapEnabled = true,
                     SitemapIncludeCategories = true,
                     SitemapIncludeManufacturers = true,
                     SitemapIncludeProducts = false,

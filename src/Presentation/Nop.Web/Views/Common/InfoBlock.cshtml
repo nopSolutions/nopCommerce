@@ -29,7 +29,10 @@ TODO add URLs for forums*@
             {
                 <li><a href="@Url.RouteUrl("CompareProducts")">@T("Products.Compare.List")</a></li>            
             }
-            <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
+            @if (Model.SitemapEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
+            }
             <li><a href="@Url.RouteUrl("Topic", new { SystemName = "shippinginfo" })">Shipping &
                 Returns</a></li>
             <li><a href="@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })">Privacy Notice</a></li>

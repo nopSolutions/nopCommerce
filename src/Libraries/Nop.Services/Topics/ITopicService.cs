@@ -38,7 +38,7 @@ namespace Nop.Services.Topics
         /// Gets all topics
         /// </summary>
         /// <returns>Topics</returns>
-        IList<Topic> GetAllTopic();
+        IList<Topic> GetAllTopics();
 
         /// <summary>
         /// Inserts a topic

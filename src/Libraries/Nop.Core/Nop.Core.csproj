@@ -285,6 +285,7 @@
     <Compile Include="NopException.cs" />
     <Compile Include="PagedList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

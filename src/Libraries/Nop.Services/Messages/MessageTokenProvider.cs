@@ -486,8 +486,8 @@ namespace Nop.Services.Messages
 
 
             //TODO add a method for getting URL
-            tokens.Add(new Token("Customer.PasswordRecoveryURL", string.Format("{0}passwordrecovery/confirm/{1}/{2}/", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.GetDefaultUserAccountEmail())));
-            tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}customer/activation/{1}/{2}/", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.GetDefaultUserAccountEmail(false))));
+            tokens.Add(new Token("Customer.PasswordRecoveryURL", string.Format("{0}passwordrecovery/confirm/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.GetDefaultUserAccountEmail())));
+            tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}customer/activation/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.GetDefaultUserAccountEmail(false))));
             tokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
         }
 
@@ -496,7 +496,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
 
 
-            const string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}/";
+            const string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}";
 
             var activationUrl = String.Format(urlFormat, _webHelper.GetStoreLocation(false), subscription.NewsLetterSubscriptionGuid, "true");
             tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl));

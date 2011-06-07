@@ -42,6 +42,7 @@ using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
 using Nop.Services.Security.Permissions;
+using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
@@ -190,6 +191,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<NewsService>().As<INewsService>().InstancePerHttpRequest();
 
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
+            builder.RegisterType<SitemapGenerator>().As<ISitemapGenerator>().InstancePerHttpRequest();
 
 
             builder.RegisterType<TelerikLocalizationServiceFactory>().As<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>().InstancePerHttpRequest();

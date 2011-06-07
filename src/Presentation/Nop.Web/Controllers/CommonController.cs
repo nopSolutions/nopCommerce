@@ -21,6 +21,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
@@ -42,6 +43,7 @@ namespace Nop.Web.Controllers
         private readonly IAuthenticationService _authenticationService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailAccountService _emailAccountService;
+        private readonly ISitemapGenerator _sitemapGenerator;
 
         private readonly UserSettings _userSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -58,6 +60,7 @@ namespace Nop.Web.Controllers
             ICurrencyService currencyService, ILocalizationService localizationService,
             IWorkContext workContext, IAuthenticationService authenticationService,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
+            ISitemapGenerator sitemapGenerator, 
             UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
@@ -74,6 +77,7 @@ namespace Nop.Web.Controllers
             this._authenticationService = authenticationService;
             this._queuedEmailService = queuedEmailService;
             this._emailAccountService = emailAccountService;
+            this._sitemapGenerator = sitemapGenerator;
 
             this._userSettings = userSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -197,6 +201,7 @@ namespace Nop.Web.Controllers
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
+                SitemapEnabled = _commonSettings.SitemapEnabled,
             };
 
             return PartialView(model);
@@ -261,7 +266,9 @@ namespace Nop.Web.Controllers
         //sitemap page
         public ActionResult Sitemap()
         {
-            //UNDONE Add a setting to disable sitemap
+            if (!_commonSettings.SitemapEnabled)
+                return RedirectToAction("Index", "Home");
+
             var model = new SitemapModel();
             if (_commonSettings.SitemapIncludeCategories)
             {
@@ -282,10 +289,20 @@ namespace Nop.Web.Controllers
             }
             if (_commonSettings.SitemapIncludeTopics)
             {
-                var topics = _topicService.GetAllTopic().ToList().FindAll(t => t.IncludeInSitemap);
+                var topics = _topicService.GetAllTopics().ToList().FindAll(t => t.IncludeInSitemap);
                 model.Topics = topics.Select(x => x.ToModel()).ToList();
             }
             return View(model);
+        }
+
+        //SEO sitemap page
+        public ActionResult SitemapSeo()
+        {
+            if (!_commonSettings.SitemapEnabled)
+                return RedirectToAction("Index", "Home");
+
+            string siteMap = _sitemapGenerator.Generate();
+            return Content(siteMap, "text/xml");
         }
     }
 }

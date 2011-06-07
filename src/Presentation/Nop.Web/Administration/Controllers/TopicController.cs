@@ -92,7 +92,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            var topics = _topicService.GetAllTopic();
+            var topics = _topicService.GetAllTopics();
             var gridModel = new GridModel<TopicModel>
             {
                 Data = topics.Select(x => x.ToModel()),
@@ -104,7 +104,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
-            var topics = _topicService.GetAllTopic();
+            var topics = _topicService.GetAllTopics();
             var gridModel = new GridModel<TopicModel>
             {
                 Data = topics.Select(x => x.ToModel()),
