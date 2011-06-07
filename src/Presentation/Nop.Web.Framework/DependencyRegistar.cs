@@ -95,8 +95,10 @@ namespace Nop.Web.Framework
             builder.RegisterType<PluginBootstrapper>().As<IPluginBootstrapper>().InstancePerHttpRequest();
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerHttpRequest();
 
-            //cache mamager
-            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerHttpRequest();
+            //cache manager
+            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").InstancePerHttpRequest();
+            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_per_request").InstancePerHttpRequest();
+
 
             //work context
             builder.RegisterType<WorkContext>().As<IWorkContext>().InstancePerHttpRequest();
@@ -121,9 +123,6 @@ namespace Nop.Web.Framework
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfigurationProvider<>));
             builder.RegisterSource(new SettingsSource());
-
-            //TODO pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)
-            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
             
             builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
@@ -138,11 +137,22 @@ namespace Nop.Web.Framework
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
             builder.RegisterType<PromotionFeedService>().As<IPromotionFeedService>().InstancePerHttpRequest();
 
-            builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerHttpRequest();
 
-            //TODO pass MemoryCacheManager to LocalizationService as cacheManager (cache locales between requests)
-            builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerHttpRequest();
+
+            //pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)
+            //builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
+            builder.RegisterType<SettingService>().As<ISettingService>()
+                .WithParameter("cacheManager", new MemoryCacheManager())
+                .InstancePerHttpRequest();
+            //pass MemoryCacheManager to LocalizationService as cacheManager (cache locales between requests)
+            //builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerHttpRequest();
+            builder.RegisterType<LocalizationService>().As<ILocalizationService>()
+                .WithParameter("cacheManager", new MemoryCacheManager())
+                .InstancePerHttpRequest();
+
+
             builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>().InstancePerHttpRequest();
+            builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerHttpRequest();
 
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerHttpRequest();
             builder.RegisterType<PictureService>().As<IPictureService>().InstancePerHttpRequest();
