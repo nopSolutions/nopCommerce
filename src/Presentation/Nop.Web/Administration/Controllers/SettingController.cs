@@ -500,6 +500,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("AllSettings");
             }
 
+            var setting = _settingService.GetSettingById(model.Id);
+            if (setting.Name != model.Name)
+                _settingService.DeleteSetting(setting);
+
             _settingService.SetSetting(model.Name, model.Value);
 
             return AllSettings(command);

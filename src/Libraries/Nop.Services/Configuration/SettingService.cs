@@ -135,6 +135,8 @@ namespace Nop.Services.Configuration
             {
                 //update
                 setting = settings[key];
+                //little hack here because of EF issue
+                setting = GetSettingById(setting.Id);
                 setting.Value = valueStr;
                 UpdateSetting(setting);
             }
