@@ -130,6 +130,7 @@
     <Compile Include="Themes\ThemeContext.cs" />
     <Compile Include="UI\LayoutExtensions.cs" />
     <Compile Include="UI\IPageTitleBuilder.cs" />
+    <Compile Include="UI\NotifyType.cs" />
     <Compile Include="UI\PageTitleBuilder.cs" />
     <Compile Include="UI\DataListExtensions.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
