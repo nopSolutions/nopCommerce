@@ -9,7 +9,7 @@ namespace Nop.Admin.Validators.Localization
     {
         public LanguageValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Location.Languages.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.Name.Required"));
             RuleFor(x => x.LanguageCulture)
                 .Must(x =>
                           {
@@ -23,7 +23,7 @@ namespace Nop.Admin.Validators.Localization
                                   return false;
                               }
                           })
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Location.Languages.Fields.LanguageCulture.Validation"));
+                .WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.LanguageCulture.Validation"));
         }
     }
 }

@@ -15,22 +15,22 @@ namespace Nop.Admin.Models.Localization
     [Validator(typeof(LanguageValidator))]
     public class LanguageModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.Name")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.LanguageCulture")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.LanguageCulture")]
         [AllowHtml]
         public string LanguageCulture { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.FlagImageFileName")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.FlagImageFileName")]
         [AllowHtml]
         public string FlagImageFileName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.Published")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Languages.Fields.DisplayOrder")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
     }
 }

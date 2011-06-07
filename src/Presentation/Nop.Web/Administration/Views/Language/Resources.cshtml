@@ -4,7 +4,7 @@
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
-        @T("Admin.Configuration.Location.Languages.Localization")
+        @T("Admin.Configuration.Languages.Localization")
     </div>
 </div>
 @if (ViewBag.AllLanguages != null)
@@ -12,7 +12,7 @@
     <table class="adminContent" style="margin-bottom:10px;">
         <tr>
             <td class="adminTitle">
-                @T("Admin.Configuration.Location.Languages.Select")
+                @T("Admin.Configuration.Languages.Select")
             </td>
             <td class="adminData">
                 @(Html.Telerik().ComboBox().Name("select-language")

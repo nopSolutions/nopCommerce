@@ -10,7 +10,7 @@ namespace Nop.Admin.Validators.Directory
         {
             RuleFor(x => x.Name)
                 .NotNull()
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Location.Countries.States.Fields.Name.Required"));
+                .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.States.Fields.Name.Required"));
         }
     }
 }

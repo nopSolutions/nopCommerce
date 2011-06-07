@@ -4,7 +4,7 @@
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
-        @T("Admin.Configuration.Location.Languages")
+        @T("Admin.Configuration.Languages")
     </div>
     <div class="options">
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
@@ -24,11 +24,11 @@
                             .Centered();
                         columns.Template(
                                 @<div>
-                                    @Html.ActionLink(T("Admin.Configuration.Location.Languages.Resources.View").Text, "Resources", new { languageId = @item.Id })
+                                    @Html.ActionLink(T("Admin.Configuration.Languages.Resources.View").Text, "Resources", new { languageId = @item.Id })
                                 </div>
                             ).Width(200)
                             .Centered()
-                            .Title(T("Admin.Configuration.Location.Languages.Resources.View").Text);
+                            .Title(T("Admin.Configuration.Languages.Resources.View").Text);
                         columns.Bound(x => x.DisplayOrder)
                             .Width(100)
                             .Centered();

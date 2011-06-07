@@ -10,34 +10,34 @@ namespace Nop.Admin.Models.Directory
     [Validator(typeof(CountryValidator))]
     public class CountryModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.Name")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.AllowsBilling")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.AllowsBilling")]
         public bool AllowsBilling { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.AllowsShipping")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.AllowsShipping")]
         public bool AllowsShipping { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.TwoLetterIsoCode")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")]
         [AllowHtml]
         public string TwoLetterIsoCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.ThreeLetterIsoCode")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")]
         [AllowHtml]
         public string ThreeLetterIsoCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.NumericIsoCode")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.NumericIsoCode")]
         public int NumericIsoCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.SubjectToVat")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.SubjectToVat")]
         public bool SubjectToVat { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.Published")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Countries.Fields.DisplayOrder")]
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
     }
 }

@@ -8,11 +8,11 @@
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
-        @T("Admin.Configuration.Location.Currencies")
+        @T("Admin.Configuration.Currencies")
     </div>
     <div class="options">
         <a href="JAVASCRIPT:CurrencySettings.submit()" class="t-button">@T("Admin.Common.Save")</a>
-        <a href="@Url.Action("List","Currency", new { liveRates=true })" class="t-button">@T("Admin.Configuration.Location.Currencies.GetLiveRates")</a>
+        <a href="@Url.Action("List","Currency", new { liveRates=true })" class="t-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
     </div>
 
@@ -22,7 +22,7 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @T("Admin.Configuration.Location.Currencies.Fields.ExchangeRateProvider")
+                @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider")
             </td>
             <td class="adminData">
                 @(Html.DropDownList("exchangeRateProvider",ViewBag.ExchangeRateProviders as SelectList)
@@ -31,7 +31,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @T("Admin.Configuration.Location.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
+                @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
             </td>
             <td class="adminData">
                 @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled)
@@ -62,14 +62,14 @@
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryExchangeRateCurrency", new { id = x.Id }, new { @class = "t-button" }))
                             .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.Location.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
+                            .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
                             .Filterable(false);
                         columns.Bound(x => x.IsPrimaryStoreCurrency)
                             .Centered();
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryStoreCurrency", new { id = x.Id }, new { @class = "t-button" }))
                             .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.Location.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
+                            .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
                             .Filterable(false);
                         columns.Bound(x => x.Published)
                             .Centered();
@@ -107,9 +107,9 @@
                             columns.Bound(x => x.Rate)
                                 .Centered();
                             columns.Bound(x => x)
-                                .Template(x => Html.ActionLink(T("Admin.Configuration.Location.Currencies.ApplyRate").Text, "ApplyRate", new { rate = x.Rate, currencyCode = x.CurrencyCode }))
+                                .Template(x => Html.ActionLink(T("Admin.Configuration.Currencies.ApplyRate").Text, "ApplyRate", new { rate = x.Rate, currencyCode = x.CurrencyCode }))
                                 .Centered()
-                                .HeaderTemplate(T("Admin.Configuration.Location.Currencies.ApplyRate").Text)
+                                .HeaderTemplate(T("Admin.Configuration.Currencies.ApplyRate").Text)
                                 .Filterable(false);
 
                         })

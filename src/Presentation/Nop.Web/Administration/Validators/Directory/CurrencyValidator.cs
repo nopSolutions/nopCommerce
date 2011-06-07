@@ -15,10 +15,10 @@ namespace Nop.Admin.Validators.Directory
         {
             //TODO localize
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Location.Currencies.Fields.Name.Required"))
+                .NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Currencies.Fields.Name.Required"))
                 .Length(1, 50).WithMessage("Name must be less than or equal to 50 characters");
             RuleFor(x => x.CurrencyCode)
-                .NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Location.Currencies.Fields.CurrencyCode.Required"))
+                .NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Currencies.Fields.CurrencyCode.Required"))
                 .Length(1, 5).WithMessage("Currency code must be less than or equal to 5 characters");
             RuleFor(x => x.CustomFormatting)
                 .Length(0, 50).WithMessage("Custom formatting must be less than or equal to 50 characters");
@@ -35,7 +35,7 @@ namespace Nop.Admin.Validators.Directory
                         return false;
                     }
                 })
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Location.Currencies.Fields.DisplayLocale.Validation"));
+                .WithMessage(localizationService.GetResource("Admin.Configuration.Currencies.Fields.DisplayLocale.Validation"));
         }
     }
 }

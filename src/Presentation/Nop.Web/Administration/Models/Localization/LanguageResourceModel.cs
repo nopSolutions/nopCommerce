@@ -15,15 +15,15 @@ namespace Nop.Admin.Models.Localization
     [Validator(typeof(LanguageResourceValidator))]
     public class LanguageResourceModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.Configuration.Location.Languages.Resources.Fields.Name")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Languages.Resources.Fields.Value")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Value")]
         [AllowHtml]
         public string Value { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Location.Languages.Resources.Fields.LanguageName")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.LanguageName")]
         [AllowHtml]
         public string LanguageName { get; set; }
 

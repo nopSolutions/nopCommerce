@@ -5,8 +5,8 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("discount-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Configuration.Location.Countries.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Configuration.Location.Countries.States").Text).Content(TabStates().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Countries.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Countries.States").Text).Content(TabStates().ToHtmlString());
 })
 @helper TabInfo()
     {
@@ -146,6 +146,6 @@
         }
         else
         {
-    @T("Admin.Configuration.Location.Countries.States.SaveBeforeEdit")
+    @T("Admin.Configuration.Countries.States.SaveBeforeEdit")
         }
 }

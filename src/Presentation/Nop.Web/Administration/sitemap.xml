@@ -53,6 +53,9 @@
           <siteMapNode title="Message templates" nopResource="Admin.ContentManagement.MessageTemplates" controller="MessageTemplate" action="List" />
         </siteMapNode>
         <siteMapNode title="Configuration" nopResource="Admin.Configuration" ImageUrl="~/Administration/Content/images/ico-configuration.png">
+          <siteMapNode title="Countries" nopResource="Admin.Configuration.Countries" controller="Country" action="List"/>
+          <siteMapNode title="Languages" nopResource="Admin.Configuration.Languages" controller="Language" action="List"/>
+          <siteMapNode title="Currencies" nopResource="Admin.Configuration.Currencies" controller="Currency" action="List"/>
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
           <siteMapNode title="Payment methods" nopResource="Admin.Configuration.Payment.Methods" controller="Payment" action="Methods"/>
           <siteMapNode title="Tax" nopResource="Admin.Configuration.Tax">
@@ -63,11 +66,6 @@
             <siteMapNode title="Shipping methods" nopResource="Admin.Configuration.Shipping.Methods" controller="Shipping" action="Methods"/>
             <siteMapNode title="Shipping method restrictions" nopResource="Admin.Configuration.Shipping.Restrictions" controller="Shipping" action="Restrictions"/>
             <siteMapNode title="Shipping providers" nopResource="Admin.Configuration.Shipping.Providers" controller="Shipping" action="Providers"/>
-          </siteMapNode>
-          <siteMapNode title="Location" nopResource="Admin.Configuration.Location">
-            <siteMapNode title="Countries" nopResource="Admin.Configuration.Location.Countries" controller="Country" action="List"/>
-            <siteMapNode title="Languages" nopResource="Admin.Configuration.Location.Languages" controller="Language" action="List"/>
-            <siteMapNode title="Currencies" nopResource="Admin.Configuration.Location.Currencies" controller="Currency" action="List"/>
           </siteMapNode>
           <siteMapNode title="Activity Log" nopResource="Admin.Configuration.ActivityLog">
             <siteMapNode title="Activity Types" nopResource="Admin.Configuration.ActivityLog.ActivityLogType" controller="ActivityLog" action="ListTypes"/>
