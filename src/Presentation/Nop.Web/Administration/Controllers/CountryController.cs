@@ -137,10 +137,22 @@ namespace Nop.Admin.Controllers
             var country = _countryService.GetCountryById(id);
             if (country == null)
                 throw new ArgumentException("No country found with the specified id", "id");
-            _countryService.DeleteCountry(country);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Deleted"));
-            return RedirectToAction("List");
+            try
+            {
+                if (country.Addresses.Count > 0)
+                    throw new NopException("The country can't be deleted. It has associated addresses");
+
+                _countryService.DeleteCountry(country);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Deleted"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("Edit", new { id = country.Id });
+            }
         }
 
 
@@ -191,7 +203,7 @@ namespace Nop.Admin.Controllers
             {
                 return new JsonResult { Data = "error" };
             }
-
+            
             var state = new StateProvince { CountryId = countryId };
             state = model.ToEntity(state);
             _stateProvinceService.InsertStateProvince(state);
@@ -204,6 +216,10 @@ namespace Nop.Admin.Controllers
         public ActionResult StateDelete(int id, GridCommand command)
         {
             var state = _stateProvinceService.GetStateProvinceById(id);
+
+            if (state.Addresses.Count > 0)
+                throw new NopException("The state can't be deleted. It has associated addresses");
+
             int countryId = state.CountryId;
             _stateProvinceService.DeleteStateProvince(state);
 

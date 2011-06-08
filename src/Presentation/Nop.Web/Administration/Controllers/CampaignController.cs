@@ -180,7 +180,7 @@ namespace Nop.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
             }
 
             //If we got this far, something failed, redisplay form
@@ -211,7 +211,7 @@ namespace Nop.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
             }
 
             //If we got this far, something failed, redisplay form

@@ -221,7 +221,7 @@ namespace Nop.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
             }
 
             return View(model);

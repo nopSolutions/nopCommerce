@@ -239,7 +239,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment, true);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -273,7 +273,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment, true);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }

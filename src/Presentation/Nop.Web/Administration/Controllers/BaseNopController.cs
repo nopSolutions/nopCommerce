@@ -21,19 +21,10 @@ namespace Nop.Admin.Controllers
 
             base.OnActionExecuting(filterContext);
         }
-
         protected override void OnException(ExceptionContext filterContext)
         {
-            //log exception
             if (filterContext.Exception != null)
-            {
-                var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var logger = EngineContext.Current.Resolve<ILogger>();
-
-                var customer = workContext.CurrentCustomer;
-                logger.Error(filterContext.Exception.Message, filterContext.Exception, customer);
-            }
-
+                LogException(filterContext.Exception);
             base.OnException(filterContext);
         }
 
@@ -64,8 +55,16 @@ namespace Nop.Admin.Controllers
             //return new HttpUnauthorizedResult();
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
         }
-        
 
+
+        private void LogException(Exception exc)
+        {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var logger = EngineContext.Current.Resolve<ILogger>();
+
+            var customer = workContext.CurrentCustomer;
+            logger.Error(exc.Message, exc, customer);
+        }
         protected void SuccessNotification(string message, bool persistForTheNextRequest = true)
         {
             AddNotification(NotifyType.Success, message, persistForTheNextRequest);
@@ -73,6 +72,11 @@ namespace Nop.Admin.Controllers
         protected void ErrorNotification(string message, bool persistForTheNextRequest = true)
         {
             AddNotification(NotifyType.Error, message, persistForTheNextRequest);
+        }
+        protected void ErrorNotification(Exception exception, bool persistForTheNextRequest = true)
+        {
+            LogException(exception);
+            AddNotification(NotifyType.Error, exception.Message, persistForTheNextRequest);
         }
         protected void AddNotification(NotifyType type, string message, bool persistForTheNextRequest)
         {

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Admin;
 using Nop.Admin.Models;
 using Nop.Admin.Models.Directory;
+using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
@@ -188,10 +189,27 @@ namespace Nop.Admin.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var currency = _currencyService.GetCurrencyById(id);
-            _currencyService.DeleteCurrency(currency);
+            if (currency == null)
+                throw new ArgumentException("No currency found with the specified id", "id");
+            
+            try
+            {
+                if (currency.Id == _currencySettings.PrimaryStoreCurrencyId)
+                    throw new NopException("The primary store currency can't be deleted.");
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
-            return RedirectToAction("List");
+                if (currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId)
+                    throw new NopException("The primary exchange rate currency can't be deleted.");
+
+                _currencyService.DeleteCurrency(currency);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("Edit", new { id = currency.Id });
+            }
         }
 
         #endregion

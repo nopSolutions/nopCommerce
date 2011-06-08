@@ -474,7 +474,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -501,7 +501,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
 
@@ -527,7 +527,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -554,7 +554,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -579,7 +579,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -606,7 +606,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -631,7 +631,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -762,7 +762,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -789,7 +789,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
@@ -852,7 +852,7 @@ namespace Nop.Admin.Controllers
             {
                 //error
                 PrepareOrderDetailsModel(model, order);
-                ErrorNotification(exc.Message, false);
+                ErrorNotification(exc, false);
                 return View(model);
             }
         }
