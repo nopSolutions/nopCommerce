@@ -585,12 +585,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductAttributeValueDelete(int pvavId, int productVariantAttributeId, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var pvav = _productAttributeService.GetProductVariantAttributeValueById(pvavId);
             _productAttributeService.DeleteProductVariantAttributeValue(pvav);
 

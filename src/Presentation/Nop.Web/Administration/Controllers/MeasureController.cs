@@ -92,7 +92,7 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Weights");
+                return new JsonResult { Data = "error" };
             }
 
             var weight = _measureService.GetMeasureWeightById(model.Id);
@@ -107,7 +107,6 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO:Find out how telerik handles errors
                 return new JsonResult {Data = "error"};
             }
 
@@ -121,12 +120,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult WeightDelete(int id,  GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var weight = _measureService.GetMeasureWeightById(id);
             _measureService.DeleteMeasureWeight(weight);
 
@@ -190,7 +183,7 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Dimensions");
+                return new JsonResult { Data = "error" };
             }
 
             var dimension = _measureService.GetMeasureDimensionById(model.Id);
@@ -205,7 +198,6 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO:Find out how telerik handles errors
                 return new JsonResult { Data = "error" };
             }
 
@@ -219,12 +211,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult DimensionDelete(int id, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var dimension = _measureService.GetMeasureDimensionById(id);
             _measureService.DeleteMeasureDimension(dimension);
 

@@ -227,12 +227,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult CommentDelete(int? filterByNewsItemId, int id, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var comment = _customerContentService.GetCustomerContentById(id);
             _customerContentService.DeleteCustomerContent(comment);
 

@@ -306,7 +306,6 @@ namespace Nop.Admin.Controllers
             
             if (!ModelState.IsValid)
             {
-                //TODO:Find out how telerik handles errors
                 return new JsonResult { Data = "error" };
             }
 

@@ -280,12 +280,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult OptionDelete(int optionId, int specificationAttributeId, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(optionId);
             _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 

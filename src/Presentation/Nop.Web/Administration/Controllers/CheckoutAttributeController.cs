@@ -346,12 +346,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ValueDelete(int valueId, int checkoutAttributeId, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(valueId);
             _checkoutAttributeService.DeleteCheckoutAttributeValue(cav);
 

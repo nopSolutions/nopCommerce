@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.UI;
 
@@ -20,11 +21,26 @@ namespace Nop.Admin.Controllers
 
             base.OnActionExecuting(filterContext);
         }
+
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            //log exception
+            if (filterContext.Exception != null)
+            {
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                var logger = EngineContext.Current.Resolve<ILogger>();
+
+                var customer = workContext.CurrentCustomer;
+                logger.Error(filterContext.Exception.Message, filterContext.Exception, customer);
+            }
+
+            base.OnException(filterContext);
+        }
+
         public void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedModelLocal
         {
             AddLocales(languageService, locales, null);
         }
-
         public void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedModelLocal
         {
             foreach (var language in languageService.GetAllLanguages(true))
@@ -39,16 +55,16 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Access denied view
+        /// </summary>
+        /// <returns>Access denied view</returns>
         protected ActionResult AccessDeniedView()
         {
             //return new HttpUnauthorizedResult();
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
         }
-
-
-
-
-
+        
 
         protected void SuccessNotification(string message, bool persistForTheNextRequest = true)
         {

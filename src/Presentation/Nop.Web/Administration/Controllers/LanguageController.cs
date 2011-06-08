@@ -174,7 +174,7 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Resources", new {model.LanguageId});
+                return new JsonResult { Data = "error" };
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
@@ -189,7 +189,6 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO:Find out how telerik handles errors
                 return new JsonResult {Data = "error"};
             }
 
@@ -205,12 +204,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ResourceDelete(int id, int languageId, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var resource = _localizationService.GetLocaleStringResourceById(id);
             _localizationService.DeleteLocaleStringResource(resource);
 

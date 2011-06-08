@@ -172,6 +172,8 @@ namespace Nop.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 //TODO:Find out how telerik handles errors
+                //TODO: do the same for all other grid actions
+                //here is solution (not the best one) - http://www.telerik.com/community/forums/aspnet-mvc/grid/how-to-return-error-information-to-grid-in-ajax-editing-mode.aspx
                 return new JsonResult { Data = "error" };
             }
 
@@ -187,7 +189,6 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO:Find out how telerik handles errors
                 return new JsonResult { Data = "error" };
             }
 
@@ -202,12 +203,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult StateDelete(int id, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var state = _stateProvinceService.GetStateProvinceById(id);
             int countryId = state.CountryId;
             _stateProvinceService.DeleteStateProvince(state);

@@ -1027,7 +1027,6 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO:Find out how telerik handles errors
                 return new JsonResult { Data = "error" };
             }
 
@@ -1113,7 +1112,6 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //TODO:Find out how telerik handles errors
                 return new JsonResult { Data = "error" };
             }
 
@@ -1129,12 +1127,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductSpecAttrDelete(int psaId, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
             var productId = psa.ProductId;
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
@@ -1194,12 +1186,6 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductTagDelete(int id, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                return new JsonResult { Data = "error" };
-            }
-
             var tag = _productTagService.GetProductById(id);
             _productTagService.DeleteProductTag(tag);
 
