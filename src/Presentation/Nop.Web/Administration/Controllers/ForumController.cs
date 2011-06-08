@@ -7,6 +7,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Services.Configuration;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -17,11 +18,14 @@ namespace Nop.Admin.Controllers
     {
         private readonly IForumService _forumService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
 
-        public ForumController(IForumService forumService, IDateTimeHelper dateTimeHelper)
+        public ForumController(IForumService forumService,
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
         {
             this._forumService = forumService;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
         }
 
         #region List
@@ -67,6 +71,8 @@ namespace Nop.Admin.Controllers
                 forumGroup.CreatedOnUtc = DateTime.UtcNow;
                 forumGroup.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.InsertForumGroup(forumGroup);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Added"));
                 return continueEditing ? RedirectToAction("EditForumGroup", new { forumGroup.Id }) : RedirectToAction("List");
             }
 
@@ -91,6 +97,8 @@ namespace Nop.Admin.Controllers
                 forum.CreatedOnUtc = DateTime.UtcNow;
                 forum.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.InsertForum(forum);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Added"));
                 return continueEditing ? RedirectToAction("EditForum", new { forum.Id }) : RedirectToAction("List");
             }
 
@@ -120,6 +128,8 @@ namespace Nop.Admin.Controllers
                 forumGroup = model.ToEntity(forumGroup);
                 forumGroup.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.UpdateForumGroup(forumGroup);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Updated"));
                 return continueEditing ? RedirectToAction("EditForumGroup", forumGroup.Id) : RedirectToAction("List");
             }
 
@@ -147,6 +157,7 @@ namespace Nop.Admin.Controllers
                 forum.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.UpdateForum(forum);
 
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Updated"));
                 return continueEditing ? RedirectToAction("EditForum", forum.Id) : RedirectToAction("List");
             }
 
@@ -162,6 +173,8 @@ namespace Nop.Admin.Controllers
         {
             var forumGroup = _forumService.GetForumGroupById(id);
             _forumService.DeleteForumGroup(forumGroup.Id);
+
+            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Deleted"));
             return RedirectToAction("List");
         }
 
@@ -170,6 +183,8 @@ namespace Nop.Admin.Controllers
         {
             var forum = _forumService.GetForumById(id);
             _forumService.DeleteForum(forum.Id);
+
+            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Deleted"));
             return RedirectToAction("List");
         }
         #endregion

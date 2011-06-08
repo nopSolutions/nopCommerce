@@ -219,6 +219,7 @@ namespace Nop.Admin.Controllers
                 }
                 _productService.UpdateProductVariant(variant);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Variants.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = variant.Id }) : RedirectToAction("Edit", "Product", new { id = variant.ProductId });
             }
 
@@ -292,6 +293,7 @@ namespace Nop.Admin.Controllers
                 }
                 _productService.UpdateProductVariant(variant);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Variants.Updated"));
                 return continueEditing ? RedirectToAction("Edit", model.Id) : RedirectToAction("Edit", "Product", new { id = variant.ProductId });
             }
 
@@ -314,6 +316,8 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product variant found with the specified id");
             var productId = variant.ProductId;
             _productService.DeleteProductVariant(variant);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Variants.Deleted"));
             return RedirectToAction("Edit", "Product", new { id = productId });
         }
 

@@ -31,18 +31,22 @@ namespace Nop.Admin.Controllers
         private readonly ITopicService _topicService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IWebHelper _webHelper;
+        private readonly IWebHelper _webHelper; 
+        private readonly ILocalizationService _localizationService;
+
         #endregion Fields
 
         #region Constructors
 
         public TopicController(ITopicService topicService, ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService, IWebHelper webHelper)
+            ILocalizedEntityService localizedEntityService, IWebHelper webHelper,
+            ILocalizationService localizationService)
         {
             this._topicService = topicService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._webHelper = webHelper;
+            this._localizationService = localizationService;
         }
 
         #endregion Constructors
@@ -143,6 +147,7 @@ namespace Nop.Admin.Controllers
                 //locales
                 UpdateLocales(topic, model);
 
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = topic.Id }) : RedirectToAction("List");
             }
 
@@ -192,7 +197,8 @@ namespace Nop.Admin.Controllers
                 _topicService.UpdateTopic(topic);
                 //locales
                 UpdateLocales(topic, model);
-
+                
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
                 return continueEditing ? RedirectToAction("Edit", topic.Id) : RedirectToAction("List");
             }
 
@@ -206,6 +212,8 @@ namespace Nop.Admin.Controllers
         {
             var topic = _topicService.GetTopicById(id);
             _topicService.DeleteTopic(topic);
+
+            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
             return RedirectToAction("List");
         }
         

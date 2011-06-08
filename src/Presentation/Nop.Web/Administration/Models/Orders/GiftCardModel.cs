@@ -53,7 +53,6 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.IsRecipientNotified")]
         public bool IsRecipientNotified { get; set; }
-        public string RecepientNotificationError { get; set; }
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }

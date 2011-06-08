@@ -34,7 +34,5 @@ namespace Nop.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.TestEmail")]
         [AllowHtml]
         public string TestEmail { get; set; }
-
-        public string SendEmailResult { get; set; }
     }
 }

@@ -220,7 +220,7 @@ namespace Nop.Services.Security
             var result = new PasswordChangeResult();
             if (request == null || !request.IsValid)
             {
-                result.AddError("The registration request was not valid.");
+                result.AddError("The change password request was not valid.");
                 return result;
             }
 

@@ -449,6 +449,7 @@ namespace Nop.Admin.Controllers
                 _productService.InsertProductVariant(variant);
                 FirstVariant_UpdateLocales(variant, model.FirstProductVariantModel);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
 
@@ -511,6 +512,8 @@ namespace Nop.Admin.Controllers
                 _productService.UpdateProduct(product);
                 UpdateLocales(product, model);
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
+
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
 
@@ -530,6 +533,8 @@ namespace Nop.Admin.Controllers
         {
             var product = _productService.GetProductById(id);
             _productService.DeleteProduct(product);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Deleted"));
             return RedirectToAction("List");
         }
 

@@ -23,7 +23,6 @@ namespace Nop.Admin.Models.Orders
             GiftCards = new List<GiftCard>();
             Items = new List<OrderProductVariantModel>();
             OrderNotes = new List<OrderNote>();
-            ChangePaymentStatusErrors = new List<String>();
         }
 
         //identifiers
@@ -216,7 +215,6 @@ namespace Nop.Admin.Models.Orders
         public bool CanVoidOffline { get; set; }
         public bool CanShip { get; set; }
         public bool CanDeliver { get; set; }
-        public IList<string> ChangePaymentStatusErrors { get; set; }
 
         #region Nested Classes
 

@@ -178,7 +178,7 @@
             </LocaleResource>
             <LocaleResource Name="Affiliates">
             <Value>Affiliates</Value>
-            <Children>
+              <Children>
               <LocaleResource Name="AddNew">
                 <Value>Add a new affiliate</Value>
               </LocaleResource>
@@ -250,11 +250,20 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="Added">
+                <Value>The new affiliate has been added successfully.</Value>
+              </LocaleResource>
+              <LocaleResource Name="Deleted">
+                <Value>The affiliate has been deleted successfully.</Value>
+              </LocaleResource>
+              <LocaleResource Name="Updated">
+                <Value>The affiliate has been updated successfully.</Value>
+              </LocaleResource>
             </Children>
-          </LocaleResource>
+            </LocaleResource>
             <LocaleResource Name="Catalog">
             <Value>Catalog</Value>
-            <Children>
+              <Children>
               <LocaleResource Name="Attributes">
                 <Value>Attributes</Value>
                 <Children>
@@ -405,6 +414,15 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="Added">
+                        <Value>The new attribute has been added successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Deleted">
+                        <Value>The attribute has been deleted successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Updated">
+                        <Value>The attribute has been updated successfully.</Value>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="ProductAttributes">
@@ -441,6 +459,15 @@
                             </Children>
                           </LocaleResource>
                         </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Added">
+                        <Value>The new attribute has been added successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Deleted">
+                        <Value>The attribute has been deleted successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Updated">
+                        <Value>The attribute has been updated successfully.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -518,6 +545,15 @@
                             <Value>You need to save the specification attribute before you can add options for this specification attribute page.</Value>
                           </LocaleResource>
                         </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Added">
+                        <Value>The new attribute has been added successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Deleted">
+                        <Value>The attribute has been deleted successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Updated">
+                        <Value>The attribute has been updated successfully.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -699,6 +735,15 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new category has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The category has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The category has been updated successfully.</Value>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
               <LocaleResource Name="LowStockReport">
@@ -791,6 +836,12 @@
                         </Children>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The product review has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The product review has been updated successfully.</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>
@@ -1749,7 +1800,25 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="Added">
+                        <Value>The new product variant has been added successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Deleted">
+                        <Value>The product variant has been deleted successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Updated">
+                        <Value>The product variant has been updated successfully.</Value>
+                      </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new product has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The product has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The product has been updated successfully.</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>
@@ -1769,7 +1838,7 @@
                 </Children>
               </LocaleResource>
             </Children>
-          </LocaleResource>
+            </LocaleResource>
             <LocaleResource Name="Common">
             <Children>
                   <LocaleResource Name="AddNew">
@@ -1849,16 +1918,8 @@
                     <LocaleResource Name="ActivityLogType">
                       <Value>Activity Types</Value>
                       <Children>
-                        <LocaleResource Name="Hint">
-                          <Value>Activity Types</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="Title">
-                          <Value>Activity Types</Value>
-                          <Children>
-                            <LocaleResource Name="Hint">
-                              <Value>Activity Types</Value>
-                            </LocaleResource>
-                          </Children>
+                        <LocaleResource Name="Updated">
+                          <Value>The types have been updated successfully.</Value>
                         </LocaleResource>
                         <LocaleResource Name="Fields">
                           <Children>
@@ -2094,6 +2155,15 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Added">
+                      <Value>The new country has been added successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Deleted">
+                      <Value>The country has been deleted successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Updated">
+                      <Value>The country has been updated successfully.</Value>
+                    </LocaleResource>
                   </Children>
                 </LocaleResource>
                 <LocaleResource Name="Currencies">
@@ -2221,6 +2291,15 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Added">
+                      <Value>The new currency has been added successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Deleted">
+                      <Value>The currency has been deleted successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Updated">
+                      <Value>The currency has been updated successfully.</Value>
+                    </LocaleResource>
                   </Children>
                 </LocaleResource>
                 <LocaleResource Name="EmailAccounts">
@@ -2325,6 +2404,15 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Added">
+                      <Value>The new email account has been added successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Deleted">
+                      <Value>The email account has been deleted successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Updated">
+                      <Value>The email account has been updated successfully.</Value>
+                    </LocaleResource>
                   </Children>
                 </LocaleResource>
                 <LocaleResource Name="Languages">
@@ -2336,7 +2424,6 @@
                     <LocaleResource Name="Select">
                       <Value>Select a language</Value>
                     </LocaleResource>
-
                     <LocaleResource Name="AddNew">
                       <Value>Add a new language</Value>
                     </LocaleResource>
@@ -2421,6 +2508,15 @@
                           </Children>
                         </LocaleResource>
                       </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Added">
+                      <Value>The new language has been added successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Deleted">
+                      <Value>The language has been deleted successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Updated">
+                      <Value>The language has been updated successfully.</Value>
                     </LocaleResource>
                   </Children>
                 </LocaleResource>
@@ -3667,6 +3763,9 @@
                             shipping method(s) not available
                           </Value>
                         </LocaleResource>
+                      <LocaleResource Name="Updated">
+                        <Value>The settings have been updated successfully.</Value>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                 </Children>
@@ -3756,6 +3855,9 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+                <LocaleResource Name="Updated">
+                  <Value>The settings have been updated successfully.</Value>
+                </LocaleResource>
               </Children>
             </LocaleResource>
             <LocaleResource Name="ContentManagement">
@@ -3831,6 +3933,15 @@
                             <Value>View comments</Value>
                           </LocaleResource>
                         </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Added">
+                        <Value>The new blog post has been added successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Deleted">
+                        <Value>The blog post has been deleted successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Updated">
+                        <Value>The blog post has been updated successfully.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -3909,6 +4020,15 @@
                       <LocaleResource Name="BackToList">
                         <Value>back to forum group list</Value>
                       </LocaleResource>
+                      <LocaleResource Name="Added">
+                        <Value>The new forum group has been added successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Deleted">
+                        <Value>The forum group has been deleted successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Updated">
+                        <Value>The forum group has been updated successfully.</Value>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Forum">
@@ -3967,6 +4087,15 @@
                       </LocaleResource>
                       <LocaleResource Name="BackToList">
                         <Value>back to forum list</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Added">
+                        <Value>The new forum has been added successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Deleted">
+                        <Value>The forum has been deleted successfully.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Updated">
+                        <Value>The forum has been updated successfully.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -4041,6 +4170,9 @@
                         </Children>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The message template has been updated successfully.</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>
@@ -4153,6 +4285,15 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="Added">
+                          <Value>The new news item has been added successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Deleted">
+                          <Value>The news item has been deleted successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Updated">
+                          <Value>The news item has been updated successfully.</Value>
+                        </LocaleResource>
                       </Children>
                     </LocaleResource>
                   </Children>
@@ -4254,6 +4395,15 @@
                   <LocaleResource Name="Info">
                     <Value>Info</Value>
                   </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new topic has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The topic has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The topic has been updated successfully.</Value>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
             </Children>
@@ -4347,6 +4497,12 @@
                         </LocaleResource>
                         <LocaleResource Name="EditAddress">
                           <Value>Edit address</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Added">
+                          <Value>The new address has been added successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Updated">
+                          <Value>The address has been updated successfully.</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
@@ -4617,6 +4773,15 @@
                           <Value>Associate the customer with a user account</Value>
                         </LocaleResource>
                       </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Added">
+                      <Value>The new customer has been added successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Deleted">
+                      <Value>The customer has been deleted successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Updated">
+                      <Value>The customer has been updated successfully.</Value>
                     </LocaleResource>
                   </Children>
                 </LocaleResource>
@@ -4918,6 +5083,15 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="Added">
+                <Value>The new gift card has been added successfully.</Value>
+              </LocaleResource>
+              <LocaleResource Name="Deleted">
+                <Value>The gift card has been deleted successfully.</Value>
+              </LocaleResource>
+              <LocaleResource Name="Updated">
+                <Value>The gift card has been updated successfully.</Value>
+              </LocaleResource>
             </Children>
           </LocaleResource>
             <LocaleResource Name="Help">
@@ -4936,7 +5110,7 @@
             </LocaleResource>
             <LocaleResource Name="Orders">
             <Value>Orders</Value>
-            <Children>
+              <Children>
               <LocaleResource Name="Address">
                 <Children>
                   <LocaleResource Name="EditAddress">
@@ -5670,7 +5844,7 @@
                 </Children>
               </LocaleResource>
             </Children>
-          </LocaleResource>
+            </LocaleResource>
             <LocaleResource Name="Picture">
             <Children>
               <LocaleResource Name="RemovePicture">
@@ -5680,7 +5854,7 @@
           </LocaleResource>
             <LocaleResource Name="Promotions">
             <Value>Promotions</Value>
-            <Children>
+              <Children>
               <LocaleResource Name="Discounts">
                 <Value>Discounts</Value>
                 <Children>
@@ -5827,6 +6001,15 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new discount has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The discount has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The discount has been updated successfully.</Value>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
               <LocaleResource Name="Feeds">
@@ -5957,21 +6140,29 @@
                   <LocaleResource Name="Warning">
                     <Value>Make sure you've tested the campaign before sending it out to multiple customers. Save your campaign first by clicking "Save" button.</Value>
                   </LocaleResource>
-
+                  <LocaleResource Name="Added">
+                    <Value>The new campaign has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The campaign has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The campaign has been updated successfully.</Value>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
             </Children>
-          </LocaleResource>
+            </LocaleResource>
             <LocaleResource Name="RecurringPayments">
             <Value>Recurring payments</Value>
-            <Children>
-              <LocaleResource Name="BackToList">
+              <Children>
+                <LocaleResource Name="BackToList">
                 <Value>back to recurring payment list</Value>
               </LocaleResource>
-              <LocaleResource Name="EditPaymentDetails">
+                <LocaleResource Name="EditPaymentDetails">
                 <Value>Edit recurring payment details</Value>
               </LocaleResource>
-              <LocaleResource Name="Fields">
+                <LocaleResource Name="Fields">
                 <Children>
                   <LocaleResource Name="InitialOrder">
                     <Value>Initial order</Value>
@@ -6042,10 +6233,10 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
-              <LocaleResource Name="Info">
+                <LocaleResource Name="Info">
                 <Value>Recurring payment info</Value>
               </LocaleResource>
-              <LocaleResource Name="History">
+                <LocaleResource Name="History">
                 <Value>History</Value>
                 <Children>
                   <LocaleResource Name="CancelPayment">
@@ -6074,18 +6265,30 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+                <LocaleResource Name="Cancelled">
+                  <Value>The payment has been cancelled successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Deleted">
+                  <Value>The payment has been deleted successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="NextPaymentProcessed">
+                  <Value>The payment has been processed successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Updated">
+                  <Value>The paymentl has been updated successfully.</Value>
+                </LocaleResource>
             </Children>
-          </LocaleResource>
+            </LocaleResource>
             <LocaleResource Name="ReturnRequests">
             <Value>Return requests</Value>
               <Children>
-              <LocaleResource Name="BackToList">
+                <LocaleResource Name="BackToList">
                 <Value>back to return request list</Value>
               </LocaleResource>
-              <LocaleResource Name="EditReturnRequestDetails">
+                <LocaleResource Name="EditReturnRequestDetails">
                 <Value>Edit return request details</Value>
               </LocaleResource>
-              <LocaleResource Name="Fields">
+                <LocaleResource Name="Fields">
                 <Children>
                   <LocaleResource Name="ID">
                     <Value>ID</Value>
@@ -6179,6 +6382,15 @@
               </LocaleResource>
                 <LocaleResource Name="NotifyCustomer">
                   <Value>Notify customer about status change</Value>
+                </LocaleResource>
+                <LocaleResource Name="Deleted">
+                  <Value>The return request has been deleted successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Notified">
+                  <Value>The customer has been notified successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Updated">
+                  <Value>The return request has been updated successfully.</Value>
                 </LocaleResource>
             </Children>
             </LocaleResource>
@@ -6578,7 +6790,15 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
-
+                          <LocaleResource Name="Deleted">
+                            <Value>The queued email has been deleted successfully.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Requeued">
+                            <Value>The queued email has been requeued successfully.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Updated">
+                            <Value>The queued email has been updated successfully.</Value>
+                          </LocaleResource>
                         </Children>
                     </LocaleResource>
                     <LocaleResource Name="SystemInfo">
@@ -7004,6 +7224,18 @@
                         </Children>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new user has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The user has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="PasswordChanged">
+                    <Value>The password has been changed successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The user has been updated successfully.</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

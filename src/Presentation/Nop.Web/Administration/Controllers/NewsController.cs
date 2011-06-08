@@ -28,7 +28,8 @@ namespace Nop.Admin.Controllers
         private readonly INewsService _newsService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICustomerContentService _customerContentService;
+        private readonly ICustomerContentService _customerContentService; 
+        private readonly ILocalizationService _localizationService;
 
 
 		#endregion
@@ -36,12 +37,14 @@ namespace Nop.Admin.Controllers
 		#region Constructors
 
         public NewsController(INewsService newsService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService)
+            IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
+            ILocalizationService localizationService)
         {
             this._newsService = newsService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._customerContentService = customerContentService;
+            this._localizationService = localizationService;
 		}
 
 		#endregion Constructors 
@@ -114,6 +117,8 @@ namespace Nop.Admin.Controllers
                 var newsItem = model.ToEntity();
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
                 _newsService.InsertNews(newsItem);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
             }
 
@@ -147,6 +152,8 @@ namespace Nop.Admin.Controllers
             {
                 newsItem = model.ToEntity(newsItem);
                 _newsService.UpdateNews(newsItem);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
             }
 
@@ -162,6 +169,8 @@ namespace Nop.Admin.Controllers
             if (newsItem == null)
                 throw new ArgumentException("No news item found with the specified id", "id");
             _newsService.DeleteNews(newsItem);
+
+            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Deleted"));
             return RedirectToAction("List");
         }
 

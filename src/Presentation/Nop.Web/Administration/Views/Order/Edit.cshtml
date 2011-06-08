@@ -638,18 +638,6 @@
                 {
                     <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="adminButton" /><text>&nbsp;</text>
                 }
-                @if (Model.ChangePaymentStatusErrors.Count > 0)
-                {
-                    <div style="color: red">
-                        <b>
-                            @foreach (var error in Model.ChangePaymentStatusErrors)
-                            {
-                                @error
-                                <br />
-                            }
-                        </b>
-                    </div>
-                }
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('#btnRefreshPage').click(function () {

@@ -6,30 +6,6 @@
     var usernamesEnabled = EngineContext.Current.Resolve<Nop.Core.Domain.Security.UserSettings>().UsernamesEnabled;
 
     var currentVersion = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().CurrentVersion;
-
-            
-    //success messages
-    var successMessages = new List<string>();
-    if (TempData[string.Format("nop.notifications.{0}",NotifyType.Success)] != null)
-    {
-        successMessages.AddRange(TempData[string.Format("nop.notifications.{0}", NotifyType.Success)] as IList<string>);
-    }
-    if (ViewData[string.Format("nop.notifications.{0}",NotifyType.Success)] != null)
-    {
-        successMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Success)] as IList<string>);
-    }
-    
-    
-    //error messages
-    var errorMessages = new List<string>();
-    if (TempData[string.Format("nop.notifications.{0}",NotifyType.Error)] != null)
-    {
-        errorMessages.AddRange(TempData[string.Format("nop.notifications.{0}", NotifyType.Error)]  as IList<string>);
-    }
-    if (ViewData[string.Format("nop.notifications.{0}",NotifyType.Error)] != null)
-    {
-        errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)]  as IList<string>);
-    }
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -118,24 +94,7 @@
                 </div>
             }
             <div class="content">
-                @if (successMessages.Count > 0)
-                {<div class="messageBox messageBoxSuccess">
-                    @foreach (var message in successMessages)
-                    {
-                        @message
-                    }
-                </div>
-                }
-                <div class="clear">
-                </div>
-                @if (errorMessages.Count > 0)
-                {<div class="messageBox messageBoxError">
-                    @foreach (var message in errorMessages)
-                    {
-                        @message
-                    }
-                </div>
-                }
+                @Html.Partial("_Notifications")
                 <div class="cph">
                     @RenderBody()
                 </div>

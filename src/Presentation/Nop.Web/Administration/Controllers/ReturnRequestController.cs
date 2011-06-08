@@ -164,6 +164,7 @@ namespace Nop.Admin.Controllers
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
                 _customerService.UpdateCustomer(returnRequest.Customer);
 
+                SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
                 return continueEditing ? RedirectToAction("Edit", returnRequest.Id) : RedirectToAction("List");
             }
 
@@ -183,9 +184,9 @@ namespace Nop.Admin.Controllers
 
             var customer = returnRequest.Customer;
             var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
-            _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, opv, _localizationSettings.DefaultAdminLanguageId);
-            //TODO notify store owner about success or error
-
+            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, opv, _localizationSettings.DefaultAdminLanguageId);
+            if (queuedEmailId > 0)
+                SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
             return RedirectToAction("Edit", returnRequest.Id);
         }
 
@@ -195,6 +196,8 @@ namespace Nop.Admin.Controllers
         {
             var returnRequest = _orderService.GetReturnRequestById(id);
             _orderService.DeleteReturnRequest(returnRequest);
+
+            SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Deleted"));
             return RedirectToAction("List");
         }
 

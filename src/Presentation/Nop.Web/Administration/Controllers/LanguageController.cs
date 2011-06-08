@@ -80,6 +80,8 @@ namespace Nop.Admin.Controllers
             {
                 var language = model.ToEntity();
                 _languageService.InsertLanguage(language);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
             }
 
@@ -103,6 +105,8 @@ namespace Nop.Admin.Controllers
             {
                 language = model.ToEntity(language);
                 _languageService.UpdateLanguage(language);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
             }
 
@@ -115,6 +119,8 @@ namespace Nop.Admin.Controllers
 		{
 			var language = _languageService.GetLanguageById(id);
 			_languageService.DeleteLanguage(language);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
 			return RedirectToAction("List");
 		}
 

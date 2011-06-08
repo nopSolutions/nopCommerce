@@ -94,6 +94,8 @@ namespace Nop.Admin.Controllers
             {
                 var country = model.ToEntity();
                 _countryService.InsertCountry(country);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");
             }
 
@@ -120,6 +122,8 @@ namespace Nop.Admin.Controllers
             {
                 country = model.ToEntity(country);
                 _countryService.UpdateCountry(country);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");
             }
 
@@ -134,6 +138,8 @@ namespace Nop.Admin.Controllers
             if (country == null)
                 throw new ArgumentException("No country found with the specified id", "id");
             _countryService.DeleteCountry(country);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Deleted"));
             return RedirectToAction("List");
         }
 

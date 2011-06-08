@@ -32,16 +32,6 @@
                 <button type="submit" name="send-mass-email" value="send-mass-email" class="t-button">@T("Admin.Promotions.Campaigns.SendMassEmail")</button>
             </td>
         </tr>
-        @if (!String.IsNullOrEmpty(Model.SendEmailResult))
-        {
-            <tr>
-                <td class="adminTitle">
-                </td>
-                <td class="adminData" style="color: red">
-                    @Model.SendEmailResult
-                </td>
-            </tr>
-        }
     </table>
     <hr />
 }

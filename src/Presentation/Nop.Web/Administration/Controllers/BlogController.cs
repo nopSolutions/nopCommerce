@@ -29,18 +29,21 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerContentService _customerContentService;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
 		#region Constructors
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService)
+            IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
+            ILocalizationService localizationService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._customerContentService = customerContentService;
+            this._localizationService = localizationService;
 		}
 
 		#endregion Constructors 
@@ -112,6 +115,8 @@ namespace Nop.Admin.Controllers
                 var blogPost = model.ToEntity();
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
                 _blogService.InsertBlogPost(blogPost);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
             }
 
@@ -145,6 +150,8 @@ namespace Nop.Admin.Controllers
             {
                 blogPost = model.ToEntity(blogPost);
                 _blogService.UpdateBlogPost(blogPost);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
             }
 
@@ -160,6 +167,8 @@ namespace Nop.Admin.Controllers
             if (blogPost == null)
                 throw new ArgumentException("No blog post found with the specified id", "id");
             _blogService.DeleteBlogPost(blogPost);
+
+            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
 			return RedirectToAction("List");
 		}
 

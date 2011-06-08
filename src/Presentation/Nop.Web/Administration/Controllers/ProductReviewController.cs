@@ -1,25 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Catalog;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
-using Nop.Services.Payments;
-using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -31,18 +20,21 @@ namespace Nop.Admin.Controllers
 
         private readonly ICustomerContentService _customerContentService;
         private readonly IProductService _productService;
-        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDateTimeHelper _dateTimeHelper; 
+        private readonly ILocalizationService _localizationService;
 
         #endregion Fields
 
         #region Constructors
 
         public ProductReviewController(ICustomerContentService customerContentService,
-            IProductService productService, IDateTimeHelper dateTimeHelper)
+            IProductService productService, IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService)
         {
             this._customerContentService = customerContentService;
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
         }
 
         #endregion Constructors
@@ -140,6 +132,7 @@ namespace Nop.Admin.Controllers
                 //update product totals
                 _productService.UpdateProductReviewTotals(productReview.Product);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
                 return continueEditing ? RedirectToAction("Edit", productReview.Id) : RedirectToAction("List");
             }
 
@@ -160,6 +153,7 @@ namespace Nop.Admin.Controllers
             //update product totals
             _productService.UpdateProductReviewTotals(product);
 
+            SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Deleted"));
             return RedirectToAction("List");
         }
 

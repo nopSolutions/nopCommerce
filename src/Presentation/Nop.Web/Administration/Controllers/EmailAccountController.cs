@@ -103,6 +103,8 @@ namespace Nop.Admin.Controllers
             {
                 var emailAccount = model.ToEntity();
                 _emailAccountService.InsertEmailAccount(emailAccount);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
 
@@ -130,6 +132,8 @@ namespace Nop.Admin.Controllers
             {
                 emailAccount = model.ToEntity(emailAccount);
                 _emailAccountService.UpdateEmailAccount(emailAccount);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
 
@@ -152,11 +156,11 @@ namespace Nop.Admin.Controllers
                 string subject = _storeSettings.StoreName + ". Testing email functionaly.";
                 string body = "Email works fine.";
                 _emailSender.SendEmail(emailAccount, subject, body, from, to);
-                model.SendTestEmailResult = _localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success");
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"), false);
             }
             catch (Exception exc)
             {
-                model.SendTestEmailResult = exc.Message;
+                ErrorNotification(exc.Message, false);
             }
 
             //If we got this far, something failed, redisplay form
@@ -170,6 +174,7 @@ namespace Nop.Admin.Controllers
             if (emailAccount == null)
                 throw new ArgumentException("No email account found with the specified id", "id");
 
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
             _emailAccountService.DeleteEmailAccount(emailAccount);
             return RedirectToAction("List");
         }

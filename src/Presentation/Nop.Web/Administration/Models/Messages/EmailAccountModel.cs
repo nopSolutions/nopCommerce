@@ -46,7 +46,6 @@ namespace Nop.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo")]
         [AllowHtml]
         public string SendTestEmailTo { get; set; }
-        public string SendTestEmailResult { get; set; }
 
     }
 }

@@ -105,11 +105,5 @@
                 <button type="submit" name="sendtestemail" value="sendtestemail" class="t-button">@T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")</button>
             </td>
         </tr>
-        if (!String.IsNullOrEmpty(Model.SendTestEmailResult))
-        {
-            <tr> <td class="adminTitle"> </td> <td class="adminData" style="color: red">
-            @Model.SendTestEmailResult
-        </td> </tr>
-        }
     }
 </table>

@@ -7,6 +7,7 @@ using Nop.Admin.Models;
 using Nop.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 
@@ -19,12 +20,15 @@ namespace Nop.Admin.Controllers
 	public class QueuedEmailController : BaseNopController
 	{
 		private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDateTimeHelper _dateTimeHelper; 
+        private readonly ILocalizationService _localizationService;
 
-		public QueuedEmailController(IQueuedEmailService queuedEmailService, IDateTimeHelper dateTimeHelper)
+		public QueuedEmailController(IQueuedEmailService queuedEmailService,
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
 		{
             this._queuedEmailService = queuedEmailService;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
 		}
 
         public ActionResult Index()
@@ -108,6 +112,8 @@ namespace Nop.Admin.Controllers
             {
                 email = model.ToEntity(email);
                 _queuedEmailService.UpdateQueuedEmail(email);
+
+                SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = email.Id }) : RedirectToAction("List");
             }
 
@@ -139,6 +145,8 @@ namespace Nop.Admin.Controllers
                     EmailAccountId = queuedEmail.EmailAccountId
                 };
                 _queuedEmailService.InsertQueuedEmail(requeuedEmail);
+
+                SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Requeued"));
                 return RedirectToAction("Edit", requeuedEmail.Id);
             }
             else
@@ -149,7 +157,9 @@ namespace Nop.Admin.Controllers
 		public ActionResult DeleteConfirmed(int id)
 		{
 			var email = _queuedEmailService.GetQueuedEmailById(id);
-			_queuedEmailService.DeleteQueuedEmail(email);
+            _queuedEmailService.DeleteQueuedEmail(email);
+
+            SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Deleted"));
 			return RedirectToAction("List");
 		}
 

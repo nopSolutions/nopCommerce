@@ -120,6 +120,8 @@ namespace Nop.Admin.Controllers
         {
             _blogSettings = model.ToEntity(_blogSettings);
             _settingService.SaveSetting(_blogSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Blog");
         }
 
@@ -137,6 +139,8 @@ namespace Nop.Admin.Controllers
         {
             _forumSettings = model.ToEntity(_forumSettings);
             _settingService.SaveSetting(_forumSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Forum");
         }
 
@@ -153,6 +157,8 @@ namespace Nop.Admin.Controllers
         {
             _newsSettings = model.ToEntity(_newsSettings);
             _settingService.SaveSetting(_newsSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("News");
         }
 
@@ -215,6 +221,8 @@ namespace Nop.Admin.Controllers
             _shippingSettings.ShippingOriginAddressId = originAddress.Id;
             _settingService.SaveSetting(_shippingSettings);
 
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Shipping");
         }
 
@@ -293,6 +301,8 @@ namespace Nop.Admin.Controllers
             _taxSettings.DefaultTaxAddressId = defaultAddress.Id;
             _settingService.SaveSetting(_taxSettings);
 
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Tax");
         }
 
@@ -309,6 +319,8 @@ namespace Nop.Admin.Controllers
         {
             _catalogSettings = model.ToEntity(_catalogSettings);
             _settingService.SaveSetting(_catalogSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Catalog");
         }
 
@@ -332,6 +344,8 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"), false);
             return View(model);
         }
 
@@ -374,8 +388,10 @@ namespace Nop.Admin.Controllers
             _orderSettings.ReturnRequestReasons.Clear();
             foreach (var returnReason in model.ReturnRequestReasonsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 _orderSettings.ReturnRequestReasons.Add(returnReason);
-        
+
             _settingService.SaveSetting(_orderSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Order");
         }
 
@@ -392,6 +408,8 @@ namespace Nop.Admin.Controllers
         {
             _shoppingCartSettings = model.ToEntity(_shoppingCartSettings);
             _settingService.SaveSetting(_shoppingCartSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("ShoppingCart");
         }
 
@@ -410,6 +428,8 @@ namespace Nop.Admin.Controllers
         {
             _mediaSettings = model.ToEntity(_mediaSettings);
             _settingService.SaveSetting(_mediaSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Media");
         }
         [HttpPost, ActionName("Media")]
@@ -417,6 +437,8 @@ namespace Nop.Admin.Controllers
         public ActionResult ChangePictureStorage()
         {
             _pictureService.StoreInDb = !_pictureService.StoreInDb;
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Media");
         }
 
@@ -440,6 +462,8 @@ namespace Nop.Admin.Controllers
             _userSettings = model.UserSettings.ToEntity(_userSettings);
             _settingService.SaveSetting(_userSettings);
 
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("CustomerUser");
         }
 

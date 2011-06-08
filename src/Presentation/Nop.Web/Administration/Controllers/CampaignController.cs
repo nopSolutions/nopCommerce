@@ -114,6 +114,8 @@ namespace Nop.Admin.Controllers
                 var campaign = model.ToEntity();
                 campaign.CreatedOnUtc = DateTime.UtcNow;
                 _campaignService.InsertCampaign(campaign);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
@@ -146,6 +148,8 @@ namespace Nop.Admin.Controllers
             {
                 campaign = model.ToEntity(campaign);
                 _campaignService.UpdateCampaign(campaign);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
@@ -171,12 +175,12 @@ namespace Nop.Admin.Controllers
                 if (emailAccount == null)
                     throw new NopException("Email account could not be loaded");
                 _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
-                model.SendEmailResult = _localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers");
+                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers"), false);
                 return View(model);
             }
             catch (Exception exc)
             {
-                model.SendEmailResult = exc.Message;
+                ErrorNotification(exc.Message, false);
             }
 
             //If we got this far, something failed, redisplay form
@@ -202,12 +206,12 @@ namespace Nop.Admin.Controllers
 
                 var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(null, false);
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
-                model.SendEmailResult = string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent);
+                SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent), false);
                 return View(model);
             }
             catch (Exception exc)
             {
-                model.SendEmailResult = exc.Message;
+                ErrorNotification(exc.Message, false);
             }
 
             //If we got this far, something failed, redisplay form
@@ -221,6 +225,8 @@ namespace Nop.Admin.Controllers
             if (campaign == null)
                 throw new ArgumentException("No campaign found with the specified id", "id");
             _campaignService.DeleteCampaign(campaign);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
 			return RedirectToAction("List");
 		}
 	}

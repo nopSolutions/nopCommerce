@@ -474,7 +474,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -492,7 +492,8 @@ namespace Nop.Admin.Controllers
                 var errors = _orderProcessingService.Capture(order);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors = errors.ToList();
+                foreach (var error in errors)
+                    ErrorNotification(error, false);
                 return View(model);
             }
             catch (Exception exc)
@@ -500,7 +501,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
 
@@ -526,7 +527,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -544,7 +545,8 @@ namespace Nop.Admin.Controllers
                 var errors = _orderProcessingService.Refund(order);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors = errors.ToList();
+                foreach (var error in errors)
+                    ErrorNotification(error, false);
                 return View(model);
             }
             catch (Exception exc)
@@ -552,7 +554,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -577,7 +579,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -595,7 +597,8 @@ namespace Nop.Admin.Controllers
                 var errors = _orderProcessingService.Void(order);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors = errors.ToList();
+                foreach (var error in errors)
+                    ErrorNotification(error, false);
                 return View(model);
             }
             catch (Exception exc)
@@ -603,7 +606,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -628,7 +631,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -759,7 +762,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -786,7 +789,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -840,7 +843,8 @@ namespace Nop.Admin.Controllers
                 {
                     //error
                     PrepareOrderDetailsModel(model, order);
-                    model.ChangePaymentStatusErrors = errors.ToList();
+                    foreach (var error in errors)
+                        ErrorNotification(error, false);
                     return View(model);
                 }
             }
@@ -848,7 +852,7 @@ namespace Nop.Admin.Controllers
             {
                 //error
                 PrepareOrderDetailsModel(model, order);
-                model.ChangePaymentStatusErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }

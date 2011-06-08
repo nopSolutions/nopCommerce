@@ -116,22 +116,6 @@
                         }
             </td>
         </tr>
-        @if (Model.ProcessPaymentErrors.Count > 0)
-                {
-            <tr>
-                <td>
-                    <div style="color: red">
-                        <b>
-                            @foreach (var error in Model.ProcessPaymentErrors)
-                            {
-                                @error
-                                <br />
-                            }
-                        </b>
-                    </div>
-                </td>
-            </tr>
-                }
     </table>
     <table class="adminContent">
         <tr>

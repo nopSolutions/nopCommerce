@@ -169,6 +169,7 @@ namespace Nop.Admin.Controllers
             payment.IsActive = model.IsActive;
             _orderService.UpdateRecurringPayment(payment);
 
+            SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Updated"));
             return continueEditing ? RedirectToAction("Edit", payment.Id) : RedirectToAction("List");
         }
 
@@ -178,6 +179,8 @@ namespace Nop.Admin.Controllers
         {
             var payment = _orderService.GetRecurringPaymentById(id);
             _orderService.DeleteRecurringPayment(payment);
+
+            SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Deleted"));
             return RedirectToAction("List");
         }
 
@@ -227,6 +230,8 @@ namespace Nop.Admin.Controllers
                 _orderProcessingService.ProcessNextRecurringPayment(payment);
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment, true);
+
+                SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
                 return View(model);
             }
             catch (Exception exc)
@@ -234,7 +239,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment, true);
-                model.ProcessPaymentErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }
@@ -254,7 +259,13 @@ namespace Nop.Admin.Controllers
                 var errors = _orderProcessingService.CancelRecurringPayment(payment);
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment, true);
-                model.ProcessPaymentErrors = errors.ToList();
+                if (errors.Count > 0)
+                {
+                    foreach (var error in errors)
+                        ErrorNotification(error, false);
+                }
+                else
+                    SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Cancelled"), false);
                 return View(model);
             }
             catch (Exception exc)
@@ -262,7 +273,7 @@ namespace Nop.Admin.Controllers
                 //error
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment, true);
-                model.ProcessPaymentErrors.Add(exc.Message);
+                ErrorNotification(exc.Message, false);
                 return View(model);
             }
         }

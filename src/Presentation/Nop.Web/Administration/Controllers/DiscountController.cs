@@ -155,6 +155,7 @@ namespace Nop.Admin.Controllers
                 var discount = model.ToEntity();
                 _discountService.InsertDiscount(discount);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = discount.Id }) : RedirectToAction("List");
             }
 
@@ -185,6 +186,7 @@ namespace Nop.Admin.Controllers
                 discount = model.ToEntity(discount);
                 _discountService.UpdateDiscount(discount);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", discount.Id) : RedirectToAction("List");
             }
 
@@ -199,6 +201,8 @@ namespace Nop.Admin.Controllers
         {
             var discount = _discountService.GetDiscountById(id);
             _discountService.DeleteDiscount(discount);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Deleted"));
             return RedirectToAction("List");
         }
 

@@ -38,6 +38,7 @@ namespace Nop.Admin.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
@@ -46,7 +47,8 @@ namespace Nop.Admin.Controllers
         public GiftCardController(IGiftCardService giftCardService,
             IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,
             IDateTimeHelper dateTimeHelper, LocalizationSettings localizationSettings,
-            ICurrencyService currencyService, CurrencySettings currencySettings)
+            ICurrencyService currencyService, CurrencySettings currencySettings,
+            ILocalizationService localizationService)
         {
             this._giftCardService = giftCardService;
             this._priceFormatter = priceFormatter;
@@ -55,6 +57,7 @@ namespace Nop.Admin.Controllers
             this._localizationSettings = localizationSettings;
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -132,6 +135,8 @@ namespace Nop.Admin.Controllers
                 var giftCard = model.ToEntity();
                 giftCard.CreatedOnUtc = DateTime.UtcNow;
                 _giftCardService.InsertGiftCard(giftCard);
+
+                SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
             }
 
@@ -172,6 +177,8 @@ namespace Nop.Admin.Controllers
             {
                 giftCard = model.ToEntity(giftCard);
                 _giftCardService.UpdateGiftCard(giftCard);
+
+                SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
                 return continueEditing ? RedirectToAction("Edit", giftCard.Id) : RedirectToAction("List");
             }
 
@@ -214,7 +221,7 @@ namespace Nop.Admin.Controllers
             }
             catch (Exception exc)
             {
-                model.RecepientNotificationError = exc.Message;
+                ErrorNotification(exc.Message, false);
             }
 
             return View(model);
@@ -226,6 +233,8 @@ namespace Nop.Admin.Controllers
         {
             var giftCard = _giftCardService.GetGiftCardById(id);
             _giftCardService.DeleteGiftCard(giftCard);
+
+            SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
             return RedirectToAction("List");
         }
 

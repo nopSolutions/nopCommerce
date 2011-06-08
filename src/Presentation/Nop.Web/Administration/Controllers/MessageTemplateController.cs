@@ -32,6 +32,7 @@ namespace Nop.Admin.Controllers
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILocalizationService _localizationService;
 
         private readonly EmailAccountSettings _emailAccountSettings;
         #endregion Fields
@@ -40,12 +41,14 @@ namespace Nop.Admin.Controllers
 
         public MessageTemplateController(IMessageTemplateService messageTemplateService, 
             IEmailAccountService emailAccountService, ILanguageService languageService, 
-            ILocalizedEntityService localizedEntityService, EmailAccountSettings emailAccountSettings)
+            ILocalizedEntityService localizedEntityService,
+            ILocalizationService localizationService, EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._localizationService = localizationService;
             this._emailAccountSettings = emailAccountSettings;
         }
 
@@ -156,6 +159,7 @@ namespace Nop.Admin.Controllers
                 //locales
                 UpdateLocales(messageTemplate, model);
 
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
                 return continueEditing ? RedirectToAction("Edit", messageTemplate.Id) : RedirectToAction("List");
             }
 

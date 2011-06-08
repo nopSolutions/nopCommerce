@@ -8,6 +8,7 @@ using Nop.Admin.Models.Logging;
 using Nop.Core.Domain.Logging;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -21,14 +22,17 @@ namespace Nop.Admin.Controllers
 
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
         #endregion Fields
 
         #region Constructors
 
-        public ActivityLogController(ICustomerActivityService customerActivityService, IDateTimeHelper dateTimeHelper)
+        public ActivityLogController(ICustomerActivityService customerActivityService,
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
 		{
             this._customerActivityService = customerActivityService;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
 		}
 
 		#endregion Constructors 
@@ -62,7 +66,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveTypes(FormCollection formCollection, ActivityLogSearchModel model)
+        public ActionResult SaveTypes(FormCollection formCollection)
         {
             var keys = formCollection.AllKeys.Where(c => c.StartsWith("checkBox_")).Select(c => c.Substring(9));
             foreach (var key in keys)
@@ -76,6 +80,7 @@ namespace Nop.Admin.Controllers
                 }
 
             }
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
             return RedirectToAction("ListTypes");
         }
 

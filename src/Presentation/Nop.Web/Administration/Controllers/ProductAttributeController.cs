@@ -24,18 +24,21 @@ namespace Nop.Admin.Controllers
 
         private readonly IProductAttributeService _productAttributeService;
         private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILocalizedEntityService _localizedEntityService; 
+        private readonly ILocalizationService _localizationService;
 
         #endregion Fields
 
         #region Constructors
 
         public ProductAttributeController(IProductAttributeService productAttributeService,
-            ILanguageService languageService, ILocalizedEntityService localizedEntityService)
+            ILanguageService languageService, ILocalizedEntityService localizedEntityService,
+            ILocalizationService localizationService)
         {
             this._productAttributeService = productAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._localizationService = localizationService;
         }
 
         #endregion Constructors
@@ -119,6 +122,7 @@ namespace Nop.Admin.Controllers
                 _productAttributeService.InsertProductAttribute(productAttribute);
                 UpdateLocales(productAttribute, model);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = productAttribute.Id }) : RedirectToAction("List");
             }
 
@@ -162,6 +166,7 @@ namespace Nop.Admin.Controllers
 
                 UpdateLocales(productAttribute, model);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Updated"));
                 return continueEditing ? RedirectToAction("Edit", productAttribute.Id) : RedirectToAction("List");
             }
 
@@ -175,6 +180,8 @@ namespace Nop.Admin.Controllers
         {
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             _productAttributeService.DeleteProductAttribute(productAttribute);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
             return RedirectToAction("List");
         }
 

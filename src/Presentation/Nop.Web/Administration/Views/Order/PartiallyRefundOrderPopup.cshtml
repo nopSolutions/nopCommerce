@@ -46,18 +46,4 @@ if (ViewBag.RefreshPage == true)
         </tr>
     </table>
     <input type="submit" name="partialrefundorder" value="@T("Admin.Orders.Fields.Refund")" id="partialrefundorder" class="adminButton" />
-    
-    if (Model.ChangePaymentStatusErrors.Count > 0)
-    {
-        <div style="color: red">
-            <b>
-                @foreach (var error in Model.ChangePaymentStatusErrors)
-                {
-                    @error
-                    <br />
-                }
-            </b>
-        </div>
-    }
-
 }

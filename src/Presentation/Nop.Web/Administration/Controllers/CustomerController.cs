@@ -259,6 +259,7 @@ namespace Nop.Admin.Controllers
                 }
                 _customerService.UpdateCustomer(customer);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
             }
 
@@ -371,6 +372,8 @@ namespace Nop.Admin.Controllers
                 }
                 _customerService.UpdateCustomer(customer);
 
+
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
                 return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
             }
 
@@ -432,6 +435,8 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No customer found with the specified id", "id");
 
             _customerService.DeleteCustomer(customer);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
             return RedirectToAction("List");
         }
         
@@ -564,6 +569,7 @@ namespace Nop.Admin.Controllers
                 customer.AddAddress(address);
                 _customerService.UpdateCustomer(customer);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Added"));
                 return RedirectToAction("AddressEdit", new { addressId = address.Id, customerId = model.CustomerId });
             }
 
@@ -631,6 +637,7 @@ namespace Nop.Admin.Controllers
                 address = model.Address.ToEntity(address);
                 _addressService.UpdateAddress(address);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Updated"));
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });
             }
 

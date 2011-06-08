@@ -21,18 +21,21 @@ namespace Nop.Admin.Controllers
 
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILocalizedEntityService _localizedEntityService; 
+        private readonly ILocalizationService _localizationService;
 
         #endregion Fields
 
         #region Constructors
 
         public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
-            ILanguageService languageService, ILocalizedEntityService localizedEntityService)
+            ILanguageService languageService, ILocalizedEntityService localizedEntityService,
+            ILocalizationService localizationService)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._localizationService = localizationService;
         }
 
         #endregion Constructors
@@ -117,6 +120,7 @@ namespace Nop.Admin.Controllers
                 _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
                 UpdateAttributeLocales(specificationAttribute, model);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = specificationAttribute.Id }) : RedirectToAction("List");
             }
 
@@ -153,6 +157,7 @@ namespace Nop.Admin.Controllers
 
                 UpdateAttributeLocales(specificationAttribute, model);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Updated"));
                 return continueEditing ? RedirectToAction("Edit", specificationAttribute.Id) : RedirectToAction("List");
             }
 
@@ -166,6 +171,8 @@ namespace Nop.Admin.Controllers
         {
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
             return RedirectToAction("List");
         }
 

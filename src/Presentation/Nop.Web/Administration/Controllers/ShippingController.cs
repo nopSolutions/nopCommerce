@@ -12,6 +12,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Shipping;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -27,19 +28,22 @@ namespace Nop.Admin.Controllers
         private readonly IShippingService _shippingService;
         private ShippingSettings _shippingSettings;
         private readonly ISettingService _settingService;
-        private readonly ICountryService _countryService;
+        private readonly ICountryService _countryService; 
+        private readonly ILocalizationService _localizationService;
 
 		#endregion
 
 		#region Constructors
 
         public ShippingController(IShippingService shippingService, ShippingSettings shippingSettings,
-            ISettingService settingService, ICountryService countryService)
+            ISettingService settingService, ICountryService countryService,
+            ILocalizationService localizationService)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
             this._settingService = settingService;
             this._countryService = countryService;
+            this._localizationService = localizationService;
 		}
 
 		#endregion Constructors 
@@ -294,6 +298,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Restrictions.Updated"));
             return RedirectToAction("Restrictions");
         }
 

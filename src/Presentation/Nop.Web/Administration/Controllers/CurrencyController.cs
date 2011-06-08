@@ -10,6 +10,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Nop.Services.Directory;
 using Telerik.Web.Mvc;
@@ -24,18 +25,22 @@ namespace Nop.Admin.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly ISettingService _settingService;
-        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDateTimeHelper _dateTimeHelper; 
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Constructors
 
-        public CurrencyController(ICurrencyService currencyService, CurrencySettings currencySettings, ISettingService settingService, IDateTimeHelper dateTimeHelper)
+        public CurrencyController(ICurrencyService currencyService, 
+            CurrencySettings currencySettings, ISettingService settingService,
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._settingService = settingService;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
         }
         
         #endregion
@@ -138,6 +143,8 @@ namespace Nop.Admin.Controllers
                 currency.CreatedOnUtc = DateTime.UtcNow;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.InsertCurrency(currency);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
             }
 
@@ -167,6 +174,8 @@ namespace Nop.Admin.Controllers
                 currency = model.ToEntity(currency);
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.UpdateCurrency(currency);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
             }
 
@@ -180,6 +189,8 @@ namespace Nop.Admin.Controllers
         {
             var currency = _currencyService.GetCurrencyById(id);
             _currencyService.DeleteCurrency(currency);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
             return RedirectToAction("List");
         }
 

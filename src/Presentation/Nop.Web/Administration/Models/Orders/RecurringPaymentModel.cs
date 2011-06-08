@@ -16,7 +16,6 @@ namespace Nop.Admin.Models.Orders
         public RecurringPaymentModel()
         {
             History = new List<RecurringPaymentHistoryModel>();
-            ProcessPaymentErrors = new List<string>();
         }
 
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.CycleLength")]
@@ -53,8 +52,6 @@ namespace Nop.Admin.Models.Orders
 
 
         public IList<RecurringPaymentHistoryModel> History { get; set; }
-
-        public IList<String> ProcessPaymentErrors { get; set; }
 
         #region Nested classes
 

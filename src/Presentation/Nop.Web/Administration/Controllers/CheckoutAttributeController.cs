@@ -169,6 +169,7 @@ namespace Nop.Admin.Controllers
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
                 UpdateAttributeLocales(checkoutAttribute, model);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = checkoutAttribute.Id }) : RedirectToAction("List");
             }
 
@@ -208,6 +209,8 @@ namespace Nop.Admin.Controllers
 
                 UpdateAttributeLocales(checkoutAttribute, model);
 
+
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Updated"));
                 return continueEditing ? RedirectToAction("Edit", checkoutAttribute.Id) : RedirectToAction("List");
             }
 
@@ -222,6 +225,8 @@ namespace Nop.Admin.Controllers
         {
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
             _checkoutAttributeService.DeleteCheckoutAttribute(checkoutAttribute);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Deleted"));
             return RedirectToAction("List");
         }
 

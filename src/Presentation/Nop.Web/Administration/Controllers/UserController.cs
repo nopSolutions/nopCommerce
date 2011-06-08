@@ -28,18 +28,20 @@ namespace Nop.Admin.Controllers
 
         private readonly IUserService _userService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly UserSettings _userSettings;
+        private readonly UserSettings _userSettings; 
+        private readonly ILocalizationService _localizationService;
         
         #endregion Fields
 
         #region Constructors
 
         public UserController(IUserService userService, IDateTimeHelper dateTimeHelper,
-            UserSettings userSettings)
+            UserSettings userSettings, ILocalizationService localizationService)
         {
             this._userService = userService;
             this._dateTimeHelper = dateTimeHelper;
             this._userSettings = userSettings;
+            this._localizationService = localizationService;
         }
 
         #endregion Constructors
@@ -132,11 +134,13 @@ namespace Nop.Admin.Controllers
                     user.IsLockedOut = model.IsLockedOut;
                     _userService.UpdateUser(user);
 
+                    SuccessNotification(_localizationService.GetResource("Admin.Users.Added"));
                     return continueEditing ? RedirectToAction("Edit", new { id = user.Id }) : RedirectToAction("List");
                 }
                 else
                 {
-                    registrationResult.Errors.ToList().ForEach(e => ModelState.AddModelError("", e));
+                    foreach (var error in registrationResult.Errors)
+                        ErrorNotification(error, false);
                 }
             }
 
@@ -205,6 +209,7 @@ namespace Nop.Admin.Controllers
 
                 _userService.UpdateUser(user);
 
+                SuccessNotification(_localizationService.GetResource("Admin.Users.Updated"));
                 return continueEditing ? RedirectToAction("Edit", user.Id) : RedirectToAction("List");
             }
 
@@ -230,12 +235,13 @@ namespace Nop.Admin.Controllers
                 var changePassResult = _userService.ChangePassword(changePassRequest);
                 if (changePassResult.Success)
                 {
-                    //UNDONE show message that password is changed
+                    SuccessNotification(_localizationService.GetResource("Admin.Users.PasswordChanged"));
                     return Edit(model.Id);
                 }
                 else
                 {
-                    changePassResult.Errors.ToList().ForEach(e => ModelState.AddModelError("", e));
+                    foreach (var error in changePassResult.Errors)
+                        ErrorNotification(error, false);
                 }
             }
 
@@ -256,6 +262,8 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No user found with the specified id", "id");
 
             _userService.DeleteUser(user);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Users.Deleted"));
             return RedirectToAction("List");
         }
         
