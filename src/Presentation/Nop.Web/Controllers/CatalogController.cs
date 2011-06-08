@@ -1884,8 +1884,7 @@ namespace Nop.Web.Controllers
             if (model == null)
                 model = new SearchModel();
 
-            //TODO set default search page size (currently set to 6)
-            if (command.PageSize <= 0) command.PageSize = 6;
+            if (command.PageSize <= 0) command.PageSize = _catalogSettings.SearchPageProductsPerPage;
             if (command.PageNumber <= 0) command.PageNumber = 1;
             if (model.Q == null)
                 model.Q = "";

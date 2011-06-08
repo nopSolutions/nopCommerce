@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Web.Framework;
@@ -11,9 +12,11 @@ namespace Nop.Admin.Models.Settings
         {
             CustomerSettings = new CustomerSettingsModel();
             UserSettings = new UserSettingsModel();
+            DateTimeSettings = new DateTimeSettingsModel();
         }
         public CustomerSettingsModel CustomerSettings { get; set; }
         public UserSettingsModel UserSettings { get; set; }
+        public DateTimeSettingsModel DateTimeSettings { get; set; }
 
         #region Nested classes
         
@@ -71,6 +74,23 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
             public int UserRegistrationType { get; set; }
+        }
+
+        public class DateTimeSettingsModel
+        {
+            public DateTimeSettingsModel()
+            {
+                AvailableTimeZones = new List<SelectListItem>();
+            }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowCustomersToSetTimeZone")]
+            public bool AllowCustomersToSetTimeZone { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultStoreTimeZone")]
+            public string DefaultStoreTimeZoneId { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultStoreTimeZone")]
+            public IList<SelectListItem> AvailableTimeZones { get; set; }
         }
 
         #endregion

@@ -7,8 +7,6 @@ namespace Nop.Core.Domain.Directory
     /// </summary>
     public partial class ExchangeRate
     {
-        #region Ctor
-
         /// <summary>
         /// Creates a new instance of the ExchangeRate class
         /// </summary>
@@ -16,13 +14,8 @@ namespace Nop.Core.Domain.Directory
         {
             CurrencyCode = string.Empty;
             Rate = 1.0m;
-            UpdatedOn = DateTime.MinValue;
         }
-
-        #endregion
-
-        #region Properties
-
+        
         /// <summary>
         /// The three letter ISO code for the Exchange Rate, e.g. USD
         /// </summary>
@@ -47,8 +40,6 @@ namespace Nop.Core.Domain.Directory
         {
             return string.Format("{0} {1}", this.CurrencyCode, this.Rate);
         }
-
-        #endregion 
     }
 
 }

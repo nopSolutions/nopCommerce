@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Xml;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
+using Nop.Services.Configuration;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
@@ -17,15 +18,18 @@ namespace Nop.Admin.Controllers
         #region Fields
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CommonSettings _commonSettings;
+        private readonly ISettingService _settingService;
 
         #endregion
 
         #region Ctor
 
-        public HomeController(StoreInformationSettings storeInformationSettings, CommonSettings commonSettings)
+        public HomeController(StoreInformationSettings storeInformationSettings,
+            CommonSettings commonSettings, ISettingService settingService)
         {
             this._storeInformationSettings = storeInformationSettings;
             this._commonSettings = commonSettings;
+            this._settingService = settingService;
         }
 
         #endregion
@@ -37,11 +41,16 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
+        [ChildActionOnly]
         public ActionResult NopCommerceNews()
         {
             try
             {
-                string feedUrl = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", _storeInformationSettings.CurrentVersion, Request.Url.IsLoopback, _commonSettings.HideAdvertisementsOnAdminArea, _storeInformationSettings.StoreUrl);
+                string feedUrl = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", 
+                    _storeInformationSettings.CurrentVersion, 
+                    Request.Url.IsLoopback, 
+                    _commonSettings.HideAdvertisementsOnAdminArea, 
+                    _storeInformationSettings.StoreUrl);
                 //TODO cache results (based on feed URL)
                 using (var reader = XmlReader.Create(feedUrl))
                 {
@@ -53,6 +62,14 @@ namespace Nop.Admin.Controllers
             {
                 return Content("");
             }
+        }
+
+        [HttpPost]
+        public ActionResult NopCommerceNewsHideAdv()
+        {
+            _commonSettings.HideAdvertisementsOnAdminArea = !_commonSettings.HideAdvertisementsOnAdminArea;
+            _settingService.SaveSetting(_commonSettings);
+            return Content("Setting changed");
         }
 
         #endregion

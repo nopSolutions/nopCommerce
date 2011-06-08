@@ -1,0 +1,122 @@
+﻿@model GeneralCommonSettingsModel
+@using Telerik.Web.Mvc.UI;
+@using Nop.Core.Domain.Customers;
+@using Nop.Core.Domain.Security;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.GeneralCommon")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+        </div>
+    </div>
+        
+    @Html.ValidationSummary(false)
+
+    
+    @Html.Telerik().TabStrip().Name("generalsettings-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings").Text).Content(TabStoreInformationSettings().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SEOSettings").Text).Content(TabSEOSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
+
+})
+}
+@helper TabStoreInformationSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreName)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreUrl)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreUrl)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabSEOSettings()
+    {
+    
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.PageTitleSeparator)
+                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeparator)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.DefaultTitle)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultTitle)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaKeywords):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.DefaultMetaKeywords)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaKeywords)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaDescription):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.DefaultMetaDescription)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaDescription)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabSecuritySettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.EncryptionKey):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.EncryptionKey)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
+                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" />
+            </td>
+        </tr>
+    </table>
+}
+@helper TabPdfSettings()
+    {
+<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PdfSettings.Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PdfSettings.Enabled)
+                @Html.ValidationMessageFor(model => model.PdfSettings.Enabled)
+            </td>
+        </tr>
+    </table>
+}

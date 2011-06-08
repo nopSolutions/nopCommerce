@@ -18,5 +18,7 @@ namespace Nop.Core.Domain
         /// Gets or sets the store version
         /// </summary>
         public string CurrentVersion { get; set; }
+
+        //TODO Add 'Store closed' option
     }
 }

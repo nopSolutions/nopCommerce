@@ -8,8 +8,10 @@ using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Forums;
 using Nop.Admin.Models.Settings;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -29,6 +31,8 @@ using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Orders;
+using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -50,6 +54,10 @@ namespace Nop.Admin.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IOrderService _orderService;
+        private readonly IUserService _userService;
+        private readonly IEncryptionService _encryptionService;
 
         private BlogSettings _blogSettings;
         private ForumSettings _forumSettings;
@@ -64,6 +72,11 @@ namespace Nop.Admin.Controllers
         private MediaSettings _mediaSettings;
         private CustomerSettings _customerSettings;
         private UserSettings _userSettings;
+        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly SeoSettings _seoSettings;
+        private readonly SecuritySettings _securitySettings;
+        private readonly PdfSettings _pdfSettings;
 
 		#endregion
 
@@ -73,14 +86,17 @@ namespace Nop.Admin.Controllers
             ICountryService countryService, IStateProvinceService stateProvinceService,
             IAddressService addressService, ITaxCategoryService taxCategoryService,
             ICurrencyService currencyService, IPictureService pictureService, 
-            ILocalizationService localizationService,
-            BlogSettings blogSettings,
+            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
+            IOrderService orderService, IUserService userService, 
+            IEncryptionService encryptionService, BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
             CurrencySettings currencySettings, OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings, MediaSettings mediaSettings,
-            CustomerSettings customerSettings, UserSettings userSettings)
+            CustomerSettings customerSettings, UserSettings userSettings,
+            DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
+            SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -90,6 +106,10 @@ namespace Nop.Admin.Controllers
             this._currencyService = currencyService;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._orderService = orderService;
+            this._userService = userService;
+            this._encryptionService = encryptionService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -104,6 +124,11 @@ namespace Nop.Admin.Controllers
             this._mediaSettings = mediaSettings;
             this._customerSettings = customerSettings;
             this._userSettings = userSettings;
+            this._dateTimeSettings = dateTimeSettings;
+            this._storeInformationSettings = storeInformationSettings;
+            this._seoSettings = seoSettings;
+            this._securitySettings = securitySettings;
+            this._pdfSettings = pdfSettings;
         }
 
 		#endregion Constructors 
@@ -450,6 +475,18 @@ namespace Nop.Admin.Controllers
             var model = new CustomerUserSettingsModel();
             model.CustomerSettings = _customerSettings.ToModel();
             model.UserSettings = _userSettings.ToModel();
+
+            model.DateTimeSettings.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            model.DateTimeSettings.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;
+            foreach (TimeZoneInfo timeZone in _dateTimeHelper.GetSystemTimeZones())
+            {
+                model.DateTimeSettings.AvailableTimeZones.Add(new SelectListItem()
+                    {
+                        Text = timeZone.DisplayName,
+                        Value = timeZone.Id,
+                        Selected = timeZone.Id.Equals(_dateTimeHelper.DefaultStoreTimeZone.Id, StringComparison.InvariantCultureIgnoreCase)
+                    });
+            }
             return View(model);
         }
         [HttpPost]
@@ -462,12 +499,137 @@ namespace Nop.Admin.Controllers
             _userSettings = model.UserSettings.ToEntity(_userSettings);
             _settingService.SaveSetting(_userSettings);
 
+            _dateTimeSettings.DefaultStoreTimeZoneId = model.DateTimeSettings.DefaultStoreTimeZoneId;
+            _dateTimeSettings.AllowCustomersToSetTimeZone = model.DateTimeSettings.AllowCustomersToSetTimeZone;
+            _settingService.SaveSetting(_dateTimeSettings);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("CustomerUser");
         }
 
 
+
+
+
+
+        public ActionResult GeneralCommon()
+        {
+            //store information
+            var model = new GeneralCommonSettingsModel();
+            model.StoreInformationSettings.StoreName = _storeInformationSettings.StoreName;
+            model.StoreInformationSettings.StoreUrl = _storeInformationSettings.StoreUrl;
+
+            //seo settings
+            model.SeoSettings.PageTitleSeparator = _seoSettings.PageTitleSeparator;
+            model.SeoSettings.DefaultTitle = _seoSettings.DefaultTitle;
+            model.SeoSettings.DefaultMetaKeywords = _seoSettings.DefaultMetaKeywords;
+            model.SeoSettings.DefaultMetaDescription = _seoSettings.DefaultMetaDescription;
+            
+            //security settings
+            model.SecuritySettings.EncryptionKey = _securitySettings.EncryptionKey;
+
+            //PDF settings
+            model.PdfSettings.Enabled = _pdfSettings.Enabled;
+
+            return View(model);
+        }
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult GeneralCommon(GeneralCommonSettingsModel model)
+        {
+            //store information
+            _storeInformationSettings.StoreName = model.StoreInformationSettings.StoreName;
+            if (model.StoreInformationSettings.StoreUrl == null)
+                model.StoreInformationSettings.StoreUrl = "";
+            _storeInformationSettings.StoreUrl = model.StoreInformationSettings.StoreUrl;
+            //ensure we have "/" at the end
+            if (!_storeInformationSettings.StoreUrl.EndsWith("/"))
+                _storeInformationSettings.StoreUrl += "/";
+            _settingService.SaveSetting(_storeInformationSettings);
+
+            //seo settings
+            _seoSettings.PageTitleSeparator = model.SeoSettings.PageTitleSeparator;
+            _seoSettings.DefaultTitle = model.SeoSettings.DefaultTitle;
+            _seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
+            _seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
+            _settingService.SaveSetting(_seoSettings);
+
+            //PDF settings
+            _pdfSettings.Enabled = model.PdfSettings.Enabled;
+            _settingService.SaveSetting(_pdfSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            return RedirectToAction("GeneralCommon");
+        }
+        [HttpPost, ActionName("GeneralCommon")]
+        [FormValueRequired("changeencryptionkey")]
+        public ActionResult ChangeEnryptionKey(GeneralCommonSettingsModel model)
+        {
+            try
+            {
+                if (model.SecuritySettings.EncryptionKey == null)
+                    model.SecuritySettings.EncryptionKey = "";
+
+                model.SecuritySettings.EncryptionKey = model.SecuritySettings.EncryptionKey.Trim();
+
+                var newEncryptionPrivateKey = model.SecuritySettings.EncryptionKey;
+                if (String.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
+                    throw new NopException("Encryption private key must be 16 characters long");
+
+                string oldEncryptionPrivateKey = _securitySettings.EncryptionKey;
+                if (oldEncryptionPrivateKey == newEncryptionPrivateKey)
+                    throw new NopException("The new ecryption key is the same as the old one");
+
+                //update encrypted order info
+                var orders = _orderService.LoadAllOrders();
+                foreach (var order in orders)
+                {
+                    string decryptedCardType = _encryptionService.DecryptText(order.CardType, oldEncryptionPrivateKey);
+                    string decryptedCardName = _encryptionService.DecryptText(order.CardName, oldEncryptionPrivateKey);
+                    string decryptedCardNumber = _encryptionService.DecryptText(order.CardNumber, oldEncryptionPrivateKey);
+                    string decryptedMaskedCreditCardNumber = _encryptionService.DecryptText(order.MaskedCreditCardNumber, oldEncryptionPrivateKey);
+                    string decryptedCardCvv2 = _encryptionService.DecryptText(order.CardCvv2, oldEncryptionPrivateKey);
+                    string decryptedCardExpirationMonth = _encryptionService.DecryptText(order.CardExpirationMonth, oldEncryptionPrivateKey);
+                    string decryptedCardExpirationYear = _encryptionService.DecryptText(order.CardExpirationYear, oldEncryptionPrivateKey);
+
+                    string encryptedCardType = _encryptionService.EncryptText(decryptedCardType, newEncryptionPrivateKey);
+                    string encryptedCardName = _encryptionService.EncryptText(decryptedCardName, newEncryptionPrivateKey);
+                    string encryptedCardNumber = _encryptionService.EncryptText(decryptedCardNumber, newEncryptionPrivateKey);
+                    string encryptedMaskedCreditCardNumber = _encryptionService.EncryptText(decryptedMaskedCreditCardNumber, newEncryptionPrivateKey);
+                    string encryptedCardCvv2 = _encryptionService.EncryptText(decryptedCardCvv2, newEncryptionPrivateKey);
+                    string encryptedCardExpirationMonth = _encryptionService.EncryptText(decryptedCardExpirationMonth, newEncryptionPrivateKey);
+                    string encryptedCardExpirationYear = _encryptionService.EncryptText(decryptedCardExpirationYear, newEncryptionPrivateKey);
+
+                    order.CardType = encryptedCardType;
+                    order.CardName = encryptedCardName;
+                    order.CardNumber = encryptedCardNumber;
+                    order.MaskedCreditCardNumber = encryptedMaskedCreditCardNumber;
+                    order.CardCvv2 = encryptedCardCvv2;
+                    order.CardExpirationMonth = encryptedCardExpirationMonth;
+                    order.CardExpirationYear = encryptedCardExpirationYear;
+                    _orderService.UpdateOrder(order);
+                }
+
+                //update user information
+                //TODO optimization - load only users with PasswordFormat.Encrypted (don't filter them here)
+                //UNDONE finish 
+                //var users = _userService.GetUsers(null, null, 0, int.MaxValue)
+                //    .Where(u => u.PasswordFormat == PasswordFormat.Encrypted);
+                //foreach (var user in users)
+                //{
+                //    //update encrypted passwords and other encrypted informartion here
+                //}
+
+                _securitySettings.EncryptionKey = newEncryptionPrivateKey;
+                _settingService.SaveSetting(_securitySettings);
+                SuccessNotification("Encryption key is changed");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+            }
+            return RedirectToAction("GeneralCommon");
+        }
 
 
 

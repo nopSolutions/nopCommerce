@@ -147,6 +147,7 @@
     <Compile Include="Models\Orders\BestsellersReportLineModel.cs" />
     <Compile Include="Models\Orders\BestsellersReportModel.cs" />
     <Compile Include="Models\Catalog\ProductTagModel.cs" />
+    <Compile Include="Models\Settings\GeneralCommonSettingsModel.cs" />
     <Compile Include="Models\Settings\SettingModel.cs" />
     <Compile Include="Models\Settings\CustomerUserSettingsModel.cs" />
     <Compile Include="Models\Settings\MediaSettingsModel.cs" />
@@ -853,6 +854,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_Notifications.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setting\GeneralCommon.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

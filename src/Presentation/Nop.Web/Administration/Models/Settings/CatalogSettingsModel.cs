@@ -65,5 +65,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NumberOfBestsellersOnHomepage")]
         public int NumberOfBestsellersOnHomepage { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPageProductsPerPage")]
+        public int SearchPageProductsPerPage { get; set; }
     }
 }

@@ -1853,6 +1853,9 @@
                   <LocaleResource Name="Cancel">
                     <Value>Cancel</Value>
                   </LocaleResource>
+                  <LocaleResource Name="Change">
+                    <Value>Change</Value>
+                  </LocaleResource>
                   <LocaleResource Name="Clear">
                     <Value>Clear</Value>
                   </LocaleResource>
@@ -2871,11 +2874,28 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="SearchPageProductsPerPage">
+                        <Value>Search page. Products per page</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set the page size for products on 'Search' page.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
-                  </LocaleResource>
+                  </LocaleResource>                  
                   <LocaleResource Name="CustomerUser">
                     <Value>Customer and user settings</Value>
                     <Children>
+                      <LocaleResource Name="CustomerSettings">
+                        <Value>Customer settings</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="UserSettings">
+                        <Value>User settings</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="DateTimeSettings">
+                        <Value>DateTime settings</Value>
+                      </LocaleResource>
                       <LocaleResource Name="AllowCustomersToUploadAvatars">
                         <Value>Allow customers to upload avatars</Value>
                         <Children>
@@ -3004,6 +3024,22 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="AllowCustomersToSetTimeZone">
+                        <Value>Allow customers to select time zone</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow customers to select time zone. If checked, then time zone can be selected on the public store (account page). If not, then default time zone will be used.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DefaultStoreTimeZone">
+                        <Value>Default store time zone</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default store time zone used to display dates</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Forums">
@@ -3107,6 +3143,87 @@
                         </LocaleResource>
                       </Children>
                 </LocaleResource>
+                  <LocaleResource Name="GeneralCommon">
+                    <Value>General and common settings</Value>
+                    <Children>
+                      <LocaleResource Name="StoreInformationSettings">
+                        <Value>Store information</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="PdfSettings">
+                        <Value>Pdf settings</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="SEOSettings">
+                        <Value>SEO settings</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="SecuritySettings">
+                        <Value>Security settings</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="StoreName">
+                        <Value>Store name</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter the name of your store e.g. Your Store</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="StoreUrl">
+                        <Value>Store URL</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>title="The URL of your store e.g. http://www.yourstore.com/"</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="PdfEnabled">
+                        <Value>Enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enabled PDF.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="PageTitleSeparator">
+                        <Value>Page title separator</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Specify page title separator.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DefaultTitle">
+                        <Value>Default title</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default title for pages in your store.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DefaultMetaKeywords">
+                        <Value>Default meta keywords</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default meta keywords for pages in your store. You can override these for individual categories / products / manufacturer pages.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DefaultMetaDescription">
+                        <Value>Default meta description</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The default meta description for pages in your store. You can override this for individual categories / products / manufacturer pages.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="EncryptionKey">
+                        <Value>Encryption private key</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The encryption private key used for storing sensitive data.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Media">
                     <Value>Media settings</Value>
                     <Children>
@@ -3252,6 +3369,12 @@
                   <LocaleResource Name="Order">
                     <Value>Order settings</Value>
                     <Children>
+                      <LocaleResource Name="OrderSettings">
+                        <Value>Order settings</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="ReturnRequestSettings">
+                        <Value>Return request settings</Value>
+                      </LocaleResource>
                       <LocaleResource Name="IsReOrderAllowed">
                         <Value>Is re-order allowed</Value>
                         <Children>
@@ -5107,6 +5230,14 @@
             </LocaleResource>
             <LocaleResource Name="NopCommerceNews">
               <Value>NopCommerce News</Value>
+              <Children>
+                <LocaleResource Name="HideAdv">
+                  <Value>Hide advertisements</Value>
+                </LocaleResource>
+                <LocaleResource Name="ShowAdv">
+                  <Value>Show advertisements</Value>
+                </LocaleResource>
+              </Children>
             </LocaleResource>
             <LocaleResource Name="Orders">
             <Value>Orders</Value>

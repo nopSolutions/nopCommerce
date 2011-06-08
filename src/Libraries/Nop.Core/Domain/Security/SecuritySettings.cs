@@ -9,5 +9,7 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets an encryption key
         /// </summary>
         public string EncryptionKey { get; set; }
+
+        //TODO Add 'Admin area allowed IP' option
     }
 }

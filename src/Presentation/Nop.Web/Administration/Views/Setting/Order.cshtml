@@ -1,5 +1,4 @@
 ﻿@model OrderSettingsModel
-
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
@@ -13,6 +12,17 @@
         </div>
     </div>
     @Html.ValidationSummary(false)
+
+    
+     
+    @Html.Telerik().TabStrip().Name("customersettings-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Configuration.Settings.Order.OrderSettings").Text).Content(TabOrderSettings().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Settings.Order.ReturnRequestSettings").Text).Content(TabReturnRequestSettings().ToHtmlString());
+})
+}
+@helper TabOrderSettings()
+    {
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -68,11 +78,11 @@
                 @Html.ValidationMessageFor(model => model.OnePageCheckoutEnabled)
             </td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
+    </table>
+}
+@helper TabReturnRequestSettings()
+    {
+    <table class="adminContent">
         <tr>
             <td class="adminTitle" colspan="2">
                 @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")

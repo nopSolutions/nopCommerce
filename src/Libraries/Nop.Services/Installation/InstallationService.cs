@@ -998,7 +998,6 @@ namespace Nop.Services.Installation
                 .SaveSettings(new PdfSettings()
                 {
                     Enabled = true,
-                    LogoFilePath = null,
                     RenderOrderNotes = true,
                 });
 
@@ -1047,6 +1046,7 @@ namespace Nop.Services.Installation
                     ProductSearchTermMinimumLength = 3,
                     ShowBestsellersOnHomepage = false,
                     NumberOfBestsellersOnHomepage = 3,
+                    SearchPageProductsPerPage  = 6,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

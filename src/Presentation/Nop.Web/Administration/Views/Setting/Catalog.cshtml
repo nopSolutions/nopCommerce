@@ -258,5 +258,14 @@
                 @Html.ValidationMessageFor(model => model.NumberOfBestsellersOnHomepage)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchPageProductsPerPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SearchPageProductsPerPage)
+                @Html.ValidationMessageFor(model => model.SearchPageProductsPerPage)
+            </td>
+        </tr>
     </table>
 }

@@ -1,6 +1,4 @@
 ﻿@model CustomerUserSettingsModel
-
-
 @using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Customers;
 @using Nop.Core.Domain.Security;
@@ -46,13 +44,18 @@
     </script>
     
     @Html.ValidationSummary(false)
+
+    
+    @Html.Telerik().TabStrip().Name("customersettings-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.CustomerSettings").Text).Content(TabCustomerSettings().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.UserSettings").Text).Content(TabUserSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings").Text).Content(TabDateTimeSettings().ToHtmlString());
+})
+}
+@helper TabCustomerSettings()
+    {
     <table class="adminContent">
-        <tr>
-            <td colspan="2">
-                <b>Customers:</b>
-                <br />
-            </td>
-        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars):
@@ -177,13 +180,11 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.NewsletterEnabled)
             </td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <hr />
-                <b>Users:</b>
-                <br />
-            </td>
-        </tr>
+    </table>
+}
+@helper TabUserSettings()
+    {
+    <table class="adminContent">
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.UserSettings.UsernamesEnabled):
@@ -209,6 +210,29 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.UserSettings.UserRegistrationType, ((UserRegistrationType)Model.UserSettings.UserRegistrationType).ToSelectList())
                 @Html.ValidationMessageFor(model => model.UserSettings.UserRegistrationType)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabDateTimeSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
+                @Html.ValidationMessageFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId, Model.DateTimeSettings.AvailableTimeZones)
+                @Html.ValidationMessageFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
             </td>
         </tr>
     </table>

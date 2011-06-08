@@ -114,5 +114,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a number of bestsellers on home page
         /// </summary>
         public int NumberOfBestsellersOnHomepage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of products per page on search products page
+        /// </summary>
+        public int SearchPageProductsPerPage { get; set; }
     }
 }

@@ -1,5 +1,9 @@
 ﻿@model SyndicationFeed
+@{
+    var hideAdvertisements = EngineContext.Current.Resolve<CommonSettings>().HideAdvertisementsOnAdminArea;
+}
 @using System.ServiceModel.Syndication;
+@using Nop.Core.Domain.Common;
 <div class="nop-news">
     <div class="section-header">
         <div class="title">
@@ -18,7 +22,8 @@
                 else
                 {
                     @item.Title.Text
-                }</div>
+                }
+            </div>
             <div class="newsdate">
                 @item.PublishDate.ToString("d")
             </div>
@@ -31,6 +36,25 @@
     <div class="clear">
     </div>
     <div class="adv">
-        @*UNDONE Add 'Hide advertisements' button *@
+        <a id="nopcommerceNewsHideAdv" href="#">@(hideAdvertisements ? T("Admin.NopCommerceNews.ShowAdv") : T("Admin.NopCommerceNews.HideAdv"))</a>
+        <script type="text/javascript">
+        
+        $(document).ready(function () {
+            $('#nopcommerceNewsHideAdv').click(function () {
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("NopCommerceNewsHideAdv", "Home"))",
+                    success: function (data) {
+                         location.reload();
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to change setting.')
+                    }  
+                });
+            });
+        });
+
+        </script>
     </div>
 </div>

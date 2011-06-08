@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
@@ -88,7 +89,8 @@ namespace Nop.Services.Common
             Table table = sec.AddTable();
             table.Borders.Visible = false;
 
-            bool logoExists = !String.IsNullOrEmpty(_pdfSettings.LogoFilePath) && File.Exists(_pdfSettings.LogoFilePath);
+            string logoFilePath = HttpContext.Current.Request.PhysicalApplicationPath + "images/pdflogo.img";
+            bool logoExists = !String.IsNullOrEmpty(logoFilePath) && File.Exists(logoFilePath);
 
             table.AddColumn(Unit.FromCentimeter(10));
             if (logoExists)
@@ -106,7 +108,7 @@ namespace Nop.Services.Common
             ordRow[rownum].AddParagraph(String.Format(_localizationService.GetResource("PDFInvoice.OrderDate", lang.Id), _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString("D")));
 
             if (logoExists)
-                ordRow[0].AddImage(_pdfSettings.LogoFilePath);
+                ordRow[0].AddImage(logoFilePath);
             
             var addressTable = sec.AddTable();
 
