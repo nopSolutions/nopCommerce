@@ -597,8 +597,6 @@ namespace Nop.Services.Installation
                 Password = "admin",
                 PasswordFormat = PasswordFormat.Clear,
                 PasswordSalt = "",
-                SecurityQuestion = "",
-                SecurityAnswer = "",
                 IsApproved = true,
                 IsLockedOut = false,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -1675,9 +1673,8 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallProducts()
         {
-
             var allCategories = _categoryRepository.Table.ToList();
-
+            //UNDONE insert old sample products
             for (var i = 1; i <= 20; i++)
             {
                 var product = new Product()

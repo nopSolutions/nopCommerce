@@ -75,26 +75,6 @@
             }
         </td>
     </tr>
-    @*TODO hide SecurityQuestion & SecurityAnswer because they're not supported now*@
-    @*Don't display SecurityAnswer because it can be encrypted or hashed*@
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SecurityQuestion):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SecurityQuestion)
-            @Html.ValidationMessageFor(model => model.SecurityQuestion)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SecurityAnswer):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SecurityAnswer)
-            @Html.ValidationMessageFor(model => model.SecurityAnswer)
-        </td>
-    </tr>
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.Comments):

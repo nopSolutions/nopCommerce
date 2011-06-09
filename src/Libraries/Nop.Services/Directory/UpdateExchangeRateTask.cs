@@ -20,7 +20,7 @@ namespace Nop.Services.Directory
         /// <param name="node">Xml node that represents a task description</param>
         public void Execute(XmlNode node)
         {
-            //UNDONE Autofac issue - sdependencies can't be resolved
+            //UNDONE Autofac issue - dependencies can't be resolved
             var currencySettings = EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>().Settings;
             if (currencySettings.AutoUpdateEnabled)
                 return;

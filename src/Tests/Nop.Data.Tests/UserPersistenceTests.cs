@@ -22,8 +22,6 @@ namespace Nop.Data.Tests
                 PasswordFormat = PasswordFormat.Clear,
                 PasswordSalt = "",
                 Email = "a@b.com",
-                SecurityQuestion = "",
-                SecurityAnswer = "",
                 IsApproved = true,
                 IsLockedOut = false,
                 CreatedOnUtc = DateTime.UtcNow
@@ -43,8 +41,6 @@ namespace Nop.Data.Tests
                 PasswordFormat = PasswordFormat.Clear,
                 PasswordSalt = "",
                 Email = "a@b.com",
-                SecurityQuestion = "",
-                SecurityAnswer = "",
                 IsApproved = true,
                 IsLockedOut = false,
                 CreatedOnUtc = DateTime.UtcNow,

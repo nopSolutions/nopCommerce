@@ -177,20 +177,17 @@ namespace Nop.Services.Security
             user.Username = request.Username;
             user.Email = request.Email;
             user.PasswordFormat = request.PasswordFormat;
-            user.SecurityQuestion = request.SecurityQuestion;
 
             switch (request.PasswordFormat)
             {
                 case PasswordFormat.Clear:
                     {
                         user.Password = request.Password;
-                        user.SecurityAnswer = request.SecurityAnswer;
                     }
                     break;
                 case PasswordFormat.Encrypted:
                     {
                         user.Password = _encryptionService.EncryptText(request.Password);
-                        user.SecurityAnswer = _encryptionService.EncryptText(request.SecurityAnswer);
                     }
                     break;
                 case PasswordFormat.Hashed:
@@ -198,7 +195,6 @@ namespace Nop.Services.Security
                         string saltKey = _encryptionService.CreateSaltKey(5);
                         user.PasswordSalt = saltKey;
                         user.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _userSettings.HashedPasswordFormat);
-                        user.SecurityAnswer = _encryptionService.CreatePasswordHash(request.SecurityAnswer, saltKey);
                     }
                     break;
                 default:
@@ -253,15 +249,9 @@ namespace Nop.Services.Security
                 bool oldPasswordIsValid = oldPwd == user.Password;
                 if (!oldPasswordIsValid)
                     result.AddError("Old password doesn't match");
-
-                //validate security answer
-                bool securityAnswerIsValid = true;
-                //UNDONE validate security answer
-                //result.AddError("Wrong security answer");
-
-
-                if (oldPasswordIsValid && securityAnswerIsValid)
-                requestIsValid = true;
+                
+                if (oldPasswordIsValid)
+                    requestIsValid = true;
             }
             else
                 requestIsValid = true;

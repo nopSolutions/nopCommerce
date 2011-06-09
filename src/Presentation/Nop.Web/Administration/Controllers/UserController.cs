@@ -121,8 +121,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var registrationRequest = new UserRegistrationRequest(model.Email,
-                    model.Username, model.Password, PasswordFormat.Hashed, model.SecurityQuestion,
-                    model.SecurityAnswer, model.IsApproved);
+                    model.Username, model.Password, PasswordFormat.Hashed, model.IsApproved);
 
                 var registrationResult = _userService.RegisterUser(registrationRequest);
 
@@ -161,8 +160,6 @@ namespace Nop.Admin.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 Username = user.Username,
-                SecurityQuestion = user.SecurityQuestion,
-                SecurityAnswer = user.SecurityAnswer,
                 Comments = user.Comments,
                 IsApproved = user.IsApproved,
                 IsLockedOut = user.IsLockedOut,
@@ -201,8 +198,6 @@ namespace Nop.Admin.Controllers
                 if (!user.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
                     //TODO handle an error if an exception is thrown
                     _userService.SetEmail(user, model.Email);
-                user.SecurityQuestion = model.SecurityQuestion;
-                user.SecurityAnswer = model.SecurityAnswer;
                 user.Comments = model.Comments;
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;

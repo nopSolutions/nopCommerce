@@ -25,8 +25,6 @@ namespace Nop.Core.Domain.Security
         }
         
         public virtual string PasswordSalt { get; set; }
-        public virtual string SecurityQuestion { get; set; }
-        public virtual string SecurityAnswer { get; set; }
         public virtual string Comments { get; set; }
         public virtual bool IsApproved { get; set; }
         public virtual bool IsLockedOut { get; set; }

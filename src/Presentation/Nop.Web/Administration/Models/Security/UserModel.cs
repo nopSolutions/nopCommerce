@@ -32,14 +32,6 @@ namespace Nop.Admin.Models.Security
         [AllowHtml]
         public string Password { get; set; }
 
-        [NopResourceDisplayName("Admin.Users.Fields.SecurityQuestion")]
-        [AllowHtml]
-        public string SecurityQuestion { get; set; }
-
-        [NopResourceDisplayName("Admin.Users.Fields.SecurityAnswer")]
-        [AllowHtml]
-        public string SecurityAnswer { get; set; }
-
         [NopResourceDisplayName("Admin.Users.Fields.Comments")]
         [AllowHtml]
         public string Comments { get; set; }

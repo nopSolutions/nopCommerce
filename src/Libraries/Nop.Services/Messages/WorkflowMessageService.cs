@@ -28,6 +28,7 @@ namespace Nop.Services.Messages
         private readonly ITokenizer _tokenizer;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IMessageTokenProvider _messageTokenProvider;
+        private readonly IWebHelper _webHelper;
 
         private readonly EmailAccountSettings _emailAccountSettings;
 
@@ -38,7 +39,8 @@ namespace Nop.Services.Messages
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService, ILanguageService languageService,
             ITokenizer tokenizer, IEmailAccountService emailAccountService,
-            IMessageTokenProvider messageTokenProvider, EmailAccountSettings emailAccountSettings)
+            IMessageTokenProvider messageTokenProvider, IWebHelper webHelper,
+            EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
@@ -46,6 +48,7 @@ namespace Nop.Services.Messages
             this._tokenizer = tokenizer;
             this._emailAccountService = emailAccountService;
             this._messageTokenProvider = messageTokenProvider;
+            this._webHelper = webHelper;
 
             this._emailAccountSettings = emailAccountSettings;
         }
@@ -634,7 +637,8 @@ namespace Nop.Services.Messages
                 return 0;
 
             var customerTokens = GenerateTokens(customer);
-            customerTokens.Add(new Token("Wishlist.URLForCustomer", "UNDONE Not implemented"));
+            //TODO add a method for getting URL (e.g. SEOHelper.GetWishlistUrl)
+            customerTokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
             customerTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
             //UNDONE use customerEmail
 

@@ -219,8 +219,7 @@ namespace Nop.Web.Controllers
                 //register 'User' entity
                 bool isApproved = _userSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new UserRegistrationRequest(model.Email,
-                    model.Username, model.Password, PasswordFormat.Hashed, "",
-                    "", isApproved);
+                    model.Username, model.Password, PasswordFormat.Hashed, isApproved);
                 var registrationResult = _userService.RegisterUser(registrationRequest);
                 if (registrationResult.Success)
                 {

@@ -7278,22 +7278,6 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
-                      <LocaleResource Name="SecurityQuestion">
-                        <Value>Security question</Value>
-                        <Children>
-                          <LocaleResource Name="Hint">
-                            <Value>The security question.</Value>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
-                      <LocaleResource Name="SecurityAnswer">
-                        <Value>Security answer</Value>
-                        <Children>
-                          <LocaleResource Name="Hint">
-                            <Value>The security answer.</Value>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
                       <LocaleResource Name="Comments">
                         <Value>Comments</Value>
                         <Children>
