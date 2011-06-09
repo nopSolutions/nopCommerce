@@ -142,12 +142,12 @@ namespace Nop.Web.Framework
             //pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)
             //builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
             builder.RegisterType<SettingService>().As<ISettingService>()
-                .WithParameter("cacheManager", new MemoryCacheManager())
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
             //pass MemoryCacheManager to LocalizationService as cacheManager (cache locales between requests)
             //builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerHttpRequest();
             builder.RegisterType<LocalizationService>().As<ILocalizationService>()
-                .WithParameter("cacheManager", new MemoryCacheManager())
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
 
 
