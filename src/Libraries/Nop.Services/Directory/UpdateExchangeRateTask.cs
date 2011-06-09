@@ -22,7 +22,7 @@ namespace Nop.Services.Directory
         {
             //UNDONE Autofac issue - dependencies can't be resolved
             var currencySettings = EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>().Settings;
-            if (currencySettings.AutoUpdateEnabled)
+            if (!currencySettings.AutoUpdateEnabled)
                 return;
 
             long lastUpdateTimeTicks = currencySettings.LastUpdateTime;

@@ -15,6 +15,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Fakes;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
@@ -72,9 +73,10 @@ namespace Nop.Web.Framework
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();
 
 
-            //Source code from AutofacWebTypesModule class.
-            //It can be replaced with the following code: builder.RegisterModule(new AutofacWebTypesModule());
-            builder.Register(c => new HttpContextWrapper(HttpContext.Current))
+            //register FakeHttpContext when HttpContext is not available
+            builder.Register(c => HttpContext.Current != null ? 
+                (new HttpContextWrapper(HttpContext.Current) as HttpContextBase) : 
+                (new FakeHttpContext("~/") as HttpContextBase))
                 .As<HttpContextBase>()
                 .InstancePerHttpRequest();
             builder.Register(c => c.Resolve<HttpContextBase>().Request)

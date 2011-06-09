@@ -66,6 +66,12 @@
   <ItemGroup>
     <Compile Include="Domain\Common\SeoSettings.cs" />
     <Compile Include="Domain\Orders\BestsellersReportLine.cs" />
+    <Compile Include="Fakes\FakeHttpContext.cs" />
+    <Compile Include="Fakes\FakeHttpRequest.cs" />
+    <Compile Include="Fakes\FakeHttpResponse.cs" />
+    <Compile Include="Fakes\FakeHttpSessionState.cs" />
+    <Compile Include="Fakes\FakeIdentity.cs" />
+    <Compile Include="Fakes\FakePrincipal.cs" />
     <Compile Include="ICollectionTExtensions.cs" />
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Caching\Extensions.cs" />

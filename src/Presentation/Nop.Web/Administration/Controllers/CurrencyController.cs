@@ -59,8 +59,17 @@ namespace Nop.Admin.Controllers
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId ? true : false;
-            if (liveRates) 
-                ViewBag.Rates = _currencyService.GetCurrencyLiveRates(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
+            if (liveRates)
+            {
+                try
+                {
+                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(_currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId).CurrencyCode);
+                }
+                catch (Exception exc)
+                {
+                    ErrorNotification(exc);
+                }
+            }
             ViewBag.ExchangeRateProviders = new SelectList(_currencyService.LoadAllExchangeRateProviders(), "SystemName", "FriendlyName", _currencySettings.ActiveExchangeRateProviderSystemName); ;
             ViewBag.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
             var gridModel = new GridModel<CurrencyModel>
