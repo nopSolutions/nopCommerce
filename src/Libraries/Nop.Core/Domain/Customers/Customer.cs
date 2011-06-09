@@ -300,14 +300,28 @@ namespace Nop.Core.Domain.Customers
 
         public virtual void SetBillingAddress(Address address)
         {
-            if (this.Addresses.Contains(address))
+            if (address != null)
+            {
+                if (this.Addresses.Contains(address))
+                    this.BillingAddress = address;
+            }
+            else
+            {
                 this.BillingAddress = address;
+            }
         }
 
         public virtual void SetShippingAddress(Address address)
         {
-            if (this.Addresses.Contains(address))
+            if (address != null)
+            {
+                if (this.Addresses.Contains(address))
+                    this.ShippingAddress = address;
+            }
+            else
+            {
                 this.ShippingAddress = address;
+            }
         }
 
         #endregion

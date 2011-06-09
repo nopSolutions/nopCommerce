@@ -27,6 +27,8 @@ namespace Nop.Admin.Validators.Directory
                 {
                     try
                     {
+                        if (String.IsNullOrEmpty(x))
+                            return true;
                         var culture = new CultureInfo(x);
                         return culture != null;
                     }

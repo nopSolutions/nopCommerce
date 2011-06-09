@@ -460,19 +460,142 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCurrencies()
         {
-            var currencyUsd = new Currency
+            var currencies = new List<Currency>()
             {
-                Name = "US Dollar",
-                CurrencyCode = "USD",
-                Rate = 1,
-                DisplayLocale = "en-US",
-                CustomFormatting = "",
-                Published = true,
-                DisplayOrder = 2,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
+                new Currency
+                {
+                    Name = "US Dollar",
+                    CurrencyCode = "USD",
+                    Rate = 1,
+                    DisplayLocale = "en-US",
+                    CustomFormatting = "",
+                    Published = true,
+                    DisplayOrder = 1,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Australian Dollar",
+                    CurrencyCode = "AUD",
+                    Rate = 0.94M,
+                    DisplayLocale = "en-AU",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 2,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "British Pound",
+                    CurrencyCode = "GBP",
+                    Rate = 0.61M,
+                    DisplayLocale = "en-GB",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 3,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Canadian Dollar",
+                    CurrencyCode = "CAD",
+                    Rate = 0.98M,
+                    DisplayLocale = "en-CA",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 4,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Chinese Yuan Renminbi",
+                    CurrencyCode = "CNY",
+                    Rate = 6.48M,
+                    DisplayLocale = "zh-CN",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 5,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Euro",
+                    CurrencyCode = "EUR",
+                    Rate = 0.68M,
+                    DisplayLocale = "",
+                    CustomFormatting = "ˆ0.00",
+                    Published = false,
+                    DisplayOrder = 6,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Hong Kong Dollar",
+                    CurrencyCode = "HKD",
+                    Rate = 7.75M,
+                    DisplayLocale = "zh-HK",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 7,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Japanese Yen",
+                    CurrencyCode = "JPY",
+                    Rate = 80.07M,
+                    DisplayLocale = "ja-JP",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 8,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Russian Rouble",
+                    CurrencyCode = "RUR",
+                    Rate = 27.7M,
+                    DisplayLocale = "ru-RU",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 9,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Swedish Krona",
+                    CurrencyCode = "SEK",
+                    Rate = 6.19M,
+                    DisplayLocale = "sv-SE",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 10,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
+                new Currency
+                {
+                    Name = "Romanian Leu",
+                    CurrencyCode = "RON",
+                    Rate = 2.85M,
+                    DisplayLocale = "ro-RO",
+                    CustomFormatting = "",
+                    Published = false,
+                    DisplayOrder = 11,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                },
             };
-            _currencyRepository.Insert(currencyUsd);
+            currencies.ForEach(c => _currencyRepository.Insert(c));
         }
 
         protected virtual void InstallCountriesAndStates()
@@ -4299,7 +4422,8 @@ namespace Nop.Services.Installation
                     PageTitleSeparator = ". ",
                     DefaultTitle = "Your store",
                     DefaultMetaKeywords = "",
-                    DefaultMetaDescription = ""
+                    DefaultMetaDescription = "",
+                    ConvertNonWesternChars = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()

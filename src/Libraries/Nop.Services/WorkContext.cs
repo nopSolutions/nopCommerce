@@ -92,7 +92,6 @@ namespace Nop.Services
                     //TODO we should not create guest customer if request is made by search engine?
                     //perhaps, use a single built-in system record for search engines (don't allow it to be registered, etc)
 
-                    //TODO set current language and currency?
                     customer = _customerService.InsertGuestCustomer();
                 }
 
@@ -116,8 +115,6 @@ namespace Nop.Services
 
         protected void SetCustomerCookie(Guid customerGuid)
         {
-            //TODO encrypt customer GUID
-
             var cookie = new HttpCookie(CustomerCookieName);
             cookie.Value = customerGuid.ToString();
             if (customerGuid == Guid.Empty)

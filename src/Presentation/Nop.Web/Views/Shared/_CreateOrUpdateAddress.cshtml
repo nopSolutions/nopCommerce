@@ -1,11 +1,12 @@
 ﻿@model Nop.Web.Models.Common.AddressModel
 @using Nop.Web.Framework;
-@*UNDONE display ajax loading icon while loading states*@
 <script type="text/javascript">
      $(function() {
             $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)")
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
                 $.ajax({
                     cache:false,
                     type: "GET",
@@ -16,9 +17,11 @@
                         $.each(data, function(id, option) {
                             ddlStates.append($('<option></option>').val(option.id).html(option.name));
                         });
+                        statesProgress.hide();
                     },
                     error:function (xhr, ajaxOptions, thrownError){
-                        alert('Failed to retrieve states.')
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
                     }  
                 });
             });
@@ -107,6 +110,9 @@
             </td>
             <td>
                 @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+                <span id="states-loading-progress" style="display: none;">@T("Common.Wait...")
+                            <img src='@Href("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                        </span>
                 @Html.ValidationMessageFor(model => model.StateProvinceId)
             </td>
         </tr>

@@ -524,6 +524,7 @@ namespace Nop.Admin.Controllers
             model.SeoSettings.DefaultTitle = _seoSettings.DefaultTitle;
             model.SeoSettings.DefaultMetaKeywords = _seoSettings.DefaultMetaKeywords;
             model.SeoSettings.DefaultMetaDescription = _seoSettings.DefaultMetaDescription;
+            model.SeoSettings.ConvertNonWesternChars = _seoSettings.ConvertNonWesternChars;
             
             //security settings
             model.SecuritySettings.EncryptionKey = _securitySettings.EncryptionKey;
@@ -552,6 +553,7 @@ namespace Nop.Admin.Controllers
             _seoSettings.DefaultTitle = model.SeoSettings.DefaultTitle;
             _seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
             _seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
+            _seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
             _settingService.SaveSetting(_seoSettings);
 
             //PDF settings
@@ -612,13 +614,16 @@ namespace Nop.Admin.Controllers
 
                 //update user information
                 //TODO optimization - load only users with PasswordFormat.Encrypted (don't filter them here)
-                //UNDONE finish 
-                //var users = _userService.GetUsers(null, null, 0, int.MaxValue)
-                //    .Where(u => u.PasswordFormat == PasswordFormat.Encrypted);
-                //foreach (var user in users)
-                //{
-                //    //update encrypted passwords and other encrypted informartion here
-                //}
+                var users = _userService.GetUsers(null, null, 0, int.MaxValue)
+                    .Where(u => u.PasswordFormat == PasswordFormat.Encrypted);
+                foreach (var user in users)
+                {
+                    string decryptedPassword = _encryptionService.DecryptText(user.Password, oldEncryptionPrivateKey);
+                    string encryptedPassword = _encryptionService.EncryptText(decryptedPassword, newEncryptionPrivateKey);
+
+                    user.Password = encryptedPassword;
+                    _userService.UpdateUser(user);
+                }
 
                 _securitySettings.EncryptionKey = newEncryptionPrivateKey;
                 _settingService.SaveSetting(_securitySettings);

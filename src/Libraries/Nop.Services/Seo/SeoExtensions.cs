@@ -6,7 +6,9 @@ using System.Text;
 using System.Web;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.News;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
@@ -121,23 +123,22 @@ namespace Nop.Services.Seo
             string OkChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();
 
-            //TODO:Suppot ConvertNonWesternChars?
-            //if (EngineContext.Current.Resolve<ISettingManager>().GetSettingValueBoolean("SEONames.ConvertNonWesternChars"))
-            //{
-            if (_seoCharacterTable == null)
-                InitializeSeoCharacterTable();
-            //}
+            bool convertNonWesternChars = EngineContext.Current.Resolve<SeoSettings>().ConvertNonWesternChars;
+            if (convertNonWesternChars)
+            {
+                if (_seoCharacterTable == null)
+                    InitializeSeoCharacterTable();
+            }
 
             var sb = new StringBuilder();
             foreach (char c in name.ToCharArray())
             {
                 string c2 = c.ToString();
-                //TODO:Suppot ConvertNonWesternChars?
-                //if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("SEONames.ConvertNonWesternChars"))
-                //{
-                if (_seoCharacterTable.ContainsKey(c2))
-                    c2 = _seoCharacterTable[c2];
-                //}
+                if (convertNonWesternChars)
+                {
+                    if (_seoCharacterTable.ContainsKey(c2))
+                        c2 = _seoCharacterTable[c2];
+                }
 
                 if (OkChars.Contains(c2))
                     sb.Append(c2);

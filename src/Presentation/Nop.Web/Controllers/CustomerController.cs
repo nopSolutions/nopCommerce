@@ -190,7 +190,6 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
             //TODO Get and save DateOfBirth (if enabled)
-            //TODO mark register button as default one (pressing 'Enter' button should cause appropriate form submit)
 
             var model = new RegisterModel();
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
@@ -843,10 +842,16 @@ namespace Nop.Web.Controllers
             if (_orderProcessingService.CanCancelRecurringPayment(customer, recurringPayment))
             {
                 var errors = _orderProcessingService.CancelRecurringPayment(recurringPayment);
-                //UNDONE display errors (if errors.Count > 0)
+
+                var model = PrepareCustomerOrderListModel(customer);
+                model.CancelRecurringPaymentErrors = errors;
+
+                return View(model);
             }
-            var model = PrepareCustomerOrderListModel(customer);
-            return View(model);
+            else
+            {
+                return RedirectToAction("Orders");
+            }
         }
 
         private CustomerOrderListModel PrepareCustomerOrderListModel(Customer customer)

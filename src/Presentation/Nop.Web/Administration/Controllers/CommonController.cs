@@ -267,7 +267,7 @@ namespace Nop.Admin.Controllers
                 }
                 catch (Exception exc)
                 {
-                    //TODO log exception
+                    ErrorNotification(exc);
                 }
             }
 

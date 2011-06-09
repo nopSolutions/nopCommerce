@@ -3214,6 +3214,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="ConvertNonWesternChars">
+                        <Value>Convert non-western chars</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to take out the accent marks in the letters of SEO names while keeping the letter.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                       <LocaleResource Name="EncryptionKey">
                         <Value>Encryption private key</Value>
                         <Children>
@@ -4600,6 +4608,15 @@
                         </Children>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new customer role has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The customer role has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The customer role has been updated successfully.</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

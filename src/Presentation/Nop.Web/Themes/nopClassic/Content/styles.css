@@ -3820,7 +3820,7 @@ textarea
     width: 150px;
 }
 
-.product-variant-line .error
+.product-details-page .error
 {
     font-weight: bold;
 	color: Red;

@@ -95,6 +95,24 @@
                 <div class="clear">
                 </div>
             
+                
+                if (Model.CancelRecurringPaymentErrors.Count > 0)
+                {
+                <div class="warning-box">
+                    <div class="warning-text">
+                        @for (int i = 0; i < Model.CancelRecurringPaymentErrors.Count; i++)
+                        {
+                            @Model.CancelRecurringPaymentErrors[i]
+                       if (i != Model.CancelRecurringPaymentErrors.Count - 1)
+                       {
+                            <br />
+                       }
+                        }
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+                }
                 <br />
             }
             <div class="order-list">

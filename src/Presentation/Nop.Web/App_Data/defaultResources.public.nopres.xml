@@ -432,6 +432,9 @@
       <LocaleResource Name="EditCategory">
         <Value>Edited a category ('{0}')</Value>
       </LocaleResource>
+      <LocaleResource Name="PlaceOrder">
+        <Value>Placed a new order</Value>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Address">
@@ -800,6 +803,9 @@
       </LocaleResource>
       <LocaleResource Name="View">
         <Value>View</Value>
+      </LocaleResource>
+      <LocaleResource Name="Wait...">
+        <Value>Wait...</Value>
       </LocaleResource>
       <LocaleResource Name="Yes">
         <Value>Yes</Value>

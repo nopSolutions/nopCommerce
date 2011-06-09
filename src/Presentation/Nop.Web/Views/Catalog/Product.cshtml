@@ -121,6 +121,22 @@
                     }
                     <div class="clear">
                     </div>
+                    @if (errors.Count > 0)
+                    {
+                        //display errors   
+                        <span class="error">
+                        @for (int i = 0; i < errors.Count; i++)
+                        {
+                            @errors[i]
+                            if (i != errors.Count - 1)
+                            {
+                                <text><br /></text>
+                            }
+                        }
+                        </span>
+                        <div class="clear">
+                        </div>
+                    }
                     <br />
                     @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
                     <text>&nbsp;</text>

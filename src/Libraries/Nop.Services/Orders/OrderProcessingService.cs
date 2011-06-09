@@ -57,6 +57,7 @@ namespace Nop.Services.Orders
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ISmsService _smsService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
@@ -93,6 +94,7 @@ namespace Nop.Services.Orders
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="smsService">SMS service</param>
+        /// <param name="customerActivityService">Customer activityservice</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
         /// <param name="taxSettings">Tax settings</param>
@@ -120,6 +122,7 @@ namespace Nop.Services.Orders
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             ISmsService smsService,
+            ICustomerActivityService customerActivityService,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
@@ -148,6 +151,7 @@ namespace Nop.Services.Orders
             this._discountService = discountService;
             this._encryptionService = encryptionService;
             this._smsService = smsService;
+            this._customerActivityService = customerActivityService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
@@ -1192,14 +1196,13 @@ namespace Nop.Services.Orders
                         if (!processPaymentRequest.IsRecurringPayment)
                             _customerService.ResetCheckoutData(customer, true);
 
-                        //TODO insert activity
-                        //if (!processPaymentRequest.IsRecurringPayment)
-                        //{
-                        //    customerActivityService.InsertActivity(
-                        //        "PlaceOrder",
-                        //        _localizationManager.GetLocaleResourceString("ActivityLog.PlaceOrder"),
-                        //        order.Id);
-                        //}
+                        if (!processPaymentRequest.IsRecurringPayment)
+                        {
+                            _customerActivityService.InsertActivity(
+                                "PlaceOrder",
+                                _localizationService.GetResource("ActivityLog.PlaceOrder"),
+                                order.Id);
+                        }
 
                         //uncomment this line to support transactions
                         //scope.Complete();

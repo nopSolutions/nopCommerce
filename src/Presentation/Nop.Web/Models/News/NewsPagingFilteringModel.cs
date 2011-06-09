@@ -13,8 +13,6 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.News
 {
-    //TODO make a new common abstract class for PagingFilteringModel
-    //(NewsPagingFilteringModel, BlogPagingFilteringModel, CatalogPagingFilteringModel)
     public class NewsPagingFilteringModel : IPagination
     {
         #region Methods

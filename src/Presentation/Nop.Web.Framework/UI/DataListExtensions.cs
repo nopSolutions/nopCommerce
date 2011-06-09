@@ -30,7 +30,6 @@ namespace Nop.Web.Framework.UI
                     sb.Append("<tr>");
 
                 sb.Append("<td");
-                //UNDONE support custom attributes
                 sb.Append(">");
                 
                 sb.Append(template(item).ToHtmlString());

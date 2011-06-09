@@ -25,6 +25,10 @@
                 </div>
                 <div class="buttons">
                     <input type="submit" name="newsletter-subscribe-button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="newsletterbox-subscribebutton" />
+                    <span id="subscribe-loading-progress" style="display: none;">@T("Common.Wait...")
+                            <img src='@Href("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                        </span>
+                        @*add a new 'ajax_loader_small.gif' with transparent background*@
                 </div>
             </div>
             <div class="clear">
@@ -43,12 +47,15 @@
                     subscribe = 'false';
                 }
                 var email = $("#@Html.FieldIdFor(model => model.Email)").val();
+                var subscribeProgress = $("#subscribe-loading-progress");
+                subscribeProgress.show();
                 $.ajax({
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("SubscribeNewsletter", "Newsletter"))",
                     data: "subscribe=" + subscribe + "&email=" +email ,
                     success: function (data) {
+                        subscribeProgress.hide();
                         $("#pnl-newsletter-result").html(data.Result);
                          if (data.Success) {
                             $('#pnl-newsletter-subscribe').hide();                            
@@ -59,6 +66,7 @@
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to subscribe.');
+                        subscribeProgress.hide();
                     }  
                 });                
                 return false;

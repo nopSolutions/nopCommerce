@@ -89,6 +89,15 @@
                 @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaDescription)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.ConvertNonWesternChars)
+                @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSecuritySettings()

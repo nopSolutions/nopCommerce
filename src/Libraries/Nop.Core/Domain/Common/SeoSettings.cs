@@ -9,5 +9,7 @@ namespace Nop.Core.Domain.Common
         public string DefaultTitle { get; set; }
         public string DefaultMetaKeywords { get; set; }
         public string DefaultMetaDescription { get; set; }
+
+        public bool ConvertNonWesternChars { get; set; }
     }
 }

@@ -44,6 +44,9 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription")]
             public string DefaultMetaDescription { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ConvertNonWesternChars")]
+            public bool ConvertNonWesternChars { get; set; }
         }
 
         public class SecuritySettingsModel

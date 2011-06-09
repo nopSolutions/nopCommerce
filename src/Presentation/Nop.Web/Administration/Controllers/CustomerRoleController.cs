@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Admin.Models.Customers;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -15,14 +16,17 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
 		private readonly ICustomerService _customerService;
+        private readonly ILocalizationService _localizationService;
 
 		#endregion
 
 		#region Constructors
 
-        public CustomerRoleController(ICustomerService customerService)
+        public CustomerRoleController(ICustomerService customerService,
+            ILocalizationService localizationService)
 		{
             this._customerService = customerService;
+            this._localizationService = localizationService;
 		}
 
 		#endregion Constructors 
@@ -75,6 +79,8 @@ namespace Nop.Admin.Controllers
             {
                 var customerRole = model.ToEntity();
                 _customerService.InsertCustomerRole(customerRole);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
             }
 
@@ -93,10 +99,15 @@ namespace Nop.Admin.Controllers
         public ActionResult Edit(CustomerRoleModel model, bool continueEditing)
         {
             var customerRole = _customerService.GetCustomerRoleById(model.Id);
+            if (customerRole == null) 
+                throw new ArgumentException("No customer role found with the specified id");
+
             if (ModelState.IsValid)
             {
                 customerRole = model.ToEntity(customerRole);
                 _customerService.UpdateCustomerRole(customerRole);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
                 return continueEditing ? RedirectToAction("Edit", customerRole.Id) : RedirectToAction("List");
             }
 
@@ -106,11 +117,24 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
-		{
-            //TODO display warning when customer role could not be deleted (system role)
+        {
             var customerRole = _customerService.GetCustomerRoleById(id);
-            _customerService.DeleteCustomerRole(customerRole);
-			return RedirectToAction("List");
+            if (customerRole == null)
+                throw new ArgumentException("No customer role found with the specified id");
+
+            try
+            {
+                _customerService.DeleteCustomerRole(customerRole);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc.Message);
+                return RedirectToAction("Edit", new { id = customerRole.Id });
+            }
+
 		}
 
 		#endregion

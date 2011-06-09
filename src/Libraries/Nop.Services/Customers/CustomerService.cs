@@ -186,7 +186,6 @@ namespace Nop.Services.Customers
         /// <returns>Customer</returns>
         public virtual Customer InsertGuestCustomer()
         {
-            //TODO save current language, currency, tax display type, etc
             var customer = new Customer()
             {
                 CustomerGuid = Guid.NewGuid(),

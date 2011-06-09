@@ -119,12 +119,10 @@ namespace Nop.Admin.Controllers
                 if (i == 0)
                 {
                     //attribute options
-                    foreach (var sao in sa.SpecificationAttributeOptions)
+                    foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(sa.Id))
                         model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem() { Text = sao.Name, Value = sao.Id.ToString() });
                 }
             }
-            //UNDONE: display specification attributes without options?
-
         }
 
         [NonAction]

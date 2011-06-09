@@ -13,7 +13,7 @@ namespace Nop.Data.Mapping.Directory
             this.HasKey(c =>c.Id);
             this.Property(c => c.Name).IsRequired().HasMaxLength(50);
             this.Property(c => c.CurrencyCode).IsRequired().HasMaxLength(5);
-            this.Property(c => c.DisplayLocale).IsRequired().HasMaxLength(50);
+            this.Property(c => c.DisplayLocale).HasMaxLength(50);
             this.Property(c => c.CustomFormatting).HasMaxLength(50);
             this.Property(c => c.Rate).HasPrecision(18, 4);
         }

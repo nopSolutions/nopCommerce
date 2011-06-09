@@ -13,24 +13,13 @@ namespace Nop.Admin.Controllers
     [AdminAuthorize]
     public class PictureController : BaseNopController
     {
-        private IPictureService _pictureService;
+        private readonly IPictureService _pictureService;
 
         public PictureController(IPictureService pictureService)
         {
             _pictureService = pictureService;
         }
-
-        public ActionResult Render(int pictureId, int targetSize = 100)
-        {
-            var picture = _pictureService.GetPictureById(pictureId);
-
-            if (picture == null) { 
-                //TODO:Return default image 
-            }
-
-            return new PictureResult(picture, targetSize);
-        }
-
+        
         public ActionResult InsertPicture(HttpPostedFileBase httpPostedFile)
         {
              byte[] pictureBinary = httpPostedFile.GetPictureBits();

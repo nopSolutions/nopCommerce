@@ -8,7 +8,6 @@ namespace Nop.Admin.Validators.Customers
     {
         public CustomerValidator(ILocalizationService localizationService)
         {
-            //UNDONE add requred validation (use 'FormFieldSettings' class)
         }
     }
 }

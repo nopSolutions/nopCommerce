@@ -80,7 +80,8 @@ namespace Nop.Services.Directory
             if (currency == null)
                 throw new ArgumentNullException("currency");
 
-            //TODO load all customers (currency.Customers property) and set new currency to a new one
+            //clear many-to-many navigation property because EF doesn't allow to configure cascade delete for this type of associations
+            currency.Customers.Clear();
 
             _currencyRepository.Delete(currency);
 

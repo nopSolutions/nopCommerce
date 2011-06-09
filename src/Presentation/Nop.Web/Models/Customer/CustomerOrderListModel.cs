@@ -14,11 +14,15 @@ namespace Nop.Web.Models.Customer
         {
             Orders = new List<OrderDetailsModel>();
             RecurringOrders = new List<RecurringOrderModel>();
+            CancelRecurringPaymentErrors = new List<string>();
         }
 
         public IList<OrderDetailsModel> Orders { get; set; }
         public IList<RecurringOrderModel> RecurringOrders { get; set; }
+        public IList<string> CancelRecurringPaymentErrors { get; set; }
+
         public CustomerNavigationModel NavigationModel { get; set; }
+
 
         #region Nested classes
         public class OrderDetailsModel : BaseNopEntityModel
