@@ -6139,7 +6139,6 @@ namespace Nop.Services.Installation
             {
                 ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Software").Single().Id,
                 AttributeControlType = AttributeControlType.Checkboxes,
-                IsRequired = true,
             };
             pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {

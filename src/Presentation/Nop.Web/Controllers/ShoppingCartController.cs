@@ -666,7 +666,20 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.Datepicker:
                         {
-                            //TODO date picker
+                            var date = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                            }
+                            catch { }
+                            if (selectedDate.HasValue)
+                            {
+                                selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                    attribute, selectedDate.Value.ToString("D"));
+                            }
                         }
                         break;
                     default:

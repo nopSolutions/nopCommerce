@@ -40,6 +40,16 @@ namespace Nop.Web.Models.Customer
         public string FirstName { get; set; }
         [NopResourceDisplayName("Account.Fields.LastName")]
         public string LastName { get; set; }
+        
+
+        public bool DateOfBirthEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.DateOfBirth")]
+        public int? DateOfBirthDay { get; set; }
+        [NopResourceDisplayName("Account.Fields.DateOfBirth")]
+        public int? DateOfBirthMonth { get; set; }
+        [NopResourceDisplayName("Account.Fields.DateOfBirth")]
+        public int? DateOfBirthYear { get; set; }
+
 
         public bool CompanyEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Company")]

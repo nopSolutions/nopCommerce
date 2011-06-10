@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.Models.Customer.CustomerInfoModel
+@using Nop.Web.Framework;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -65,6 +66,27 @@
                                         @Html.ValidationMessageFor(model => model.LastName)
                                     </td>
                                 </tr>
+                                @if (Model.DateOfBirthEnabled)
+                                {
+                                <tr class="row">
+                                    <td class="item-name">
+                                        @Html.LabelFor(model => model.DateOfBirthDay):
+                                    </td>
+                                    <td class="item-value">
+                                        @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay), 
+                                        Html.FieldNameFor(x => x.DateOfBirthMonth), 
+                                        Html.FieldNameFor(x => x.DateOfBirthYear), 
+                                        DateTime.Now.Year - 110, 
+                                        DateTime.Now.Year, 
+                                        Model.DateOfBirthDay, 
+                                        Model.DateOfBirthMonth, 
+                                        Model.DateOfBirthYear)
+                                        @Html.ValidationMessageFor(model => model.DateOfBirthDay)
+                                        @Html.ValidationMessageFor(model => model.DateOfBirthMonth)
+                                        @Html.ValidationMessageFor(model => model.DateOfBirthYear)
+                                    </td>
+                                </tr>
+                                }
                                 <tr class="row">
                                     <td class="item-name">
                                         @Html.LabelFor(model => model.Email):

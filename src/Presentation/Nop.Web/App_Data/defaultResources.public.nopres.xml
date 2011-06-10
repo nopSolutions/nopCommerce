@@ -188,6 +188,9 @@
           <LocaleResource Name="Company">
             <Value>Company name</Value>
           </LocaleResource>
+          <LocaleResource Name="DateOfBirth">
+            <Value>Date of birth</Value>
+          </LocaleResource>
           <LocaleResource Name="Email">
             <Value>Email</Value>
             <Children>

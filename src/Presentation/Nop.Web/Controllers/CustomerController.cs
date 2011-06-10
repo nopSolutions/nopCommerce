@@ -189,8 +189,6 @@ namespace Nop.Web.Controllers
             if (_userSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
-            //TODO Get and save DateOfBirth (if enabled)
-
             var model = new RegisterModel();
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
@@ -200,7 +198,7 @@ namespace Nop.Web.Controllers
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
-            //model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
+            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
 
             return View(model);
@@ -260,8 +258,16 @@ namespace Nop.Web.Controllers
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-                    //if (_customerSettings.DateOfBirthEnabled)
-                    //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+                    if (_customerSettings.DateOfBirthEnabled)
+                    {
+                        DateTime? dateOfBirth = null;
+                        try
+                        {
+                            dateOfBirth = new DateTime(model.DateOfBirthYear.Value, model.DateOfBirthMonth.Value, model.DateOfBirthDay.Value);
+                        }
+                        catch { }
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, dateOfBirth);
+                    }
                     if (_customerSettings.CompanyEnabled)
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
                     if (_customerSettings.NewsletterEnabled)
@@ -356,7 +362,7 @@ namespace Nop.Web.Controllers
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
-            //model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
+            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             return View(model);
         }
@@ -514,9 +520,16 @@ namespace Nop.Web.Controllers
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-                    //TODO save DateOfBirth (if enabled)
-                    //if (_customerSettings.DateOfBirthEnabled)
-                    //    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+                    if (_customerSettings.DateOfBirthEnabled)
+                    {
+                        DateTime? dateOfBirth = null;
+                        try
+                        {
+                            dateOfBirth = new DateTime(model.DateOfBirthYear.Value, model.DateOfBirthMonth.Value, model.DateOfBirthDay.Value);
+                        }
+                        catch { }
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, dateOfBirth);
+                    }
                     if (_customerSettings.CompanyEnabled)
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
                     //newsletter
@@ -574,7 +587,6 @@ namespace Nop.Web.Controllers
 
             if (user == null)
                 throw new ArgumentNullException("user");
-            //TODO Get and save DateOfBirth (if enabled)
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
@@ -586,7 +598,13 @@ namespace Nop.Web.Controllers
                 model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
                 model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
                 model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-                //model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                var dateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                if (dateOfBirth.HasValue)
+                {
+                    model.DateOfBirthDay = dateOfBirth.Value.Day;
+                    model.DateOfBirthMonth = dateOfBirth.Value.Month;
+                    model.DateOfBirthYear = dateOfBirth.Value.Year;
+                }
                 model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
 
                 //newsletter
@@ -605,7 +623,7 @@ namespace Nop.Web.Controllers
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.GenderEnabled = _customerSettings.GenderEnabled;
-            //model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
+            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
