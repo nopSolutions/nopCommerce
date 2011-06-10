@@ -29,10 +29,9 @@
         //TODO LiveChatBlock
         <div class="clear">
         </div>
-        //TODO MiniShoppingCartBox
+        @Html.Action("MiniShoppingCart", "ShoppingCart")
         <div class="clear">
-        </div>
-        
+        </div>        
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId })
         <div class="clear">
         </div>
