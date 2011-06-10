@@ -88,9 +88,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Methods");
             }
 
-            //TODO an issue: when a store owner clicks on 'Update' button and then 'Cancel' button,
-            //the 'Configure method' hyperlink disappears
-            
             var smsProvider = _smsService.LoadSmsProviderBySystemName(model.SystemName);
             if (smsProvider.IsSmsProviderActive(_smsSettings))
             {

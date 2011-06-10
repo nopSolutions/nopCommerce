@@ -61,7 +61,6 @@ namespace Nop.Web.Framework
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
 
             //data layer
-            //TODO database type should be configurable
             Database.DefaultConnectionFactory = new SqlCeConnectionFactory(
                 "System.Data.SqlServerCe.4.0", HostingEnvironment.MapPath("~/App_Data/"), "");
             //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
