@@ -787,6 +787,22 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        [ChildActionOnly]
+        public ActionResult HomepageCategories()
+        {
+            var listModel = _categoryService.GetAllCategoriesDisplayedOnHomePage()
+                .Select(x =>
+                {
+                    var catModel = x.ToModel();
+                    catModel.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
+                    catModel.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name);
+                    catModel.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name);
+                    return catModel;
+                })
+                .ToList();
+
+            return PartialView(listModel);
+        }
         #endregion
 
         #region Manufacturers
@@ -1464,6 +1480,16 @@ namespace Nop.Web.Controllers
             }
 
             var model = products
+                .Select(x => PrepareProductOverviewModel(x))
+                .ToList();
+
+            return PartialView(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult HomepageProducts()
+        {
+            var model = _productService.GetAllProductsDisplayedOnHomePage()
                 .Select(x => PrepareProductOverviewModel(x))
                 .ToList();
 

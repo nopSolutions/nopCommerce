@@ -1286,6 +1286,13 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="HomePage">
+    <Children>
+      <LocaleResource Name="Products">
+        <Value>Featured products</Value>
+      </LocaleResource>
+      </Children>
+  </LocaleResource>
   <LocaleResource Name="Information">
     <Value>Information</Value>
   </LocaleResource>

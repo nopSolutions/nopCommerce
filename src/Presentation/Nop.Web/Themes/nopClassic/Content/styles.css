@@ -1786,7 +1786,7 @@ textarea
 	width: 520px;
 }
 
-.home-page-product-grid .boxtitle
+.home-page-product-grid .title
 {
 	padding: 10px 0px 1px 0px;
 	margin: 0 5px 10px 5px;
@@ -1805,7 +1805,7 @@ textarea
 	vertical-align: text-top;
 }
 
-.home-page-product-grid .product-item
+.home-page-product-grid .item
 {
 	text-align: center;
 	margin: 10px 10px 10px 10px;
@@ -1813,7 +1813,7 @@ textarea
 	height: 150px;
 }
 
-.home-page-product-grid .product-item .product-title
+.home-page-product-grid .item .product-title
 {
 	margin-bottom: 5px;
 	margin-top: 5px;
@@ -1822,7 +1822,7 @@ textarea
 	font-size:12px;
 }
 
-.home-page-product-grid .product-item .picture
+.home-page-product-grid .item .picture
 {
 	text-align: center;
 }
