@@ -113,6 +113,15 @@
                 <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" />
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+            </td>
+        </tr>
     </table>
 }
 @helper TabPdfSettings()

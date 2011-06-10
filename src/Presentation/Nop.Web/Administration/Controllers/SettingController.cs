@@ -528,6 +528,14 @@ namespace Nop.Admin.Controllers
             
             //security settings
             model.SecuritySettings.EncryptionKey = _securitySettings.EncryptionKey;
+            if (_securitySettings.AdminAreaAllowedIpAddresses!=null)
+                for (int i=0;i<_securitySettings.AdminAreaAllowedIpAddresses.Count; i++)
+                {
+                    model.SecuritySettings.AdminAreaAllowedIpAddresses += _securitySettings.AdminAreaAllowedIpAddresses[i];
+                    if (i != _securitySettings.AdminAreaAllowedIpAddresses.Count - 1)
+                        model.SecuritySettings.AdminAreaAllowedIpAddresses += ",";
+                }
+            
 
             //PDF settings
             model.PdfSettings.Enabled = _pdfSettings.Enabled;
@@ -555,6 +563,17 @@ namespace Nop.Admin.Controllers
             _seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
             _seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
             _settingService.SaveSetting(_seoSettings);
+
+
+            //security settings
+            if (_securitySettings.AdminAreaAllowedIpAddresses == null)
+                _securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
+            _securitySettings.AdminAreaAllowedIpAddresses.Clear();
+            if (!String.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
+                foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    if (!String.IsNullOrWhiteSpace(s))
+                        _securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
+            _settingService.SaveSetting(_securitySettings);
 
             //PDF settings
             _pdfSettings.Enabled = model.PdfSettings.Enabled;

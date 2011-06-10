@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -19,6 +20,9 @@ namespace Nop.Admin.Controllers
             //set work context to admin mode
             EngineContext.Current.Resolve<IWorkContext>().IsAdmin = true;
 
+            //validate IP address
+            ValidateIpAddress();
+
             base.OnActionExecuting(filterContext);
         }
         protected override void OnException(ExceptionContext filterContext)
@@ -28,11 +32,37 @@ namespace Nop.Admin.Controllers
             base.OnException(filterContext);
         }
 
-        public void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedModelLocal
+        protected virtual void ValidateIpAddress()
+        {
+            bool ok = false;
+            var ipAddresses = EngineContext.Current.Resolve<SecuritySettings>().AdminAreaAllowedIpAddresses;
+            if (ipAddresses!= null && ipAddresses.Count > 0)
+            {
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                foreach (string ip in ipAddresses)
+                    if (ip.Equals(webHelper.GetCurrentIpAddress(), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ok =  true;
+                        break;
+                    }
+            }
+            else
+            {
+                //no restrictions
+                ok = true;
+            }
+
+            if (!ok)
+            {
+                //TODO redirect to 'Access denied page' (previous 'AccessDenied.aspx' page)
+            }
+        }
+
+        public virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedModelLocal
         {
             AddLocales(languageService, locales, null);
         }
-        public void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedModelLocal
+        public virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedModelLocal
         {
             foreach (var language in languageService.GetAllLanguages(true))
             {
@@ -65,20 +95,20 @@ namespace Nop.Admin.Controllers
             var customer = workContext.CurrentCustomer;
             logger.Error(exc.Message, exc, customer);
         }
-        protected void SuccessNotification(string message, bool persistForTheNextRequest = true)
+        protected virtual void SuccessNotification(string message, bool persistForTheNextRequest = true)
         {
             AddNotification(NotifyType.Success, message, persistForTheNextRequest);
         }
-        protected void ErrorNotification(string message, bool persistForTheNextRequest = true)
+        protected virtual void ErrorNotification(string message, bool persistForTheNextRequest = true)
         {
             AddNotification(NotifyType.Error, message, persistForTheNextRequest);
         }
-        protected void ErrorNotification(Exception exception, bool persistForTheNextRequest = true)
+        protected virtual void ErrorNotification(Exception exception, bool persistForTheNextRequest = true)
         {
             LogException(exception);
             AddNotification(NotifyType.Error, exception.Message, persistForTheNextRequest);
         }
-        protected void AddNotification(NotifyType type, string message, bool persistForTheNextRequest)
+        protected virtual void AddNotification(NotifyType type, string message, bool persistForTheNextRequest)
         {
             string dataKey = string.Format("nop.notifications.{0}", type);
             if (persistForTheNextRequest)

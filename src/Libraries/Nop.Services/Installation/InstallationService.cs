@@ -4595,7 +4595,8 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()
                 .SaveSettings(new SecuritySettings()
                 {
-                    EncryptionKey = "273ece6f97dd844d"
+                    EncryptionKey = "273ece6f97dd844d",
+                    AdminAreaAllowedIpAddresses = null
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<ShippingSettings>>()

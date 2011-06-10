@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Security
@@ -10,6 +11,9 @@ namespace Nop.Core.Domain.Security
         /// </summary>
         public string EncryptionKey { get; set; }
 
-        //TODO Add 'Admin area allowed IP' option
+        /// <summary>
+        /// Gets or sets a list of adminn area allowed IP addresses
+        /// </summary>
+        public List<string> AdminAreaAllowedIpAddresses { get; set; }
     }
 }

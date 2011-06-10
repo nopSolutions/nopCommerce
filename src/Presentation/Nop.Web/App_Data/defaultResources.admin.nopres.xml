@@ -3259,6 +3259,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="AdminAreaAllowedIpAddresses">
+                        <Value>Admin area allowed IP</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>IP addresses allowed to access the Back End. Leave this field empty, if you do not want to restict access to the Back End. Use comma to separate them (e.g. 127.0.0.10,232.18.204.16)</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Media">
