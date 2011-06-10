@@ -1,22 +1,22 @@
 ﻿@model Nop.Web.Models.Common.InfoBlockModel
-@*TODO localize all labels*@
+
 <div class="block block-info">
     <div class="title">
-        Infortmation
+        @T("Information")
     </div>
     <div class="clear">
     </div>
     <div class="listbox">
         <ul>
             <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a> </li>
-            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })">About us</a></li>
+            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })">@T("AboutUs")</a></li>
             @if (Model.BlogEnabled)
             {
                 <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
             }
-            @*TODO enbale/disable links for forums based on settings 
-TODO add URLs for forums*@
-            <li><a href="#">Forums</a></li>
+            @*TODO enable/disable links for forums based on settings*@
+            @*TODO add URLs for forums*@
+            <li><a href="#">@T("Forums")</a></li>
             @if (Model.RecentlyAddedProductsEnabled)
             {
                 <li><a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a></li>
@@ -33,11 +33,9 @@ TODO add URLs for forums*@
             {
                 <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
             }
-            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "shippinginfo" })">Shipping &
-                Returns</a></li>
-            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })">Privacy Notice</a></li>
-            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "conditionsofUse" })">Conditions
-                of Use</a></li>
+            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "shippinginfo" })">@T("ShippingReturns")</a></li>
+            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })">@T("PrivacyNotice")</a></li>
+            <li><a href="@Url.RouteUrl("Topic", new { SystemName = "conditionsofUse" })">@T("ConditionsOfUse")</a></li>
         </ul>
     </div>
 </div>

@@ -22,7 +22,8 @@ namespace Nop.Admin.Validators.Common
                 .When(x => !x.EmailDisabled);
             RuleFor(x => x.Email)
                 .EmailAddress()
-                .When(x => !x.EmailDisabled); //TODO locale email not valid message
+                .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"))
+                .When(x => !x.EmailDisabled);
             RuleFor(x => x.CountryId)
                 .NotNull()
                 .WithMessage(localizationService.GetResource("Admin.Address.Fields.Country.Required"))

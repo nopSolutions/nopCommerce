@@ -51,10 +51,7 @@ namespace Nop.Web.Controllers
             bool success = false;
 
             if (!CommonHelper.IsValidEmail(email))
-            {
-                //TODO localize
-                result = "Enter valid email";
-            }
+                result = _localizationService.GetResource("Newsletter.Email.Wrong");
             else
             {
                 //subscribe/unsubscribe

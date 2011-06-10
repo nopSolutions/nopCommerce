@@ -576,12 +576,17 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
-            //TODO LastContinueShoppingPage
-            //string returnUrl = NopContext.Current.LastContinueShoppingPage;
-            //if (!String.IsNullOrEmpty(returnUrl))
-            //    Response.Redirect(returnUrl);
-            //else
-            //    Response.Redirect(CommonHelper.GetStoreLocation());
+            //TODO set returnUrl
+            string returnUrl = "";
+            //returnUrl = NopContext.Current.LastContinueShoppingPage;
+            if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
             return View(model);

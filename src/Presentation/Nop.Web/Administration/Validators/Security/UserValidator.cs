@@ -19,7 +19,8 @@ namespace Nop.Admin.Validators.Security
                 .WithMessage(localizationService.GetResource("Admin.Users.Fields.Email.Required"));
 
             RuleFor(x => x.Email)
-                .EmailAddress(); //TODO locale email not valid message
+                .EmailAddress()
+                .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));
         }
     }
 }

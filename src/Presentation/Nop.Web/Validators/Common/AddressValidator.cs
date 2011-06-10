@@ -8,7 +8,6 @@ namespace Nop.Web.Validators.Common
     {
         public AddressValidator(ILocalizationService localizationService)
         {
-            //TODO add localization
             RuleFor(x => x.FirstName)
                 .NotNull()
                 .WithMessage(localizationService.GetResource("Address.Fields.FirstName.Required"))
@@ -23,7 +22,8 @@ namespace Nop.Web.Validators.Common
                 .When(x => !x.EmailDisabled);
             RuleFor(x => x.Email)
                 .EmailAddress()
-                .When(x => !x.EmailDisabled); //TODO locale email not valid message
+                .WithMessage(localizationService.GetResource("Common.WrongEmail"))
+                .When(x => !x.EmailDisabled);
             RuleFor(x => x.CountryId)
                 .NotNull()
                 .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"))

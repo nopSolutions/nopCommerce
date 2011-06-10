@@ -8,9 +8,8 @@ namespace Nop.Admin.Validators.Messages
     {
         public EmailAccountValidator(ILocalizationService localizationService)
         {
-            //UNDONE localize
             RuleFor(x => x.Email).NotEmpty();
-            RuleFor(x => x.Email).EmailAddress();
+            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));
             
             RuleFor(x => x.DisplayName).NotEmpty();
         }

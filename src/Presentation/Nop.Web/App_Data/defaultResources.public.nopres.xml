@@ -18,7 +18,9 @@
   </LocaleResource>
 
 
-
+  <LocaleResource Name="AboutUs">
+    <Value>About us</Value>
+  </LocaleResource>
   <LocaleResource Name="Account">
     <Children>
       <LocaleResource Name="AccountActivation">
@@ -810,10 +812,16 @@
       <LocaleResource Name="Wait...">
         <Value>Wait...</Value>
       </LocaleResource>
+      <LocaleResource Name="WrongEmail">
+        <Value>Wrong email</Value>
+      </LocaleResource>
       <LocaleResource Name="Yes">
         <Value>Yes</Value>
       </LocaleResource>
     </Children>
+  </LocaleResource>
+  <LocaleResource Name="ConditionsOfUse">
+    <Value>Conditions of Use</Value>
   </LocaleResource>
   <LocaleResource Name="ContactUs">
     <Value>Contact us</Value>
@@ -1278,6 +1286,9 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Information">
+    <Value>Information</Value>
+  </LocaleResource>
   <LocaleResource Name="Manufacturers">
     <Value>Manufacturers</Value>
     <Children>
@@ -1457,6 +1468,11 @@
     <Children>
       <LocaleResource Name="Email">
         <Value>Email</Value>
+        <Children>
+          <LocaleResource Name="Wrong">
+            <Value>Enter valid email</Value>
+          </LocaleResource>          
+        </Children>
       </LocaleResource>
       <LocaleResource Name="Button">
         <Value>Submit</Value>
@@ -1862,6 +1878,9 @@
         <Value>Plugins</Value>
       </LocaleResource>
     </Children>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyNotice">
+    <Value>Privacy Notice</Value>
   </LocaleResource>
   <LocaleResource Name="Products">
     <Children>
@@ -2283,6 +2302,9 @@
         </Children>
       </LocaleResource>
     </Children>
+  </LocaleResource>
+  <LocaleResource Name="ShippingReturns">
+    <Value><![CDATA[Shipping & Returns]]></Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
     <Value>Shopping cart</Value>

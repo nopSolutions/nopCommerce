@@ -1861,7 +1861,7 @@
             </Children>
             </LocaleResource>
             <LocaleResource Name="Common">
-            <Children>
+              <Children>
                   <LocaleResource Name="AddNew">
                     <Value>Add new</Value>
                   </LocaleResource>
@@ -1931,6 +1931,9 @@
                   <LocaleResource Name="Update">
                     <Value>Update</Value>
                   </LocaleResource>
+                <LocaleResource Name="WrongEmail">
+                  <Value>Wrong email</Value>
+                </LocaleResource>
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Configuration">
@@ -2225,6 +2228,9 @@
                             <LocaleResource Name="Required">
                               <Value>Please provide a name.</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Range">
+                              <Value>Name must be less than or equal to 50 characters.</Value>
+                            </LocaleResource>
                           </Children>
                         </LocaleResource>
                         <LocaleResource Name="DisplayLocale">
@@ -2255,6 +2261,9 @@
                             <LocaleResource Name="Required">
                               <Value>Please provide a currency code.</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Range">
+                              <Value>Currency code must be less than or equal to 5 characters.</Value>
+                            </LocaleResource>
                           </Children>
                         </LocaleResource>
                         <LocaleResource Name="CustomFormatting">
@@ -2262,6 +2271,9 @@
                           <Children>
                             <LocaleResource Name="Hint">
                               <Value>Custom formatting to be applied to the currency values.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Validation">
+                              <Value>Custom formatting must be less than or equal to 50 characters.</Value>
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
