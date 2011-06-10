@@ -1777,14 +1777,6 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
-                          <LocaleResource Name="Warehouse">
-                            <Value>Warehouse</Value>
-                            <Children>
-                              <LocaleResource Name="Hint">
-                                <Value>Select the warehouse where this product is stored / to be shipped from.</Value>
-                              </LocaleResource>
-                            </Children>
-                          </LocaleResource>
                           <LocaleResource Name="Weight">
                             <Value>Weight</Value>
                             <Children>

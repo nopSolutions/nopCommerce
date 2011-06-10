@@ -257,7 +257,6 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("BackorderModeId", null, productVariant.BackorderModeId.ToString());
                         xmlWriter.WriteElementString("OrderMinimumQuantity", null, productVariant.OrderMinimumQuantity.ToString());
                         xmlWriter.WriteElementString("OrderMaximumQuantity", null, productVariant.OrderMaximumQuantity.ToString());
-                        xmlWriter.WriteElementString("WarehouseId", null, productVariant.WarehouseId.ToString());
                         xmlWriter.WriteElementString("DisableBuyButton", null, productVariant.DisableBuyButton.ToString());
                         xmlWriter.WriteElementString("CallForPrice", null, productVariant.CallForPrice.ToString());
                         xmlWriter.WriteElementString("Price", null, productVariant.Price.ToString());

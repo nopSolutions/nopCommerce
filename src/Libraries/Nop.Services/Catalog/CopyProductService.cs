@@ -303,7 +303,6 @@ namespace Nop.Services.Catalog
                         BackorderMode = productVariant.BackorderMode,
                         OrderMinimumQuantity = productVariant.OrderMinimumQuantity,
                         OrderMaximumQuantity = productVariant.OrderMaximumQuantity,
-                        WarehouseId = productVariant.WarehouseId,
                         DisableBuyButton = productVariant.DisableBuyButton,
                         CallForPrice = productVariant.CallForPrice,
                         Price = productVariant.Price,

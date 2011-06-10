@@ -258,7 +258,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            //TODO implement gift cards activation (perhaps, it'll not be possible due to new GiftCard implementation)
+            //TODO implement gift cards activation (perhaps, it'll not be possible due to the new GiftCard implementation)
             //if (this.GiftCards_Activated.HasValue &&
             //   this.GiftCards_Activated.Value == order.OrderStatus)
             //{

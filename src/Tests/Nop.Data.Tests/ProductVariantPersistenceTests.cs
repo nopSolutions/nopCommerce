@@ -53,7 +53,6 @@ namespace Nop.Data.Tests
                                          BackorderModeId = 17,
                                          OrderMinimumQuantity = 18,
                                          OrderMaximumQuantity = 19,
-                                         WarehouseId = 20,
                                          DisableBuyButton = true,
                                          CallForPrice = true,
                                          Price = 21.1M,
@@ -122,7 +121,6 @@ namespace Nop.Data.Tests
             fromDb.BackorderModeId.ShouldEqual(17);
             fromDb.OrderMinimumQuantity.ShouldEqual(18);
             fromDb.OrderMaximumQuantity.ShouldEqual(19);
-            fromDb.WarehouseId.ShouldEqual(20);
             fromDb.DisableBuyButton.ShouldEqual(true);
             fromDb.CallForPrice.ShouldEqual(true);
             fromDb.Price.ShouldEqual(21.1M);
@@ -189,7 +187,6 @@ namespace Nop.Data.Tests
                 BackorderModeId = 17,
                 OrderMinimumQuantity = 18,
                 OrderMaximumQuantity = 19,
-                WarehouseId = 20,
                 DisableBuyButton = true,
                 CallForPrice = true,
                 Price = 21.1M,

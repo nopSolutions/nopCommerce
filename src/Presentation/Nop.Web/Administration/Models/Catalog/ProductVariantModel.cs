@@ -18,7 +18,6 @@ namespace Nop.Admin.Models.Catalog
         {
             Locales = new List<ProductVariantLocalizedModel>();
             AvailableTaxCategories = new List<SelectListItem>();
-            AvailableWarehouses = new List<SelectListItem>();
         }
 
         #region Standard properties
@@ -144,12 +143,7 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.OrderMaximumQuantity")]
         public int OrderMaximumQuantity { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Warehouse")]
-        public int WarehouseId { get; set; }
-        public IList<SelectListItem> AvailableWarehouses { get; set; }
-
-
+        
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
 

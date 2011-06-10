@@ -120,13 +120,6 @@ namespace Nop.Admin.Controllers
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = variant != null && !setPredefinedValues && tc.Id == variant.TaxCategoryId });
 
-            //warehouses
-            //TODO finish when warehouses are ready
-            //var warehouses = _warehouseService.GetAllWarehouses();
-            model.AvailableWarehouses.Add(new SelectListItem() { Text = "---", Value = "0" });
-            //foreach (var wh in warehouses)
-            //    model.AvailableWarehouses.Add(new SelectListItem() { Text = wh.Name, Value = wh.Id.ToString(), Selected = variant != null && !setPredefinedValues && wh.Id == variant.WarehouseId });
-
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
             model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;

@@ -34,6 +34,7 @@ namespace Nop.Admin.Controllers
 
         protected virtual void ValidateIpAddress()
         {
+            //TODO 'Access denied' page should not validate IP address
             bool ok = false;
             var ipAddresses = EngineContext.Current.Resolve<SecuritySettings>().AdminAreaAllowedIpAddresses;
             if (ipAddresses!= null && ipAddresses.Count > 0)

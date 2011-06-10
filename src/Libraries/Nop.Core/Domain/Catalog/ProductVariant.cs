@@ -205,11 +205,6 @@ namespace Nop.Core.Domain.Catalog
         public virtual int OrderMaximumQuantity { get; set; }
 
         /// <summary>
-        /// Gets or sets the warehouse identifier
-        /// </summary>
-        public virtual int WarehouseId { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to disable buy button
         /// </summary>
         public virtual bool DisableBuyButton { get; set; }
