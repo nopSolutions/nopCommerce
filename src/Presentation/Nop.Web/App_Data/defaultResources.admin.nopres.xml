@@ -3695,6 +3695,22 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="MiniShoppingCartEnabled">
+                        <Value>Show mini-shopping cart</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enable mini-shopping cart.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MiniShoppingCartDisplayProducts">
+                        <Value>Show product in mini-shopping cart</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to show product in mini-shopping cart.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Tax">

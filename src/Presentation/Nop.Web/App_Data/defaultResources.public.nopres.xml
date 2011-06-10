@@ -2397,6 +2397,25 @@
       <LocaleResource Name="MinimumQuantity">
         <Value>The minimum quantity allowed for purchase is {0}.</Value>
       </LocaleResource>
+      <LocaleResource Name="Mini">
+        <Children>
+          <LocaleResource Name="NoItems">
+            <Value>You have no items in your shopping cart.</Value>
+          </LocaleResource>
+          <LocaleResource Name="OneItem">
+            <Value>1 item</Value>
+          </LocaleResource>
+          <LocaleResource Name="OneItemText">
+            <Value>There is {0} in your cart.</Value>
+          </LocaleResource>
+          <LocaleResource Name="SeveralItems">
+            <Value>{0} items</Value>
+          </LocaleResource>
+          <LocaleResource Name="SeveralItemsText">
+            <Value>There are {0} in your cart.</Value>
+          </LocaleResource>
+          </Children>
+      </LocaleResource>
       <LocaleResource Name="OutOfStock">
         <Value>Out of stock</Value>
       </LocaleResource>

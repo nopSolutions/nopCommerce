@@ -172,6 +172,7 @@
     <Compile Include="Models\Media\PictureModel.cs" />
     <Compile Include="Models\Order\SubmitReturnRequestModel.cs" />
     <Compile Include="Models\Order\OrderDetailsModel.cs" />
+    <Compile Include="Models\ShoppingCart\MiniShoppingCartModel.cs" />
     <Compile Include="Models\ShoppingCart\WishlistEmailAFriendModel.cs" />
     <Compile Include="Models\ShoppingCart\WishlistModel.cs" />
     <Compile Include="Models\ShoppingCart\OrderTotalsModel.cs" />
@@ -1215,6 +1216,7 @@
     <Content Include="Views\Catalog\HomepageBestSellers.cshtml" />
     <Content Include="Views\Catalog\HomepageProducts.cshtml" />
     <Content Include="Views\Catalog\HomepageCategories.cshtml" />
+    <Content Include="Views\ShoppingCart\MiniShoppingCart.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

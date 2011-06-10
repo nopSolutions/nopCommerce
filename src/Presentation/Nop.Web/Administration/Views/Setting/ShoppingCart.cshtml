@@ -13,6 +13,25 @@
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
         </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartDisplayProducts);
+
+            toggleMiniShoppingCartDisplayProducts();
+        });
+
+        function toggleMiniShoppingCartDisplayProducts() {
+            if (getE('@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)').checked) {
+                $('#pnlMiniShoppingCartDisplayProducts').show();
+            }
+            else {
+                $('#pnlMiniShoppingCartDisplayProducts').hide();
+            }
+        }
+        
+    </script>
+    
 @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
@@ -94,6 +113,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.EmailWishlistEnabled)
                 @Html.ValidationMessageFor(model => model.EmailWishlistEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MiniShoppingCartEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MiniShoppingCartEnabled)
+                @Html.ValidationMessageFor(model => model.MiniShoppingCartEnabled)
+            </td>
+        </tr>
+        <tr id="pnlMiniShoppingCartDisplayProducts">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MiniShoppingCartDisplayProducts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MiniShoppingCartDisplayProducts)
+                @Html.ValidationMessageFor(model => model.MiniShoppingCartDisplayProducts)
             </td>
         </tr>
     </table>

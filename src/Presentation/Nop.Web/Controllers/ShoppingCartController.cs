@@ -1008,7 +1008,57 @@ namespace Nop.Web.Controllers
             model = PrepareShoppingCartModel(model, cart, true);
             return View(model);
         }
-        
+
+        [ChildActionOnly]
+        public ActionResult MiniShoppingCart()
+        {
+            if (!_shoppingCartSettings.MiniShoppingCartEnabled)
+                return Content("");
+
+            var model = new MiniShoppingCartModel();
+            model.DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts;
+
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            model.TotalProducts = cart.GetTotalProducts();
+            if (cart.Count > 0)
+            {
+                //subtotal
+                decimal subtotalBase = decimal.Zero;
+                decimal orderSubTotalDiscountAmountBase = decimal.Zero;
+                Discount orderSubTotalAppliedDiscount = null;
+                decimal subTotalWithoutDiscountBase = decimal.Zero;
+                decimal subTotalWithDiscountBase = decimal.Zero;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
+                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
+                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                subtotalBase = subTotalWithoutDiscountBase;
+                decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
+                model.SubTotal = _priceFormatter.FormatPrice(subtotal);
+            }
+            if (_shoppingCartSettings.MiniShoppingCartDisplayProducts)
+            {
+                foreach (var sci in cart)
+                {
+                    var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
+                    {
+                        Id = sci.Id,
+                        ProductId = sci.ProductVariant.ProductId,
+                        ProductSeName = sci.ProductVariant.Product.GetSeName(),
+                        Quantity = sci.Quantity,
+                    };
+
+                    //product name
+                    if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
+                        cartItemModel.ProductName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
+                    else
+                        cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
+
+                    model.Items.Add(cartItemModel);
+                }
+            }
+            return PartialView(model);
+        }
+
         #endregion
 
         #region Wishlist

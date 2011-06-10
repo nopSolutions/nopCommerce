@@ -4567,6 +4567,8 @@ namespace Nop.Services.Installation
                     CrossSellsNumber = 2,
                     WishlistEnabled = true,
                     EmailWishlistEnabled = true,
+                    MiniShoppingCartEnabled = true,
+                    MiniShoppingCartDisplayProducts = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<OrderSettings>>()
@@ -6127,6 +6129,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Vista Home",
                 PriceAdjustment = 50,
+                IsPreSelected = true,
                 DisplayOrder = 1,
             });
             pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()

@@ -1,0 +1,48 @@
+﻿@model MiniShoppingCartModel
+@using Nop.Web.Models.ShoppingCart;
+<div class="block block-shoppingcart">
+    <div class="title">
+        @T("ShoppingCart")
+    </div>
+    <div class="clear">
+    </div>
+    <div class="listbox">
+        @if (Model.TotalProducts == 0)
+        {
+            @T("ShoppingCart.Mini.NoItems")
+        }
+        else if (Model.TotalProducts == 1)
+        {
+            @Html.Raw(string.Format(T("ShoppingCart.Mini.OneItemText").Text, string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Url.RouteUrl("ShoppingCart"), T("ShoppingCart.Mini.OneItem").Text)))
+        }
+        else
+        {
+            @Html.Raw(string.Format(T("ShoppingCart.Mini.SeveralItemsText").Text, string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.SeveralItems").Text, Model.TotalProducts))))
+        }
+        @if (Model.TotalProducts > 0)
+         {
+            <br />
+            <span class="subtotal">@T("ShoppingCart.Totals.SubTotal"): @Model.SubTotal</span>
+            <div class="buttons">
+                <input type="submit" value="@T("Checkout")" class="minicartcheckoutbutton" onclick="setLocation('@Url.RouteUrl("Checkout")')" />
+            </div>
+             if (Model.DisplayProducts)
+             {
+            <div class="items">
+                <ul>
+                    @for (int i=0; i < Model.Items.Count;i++)
+                    {
+                        var item = Model.Items[i];
+                        <li><span class="quantity">@item.Quantity</span> x <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })">@item.ProductName</a>
+                        </li>
+                        //if (i != Model.Items.Count - 1)
+                        //{
+                        <li class="separator">&nbsp;</li>
+                        //}
+                    }
+                </ul>
+            </div>
+             }
+        }
+    </div>
+</div>

@@ -50,5 +50,15 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether "email a wishlist" feature is enabled
         /// </summary>
         public bool EmailWishlistEnabled { get; set; }
+
+
+        /// <summary>Gets or sets a value indicating whether mini shopping catr is enabled
+        /// </summary>
+        public bool MiniShoppingCartEnabled { get; set; }
+
+
+        /// <summary>Gets or sets a value indicating whether to display products in mini shopping cart
+        /// </summary>
+        public bool MiniShoppingCartDisplayProducts { get; set; }
     }
 }
