@@ -37,7 +37,7 @@
             <span class="login-title">@T("Account.Login.ReturningCustomer")</span>
             <div class="login-block">
                 @Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)
-                @using (Html.BeginForm(Url.RouteUrl("Login")))
+                @using (Html.BeginForm())
                 {
                     <table class="login-table-container">
                         <tbody>

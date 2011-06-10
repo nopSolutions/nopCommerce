@@ -166,11 +166,15 @@ namespace Nop.Web.Controllers
                     var user = _userSettings.UsernamesEnabled ? _userService.GetUserByUsername(model.UserName) : _userService.GetUserByEmail(model.Email);
                     _authenticationService.SignIn(user, model.RememberMe);
 
-                    //UNDONE Return URL doesn't work
-                    if (!String.IsNullOrEmpty(returnUrl))
+
+                    if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
                         return Redirect(returnUrl);
+                    }
                     else
+                    {
                         return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                 {
