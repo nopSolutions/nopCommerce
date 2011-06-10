@@ -36,6 +36,7 @@ namespace Nop.Admin.Controllers
         private readonly IPictureService _pictureService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IProductTagService _productTagService;
+        private readonly ICopyProductService _copyProductService;
 
         #endregion
 
@@ -46,7 +47,8 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext, ILanguageService languageService, 
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
-            ITaxCategoryService taxCategoryService, IProductTagService productTagService)
+            ITaxCategoryService taxCategoryService, IProductTagService productTagService,
+            ICopyProductService copyProductService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -59,6 +61,7 @@ namespace Nop.Admin.Controllers
             this._pictureService = pictureService;
             this._taxCategoryService = taxCategoryService;
             this._productTagService = productTagService;
+            this._copyProductService = copyProductService;
         }
 
         #endregion Constructors 
@@ -169,6 +172,21 @@ namespace Nop.Admin.Controllers
                         variantModel.Name = "Unnamed";
                     model.ProductVariantModels.Add(variantModel);
                 }
+            }
+        }
+
+        [NonAction]
+        private void PrepareCopyProductModel(ProductModel model, Product product)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (product != null)
+            {
+                model.CopyProductModel.Id = product.Id;
+                model.CopyProductModel.Name = "Copy of " + product.Name;
+                model.CopyProductModel.Published = true;
+                model.CopyProductModel.CopyImages = true;
             }
         }
 
@@ -483,6 +501,7 @@ namespace Nop.Admin.Controllers
                 });
 
             PrepareTags(model, product);
+            PrepareCopyProductModel(model, product);
             PrepareVariantsModel(model, product);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
@@ -517,6 +536,7 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             PrepareTags(model, product);
+            PrepareCopyProductModel(model, product);
             PrepareVariantsModel(model, product);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
@@ -556,6 +576,23 @@ namespace Nop.Admin.Controllers
             {
                 Data = gridModel
             };
+        }
+
+        [HttpPost]
+        public ActionResult CopyProduct(ProductModel model)
+        {
+            var copyModel = model.CopyProductModel;
+            try
+            {
+                var newProduct = _copyProductService.CopyProduct(copyModel.Id, copyModel.Name, copyModel.Published, copyModel.CopyImages);
+                SuccessNotification("The product is copied");
+                return RedirectToAction("Edit", new { id = newProduct.Id });
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc.Message);
+                return RedirectToAction("Edit", new { id = copyModel.Id });
+            }
         }
 
         #endregion

@@ -878,6 +878,35 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="Copy">
+                    <Value>Copy product</Value>
+                    <Children>
+                      <LocaleResource Name="Name">
+                        <Value>New product name</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The name of the new product.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="CopyImages">
+                        <Value>Copy images</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to copy the images.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Published">
+                        <Value>Published</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to mark a product as published.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="CrossSells">
                     <Value>Cross-sells</Value>
                     <Children>

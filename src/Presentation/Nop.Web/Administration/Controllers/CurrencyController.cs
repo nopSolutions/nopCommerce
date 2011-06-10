@@ -67,7 +67,7 @@ namespace Nop.Admin.Controllers
                 }
                 catch (Exception exc)
                 {
-                    ErrorNotification(exc);
+                    ErrorNotification(exc, false);
                 }
             }
             ViewBag.ExchangeRateProviders = new SelectList(_currencyService.LoadAllExchangeRateProviders(), "SystemName", "FriendlyName", _currencySettings.ActiveExchangeRateProviderSystemName); ;

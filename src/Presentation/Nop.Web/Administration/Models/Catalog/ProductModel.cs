@@ -19,6 +19,7 @@ namespace Nop.Admin.Models.Catalog
             Locales = new List<ProductLocalizedModel>();
             ProductVariantModels = new List<ProductVariantModel>();
             ProductPictureModels = new List<ProductPictureModel>();
+            CopyProductModel = new CopyProductModel();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
@@ -98,6 +99,12 @@ namespace Nop.Admin.Models.Catalog
 
         //add specification attribute model
         public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
+
+
+
+        //copy product
+        public CopyProductModel CopyProductModel { get; set; }
+
 
         #region Nested classes
         

@@ -1,5 +1,5 @@
 ﻿@model ProductModel
-
+@using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -10,10 +10,67 @@
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
             <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
-            @*UNDONE add 'copy product' functionality*@
+            <button type="submit" id="copyproduct" name="copyproduct" value="copyproduct" class="t-button">@T("Admin.Catalog.Products.Copy")</button>
             <span id="product-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("product-delete")
+
+@*copy product form*@
+@{Html.Telerik().Window()
+        .Name("copyproduct-window")
+        .Title(T("Admin.Catalog.Products.Copy").Text)
+        .Content(@<text>
+    @using (Html.BeginForm("CopyProduct", "Product"))
+    {
+        @Html.HiddenFor(model => Model.CopyProductModel.Id)
+        <table style="text-align: left;">
+            <tr>
+                <td>
+                    @Html.NopLabelFor(model => model.CopyProductModel.Name):
+                </td>
+                <td>
+                    @Html.EditorFor(model => Model.CopyProductModel.Name)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.NopLabelFor(model => model.CopyProductModel.Published):
+                </td>
+                <td>
+                    @Html.EditorFor(model => Model.CopyProductModel.Published)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.NopLabelFor(model => model.CopyProductModel.CopyImages):
+                </td>
+                <td>
+                    @Html.EditorFor(model => Model.CopyProductModel.CopyImages)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit" class="t-button t-state-default">@T("Admin.Catalog.Products.Copy")</button>
+                </td>
+            </tr>
+        </table>
+    }
+    </text>)
+        .Width(400)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#copyproduct").click(function (e) {
+            e.preventDefault();
+            $('#copyproduct-window').data('tWindow').center().open();
+        });
+    });
+</script>

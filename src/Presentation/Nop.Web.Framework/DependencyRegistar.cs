@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
-using System.Web.Mvc;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
@@ -47,7 +46,6 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
-using Nop.Web.Framework;
 using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
@@ -117,6 +115,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerHttpRequest();
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerHttpRequest();
+            builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerHttpRequest();
             builder.RegisterType<ProductTagService>().As<IProductTagService>().InstancePerHttpRequest();
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerHttpRequest();
 
