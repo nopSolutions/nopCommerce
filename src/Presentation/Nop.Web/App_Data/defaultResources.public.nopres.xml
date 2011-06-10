@@ -1699,6 +1699,9 @@
           <LocaleResource Name="Required">
             <Value>Enter card code</Value>
           </LocaleResource>
+          <LocaleResource Name="Wrong">
+            <Value>Wrong card code</Value>
+          </LocaleResource>
         </Children>
       </LocaleResource>
       <LocaleResource Name="CardholderName">
@@ -1714,6 +1717,9 @@
         <Children>
           <LocaleResource Name="Required">
             <Value>Enter card number</Value>
+          </LocaleResource>
+          <LocaleResource Name="Wrong">
+            <Value>Wrong card number</Value>
           </LocaleResource>
         </Children>
       </LocaleResource>
