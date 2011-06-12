@@ -12,10 +12,12 @@ using Nop.Admin.Models;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Directory;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -303,6 +305,13 @@ namespace Nop.Admin.Controllers
             return PartialView("LanguageSelector", model);
         }
 
+        public ActionResult ClearCache()
+        {
+            var cacheManager = new MemoryCacheManager();
+            cacheManager.Clear();
+
+            return RedirectToAction("Index", "Home");
+        }
         #endregion
     }
 }

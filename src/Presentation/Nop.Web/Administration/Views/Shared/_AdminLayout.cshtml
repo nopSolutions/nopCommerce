@@ -46,9 +46,8 @@
                     </div>
                     <div class="links">
                         @Html.ActionLink("Public store", "Index", "Home", new { area = "" }, null)
-                        <span class="separator">|</span>
-                        <!--TODO clear cache button here-->
-                        <a href="#">Clear Cache</a>
+                        <span class="separator">|</span>                        
+                        @Html.ActionLink("Clear Cache", "ClearCache", "Common")
                     </div>
                     <div class="login-info">
                         @if (currentUser != null)
