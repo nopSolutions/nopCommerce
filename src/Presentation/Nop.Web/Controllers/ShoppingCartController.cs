@@ -574,11 +574,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("continueshopping")]
         public ActionResult ContinueShopping()
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
-
-            //TODO set returnUrl
-            string returnUrl = "";
-            //returnUrl = NopContext.Current.LastContinueShoppingPage;
+            string returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage);
             if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
@@ -587,9 +583,6 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-
-            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
-            return View(model);
         }
         
         [ValidateInput(false)]

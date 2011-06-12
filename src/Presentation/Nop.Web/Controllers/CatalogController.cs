@@ -60,6 +60,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IProductTagService _productTagService;
         private readonly IOrderReportService _orderReportService;
+        private readonly ICustomerService _customerService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -82,7 +83,7 @@ namespace Nop.Web.Controllers
             IAuthenticationService authenticationService, IShoppingCartService shoppingCartService,
             IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
-            IOrderReportService orderReportService,
+            IOrderReportService orderReportService, ICustomerService customerService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings)
@@ -110,6 +111,8 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._productTagService = productTagService;
             this._orderReportService = orderReportService;
+            this._customerService = customerService;
+
 
             this._mediaSetting = mediaSetting;
             this._catalogSettings = catalogSettings;
@@ -647,6 +650,10 @@ namespace Nop.Web.Controllers
             if (category == null || category.Deleted || !category.Published)
                 return RedirectToAction("Index", "Home");
 
+            //'Continue shopping' URL
+            //TODO perhaps, it's better to store URL in cookie or session
+            _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
+
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
@@ -812,6 +819,10 @@ namespace Nop.Web.Controllers
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null || manufacturer.Deleted || !manufacturer.Published)
                 return RedirectToAction("Index", "Home");
+
+            //'Continue shopping' URL
+            //TODO perhaps, it's better to store URL in cookie or session
+            _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
 
             if (command.PageSize <= 0) command.PageSize = manufacturer.PageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
