@@ -1039,6 +1039,17 @@
                   </LocaleResource>
                   <LocaleResource Name="List">
                     <Children>
+                      <LocaleResource Name="DownloadPDF">
+                        <Value>Download catalog as PDF</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="GoDirectlyToSku">
+                        <Value>Go directly to product SKU</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter product SKU and click Go.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                       <LocaleResource Name="SearchProductName">
                         <Value>Product name</Value>
                         <Children>
@@ -1060,14 +1071,6 @@
                         <Children>
                           <LocaleResource Name="Hint">
                             <Value>Search by a specific manufacturer.</Value>
-                          </LocaleResource>
-                        </Children>
-                      </LocaleResource>
-                      <LocaleResource Name="GoDirectlyToSku">
-                        <Value>Go directly to product SKU</Value>
-                        <Children>
-                          <LocaleResource Name="Hint">
-                            <Value>Enter product SKU and click Go.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

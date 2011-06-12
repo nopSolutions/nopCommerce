@@ -10,6 +10,7 @@ using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
@@ -21,7 +22,9 @@ using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Common
 {
@@ -37,7 +40,11 @@ namespace Nop.Services.Common
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
+        private readonly IMeasureService _measureService;
+        private readonly IPictureService _pictureService;
 
+        private readonly CurrencySettings _currencySettings;
+        private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
         private readonly TaxSettings _taxSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -47,8 +54,9 @@ namespace Nop.Services.Common
 
         public PdfService(ILocalizationService localizationService, IOrderService orderService,
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
-            ICurrencyService currencyService,
-            PdfSettings pdfSettings, TaxSettings taxSettings, 
+            ICurrencyService currencyService, IMeasureService measureService, 
+            IPictureService pictureService, CurrencySettings currencySettings, 
+            MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings, 
             StoreInformationSettings storeInformationSettings)
         {
             this._localizationService = localizationService;
@@ -56,6 +64,10 @@ namespace Nop.Services.Common
             this._dateTimeHelper = dateTimeHelper;
             this._priceFormatter = priceFormatter;
             this._currencyService = currencyService;
+            this._measureService = measureService;
+            this._pictureService = pictureService;
+            this._currencySettings = currencySettings;
+            this._measureSettings = measureSettings;
             this._pdfSettings = pdfSettings;
             this._taxSettings = taxSettings;
             this._storeInformationSettings = storeInformationSettings;
@@ -510,8 +522,7 @@ namespace Nop.Services.Common
             renderer.RenderDocument();
             renderer.PdfDocument.Save(filePath);
         }
-
-
+        
         /// <summary>
         /// Print packaging slips to PDF
         /// </summary>
@@ -534,7 +545,7 @@ namespace Nop.Services.Common
             {
                 if (order.ShippingAddress != null)
                 {
-                    Paragraph p1 = section.AddParagraph(String.Format("{0} #{1}", _localizationService.GetResource("PdfPackagingSlip.Order"), order.Id));
+                    Paragraph p1 = section.AddParagraph(String.Format("{0} #{1}", _localizationService.GetResource("PDFPackagingSlip.Order"), order.Id));
                     p1.Format.Font.Bold = true;
                     p1.Format.Font.Color = Colors.Black;
                     p1.Format.Font.Underline = Underline.None;
@@ -542,19 +553,19 @@ namespace Nop.Services.Common
 
                     if (!String.IsNullOrEmpty(order.ShippingAddress.Company))
                     {
-                        section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Company"), order.ShippingAddress.Company));
+                        section.AddParagraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Company"), order.ShippingAddress.Company));
                     }
-                    section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Name"), order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName));
-                    section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Phone"), order.ShippingAddress.PhoneNumber));
-                    section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Address"), order.ShippingAddress.Address1));
+                    section.AddParagraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Name"), order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName));
+                    section.AddParagraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Phone"), order.ShippingAddress.PhoneNumber));
+                    section.AddParagraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Address"), order.ShippingAddress.Address1));
                     if (!String.IsNullOrEmpty(order.ShippingAddress.Address2))
-                        section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.Address2"), order.ShippingAddress.Address2));
+                        section.AddParagraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Address2"), order.ShippingAddress.Address2));
                     section.AddParagraph(String.Format("{0}, {1}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "", order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.Name : ""));
                     section.AddParagraph(String.Format("{0}, {1}", order.ShippingAddress.City, order.ShippingAddress.ZipPostalCode));
 
                     section.AddParagraph();
 
-                    section.AddParagraph(String.Format(_localizationService.GetResource("PdfPackagingSlip.ShippingMethod"), order.ShippingMethod));
+                    section.AddParagraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.ShippingMethod"), order.ShippingMethod));
                     section.AddParagraph();
 
                     Table productTable = section.AddTable();
@@ -567,13 +578,13 @@ namespace Nop.Services.Common
                     header.Shading.Color = Colors.LightGray;
 
                     header.Cells[0].Format.Alignment = ParagraphAlignment.Center;
-                    header.Cells[0].AddParagraph(_localizationService.GetResource("PdfPackagingSlip.QTY"));
+                    header.Cells[0].AddParagraph(_localizationService.GetResource("PDFPackagingSlip.QTY"));
 
                     header.Cells[1].Format.Alignment = ParagraphAlignment.Center;
-                    header.Cells[1].AddParagraph(_localizationService.GetResource("PdfPackagingSlip.ProductName"));
+                    header.Cells[1].AddParagraph(_localizationService.GetResource("PDFPackagingSlip.ProductName"));
 
                     header.Cells[2].Format.Alignment = ParagraphAlignment.Center;
-                    header.Cells[2].AddParagraph(_localizationService.GetResource("PdfPackagingSlip.SKU"));
+                    header.Cells[2].AddParagraph(_localizationService.GetResource("PDFPackagingSlip.SKU"));
 
                     var opvc = order.OrderProductVariants;
                     foreach (var orderProductVariant in opvc)
@@ -608,6 +619,123 @@ namespace Nop.Services.Common
             }
 
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
+            renderer.Document = doc;
+            renderer.RenderDocument();
+            renderer.PdfDocument.Save(filePath);
+        }
+        
+        /// <summary>
+        /// Print product collection to PDF
+        /// </summary>
+        /// <param name="products">Products</param>
+        /// <param name="lang">Language</param>
+        /// <param name="filePath">File path</param>
+        public virtual void PrintProductsToPdf(IList<Product> products, Language lang, string filePath)
+        {
+            if (lang == null)
+                throw new ArgumentNullException("lang");
+
+            if (String.IsNullOrEmpty(filePath))
+                throw new ArgumentNullException("filePath");
+
+            Document doc = new Document();
+            Section section = doc.AddSection();
+
+            int productNumber = 1;
+            int prodCount = products.Count;
+
+            foreach (var product in products)
+            {
+                string productName = product.GetLocalized(x => x.Name, lang.Id);
+                string productFullDescription = product.GetLocalized(x => x.FullDescription, lang.Id);
+                Paragraph p1 = section.AddParagraph(String.Format("{0}. {1}", productNumber, productName));
+                p1.Format.Font.Bold = true;
+                p1.Format.Font.Color = Colors.Black;
+
+                section.AddParagraph();
+
+                section.AddParagraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productFullDescription)));
+
+                section.AddParagraph();
+
+                var pictures = _pictureService.GetPicturesByProductId(product.Id);
+                if (pictures.Count > 0)
+                {
+                    Table table = section.AddTable();
+                    table.Borders.Visible = false;
+
+                    table.AddColumn(Unit.FromCentimeter(10));
+                    table.AddColumn(Unit.FromCentimeter(10));
+
+                    Row row = table.AddRow();
+                    for (int i = 0; i < pictures.Count; i++)
+                    {
+                        int cellNum = i % 2;
+                        var pic = pictures[i];
+
+                        if (pic != null && pic.LoadPictureBinary() != null && pic.LoadPictureBinary().Length > 0)
+                        {
+                            row.Cells[cellNum].AddImage(_pictureService.GetPictureLocalPath(pic, 200, true));
+                        }
+
+                        if (i != 0 && i % 2 == 0)
+                        {
+                            row = table.AddRow();
+                        }
+                    }
+
+                    section.AddParagraph();
+                }
+
+                int pvNum = 1;
+
+                foreach (var productVariant in product.ProductVariants)
+                {
+                    string pvName = String.IsNullOrEmpty(productVariant.GetLocalized(x => x.Name, lang.Id)) ? _localizationService.GetResource("PDFProductCatalog.UnnamedProductVariant") : productVariant.GetLocalized(x => x.Name, lang.Id);
+                    section.AddParagraph(String.Format("{0}.{1}. {2}", productNumber, pvNum, pvName));
+
+                    section.AddParagraph();
+
+                    string productVariantDescription = productVariant.GetLocalized(x => x.Description, lang.Id);
+                    if (!String.IsNullOrEmpty(productVariantDescription))
+                    {
+                        section.AddParagraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productVariantDescription)));
+                        section.AddParagraph();
+                    }
+
+                    var pic = _pictureService.GetPictureById(productVariant.PictureId);
+                    if (pic != null && pic.LoadPictureBinary() != null && pic.LoadPictureBinary().Length > 0)
+                    {
+                        section.AddImage(_pictureService.GetPictureLocalPath(pic, 200, true));
+                    }
+
+                    section.AddParagraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price"), productVariant.Price, _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode));
+                    section.AddParagraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU"), productVariant.Sku));
+
+                    if (productVariant.Weight > Decimal.Zero)
+                    {
+                        section.AddParagraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight"), productVariant.Weight, _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name));
+                    }
+
+                    if (productVariant.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                    {
+                        section.AddParagraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.StockQuantity"), productVariant.StockQuantity));
+                    }
+
+                    section.AddParagraph();
+
+                    pvNum++;
+                }
+
+                productNumber++;
+
+                if (productNumber <= prodCount)
+                {
+                    section.AddPageBreak();
+                }
+            }
+
+            var renderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
             renderer.Document = doc;
             renderer.RenderDocument();
             renderer.PdfDocument.Save(filePath);

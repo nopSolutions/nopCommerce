@@ -1293,6 +1293,7 @@
     </Children>
   </LocaleResource>
   <LocaleResource Name="HomePage">
+    <Value>Home page</Value>
     <Children>
       <LocaleResource Name="Products">
         <Value>Featured products</Value>
@@ -1760,6 +1761,25 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="PDFProductCatalog">
+    <Children>
+      <LocaleResource Name="Price">
+        <Value>Price</Value>
+      </LocaleResource>
+      <LocaleResource Name="SKU">
+        <Value>SKU</Value>
+      </LocaleResource>
+      <LocaleResource Name="StockQuantity">
+        <Value>Stock quantity</Value>
+      </LocaleResource>
+      <LocaleResource Name="UnnamedProductVariant">
+        <Value>Unnamed product variant</Value>
+      </LocaleResource>
+      <LocaleResource Name="Weight">
+        <Value>Weight</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="PDFInvoice">
     <Children>
       <LocaleResource Name="Address">
@@ -1851,7 +1871,7 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
-  <LocaleResource Name="PdfPackagingSlip">
+  <LocaleResource Name="PDFPackagingSlip">
     <Children>
       <LocaleResource Name="Address">
         <Value>Address: {0}</Value>

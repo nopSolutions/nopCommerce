@@ -17,6 +17,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
+using Nop.Services.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -37,6 +38,7 @@ namespace Nop.Admin.Controllers
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IProductTagService _productTagService;
         private readonly ICopyProductService _copyProductService;
+        private readonly IPdfService _pdfService;
 
         #endregion
 
@@ -48,7 +50,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
             ITaxCategoryService taxCategoryService, IProductTagService productTagService,
-            ICopyProductService copyProductService)
+            ICopyProductService copyProductService, IPdfService pdfService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -62,6 +64,7 @@ namespace Nop.Admin.Controllers
             this._taxCategoryService = taxCategoryService;
             this._productTagService = productTagService;
             this._copyProductService = copyProductService;
+            this._pdfService = pdfService;
         }
 
         #endregion Constructors 
@@ -586,6 +589,18 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = copyModel.Id });
             }
+        }
+
+        public ActionResult DownloadCatalogAsPdf()
+        {
+            var products =  _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, int.MaxValue, true);
+            string fileName = string.Format("pdfcatalog_{0}_{1}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+            _pdfService.PrintProductsToPdf(products, _workContext.WorkingLanguage, filePath);
+            var pdfBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(pdfBytes, "application/pdf", fileName);
         }
 
         #endregion
