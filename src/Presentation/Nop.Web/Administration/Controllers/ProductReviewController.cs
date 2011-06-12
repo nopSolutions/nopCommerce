@@ -43,7 +43,7 @@ namespace Nop.Admin.Controllers
 
         [NonAction]
         private void PrepareProductReviewModel(ProductReviewModel model,
-            ProductReview productReview, bool excludeProperties)
+            ProductReview productReview, bool excludeProperties, bool formatReviewText)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -61,7 +61,10 @@ namespace Nop.Admin.Controllers
             if (!excludeProperties)
             {
                 model.Title = productReview.Title;
-                model.ReviewText = productReview.ReviewText;
+                if (formatReviewText)
+                    model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+                else
+                    model.ReviewText = productReview.ReviewText;
                 model.IsApproved = productReview.IsApproved;
             }
         }
@@ -91,7 +94,7 @@ namespace Nop.Admin.Controllers
                 Data = productReviews.PagedForCommand(command).Select(x =>
                 {
                     var m = new ProductReviewModel();
-                    PrepareProductReviewModel(m, x, false);
+                    PrepareProductReviewModel(m, x, false, true);
                     return m;
                 }),
                 Total = productReviews.Count,
@@ -110,7 +113,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product review found with the specified id", "id");
 
             var model = new ProductReviewModel();
-            PrepareProductReviewModel(model, productReview, false);
+            PrepareProductReviewModel(model, productReview, false, false);
             return View(model);
         }
 
@@ -138,7 +141,7 @@ namespace Nop.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            PrepareProductReviewModel(model, productReview, true);
+            PrepareProductReviewModel(model, productReview, true, false);
             return View(model);
         }
 
@@ -147,6 +150,8 @@ namespace Nop.Admin.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
+            if (productReview == null)
+                throw new ArgumentException("No product review found with the specified id");
 
             var product = productReview.Product;
             _customerContentService.DeleteCustomerContent(productReview);

@@ -9,7 +9,6 @@
     <div class="options">
     </div>
 </div>
-@*TODO display full review text (similar to news comments). After it's done remove product review details page*@
 <table class="adminContent">
     <tr>
         <td>
@@ -28,7 +27,11 @@
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
                             .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
                         columns.Bound(x => x.Title)
-                            .Width(250)
+                            .Width(150)
+                            .Centered();
+                        columns.Bound(x => x.ReviewText)
+                            .Width(350)
+                            .Encoded(false)
                             .Centered();
                         columns.Bound(x => x.Rating)
                             .Width(50)
