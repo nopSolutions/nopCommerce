@@ -2130,6 +2130,9 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="NumberOfStates">
+                          <Value>Number of states</Value>
+                        </LocaleResource>                        
                       </Children>
                     </LocaleResource>
                     <LocaleResource Name="Info">

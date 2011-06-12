@@ -13,7 +13,6 @@
 <table class="adminContent">
     <tr>
         <td>
-        @*TODO display number of states*@
             @(Html.Telerik().Grid<CountryModel>()
                     .Name("countries-grid")
                     .BindTo(Model.Data)
@@ -43,6 +42,9 @@
                              .Width(50)
                              .Template(x => x.SubjectToVat.ToString().ToLower())
                              .Centered();
+                        columns.Bound(x => x.NumberOfStates)
+                            .Width(50)
+                            .Centered();
                         columns.Bound(x => x.DisplayOrder)
                             .Width(50)
                             .Centered();

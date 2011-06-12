@@ -59,7 +59,9 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
 
             //countries
-            ViceVersa<Country, CountryModel>();
+            Mapper.CreateMap<CountryModel, Country>();
+            Mapper.CreateMap<Country, CountryModel>()
+                .ForMember(dest => dest.NumberOfStates, opt => opt.MapFrom(src => src.StateProvinces != null ? src.StateProvinces.Count : 0));
             //state/provinces
             Mapper.CreateMap<StateProvince, StateProvinceModel>()
                 .ForMember(dest => dest.DisplayOrder1, dt => dt.MapFrom(src => src.DisplayOrder));

@@ -39,5 +39,11 @@ namespace Nop.Admin.Models.Directory
 
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
+
+
+
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.NumberOfStates")]
+        public int NumberOfStates { get; set; }
     }
 }
