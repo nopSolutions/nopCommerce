@@ -605,7 +605,11 @@
     {
         if (Model.Id > 0)
         {
-            <div>
+
+            /*hide "add spec" table if no attributes are defined*/
+            if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
+            {
+                <div>
         @(Html.Telerik().Grid<ProductSpecificationAttributeModel>()
                     .Name("specificationattributes-grid")
                     .DataKeys(x =>
@@ -638,10 +642,10 @@
                     })
                     .EnableCustomBinding(true))
     </div>
-            <p>
-                <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
-            </p>
-            <script type="text/javascript">
+                <p>
+                    <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
+                </p>
+                <script type="text/javascript">
      $(function() {
             $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
                 var selectedItem = $(this).val();
@@ -683,15 +687,14 @@
                          $('#addProductSpec').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){
-                        alert('Failed to add reward points.')
+                        alert('Failed to add specification attribute.')
                         $('#addProductSpec').attr('disabled', false);
                     }  
                 });
             });
         });
     </script>
-        //TODO hide "add spec" table if no attributes are defined
-            <table class="adminContent">
+                <table class="adminContent">
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId):
@@ -744,6 +747,11 @@
             </td>
         </tr>
     </table>
+            }
+            else
+            {
+                @T("Admin.Catalog.Products.SpecificationAttributes.NoAttributes")
+            }
         }
         else
         {

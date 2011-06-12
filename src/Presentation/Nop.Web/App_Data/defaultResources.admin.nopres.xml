@@ -1208,6 +1208,9 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="NoAttributes">
+                        <Value>No specification attributes defined.</Value>
+                      </LocaleResource>
                       <LocaleResource Name="SaveBeforeEdit">
                         <Value>You need to save the product before you can add product specification attributes for this product page.</Value>
                       </LocaleResource>
