@@ -1170,7 +1170,6 @@
     <Content Include="Views\Checkout\PaymentInfo.cshtml" />
     <Content Include="Views\Checkout\Confirm.cshtml" />
     <Content Include="Views\Checkout\Completed.cshtml" />
-    <Content Include="Views\Order\Details.cshtml" />
     <Content Include="Views\Customer\Orders.cshtml" />
     <Content Include="Views\Customer\DownloadableProducts.cshtml" />
     <Content Include="Views\Customer\UserAgreement.cshtml" />
@@ -1217,6 +1216,7 @@
     <Content Include="Views\Catalog\HomepageProducts.cshtml" />
     <Content Include="Views\Catalog\HomepageCategories.cshtml" />
     <Content Include="Views\ShoppingCart\MiniShoppingCart.cshtml" />
+    <Content Include="Views\Order\Details.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

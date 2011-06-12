@@ -24,6 +24,7 @@ namespace Nop.Web.Models.Order
             OrderNotes = new List<OrderNote>();
         }
 
+        public bool PrintMode { get; set; }
         public bool DisplayPdfInvoice { get; set; }
 
         public DateTime CreatedOn { get; set; }

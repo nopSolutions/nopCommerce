@@ -3,31 +3,40 @@
 @using Nop.Web.Models.Order
 @using Nop.Services.Localization
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
-
+    if (!Model.PrintMode)
+    {
+        Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    }
+    else
+    {
+        Layout = null;
+    }
     //title
     Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
 }
 <div class="order-details">
-    <table width="100%">
-        <tr>
-            <td style="text-align: left;">
-                <div class="page-title">
-                    <h1>
-                        @T("Order.OrderInformation")</h1>
-                </div>
-            </td>
-            <td style="text-align: right;">
-                @*TODO add print order page*@ <a href="" target="_blank" class="orderdetailsprintbutton">@T("Order.Print")</a>
-                @if (Model.DisplayPdfInvoice)
-                {
-                    <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
-                }
-            </td>
-        </tr>
-    </table>
-    <div class="clear">
-    </div>
+    @if (!Model.PrintMode)
+    {
+        <table width="100%">
+            <tr>
+                <td style="text-align: left;">
+                    <div class="page-title">
+                        <h1>
+                            @T("Order.OrderInformation")</h1>
+                    </div>
+                </td>
+                <td style="text-align: right;">
+                    <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="orderdetailsprintbutton">@T("Order.Print")</a>
+                    @if (Model.DisplayPdfInvoice)
+                    {
+                        <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
+                    }
+                </td>
+            </tr>
+        </table>
+        <div class="clear">
+        </div>
+    }
     <div class="info">
         <div class="order-overview">
             <table width="100%" cellspacing="0" cellpadding="2" border="0">
@@ -163,31 +172,34 @@
                                     @Model.TrackingNumber
                                 }
                                 <br />
-                                <br />
-                                <b>
-                                    @T("Order.ShippedOn")</b>
-                                <br />
-                                @if (!String.IsNullOrEmpty(Model.ShippedDate))
+                                @if (!Model.PrintMode)
                                 {
-                                    @Model.ShippedDate
+                                    <br />
+                                    <b>
+                                        @T("Order.ShippedOn")</b>
+                                    <br />
+                                    if (!String.IsNullOrEmpty(Model.ShippedDate))
+                                    {
+                                        @Model.ShippedDate
+                                    }
+                                    else
+                                    {
+                                        @T("Order.NotYetShipped")
+                                    }
+                                    <br />
+                                    <b>
+                                        @T("Order.DeliveredOn")</b>
+                                    <br />
+                                    if (!String.IsNullOrEmpty(Model.DeliveryDate))
+                                    {
+                                        @Model.DeliveryDate
+                                    }
+                                    else
+                                    {
+                                        @T("Order.NotYetDelivered")
+                                    }
+                                    <br />
                                 }
-                                else
-                                {
-                                    @T("Order.NotYetShipped")
-                                }
-                                <br />
-                                <b>
-                                    @T("Order.DeliveredOn")</b>
-                                <br />
-                                @if (!String.IsNullOrEmpty(Model.DeliveryDate))
-                                {
-                                    @Model.DeliveryDate
-                                }
-                                else
-                                {
-                                    @T("Order.NotYetDelivered")
-                                }
-                                <br />
                                 <b>
                                     @T("Order.Weight")</b>
                                 <br />
@@ -207,7 +219,7 @@
             <div class="clear">
             </div>
             <div class="products-box">
-                <table border="1" cellspacing="0" style="width:100%;border-collapse:collapse;">
+                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
                     @if (Model.ShowSku)
                     {
                         <col width="1" />
@@ -252,7 +264,14 @@
                                 }
                                 <td>
                                     <div style="padding-left: 10px; padding-right: 10px;">
-                                        <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
+                                        @if (!Model.PrintMode)
+                                        {
+                                            <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
+                                        }
+                                        else
+                                        {
+                                            @item.ProductName
+                                        }
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <br />
@@ -287,18 +306,21 @@
                     <div class="clear">
                     </div>
                 }
-                <br />
-                @*Reorder support*@
-                @using (Html.BeginForm("Details", "Order", FormMethod.Post))
+                @if (!Model.PrintMode)
                 {
-                    if (Model.IsReOrderAllowed)
+                    <br />
+                    @*Reorder support*@
+                    using (Html.BeginForm("Details", "Order", FormMethod.Post))
                     {
+                        if (Model.IsReOrderAllowed)
+                        {
                     <input type="submit" name="reorder" value="@T("Order.Reorder")" id="reorder" class="reorderbutton" />
-                    }
-                    if (Model.IsReturnRequestAllowed)
-                    {
+                        }
+                        if (Model.IsReturnRequestAllowed)
+                        {
                     <text>&nbsp; &nbsp; &nbsp;</text>
                     <input type="button" name="returnitems" value="@T("Order.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@(@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id }))')" />
+                        }
                     }
                 }
             </div>
@@ -453,15 +475,17 @@
         </table>
         <div class="clear">
         </div>
-        @if (Model.OrderNotes.Count > 0)
+        @if (!Model.PrintMode)
         {
+            if (Model.OrderNotes.Count > 0)
+            {
             <div class="section-title">
                 @T("Order.Notes")
             </div>
             <div class="clear">
             </div>
             <div class="ordernotes-box">
-                <table border="1" cellspacing="0" style="width:100%;border-collapse:collapse;">
+                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
                     <col />
                     <col />
                     <thead>
@@ -478,10 +502,10 @@
                         @foreach (var item in Model.OrderNotes)
                         {
                             <tr>
-                                <td style="width:20%;">
+                                <td style="width: 20%;">
                                     @item.CreatedOn.ToString()
                                 </td>
-                                <td style="width:80%;">
+                                <td style="width: 80%;">
                                     <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
                                         @Html.Raw(item.Note)
                                     </div>
@@ -491,6 +515,7 @@
                     </tbody>
                 </table>
             </div>
+            }
         }
     </div>
 </div>

@@ -171,6 +171,10 @@ namespace Nop.Web.Infrastructure
                             "orderdetails/pdf/{orderId}",
                             new { controller = "Order", action = "GetPdfInvoice" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("PrintOrderDetails",
+                            "orderdetails/print/{orderId}",
+                            new { controller = "Order", action = "PrintOrderDetails" },
+                            new[] { "Nop.Web.Controllers" });
 
 
             //contact us

@@ -427,6 +427,20 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        public ActionResult PrintOrderDetails(int orderId)
+        {
+            if (_workContext.CurrentCustomer == null)
+                return new HttpUnauthorizedResult();
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+                return new HttpUnauthorizedResult();
+
+            var model = PrepareOrderDetailsModel(order);
+            model.PrintMode = true;
+
+            return View("Details", model);
+        }
+
         public ActionResult GetPdfInvoice(int orderId)
         {
             if (_workContext.CurrentCustomer == null)
