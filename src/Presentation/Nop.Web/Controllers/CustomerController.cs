@@ -147,10 +147,11 @@ namespace Nop.Web.Controllers
 
         #region Login / logout / register
 
-        public ActionResult Login()
+        public ActionResult Login(bool? checkoutAsGuest)
         {
             var model = new LoginModel();
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.CheckoutAsGuest = checkoutAsGuest.HasValue ? checkoutAsGuest.Value : false;
             return View(model);
         }
 

@@ -85,6 +85,10 @@ namespace Nop.Web.Infrastructure
                             "login/",
                             new { controller = "Customer", action = "Login" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("LoginCheckoutAsGuest",
+                            "login/checkoutAsGuest",
+                            new { controller = "Customer", action = "Login", checkoutAsGuest = true },
+                            new[] { "Nop.Web.Controllers" });
             routes.MapRoute("Register",
                             "register/",
                             new { controller = "Customer", action = "Register" },

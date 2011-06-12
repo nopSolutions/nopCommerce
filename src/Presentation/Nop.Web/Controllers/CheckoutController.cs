@@ -158,6 +158,9 @@ namespace Nop.Web.Controllers
 
         public ActionResult OnePageCheckout()
         {
+            if (!_orderSettings.OnePageCheckoutEnabled)
+                return RedirectToRoute("Checkout");
+
             return Content("UNDONE OnePageCheckout");
         }
 

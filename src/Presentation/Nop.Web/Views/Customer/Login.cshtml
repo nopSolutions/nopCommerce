@@ -13,12 +13,36 @@
     <div class="clear">
     </div>
     <div class="wrapper">
-        @*TODO Support CheckoutAsGuestQuestion*@
-        <div class="new-wrapper">
-            <span class="register-title">@T("Account.Login.NewCustomer")</span>
-            <div class="register-block">
-                <table>
-                    <tbody>
+        @if (Model.CheckoutAsGuest)
+        {
+            <div class="new-wrapper">
+                <span class="register-title">@T("Account.Login.CheckoutAsGuestOrRegister")</span>
+                <div class="checkout-as-guest-or-register-block">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>
+                                @Html.Action("TopicBlock", "Topic", new { systemName = "CheckoutAsGuestOrRegister" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="padding-right: 20px; padding-top: 20px;">
+                                <input type="submit" class="checkoutasguestbutton" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
+                                <input type="submit" class="registerbutton" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="new-wrapper">
+                <span class="register-title">@T("Account.Login.NewCustomer")</span>
+                <div class="register-block">
+                    <table>
+                        <tbody>
                         <tr>
                             <td>
                                 @T("Account.Login.NewCustomerText")
@@ -26,13 +50,14 @@
                         </tr>
                         <tr>
                             <td align="right" style="padding-right: 20px; padding-top: 20px;">
-                             <input type="submit" class="registerbutton" id="register-button" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" name="register-button" />
+                             <input type="submit" class="registerbutton" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
-        </div>        
+        }
         <div class="returning-wrapper">
             <span class="login-title">@T("Account.Login.ReturningCustomer")</span>
             <div class="login-block">

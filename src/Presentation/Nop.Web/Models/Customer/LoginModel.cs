@@ -7,6 +7,8 @@ namespace Nop.Web.Models.Customer
 {
     public class LoginModel : BaseNopModel
     {
+        public bool CheckoutAsGuest { get; set; }
+
         [NopResourceDisplayName("Account.Login.Fields.Email")]
         public string Email { get; set; }
 

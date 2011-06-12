@@ -42,7 +42,7 @@
                                     @Html.LabelFor(model => model.CountryId):
                                 </td>
                                 <td>
-                                    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+                                    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { style = "width:137px;" })
                                     @Html.ValidationMessageFor(model => model.CountryId)
                                 </td>
                             </tr>
@@ -51,7 +51,7 @@
                                     @Html.LabelFor(model => model.StateProvinceId):
                                 </td>
                                 <td>
-                                    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+                                    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { style = "width:137px;" })
                                     @Html.ValidationMessageFor(model => model.StateProvinceId)
                                 </td>
                             </tr>

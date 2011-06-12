@@ -275,6 +275,12 @@
       <LocaleResource Name="Login">
         <Value>Log in</Value>
         <Children>
+          <LocaleResource Name="CheckoutAsGuestOrRegister">
+            <Value>Checkout as a guest or register</Value>
+          </LocaleResource>
+          <LocaleResource Name="CheckoutAsGuest">
+            <Value>Checkout as Guest</Value>
+          </LocaleResource>
           <LocaleResource Name="ForgotPassword">
             <Value>Forgot password?</Value>
           </LocaleResource>
