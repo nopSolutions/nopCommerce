@@ -21,8 +21,6 @@ namespace Nop.Web.Framework.Themes
                 PreviewImageUrl = attribute == null ? string.Empty : attribute.Value;
                 attribute = node.Attributes["previewText"];
                 PreviewText = attribute == null ? string.Empty : attribute.Value;
-                attribute = node.Attributes["isDefault"];
-                IsDefault = attribute == null ? false : bool.Parse(attribute.Value);
             }
         }
 
@@ -35,8 +33,6 @@ namespace Nop.Web.Framework.Themes
         public string ThemeName { get; protected set; }
 
         public string ThemeTitle { get; protected set; }
-
-        public bool IsDefault { get; protected set; }
 
     }
 }

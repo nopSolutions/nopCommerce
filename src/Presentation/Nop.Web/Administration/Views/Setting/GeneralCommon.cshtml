@@ -47,6 +47,24 @@
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreUrl)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.StoreInformationSettings.DefaultStoreTheme, Model.StoreInformationSettings.AvailableStoreThemes)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSEOSettings()

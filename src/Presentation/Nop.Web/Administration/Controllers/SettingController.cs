@@ -1,32 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Common;
-using Nop.Admin.Models.Forums;
 using Nop.Admin.Models.Settings;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Blogs;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -36,8 +29,8 @@ using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Themes;
 using Telerik.Web.Mvc;
-using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Controllers
 {
@@ -58,6 +51,8 @@ namespace Nop.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IUserService _userService;
         private readonly IEncryptionService _encryptionService;
+        private readonly IThemeProvider _themeProvider;
+
 
         private BlogSettings _blogSettings;
         private ForumSettings _forumSettings;
@@ -88,7 +83,8 @@ namespace Nop.Admin.Controllers
             ICurrencyService currencyService, IPictureService pictureService, 
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             IOrderService orderService, IUserService userService, 
-            IEncryptionService encryptionService, BlogSettings blogSettings,
+            IEncryptionService encryptionService, IThemeProvider themeProvider, 
+            BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
@@ -110,6 +106,7 @@ namespace Nop.Admin.Controllers
             this._orderService = orderService;
             this._userService = userService;
             this._encryptionService = encryptionService;
+            this._themeProvider = themeProvider;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -518,6 +515,18 @@ namespace Nop.Admin.Controllers
             var model = new GeneralCommonSettingsModel();
             model.StoreInformationSettings.StoreName = _storeInformationSettings.StoreName;
             model.StoreInformationSettings.StoreUrl = _storeInformationSettings.StoreUrl;
+            model.StoreInformationSettings.DefaultStoreTheme = _storeInformationSettings.DefaultStoreTheme;
+            model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
+                .GetThemeConfigurations().Select(x =>
+                {
+                    return new SelectListItem()
+                    {
+                        Text = x.ThemeTitle,
+                        Value = x.ThemeName,
+                        Selected = x.ThemeName.Equals(_storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
+                    };
+                }).ToList();
+            model.StoreInformationSettings.AllowCustomerToSelectTheme = _storeInformationSettings.AllowCustomerToSelectTheme;
 
             //seo settings
             model.SeoSettings.PageTitleSeparator = _seoSettings.PageTitleSeparator;
@@ -554,7 +563,11 @@ namespace Nop.Admin.Controllers
             //ensure we have "/" at the end
             if (!_storeInformationSettings.StoreUrl.EndsWith("/"))
                 _storeInformationSettings.StoreUrl += "/";
+            _storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
+            _storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
             _settingService.SaveSetting(_storeInformationSettings);
+
+
 
             //seo settings
             _seoSettings.PageTitleSeparator = model.SeoSettings.PageTitleSeparator;

@@ -163,8 +163,8 @@ namespace Nop.Admin.Controllers
 			return RedirectToAction("List");
 		}
 
-        //TODO: currently, only recored within current page are passed, 
-        //  need to somehow pass all of the records
+        //TODO: currently, only records within current page are passed, 
+        //need to somehow pass all of the records
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-selected")]
         public ActionResult DeleteSelected(QueuedEmailListModel model, ICollection<int> checkedRecords)

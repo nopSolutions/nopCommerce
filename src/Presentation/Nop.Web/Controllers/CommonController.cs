@@ -25,6 +25,7 @@ using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Themes;
 using Nop.Web.Models;
 using Nop.Web.Models.Common;
 
@@ -44,6 +45,8 @@ namespace Nop.Web.Controllers
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ISitemapGenerator _sitemapGenerator;
+        private readonly IThemeContext _themeContext;
+        private readonly IThemeProvider _themeProvider;
 
         private readonly UserSettings _userSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -60,7 +63,8 @@ namespace Nop.Web.Controllers
             ICurrencyService currencyService, ILocalizationService localizationService,
             IWorkContext workContext, IAuthenticationService authenticationService,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
-            ISitemapGenerator sitemapGenerator, 
+            ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
+            IThemeProvider themeProvider, 
             UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
@@ -78,6 +82,8 @@ namespace Nop.Web.Controllers
             this._queuedEmailService = queuedEmailService;
             this._emailAccountService = emailAccountService;
             this._sitemapGenerator = sitemapGenerator;
+            this._themeContext = themeContext;
+            this._themeProvider = themeProvider;
 
             this._userSettings = userSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -304,5 +310,57 @@ namespace Nop.Web.Controllers
             string siteMap = _sitemapGenerator.Generate();
             return Content(siteMap, "text/xml");
         }
+
+        //store theme
+        [ChildActionOnly]
+        public ActionResult StoreThemeSelector()
+        {
+            if (!_storeInformationSettings.AllowCustomerToSelectTheme)
+                return Content("");
+
+            var model = new StoreThemeSelectorModel();
+            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingTheme);
+            model.CurrentStoreTheme = new StoreThemeModel()
+            {
+                Name = currentTheme.ThemeName,
+                Title = currentTheme.ThemeTitle
+            };
+            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
+                .Select(x =>
+                {
+                    return new StoreThemeModel()
+                    {
+                        Name = x.ThemeName,
+                        Title = x.ThemeTitle
+                    };
+                })
+                .ToList();
+            return PartialView(model);
+        }
+
+        public ActionResult StoreThemeSelected(string themeName)
+        {
+            _themeContext.WorkingTheme = themeName;
+            
+            var model = new StoreThemeSelectorModel();
+            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingTheme);
+            model.CurrentStoreTheme = new StoreThemeModel()
+            {
+                Name = currentTheme.ThemeName,
+                Title = currentTheme.ThemeTitle
+            };
+            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
+                .Select(x =>
+                {
+                    return new StoreThemeModel()
+                    {
+                        Name = x.ThemeName,
+                        Title = x.ThemeTitle
+                    };
+                })
+                .ToList();
+            return PartialView("StoreThemeSelector", model);
+        }
+
     }
 }

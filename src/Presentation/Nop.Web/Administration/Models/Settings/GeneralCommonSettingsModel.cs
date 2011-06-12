@@ -24,11 +24,22 @@ namespace Nop.Admin.Models.Settings
 
         public class StoreInformationSettingsModel
         {
+            public StoreInformationSettingsModel()
+            {
+                this.AvailableStoreThemes = new List<SelectListItem>();
+            }
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreName")]
             public string StoreName { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreUrl")]
             public string StoreUrl { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme")]
+            public string DefaultStoreTheme { get; set; }
+            public IList<SelectListItem> AvailableStoreThemes { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme")]
+            public bool AllowCustomerToSelectTheme { get; set; }
         }
 
         public class SeoSettingsModel

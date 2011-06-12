@@ -4508,7 +4508,9 @@ namespace Nop.Services.Installation
                 {
                     StoreName = "Your store name",
                     StoreUrl = "http://www.yourStore.com/",
-                    CurrentVersion = "2.00"
+                    CurrentVersion = "2.00",
+                    DefaultStoreTheme = "DarkOrange",
+                    AllowCustomerToSelectTheme = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<RewardPointsSettings>>()

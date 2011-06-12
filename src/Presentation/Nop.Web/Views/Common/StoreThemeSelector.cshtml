@@ -1,0 +1,20 @@
+﻿@model Nop.Web.Models.Common.StoreThemeSelectorModel
+@using (Ajax.BeginForm("StoreThemeSelected", "Common", new AjaxOptions { OnComplete = "onStoreThemeChangedRequestCompleted();" }, new { id = "form-storethemeselector" }))
+{
+    var themes = Model.AvailableStoreThemes.Select(x => new SelectListItem
+    {
+        Text = x.Title,
+        Value = x.Name,
+        Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.InvariantCultureIgnoreCase)
+    });
+    
+    @T("StoreTheme")<text>:</text> @Html.DropDownList("themeName", themes, new { onChange = "onStoreThemeChanged();", @class = "storethemelist" })
+}
+<script type="text/javascript">
+    function onStoreThemeChanged() {
+        $("#form-storethemeselector").submit();
+    }
+    function onStoreThemeChangedRequestCompleted() {
+        location.reload();
+    }
+</script>

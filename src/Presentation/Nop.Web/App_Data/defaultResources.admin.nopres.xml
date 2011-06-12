@@ -3212,7 +3212,23 @@
                         <Value>Store URL</Value>
                         <Children>
                           <LocaleResource Name="Hint">
-                            <Value>title="The URL of your store e.g. http://www.yourstore.com/"</Value>
+                            <Value>The URL of your store e.g. http://www.yourstore.com/</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DefaultStoreTheme">
+                        <Value>Store theme</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The public store theme. You can download themes from the extensions page at www.nopcommerce.com.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AllowCustomerToSelectTheme">
+                        <Value>Allow customers to select a theme</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow customers to select a store theme.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

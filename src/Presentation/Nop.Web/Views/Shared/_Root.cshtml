@@ -68,7 +68,7 @@
                 @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), "Store name here")
             </div>
             <div class="footer-storetheme">
-                <!--UNDONE store theme selector (if enabled) -->
+                @Html.Action("StoreThemeSelector", "Common")
             </div>
         </div>
     </div>

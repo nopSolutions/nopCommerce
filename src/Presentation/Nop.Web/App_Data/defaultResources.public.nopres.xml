@@ -2555,6 +2555,9 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="StoreTheme">
+    <Value>Select store theme</Value>
+  </LocaleResource>
   <LocaleResource Name="Tax">
     <Children>
       <LocaleResource Name="Exclusive">

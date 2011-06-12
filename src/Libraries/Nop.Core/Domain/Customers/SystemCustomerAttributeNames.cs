@@ -25,5 +25,7 @@ namespace Nop.Core.Domain.Customers
         public static string AccountActivationToken { get { return "AccountActivationToken"; } }
 
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
+
+        public static string WorkingThemeName { get { return "WorkingThemeName"; } }
     }
 }

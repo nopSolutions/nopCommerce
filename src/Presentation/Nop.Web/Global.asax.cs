@@ -96,15 +96,7 @@ namespace Nop.Web
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
         { 
             //we don't do it in Application_BeginRequest because a user is not authenticated yet
-            SetWorkingTheme();
             SetWorkingCulture();
-        }
-
-        protected void SetWorkingTheme()
-        {
-            //Allow store owner to manage themes (Whether it's active or not)
-            var defaultTheme = EngineContext.Current.Resolve<IThemeProvider>().GetThemeConfigurations().Where(x => x.IsDefault).FirstOrDefault();
-            EngineContext.Current.Resolve<IThemeContext>().WorkingTheme = defaultTheme == null ? string.Empty : defaultTheme.ThemeName;
         }
 
         protected void SetWorkingCulture()

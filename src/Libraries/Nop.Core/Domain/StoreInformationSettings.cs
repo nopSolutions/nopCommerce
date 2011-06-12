@@ -20,5 +20,9 @@ namespace Nop.Core.Domain
         public string CurrentVersion { get; set; }
 
         //TODO Add 'Store closed' option
+
+        public string DefaultStoreTheme { get; set; }
+
+        public bool AllowCustomerToSelectTheme { get; set; }
     }
 }
