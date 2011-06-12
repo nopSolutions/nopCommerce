@@ -123,6 +123,7 @@
     <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\CopyProductModel.cs" />
+    <Compile Include="Models\Common\LanguageSelectorModel.cs" />
     <Compile Include="Models\Common\MaintenanceModel.cs" />
     <Compile Include="Models\Common\SystemWarningModel.cs" />
     <Compile Include="Models\Common\SystemInfoModel.cs" />
@@ -858,6 +859,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Setting\GeneralCommon.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\LanguageSelector.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

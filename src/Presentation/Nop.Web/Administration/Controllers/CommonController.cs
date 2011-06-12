@@ -46,6 +46,8 @@ namespace Nop.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILanguageService _languageService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -55,7 +57,8 @@ namespace Nop.Admin.Controllers
             ICurrencyService currencyService, IMeasureService measureService,
             ICustomerService customerService, IWebHelper webHelper,
             StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
-            MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper)
+            MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper,
+            ILanguageService languageService, IWorkContext workContext)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -67,6 +70,8 @@ namespace Nop.Admin.Controllers
             this._currencySettings = currencySettings;
             this._measureSettings = measureSettings;
             this._dateTimeHelper = dateTimeHelper;
+            this._languageService = languageService;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -273,7 +278,31 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-        
+
+
+
+        //language
+        [ChildActionOnly]
+        public ActionResult LanguageSelector()
+        {
+            var model = new LanguageSelectorModel();
+            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
+            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
+            return PartialView(model);
+        }
+        public ActionResult LanguageSelected(int customerlanguage)
+        {
+            var language = _languageService.GetLanguageById(customerlanguage);
+            if (language != null)
+            {
+                _workContext.WorkingLanguage = language;
+            }
+            var model = new LanguageSelectorModel();
+            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
+            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
+            return PartialView("LanguageSelector", model);
+        }
+
         #endregion
     }
 }

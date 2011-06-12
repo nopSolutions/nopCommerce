@@ -1,0 +1,25 @@
+﻿@model LanguageSelectorModel
+@if (Model.AvailableLanguages.Count > 1)
+{
+    using (Ajax.BeginForm("LanguageSelected", "Common", new AjaxOptions { OnComplete = "onLanguageChangedRequestCompleted();" }, new { id = "form-languageselector" }))
+    {
+        var languages = Model.AvailableLanguages.Select(x => new SelectListItem
+        {
+            Text = x.Name,
+            Value = x.Id.ToString(),
+            Selected = x.Id.Equals(Model.CurrentLanguage.Id)
+        });
+    
+        @Html.DropDownList("customerlanguage",
+            languages,
+            new { onChange = "onLanguageChanged();" })
+    }
+    <script type="text/javascript">
+        function onLanguageChanged() {
+            $("#form-languageselector").submit();
+        }
+        function onLanguageChangedRequestCompleted() {
+            location.reload();
+        }
+    </script>
+}
