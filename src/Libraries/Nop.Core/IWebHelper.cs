@@ -105,42 +105,13 @@ namespace Nop.Core
         /// <param name="queryString">Query string to remove</param>
         /// <returns>New url</returns>
         string RemoveQueryString(string url, string queryString);
-
-        //TODO implement 'QueryString' method as generic
+        
         /// <summary>
         /// Gets query string value by name
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="name">Parameter name</param>
         /// <returns>Query string value</returns>
-        string QueryString(string name);
-
-        /// <summary>
-        /// Gets boolean value from query string 
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <returns>Query string value</returns>
-        bool QueryStringBool(string name);
-
-        /// <summary>
-        /// Gets integer value from query string 
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <returns>Query string value</returns>
-        int QueryStringInt(string name);
-
-        /// <summary>
-        /// Gets integer value from query string 
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <param name="defaultValue">Default value</param>
-        /// <returns>Query string value</returns>
-        int QueryStringInt(string name, int defaultValue);
-
-        /// <summary>
-        /// Gets GUID value from query string 
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <returns>Query string value</returns>
-        Guid? QueryStringGuid(string name);
+        T QueryString<T>(string name);
     }
 }

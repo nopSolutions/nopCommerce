@@ -231,6 +231,7 @@ namespace Nop.Core
             return result;
         }
 
+        //TODO move this property to NopConfig
         public static bool OneToManyCollectionWrapperEnabled { get; set; }
     }
 }

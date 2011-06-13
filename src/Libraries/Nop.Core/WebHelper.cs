@@ -14,6 +14,8 @@ namespace Nop.Core
     /// </summary>
     public partial class WebHelper : IWebHelper
     {
+        //TODO inject HttpContextBase (don't use HttpContext.Current)
+
         /// <summary>
         /// Get URL referrer
         /// </summary>
@@ -435,74 +437,16 @@ namespace Nop.Core
         /// <summary>
         /// Gets query string value by name
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="name">Parameter name</param>
         /// <returns>Query string value</returns>
-        public virtual string QueryString(string name)
+        public virtual T QueryString<T>(string name)
         {
-            string result = string.Empty;
+            string queryParam = string.Empty;
             if (HttpContext.Current != null && HttpContext.Current.Request.QueryString[name] != null)
-                result = HttpContext.Current.Request.QueryString[name];
-            return result;
-        }
+                queryParam = HttpContext.Current.Request.QueryString[name];
 
-        /// <summary>
-        /// Gets boolean value from query string 
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <returns>Query string value</returns>
-        public virtual bool QueryStringBool(string name)
-        {
-            string resultStr = QueryString(name).ToUpperInvariant();
-            return (resultStr == "YES" || resultStr == "TRUE" || resultStr == "1");
+            return CommonHelper.To<T>(queryParam);
         }
-
-        /// <summary>
-        /// Gets integer value from query string 
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <returns>Query string value</returns>
-        public virtual int QueryStringInt(string name)
-        {
-            string resultStr = QueryString(name).ToUpperInvariant();
-            int result;
-            Int32.TryParse(resultStr, out result);
-            return result;
-        }
-
-        /// <summary>
-        /// Gets integer value from query string 
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <param name="defaultValue">Default value</param>
-        /// <returns>Query string value</returns>
-        public virtual int QueryStringInt(string name, int defaultValue)
-        {
-            string resultStr = QueryString(name).ToUpperInvariant();
-            if (resultStr.Length > 0)
-            {
-                return Int32.Parse(resultStr);
-            }
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Gets GUID value from query string 
-        /// </summary>
-        /// <param name="name">Parameter name</param>
-        /// <returns>Query string value</returns>
-        public virtual Guid? QueryStringGuid(string name)
-        {
-            string resultStr = QueryString(name).ToUpperInvariant();
-            Guid? result = null;
-            try
-            {
-                result = new Guid(resultStr);
-            }
-            catch
-            {
-            }
-            return result;
-        }
-        
     }
 }
