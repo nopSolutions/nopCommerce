@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Common\SeoSettings.cs" />
+    <Compile Include="Domain\Common\LiveChatSettings.cs" />
     <Compile Include="Domain\Orders\BestsellersReportLine.cs" />
     <Compile Include="Fakes\FakeHttpContext.cs" />
     <Compile Include="Fakes\FakeHttpRequest.cs" />

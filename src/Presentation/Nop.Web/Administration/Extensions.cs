@@ -38,6 +38,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
+using Nop.Services.Common;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
@@ -517,6 +518,14 @@ namespace Nop.Admin
 
         #endregion
 
+        #region Live chat providers
+
+        public static LiveChatProviderModel ToModel(this ILiveChatProvider entity)
+        {
+            return Mapper.Map<ILiveChatProvider, LiveChatProviderModel>(entity);
+        }
+
+        #endregion
         #region NewsLetter subscriptions
 
         public static NewsLetterSubscriptionModel ToModel(this NewsLetterSubscription entity)

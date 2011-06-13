@@ -1303,6 +1303,9 @@
   <LocaleResource Name="Information">
     <Value>Information</Value>
   </LocaleResource>
+  <LocaleResource Name="LiveChat">
+    <Value>Live chat</Value>
+  </LocaleResource>
   <LocaleResource Name="Manufacturers">
     <Value>Manufacturers</Value>
     <Children>

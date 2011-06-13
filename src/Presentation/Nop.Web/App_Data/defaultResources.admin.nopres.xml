@@ -2565,6 +2565,39 @@
                     </LocaleResource>
                   </Children>
                 </LocaleResource>
+                <LocaleResource Name="LiveChats">
+                  <Value>Live chat providers</Value>
+                  <Children>
+                    <LocaleResource Name="BackToList">
+                      <Value>back to live chat provider list</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Configure">
+                      <Value>Configure</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Fields">
+                      <Children>
+                        <LocaleResource Name="FriendlyName">
+                          <Value>Friendly name</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="SystemName">
+                          <Value>System name</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Version">
+                          <Value>Version</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Author">
+                          <Value>Author</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="DisplayOrder">
+                          <Value>Display order</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="IsActive">
+                          <Value>Is active</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
                 <LocaleResource Name="Measures">
                 <Value>Measures</Value>
                 <Children>

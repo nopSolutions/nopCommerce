@@ -37,6 +37,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Tasks;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
@@ -194,6 +195,9 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<GiftCardModel, GiftCard>()
                 .ForMember(dest => dest.IsRecipientNotified, dt => dt.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+
+            //live chat providers
+            Mapper.CreateMap<ILiveChatProvider, LiveChatProviderModel>();
 
             //Settings
             ViceVersa<TaxSettings, TaxSettingsModel>();

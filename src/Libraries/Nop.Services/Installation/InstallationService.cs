@@ -4414,6 +4414,11 @@ namespace Nop.Services.Installation
                     RenderOrderNotes = true,
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<LiveChatSettings>>()
+                .SaveSettings(new LiveChatSettings()
+                {
+                    ActiveLiveChatProviderSystemName = new List<string>(),
+                });
             EngineContext.Current.Resolve<IConfigurationProvider<CommonSettings>>()
                 .SaveSettings(new CommonSettings()
                 {

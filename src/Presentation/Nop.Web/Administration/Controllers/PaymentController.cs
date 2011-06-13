@@ -93,9 +93,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Methods");
             }
 
-            //TODO an issue: when a store owner clicks on 'Update' button and then 'Cancel' button,
-            //the 'Configure method' hyperlink disappears
-            
             //UNDONE allow store owner to edit display order of payment methods
 
             var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);

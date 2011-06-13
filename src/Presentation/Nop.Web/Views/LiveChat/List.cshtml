@@ -1,0 +1,8 @@
+﻿@model List<LiveChatModel>
+@using Nop.Web.Models.LiveChat;
+@foreach (var lcp in Model)
+{
+    @Html.Action(lcp.ActionName, lcp.ControllerName, lcp.RouteValues)
+    <div class="clear">
+    </div>
+}

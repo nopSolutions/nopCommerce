@@ -99,9 +99,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Providers");
             }
 
-            //TODO an issue: when a store owner clicks on 'Update' button and then 'Cancel' button,
-            //the 'Configure provider' hyperlink disappers
-            
             //UNDONE allow store owner to edit display order of shipping rate computation methods
 
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(model.SystemName);

@@ -88,6 +88,7 @@
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\LiveChatController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Models\Common\StoreThemeModel.cs" />
     <Compile Include="Models\Common\Copy of LanguageSelectorModel.cs" />
     <Compile Include="Models\Common\SitemapModel.cs" />
+    <Compile Include="Models\LiveChat\LiveChatModel.cs" />
     <Compile Include="Models\News\AddNewsCommentModel.cs" />
     <Compile Include="Models\News\NewsCommentModel.cs" />
     <Compile Include="Models\News\NewsPagingFilteringModel.cs" />
@@ -1220,6 +1222,7 @@
     <Content Include="Views\ShoppingCart\MiniShoppingCart.cshtml" />
     <Content Include="Views\Order\Details.cshtml" />
     <Content Include="Views\Common\StoreThemeSelector.cshtml" />
+    <Content Include="Views\LiveChat\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

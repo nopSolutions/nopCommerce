@@ -85,9 +85,13 @@
     <Compile Include="Catalog\ProductAttributeFormatter.cs" />
     <Compile Include="Catalog\ProductAttributeParser.cs" />
     <Compile Include="Common\AddressService.cs" />
+    <Compile Include="Common\ILiveChatProvider.cs" />
+    <Compile Include="Common\ILiveChatService.cs" />
     <Compile Include="Common\IPdfService.cs" />
+    <Compile Include="Common\LiveChatExtentions.cs" />
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
+    <Compile Include="Common\LiveChatService.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Customers\ICustomerReportService.cs" />
     <Compile Include="Customers\CustomerReportService.cs" />
