@@ -31,7 +31,6 @@ namespace Nop.Services.Logging
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IRepository<Customer> _customerRepository;
         private readonly IWorkContext _workContext;
         #endregion
         
@@ -47,13 +46,11 @@ namespace Nop.Services.Logging
         public CustomerActivityService(ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IRepository<Customer> customerRepository,
             IWorkContext workContext)
         {
             this._cacheManager = cacheManager;
             this._activityLogRepository = activityLogRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
-            this._customerRepository = customerRepository;
             this._workContext = workContext;
         }
 
@@ -207,8 +204,6 @@ namespace Nop.Services.Logging
             DateTime? createdOnTo, string email, string username, int activityLogTypeId,
             int pageIndex, int pageSize)
         {
-            //UNDONE search by email and username
-
             var query = _activityLogRepository.Table;
             if (createdOnFrom.HasValue)
                 query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
@@ -217,6 +212,16 @@ namespace Nop.Services.Logging
             if (activityLogTypeId > 0)
                 query = query.Where(al => activityLogTypeId == al.ActivityLogTypeId);
             query = query.Where(al => !al.Customer.Deleted);
+            
+            if (!String.IsNullOrEmpty(email))
+            {
+                query = query.Where(c => c.Customer.Addresses.Where(u => u.Email.Contains(email)).Count() > 0);
+            };
+            if (!String.IsNullOrEmpty(username))
+            {
+                query = query.Where(c => c.Customer.AssociatedUsers.Where(u => u.Username.Contains(username)).Count() > 0);
+            };
+
             query = query.OrderByDescending(al => al.CreatedOnUtc);
 
             var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
