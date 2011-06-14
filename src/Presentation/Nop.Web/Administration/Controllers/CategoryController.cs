@@ -136,7 +136,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
-            var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize);
+            var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<CategoryModel>
             {
                 Data = categories.Select(x =>
@@ -183,12 +183,12 @@ namespace Nop.Admin.Controllers
         {
             var parentId = !string.IsNullOrEmpty(node.Value) ? Convert.ToInt32(node.Value) : 0;
 
-            var children = _categoryService.GetAllCategoriesByParentCategoryId(parentId).Select(x =>
+            var children = _categoryService.GetAllCategoriesByParentCategoryId(parentId, true).Select(x =>
                 new TreeViewItem
                 {
                     Text = x.Name,
                     Value = x.Id.ToString(),
-                    LoadOnDemand = _categoryService.GetAllCategoriesByParentCategoryId(x.Id).Count > 0,
+                    LoadOnDemand = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
                     Enabled = true,
                     ImageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
                 });
@@ -422,6 +422,7 @@ namespace Nop.Admin.Controllers
             var fileName = string.Format("categories_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             var xml = _exportManager.ExportCategoriesToXml();
             return new XmlDownloadResult(xml, fileName);
+            //TODO why return file has such a weird extension (Chrome)
         }
 
         #endregion

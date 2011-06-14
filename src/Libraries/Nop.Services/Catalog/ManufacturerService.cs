@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -86,6 +87,19 @@ namespace Nop.Services.Catalog
                 var manufacturers = query.ToList();
                 return manufacturers;
             });
+        }
+
+        /// <summary>
+        /// Gets all manufacturers
+        /// </summary>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Manufacturers</returns>
+        public virtual IPagedList<Manufacturer> GetAllManufacturers(int pageIndex, int pageSize, bool showHidden = false)
+        {
+            var manufacturers = GetAllManufacturers(showHidden);
+            return new PagedList<Manufacturer>(manufacturers, pageIndex, pageSize);
         }
 
         /// <summary>

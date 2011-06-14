@@ -95,6 +95,12 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore())
                 .ForMember(dest => dest.Deleted, dt => dt.Ignore());
+            //manufacturer
+            Mapper.CreateMap<Manufacturer, ManufacturerModel>();
+            Mapper.CreateMap<ManufacturerModel, Manufacturer>()
+                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.Deleted, dt => dt.Ignore());
             //products
             Mapper.CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.ProductTags, dt => dt.Ignore());

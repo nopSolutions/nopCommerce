@@ -1,0 +1,112 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+
+@model ManufacturerModel.AddManufacturerProductModel
+
+@using Telerik.Web.Mvc.UI;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+            @T("Admin.Catalog.Manufacturers.Products.AddNew")
+        </div>
+    </div>    
+    
+       if (ViewBag.RefreshPage == true)
+       {
+        <script type="text/javascript">
+            try {window.opener.document.forms[0].@(ViewBag.btnId).click();}
+            catch (e){} 
+            window.close();
+        </script>
+       }
+
+    
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchProductName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.SearchProductName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchCategoryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchCategoryId", Model.AvailableCategories)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchManufacturerId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" id="search-products" value="search-products" class="t-button">@T("Admin.Common.Search")</button>
+            </td>
+        </tr>
+    </table>
+    <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ProductModel>(Model.Products.Data)
+                    .Name("products-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Id)
+                        .Template(
+                                @<text>
+                                    <input name="SelectedProductIds" type="checkbox" value="@item.Id " />
+                                </text>
+                        )
+                        .ClientTemplate("<input type='checkbox' name='SelectedProductIds' value='<#= Id #>' />")
+                        .Title("Check")
+                        .Width(50);
+                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Published)
+                            .Width("100px")
+                            .Template(x => x.Published.ToString().ToLower())
+                            .Centered();
+                    })
+                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10))
+                                                .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductAddPopupList", "Manufacturer"))
+                    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search-products').click(function () {
+                var grid = $('#products-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+        function onDataBinding(e) {
+            var searchModel = {
+                SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                SearchCategoryId: $('#SearchCategoryId').val(),
+                SearchManufacturerId: $('#SearchManufacturerId').val()
+            };
+            e.data = searchModel;
+        }
+   </script>
+}

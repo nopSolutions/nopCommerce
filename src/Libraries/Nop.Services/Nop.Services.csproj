@@ -68,6 +68,7 @@
     <Compile Include="Catalog\CategoryService.cs" />
     <Compile Include="Catalog\CategoryExtensions.cs" />
     <Compile Include="Catalog\CompareProductsService.cs" />
+    <Compile Include="Catalog\ManufacturerExtensions.cs" />
     <Compile Include="Catalog\ICopyProductService.cs" />
     <Compile Include="Catalog\CopyProductService.cs" />
     <Compile Include="Catalog\IProductTagService.cs" />

@@ -1,20 +1,18 @@
-﻿@model CategoryModel
+﻿@model ManufacturerModel
 
 @using Telerik.Web.Mvc.UI;
 
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("category-edit").Items(x =>
+@Html.Telerik().TabStrip().Name("manufacturer-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Catalog.Categories.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Manufacturers.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Categories.Discounts").Text).Content(TabDiscounts().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Manufacturers.Products").Text).Content(TabProducts().ToHtmlString());
 })
-@*TODO Add ACL suppport*@
 @helper TabInfo()
     { 
-    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
+    @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
                 @<table class="adminContent">
                     <tr>
                         <td class="adminTitle">
@@ -74,16 +72,6 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ParentCategoryId):
-            </td>
-            <td class="adminData">
-                @(Html.Telerik().ComboBoxFor(x => x.ParentCategoryId).BindTo(Model.ParentCategories).Encode(true)
-                            .DataBinding(x => x.Ajax().Enabled(true).Select("AllCategories", "Category", new { selectedId = Model.ParentCategoryId })))
-                @Html.ValidationMessageFor(model => model.ParentCategoryId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PriceRanges):
             </td>
             <td class="adminData">
@@ -122,7 +110,7 @@
 }
 @helper TabSeo()
     {
-    @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
+    @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-seo-localized",
                @<table class="adminContent">
                    <tr>
                        <td class="adminTitle">
@@ -225,7 +213,7 @@
             <table class="adminContent">
                 <tr>
                     <td>
-            @(Html.Telerik().Grid<CategoryModel.CategoryProductModel>()
+            @(Html.Telerik().Grid<ManufacturerModel.ManufacturerProductModel>()
                 .Name("products-grid")
                     .DataKeys(keys =>
                     {
@@ -234,9 +222,9 @@
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax()
-                            .Select("ProductList", "Category", new { categoryId = Model.Id })
-                            .Update("ProductUpdate", "Category")
-                            .Delete("ProductDelete", "Category");
+                            .Select("ProductList", "Manufacturer", new { manufacturerId = Model.Id })
+                            .Update("ProductUpdate", "Manufacturer")
+                            .Delete("ProductDelete", "Manufacturer");
                     })
                     .Columns(columns =>
                     {
@@ -261,7 +249,7 @@
                 </tr>
                 <tr>
                     <td width="100%">
-                        <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Catalog.Categories.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new { categoryId = Model.Id, btnId = "btnRefreshProducts" }))', 800, 600, true); return false;" class="t-button" />
+                        <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Catalog.Manufacturers.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Manufacturer", new { manufacturerId = Model.Id, btnId = "btnRefreshProducts" }))', 800, 600, true); return false;" class="t-button" />
                         <input type="submit" id="btnRefreshProducts" name="btnRefreshProducts" style="display: none" />
                         <script type="text/javascript">
                             $(document).ready(function () {
@@ -281,27 +269,6 @@
     }
     else
     {
-            @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+            @T("Admin.Catalog.Manufacturers.Products.SaveBeforeEdit")
     }
-}
-
-@helper TabDiscounts()
-    {
-        if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
-        {
-            foreach (var discount in Model.AvailableDiscounts)
-            {
-            <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
-            @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id))
-            {
-                <text>checked="checked"</text>
-            }
-            />@discount.Name
-            <br />
-            }
-        }
-        else
-        {
-            @T("Admin.Catalog.Categories.Discounts.NoDiscounts")
-        }
 }

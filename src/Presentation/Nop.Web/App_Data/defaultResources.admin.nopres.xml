@@ -754,6 +754,165 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+                <LocaleResource Name="Manufacturers">
+                  <Value>Manufacturers</Value>
+                  <Children>
+                    <LocaleResource Name="Info">
+                      <Value>Manufacturer Info</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="AddNew">
+                      <Value>Add a new manufacturer</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="BackToList">
+                      <Value>back to manufacturer list</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="EditManufacturerDetails">
+                      <Value>Edit manufacturer details</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Fields">
+                      <Children>
+                        <LocaleResource Name="Name">
+                          <Value>Name</Value>
+                          <Children>
+                            <LocaleResource Name="Required">
+                              <Value>Please provide a name.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Hint">
+                              <Value>The manufacturer's name.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Description">
+                          <Value>Description</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>A description of the manufacturer.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="MetaKeywords">
+                          <Value>Meta keywords</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Meta keywords to be added to manufacturer page header.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="MetaDescription">
+                          <Value>Meta description</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Meta description to be added to manufacturer page header.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="MetaTitle">
+                          <Value>Meta title</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Override the page title. The default is the name of the manufacturer.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="SeName">
+                          <Value>Search engine friendly page name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the manufacturer ID). The default is the name of manufacturer.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="PageSize">
+                          <Value>Page size</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Set the page size for products in this manufacturer e.g. '4' products per page.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="PriceRanges">
+                          <Value>Price ranges</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Define the price ranges for the store price range filter. Separate ranges with a semicolon e.g. '0-199;200-300;301-;' (301- means 301 and over)</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="ShowOnHomePage">
+                          <Value>Show on home page</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Check if you want to show a manufacturer on home page.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Published">
+                          <Value>Published</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Check to publish this manufacturer (visible in store). Uncheck to unpublish (manufacturer not available in store).</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Deleted">
+                          <Value>Deleted</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="DisplayOrder">
+                          <Value>Display order</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Set the manufacturer's display order. 1 represents the top of the list.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="CreatedOn">
+                          <Value>Created on</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Picture">
+                          <Value>Picture</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The manufacturer picture.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Products">
+                      <Value>Products</Value>
+                      <Children>
+                        <LocaleResource Name="AddNew">
+                          <Value>Add a new product</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Product">
+                              <Value>Product</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="IsFeaturedProduct">
+                              <Value>Is featured product?</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="DisplayOrder">
+                              <Value>Display order</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="SaveBeforeEdit">
+                          <Value>You need to save the manufacturer before you can add products for this manufacturer page.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Added">
+                      <Value>The new manufacturer has been added successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Deleted">
+                      <Value>The manufacturer has been deleted successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Updated">
+                      <Value>The manufacturer has been updated successfully.</Value>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
               <LocaleResource Name="ProductReviews">
                 <Value>Product reviews</Value>
                 <Children>

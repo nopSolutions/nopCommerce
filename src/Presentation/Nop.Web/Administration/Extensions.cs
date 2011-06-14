@@ -66,11 +66,30 @@ namespace Nop.Admin
 
         public static Category ToEntity(this CategoryModel model, Category destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
-        
+
+        #region Manufacturer
+
+        public static ManufacturerModel ToModel(this Manufacturer entity)
+        {
+            return Mapper.Map<Manufacturer, ManufacturerModel>(entity);
+        }
+
+        public static Manufacturer ToEntity(this ManufacturerModel model)
+        {
+            return Mapper.Map<ManufacturerModel, Manufacturer>(model);
+        }
+
+        public static Manufacturer ToEntity(this ManufacturerModel model, Manufacturer destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+        #endregion
+
         #region Products
 
         public static ProductModel ToModel(this Product entity)
@@ -85,7 +104,7 @@ namespace Nop.Admin
 
         public static Product ToEntity(this ProductModel model, Product destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -104,7 +123,7 @@ namespace Nop.Admin
 
         public static ProductVariant ToEntity(this ProductVariantModel model, ProductVariant destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -123,7 +142,7 @@ namespace Nop.Admin
 
         public static ProductAttribute ToEntity(this ProductAttributeModel model, ProductAttribute destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -143,7 +162,7 @@ namespace Nop.Admin
 
         public static SpecificationAttribute ToEntity(this SpecificationAttributeModel model, SpecificationAttribute destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         //attribute options
@@ -159,7 +178,7 @@ namespace Nop.Admin
 
         public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionModel model, SpecificationAttributeOption destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
         #endregion
 
@@ -178,7 +197,7 @@ namespace Nop.Admin
 
         public static CheckoutAttribute ToEntity(this CheckoutAttributeModel model, CheckoutAttribute destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         //checkout attribute values
@@ -194,7 +213,7 @@ namespace Nop.Admin
 
         public static CheckoutAttributeValue ToEntity(this CheckoutAttributeValueModel model, CheckoutAttributeValue destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
         #endregion
 
@@ -212,7 +231,7 @@ namespace Nop.Admin
 
         public static Language ToEntity(this LanguageModel model, Language destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #region Resources
@@ -229,7 +248,7 @@ namespace Nop.Admin
 
         public static LocaleStringResource ToEntity(this LanguageResourceModel model, LocaleStringResource destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -250,7 +269,7 @@ namespace Nop.Admin
 
         public static EmailAccount ToEntity(this EmailAccountModel model, EmailAccount destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -269,7 +288,7 @@ namespace Nop.Admin
 
         public static MessageTemplate ToEntity(this MessageTemplateModel model, MessageTemplate destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -288,7 +307,7 @@ namespace Nop.Admin
 
         public static QueuedEmail ToEntity(this QueuedEmailModel model, QueuedEmail destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -307,7 +326,7 @@ namespace Nop.Admin
 
         public static Campaign ToEntity(this CampaignModel model, Campaign destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -326,7 +345,7 @@ namespace Nop.Admin
 
         public static Topic ToEntity(this TopicModel model, Topic destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -345,7 +364,7 @@ namespace Nop.Admin
 
         public static Log ToEntity(this LogModel model, Log destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         public static ActivityLogTypeModel ToModel(this ActivityLogType entity)
@@ -374,7 +393,7 @@ namespace Nop.Admin
 
         public static Currency ToEntity(this CurrencyModel model, Currency destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
         #endregion
 
@@ -392,7 +411,7 @@ namespace Nop.Admin
 
         public static MeasureWeight ToEntity(this MeasureWeightModel model, MeasureWeight destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -411,7 +430,7 @@ namespace Nop.Admin
 
         public static MeasureDimension ToEntity(this MeasureDimensionModel model, MeasureDimension destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -439,7 +458,7 @@ namespace Nop.Admin
 
         public static TaxCategory ToEntity(this TaxCategoryModel model, TaxCategory destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -467,7 +486,7 @@ namespace Nop.Admin
 
         public static ShippingMethod ToEntity(this ShippingMethodModel model, ShippingMethod destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -513,7 +532,7 @@ namespace Nop.Admin
 
         public static Address ToEntity(this AddressModel model, Address destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -540,7 +559,7 @@ namespace Nop.Admin
 
         public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model, NewsLetterSubscription destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -559,7 +578,7 @@ namespace Nop.Admin
 
         public static Discount ToEntity(this DiscountModel model, Discount destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -579,7 +598,7 @@ namespace Nop.Admin
 
         public static ForumGroup ToEntity(this ForumGroupModel model, ForumGroup destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
         //forums
         public static ForumModel ToModel(this Forum entity)
@@ -594,7 +613,7 @@ namespace Nop.Admin
 
         public static Forum ToEntity(this ForumModel model, Forum destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
         #endregion
 
@@ -613,7 +632,7 @@ namespace Nop.Admin
 
         public static BlogPost ToEntity(this BlogPostModel model, BlogPost destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -633,7 +652,7 @@ namespace Nop.Admin
 
         public static NewsItem ToEntity(this NewsItemModel model, NewsItem destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -652,7 +671,7 @@ namespace Nop.Admin
 
         public static CustomerRole ToEntity(this CustomerRoleModel model, CustomerRole destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         //customers
@@ -668,7 +687,7 @@ namespace Nop.Admin
 
         public static Customer ToEntity(this CustomerModel model, Customer destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
         
         #endregion
@@ -687,7 +706,7 @@ namespace Nop.Admin
 
         public static GiftCard ToEntity(this GiftCardModel model, GiftCard destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         #endregion
@@ -706,7 +725,7 @@ namespace Nop.Admin
 
         public static Country ToEntity(this CountryModel model, Country destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         public static StateProvinceModel ToModel(this StateProvince entity)
@@ -721,7 +740,7 @@ namespace Nop.Admin
 
         public static StateProvince ToEntity(this StateProvinceModel model, StateProvince destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -739,7 +758,7 @@ namespace Nop.Admin
         }
         public static TaxSettings ToEntity(this TaxSettingsModel model, TaxSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -753,7 +772,7 @@ namespace Nop.Admin
         }
         public static ShippingSettings ToEntity(this ShippingSettingsModel model, ShippingSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -767,7 +786,7 @@ namespace Nop.Admin
         }
         public static ForumSettings ToEntity(this ForumSettingsModel model, ForumSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -781,7 +800,7 @@ namespace Nop.Admin
         }
         public static BlogSettings ToEntity(this BlogSettingsModel model, BlogSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -795,7 +814,7 @@ namespace Nop.Admin
         }
         public static NewsSettings ToEntity(this NewsSettingsModel model, NewsSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -809,7 +828,7 @@ namespace Nop.Admin
         }
         public static CatalogSettings ToEntity(this CatalogSettingsModel model, CatalogSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -823,7 +842,7 @@ namespace Nop.Admin
         }
         public static RewardPointsSettings ToEntity(this RewardPointsSettingsModel model, RewardPointsSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -837,7 +856,7 @@ namespace Nop.Admin
         }
         public static OrderSettings ToEntity(this OrderSettingsModel model, OrderSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -851,7 +870,7 @@ namespace Nop.Admin
         }
         public static ShoppingCartSettings ToEntity(this ShoppingCartSettingsModel model, ShoppingCartSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
 
@@ -865,7 +884,7 @@ namespace Nop.Admin
         }
         public static MediaSettings ToEntity(this MediaSettingsModel model, MediaSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
 
         //customer/user settings
@@ -879,7 +898,7 @@ namespace Nop.Admin
         }
         public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model, CustomerSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
         public static CustomerUserSettingsModel.UserSettingsModel ToModel(this UserSettings entity)
         {
@@ -891,7 +910,7 @@ namespace Nop.Admin
         }
         public static UserSettings ToEntity(this CustomerUserSettingsModel.UserSettingsModel model, UserSettings destination)
         {
-            return AutoMapper.Mapper.Map(model, destination);
+            return Mapper.Map(model, destination);
         }
         #endregion
     }

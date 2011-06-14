@@ -1,0 +1,41 @@
+﻿@model Telerik.Web.Mvc.GridModel<ManufacturerModel>
+@using Telerik.Web.Mvc.UI
+
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+        @T("Admin.Catalog.Manufacturers")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Export")" class="t-button">@T("Admin.Common.ExportToXml")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<ManufacturerModel>(Model.Data)
+                    .Name("manufacturers-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name).Width(300);
+                        columns.Bound(x => x.Published)
+                            .Width(100)
+                            .Template(x => x.Published.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Manufacturer"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>
