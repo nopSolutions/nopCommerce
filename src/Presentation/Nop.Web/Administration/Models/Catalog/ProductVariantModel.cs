@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Catalog;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -304,6 +305,30 @@ namespace Nop.Admin.Models.Catalog
             public string Name { get; set; }
         }
 
+        public class ProductVariantAttributeCombinationModel : BaseNopEntityModel
+        {
+            public int ProductVariantId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Attributes")]
+            [AllowHtml]
+            public string AttributesXml { get; set; }
+
+            [AllowHtml]
+            public string Warnings { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.StockQuantity")]
+            //we don't name it StockQuantity because Telerik has a small bug 
+            //"if we have one more editor with the same name on a page, it doesn't allow editing"
+            //in our case it's productVariant.StockQuantity1
+            public int StockQuantity1 { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
+            //we don't name it AllowOutOfStockOrders because Telerik has a small bug 
+            //"if we have one more editor with the same name on a page, it doesn't allow editing"
+            //in our case it's productVariant.AllowOutOfStockOrders1
+            public bool AllowOutOfStockOrders1 { get; set; }
+        }
+
         #endregion
 
         public string PrimaryStoreCurrencyCode { get; set; }
@@ -315,6 +340,8 @@ namespace Nop.Admin.Models.Catalog
         //product attributes
         public int NumberOfAvailableProductAttributes { get; set; }
 
+
+        //locales
         public IList<ProductVariantLocalizedModel> Locales { get; set; }
 
         //discounts

@@ -1,0 +1,71 @@
+﻿@model AddProductVariantAttributeCombinationModel
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+            @T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.AddTitle")
+        </div>
+        <div class="options">
+            
+        </div>
+    </div>
+    
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+        try {window.opener.document.forms[0].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+        </script>
+    }
+    
+    <div style="border: 1px dashed #2F4F4F; padding: 15px; margin: 10px 0px 10px 0px;">
+        @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes)
+        <br />
+        @if (Model.Warnings.Count > 0)
+        {
+        <div class="messageBox messageBoxError">
+            @foreach (var warning in Model.Warnings)
+            {
+                @warning
+                <br />
+            }
+        </div>
+        }
+    </div>
+    <div>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.StockQuantity):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.StockQuantity)
+                    @Html.ValidationMessageFor(model => model.StockQuantity)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AllowOutOfStockOrders):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.AllowOutOfStockOrders)
+                    @Html.ValidationMessageFor(model => model.AllowOutOfStockOrders)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="left">
+                    <button type="submit" id="add-attribute-combination" name="add-attribute-combination"
+                        value="add-attribute-combination" class="t-button">@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.AddNew")</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+}

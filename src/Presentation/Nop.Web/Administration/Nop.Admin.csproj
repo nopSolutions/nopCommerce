@@ -123,6 +123,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
+    <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\CopyProductModel.cs" />
     <Compile Include="Models\Common\LanguageSelectorModel.cs" />
     <Compile Include="Models\Common\MaintenanceModel.cs" />
@@ -870,6 +871,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\LiveChat\Providers.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\_ProductAttributes.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\AddAttributeCombinationPopup.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

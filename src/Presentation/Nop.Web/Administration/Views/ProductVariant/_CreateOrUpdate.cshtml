@@ -1,7 +1,5 @@
 ﻿@model ProductVariantModel
-
 @using Telerik.Web.Mvc.UI;
-
 @using Nop.Core.Domain.Catalog;
 @using Nop.Admin;
 @Html.ValidationSummary(false)
@@ -16,7 +14,7 @@
 })
 @helper TabInfo()
     {
-        @Html.Partial("_ProductVariantInfo", Model, new ViewDataDictionary())
+    @Html.Partial("_ProductVariantInfo", Model, new ViewDataDictionary())
 }
 @helper TabTierPrices()
     {
@@ -138,7 +136,9 @@
                         .Width(150)
                         .Centered();
                     columns.Bound(x => x.IsRequired)
-                        .Width(100);
+                        .Width(100)
+                        .Centered()
+                        .Template(x => x.IsRequired.ToString().ToLower());
                     columns.Bound(x => x.AttributeControlType)
                         .Width(150)
                         .Centered();
@@ -175,5 +175,59 @@
 }
 @helper TabAttributeCombinations()
     {
-    <text>UNDONE attribute combinations</text>
+    <div style="margin: 10px 0px 10px 0px;">
+        <strong>@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Description")</strong>
+    </div>
+    <div>
+        @(Html.Telerik().Grid<ProductVariantModel.ProductVariantAttributeCombinationModel>()
+                .Name("attributecombinations-grid")
+                .DataKeys(keys =>
+                {
+                    keys.Add(x => x.Id);
+                })
+                .DataBinding(dataBinding =>
+                {
+                    dataBinding.Ajax()
+                        .Select("ProductVariantAttributeCombinationList", "ProductVariant", new { productVariantId = Model.Id })
+                        .Update("ProductVariantAttrbiuteCombinationUpdate", "ProductVariant")
+                        .Delete("ProductVariantAttributeCombinationDelete", "ProductVariant");
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.AttributesXml)
+                        .ClientTemplate("<#= AttributesXml #><br /><span style=\"color: red\"><#= Warnings #></span>")
+                        .Width(350)
+                        .Encoded(false)
+                        .ReadOnly();
+                    columns.Bound(x => x.StockQuantity1)
+                        .Centered();
+                    columns.Bound(x => x.AllowOutOfStockOrders1)
+                        .Centered()
+                        .Template(x => x.AllowOutOfStockOrders1.ToString().ToLower());
+                    columns.Command(commands =>
+                    {
+                        commands.Edit();
+                        commands.Delete();
+                    })
+                    .Width(180);
+                })
+                .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
+                .EnableCustomBinding(true))
+    </div>
+    <div>
+        <input type="submit" id="btnAddNewCombination" name="btnAddNewCombination" value="@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "ProductVariant", new { productVariantId = Model.Id, btnId = "btnRefreshCombinations" }))', 800, 550, true); return false;" class="t-button" />
+        <input type="submit" id="btnRefreshCombinations" name="btnRefreshCombinations" style="display: none" />
+        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#btnRefreshCombinations').click(function () {
+                                    //refresh grid
+                                    var optionsGrid = $("#attributecombinations-grid");
+                                    optionsGrid.data('tGrid').ajaxRequest();
+
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                            });
+                        </script>
+    </div>
 }

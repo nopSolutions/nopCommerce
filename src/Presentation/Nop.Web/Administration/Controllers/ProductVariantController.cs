@@ -15,10 +15,13 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Core.Domain.Orders;
+using System.Text;
 
 namespace Nop.Admin.Controllers
 {
@@ -36,6 +39,10 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeService _productAttributeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IWorkContext _workContext;
+        private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IProductAttributeParser _productAttributeParser;
+
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
@@ -49,6 +56,8 @@ namespace Nop.Admin.Controllers
             IDiscountService discountService, ICustomerService customerService,
             ILocalizationService localizationService, IProductAttributeService productAttributeService,
             ITaxCategoryService taxCategoryService, IWorkContext workContext,
+            IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
+            IProductAttributeParser productAttributeParser,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings)
         {
@@ -61,6 +70,10 @@ namespace Nop.Admin.Controllers
             this._productAttributeService = productAttributeService;
             this._taxCategoryService = taxCategoryService;
             this._workContext = workContext;
+            this._productAttributeFormatter = productAttributeFormatter;
+            this._shoppingCartService = shoppingCartService;
+            this._productAttributeParser = productAttributeParser;
+
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
@@ -158,12 +171,56 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareProductAttributesMapping(ProductVariantModel model)
+        private void PrepareProductAttributesMapping(ProductVariantModel model, ProductVariant variant)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
             model.NumberOfAvailableProductAttributes = _productAttributeService.GetAllProductAttributes().Count;
+        }
+
+        [NonAction]
+        private void PrepareAddProductAttributeCombinationModel(AddProductVariantAttributeCombinationModel model, ProductVariant variant)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.StockQuantity = 10000;
+
+            if (variant != null)
+            {
+                var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(variant.Id);
+                foreach (var attribute in productVariantAttributes)
+                {
+                    var pvaModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeModel()
+                    {
+                        Id = attribute.Id,
+                        ProductAttributeId = attribute.ProductAttributeId,
+                        Name = attribute.ProductAttribute.Name,
+                        TextPrompt = attribute.TextPrompt,
+                        IsRequired = attribute.IsRequired,
+                        AttributeControlType = attribute.AttributeControlType
+                    };
+
+                    if (attribute.ShouldHaveValues())
+                    {
+                        //values
+                        var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                        foreach (var pvaValue in pvaValues)
+                        {
+                            var pvaValueModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeValueModel()
+                            {
+                                Id = pvaValue.Id,
+                                Name = pvaValue.Name,
+                                IsPreSelected = pvaValue.IsPreSelected
+                            };
+                            pvaModel.Values.Add(pvaValueModel);
+                        }
+                    }
+
+                    model.ProductVariantAttributes.Add(pvaModel);
+                }
+            }
         }
         
         #endregion
@@ -185,7 +242,7 @@ namespace Nop.Admin.Controllers
             PrepareProductModel(model, product);
             PrepareProductVariantModel(model, null, true);
             //attributes
-            PrepareProductAttributesMapping(model);
+            PrepareProductAttributesMapping(model, null);
             //discounts
             PrepareDiscountModel(model, null, true);
             return View(model);
@@ -225,7 +282,7 @@ namespace Nop.Admin.Controllers
             PrepareProductModel(model, product);
             PrepareProductVariantModel(model, null, false);
             //attributes
-            PrepareProductAttributesMapping(model);
+            PrepareProductAttributesMapping(model, null);
             //discounts
             PrepareDiscountModel(model, null, true);
             return View(model);
@@ -247,7 +304,7 @@ namespace Nop.Admin.Controllers
             PrepareProductModel(model, variant.Product);
             PrepareProductVariantModel(model, variant, false);
             //attributes
-            PrepareProductAttributesMapping(model);
+            PrepareProductAttributesMapping(model, variant);
             //discounts
             PrepareDiscountModel(model, variant, false);
             return View(model);
@@ -295,7 +352,7 @@ namespace Nop.Admin.Controllers
             PrepareProductModel(model, variant.Product);
             PrepareProductVariantModel(model, variant, false);
             //attributes
-            PrepareProductAttributesMapping(model);
+            PrepareProductAttributesMapping(model, variant);
             //discounts
             PrepareDiscountModel(model, variant, true);
             return View(model);
@@ -677,5 +734,229 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+        #region Product variant attribute combinations
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductVariantAttributeCombinationList(GridCommand command, int productVariantId)
+        {
+            var productVariantAttributeCombinations = _productAttributeService.GetAllProductVariantAttributeCombinations(productVariantId);
+            var productVariantAttributesModel = productVariantAttributeCombinations
+                .Select(x =>
+                {
+                    var pvacModel = new ProductVariantModel.ProductVariantAttributeCombinationModel()
+                    {
+                        Id = x.Id,
+                        ProductVariantId = x.ProductVariantId,
+                        AttributesXml = _productAttributeFormatter.FormatAttributes(x.ProductVariant, x.AttributesXml),
+                        StockQuantity1 = x.StockQuantity,
+                        AllowOutOfStockOrders1 = x.AllowOutOfStockOrders,
+                    };
+                    //warnings
+                    var warnings = _shoppingCartService.GetShoppingCartItemWarnings(ShoppingCartType.ShoppingCart,
+                            x.ProductVariant, x.AttributesXml, decimal.Zero, 1);
+                    for (int i = 0; i < warnings.Count;i++ )
+                    {
+                        pvacModel.Warnings +=warnings[i];
+                        if (i != warnings.Count - 1)
+                            pvacModel.Warnings += "<br />";
+                    }
+
+                    return pvacModel;
+                })
+                .ToList();
+
+            var model = new GridModel<ProductVariantModel.ProductVariantAttributeCombinationModel>
+            {
+                Data = productVariantAttributesModel,
+                Total = productVariantAttributesModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductVariantAttrbiuteCombinationUpdate(GridCommand command, ProductVariantModel.ProductVariantAttributeCombinationModel model)
+        {
+            var pvac = _productAttributeService.GetProductVariantAttributeCombinationById(model.Id);
+            if (pvac == null)
+                throw new ArgumentException("No product variant attribute combination found with the specified id");
+
+            pvac.StockQuantity = model.StockQuantity1;
+            pvac.AllowOutOfStockOrders = model.AllowOutOfStockOrders1;
+            _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
+
+            return ProductVariantAttributeCombinationList(command, model.ProductVariantId);
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductVariantAttributeCombinationDelete(int id, GridCommand command)
+        {
+            var pvac = _productAttributeService.GetProductVariantAttributeCombinationById(id);
+            if (pvac == null)
+                throw new ArgumentException("No product variant attribute combination found with the specified id");
+
+            var productVariantId = pvac.ProductVariantId;
+            _productAttributeService.DeleteProductVariantAttributeCombination(pvac);
+
+            return ProductVariantAttributeCombinationList(command, productVariantId);
+        }
+        
+        
+        
+        
+        //edit
+        public ActionResult AddAttributeCombinationPopup(int productVariantId)
+        {
+            var variant = _productService.GetProductVariantById(productVariantId);
+            if (variant == null)
+                throw new ArgumentException("No product variant found with the specified id", "productVariantId");
+
+            var model = new AddProductVariantAttributeCombinationModel();
+            PrepareAddProductAttributeCombinationModel(model, variant);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AddAttributeCombinationPopup(string btnId, int productVariantId, 
+            AddProductVariantAttributeCombinationModel model, FormCollection form)
+        {
+            var variant = _productService.GetProductVariantById(productVariantId);
+            if (variant == null)
+                throw new ArgumentException("No product variant found with the specified id", "productVariantId");
+
+
+            int stockQuantity = model.StockQuantity;
+            bool allowOutOfStockOrders = model.AllowOutOfStockOrders;
+            string attributes = "";
+
+            #region Product attributes
+            string selectedAttributes = string.Empty;
+            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(variant.Id);
+            foreach (var attribute in productVariantAttributes)
+            {
+                string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                        {
+                            var ddlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ddlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ddlAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                        {
+                            var rblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(rblAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(rblAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                        {
+                            var txtAttribute = form[controlId];
+                            if (!String.IsNullOrEmpty(txtAttribute))
+                            {
+                                string enteredText = txtAttribute.Trim();
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var txtAttribute = form[controlId];
+                            if (!String.IsNullOrEmpty(txtAttribute))
+                            {
+                                string enteredText = txtAttribute.Trim();
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            var date = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                            }
+                            catch { }
+                            if (selectedDate.HasValue)
+                            {
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, selectedDate.Value.ToString("D"));
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            attributes = selectedAttributes;
+
+            #endregion
+
+            var warnings = _shoppingCartService.GetShoppingCartItemWarnings(ShoppingCartType.ShoppingCart,
+                variant, attributes, decimal.Zero, 1);
+            if (warnings.Count == 0)
+            {
+                //save combination
+                var combination = new ProductVariantAttributeCombination()
+                {
+                    ProductVariantId = variant.Id,
+                    AttributesXml = attributes,
+                    StockQuantity = stockQuantity,
+                    AllowOutOfStockOrders = allowOutOfStockOrders
+                };
+                _productAttributeService.InsertProductVariantAttributeCombination(combination);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                return View(model);
+            }
+            else
+            {
+                //If we got this far, something failed, redisplay form
+                PrepareAddProductAttributeCombinationModel(model, variant);
+                model.Warnings = warnings;
+                return View(model);
+            }
+        }
+        
+        #endregion
+
     }
 }

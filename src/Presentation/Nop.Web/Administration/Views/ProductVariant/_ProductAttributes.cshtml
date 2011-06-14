@@ -1,0 +1,85 @@
+﻿@model IList<AddProductVariantAttributeCombinationModel.ProductVariantAttributeModel>
+@using Nop.Web.Framework;
+@using Nop.Core.Domain.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="attributes">
+        @foreach (var attribute in Model)
+        {
+            string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+            <div>
+                @if (attribute.IsRequired)
+                {
+                    <span>*</span>
+                }
+                @if (!string.IsNullOrEmpty(attribute.TextPrompt))
+                {
+                    <span style="font-weight: bold">@attribute.TextPrompt</span>
+                }
+                else
+                {
+                    <span style="font-weight: bold">@attribute.Name</span>
+                }
+                @if (attribute.AttributeControlType == AttributeControlType.TextBox)
+                {
+                    <text>&nbsp;&nbsp;&nbsp;</text>
+                }
+                else
+                {
+                    <br />
+                }
+                @switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                        {
+                    <select name="@(controlId)" id="@(controlId)">
+                        @if (!attribute.IsRequired)
+                        {
+                            <option value="0">---</option>
+                        }
+                        @foreach (var pvaValue in attribute.Values)
+                        {
+                            <option @(pvaValue.IsPreSelected ? " selected=\"selected\"" : null) value="@pvaValue.Id">@pvaValue.Name
+                            </option>
+                        }
+                    </select>
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                        {
+                            foreach (var pvaValue in attribute.Values)
+                            {
+                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <label for="@(controlId)">@pvaValue.Name</label>
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            foreach (var pvaValue in attribute.Values)
+                            {
+                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <label for="@(controlId)">@pvaValue.Name</label>
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                        {
+                    <input name="@(controlId)" type="text" id="@(controlId)" class="textBox" style="width:300px;" />
+                        }
+                        break;
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                    <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" style="Width: 300px; Height: 150px;"></textarea>
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                    @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
+                        }
+                        break;
+                }
+            </div>
+        }
+    </div>
+}

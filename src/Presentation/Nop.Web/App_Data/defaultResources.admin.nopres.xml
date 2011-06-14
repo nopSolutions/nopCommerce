@@ -1325,7 +1325,37 @@
                           <LocaleResource Name="AttributeCombinations">
                             <Value>Attribute combinations</Value>
                             <Children>
+                              <LocaleResource Name="AddTitle">
+                                <Value>Select new combination and enter details below</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="AddNew">
+                                <Value>Add combination</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Description">
+                                <Value>Attribute combinations are useful when your 'Manage inventory method' is set to 'Track inventory by product attributes'</Value>
+                              </LocaleResource>
                               <LocaleResource Name="Fields">
+                                <Children>
+                                  <LocaleResource Name="Attributes">
+                                    <Value>Attributes</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="AllowOutOfStockOrders">
+                                    <Value>Allow out of stock</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>A value indicating whether to allow orders when out of stock.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                  <LocaleResource Name="StockQuantity">
+                                    <Value>Stock quantity</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The current stock quantity of this combination.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                </Children>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
