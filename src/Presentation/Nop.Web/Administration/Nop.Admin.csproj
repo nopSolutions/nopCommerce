@@ -130,6 +130,8 @@
     <Compile Include="Models\Common\SystemWarningModel.cs" />
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Common\LiveChatProviderModel.cs" />
+    <Compile Include="Models\Security\PermissionRecordModel.cs" />
+    <Compile Include="Models\Security\PermissionMappingModel.cs" />
     <Compile Include="Models\Logging\ActivityLogModel.cs" />
     <Compile Include="Models\Logging\ActivityLogSearchModel.cs" />
     <Compile Include="Models\Logging\ActivityLogTypeModel.cs" />
@@ -877,6 +879,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ProductVariant\AddAttributeCombinationPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Security\Permissions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Permission\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -115,6 +115,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+	    //TODO add the same logic to other controllers
             if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 

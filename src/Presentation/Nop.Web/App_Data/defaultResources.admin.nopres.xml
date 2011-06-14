@@ -1975,6 +1975,17 @@
             <LocaleResource Name="Configuration">
             <Value>Configuration</Value>
               <Children>
+                <LocaleResource Name="ACL">
+                  <Value>Access control list</Value>
+                  <Children>
+                    <LocaleResource Name="Permission">
+                      <Value>Permission name</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Updated">
+                      <Value>The ACL has been updated successfully.</Value>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
                 <LocaleResource Name="ActivityLog">
                   <Value>Activity Log</Value>
                   <Children>
@@ -3985,8 +3996,8 @@
                 </Children>
               </LocaleResource>
                 <LocaleResource Name="Shipping">
-                <Value>Shipping</Value>
-                <Children>
+                  <Value>Shipping</Value>
+                  <Children>
                   <LocaleResource Name="Methods">
                     <Value>Shipping methods</Value>
                     <Children>
@@ -4061,7 +4072,7 @@
                     </Children>
                   </LocaleResource>
                 </Children>
-              </LocaleResource>
+                </LocaleResource>
                 <LocaleResource Name="SMSProviders">
                 <Value>SMS providers</Value>
                 <Children>

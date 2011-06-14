@@ -33,16 +33,18 @@ namespace Nop.Services.Catalog
                     CustomerRoleSystemName = SystemCustomerRoleNames.Administrators,
                     PermissionRecords = new[] {ManageCategories, ManageManufacturers}
                 },
-                new DefaultPermissionRecord //TODO remove this default permission (added for testing)
-                {
-                    CustomerRoleSystemName = SystemCustomerRoleNames.Guests,
-                    PermissionRecords = new[] {ManageCategories, ManageManufacturers}
-                },
-                new DefaultPermissionRecord //TODO remove this default permission (added for testing)
-                {
-                    CustomerRoleSystemName = "SomeCustomRoleSystemName",
-                    PermissionRecords = new[] {ManageCategories}
-                },
+                //added for testing
+                //new DefaultPermissionRecord
+                //{
+                //    CustomerRoleSystemName = SystemCustomerRoleNames.Guests,
+                //    PermissionRecords = new[] {ManageCategories, ManageManufacturers}
+                //},
+                //added for testing
+                //new DefaultPermissionRecord
+                //{
+                //    CustomerRoleSystemName = "SomeCustomRoleSystemName",
+                //    PermissionRecords = new[] {ManageCategories}
+                //},
             };
         }
     }

@@ -56,6 +56,10 @@
           <siteMapNode title="Countries" nopResource="Admin.Configuration.Countries" controller="Country" action="List"/>
           <siteMapNode title="Languages" nopResource="Admin.Configuration.Languages" controller="Language" action="List"/>
           <siteMapNode title="Currencies" nopResource="Admin.Configuration.Currencies" controller="Currency" action="List"/>
+          <siteMapNode title="Measures" nopResource="Admin.Configuration.Measures">
+            <siteMapNode title="Weights" nopResource="Admin.Configuration.Measures.Weights" controller="Measure" action="Weights"/>
+            <siteMapNode title="Dimensions" nopResource="Admin.Configuration.Measures.Dimensions" controller="Measure" action="Dimensions"/>
+          </siteMapNode>
           <siteMapNode title="EmailAccounts" nopResource="Admin.Configuration.EmailAccounts" controller="EmailAccount" action="List"/>
           <siteMapNode title="Payment methods" nopResource="Admin.Configuration.Payment.Methods" controller="Payment" action="Methods"/>
           <siteMapNode title="Tax" nopResource="Admin.Configuration.Tax">
@@ -71,12 +75,10 @@
             <siteMapNode title="Activity Types" nopResource="Admin.Configuration.ActivityLog.ActivityLogType" controller="ActivityLog" action="ListTypes"/>
             <siteMapNode title="Activity Log" nopResource="Admin.Configuration.ActivityLog.ActivityLog" controller="ActivityLog" action="ListLogs"/>
           </siteMapNode>
-          <siteMapNode title="Measures" nopResource="Admin.Configuration.Measures">
-            <siteMapNode title="Weights" nopResource="Admin.Configuration.Measures.Weights" controller="Measure" action="Weights"/>
-            <siteMapNode title="Dimensions" nopResource="Admin.Configuration.Measures.Dimensions" controller="Measure" action="Dimensions"/>
-          </siteMapNode>
-          <siteMapNode title="SMS Providers" nopResource="Admin.Configuration.SMSProviders" controller="SMS" action="Providers" />
-          <siteMapNode title="Live Chat Providers" nopResource="Admin.Configuration.LiveChats" controller="LiveChat" action="Providers" />
+          <!--TODO uncomment menu item
+          <siteMapNode title="Access control list" nopResource="Admin.Configuration.ACL" controller="Security" action="Permissions" />-->
+          <siteMapNode title="SMS providers" nopResource="Admin.Configuration.SMSProviders" controller="SMS" action="Providers" />
+          <siteMapNode title="Live chat providers" nopResource="Admin.Configuration.LiveChats" controller="LiveChat" action="Providers" />
           <siteMapNode title="Settings" nopResource="Admin.Configuration.Settings">
             <siteMapNode title="General and common settings" nopResource="Admin.Configuration.Settings.GeneralCommon" controller="Setting" action="GeneralCommon"/>
             <siteMapNode title="Catalog settings" nopResource="Admin.Configuration.Settings.Catalog" controller="Setting" action="Catalog"/>
