@@ -4466,6 +4466,8 @@ namespace Nop.Services.Installation
                     ShowBestsellersOnHomepage = false,
                     NumberOfBestsellersOnHomepage = 3,
                     SearchPageProductsPerPage  = 6,
+                    ProductsAlsoPurchasedEnabled = true,
+                    ProductsAlsoPurchasedNumber = 3,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

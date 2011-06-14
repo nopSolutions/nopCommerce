@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -49,5 +50,16 @@ namespace Nop.Services.Orders
         IList<BestsellersReportLine> BestSellersReport(DateTime? startTime,
             DateTime? endTime, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             int recordsToReturn = 5, int orderBy = 1, bool showHidden = false);
+
+        
+        /// <summary>
+        /// Gets a list of products purchased by other customers who purchased the above
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="recordsToReturn">Records to return</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product collection</returns>
+        IList<Product> GetProductsAlsoPurchasedById(int productId,
+            int recordsToReturn = 5, bool showHidden = false);
     }
 }

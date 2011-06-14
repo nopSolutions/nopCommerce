@@ -42,6 +42,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<ProductVariant> _productVariantRepository;
 
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IProductService _productService;
 
         #endregion
 
@@ -59,13 +60,14 @@ namespace Nop.Services.Orders
             IRepository<OrderProductVariant> opvRepository,
             IRepository<Product> productRepository,
             IRepository<ProductVariant> productVariantRepository,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper, IProductService productService)
         {
             this._orderRepository = orderRepository;
             this._opvRepository = opvRepository;
             this._productRepository = productRepository;
             this._productVariantRepository = productVariantRepository;
             this._dateTimeHelper = dateTimeHelper;
+            this._productService = productService;
         }
 
         #endregion
@@ -264,6 +266,57 @@ namespace Nop.Services.Orders
             }).ToList();
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets a list of products purchased by other customers who purchased the above
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="recordsToReturn">Records to return</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product collection</returns>
+        public virtual IList<Product> GetProductsAlsoPurchasedById(int productId,
+            int recordsToReturn = 5, bool showHidden = false)
+        {
+            if (productId == 0)
+                throw new ArgumentException("Product ID is not specified");
+
+            //this inner query should retrieve all orders that have contained the productID
+            var query1 = (from opv in _opvRepository.Table
+                          join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
+                          join p in _productRepository.Table on pv.ProductId equals p.Id
+                          where p.Id == productId
+                          select opv.OrderId).Distinct();
+
+            var query2 = from opv in _opvRepository.Table
+                         join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
+                         join p in _productRepository.Table on pv.ProductId equals p.Id
+                         where (query1.Contains(opv.OrderId)) &&
+                         (p.Id != productId) &&
+                         (showHidden || p.Published) &&
+                         (!p.Deleted) &&
+                         (showHidden || pv.Published) &&
+                         (showHidden || !pv.Deleted)
+                         select new { opv, p };
+
+            var query3 = from opv_p in query2
+                         group opv_p by opv_p.p.Id into g
+                         select new
+                         {
+                             ProductId = g.Key,
+                             ProductsPurchased = g.Sum(x => x.opv.Quantity),
+                         };
+            query3 = query3.OrderByDescending(x => x.ProductsPurchased);
+
+            if (recordsToReturn > 0)
+                query3 = query3.Take(recordsToReturn);
+
+            var report = query3.ToList();
+            var products = new List<Product>();
+            foreach (var reportLine in report)
+                products.Add(_productService.GetProductById(reportLine.ProductId));
+
+            return products;
         }
 
         #endregion

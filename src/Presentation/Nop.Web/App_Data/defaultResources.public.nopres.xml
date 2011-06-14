@@ -1920,6 +1920,9 @@
   </LocaleResource>
   <LocaleResource Name="Products">
     <Children>
+      <LocaleResource Name="AlsoPurchased">
+        <Value>Customers who bought this item also bought</Value>
+      </LocaleResource>
       <LocaleResource Name="Availability">
         <Value>Availability</Value>
         <Children>

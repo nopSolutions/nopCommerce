@@ -21,12 +21,14 @@
             $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
             $("#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)").click(toggleRecentlyAddedProducts);
             $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
+            $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
 
             toggleShowCategoryProductNumberIncludingSubcategories();
             toggleEmailAFriend();
             toggleRecentlyViewedProducts();
             toggleRecentlyAddedProducts();
             toggleBestsellersOnHomepage();
+            toggleProductsAlsoPurchasedNumber();
         });
 
         function toggleShowCategoryProductNumberIncludingSubcategories() {
@@ -73,9 +75,18 @@
                 $('#pnlNumberOfBestsellersOnHomepage').hide();
             }
         }
+
+        function toggleProductsAlsoPurchasedNumber() {
+            if (getE('@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)').checked) {
+                $('#pnlProductsAlsoPurchasedNumber').show();
+            }
+            else {
+                $('#pnlProductsAlsoPurchasedNumber').hide();
+            }
+        }
         
     </script>
-    
+
 @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
@@ -265,6 +276,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SearchPageProductsPerPage)
                 @Html.ValidationMessageFor(model => model.SearchPageProductsPerPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductsAlsoPurchasedEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductsAlsoPurchasedEnabled)
+                @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedEnabled)
+            </td>
+        </tr>
+        <tr id="pnlProductsAlsoPurchasedNumber">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductsAlsoPurchasedNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductsAlsoPurchasedNumber)
+                @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedNumber)
             </td>
         </tr>
     </table>

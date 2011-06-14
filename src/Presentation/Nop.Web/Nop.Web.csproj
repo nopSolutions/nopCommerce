@@ -1223,6 +1223,7 @@
     <Content Include="Views\Order\Details.cshtml" />
     <Content Include="Views\Common\StoreThemeSelector.cshtml" />
     <Content Include="Views\LiveChat\List.cshtml" />
+    <Content Include="Views\Catalog\ProductsAlsoPurchased.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

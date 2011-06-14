@@ -2957,6 +2957,22 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="ProductsAlsoPurchasedEnabled">
+                        <Value>'Products also purchased' enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to allow customers to view a list of products purchased by other customers who purchased the above</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ProductsAlsoPurchasedNumber">
+                        <Value>Number of also purchased products to display</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The number of products also purchased by other customers to display when 'Products also purchased' option is enabled.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>                  
                   <LocaleResource Name="CustomerUser">

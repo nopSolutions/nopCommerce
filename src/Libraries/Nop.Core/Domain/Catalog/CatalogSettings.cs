@@ -119,5 +119,16 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a number of products per page on search products page
         /// </summary>
         public int SearchPageProductsPerPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets "List of products purchased by other customers who purchased the above" option is enable
+        /// </summary>
+        public bool ProductsAlsoPurchasedEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of products also purchased by other customers to display
+        /// </summary>
+        public int ProductsAlsoPurchasedNumber { get; set; }
+        
     }
 }

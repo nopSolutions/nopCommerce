@@ -1325,8 +1325,26 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(0,
                 0, null, null, null, productId, 0, null, false,
                 0, null, ProductSortingEnum.Position, 0, int.MaxValue);
-            var model = products.Select(x => PrepareProductOverviewModel(x))
-            .ToList();
+
+            var model = products.Select(x => PrepareProductOverviewModel(x)).ToList();
+
+            return PartialView(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult ProductsAlsoPurchased(int productId)
+        {
+            if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
+                return Content("");
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            var products = _orderReportService.GetProductsAlsoPurchasedById(productId,
+                _catalogSettings.ProductsAlsoPurchasedNumber);
+
+            var model = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             return PartialView(model);
         }

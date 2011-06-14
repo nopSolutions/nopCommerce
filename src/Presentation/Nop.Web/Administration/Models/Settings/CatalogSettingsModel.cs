@@ -68,5 +68,11 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPageProductsPerPage")]
         public int SearchPageProductsPerPage { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsAlsoPurchasedEnabled")]
+        public bool ProductsAlsoPurchasedEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsAlsoPurchasedNumber")]
+        public int ProductsAlsoPurchasedNumber { get; set; }
     }
 }
