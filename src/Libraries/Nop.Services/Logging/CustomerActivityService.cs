@@ -215,7 +215,7 @@ namespace Nop.Services.Logging
             
             if (!String.IsNullOrEmpty(email))
             {
-                query = query.Where(c => c.Customer.Addresses.Where(u => u.Email.Contains(email)).Count() > 0);
+                query = query.Where(c => c.Customer.AssociatedUsers.Where(u => u.Email.Contains(email)).Count() > 0);
             };
             if (!String.IsNullOrEmpty(username))
             {

@@ -274,7 +274,7 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<User> AssociatedUsers
         {
             get { return _associatedUsers ?? (_associatedUsers = new List<User>()); }
-            set { _associatedUsers = value; }
+            protected set { _associatedUsers = value; }
         }
 
         #endregion

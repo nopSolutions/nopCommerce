@@ -46,35 +46,27 @@ namespace Nop.Services.Tests.Logging
                 Name = "Test name2"
             };
             _customer1 = new Customer()
-                            {
-                                Deleted = false,
-                                AssociatedUsers = new List<User>()
-                                                          {
-                                                              new User()
-                                                                  {
-                                                                      Username = "TestUser1"
-                                                                  }
-                                                          },
-                                };
-            _customer1.AddAddress(new Address()
-                                     {
-                                         Email = "test1@teststore1.com"
-                                     });
-            _customer2 = new Customer()
             {
                 Deleted = false,
-                AssociatedUsers = new List<User>()
-                                                          {
-                                                              new User()
-                                                                  {
-                                                                      Username = "TestUser2"
-                                                                  }
-                                                          },
             };
-            _customer2.AddAddress(new Address()
-            {
-                Email = "test2@teststore2.com"
-            });
+            _customer1.AssociatedUsers.Add(
+                new User()
+                {
+                    Email = "test1@teststore1.com",
+                    Username = "TestUser1"
+                }
+           );
+           _customer2 = new Customer()
+           {
+               Deleted = false,
+           };
+           _customer2.AssociatedUsers.Add(
+               new User()
+               {
+                   Email = "test2@teststore2.com",
+                   Username = "TestUser2"
+               }
+               );
             _activity1 = new ActivityLog()
             {
                 Id = 1,
