@@ -17,11 +17,13 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Web.Extensions;
 using Nop.Web.Models;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
     public class ProfileController : BaseNopController
     {
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Info(int id)
         {
             return Content("TODO show profile - " + id);

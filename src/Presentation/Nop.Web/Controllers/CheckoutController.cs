@@ -37,9 +37,11 @@ using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
+    [NopHttpsRequirement(SslRequirement.Yes)]
     public class CheckoutController : BaseNopController
     {
 		#region Fields

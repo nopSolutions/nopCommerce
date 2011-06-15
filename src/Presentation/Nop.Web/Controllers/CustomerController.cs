@@ -33,6 +33,7 @@ using Nop.Web.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
 using Nop.Services.Media;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
@@ -146,7 +147,8 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Login / logout / register
-
+        
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Login(bool? checkoutAsGuest)
         {
             var model = new LoginModel();
@@ -188,6 +190,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Register()
         {
             //check whether registration is allowed
@@ -405,7 +408,8 @@ namespace Nop.Web.Controllers
 
             return this.RedirectToAction("Index", "Home");
         }
-        
+
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AccountActivation(Guid token, string email)
         {
             var user = _userService.GetUserByEmail(email);
@@ -439,10 +443,12 @@ namespace Nop.Web.Controllers
             model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
             return View(model);
         }
+
         #endregion
 
         #region My account
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult MyAccount()
         {
             return RedirectToAction("info");
@@ -450,6 +456,7 @@ namespace Nop.Web.Controllers
 
         #region Info
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Info()
         {
             if (!IsCurrentUserRegistered())
@@ -642,6 +649,7 @@ namespace Nop.Web.Controllers
 
         #region Addresses
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Addresses()
         {
             if (!IsCurrentUserRegistered())
@@ -666,6 +674,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AddressDelete(int addressId)
         {
             if (!IsCurrentUserRegistered())
@@ -685,6 +694,7 @@ namespace Nop.Web.Controllers
             return RedirectToAction("Addresses");
         }
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AddressAdd()
         {
             if (!IsCurrentUserRegistered())
@@ -751,6 +761,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AddressEdit(int addressId)
         {
             if (!IsCurrentUserRegistered())
@@ -836,6 +847,7 @@ namespace Nop.Web.Controllers
 
         #region Orders
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Orders()
         {
             if (!IsCurrentUserRegistered())
@@ -926,6 +938,7 @@ namespace Nop.Web.Controllers
 
         #region Return request
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ReturnRequests()
         {
             if (!IsCurrentUserRegistered())
@@ -969,6 +982,7 @@ namespace Nop.Web.Controllers
 
         #region Downloable products
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult DownloadableProducts()
         {
             if (!IsCurrentUserRegistered())
@@ -1032,6 +1046,7 @@ namespace Nop.Web.Controllers
 
         #region Reward points
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult RewardPoints()
         {
             if (!IsCurrentUserRegistered())
@@ -1067,6 +1082,7 @@ namespace Nop.Web.Controllers
 
         #region Change password
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ChangePassword()
         {
             if (!IsCurrentUserRegistered())
@@ -1119,6 +1135,7 @@ namespace Nop.Web.Controllers
 
         #region Avatar
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Avatar()
         {
             if (!IsCurrentUserRegistered())
@@ -1229,6 +1246,7 @@ namespace Nop.Web.Controllers
 
         #region Password recovery
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult PasswordRecovery()
         {
             var model = new PasswordRecoveryModel();
@@ -1262,6 +1280,7 @@ namespace Nop.Web.Controllers
         }
 
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult PasswordRecoveryConfirm(Guid prt, string customerEmail)
         {
             var user = _userService.GetUserByEmail(customerEmail);

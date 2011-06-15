@@ -40,6 +40,7 @@ using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.Order;
 using Nop.Web.Models.ShoppingCart;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
@@ -414,6 +415,7 @@ namespace Nop.Web.Controllers
 
         #region Order details
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Details(int orderId)
         {
             if (_workContext.CurrentCustomer == null) 
@@ -427,6 +429,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult PrintOrderDetails(int orderId)
         {
             if (_workContext.CurrentCustomer == null)
@@ -474,6 +477,7 @@ namespace Nop.Web.Controllers
 
         #region Return requests
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ReturnRequest(int orderId)
         {
             if (_workContext.CurrentCustomer == null)

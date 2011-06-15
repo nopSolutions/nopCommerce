@@ -45,12 +45,25 @@ namespace Nop.Core
             else
                 return string.Empty;
         }
+        
+        /// <summary>
+        /// Gets this page name
+        /// </summary>
+        /// <param name="includeQueryString">Value indicating whether to include query strings</param>
+        /// <returns>Page name</returns>
+        public virtual string GetThisPageUrl(bool includeQueryString)
+        {
+            bool useSsl = IsCurrentConnectionSecured();
+            return GetThisPageUrl(includeQueryString, useSsl);
+        }
 
         /// <summary>
         /// Gets this page name
         /// </summary>
-        /// <returns></returns>
-        public virtual string GetThisPageUrl(bool includeQueryString)
+        /// <param name="includeQueryString">Value indicating whether to include query strings</param>
+        /// <param name="useSsl">Value indicating whether to get SSL protected page</param>
+        /// <returns>Page name</returns>
+        public virtual string GetThisPageUrl(bool includeQueryString, bool useSsl)
         {
             string url = string.Empty;
             if (HttpContext.Current == null)
@@ -58,7 +71,6 @@ namespace Nop.Core
 
             if (includeQueryString)
             {
-                bool useSsl = IsCurrentConnectionSecured();
                 string storeHost = GetStoreHost(useSsl);
                 if (storeHost.EndsWith("/"))
                     storeHost = storeHost.Substring(0, storeHost.Length - 1);
@@ -87,6 +99,17 @@ namespace Nop.Core
                 //useSSL = HttpContext.Current.Request.ServerVariables["HTTP_CLUSTER_HTTPS"] == "on" ? true : false;
             }
 
+            return useSsl;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether connection should be secured
+        /// </summary>
+        /// <returns>Result</returns>
+        public virtual bool SslEnabled()
+        {
+            bool useSsl = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseSSL"]) &&
+                Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"]);
             return useSsl;
         }
         
@@ -142,8 +165,7 @@ namespace Nop.Core
             }
             else
             {
-                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseSSL"])
-                    && Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"]))
+                if (SslEnabled())
                 {
                     //SSL is enabled
 

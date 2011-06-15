@@ -116,6 +116,8 @@
     <Compile Include="NopValidatorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterDefaultPermissionsStartupTask.cs" />
+    <Compile Include="Security\SslRequirement.cs" />
+    <Compile Include="Security\NopHttpsRequirementAttribute.cs" />
     <Compile Include="StatefulStorage.cs" />
     <Compile Include="TelerikLocalizationService.cs" />
     <Compile Include="TelerikLocalizationServiceFactory.cs" />

@@ -34,6 +34,7 @@ using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
@@ -523,6 +524,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Product", new { productId = product.Id, SeName = product.GetSeName() });
         }
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Cart()
         {
             return View();
@@ -1067,7 +1069,8 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Wishlist
-        
+
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Wishlist(Guid? customerGuid)
         {
             if (!_shoppingCartSettings.WishlistEnabled)

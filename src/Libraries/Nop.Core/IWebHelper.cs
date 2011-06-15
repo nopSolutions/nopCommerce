@@ -27,14 +27,29 @@ namespace Nop.Core
         /// <summary>
         /// Gets this page name
         /// </summary>
-        /// <returns></returns>
+        /// <param name="includeQueryString">Value indicating whether to include query strings</param>
+        /// <returns>Page name</returns>
         string GetThisPageUrl(bool includeQueryString);
+
+        /// <summary>
+        /// Gets this page name
+        /// </summary>
+        /// <param name="includeQueryString">Value indicating whether to include query strings</param>
+        /// <param name="useSsl">Value indicating whether to get SSL protected page</param>
+        /// <returns>Page name</returns>
+        string GetThisPageUrl(bool includeQueryString, bool useSsl);
 
         /// <summary>
         /// Gets a value indicating whether current connection is secured
         /// </summary>
         /// <returns>true - secured, false - not secured</returns>
         bool IsCurrentConnectionSecured();
+        
+        /// <summary>
+        /// Gets a value indicating whether connection should be secured
+        /// </summary>
+        /// <returns>Result</returns>
+        bool SslEnabled();
 
         /// <summary>
         /// Gets server variable by name

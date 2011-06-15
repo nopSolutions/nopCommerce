@@ -18,6 +18,7 @@ using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
 using Nop.Services.Common;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {
