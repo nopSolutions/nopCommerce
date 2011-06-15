@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 
 using Nop.Admin.Models;
@@ -26,6 +27,8 @@ using Nop.Web.Framework.Controllers;
 
 using Telerik.Web.Mvc;
 using System.Collections.Generic;
+using Nop.Services.ExportImport;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -50,6 +53,7 @@ namespace Nop.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IProductService _productService;
+        private readonly IExportManager _exportManager;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -68,6 +72,7 @@ namespace Nop.Admin.Controllers
             IMeasureService measureService, IPdfService pdfService,
             IAddressService addressService, ICountryService countryService,
             IStateProvinceService stateProvinceService, IProductService productService,
+            IExportManager exportManager, 
             CurrencySettings currencySettings, TaxSettings taxSettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings)
 		{
@@ -87,6 +92,7 @@ namespace Nop.Admin.Controllers
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._productService = productService;
+            this._exportManager = exportManager;
 
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -440,6 +446,34 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
+        #region Export / Import
+
+        public ActionResult ExportXml()
+        {
+            var orders = _orderService.SearchOrders(null, null, null,
+                null, null, null, null, 0, int.MaxValue);
+
+            var fileName = string.Format("orders_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            var xml = _exportManager.ExportOrdersToXml(orders);
+            return new XmlDownloadResult(xml, fileName);
+        }
+
+        public ActionResult ExportExcel()
+        {
+            var orders = _orderService.SearchOrders(null, null, null,
+                null, null, null, null, 0, int.MaxValue);
+
+            string fileName = string.Format("orders_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+
+            _exportManager.ExportOrdersToXls(filePath, orders);
+
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "text/xls", fileName);
+        }
+
+        #endregion
+
         #region Order details
 
         public ActionResult Edit(int id)
@@ -708,8 +742,8 @@ namespace Nop.Admin.Controllers
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
             _pdfService.PrintOrderToPdf(order, _workContext.WorkingLanguage, filePath);
-            var pdfBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(pdfBytes, "application/pdf", fileName);
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "application/pdf", fileName);
         }
 
         public ActionResult PdfPackagingSlip(int orderId)
@@ -720,8 +754,8 @@ namespace Nop.Admin.Controllers
             string fileName = string.Format("packagingslip_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
             _pdfService.PrintPackagingSlipsToPdf(orders, filePath);
-            var pdfBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(pdfBytes, "application/pdf", fileName);
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "application/pdf", fileName);
         }
 
         [HttpPost, ActionName("Edit")]

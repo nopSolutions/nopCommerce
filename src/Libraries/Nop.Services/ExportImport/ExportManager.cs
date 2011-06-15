@@ -21,7 +21,7 @@ namespace Nop.Services.ExportImport
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
-        private StoreInformationSettings _storeInformationSettings;
+        private readonly StoreInformationSettings _storeInformationSettings;
 
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
@@ -36,7 +36,7 @@ namespace Nop.Services.ExportImport
 
         #region Utilities
 
-        private void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
+        protected virtual void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
         {
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
             if (categories != null && categories.Count > 0)
@@ -478,17 +478,17 @@ namespace Nop.Services.ExportImport
                     {
                         var sb = new StringBuilder();
                         sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc) VALUES (");
-                        sb.Append('"'); sb.Append(p.Name.Replace('"', '\'')); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.ShortDescription.Replace('"', '\'')); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.FullDescription.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.Name != null ? p.Name.Replace('"', '\'') : ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.ShortDescription != null ? p.ShortDescription.Replace('"', '\''): ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.FullDescription != null ? p.FullDescription.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.ShowOnHomePage); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.MetaKeywords.Replace('"', '\'')); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.MetaDescription.Replace('"', '\'')); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.MetaTitle.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.MetaKeywords != null ? p.MetaKeywords.Replace('"', '\'') : ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.MetaDescription != null ? p.MetaDescription.Replace('"', '\'') : ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.MetaTitle != null ? p.MetaTitle.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.AllowCustomerReviews); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.Published); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.Sku.Replace('"', '\'')); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.ManufacturerPartNumber.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.Sku != null ? pv.Sku.Replace('"', '\''): ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.ManufacturerPartNumber != null ? pv.ManufacturerPartNumber.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsGiftCard); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.GiftCardTypeId); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsDownload); sb.Append("\",");
@@ -499,7 +499,7 @@ namespace Nop.Services.ExportImport
                         sb.Append('"'); sb.Append(pv.HasSampleDownload); sb.Append("\",");
                         sb.Append(pv.SampleDownloadId); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.HasUserAgreement); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.UserAgreementText.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.UserAgreementText != null ? pv.UserAgreementText.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsRecurring); sb.Append("\",");
                         sb.Append(pv.RecurringCycleLength); sb.Append(",");
                         sb.Append(pv.RecurringCyclePeriodId); sb.Append(",");
@@ -713,23 +713,23 @@ namespace Nop.Services.ExportImport
                     sb.Append(decimalQuoter); sb.Append(order.OrderShippingExclTax); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.PaymentMethodAdditionalFeeInclTax); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.PaymentMethodAdditionalFeeExclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.TaxRates.Replace('"', '\'')); sb.Append("\",");
+                    sb.Append('"'); sb.Append(order.TaxRates != null ? order.TaxRates.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderTax); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderTotal); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.RefundedAmount); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderDiscount); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.CurrencyRate); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.CustomerCurrencyCode.Replace('"', '\'')); sb.Append("\",");
+                    sb.Append('"'); sb.Append(order.CustomerCurrencyCode != null ? order.CustomerCurrencyCode.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderWeight); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(order.AffiliateId); sb.Append(",");
+                    sb.Append(order.AffiliateId.HasValue ? order.AffiliateId.Value : 0); sb.Append(",");
                     sb.Append(order.OrderStatusId); sb.Append(",");
-                    sb.Append(order.PaymentMethodSystemName); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.PurchaseOrderNumber.Replace('"', '\'')); sb.Append("\",");
+                    sb.Append('"'); sb.Append(order.PaymentMethodSystemName != null ? order.PaymentMethodSystemName.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(order.PurchaseOrderNumber != null ? order.PurchaseOrderNumber.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append(order.PaymentStatusId); sb.Append(",");
                     sb.Append(order.ShippingStatusId); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.ShippingMethod.Replace('"', '\'')); sb.Append("\",");
-                    sb.Append(order.ShippingRateComputationMethodSystemName); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.VatNumber.Replace('"', '\'')); sb.Append("\",");
+                    sb.Append('"'); sb.Append(order.ShippingMethod != null ? order.ShippingMethod.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(order.ShippingRateComputationMethodSystemName != null ? order.ShippingRateComputationMethodSystemName.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(order.VatNumber != null ? order.VatNumber.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append(decimalQuoter); sb.Append(order.CreatedOnUtc.ToOADate()); sb.Append(decimalQuoter);
                     sb.Append(")");
 

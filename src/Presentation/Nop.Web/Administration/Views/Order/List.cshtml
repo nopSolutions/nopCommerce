@@ -11,7 +11,8 @@
             @T("Admin.Orders")
         </div>
         <div class="options">
-            @*TODO export/import support*@
+            <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
+            <a href="@Url.Action("ExportExcel")" class="t-button">@T("Admin.Common.ExportToExcel")</a>
         </div>
     </div>
     <table width="100%">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models;
@@ -230,15 +231,14 @@ namespace Nop.Admin.Controllers
         
         #endregion
 
-        #region Export/Import
+        #region Export / Import
 
-        public ActionResult Export()
+        public ActionResult ExportXml()
         {
             var fileName = string.Format("manufacturers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             var manufacturers = _manufacturerService.GetAllManufacturers(true);
             var xml = _exportManager.ExportManufacturersToXml(manufacturers);
             return new XmlDownloadResult(xml, fileName);
-            //TODO why return file has such a weird extension (Chrome)
         }
 
         #endregion

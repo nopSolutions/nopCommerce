@@ -2087,6 +2087,9 @@
                   <LocaleResource Name="Edit">
                     <Value>Edit</Value>
                   </LocaleResource>
+                  <LocaleResource Name="ExportToExcel">
+                    <Value>Export to Excel</Value>
+                  </LocaleResource>
                   <LocaleResource Name="ExportToXml">
                     <Value>Export to XML</Value>
                   </LocaleResource>

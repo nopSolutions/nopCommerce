@@ -12,8 +12,9 @@
         <div class="options">
             <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
             <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
-            @*<a href="@Url.Action("Export")" class="t-button">@T("Admin.Common.ExportToXml")</a>*@
-            @*TODO export/import support*@
+            <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
+            <a href="@Url.Action("ExportExcel")" class="t-button">@T("Admin.Common.ExportToExcel")</a>
+            @*TODO import support*@
         </div>
     </div>
 

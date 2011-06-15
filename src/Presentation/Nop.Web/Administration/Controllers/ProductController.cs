@@ -10,11 +10,13 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
+using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
 using Nop.Services.Common;
@@ -40,6 +42,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductTagService _productTagService;
         private readonly ICopyProductService _copyProductService;
         private readonly IPdfService _pdfService;
+        private readonly IExportManager _exportManager;
 
         #endregion
 
@@ -51,7 +54,8 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
             ITaxCategoryService taxCategoryService, IProductTagService productTagService,
-            ICopyProductService copyProductService, IPdfService pdfService)
+            ICopyProductService copyProductService, IPdfService pdfService,
+            IExportManager exportManager)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -66,6 +70,7 @@ namespace Nop.Admin.Controllers
             this._productTagService = productTagService;
             this._copyProductService = copyProductService;
             this._pdfService = pdfService;
+            this._exportManager = exportManager;
         }
 
         #endregion 
@@ -590,18 +595,6 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = copyModel.Id });
             }
-        }
-
-        public ActionResult DownloadCatalogAsPdf()
-        {
-            var products =  _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, int.MaxValue, true);
-            string fileName = string.Format("pdfcatalog_{0}_{1}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
-            _pdfService.PrintProductsToPdf(products, _workContext.WorkingLanguage, filePath);
-            var pdfBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(pdfBytes, "application/pdf", fileName);
         }
 
         #endregion
@@ -1234,6 +1227,48 @@ namespace Nop.Admin.Controllers
             _productTagService.DeleteProductTag(tag);
 
             return ProductTags(command);
+        }
+
+        #endregion
+
+        #region Export / Import
+
+        public ActionResult DownloadCatalogAsPdf()
+        {
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, int.MaxValue, true);
+            string fileName = string.Format("pdfcatalog_{0}_{1}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+            _pdfService.PrintProductsToPdf(products, _workContext.WorkingLanguage, filePath);
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "application/pdf", fileName);
+        }
+
+        public ActionResult ExportXml()
+        {
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            var xml = _exportManager.ExportProductsToXml(products);
+            return new XmlDownloadResult(xml, fileName);
+        }
+
+        public ActionResult ExportExcel()
+        {
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                _workContext.WorkingLanguage.Id, new List<int>(),
+                ProductSortingEnum.Position, 0, 10, true);
+
+            string fileName = string.Format("products_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+            
+            _exportManager.ExportProductsToXls(filePath, products);
+
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "text/xls", fileName);
         }
 
         #endregion

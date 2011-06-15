@@ -28,9 +28,6 @@ namespace Nop.Web.Framework.Mvc
 
         public override void ExecuteResult(ControllerContext context)
         {
-            context.HttpContext.Response.AddHeader("content-disposition",
-              "attachment; filename=" + this.FileDownloadName);
-
             XmlDocument document = new XmlDocument();
             document.LoadXml(Xml);
             XmlDeclaration decl = document.FirstChild as XmlDeclaration;
