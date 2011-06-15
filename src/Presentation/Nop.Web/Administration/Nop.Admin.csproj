@@ -132,6 +132,7 @@
     <Compile Include="Models\Common\SystemWarningModel.cs" />
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Common\LiveChatProviderModel.cs" />
+    <Compile Include="Models\Logging\LogListModel.cs" />
     <Compile Include="Models\Security\PermissionRecordModel.cs" />
     <Compile Include="Models\Security\PermissionMappingModel.cs" />
     <Compile Include="Models\Logging\ActivityLogModel.cs" />
@@ -887,7 +888,7 @@
     <Content Include="Views\Security\Permissions.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\Permission\" />
+    <Content Include="Views\Log\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Manufacturer\_CreateOrUpdate.cshtml" />

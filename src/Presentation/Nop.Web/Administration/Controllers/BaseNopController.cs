@@ -55,7 +55,8 @@ namespace Nop.Admin.Controllers
 
             if (!ok)
             {
-                //TODO redirect to 'Access denied page' (previous 'AccessDenied.aspx' page)
+                //TODO redirect to public store 'Access denied page'
+                //(previous 'AccessDenied.aspx' page)
             }
         }
 

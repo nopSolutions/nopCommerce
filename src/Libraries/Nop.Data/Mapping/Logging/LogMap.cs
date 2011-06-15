@@ -17,6 +17,11 @@ namespace Nop.Data.Mapping.Logging
             this.Property(l => l.IpAddress).HasMaxLength(200);
 
             this.Ignore(l => l.LogLevel);
+
+            this.HasOptional(l => l.Customer)
+                .WithMany()
+                .HasForeignKey(l => l.CustomerId);
+
         }
     }
 }

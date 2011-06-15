@@ -6988,6 +6988,130 @@
             <LocaleResource Name="System">
                 <Value>System</Value>
                 <Children>
+                    <LocaleResource Name="Log">
+                        <Value>Log</Value>
+                        <Children>
+                          <LocaleResource Name="BackToList">
+                                <Value>back to system log</Value>
+                            </LocaleResource>
+                          <LocaleResource Name="ViewLogDetails">
+                                <Value>View log entry details</Value>
+                            </LocaleResource>
+                          <LocaleResource Name="ClearLog">
+                              <Value>Clear log</Value>
+                          </LocaleResource>                         
+                          <LocaleResource Name="Fields">
+                                <Children>
+                                    <LocaleResource Name="CreatedOn">
+                                        <Value>Created on</Value>
+                                        <Children>
+                                         <LocaleResource Name="Hint">
+                                                <Value>Date/Time the log entry was created.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Customer">
+                                        <Value>Customer</Value>
+                                        <Children>
+                                         <LocaleResource Name="Hint">
+                                                <Value>Name of the customer who caused the exception.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="FullMessage">
+                                        <Value>Full message</Value>
+                                        <Children>
+                                          <LocaleResource Name="Hint">
+                                                <Value>The details for the log entry.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="IPAddress">
+                                        <Value>IP address</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>IP address of the machine that caused the exception.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="LogLevel">
+                                        <Value>Log level</Value>
+                                        <Children>
+                                          <LocaleResource Name="Hint">
+                                                <Value>The level of log entry.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="PageURL">
+                                        <Value>Page URL</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Originating page of exception.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="ReferrerURL">
+                                        <Value>Referrer URL</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>The referrer URL.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                  <LocaleResource Name="ShortMessage">
+                                    <Value>Short message</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>The log entry message.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
+                                </Children>
+                            </LocaleResource>
+                          <LocaleResource Name="List">
+                            <Children>
+                              <LocaleResource Name="CreatedOnFrom">
+                                <Value>Created from</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The creation from date for the search.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="CreatedOnTo">
+                                <Value>Created to</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>The creation to date for the search.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="Message">
+                                <Value>Message</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Message.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                              <LocaleResource Name="LogLevel">
+                                <Value>Log level</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Select a log level.</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="Cleared">
+                            <Value>The log has been cleared successfully.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Deleted">
+                            <Value>The log entry has been deleted successfully.</Value>
+                          </LocaleResource>
+                        </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Maintenance">
                       <Value>Maintenance</Value>
                       <Children>
@@ -7072,23 +7196,7 @@
                                     <LocaleResource Name="Priority">
                                         <Value>Message Priority</Value>
                                         <Children>
-                        
-                <LocaleResource Name="OrderGuid">
-                  <Value>Order GUID</Value>
-                  <Children>
-                    <LocaleResource Name="Hint">
-                      <Value>Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</Value>
-                    </LocaleResource>
-                  </Children>
-                </LocaleResource>
-                <LocaleResource Name="GoDirectlyToNumber">
-                  <Value>Go directly to order #</Value>
-                  <Children>
-                    <LocaleResource Name="Hint">
-                      <Value>Go directly to order #</Value>
-                    </LocaleResource>
-                  </Children>
-                </LocaleResource>                    <LocaleResource Name="Hint">
+                                         <LocaleResource Name="Hint">
                                                 <Value>The priority of the message.</Value>
                                             </LocaleResource>
                                           <LocaleResource Name="Required">

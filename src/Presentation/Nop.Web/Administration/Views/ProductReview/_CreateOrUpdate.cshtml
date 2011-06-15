@@ -1,7 +1,5 @@
 ﻿@model ProductReviewModel
-
 @using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 <table class="adminContent">
@@ -26,7 +24,7 @@
             @Html.NopLabelFor(model => model.IpAddress):
         </td>
         <td class="adminData">
-            @Model.IpAddress
+            @Html.DisplayFor(model => model.IpAddress)
         </td>
     </tr>
     <tr>
@@ -52,7 +50,7 @@
             @Html.NopLabelFor(model => model.Rating):
         </td>
         <td class="adminData">
-            @Model.Rating
+            @Html.DisplayFor(model => model.Rating)
         </td>
     </tr>
     <tr>
@@ -65,12 +63,11 @@
         </td>
     </tr>
     <tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CreatedOn):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.CreatedOn)
-            </td>
-        </tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CreatedOn):
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.CreatedOn)
+        </td>
+    </tr>
 </table>

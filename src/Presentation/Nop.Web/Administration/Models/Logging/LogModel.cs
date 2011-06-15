@@ -11,25 +11,36 @@ namespace Nop.Admin.Models.Logging
 {
     public class LogModel : BaseNopEntityModel
     {
-        public int LogLevelId { get; set; }
+        [NopResourceDisplayName("Admin.System.Log.Fields.LogLevel")]
+        public string LogLevel { get; set; }
 
+        [NopResourceDisplayName("Admin.System.Log.Fields.ShortMessage")]
         [AllowHtml]
-        public string Message { get; set; }
+        public string ShortMessage { get; set; }
 
+        [NopResourceDisplayName("Admin.System.Log.Fields.FullMessage")]
         [AllowHtml]
-        public string Exception { get; set; }
+        public string FullMessage { get; set; }
 
+        [NopResourceDisplayName("Admin.System.Log.Fields.IPAddress")]
         [AllowHtml]
         public string IpAddress { get; set; }
 
-        public int CustomerId { get; set; }
+        [NopResourceDisplayName("Admin.System.Log.Fields.Customer")]
+        public int? CustomerId { get; set; }
+        [NopResourceDisplayName("Admin.System.Log.Fields.Customer")]
+        [AllowHtml]
+        public string CustomerName { get; set; }
 
+        [NopResourceDisplayName("Admin.System.Log.Fields.PageURL")]
         [AllowHtml]
         public string PageUrl { get; set; }
 
+        [NopResourceDisplayName("Admin.System.Log.Fields.ReferrerURL")]
         [AllowHtml]
         public string ReferrerUrl { get; set; }
 
+        [NopResourceDisplayName("Admin.System.Log.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
     }
 }

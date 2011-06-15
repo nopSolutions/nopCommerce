@@ -1,18 +1,104 @@
-﻿@model Telerik.Web.Mvc.GridModel<LogModel>
+﻿@model LogListModel
 @using Telerik.Web.Mvc.UI
-<table class="adminContent">
-    <tr>
-        <td>
-            @(Html.Telerik().Grid<LogModel>()
-                    .Name("log-grid")
-                    .BindTo(Model.Data)
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.LogLevelId).Title(T("Admin.System.Log.Fields.LogLevel").Text);
-                    })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Log"))
-                    .EnableCustomBinding(true))
-        </td>
-    </tr>
-</table>
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" />
+            @T("Admin.System.Log")
+        </div>
+        <div class="options">
+            <button type="submit" name="clearall" value="clearall" class="t-button">@T("Admin.System.Log.ClearLog")</button>
+        </div>
+    </div>
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CreatedOnFrom):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CreatedOnFrom)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CreatedOnTo):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.CreatedOnTo)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Message):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.Message)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LogLevelId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("LogLevelId", Model.AvailableLogLevels)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
+            </td>
+        </tr>
+    </table>
+    <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<LogModel>()
+                        .Name("log-grid")
+                        .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                        .Columns(columns =>
+                        {
+                            columns.Bound(x => x.LogLevel);
+                            columns.Bound(x => x.ShortMessage);
+                            columns.Bound(x => x.CreatedOn);
+                            columns.Bound(x => x.Id)
+                                .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "View", new { id = x.Id }))
+                                .ClientTemplate("<a href=\"View/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+                                .Width(50)
+                                .Centered()
+                                .Title("Edit");
+                        })
+                        .Pageable(settings => settings.PageSize(10))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("LogList", "Log", Model))
+                        .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+    
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#btnSearch').click(function () {
+                var grid = $('#log-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
+            });
+
+        });
+
+        function onDataBinding(e) {
+            var searchModel = {
+                CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
+                CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+                Message: $('#@Html.FieldIdFor(model => model.Message)').val(),
+                LogLevelId: $('#@Html.FieldIdFor(model => model.LogLevelId)').val()
+            };
+            e.data = searchModel;
+        }
+
+    </script>
+    
+}

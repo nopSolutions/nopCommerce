@@ -136,7 +136,7 @@ namespace Nop.Services.Logging
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
                 IpAddress = _webHelper.GetCurrentIpAddress(),
-                CustomerId = customer != null ? customer.Id : 0,
+                Customer = customer,
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow

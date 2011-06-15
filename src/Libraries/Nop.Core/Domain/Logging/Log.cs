@@ -1,5 +1,6 @@
 
 using System;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Logging
 {
@@ -31,7 +32,7 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public virtual int? CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the page URL
@@ -62,5 +63,10 @@ namespace Nop.Core.Domain.Logging
                 this.LogLevelId = (int)value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the customer
+        /// </summary>
+        public virtual Customer Customer { get; set; }
     }
 }
