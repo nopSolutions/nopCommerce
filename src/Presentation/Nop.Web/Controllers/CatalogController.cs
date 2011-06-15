@@ -121,8 +121,8 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
         }
 
-		#endregion Constructors 
-        
+        #endregion
+
         #region Utilities
 
         [NonAction]

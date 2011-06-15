@@ -84,7 +84,7 @@ namespace Nop.Admin.Controllers
             this._orderService = orderService;
         }
 
-        #endregion Constructors
+        #endregion
 
         #region Utilities
 
@@ -115,7 +115,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            var customers = _customerService.GetAllCustomers(null,null, null, null, 0, 10);
+            var customers = _customerService.GetAllCustomers(null,null, null, null, false, null, 0, 10);
             var model = new CustomerListModel();
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
@@ -150,8 +150,9 @@ namespace Nop.Admin.Controllers
 
             string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
 
-            var customers = _customerService.GetAllCustomers(null, null, 
-                searchCustomerRoleIds.ToArray(), searchCustomerEmail, command.Page - 1, command.PageSize);
+            var customers = _customerService.GetAllCustomers(null, null,
+                searchCustomerRoleIds.ToArray(), searchCustomerEmail, false, null,
+                command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
                 Data = customers.Select(x =>
@@ -192,7 +193,7 @@ namespace Nop.Admin.Controllers
 
             //laod customers
             var customers = _customerService.GetAllCustomers(null, null,
-               model.SearchCustomerRoleIds, model.SearchEmail, 0, 10);
+               model.SearchCustomerRoleIds, model.SearchEmail, false, null, 0, 10);
             //customer list
             model.Customers = new GridModel<CustomerModel>
             {

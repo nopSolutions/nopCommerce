@@ -38,7 +38,7 @@ namespace Nop.Web.Controllers
             this._localizationService = localizationService;
 		}
 
-		#endregion Constructors 
+        #endregion
 
         #region States / provinces
 

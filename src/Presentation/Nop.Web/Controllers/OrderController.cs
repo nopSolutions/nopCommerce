@@ -105,7 +105,7 @@ namespace Nop.Web.Controllers
             this._pdfSettings = pdfSettings;
         }
 
-		#endregion Constructors 
+        #endregion
 
         #region Utilities
 

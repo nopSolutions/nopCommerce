@@ -56,7 +56,7 @@ namespace Nop.Admin.Models.Messages
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentTries")]
         public int SentTries { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentOnUtc")]
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentOn")]
         [DisplayFormatAttribute(DataFormatString="{0}", NullDisplayText="Not sent yet")]
         public DateTime? SentOn { get; set; }
 

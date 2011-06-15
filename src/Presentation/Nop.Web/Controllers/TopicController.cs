@@ -52,10 +52,10 @@ namespace Nop.Web.Controllers
             this._workContext = workContext;
         }
 
-		#endregion Constructors 
-        
+        #endregion
+
         #region Methods
-        
+
         public ActionResult TopicDetails(string systemName)
         {
             var topic = _topicService.GetTopicBySystemName(systemName);

@@ -126,7 +126,7 @@ namespace Nop.Web.Controllers
             this._taxSettings = taxSettings;
         }
 
-		#endregion Constructors 
+        #endregion
 
         #region Utilities
 

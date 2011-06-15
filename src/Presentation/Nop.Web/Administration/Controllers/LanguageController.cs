@@ -30,7 +30,7 @@ namespace Nop.Admin.Controllers
             this._languageService = languageService;
 		}
 
-		#endregion Constructors 
+		#endregion 
 
 		#region Languages
 

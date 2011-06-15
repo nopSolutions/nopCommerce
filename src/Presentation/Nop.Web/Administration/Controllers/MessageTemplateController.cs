@@ -52,7 +52,7 @@ namespace Nop.Admin.Controllers
             this._emailAccountSettings = emailAccountSettings;
         }
 
-        #endregion Constructors
+        #endregion
         
         #region Utilities
 

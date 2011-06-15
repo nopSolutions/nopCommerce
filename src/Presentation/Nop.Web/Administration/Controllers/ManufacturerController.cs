@@ -55,7 +55,7 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
         }
 
-        #endregion Constructors
+        #endregion
         
         #region Utilities
 

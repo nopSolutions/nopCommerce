@@ -73,11 +73,14 @@ namespace Nop.Services.Customers
         /// <param name="registrationTo">Customer registration to; null to load all customers</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="associatedUserEmail">Email of associated user; null to load all customers</param>
+        /// <param name="loadOnlyWithShoppingCart">Value indicating whther to load customers only with shopping cart</param>
+        /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         public virtual PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, int[] customerRoleIds, string associatedUserEmail, int pageIndex, int pageSize)
+            DateTime? registrationTo, int[] customerRoleIds, string associatedUserEmail,
+            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize)
         {
             var query = _customerRepository.Table;
             if (registrationFrom.HasValue)
@@ -92,6 +95,16 @@ namespace Nop.Services.Customers
             if (!String.IsNullOrEmpty(associatedUserEmail))
             {
                 query = query.Where(c => c.AssociatedUsers.Where(u => u.Email.Contains(associatedUserEmail)).Count() > 0);
+            }
+            if (loadOnlyWithShoppingCart)
+            {
+                int? sctId = null;
+                if (sct.HasValue)
+                    sctId = (int)sct.Value;
+
+                query = sct.HasValue ?
+                    query.Where(c => c.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == sctId).Count() > 0) :
+                    query.Where(c => c.ShoppingCartItems.Count() > 0);
             }
             
             query = query.OrderByDescending(c => c.CreatedOnUtc);

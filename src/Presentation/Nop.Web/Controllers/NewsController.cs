@@ -69,7 +69,7 @@ namespace Nop.Web.Controllers
             this._storeInformationSettings = storeInformationSettings;
         }
 
-		#endregion Constructors 
+        #endregion
 
         #region Utilities
 

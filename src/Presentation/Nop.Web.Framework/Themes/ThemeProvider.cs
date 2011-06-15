@@ -26,7 +26,7 @@ namespace Nop.Web.Framework.Themes
             LoadConfigurations();
         }
 
-		#endregion Constructors 
+		#endregion 
         
         #region IThemeProvider
         

@@ -67,7 +67,7 @@ namespace Nop.Admin.Controllers
             this._pdfService = pdfService;
         }
 
-        #endregion Constructors 
+        #endregion 
 
         #region Utitilies
 

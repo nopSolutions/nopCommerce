@@ -63,7 +63,7 @@ namespace Nop.Admin.Controllers
             this._affiliateService = affiliateService;
         }
 
-        #endregion Constructors
+        #endregion
 
         #region Utilities
 

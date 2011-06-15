@@ -98,7 +98,7 @@ namespace Nop.Web.Controllers
             this._rewardPointsSettings = rewardPointsSettings;
         }
 
-		#endregion Constructors 
+        #endregion
 
         #region Utilities
 

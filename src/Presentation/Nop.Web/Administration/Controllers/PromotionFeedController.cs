@@ -36,7 +36,7 @@ namespace Nop.Admin.Controllers
             this._promotionFeedService = promotionFeedService;
 		}
 
-		#endregion Constructors 
+		#endregion 
 
         #region Methods
 

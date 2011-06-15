@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Customers
 {
@@ -20,11 +21,14 @@ namespace Nop.Services.Customers
         /// <param name="registrationTo">Customer registration to; null to load all customers</param>
         /// <param name="associatedUserEmail">Email of associated user; null to load all customers</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
+        /// <param name="loadOnlyWithShoppingCart">Value indicating whether to load customers only with shopping cart</param>
+        /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, int[] customerRoleIds, string associatedUserEmail, int pageIndex, int pageSize);
+            DateTime? registrationTo, int[] customerRoleIds, string associatedUserEmail,
+            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all customers by customer role id

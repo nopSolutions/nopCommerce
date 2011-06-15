@@ -61,7 +61,7 @@ namespace Nop.Admin.Controllers
             this._userService = userService;
         }
 
-        #endregion Constructors
+        #endregion
 
         #region Utilities
 

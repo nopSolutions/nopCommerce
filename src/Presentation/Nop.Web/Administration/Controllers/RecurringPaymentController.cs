@@ -51,7 +51,7 @@ namespace Nop.Admin.Controllers
             this._paymentService = paymentService;
         }
 
-        #endregion Constructors
+        #endregion
 
         #region Utilities
 

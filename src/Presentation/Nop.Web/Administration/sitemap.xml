@@ -25,6 +25,7 @@
           <siteMapNode title="Recurring payments" nopResource="Admin.RecurringPayments" controller="RecurringPayment" action="List" />
           <siteMapNode title="Return requests" nopResource="Admin.ReturnRequests" controller="ReturnRequest" action="List" />
           <siteMapNode title="Gift cards" nopResource="Admin.GiftCards" controller="GiftCard" action="List" />
+          <siteMapNode title="Current shopping carts" nopResource="Admin.CurrentCarts" controller="ShoppingCart" action="CurrentCarts" />
           <siteMapNode title="Bestsellers" nopResource="Admin.SalesReport.Bestsellers" controller="Order" action="BestsellersReport" />
         </siteMapNode>
         <siteMapNode title="Customers" nopResource="Admin.Customers" ImageUrl="~/Administration/Content/images/ico-customers.png" >

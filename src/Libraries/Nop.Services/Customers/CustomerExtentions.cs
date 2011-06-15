@@ -133,7 +133,19 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customer");
             var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
             var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-            return (string.Format("{0} {1}", firstName, lastName));
+
+            string fullName = "";
+            if (!String.IsNullOrWhiteSpace(firstName) && !String.IsNullOrWhiteSpace(lastName))
+                fullName = string.Format("{0} {1}", firstName, lastName);
+            else
+            {
+                if (!String.IsNullOrWhiteSpace(firstName))
+                    fullName = firstName;
+
+                if (!String.IsNullOrWhiteSpace(lastName))
+                    fullName = lastName;
+            }
+            return fullName;
         }
     }
 }

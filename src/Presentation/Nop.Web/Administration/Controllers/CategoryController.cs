@@ -63,7 +63,7 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
         }
 
-        #endregion Constructors
+        #endregion
         
         #region Utilities
 

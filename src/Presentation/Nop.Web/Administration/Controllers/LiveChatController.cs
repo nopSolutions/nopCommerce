@@ -41,7 +41,7 @@ namespace Nop.Admin.Controllers
             this._settingService = settingService;
 		}
 
-		#endregion Constructors 
+		#endregion 
 
         #region Methods
 

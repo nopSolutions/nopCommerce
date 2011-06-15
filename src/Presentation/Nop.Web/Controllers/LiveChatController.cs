@@ -57,8 +57,8 @@ namespace Nop.Web.Controllers
             this._liveChatService = liveChatService;
         }
 
-		#endregion Constructors 
-        
+        #endregion
+
         #region Methods
 
         [ChildActionOnly]

@@ -39,7 +39,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
 		}
 
-		#endregion Constructors 
+		#endregion 
 
         #region Methods
 

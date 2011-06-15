@@ -58,7 +58,7 @@ namespace Nop.Admin.Controllers
             this._measureSettings = measureSettings;
         }
 
-        #endregion Constructors
+        #endregion
         
         #region Utilities
 

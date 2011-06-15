@@ -4870,6 +4870,32 @@
               </LocaleResource>
             </Children>
             </LocaleResource>
+            <LocaleResource Name="CurrentCarts">
+              <Value>Current shopping carts</Value>
+              <Children>
+                <LocaleResource Name="Customer">
+                 <Value>Customer</Value>
+                </LocaleResource>
+                <LocaleResource Name="Product">
+                  <Value>Product</Value>
+                </LocaleResource>
+                <LocaleResource Name="UnitPrice">
+                  <Value>Unit price</Value>
+                </LocaleResource>
+                <LocaleResource Name="Quantity">
+                  <Value>Quantity</Value>
+                </LocaleResource>
+                <LocaleResource Name="Total">
+                  <Value>Total</Value>
+                </LocaleResource>
+                <LocaleResource Name="TotalItems">
+                  <Value>Total items</Value>
+                </LocaleResource>
+                <LocaleResource Name="UpdatedOn">
+                  <Value>Updated on</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
             <LocaleResource Name="Customers">
             <Value>Customers</Value>
               <Children>
@@ -7299,7 +7325,7 @@
                                           </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="SentOnUtc">
+                                    <LocaleResource Name="SentOn">
                                         <Value>Sent on</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">

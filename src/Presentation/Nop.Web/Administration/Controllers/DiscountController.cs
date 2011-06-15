@@ -52,7 +52,7 @@ namespace Nop.Admin.Controllers
             this._currencySettings = currencySettings;
         }
 
-        #endregion Constructors
+        #endregion
 
         #region Utilities
 
