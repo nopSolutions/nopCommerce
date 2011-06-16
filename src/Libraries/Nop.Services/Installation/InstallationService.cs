@@ -39,6 +39,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
+using Nop.Core.Domain.Polls;
 
 
 namespace Nop.Services.Installation
@@ -76,6 +77,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
+        private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -113,6 +115,7 @@ namespace Nop.Services.Installation
             IRepository<BlogPost> blogPostRepository,
             IRepository<Topic> topicRepository,
             IRepository<NewsItem> newsItemRepository,
+            IRepository<Poll> pollRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<ProductTag> productTagRepository)
@@ -151,6 +154,7 @@ namespace Nop.Services.Installation
             this._blogPostRepository = blogPostRepository;
             this._topicRepository = topicRepository;
             this._newsItemRepository = newsItemRepository;
+            this._pollRepository = pollRepository;
 
             this._shippingMethodRepository = shippingMethodRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
@@ -8740,6 +8744,40 @@ namespace Nop.Services.Installation
 
         }
 
+        protected virtual void InstallPolls()
+        {
+            var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+            var poll1 = new Poll
+            {
+                LanguageId = defaultLanguage.Id,
+                Name = "Do you like nopCommerce?",
+                SystemKeyword = "RightColumnPoll",
+                Published = true,
+                DisplayOrder = 1,
+            };
+            poll1.PollAnswers.Add(new PollAnswer()
+                {
+                    Name = "Excellent",
+                    DisplayOrder = 1,
+                });
+            poll1.PollAnswers.Add(new PollAnswer()
+            {
+                Name = "Good",
+                DisplayOrder = 2,
+            });
+            poll1.PollAnswers.Add(new PollAnswer()
+            {
+                Name = "Poor",
+                DisplayOrder = 3,
+            });
+            poll1.PollAnswers.Add(new PollAnswer()
+            {
+                Name = "Very bad",
+                DisplayOrder = 4,
+            });
+            _pollRepository.Insert(poll1);
+        }
+
         protected virtual void InstallActivityLogTypes()
         {
             var activityLogTypes = new List<ActivityLogType>()
@@ -8817,6 +8855,7 @@ namespace Nop.Services.Installation
                 InstallDiscounts();
                 InstallBlogPosts();
                 InstallNews();
+                InstallPolls();
             }
         }
 

@@ -39,7 +39,7 @@
         @Html.Action("InfoBlock", "Common")
         <div class="clear">
         </div>
-        //TODO PollBlock
+        @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
     }
 </div>
 <div class="master-wrapper-center-3">
@@ -65,7 +65,7 @@
         </div>
         @Html.Action("RecentlyViewedProductsBlock", "Catalog")        
         <div class="clear">
-        </div>
-        //TODO PollBlock
+        </div>        
+        @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
     }
 </div>

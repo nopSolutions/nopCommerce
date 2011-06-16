@@ -45,6 +45,8 @@ using Nop.Services.PromotionFeed;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
+using Nop.Admin.Models.Polls;
+using Nop.Core.Domain.Polls;
 
 
 namespace Nop.Admin
@@ -651,6 +653,26 @@ namespace Nop.Admin
         }
 
         public static NewsItem ToEntity(this NewsItemModel model, NewsItem destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Polls
+
+        //news items
+        public static PollModel ToModel(this Poll entity)
+        {
+            return Mapper.Map<Poll, PollModel>(entity);
+        }
+
+        public static Poll ToEntity(this PollModel model)
+        {
+            return Mapper.Map<PollModel, Poll>(model);
+        }
+
+        public static Poll ToEntity(this PollModel model, Poll destination)
         {
             return Mapper.Map(model, destination);
         }

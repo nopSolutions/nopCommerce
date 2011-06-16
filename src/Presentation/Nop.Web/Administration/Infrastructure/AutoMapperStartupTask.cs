@@ -14,6 +14,7 @@ using Nop.Admin.Models.Messages;
 using Nop.Admin.Models.News;
 using Nop.Admin.Models.Orders;
 using Nop.Admin.Models.Payments;
+using Nop.Admin.Models.Polls;
 using Nop.Admin.Models.PromotionFeeds;
 using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Shipping;
@@ -32,6 +33,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -176,6 +178,11 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<NewsItem, NewsItemModel>();
             Mapper.CreateMap<NewsItemModel, NewsItem>()
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
+            //news
+            Mapper.CreateMap<Poll, PollModel>();
+            Mapper.CreateMap<PollModel, Poll>()
+                .ForMember(dest => dest.StartDateUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.EndDateUtc, dt => dt.Ignore());
             //customer roles
             ViceVersa<CustomerRole, CustomerRoleModel>();
             //customers

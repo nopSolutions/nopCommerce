@@ -1908,10 +1908,25 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
-  <LocaleResource Name="Plugins">
+  <LocaleResource Name="Polls">
     <Children>
+      <LocaleResource Name="OnlyRegisteredUsersVote">
+        <Value>Only registered users can vote.</Value>
+      </LocaleResource>
       <LocaleResource Name="Title">
-        <Value>Plugins</Value>
+        <Value>Community poll</Value>
+      </LocaleResource>
+      <LocaleResource Name="TotalVotes">
+        <Value>{0} votes...</Value>
+      </LocaleResource>
+      <LocaleResource Name="Vote">
+        <Value>Vote</Value>
+      </LocaleResource>
+      <LocaleResource Name="Voted">
+        <Value>Thank you for voting! Please refresh the page in order to see results.</Value>
+      </LocaleResource>
+      <LocaleResource Name="votes">
+        <Value>votes - {0}</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

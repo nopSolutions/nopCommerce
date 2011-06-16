@@ -42,6 +42,7 @@
           <siteMapNode title="Promotion feeds" nopResource="Admin.Promotions.Feeds" controller="PromotionFeed" action="List" />
         </siteMapNode>
         <siteMapNode title="Content&#160;Management" nopResource="Admin.ContentManagement" ImageUrl="~/Administration/Content/images/ico-content.png">
+          <siteMapNode title="Polls" nopResource="Admin.ContentManagement.Polls" controller="Poll" action="List" />
           <siteMapNode title="News" nopResource="Admin.ContentManagement.News">
             <siteMapNode title="News items" nopResource="Admin.ContentManagement.News.NewsItems" controller="News" action="List" />
             <siteMapNode title="News comments" nopResource="Admin.ContentManagement.News.Comments" controller="News" action="Comments"/>
@@ -50,6 +51,7 @@
             <siteMapNode title="Blog posts" nopResource="Admin.ContentManagement.Blog.BlogPosts" controller="Blog" action="List" />
             <siteMapNode title="Blog comments" nopResource="Admin.ContentManagement.Blog.Comments" controller="Blog" action="Comments"/>
           </siteMapNode>
+          
           <siteMapNode title="Topics" nopResource="Admin.ContentManagement.Topics" controller="Topic" action="List" />
           <siteMapNode title="Manage forums" nopResource="Admin.ContentManagement.Forums" controller="Forum" action="List" />
           <siteMapNode title="Message templates" nopResource="Admin.ContentManagement.MessageTemplates" controller="MessageTemplate" action="List" />

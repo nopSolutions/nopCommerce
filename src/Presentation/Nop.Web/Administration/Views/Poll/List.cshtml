@@ -1,0 +1,53 @@
+﻿@model Telerik.Web.Mvc.GridModel<PollModel>
+@using Telerik.Web.Mvc.UI
+
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
+        @T("Admin.ContentManagement.Polls")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<PollModel>()
+                    .Name("polls-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name)
+                            .Width(350)
+                            .Centered();
+                        columns.Bound(x => x.LanguageName)
+                             .Width(150);
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.Published)
+                            .Width(100)
+                            .Template(x => x.Published.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.ShowOnHomePage)
+                            .Width(100)
+                            .Template(x => x.ShowOnHomePage.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.StartDate)
+                            .Centered();
+                        columns.Bound(x => x.EndDate)
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate("Edit");
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Poll"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

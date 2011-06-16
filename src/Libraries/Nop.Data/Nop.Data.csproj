@@ -90,6 +90,9 @@
     <Compile Include="Mapping\Orders\GiftCardUsageHistoryMap.cs" />
     <Compile Include="Mapping\Orders\ShoppingCartItemMap.cs" />
     <Compile Include="Mapping\Orders\OrderMap.cs" />
+    <Compile Include="Mapping\Polls\PollMap.cs" />
+    <Compile Include="Mapping\Polls\PollVotingRecordMap.cs" />
+    <Compile Include="Mapping\Polls\PollAnswerMap.cs" />
     <Compile Include="Mapping\Security\Permissions\PermissionRecordMap.cs" />
     <Compile Include="Mapping\Security\UserMap.cs" />
     <Compile Include="Mapping\Directory\StateProvinceMap.cs" />

@@ -1,0 +1,137 @@
+﻿@model PollModel
+@using Telerik.Web.Mvc.UI;
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+@Html.Telerik().TabStrip().Name("poll-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.ContentManagement.Polls.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.ContentManagement.Polls.Answers").Text).Content(TabAnswers().ToHtmlString());
+})
+@helper TabInfo()
+    {
+        
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LanguageId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SystemKeyword):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SystemKeyword)
+                @Html.ValidationMessageFor(model => model.SystemKeyword)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Published):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Published)
+                @Html.ValidationMessageFor(model => model.Published)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowOnHomePage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowOnHomePage)
+                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.Telerik().NumericTextBoxFor(model => model.DisplayOrder).DecimalDigits(0)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StartDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StartDate)
+                @Html.ValidationMessageFor(model => model.StartDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EndDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EndDate)
+                @Html.ValidationMessageFor(model => model.EndDate)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabAnswers()
+    {
+        if (Model.Id > 0)
+        {
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<PollAnswerModel>()
+                    .Name("answers-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                        x.Add(y => y.PollId).RouteKey("pollId");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name)
+                            .Width(250);
+                        columns.Bound(x => x.NumberOfVotes)
+                            .ReadOnly()
+                            .Width(100);
+                        columns.Bound(x => x.DisplayOrder1).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        }).Width(180);
+
+                    })
+                    .ToolBar(x => x.Insert())
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("PollAnswers", "Poll", new { pollId = Model.Id })
+                            .Update("PollAnswerUpdate", "Poll")
+                            .Delete("PollAnswerDelete", "Poll")
+                            .Insert("PollAnswerAdd", "Poll", new { pollId = Model.Id });
+                    })
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+        }
+        else
+        {
+    @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
+        }
+}

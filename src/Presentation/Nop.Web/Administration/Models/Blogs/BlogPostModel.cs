@@ -21,24 +21,24 @@ namespace Nop.Admin.Models.Blogs
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
         [AllowHtml]
-        public virtual string Title { get; set; }
+        public string Title { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
         [AllowHtml]
-        public virtual string Body { get; set; }
+        public string Body { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AllowComments")]
-        public virtual bool AllowComments { get; set; }
+        public bool AllowComments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags")]
         [AllowHtml]
-        public virtual string Tags { get; set; }
+        public string Tags { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]
-        public virtual int Comments { get; set; }
+        public int Comments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
-        public virtual DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
     }
 }

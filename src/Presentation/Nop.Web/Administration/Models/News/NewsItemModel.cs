@@ -22,27 +22,27 @@ namespace Nop.Admin.Models.News
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
         [AllowHtml]
-        public virtual string Title { get; set; }
+        public string Title { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Short")]
         [AllowHtml]
-        public virtual string Short { get; set; }
+        public string Short { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Full")]
         [AllowHtml]
-        public virtual string Full { get; set; }
+        public string Full { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AllowComments")]
-        public virtual bool AllowComments { get; set; }
+        public bool AllowComments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Published")]
-        public virtual bool Published { get; set; }
+        public bool Published { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Comments")]
-        public virtual int Comments { get; set; }
+        public int Comments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")]
-        public virtual DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
     }
 }

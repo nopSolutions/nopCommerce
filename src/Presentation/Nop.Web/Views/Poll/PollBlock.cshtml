@@ -1,0 +1,12 @@
+﻿@model PollModel
+@using Nop.Web.Models.Polls;
+<div class="block block-poll">
+    <div class="title">
+        @T("Polls.Title")
+    </div>
+    <div class="clear">
+    </div>
+    <div class="listbox">
+        @Html.Partial("_Poll", Model)
+    </div>
+</div>

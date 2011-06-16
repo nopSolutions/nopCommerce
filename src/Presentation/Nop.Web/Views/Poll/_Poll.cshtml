@@ -1,0 +1,77 @@
+﻿@model PollModel
+@using Nop.Web.Framework;
+@using Nop.Web.Models.Polls;
+<div class="poll-item">
+    <span class="poll-display-text">@Model.Name</span>
+    @if (Model.AlreadyVoted)
+    {
+        <div class="poll-results">
+            @foreach (var item in Model.Answers)
+        {
+                @item.Name
+                <text> (</text>
+                @string.Format(T("Polls.Votes").Text, item.NumberOfVotes)
+                <text> - </text>
+                @item.PercentOfTotalVotes.ToString("0.0")
+                <text>%)</text>
+                <br />
+        }
+            <span class="poll-total-votes">@string.Format(T("Polls.TotalVotes").Text, Model.TotalVotes)</span>
+        </div>
+    }
+    else
+    {
+        <div id="pnl-poll-vote-@(Model.Id)" class="poll-take-poll">
+            @foreach (var item in Model.Answers)
+            {
+                <input id="pollanswers-@(item.Id)" type="radio" name="pollanswers-@(Model.Id)" value="@item.Id" />
+                <label for="pollanswers-@(item.Id)">@item.Name</label>
+                <br />
+            }
+            <input type="submit" name="vote-poll-@(Model.Id)" value="@T("Polls.Vote")" id="vote-poll-@(Model.Id)" class="submitpollvotebutton" />
+            <span id="poll-voting-progress-@(Model.Id)" style="display: none;">@T("Common.Wait...")
+                <img src='@Href("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+            </span>@*TODO add a new 'ajax_loader_small.gif' with transparent background*@
+        </div>
+        <div class="clear">
+        </div>
+        <div id="pnl-poll-vote-result-@(Model.Id)">
+        </div>
+        
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $('#vote-poll-@(Model.Id)').click(function () {
+                var pollAnswerId = $("input:radio[name=pollanswers-@(Model.Id)]:checked").val();
+                if(typeof pollAnswerId == 'undefined'){
+                    alert('Please select an answer');
+                }
+                else {
+                    var voteProgress = $("#poll-voting-progress-@(Model.Id)");
+                    voteProgress.show();
+                    $.ajax({
+                        cache:false,
+                        type: "POST",
+                        url: "@(Url.Action("Vote", "Poll"))",
+                        data: "pollAnswerId=" + pollAnswerId,
+                        success: function (data) {
+                            voteProgress.hide();
+                            $("#pnl-poll-vote-result-@(Model.Id)").html(data.Result);
+                             if (data.Success) {
+                                $('#pnl-poll-vote-@(Model.Id)').hide();                            
+                             }
+                             else {
+                                $('#pnl-poll-vote-result-@(Model.Id)').fadeIn("slow").delay(2000).fadeOut("slow");
+                             }
+                        },
+                        error:function (xhr, ajaxOptions, thrownError){
+                            alert('Failed to vote.');
+                            voteProgress.hide();
+                        }  
+                    });
+                }
+                return false;
+            });
+        });
+        </script>
+    }
+</div>

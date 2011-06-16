@@ -39,6 +39,7 @@ using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Polls;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
 using Nop.Services.Security.Permissions;
@@ -197,6 +198,7 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerHttpRequest();
 
+            builder.RegisterType<PollService>().As<IPollService>().InstancePerHttpRequest();
             builder.RegisterType<BlogService>().As<IBlogService>().InstancePerHttpRequest();
             builder.RegisterType<TopicService>().As<ITopicService>().InstancePerHttpRequest();
             builder.RegisterType<NewsService>().As<INewsService>().InstancePerHttpRequest();

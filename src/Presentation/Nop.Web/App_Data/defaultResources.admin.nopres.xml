@@ -4768,7 +4768,130 @@
                       </Children>
                     </LocaleResource>
                   </Children>
-                </LocaleResource>
+                </LocaleResource>               
+              <LocaleResource Name="Polls">
+                <Value>Polls</Value>
+                  <Children>
+                        <LocaleResource Name="AddNew">
+                          <Value>Add a new poll</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Answers">
+                          <Value>Poll answers</Value>
+                          <Children>
+                            <LocaleResource Name="Fields">
+                              <Children>
+                                <LocaleResource Name="Name">
+                                  <Value>Name</Value>
+                                  <Children>
+                                    <LocaleResource Name="Required">
+                                      <Value>Name is required.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                                <LocaleResource Name="NumberOfVotes">
+                                  <Value>Number of votes</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="DisplayOrder">
+                                  <Value>Display order</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="SaveBeforeEdit">
+                              <Value>You need to save the poll before you can add answers for this poll page.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="BackToList">
+                          <Value>back to poll list</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="EditPollDetails">
+                          <Value>Edit poll details</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Language">
+                              <Value>Language</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The language of this poll. A customer will only see the polls for their selected language.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Name">
+                              <Value>Name</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The name of this poll.</Value>
+                                </LocaleResource>
+                                <LocaleResource Name="Required">
+                                  <Value>Name is required.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="SystemKeyword">
+                              <Value>System keyword</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>A system keyword for this poll.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Published">
+                              <Value>Published</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Determines whether this poll is published (visible) in your store.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="ShowOnHomePage">
+                              <Value>Show on home page</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Check if you want to show poll on home page.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="DisplayOrder">
+                              <Value>Display order</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>The display order of this poll. 1 represents the top of the list.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="StartDate">
+                              <Value>Start date</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Set the poll start date or leave empty.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="EndDate">
+                              <Value>End date</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Set the poll end date or leave empty.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Info">
+                          <Value>Poll Info</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Added">
+                          <Value>The new poll has been added successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Deleted">
+                          <Value>The poll has been deleted successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Updated">
+                          <Value>The poll has been updated successfully.</Value>
+                        </LocaleResource>
+                      </Children>
+              </LocaleResource>
               <LocaleResource Name="Topics">
                 <Value>Topics</Value>
                 <Children>
