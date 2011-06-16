@@ -754,7 +754,7 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
-                <LocaleResource Name="Manufacturers">
+              <LocaleResource Name="Manufacturers">
                   <Value>Manufacturers</Value>
                   <Children>
                     <LocaleResource Name="Info">
@@ -2036,6 +2036,9 @@
                   <LocaleResource Name="Updated">
                     <Value>The product has been updated successfully.</Value>
                   </LocaleResource>
+                  <LocaleResource Name="Imported">
+                    <Value>Product(s) have been imported successfully.</Value>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
               <LocaleResource Name="ProductTags">
@@ -2086,6 +2089,9 @@
                   </LocaleResource>
                   <LocaleResource Name="Edit">
                     <Value>Edit</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="ExportFromExcel">
+                    <Value>Export from Excel</Value>
                   </LocaleResource>
                   <LocaleResource Name="ExportToExcel">
                     <Value>Export to Excel</Value>

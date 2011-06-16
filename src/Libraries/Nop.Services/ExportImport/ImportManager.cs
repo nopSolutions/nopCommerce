@@ -66,8 +66,8 @@ namespace Nop.Services.ExportImport
                     int downloadId = Convert.ToInt32(dr["DownloadId"]);
                     bool unlimitedDownloads = Convert.ToBoolean(dr["UnlimitedDownloads"]);
                     int maxNumberOfDownloads = Convert.ToInt32(dr["MaxNumberOfDownloads"]);
-                    bool hasSampleDownload = Convert.ToBoolean(dr["HasSampleDownload"]);
                     int downloadActivationTypeId = Convert.ToInt32(dr["DownloadActivationTypeId"]);
+                    bool hasSampleDownload = Convert.ToBoolean(dr["HasSampleDownload"]);
                     int sampleDownloadId = Convert.ToInt32(dr["SampleDownloadId"]);
                     bool hasUserAgreement = Convert.ToBoolean(dr["HasUserAgreement"]);
                     string userAgreementText = dr["UserAgreementText"].ToString();
@@ -107,7 +107,7 @@ namespace Nop.Services.ExportImport
                     var productVariant = _productService.GetProductVariantBySku(sku);
                     if (productVariant != null)
                     {
-                        var product = _productService.GetProductById(productVariant.ProductId);
+                        var product = productVariant.Product;
                         product.Name = name;
                         product.ShortDescription = shortDescription;
                         product.FullDescription = fullDescription;

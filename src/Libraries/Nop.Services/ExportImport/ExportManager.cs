@@ -429,7 +429,7 @@ namespace Nop.Services.ExportImport
                 tableDefinition.Add("DownloadId", "int");
                 tableDefinition.Add("UnlimitedDownloads", "nvarchar(5)");
                 tableDefinition.Add("MaxNumberOfDownloads", "int");
-                tableDefinition.Add("DownloadActivationType", "int");
+                tableDefinition.Add("DownloadActivationTypeId", "int");
                 tableDefinition.Add("HasSampleDownload", "nvarchar(5)");
                 tableDefinition.Add("SampleDownloadId", "int");
                 tableDefinition.Add("HasUserAgreement", "nvarchar(5)");
@@ -477,7 +477,7 @@ namespace Nop.Services.ExportImport
                     foreach (var pv in productVariants)
                     {
                         var sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationTypeId,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc) VALUES (");
                         sb.Append('"'); sb.Append(p.Name != null ? p.Name.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.ShortDescription != null ? p.ShortDescription.Replace('"', '\''): ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.FullDescription != null ? p.FullDescription.Replace('"', '\'') : ""); sb.Append("\",");
@@ -495,7 +495,7 @@ namespace Nop.Services.ExportImport
                         sb.Append(pv.DownloadId); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.UnlimitedDownloads); sb.Append("\",");
                         sb.Append(pv.MaxNumberOfDownloads); sb.Append(",");
-                        sb.Append(pv.DownloadActivationType); sb.Append(",");
+                        sb.Append(pv.DownloadActivationTypeId); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.HasSampleDownload); sb.Append("\",");
                         sb.Append(pv.SampleDownloadId); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.HasUserAgreement); sb.Append("\",");

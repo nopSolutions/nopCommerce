@@ -43,6 +43,7 @@ namespace Nop.Admin.Controllers
         private readonly ICopyProductService _copyProductService;
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
+        private readonly IImportManager _importManager;
 
         #endregion
 
@@ -55,7 +56,7 @@ namespace Nop.Admin.Controllers
             ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
             ITaxCategoryService taxCategoryService, IProductTagService productTagService,
             ICopyProductService copyProductService, IPdfService pdfService,
-            IExportManager exportManager)
+            IExportManager exportManager, IImportManager importManager)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -71,6 +72,7 @@ namespace Nop.Admin.Controllers
             this._copyProductService = copyProductService;
             this._pdfService = pdfService;
             this._exportManager = exportManager;
+            this._importManager = importManager;
         }
 
         #endregion 
@@ -1249,7 +1251,7 @@ namespace Nop.Admin.Controllers
         {
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, 10, true);
+                ProductSortingEnum.Position, 0, int.MaxValue, true);
 
             var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             var xml = _exportManager.ExportProductsToXml(products);
@@ -1260,7 +1262,7 @@ namespace Nop.Admin.Controllers
         {
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, 10, true);
+                ProductSortingEnum.Position, 0, int.MaxValue, true);
 
             string fileName = string.Format("products_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
             string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
@@ -1269,6 +1271,43 @@ namespace Nop.Admin.Controllers
 
             var bytes = System.IO.File.ReadAllBytes(filePath);
             return File(bytes, "text/xls", fileName);
+        }
+
+        [HttpPost]
+        public ActionResult ImportExcel(FormCollection form)
+        {
+            try
+            {
+                var file = Request.Files["importexcelfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    var fileBytes = new byte[file.ContentLength];
+                    file.InputStream.Read(fileBytes, 0, file.ContentLength);
+                    //do stuff with the bytes
+                    string extension = "xls";
+                    if (file.FileName.EndsWith("xlsx"))
+                        extension = "xlsx";
+
+                    string fileName = string.Format("products_{0}_{1}.{2}", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4), extension);
+                    string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+
+                    System.IO.File.WriteAllBytes(filePath, fileBytes);
+                    _importManager.ImportProductsFromXls(filePath);
+                }
+                else
+                {
+                    ErrorNotification("Please upload a file");
+                    return RedirectToAction("List");
+                }
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Imported"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+
         }
 
         #endregion

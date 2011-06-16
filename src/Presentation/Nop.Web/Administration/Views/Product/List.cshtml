@@ -14,7 +14,7 @@
             <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
             <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
             <a href="@Url.Action("ExportExcel")" class="t-button">@T("Admin.Common.ExportToExcel")</a>
-            @*TODO import support*@
+            <button type="submit" id="importexcel" name="importexcel" value="importexcel" class="t-button">@T("Admin.Common.ExportFromExcel")</button>
         </div>
     </div>
 
@@ -154,5 +154,45 @@
             };
             e.data = searchModel;
         }
-    </script>
+    </script>  
 }
+
+@*import products form*@
+@{Html.Telerik().Window()
+        .Name("importexcel-window")
+        .Title(T("Admin.Common.ExportFromExcel").Text)
+        .Content(@<text>
+        @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <table style="text-align: left;">
+            <tr>
+                <td>
+                    Excel file:
+                </td>
+                <td>
+                    <input type="file" id="importexcelfile" name="importexcelfile"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit" class="t-button t-state-default">@T("Admin.Common.ExportFromExcel")</button>
+                </td>
+            </tr>
+        </table>
+        }
+        </text>)
+        .Width(400)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#importexcel").click(function (e) {
+            e.preventDefault();
+            $('#importexcel-window').data('tWindow').center().open();
+        });
+    });
+</script>
