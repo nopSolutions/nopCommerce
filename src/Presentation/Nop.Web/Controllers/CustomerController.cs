@@ -208,6 +208,14 @@ namespace Nop.Web.Controllers
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.LocationEnabled = _customerSettings.ShowCustomersLocation;
+            if (_customerSettings.ShowCustomersLocation)
+            {
+                foreach (var c in _countryService.GetAllCountries())
+                {
+                    model.AvailableLocations.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString()});
+                }
+            }
 
             return View(model);
         }
@@ -306,7 +314,10 @@ namespace Nop.Web.Controllers
                             }
                         }
                     }
-
+                    if (_customerSettings.ShowCustomersLocation)
+                    {
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LocationCountryId, model.LocationCountryId);
+                    }
 
                     //TODO migrate shopping cart
 
@@ -372,6 +383,14 @@ namespace Nop.Web.Controllers
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            if (_customerSettings.ShowCustomersLocation)
+            {
+                foreach (var c in _countryService.GetAllCountries())
+                {
+                    model.AvailableLocations.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.LocationCountryId) });
+                }
+            }
+
             return View(model);
         }
 
@@ -617,7 +636,7 @@ namespace Nop.Web.Controllers
 
             foreach (var c in _countryService.GetAllCountries())
             {
-                model.AvailableLocations.Add(new SelectListItem() {Text = c.Name, Value = c.Id.ToString()});
+                model.AvailableLocations.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (excludeProperties ? c.Id == model.LocationCountryId : false) });
             }
 
             if (!excludeProperties)

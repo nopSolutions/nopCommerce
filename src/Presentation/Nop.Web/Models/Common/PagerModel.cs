@@ -426,7 +426,7 @@ namespace Nop.Web.Models
     {
         public string searchterms { get; set; }
         public string adv { get; set; }
-        public string forumID { get; set; }
+        public string forumId { get; set; }
         public string within { get; set; }
         public string limitDays { get; set; }
         public int page { get; set; }

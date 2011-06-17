@@ -16,9 +16,10 @@ namespace Nop.Web.Models.Boards
 
         public bool ShowAdvancedSearch { get; set; }
 
+        [AllowHtml]
         public string SearchTerms { get; set; }
 
-        public int? ForumID { get; set; }
+        public int? ForumId { get; set; }
 
         public int? Within { get; set; }
 

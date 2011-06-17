@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Core.Domain.Forums;
 using Nop.Web.Validators.Boards;
@@ -10,7 +11,7 @@ namespace Nop.Web.Models.Boards
     {
         public ForumTopicModel()
         {
-            TopicPriorities = new List<System.Web.Mvc.SelectListItem>();
+            TopicPriorities = new List<SelectListItem>();
         }
 
         public int Id { get; set; }
@@ -19,15 +20,17 @@ namespace Nop.Web.Models.Boards
 
         public int TopicTypeId { get; set; }
 
+        [AllowHtml]
         public string Subject { get; set; }
 
+        [AllowHtml]
         public string Text { get; set; }
 
         public Forum Forum { get; set; }
 
         public bool Subscribed { get; set; }
 
-        public IEnumerable<System.Web.Mvc.SelectListItem> TopicPriorities { get; set; }
+        public IEnumerable<SelectListItem> TopicPriorities { get; set; }
 
         public ForumBreadcrumbModel ForumBreadcrumbModel { get; set; }
 

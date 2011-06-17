@@ -15,7 +15,6 @@ namespace Nop.Web.Models.Customer
         {
             this.AvailableTimeZones = new List<SelectListItem>();
             this.AvailableLocations = new List<SelectListItem>();
-            this.AvailableLocations.Add(new SelectListItem() { Text = "---", Value = "0" });
         }
 
         [NopResourceDisplayName("Account.Fields.Email")]
@@ -56,6 +55,7 @@ namespace Nop.Web.Models.Customer
         //preferences
         public bool SignatureEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Signature")]
+        [AllowHtml]
         public string Signature { get; set; }
 
         public bool LocationEnabled { get; set; }

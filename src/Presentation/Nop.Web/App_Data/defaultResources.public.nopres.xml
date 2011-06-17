@@ -877,7 +877,7 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
-    <LocaleResource Name="Customer">
+  <LocaleResource Name="Customer">
         <Children>
             <LocaleResource Name="Guest">
                 <Value>Guest</Value>
@@ -1295,7 +1295,7 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
-    <LocaleResource Name="Forum">
+  <LocaleResource Name="Forum">
         <Children>
             <LocaleResource Name="ActiveDiscussions">
                 <Value>Active discussions</Value>
@@ -2244,7 +2244,7 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
-    <LocaleResource Name="Pager">
+  <LocaleResource Name="Pager">
         <Children>
             <LocaleResource Name="CurrentPage">
                 <Value>Page {0} of {1} ({2} total)</Value>
@@ -2281,7 +2281,7 @@
   <LocaleResource Name="PrivacyNotice">
     <Value>Privacy Notice</Value>
   </LocaleResource>
-    <LocaleResource Name="PrivateMessages">
+  <LocaleResource Name="PrivateMessages">
         <Children>
             <LocaleResource Name="Inbox">
                 <Value>Inbox</Value>
@@ -3100,5 +3100,4 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
-
 </Language>

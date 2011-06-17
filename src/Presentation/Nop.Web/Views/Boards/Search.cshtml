@@ -43,7 +43,7 @@
                         <tr>
                             <td class="title" colspan="2">
                                 @Html.CheckBox("adv", @Model.ShowAdvancedSearch)
-                                @Html.Label("adv", @T("Forum.Search.AdvancedSearch").ToString())
+                                @Html.Label("adv", @T("Forum.Search.AdvancedSearch").Text)
                             </td>
                         </tr>
                         <tr>
@@ -56,7 +56,9 @@
                                                     @T("Forum.Search.SearchInForum")
                                                 </td>
                                                 <td class="data">
-                                                    @Html.DropDownList("forumID", new SelectList(Model.ForumList, "Value", "Text", @Model.ForumIdSelected))
+                                                    @*TODO 'All forums' option should be selected after postback if no option is selected
+                                                    but now it selects the latest forum group option*@
+                                                    @Html.DropDownList("forumId", new SelectList(Model.ForumList, "Value", "Text", Model.ForumIdSelected))
                                                 </td>
                                             </tr>
                                             <tr>
@@ -64,7 +66,7 @@
                                                     @T("Forum.Search.SearchWithin")
                                                 </td>
                                                 <td class="data">
-                                                    @Html.DropDownList("within", new SelectList(Model.WithinList, "Value", "Text", @Model.WithinSelected))
+                                                    @Html.DropDownList("within", new SelectList(Model.WithinList, "Value", "Text", Model.WithinSelected))
                                                 </td>
                                             </tr>
                                             <tr>
@@ -72,7 +74,7 @@
                                                     @T("Forum.Search.LimitResultsToPrevious")
                                                 </td>
                                                 <td class="data">
-                                                    @Html.DropDownList("limitDays", new SelectList(Model.LimitList, "Value", "Text", @Model.LimitDaysSelected))
+                                                    @Html.DropDownList("limitDays", new SelectList(Model.LimitList, "Value", "Text", Model.LimitDaysSelected))
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -95,14 +97,14 @@
                 string adv = null;
                 string within = null;
                 string limitDays = null;
-                string forumID = null;
+                string forumId = null;
 
                 if (Model.ShowAdvancedSearch)
                 {
                     adv = "true";
                     within = Model.WithinSelected.ToString();
                     limitDays = Model.LimitDaysSelected.ToString();
-                    forumID = Model.ForumIdSelected.ToString();
+                    forumId = Model.ForumIdSelected.ToString();
                 }
 
                 var pager = @Html.Pager(new PagerModel()
@@ -112,7 +114,7 @@
                     PageIndex = Model.PagedList.PageIndex,
                     ShowTotalSummary = true,
                     RouteActionName = "Search",
-                    RouteValues = new SearchRouteValues { adv = adv, searchterms = searchterms, forumID = forumID, within = within, limitDays = limitDays },
+                    RouteValues = new SearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
                 });
             }
             @pager

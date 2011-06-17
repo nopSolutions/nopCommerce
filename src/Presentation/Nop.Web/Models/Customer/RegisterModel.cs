@@ -14,6 +14,7 @@ namespace Nop.Web.Models.Customer
         public RegisterModel()
         {
             this.AvailableTimeZones = new List<SelectListItem>();
+            this.AvailableLocations = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Account.Fields.Email")]
@@ -64,6 +65,12 @@ namespace Nop.Web.Models.Customer
         public string TimeZoneId { get; set; }
         public bool AllowCustomersToSetTimeZone { get; set; }
         public IList<SelectListItem> AvailableTimeZones { get; set; }
+
+        //locations
+        public bool LocationEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.Location")]
+        public int LocationCountryId { get; set; }
+        public IList<SelectListItem> AvailableLocations { get; set; }
 
         //EU VAT
         [NopResourceDisplayName("Account.Fields.VatNumber")]

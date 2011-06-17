@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Forums;
 
-namespace Nop.Data.Mapping.Content.Forums
+namespace Nop.Data.Mapping.Forums
 {
     public partial class ForumMap : EntityTypeConfiguration<Forum>
     {

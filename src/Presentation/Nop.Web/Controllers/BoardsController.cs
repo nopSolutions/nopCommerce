@@ -61,25 +61,7 @@ namespace Nop.Web.Controllers
         {
             return _forumSettings.ForumsEnabled;
         }
-
-        [NonAction]
-        private ActionResult RedirectHomePage()
-        {
-            return RedirectToActionPermanent("Index", "Home");
-        }
-
-        [NonAction]
-        private ActionResult RedirectBoardsHomePage()
-        {
-            return RedirectToActionPermanent("Index", "Boards");
-        }
-
-        [NonAction]
-        private ActionResult RedirectLogin()
-        {
-            return RedirectToAction("login", "customer");
-        }
-
+        
         [NonAction]
         protected IEnumerable<SelectListItem> ForumTopicTypesList()
         {
@@ -131,7 +113,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumGroups = _forumService.GetAllForumGroups();
@@ -154,7 +136,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             int topicLimit = _forumSettings.ActiveDiscussionsPageTopicCount;
@@ -170,11 +152,11 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ActiveDiscussionsRSS(int forumId = 0)
+        public ActionResult ActiveDiscussionsRss(int forumId = 0)
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             int topicLimit = _forumSettings.ActiveDiscussionsFeedCount;
@@ -213,7 +195,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumGroup = _forumService.GetForumGroupById(id);
@@ -226,14 +208,14 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            return RedirectBoardsHomePage();
+            return RedirectToRoute("Boards");
         }
 
         public ActionResult Forum(int id, int page = 1)
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forum = _forumService.GetForumById(id);
@@ -272,14 +254,14 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            return RedirectBoardsHomePage();
+            return RedirectToRoute("Boards");
         }
 
-        public ActionResult ForumRSS(int id)
+        public ActionResult ForumRss(int id)
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             int topicLimit = _forumSettings.ForumFeedCount;
@@ -372,7 +354,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -464,7 +446,7 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            return RedirectBoardsHomePage();
+            return RedirectToRoute("Boards");
         }
 
         [HttpPost]
@@ -515,14 +497,14 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
 
             if (forumTopic == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             var model = new TopicMoveModel();
@@ -546,14 +528,14 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumTopic = _forumService.GetTopicById(model.Id);
 
             if (forumTopic == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             var newForumId = model.ForumSelected;
@@ -571,7 +553,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -579,7 +561,7 @@ namespace Nop.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic))
                 {
-                    return RedirectLogin();
+                    return new HttpUnauthorizedResult();
                 }
                 var forum = _forumService.GetForumById(forumTopic.ForumId);
 
@@ -591,26 +573,26 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            return RedirectBoardsHomePage();
+            return RedirectToRoute("Boards");
         }
 
         public ActionResult TopicCreate(int id)
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forum = _forumService.GetForumById(id);
 
             if (forum == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             if (_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum) == false)
             {
-                return RedirectLogin();
+                return new HttpUnauthorizedResult();
             }
 
             var model = new ForumTopicModel();
@@ -643,21 +625,21 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forum = _forumService.GetForumById(model.ForumId);
 
             if (forum == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             try
             {
                 if (!_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum))
                 {
-                    return RedirectLogin();
+                    return new HttpUnauthorizedResult();
                 }
 
                 string subject = model.Subject;
@@ -786,25 +768,25 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
 
             if (forumTopic == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
             {
-                return RedirectLogin();
+                return new HttpUnauthorizedResult();
             }
 
             var forum = forumTopic.Forum;
             if (forum == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             var model = new ForumTopicModel();
@@ -845,7 +827,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumTopic = _forumService.GetTopicById(model.Id);
@@ -864,7 +846,7 @@ namespace Nop.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
                 {
-                    return RedirectLogin();
+                    return new HttpUnauthorizedResult();
                 }
 
                 string subject = model.Subject;
@@ -1003,7 +985,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumPost = _forumService.GetPostById(id);
@@ -1012,7 +994,7 @@ namespace Nop.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
                 {
-                    return RedirectLogin();
+                    return new HttpUnauthorizedResult();
                 }
 
                 var forumTopic = forumPost.ForumTopic;
@@ -1034,32 +1016,32 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            return RedirectBoardsHomePage();
+            return RedirectToRoute("Boards");
         }
 
         public ActionResult PostCreate(int id, int? quote)
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
 
             if (forumTopic == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
             {
-                return RedirectLogin();
+                return new HttpUnauthorizedResult();
             }
 
             var forum = forumTopic.Forum;
             if (forum == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             var model = new ForumPostModel();
@@ -1121,20 +1103,20 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumTopic = _forumService.GetTopicById(model.ForumTopicId);
             if (forumTopic == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             try
             {
                 if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
                 {
-                    return RedirectLogin();
+                    return new HttpUnauthorizedResult();
                 }
 
                 var text = model.Text;
@@ -1224,7 +1206,7 @@ namespace Nop.Web.Controllers
             var forum = forumTopic.Forum;
             if (forum == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             model.ForumTopic = forumTopic;
@@ -1249,28 +1231,28 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumPost = _forumService.GetPostById(id);
 
             if (forumPost == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
             {
-                return RedirectLogin();
+                return new HttpUnauthorizedResult();
             }
             var forumTopic = forumPost.ForumTopic;
             if (forumTopic == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
             var forum = forumTopic.Forum;
             if (forum == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             var model = new ForumPostModel();
@@ -1309,30 +1291,30 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
 
             var forumPost = _forumService.GetPostById(model.Id);
             if (forumPost == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
             {
-                return RedirectLogin();
+                return new HttpUnauthorizedResult();
             }
 
             var forumTopic = forumPost.ForumTopic;
             if (forumTopic == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             var forum = forumTopic.Forum;
             if (forum == null)
             {
-                return RedirectBoardsHomePage();
+                return RedirectToRoute("Boards");
             }
 
             try
@@ -1433,9 +1415,9 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectHomePage();
+                return RedirectToAction("index", "home");
             }
-
+            
             int pageSize = 10;
 
             var model = new SearchModel();
@@ -1488,12 +1470,19 @@ namespace Nop.Web.Controllers
 
             // Create the values for the "Search in forum" select list
             var forumsSelectList = new List<SelectListItem>();
+            forumsSelectList.Add(
+                new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Forum.Search.SearchInForum.All"),
+                    Value = "0",
+                    Selected = true,
+                });
             var separator = "--";
-            var forumGroups = _forumService.GetAllForumGroups().OrderBy(fg => fg.DisplayOrder);
+            var forumGroups = _forumService.GetAllForumGroups();
             foreach (var fg in forumGroups)
             {
-                // Add the forum group with value as 0 so it can't be used as a target forum id
-                forumsSelectList.Add(new SelectListItem { Text = fg.Name, Value = "0" });
+                // Add the forum group with value as '-' so it can't be used as a target forum id
+                forumsSelectList.Add(new SelectListItem { Text = fg.Name, Value = "-" });
 
                 foreach (var f in fg.Forums.OrderBy(f => f.DisplayOrder))
                 {
@@ -1505,12 +1494,6 @@ namespace Nop.Web.Controllers
                         });
                 }
             }
-            forumsSelectList.Add(
-                new SelectListItem
-                {
-                    Text = _localizationService.GetResource("Forum.Search.SearchInForum.All"),
-                    Value = "0"
-                });
             model.ForumList = forumsSelectList;
 
             // Create the values for "Search within" select list            

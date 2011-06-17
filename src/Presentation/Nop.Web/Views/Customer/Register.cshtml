@@ -65,24 +65,24 @@
                         </tr>
                         @if (Model.DateOfBirthEnabled)
                         {
-                        <tr class="row">
-                            <td class="item-name">
-                                @Html.LabelFor(model => model.DateOfBirthDay):
-                            </td>
-                            <td class="item-value">
-                                @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay), 
-                                Html.FieldNameFor(x => x.DateOfBirthMonth), 
-                                Html.FieldNameFor(x => x.DateOfBirthYear), 
-                                DateTime.Now.Year - 110, 
-                                DateTime.Now.Year, 
-                                Model.DateOfBirthDay, 
-                                Model.DateOfBirthMonth, 
+                            <tr class="row">
+                                <td class="item-name">
+                                    @Html.LabelFor(model => model.DateOfBirthDay):
+                                </td>
+                                <td class="item-value">
+                                    @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
+                                Html.FieldNameFor(x => x.DateOfBirthMonth),
+                                Html.FieldNameFor(x => x.DateOfBirthYear),
+                                DateTime.Now.Year - 110,
+                                DateTime.Now.Year,
+                                Model.DateOfBirthDay,
+                                Model.DateOfBirthMonth,
                                 Model.DateOfBirthYear)
-                                @Html.ValidationMessageFor(model => model.DateOfBirthDay)
-                                @Html.ValidationMessageFor(model => model.DateOfBirthMonth)
-                                @Html.ValidationMessageFor(model => model.DateOfBirthYear)
-                            </td>
-                        </tr>
+                                    @Html.ValidationMessageFor(model => model.DateOfBirthDay)
+                                    @Html.ValidationMessageFor(model => model.DateOfBirthMonth)
+                                    @Html.ValidationMessageFor(model => model.DateOfBirthYear)
+                                </td>
+                            </tr>
                         }
                         <tr class="row">
                             <td class="item-name">
@@ -180,7 +180,7 @@
                 <div class="clear">
                 </div>
             }
-            @if (Model.AllowCustomersToSetTimeZone)
+            @if (Model.AllowCustomersToSetTimeZone || Model.LocationEnabled)
             {
                 <div class="section-title">
                     @T("Account.Preferences")
@@ -190,15 +190,29 @@
                 <div class="section-body">
                     <table class="table-container">
                         <tbody>
-                            <tr class="row">
-                                <td class="item-name">
-                                    @Html.LabelFor(model => model.TimeZoneId):
-                                </td>
-                                <td class="item-value">
-                                    @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
-                                    @Html.ValidationMessageFor(model => model.TimeZoneId)
-                                </td>
-                            </tr>
+                            @if (Model.AllowCustomersToSetTimeZone)
+                            {
+                                <tr class="row">
+                                    <td class="item-name">
+                                        @Html.LabelFor(model => model.TimeZoneId):
+                                    </td>
+                                    <td class="item-value">
+                                        @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+                                        @Html.ValidationMessageFor(model => model.TimeZoneId)
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.LocationEnabled)
+                            {
+                                <tr class="row">
+                                    <td class="item-name">
+                                        @Html.LabelFor(model => model.LocationCountryId):
+                                    </td>
+                                    <td class="item-value">
+                                        @Html.DropDownList("LocationCountryId", Model.AvailableLocations)
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
