@@ -14,5 +14,6 @@ namespace Nop.Web.Models.Common
         public bool CompareProductsEnabled { get; set; }
         public bool BlogEnabled { get; set; }
         public bool SitemapEnabled { get; set; }
+        public bool ForumEnabled { get; set; }
     }
 }

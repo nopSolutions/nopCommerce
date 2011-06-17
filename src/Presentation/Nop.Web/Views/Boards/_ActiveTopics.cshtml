@@ -1,0 +1,92 @@
+﻿@model Nop.Web.Models.Boards.ActiveDiscussionsModel
+@using Nop.Services.Customers;
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+@using Nop.Web;
+@using Nop.Web.Models.Boards;
+@if (Model.ViewAllLinkEnabled == true)
+{
+    Html.RenderPartial("_ForumBreadcrumb", new ForumBreadcrumbModel { ForumGroupModel = null, ForumModel = null, Separator = " / " });
+    Html.RenderPartial("_SearchBox");
+    <div class="clear">
+    </div>    
+}
+<div class="activediscussions">
+    <div class="activediscussionstitle">
+        @T("Forum.ActiveDiscussions")
+        @if (Model.ActiveDiscussionsFeedEnabled == true)
+        {
+            @Html.RouteLink("  ", "ActiveDiscussionsRSS", new { }, new { @class = "active-rss", title = T("Forum.ActiveDiscussionsRSSLinkTitle") })
+        }
+        @if (Model.ViewAllLinkEnabled == false)
+        {        
+            <div class="viewall">
+                [@Html.RouteLink(@T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions")]
+            </div>
+        }
+    </div>
+    <div class="activediscussionstopics">
+        <table class="topics">
+            @if (Model.ActiveDiscussions.Count() > 0)
+            {
+                <tr class="activediscussionsheader">
+                    <td class="topicname">
+                        @T("Forum.TopicTitle")
+                    </td>
+                    <td class="replies">
+                        @T("Forum.Replies")
+                    </td>
+                    <td class="views">
+                        @T("Forum.Views")
+                    </td>
+                    <td class="lastpost">
+                        @T("Forum.LatestPost")
+                    </td>
+                </tr>
+            }
+            @foreach (var topic in Model.ActiveDiscussions)
+            {
+                <tr class="topic">
+                    <td class="topicname">
+                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, new { @class = "topictitle" })
+                        <br />
+                        @if (@topic.ForumPosts.Count > Model.PostsPageSize)
+                        {                            
+                            <span class="topicspager">
+                                @Html.Pager(new Nop.Core.PagedList<Nop.Core.Domain.Forums.ForumPost>(topic.ForumPosts.ToList(), 1, Model.PostsPageSize))
+                            </span>
+                            <br />
+                        } <span class="topicstarter">
+                            @if (@topic.Customer != null)
+                            {
+                                var authorText = @T("Forum.Author");
+                                var authorName = Html.Encode(@topic.Customer.FormatUserName(true));
+                                var allowViewingProfiles = Model.AllowViewingProfiles;
+                                var customerGuest = @topic.Customer.IsGuest();
+
+                                if (allowViewingProfiles && !customerGuest)
+                                {
+                                    var output = String.Format("{0}: <a href=\"{2}\">{1}</a>", authorText, authorName, @Url.RouteUrl("CustomerProfile", new { id = topic.Customer.Id }));
+                                    @Html.Raw(output)
+                                }
+                                else if (!allowViewingProfiles || customerGuest)
+                                {
+                                    var output = String.Format("{0}: {1}", authorText, authorName);
+                                    @output
+                                }
+                            } </span>
+                    </td>
+                    <td class="replies">
+                        @topic.NumReplies
+                    </td>
+                    <td class="views">
+                        @topic.Views
+                    </td>
+                    <td class="lastpost">
+                        @{Html.RenderPartial("_LastPost", new LastPostModel(@topic.LastPost, false, Model.AllowViewingProfiles, Model.RelativeDateTimeFormattingEnabled));}
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

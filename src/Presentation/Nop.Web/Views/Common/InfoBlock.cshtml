@@ -14,9 +14,10 @@
             {
                 <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
             }
-            @*TODO enable/disable links for forums based on settings*@
-            @*TODO add URLs for forums*@
-            <li><a href="#">@T("Forums")</a></li>
+            @if (Model.ForumEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+            }
             @if (Model.RecentlyAddedProductsEnabled)
             {
                 <li><a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a></li>

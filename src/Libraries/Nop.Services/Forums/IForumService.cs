@@ -13,8 +13,8 @@ namespace Nop.Services.Forums
         /// <summary>
         /// Deletes a forum group
         /// </summary>
-        /// <param name="forumGroupId">The forum group identifier</param>
-        void DeleteForumGroup(int forumGroupId);
+        /// <param name="forumGroup">Forum group</param>
+        void DeleteForumGroup(ForumGroup forumGroup);
 
         /// <summary>
         /// Gets a forum group
@@ -44,8 +44,8 @@ namespace Nop.Services.Forums
         /// <summary>
         /// Deletes a forum
         /// </summary>
-        /// <param name="forumId">The forum identifier</param>
-        void DeleteForum(int forumId);
+        /// <param name="forum">Forum</param>
+        void DeleteForum(Forum forum);
 
         /// <summary>
         /// Gets a forum
@@ -74,85 +74,85 @@ namespace Nop.Services.Forums
         void UpdateForum(Forum forum);
 
         /// <summary>
-        /// Deletes a topic
+        /// Deletes a forum topic
         /// </summary>
-        /// <param name="forumTopicId">The topic identifier</param>
-        void DeleteTopic(int forumTopicId);
+        /// <param name="forumTopic">Forum topic</param>
+        void DeleteTopic(ForumTopic forumTopic);
 
         /// <summary>
-        /// Gets a topic
+        /// Gets a forum topic
         /// </summary>
-        /// <param name="forumTopicId">The topic identifier</param>
-        /// <returns>Topic</returns>
+        /// <param name="forumTopicId">The forum topic identifier</param>
+        /// <returns>Forum Topic</returns>
         ForumTopic GetTopicById(int forumTopicId);
 
         /// <summary>
-        /// Gets a topic
+        /// Gets a forum topic
         /// </summary>
-        /// <param name="forumTopicId">The topic identifier</param>
-        /// <param name="increaseViews">The value indicating whether to increase topic views</param>
-        /// <returns>Topic</returns>
+        /// <param name="forumTopicId">The forum topic identifier</param>
+        /// <param name="increaseViews">The value indicating whether to increase forum topic views</param>
+        /// <returns>Forum Topic</returns>
         ForumTopic GetTopicById(int forumTopicId, bool increaseViews);
 
         /// <summary>
-        /// Gets all topics
+        /// Gets all forum topics
         /// </summary>
-        /// <param name="forumId">The forum group identifier</param>
+        /// <param name="forumId">The forum identifier</param>
         /// <param name="customerId">The customer identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchType">Search type</param>
         /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Topics</returns>
+        /// <returns>Forum Topics</returns>
         IList<ForumTopic> GetAllTopics(int forumId,
             int customerId, string keywords, ForumSearchType searchType,
             int limitDays, int pageIndex, int pageSize);
 
         /// <summary>
-        /// Gets active topics
+        /// Gets active forum topics
         /// </summary>
-        /// <param name="forumId">The forum group identifier</param>
-        /// <param name="topicCount">Topic count</param>
-        /// <returns>Topics</returns>
+        /// <param name="forumId">The forum identifier</param>
+        /// <param name="count">Count of forum topics to return</param>
+        /// <returns>Forum Topics</returns>
         IList<ForumTopic> GetActiveTopics(int forumId, int topicCount);
 
         /// <summary>
-        /// Inserts a topic
+        /// Inserts a forum topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
         void InsertTopic(ForumTopic forumTopic, bool sendNotifications);
 
         /// <summary>
-        /// Updates the topic
+        /// Updates the forum topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         void UpdateTopic(ForumTopic forumTopic);
 
         /// <summary>
-        /// Moves the topic
+        /// Moves the forum topic
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="newForumId">New forum identifier</param>
-        /// <returns>Moved topic</returns>
+        /// <returns>Moved forum topic</returns>
         ForumTopic MoveTopic(int forumTopicId, int newForumId);
 
         /// <summary>
-        /// Deletes a post
+        /// Deletes a forum post
         /// </summary>
-        /// <param name="forumPostId">The post identifier</param>
-        void DeletePost(int forumPostId);
+        /// <param name="forumPost">Forum post</param>
+        void DeletePost(ForumPost forumPost);
 
         /// <summary>
-        /// Gets a post
+        /// Gets a forum post
         /// </summary>
-        /// <param name="forumPostId">The post identifier</param>
-        /// <returns>Post</returns>
+        /// <param name="forumPostId">The forum post identifier</param>
+        /// <returns>Forum Post</returns>
         ForumPost GetPostById(int forumPostId);
 
         /// <summary>
-        /// Gets all posts
+        /// Gets all forum posts
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="customerId">The customer identifier</param>
@@ -164,7 +164,7 @@ namespace Nop.Services.Forums
             int customerId, string keywords, int pageIndex, int pageSize);
 
         /// <summary>
-        /// Gets all posts
+        /// Gets all forum posts
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="customerId">The customer identifier</param>
@@ -172,35 +172,35 @@ namespace Nop.Services.Forums
         /// <param name="ascSort">Sort order</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Posts</returns>
+        /// <returns>Forum Posts</returns>
         PagedList<ForumPost> GetAllPosts(int forumTopicId, int customerId,
             string keywords, bool ascSort, int pageIndex, int pageSize);
 
         /// <summary>
-        /// Inserts a post
+        /// Inserts a forum post
         /// </summary>
         /// <param name="forumPost">The forum post</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
         void InsertPost(ForumPost forumPost, bool sendNotifications);
 
         /// <summary>
-        /// Updates the post
+        /// Updates the forum post
         /// </summary>
-        /// <param name="forumPost">The forum post</param>
+        /// <param name="forumPost">Forum post</param>
         void UpdatePost(ForumPost forumPost);
 
         /// <summary>
         /// Deletes a private message
         /// </summary>
-        /// <param name="forumPrivateMessageId">The private message identifier</param>
-        void DeletePrivateMessage(int forumPrivateMessageId);
+        /// <param name="privateMessage">Private message</param>
+        void DeletePrivateMessage(PrivateMessage privateMessage);
 
         /// <summary>
         /// Gets a private message
         /// </summary>
-        /// <param name="forumPrivateMessageId">The private message identifier</param>
+        /// <param name="privateMessageId">The private message identifier</param>
         /// <returns>Private message</returns>
-        PrivateMessage GetPrivateMessageById(int forumPrivateMessageId);
+        PrivateMessage GetPrivateMessageById(int privateMessageId);
 
         /// <summary>
         /// Gets private messages
@@ -233,8 +233,8 @@ namespace Nop.Services.Forums
         /// <summary>
         /// Deletes a forum subscription
         /// </summary>
-        /// <param name="forumSubscriptionId">The forum subscription identifier</param>
-        void DeleteSubscription(int forumSubscriptionId);
+        /// <param name="forumSubscription">Forum subscription</param>
+        void DeleteSubscription(ForumSubscription forumSubscription);
 
         /// <summary>
         /// Gets a forum subscription

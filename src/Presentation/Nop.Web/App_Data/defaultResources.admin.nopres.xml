@@ -3343,7 +3343,7 @@
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Forums">
-                  <Value>Forums settings</Value>
+                  <Value>Forum settings</Value>
                     <Children>
                         <LocaleResource Name="ForumsEnabled">
                           <Value>Forums enabled</Value>
@@ -6650,7 +6650,7 @@
                 </Children>
               </LocaleResource>
               <LocaleResource Name="Feeds">
-                    <Value>Pomotion feeds</Value>
+                    <Value>Promotion feeds</Value>
                     <Children>
                       <LocaleResource Name="BackToList">
                         <Value>back to feed list</Value>

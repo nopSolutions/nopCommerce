@@ -1,0 +1,35 @@
+﻿@model Nop.Web.Models.Boards.BoardsIndexModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
+}
+<div class="forumsmain">
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
+    </div>
+    <div class="clear">
+    </div>
+    <div class="forumsmainheader">
+        <div class="currenttime">
+            @(Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(@DateTime.UtcNow).ToString("F"))
+        </div>
+        @Html.Partial("_SearchBox")
+    </div>
+    <div class="clear">
+    </div>
+    @foreach (var forumGroup in Model.ForumGroup)
+    {
+        Html.RenderPartial("_ForumGroup", new Nop.Web.Models.Boards.ForumGroupModel(forumGroup)
+        {
+            AllowViewingProfiles = Model.AllowViewingProfiles,
+            RelativeDateTimeFormattingEnabled = Model.RelativeDateTimeFormattingEnabled
+        });
+    }
+    <div class="clear">
+    </div>
+    @if (@Model.ActiveDiscussionsModel.ActiveDiscussions.Count() > 0)
+    {
+        @Html.Partial("_ActiveTopics", @Model.ActiveDiscussionsModel)
+    }
+</div>

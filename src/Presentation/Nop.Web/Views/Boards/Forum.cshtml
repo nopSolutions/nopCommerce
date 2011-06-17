@@ -1,0 +1,162 @@
+﻿@model Nop.Web.Models.Boards.ForumModel
+@using Nop.Services.Customers;
+@using Nop.Services.Seo;
+@using Nop.Web.Models.Boards;
+@using Nop.Web.Models;
+@using Nop.Web;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(Model.Forum.Name);
+}
+<script type="text/javascript">
+    function handleForumWatch(context) {
+        $('#watchforum').text(context.Text);
+    }
+</script>
+<div class="forum">
+    @Html.Partial("_ForumBreadcrumb", new ForumBreadcrumbModel { ForumGroupModel = new ForumGroupModel(@Model.Forum.ForumGroup), ForumModel = new ForumModel(@Model.Forum), Separator = " / " })
+    <div class="top">
+        <div class="foruminfo">
+            <span class="forumname">
+                @Model.Forum.Name</span>
+            <br />
+            <span class="forumdescription">
+                @Model.Forum.Description</span>
+            <br />
+            @if (Model.ForumFeedsEnabled)
+            {            
+                <span>                    
+                    @Html.RouteLink(" ", "ForumRSS", new { id = @Model.Forum.Id }, new { @class = "forum-rss", title = T("Forum.ForumRSSLinkTitle") })</span>
+            }
+        </div>
+        <div class="actions">            
+            @Html.RouteLink(@T("Forum.NewTopic").ToString(), "TopicCreate", new { id = @Model.Forum.Id }, new { @class = "newtopic" })
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                @Ajax.RouteLink(Model.WatchForumText,
+                                "ForumWatch",
+                                new { id = @Model.Forum.Id },
+                                new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleForumWatch" },
+                                new { id = "watchforum", @class = "watchforum" })
+            }
+            <br />
+            @Html.Partial("_SearchBox")
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="pager">
+        @{
+            var pager = @Html.Pager(new PagerModel()
+            {
+                PageSize = Model.PagedList.PageSize,
+                TotalRecords = Model.PagedList.TotalCount,
+                PageIndex = Model.PagedList.PageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "ForumSlugPaged",
+                UseRouteLinks = true,
+                RouteValues = new RouteValues { id = Model.Forum.Id, slug = Model.Forum.GetSeName() }
+            });
+        }
+        @pager
+    </div>
+    <div class="topicsgroup">
+        <table class="topics">
+            @if (Model.PagedList.Count() > 0)
+            {
+                <tr class="forumheader">
+                    <td class="topicname" colspan="2">
+                        @T("Forum.TopicTitle")
+                    </td>
+                    <td class="replies">
+                        @T("Forum.Replies")
+                    </td>
+                    <td class="views">
+                        @T("Forum.Views")
+                    </td>
+                    <td class="lastpost">
+                        @T("Forum.LatestPost")
+                    </td>
+                </tr>
+            }
+            @foreach (var topic in @Model.PagedList)
+            {
+                <tr class="topic">
+                    <td>
+                        @{
+                            var topicType = "post";
+                            var topicText = String.Empty;
+                            switch (topic.ForumTopicType)
+                            {
+                                case Nop.Core.Domain.Forums.ForumTopicType.Normal:
+                                    topicType = "post";
+                                    break;
+                                case Nop.Core.Domain.Forums.ForumTopicType.Sticky:
+                                    topicType = "poststicky";
+                                    topicText = string.Format("[{0}]", @T("Forum.Sticky").ToString());
+                                    break;
+                                case Nop.Core.Domain.Forums.ForumTopicType.Announcement:
+                                    topicType = "postannoucement";
+                                    topicText = string.Format("[{0}]", @T("Forum.Announcement").ToString());
+                                    break;
+                                default:
+                                    topicType = "post";
+                                    break;
+                            }
+                            <div class="@topicType">
+                            </div>
+                        }
+                    </td>
+                    <td class="topicname">
+                        @if (!String.IsNullOrEmpty(@topicText))
+                        {
+                            <span class="topictype">@topicText</span>
+                        }
+                        @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.GetSeName() }, new { @class = "topictitle" })
+                        <br />
+                        @if (@topic.ForumPosts.Count > Model.PostsPageSize)
+                        {                            
+                            <span class="topicspager">
+                                @Html.Pager(new Nop.Core.PagedList<Nop.Core.Domain.Forums.ForumPost>(topic.ForumPosts.ToList(), 1, Model.PostsPageSize))
+                            </span>
+                            <br />
+                        } <span class="topicstarter">
+                            @if (@topic.Customer != null)
+                            {
+                                var authorText = @T("Forum.Author");
+                                var authorName = Html.Encode(@topic.Customer.FormatUserName(true));
+                                var allowViewingProfiles = Model.AllowViewingProfiles;
+                                var customerGuest = @topic.Customer.IsGuest();
+
+                                if (allowViewingProfiles && !customerGuest)
+                                {
+                                    var output = String.Format("{0}: <a href=\"{2}\">{1}</a>", authorText, authorName, @Url.RouteUrl("CustomerProfile", new { id = topic.Customer.Id }));
+                                    @Html.Raw(output)
+                                }
+                                else if (!allowViewingProfiles || customerGuest)
+                                {
+                                    var output = String.Format("{0}: {1}", authorText, authorName);
+                                    @output
+                                }
+                            } </span>
+                    </td>
+                    <td class="replies">
+                        @topic.NumReplies
+                    </td>
+                    <td class="views">
+                        @topic.Views
+                    </td>
+                    <td class="lastpost">
+                        @Html.Partial("_LastPost", new LastPostModel(@topic.LastPost, false, Model.AllowViewingProfiles, Model.RelativeDateTimeFormattingEnabled))
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="pager">
+        @pager
+    </div>
+</div>

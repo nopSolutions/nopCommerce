@@ -472,6 +472,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        //[ValidateInput(false)]
         public ActionResult Info(CustomerInfoModel model)
         {
             if (!IsCurrentUserRegistered())
@@ -574,6 +575,16 @@ namespace Nop.Web.Controllers
                         }
                     }
 
+                    if (_forumSettings.SignaturesEnabled)
+                    {
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Signature, model.Signature);
+                    }
+
+                    if (_customerSettings.ShowCustomersLocation)
+                    {
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LocationCountryId, model.LocationCountryId);
+                    }
+
                     return RedirectToAction("info");
                 }
             }
@@ -604,6 +615,11 @@ namespace Nop.Web.Controllers
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
 
+            foreach (var c in _countryService.GetAllCountries())
+            {
+                model.AvailableLocations.Add(new SelectListItem() {Text = c.Name, Value = c.Id.ToString()});
+            }
+
             if (!excludeProperties)
             {
                 model.VatNumber = customer.VatNumber;
@@ -623,6 +639,8 @@ namespace Nop.Web.Controllers
                 var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.GetDefaultUserAccountEmail());
                 model.Newsletter = newsletter != null && newsletter.Active;
 
+                model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);                
+                model.LocationCountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId);
 
                 model.Email = user.Email;
                 model.Username = user.Username;
@@ -640,6 +658,8 @@ namespace Nop.Web.Controllers
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _userSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
+            model.SignatureEnabled = _forumSettings.SignaturesEnabled;
+            model.LocationEnabled = _customerSettings.ShowCustomersLocation;
 
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Info;

@@ -172,7 +172,7 @@ namespace Nop.Admin.Controllers
         public ActionResult DeleteForumGroup(int id)
         {
             var forumGroup = _forumService.GetForumGroupById(id);
-            _forumService.DeleteForumGroup(forumGroup.Id);
+            _forumService.DeleteForumGroup(forumGroup);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Deleted"));
             return RedirectToAction("List");
@@ -182,7 +182,7 @@ namespace Nop.Admin.Controllers
         public ActionResult DeleteForum(int id)
         {
             var forum = _forumService.GetForumById(id);
-            _forumService.DeleteForum(forum.Id);
+            _forumService.DeleteForum(forum);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Deleted"));
             return RedirectToAction("List");

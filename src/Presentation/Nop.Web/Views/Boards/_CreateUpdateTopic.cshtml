@@ -1,0 +1,90 @@
+﻿@model Nop.Web.Models.Boards.ForumTopicModel
+@using Nop.Core.Domain.Forums;
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+@using Nop.Web;
+@using (Html.BeginForm())
+{
+    <div class="postedit">
+        @{Html.RenderPartial("_ForumBreadcrumb", Model.ForumBreadcrumbModel);}
+        <div class="title">
+            @ViewBag.Title
+        </div>
+        <div class="wrapper">
+            @if (Model.PostError != null)
+            {                
+                <div class="error-block">
+                    <div class="message-error">
+                        @Model.PostError
+                    </div>
+                </div>
+            }
+            @Html.ValidationSummary(false)
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.ForumId)
+            <div class="clear">
+            </div>
+            <table class="posttopic">
+                <tr>
+                    <td class="fieldname">
+                        @T("Forum.ForumName"):
+                    </td>
+                    <td>
+                        @Model.Forum.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fieldname">
+                        @T("Forum.TopicTitle"):
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Subject, new { @class = "forumtopictitletext" })
+                        @Html.ValidationMessageFor(model => model.Subject)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fieldname">
+                    </td>
+                    <td>
+                        @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                        {
+                            @Html.BBCodeEdtor("Text");
+                        }
+                        @Html.TextAreaFor(model => model.Text, new { @class = "forumposttext", TextMode = "MultiLine" })
+                        @Html.ValidationMessageFor(model => model.Text)
+                    </td>
+                </tr>
+                @if (Model.IsCustomerAllowedToSetTopicPriority)
+                {
+                    <tr>
+                        <td class="fieldname">
+                            @T("Forum.Priority"):
+                        </td>
+                        <td>
+                            @Html.DropDownList("TopicTypeId", new SelectList(@Model.TopicPriorities, "Value", "Text", @Model.TopicTypeId))
+                        </td>
+                    </tr>
+                }
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <tr>
+                        <td class="fieldname">
+                            @T("Forum.Options"):
+                        </td>
+                        <td>
+                            @Html.EditorFor(model => model.Subscribed)
+                            @Html.LabelFor(model => model.Subscribed, @T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="2" class="options">
+                        <input type="submit" value="@T("Forum.Submit")" class="submitforumtopicbutton" />
+                        <input type="button" class="cancelforumtopicbutton" value="@T("Forum.Cancel")" 
+                        onclick="window.location.href='@Url.RouteUrl("ForumSlug", new { id = @Model.ForumId, slug = @Model.Forum.GetSeName() })'" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+} 

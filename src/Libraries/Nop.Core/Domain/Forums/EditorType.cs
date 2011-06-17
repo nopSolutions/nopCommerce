@@ -12,10 +12,6 @@
         /// <summary>
         /// BBCode Editor
         /// </summary>
-        BBCodeEditor = 20,
-        /// <summary>
-        /// Html Editor
-        /// </summary>
-        HtmlEditor = 30,    //remove HtmlEditor.
+        BBCodeEditor = 20
     }
 }

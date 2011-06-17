@@ -196,7 +196,7 @@
                         <div class="clear">
                         </div>
                     }
-                    @if (Model.AllowCustomersToSetTimeZone)
+                    @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled || Model.LocationEnabled)
                     {
                         <div class="section-title">
                             @T("Account.Preferences")
@@ -218,13 +218,28 @@
                                             </td>
                                         </tr>
                                     }
-                                    @*TODO allow to set signature (if enabled)*@
-                                    <tr class="row">
-                                        <td class="item-name">
-                                        </td>
-                                        <td class="item-value">
-                                        </td>
-                                    </tr>
+                                    @if (Model.LocationEnabled)
+                                    {
+                                        <tr class="row">
+                                            <td class="item-name">
+                                                @Html.LabelFor(model => model.LocationCountryId):
+                                            </td>
+                                            <td class="item-value">
+                                                @Html.DropDownList("LocationCountryId", Model.AvailableLocations)
+                                            </td>
+                                        </tr>
+                                    }
+                                    @if (Model.SignatureEnabled)
+                                    {                                    
+                                        <tr class="row">
+                                            <td class="item-name">
+                                                @Html.LabelFor(model => model.Signature):
+                                            </td>
+                                            <td class="item-value">
+                                                @Html.TextAreaFor(model => model.Signature, new { @class = "accountsignaturetext" })
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>

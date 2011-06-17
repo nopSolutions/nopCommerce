@@ -96,6 +96,7 @@
     <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Customers\ICustomerReportService.cs" />
     <Compile Include="Customers\CustomerReportService.cs" />
+    <Compile Include="Forums\ForumExtensions.cs" />
     <Compile Include="News\NewsService.cs" />
     <Compile Include="News\INewsService.cs" />
     <Compile Include="Customers\CustomerExtentions.cs" />

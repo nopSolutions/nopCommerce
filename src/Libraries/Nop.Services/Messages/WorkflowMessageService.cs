@@ -15,6 +15,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Services.Messages
 {
@@ -183,6 +184,42 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens);
             _messageTokenProvider.AddProductVariantTokens(tokens, productVariant);
+            return tokens;
+        }
+
+        private IList<Token> GenerateTokens(ForumTopic forumTopic)
+        {
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddForumTopicTokens(tokens, forumTopic);
+            _messageTokenProvider.AddForumTokens(tokens, forumTopic.Forum);
+            return tokens;            
+        }
+
+        private IList<Token> GenerateTokens(ForumPost forumPost)
+        {
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddForumPostTokens(tokens, forumPost);
+            _messageTokenProvider.AddForumTopicTokens(tokens, forumPost.ForumTopic);
+            _messageTokenProvider.AddForumTokens(tokens, forumPost.ForumTopic.Forum);
+
+            return tokens;
+        }
+
+        private IList<Token> GenerateTokens(Forum forum)
+        {
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddForumTokens(tokens, forum);
+            return tokens;
+        }
+
+        private IList<Token> GenerateTokens(PrivateMessage privateMessage)
+        {
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddPrivateMessageTokens(tokens, privateMessage);
             return tokens;
         }
 
@@ -712,6 +749,102 @@ namespace Nop.Services.Messages
                 toEmail, toName);
         }
         
+        #endregion
+
+        #region Forum Notifications
+
+        /// <summary>
+        /// Sends a forum subscription message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="forumTopic">Forum Topic</param>
+        /// <param name="forum">Forum</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendNewForumTopicMessage(Customer customer,
+            ForumTopic forumTopic, Forum forum, int languageId)
+        {
+            if (customer == null)
+            {
+                throw new ArgumentNullException("customer");
+            }
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Forums.NewForumTopic", languageId);
+            if (messageTemplate == null || !messageTemplate.IsActive)
+            {
+                return 0;
+            }
+
+            var tokens = GenerateTokens(forumTopic);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var toEmail = customer.GetDefaultUserAccountEmail();
+            var toName = customer.GetFullName();
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends a forum subscription message to a customer
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="forumPost">Forum post</param>
+        /// <param name="forumTopic">Forum Topic</param>
+        /// <param name="forum">Forum</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendNewForumPostMessage(Customer customer,
+            ForumPost forumPost, ForumTopic forumTopic,
+            Forum forum, int languageId)
+        {
+            if (customer == null)
+            {
+                throw new ArgumentNullException("customer");
+            }
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Forums.NewForumPost", languageId);
+            if (messageTemplate == null || !messageTemplate.IsActive)
+            {
+                return 0;
+            }
+
+            var tokens = GenerateTokens(forumPost);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);            
+            var toEmail = customer.GetDefaultUserAccountEmail();
+            var toName = customer.GetFullName();
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends a private message notification
+        /// </summary>
+        /// <param name="privateMessage">Private message</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendPrivateMessageNotification(PrivateMessage privateMessage, int languageId)
+        {
+            if (privateMessage == null)
+            {
+                throw new ArgumentNullException("privateMessage");
+            }
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.NewPM", languageId);
+            if (messageTemplate == null || !messageTemplate.IsActive)
+            {
+                return 0;
+            }
+
+            var privateMessageTokens = GenerateTokens(privateMessage);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);            
+            var toEmail = privateMessage.ToCustomer.GetDefaultUserAccountEmail();
+            var toName = privateMessage.ToCustomer.GetFullName();
+
+            return SendNotification(messageTemplate, emailAccount, languageId, privateMessageTokens, toEmail, toName);
+        }
+
         #endregion
 
         #region Misc

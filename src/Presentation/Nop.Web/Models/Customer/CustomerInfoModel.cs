@@ -14,6 +14,8 @@ namespace Nop.Web.Models.Customer
         public CustomerInfoModel()
         {
             this.AvailableTimeZones = new List<SelectListItem>();
+            this.AvailableLocations = new List<SelectListItem>();
+            this.AvailableLocations.Add(new SelectListItem() { Text = "---", Value = "0" });
         }
 
         [NopResourceDisplayName("Account.Fields.Email")]
@@ -50,6 +52,16 @@ namespace Nop.Web.Models.Customer
         public bool NewsletterEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Newsletter")]
         public bool Newsletter { get; set; }
+
+        //preferences
+        public bool SignatureEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.Signature")]
+        public string Signature { get; set; }
+
+        public bool LocationEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.Location")]
+        public int LocationCountryId { get; set; }
+        public IList<SelectListItem> AvailableLocations { get; set; }
 
         //time zone
         [NopResourceDisplayName("Account.Fields.TimeZone")]

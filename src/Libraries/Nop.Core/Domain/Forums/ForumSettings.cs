@@ -45,6 +45,11 @@ namespace Nop.Core.Domain.Forums
         public int TopicSubjectMaxLength { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum length for stripped forum topic names
+        /// </summary>
+        public int StrippedTopicMaxLength { get; set; }
+
+        /// <summary>
         /// Gets or sets maximum length of post
         /// </summary>
         public int PostMaxLength { get; set; }
@@ -120,14 +125,29 @@ namespace Nop.Core.Domain.Forums
         public int PMTextMaxLength { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of items to display for Active Discussions
+        /// Gets or sets the number of items to display for Active Discussions on forums home page
         /// </summary>
-        public int ActiveDiscussionsCount { get; set; }
+        public int HomePageActiveDiscussionsTopicCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of items to display for Active Discussions page
+        /// </summary>
+        public int ActiveDiscussionsPageTopicCount { get; set; }
 
         /// <summary>
         /// Gets or sets the number of items to display for Active Discussions RSS Feed
         /// </summary>
         public int ActiveDiscussionsFeedCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the whether the Active Discussions RSS Feed is enabled
+        /// </summary>
+        public bool ActiveDiscussionsFeedEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the whether Forums have an RSS Feed enabled
+        /// </summary>
+        public bool ForumFeedsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets the number of items to display for Forum RSS Feed

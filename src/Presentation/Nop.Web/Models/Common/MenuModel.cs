@@ -11,5 +11,6 @@ namespace Nop.Web.Models.Common
     {
         public bool BlogEnabled { get; set; }
         public bool RecentlyAddedProductsEnabled { get; set; }
+        public bool ForumEnabled { get; set; }
     }
 }

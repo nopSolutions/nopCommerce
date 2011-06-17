@@ -56,6 +56,7 @@
     <Reference Include="RouteDebugger">
       <HintPath>..\..\packages\routedebugger.1.0.0.1\lib\net35\RouteDebugger.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll</HintPath>
@@ -84,12 +85,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BaseNopController.cs" />
+    <Compile Include="Controllers\BoardsController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\PollController.cs" />
     <Compile Include="Controllers\LiveChatController.cs" />
+    <Compile Include="Controllers\PrivateMessagesController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
@@ -100,7 +103,9 @@
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Extensions\EditorExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
+    <Compile Include="Extensions\PagerHtmlExtension.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -114,6 +119,17 @@
     <Compile Include="Models\Blogs\BlogPostYearMonthModel.cs" />
     <Compile Include="Models\Blogs\AddBlogCommentModel.cs" />
     <Compile Include="Models\Blogs\BlogPostTagListModel.cs" />
+    <Compile Include="Models\Boards\ActiveDiscussionsModel.cs" />
+    <Compile Include="Models\Boards\BoardsIndexModel.cs" />
+    <Compile Include="Models\Boards\ForumBreadcrumbModel.cs" />
+    <Compile Include="Models\Boards\ForumGroupModel.cs" />
+    <Compile Include="Models\Boards\ForumModel.cs" />
+    <Compile Include="Models\Boards\ForumPostModel.cs" />
+    <Compile Include="Models\Boards\ForumTopicModel.cs" />
+    <Compile Include="Models\Boards\ForumTopicPostsModel.cs" />
+    <Compile Include="Models\Boards\LastPostModel.cs" />
+    <Compile Include="Models\Boards\SearchModel.cs" />
+    <Compile Include="Models\Boards\TopicMoveModel.cs" />
     <Compile Include="Models\Catalog\SearchModel.cs" />
     <Compile Include="Models\Catalog\SearchPagingFilteringModel.cs" />
     <Compile Include="Models\Catalog\ProductsByTagModel.cs" />
@@ -137,6 +153,7 @@
     <Compile Include="Models\Checkout\CheckoutConfirmModel.cs" />
     <Compile Include="Models\Checkout\CheckoutCompletedModel.cs" />
     <Compile Include="Models\Common\AddressModel.cs" />
+    <Compile Include="Models\Common\PagerModel.cs" />
     <Compile Include="Models\Common\StoreThemeModel.cs" />
     <Compile Include="Models\Common\Copy of LanguageSelectorModel.cs" />
     <Compile Include="Models\Common\SitemapModel.cs" />
@@ -187,6 +204,8 @@
     <Compile Include="Models\Topics\TopicModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\Blogs\BlogPostValidator.cs" />
+    <Compile Include="Validators\Boards\ForumPostValidator.cs" />
+    <Compile Include="Validators\Boards\ForumTopicValidator.cs" />
     <Compile Include="Validators\Catalog\ProductEmailAFriendValidator.cs" />
     <Compile Include="Validators\Catalog\ProductReviewsValidator.cs" />
     <Compile Include="Validators\Common\AddressValidator.cs" />
@@ -522,6 +541,17 @@
     <Content Include="Content\2011.1.315\Windows7\slider-vs-right.gif" />
     <Content Include="Content\2011.1.315\Windows7\sprite-vertical.png" />
     <Content Include="Content\2011.1.315\Windows7\sprite.png" />
+    <Content Include="Content\editors\BBEditor\ed.js" />
+    <Content Include="Content\editors\BBEditor\images\bold.gif" />
+    <Content Include="Content\editors\BBEditor\images\code.gif" />
+    <Content Include="Content\editors\BBEditor\images\italic.gif" />
+    <Content Include="Content\editors\BBEditor\images\link.gif" />
+    <Content Include="Content\editors\BBEditor\images\ordered.gif" />
+    <Content Include="Content\editors\BBEditor\images\picture.gif" />
+    <Content Include="Content\editors\BBEditor\images\quote.gif" />
+    <Content Include="Content\editors\BBEditor\images\underline.gif" />
+    <Content Include="Content\editors\BBEditor\images\unlink.gif" />
+    <Content Include="Content\editors\BBEditor\images\unordered.gif" />
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\flash\uploadify.swf" />
@@ -986,6 +1016,7 @@
     <Content Include="Themes\DarkOrange\Content\images\ico-pm.png" />
     <Content Include="Themes\DarkOrange\Content\images\ico-register.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-wishlist.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\icon_rss.gif" />
     <Content Include="Themes\DarkOrange\Content\images\loading.gif" />
     <Content Include="Themes\DarkOrange\Content\images\logo.gif" />
     <Content Include="Themes\DarkOrange\Content\images\nextlabel.gif" />
@@ -1030,6 +1061,7 @@
     <Content Include="Themes\nopClassic\Content\images\ico-pm.png" />
     <Content Include="Themes\nopClassic\Content\images\ico-register.gif" />
     <Content Include="Themes\nopClassic\Content\images\ico-wishlist.gif" />
+    <Content Include="Themes\nopClassic\Content\images\icon_rss.gif" />
     <Content Include="Themes\nopClassic\Content\images\loading.gif" />
     <Content Include="Themes\nopClassic\Content\images\logo.gif" />
     <Content Include="Themes\nopClassic\Content\images\nextlabel.gif" />
@@ -1229,6 +1261,25 @@
     <Content Include="Views\Poll\_Poll.cshtml" />
     <Content Include="Views\Poll\PollBlock.cshtml" />
     <Content Include="Views\Poll\HomePagePolls.cshtml" />
+    <Content Include="Views\Boards\ActiveDiscussions.cshtml" />
+    <Content Include="Views\Boards\Forum.cshtml" />
+    <Content Include="Views\Boards\ForumGroup.cshtml" />
+    <Content Include="Views\Boards\Index.cshtml" />
+    <Content Include="Views\Boards\PostCreate.cshtml" />
+    <Content Include="Views\Boards\PostEdit.cshtml" />
+    <Content Include="Views\Boards\Search.cshtml" />
+    <Content Include="Views\Boards\Topic.cshtml" />
+    <Content Include="Views\Boards\TopicCreate.cshtml" />
+    <Content Include="Views\Boards\TopicEdit.cshtml" />
+    <Content Include="Views\Boards\TopicMove.cshtml" />
+    <Content Include="Views\Boards\_ActiveTopics.cshtml" />
+    <Content Include="Views\Boards\_CreateUpdatePost.cshtml" />
+    <Content Include="Views\Boards\_CreateUpdateTopic.cshtml" />
+    <Content Include="Views\Boards\_ForumBreadcrumb.cshtml" />
+    <Content Include="Views\Boards\_ForumGroup.cshtml" />
+    <Content Include="Views\Boards\_ForumPost.cshtml" />
+    <Content Include="Views\Boards\_LastPost.cshtml" />
+    <Content Include="Views\Boards\_SearchBox.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

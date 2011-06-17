@@ -10,6 +10,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.News;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Services.Seo
 {
@@ -104,6 +105,57 @@ namespace Nop.Services.Seo
             if (newsItem == null)
                 throw new ArgumentNullException("newsItem");
             string seName = GetSeName(newsItem.Title);
+            return seName;
+        }
+
+        #endregion
+
+        #region Forum
+
+        /// <summary>
+        /// Gets ForumGroup SE (search engine) name
+        /// </summary>
+        /// <param name="forumGroup">ForumGroup</param>
+        /// <returns>ForumGroup SE (search engine) name</returns>
+        public static string GetSeName(this ForumGroup forumGroup)
+        {
+            if (forumGroup == null)
+                throw new ArgumentNullException("newsItem");
+            string seName = GetSeName(forumGroup.Name);
+            return seName;
+        }
+
+        /// <summary>
+        /// Gets Forum SE (search engine) name
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum SE (search engine) name</returns>
+        public static string GetSeName(this Forum forum)
+        {
+            if (forum == null)
+                throw new ArgumentNullException("newsItem");
+            string seName = GetSeName(forum.Name);
+            return seName;
+        }
+
+        /// <summary>
+        /// Gets ForumTopic SE (search engine) name
+        /// </summary>
+        /// <param name="forumTopic">ForumTopic</param>
+        /// <returns>ForumTopic SE (search engine) name</returns>
+        public static string GetSeName(this ForumTopic forumTopic)
+        {
+            if (forumTopic == null)
+                throw new ArgumentNullException("newsItem");
+            string seName = GetSeName(forumTopic.Subject);
+
+            // Trim SE name to avoid URLs that are too long
+            var maxLength = 100;
+            if (seName.Length > maxLength)
+            {
+                seName = seName.Substring(0, maxLength);
+            }
+
             return seName;
         }
 

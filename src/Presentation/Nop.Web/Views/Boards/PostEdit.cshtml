@@ -1,0 +1,7 @@
+﻿@model Nop.Web.Models.Boards.ForumPostModel
+@{   
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
+}
+@Html.Partial("_CreateUpdatePost", @Model)

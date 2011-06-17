@@ -28,6 +28,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Models;
 using Nop.Web.Models.Common;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Controllers
 {
@@ -56,6 +57,7 @@ namespace Nop.Web.Controllers
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
+        private readonly ForumSettings _forumsettings;
 
         public CommonController(ICategoryService categoryService, IProductService productService,
             IManufacturerService manufacturerService, ITopicService topicService,
@@ -68,7 +70,7 @@ namespace Nop.Web.Controllers
             UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
-            CommonSettings commonSettings, BlogSettings blogSettings)
+            CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -93,6 +95,7 @@ namespace Nop.Web.Controllers
             this._emailAccountSettings = emailAccountSettings;
             this._commonSettings = commonSettings;
             this._blogSettings = blogSettings;
+            this._forumsettings = forumSettings;
         }
 
         //language
@@ -191,7 +194,7 @@ namespace Nop.Web.Controllers
             {
                 RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
-
+                ForumEnabled = _forumsettings.ForumsEnabled
             };
 
             return PartialView(model);
@@ -208,6 +211,7 @@ namespace Nop.Web.Controllers
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
                 SitemapEnabled = _commonSettings.SitemapEnabled,
+                ForumEnabled = _forumsettings.ForumsEnabled
             };
 
             return PartialView(model);

@@ -20,8 +20,8 @@
 
 body, h1, h2, h3, h4, h5, h6, address, blockquote, dd, dl, hr, form, input
 {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 body
@@ -57,12 +57,12 @@ img
 
 h1, h2, h3, h4, h5, h6
 {
-    font-family: arial, helvetica, sans-serif;
+	font-family: arial, helvetica, sans-serif;
 }
 
 h2, h3
 {
-    font-size: 16px;
+	font-size: 16px;
 }
 
 
@@ -173,34 +173,34 @@ h2, h3
 }
 
 .master-wrapper-fluid-content {
-    height: 1%;
-    margin: 0;
-    overflow: hidden;
-    padding: 0;
+	height: 1%;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
 }
 
 .master-wrapper-fluid-content-inner {
-    overflow: hidden;
-    width: 100%;
-    padding:0px 10px;
+	overflow: hidden;
+	width: 100%;
+	padding:0px 10px;
 }
 
 .master-wrapper-fluid-content-left .master-wrapper-fluid-content-sidebar {
-    float: left;
-    overflow: hidden;
-    padding-right: 20px;
-    margin-left:10px;
-    width: 180px;
-    font-family: arial, helvetica, sans-serif;
+	float: left;
+	overflow: hidden;
+	padding-right: 20px;
+	margin-left:10px;
+	width: 180px;
+	font-family: arial, helvetica, sans-serif;
 }
 
 .master-wrapper-fluid-content-right .master-wrapper-fluid-content-sidebar {
-    float: right;
-    overflow: hidden;
-    padding-left: 20px;
-    margin-right:10px;
-    width: 180px;
-    font-family: arial, helvetica, sans-serif;
+	float: right;
+	overflow: hidden;
+	padding-left: 20px;
+	margin-right:10px;
+	width: 180px;
+	font-family: arial, helvetica, sans-serif;
 }
 
 
@@ -415,7 +415,7 @@ a.logo
 
 .headermenu ul.topmenu
 {
-    text-align: right;
+	text-align: right;
 }
 
 .footer
@@ -458,29 +458,29 @@ a.logo
 
 .page-title 
 {
-    border-bottom: 1px solid;
-    margin: 0 0 10px;
-    overflow: hidden;
-    width: 100%;
+	border-bottom: 1px solid;
+	margin: 0 0 10px;
+	overflow: hidden;
+	width: 100%;
 }
 
 .page-title h1, .page-title h2 
 {
-    padding: 5px 5px 5px 0px;
-    font-size: 20px;
-    margin: 0;
-    font-family: Arial,Helvetica,sans-serif;
-    font-weight:normal;
+	padding: 5px 5px 5px 0px;
+	font-size: 20px;
+	margin: 0;
+	font-family: Arial,Helvetica,sans-serif;
+	font-weight:normal;
 }
 
 td
 {
-    vertical-align: middle;
+	vertical-align: middle;
 }
 
 td.fieldname
 {
-    font-size: 12px;
+	font-size: 12px;
 }
 
 .table-container
@@ -529,7 +529,7 @@ td.fieldname
 
 .htmlcontent-body a
 {
-    text-decoration: underline;
+	text-decoration: underline;
 	color: #ff9933;
 }
 
@@ -552,7 +552,7 @@ td.fieldname
 
 .topicpage .topicpage-body a
 {
-    text-decoration: underline;
+	text-decoration: underline;
 	color: #ff9933;
 }
 
@@ -584,7 +584,7 @@ td.fieldname
 
 .nobr 
 {
-    white-space:nowrap !important;
+	white-space:nowrap !important;
 }
 
 .linkButton
@@ -773,7 +773,11 @@ textarea
 	vertical-align: top;
 	font-size: 12px;
 }
-
+.forumposttext
+{
+	width:100%;
+	height:300px
+}
 .privatemessagesubjecttext
 {
 	width: 500px;
@@ -850,7 +854,7 @@ textarea
 	background: url('images/ico-delete.gif') no-repeat;
 }
 
-.quotepostlinkbutton
+.quotepostlinkbutton, .postlink
 {
 	color: #555555;
 	float: right;
@@ -859,7 +863,12 @@ textarea
 	line-height: 15px;
 	font-size: 11px;
 }
-
+.postlink
+{
+	padding: 1px 3px 1px 3px;
+	margin-right:5px;
+	border:none;
+}
 .searchboxbutton
 {
 	background: url(images/orange_button_bg.gif) no-repeat 25% 50% #FF8800;
@@ -948,7 +957,7 @@ textarea
 
 .block 
 {
-    margin-bottom: 15px;
+	margin-bottom: 15px;
 	padding-bottom: 5px;
 	padding-left: 0;
 	color: #FFFFFF;
@@ -990,7 +999,7 @@ textarea
 
 .block li
 {
-    list-style: none;
+	list-style: none;
 }
 
 .block li.separator
@@ -1019,12 +1028,12 @@ textarea
 
 .block-shoppingcart .items
 {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
 .block-shoppingcart .items ul
 {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 .block-shoppingcart .buttons
@@ -1069,12 +1078,12 @@ textarea
 
 .block-newsletter .options
 {
-    margin-top: 5px;
+	margin-top: 5px;
 }
 
 .block-newsletter .buttons
 {
-    margin-top: 5px;
+	margin-top: 5px;
 }
 
 .block-recently-viewed-products a:hover
@@ -1086,7 +1095,7 @@ textarea
 
 .block-popular-tags li, .block-popular-blogtags li
 {
-    display:inline !important;
+	display:inline !important;
 }
 
 .block-blog-archive .year
@@ -1158,31 +1167,31 @@ textarea
 
 .order-summary-content .totals 
 {
-    float: right;
-    padding: 23px 5px 0 5px;
-    width: 330px;
+	float: right;
+	padding: 23px 5px 0 5px;
+	width: 330px;
 }
 
 .order-summary-content .cart-collaterals 
 {
-    padding: 20px 0 10px;
-    width: 550px;
+	padding: 20px 0 10px;
+	width: 550px;
 }
 
 .order-summary-content .deals
 {
-    display: inline;
-    float: left;
-    margin: 0 20px 0 0;
-    width: 250px;
+	display: inline;
+	float: left;
+	margin: 0 20px 0 0;
+	width: 250px;
 }
 
 .order-summary-content .shipping
 {
-    display: inline;
-    float: left;
-    margin: 0;
-    width: 280px;
+	display: inline;
+	float: left;
+	margin: 0;
+	width: 280px;
 }
 
 .order-summary-content .coupon-box, .order-summary-content .giftcard-box
@@ -1197,8 +1206,8 @@ textarea
 
 .order-summary-content .giftcard-box
 {
-    position:relative;
-    z-index:1;
+	position:relative;
+	z-index:1;
 }
 
 .order-summary-content .cart, .wishlist-content .cart
@@ -1334,7 +1343,7 @@ textarea
 
 .order-summary-content .selected-checkout-attributes
 {
-    margin: 0px;
+	margin: 0px;
 	padding: 10px 5px 10px 0px;
 	width: 100%;
 	text-align: right;
@@ -1388,7 +1397,7 @@ textarea
 
 .order-summary-content .addon-buttons
 {
-    clear: both;
+	clear: both;
 	float: right;
 	margin: 0px;
 	padding: 10px 0px 10px 10px;
@@ -1397,14 +1406,14 @@ textarea
 
 .order-summary-content .crosssells-title
 {
-    color:#000000;
-    font-family:Arial,Helvetica,sans-serif;
-    font-size:15px;
-    font-weight:bold;
-    padding:5px 5px 5px 0;
-    border-bottom:0 none;
-    margin:0 0 10px;
-    width:100%;
+	color:#000000;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:15px;
+	font-weight:bold;
+	padding:5px 5px 5px 0;
+	border-bottom:0 none;
+	margin:0 0 10px;
+	width:100%;
 }
 
 
@@ -1468,17 +1477,17 @@ textarea
 
 .checkout-one-page .checkout-data .progress
 {
-    position: absolute;
-    top: 100px;
-    width: 180px;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    background: none repeat scroll 0 0 #FFFFFF;
-    padding: 5px 10px;
-    text-align: center;
-    z-index: 2147483647;
+	position: absolute;
+	top: 100px;
+	width: 180px;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	background: none repeat scroll 0 0 #FFFFFF;
+	padding: 5px 10px;
+	text-align: center;
+	z-index: 2147483647;
 }
 
 .checkoutstep
@@ -1488,13 +1497,13 @@ textarea
 .checkoutstep .steptitle
 {
 	border: 1px solid #2F4F4F;
-    color: white;
-    background-color: #2E4d7B;
+	color: white;
+	background-color: #2E4d7B;
 	font-family: Arial, Sans-Serif;
 	font-size: 12px;
 	font-weight: bold;
-    padding: 5px 5px 5px 5px;
-    margin-top: 5px;
+	padding: 5px 5px 5px 5px;
+	margin-top: 5px;
 }
 
 .checkoutstep .stepcontent
@@ -2544,7 +2553,7 @@ textarea
 
 .product-spec-filter .remove-filter
 {
-    padding-top: 5px;
+	padding-top: 5px;
 	padding-left: 20px;
 }
 
@@ -2576,12 +2585,12 @@ textarea
 
 .compare-products-table
 {
-    width: 100%;
+	width: 100%;
 }
 
 .compare-products-table .remove-button
 {
-    margin: 0px 0px 5px 0px;
+	margin: 0px 0px 5px 0px;
 	margin-right: 5px;
 	margin-top: 5px;
 }
@@ -2794,7 +2803,7 @@ textarea
 
 .customer-avatar .button
 {
-    margin: 5px 0;
+	margin: 5px 0;
 }
 
 .account-activation-page
@@ -2879,8 +2888,8 @@ textarea
 
 .search-panel table.adv-search
 {
-    border-top: solid #D3D3D3 1px;
-    margin-top:10px;
+	border-top: solid #D3D3D3 1px;
+	margin-top:10px;
 }
 
 .search-panel table.basic-search td.title, .search-panel table.adv-search td.title
@@ -3026,7 +3035,7 @@ textarea
 
 .newsitem .newsbody a
 {
-    color: #ff9933;
+	color: #ff9933;
 	text-decoration: underline;
 }
 
@@ -3206,7 +3215,7 @@ textarea
 
 .blog .blogposts .blogbody a, .blog .blogposts .tags a
 {
-    color: #ff9933;
+	color: #ff9933;
 	text-decoration: underline;
 }
 
@@ -3244,7 +3253,7 @@ textarea
 
 .blogpost .postbody a, .blogpost .tags a
 {
-    color: #ff9933;
+	color: #ff9933;
 	text-decoration: underline;
 }
 
@@ -3413,7 +3422,7 @@ textarea
 
 .poll-item label
 {
-    margin: 0px 0px 0px 5px;
+	margin: 0px 0px 0px 5px;
 }
 
 .poll-take-poll, .poll-results
@@ -3492,7 +3501,7 @@ textarea
 
 .account-page .page-title
 {
-    border-bottom: 0 none;
+	border-bottom: 0 none;
 }
 
 .account-page .body
@@ -3747,15 +3756,15 @@ textarea
 }
 .product-reviews-overview .product-review-box 
 { 
-    margin-right: 5px; 
-    width: 69px; 
-    height: 13px;
+	margin-right: 5px; 
+	width: 69px; 
+	height: 13px;
 }
 .product-review-box .rating 
 { 
-    height: 13px; 
-    width: 55px;
-    background: url(images/star_x_inactive.gif) 0 0 repeat-x;
+	height: 13px; 
+	width: 55px;
+	background: url(images/star_x_inactive.gif) 0 0 repeat-x;
 }
 .product-review-box .rating  div 
 {
@@ -3764,11 +3773,11 @@ textarea
 }
 .product-reviews-overview .product-review-links .separator 
 { 
-    margin: 0 2px; 
+	margin: 0 2px; 
 }
 .product-reviews-overview .product-review-links 
 { 
-    margin: 0;
+	margin: 0;
 }
 .product-no-reviews
 {
@@ -3816,9 +3825,9 @@ textarea
 .product-review-list .product-review-item .product-review-box
 {
 	float: right;
-    margin-right: 5px; 
-    width: 69px; 
-    height: 13px;
+	margin-right: 5px; 
+	width: 69px; 
+	height: 13px;
 }
 .product-review-list .product-review-item .review-text
 {
@@ -3832,12 +3841,12 @@ textarea
 }
 .product-review-list .product-review-item .review-info .separator 
 { 
-    margin: 0 2px; 
+	margin: 0 2px; 
 }
 
 .product-review-helpfulness
 {
-    font-size: 11px;
+	font-size: 11px;
 	color: #333;
 	clear: both;
 }
@@ -3866,7 +3875,7 @@ textarea
 
 .product-variant-line
 {
-    clear: both;
+	clear: both;
 	margin-bottom: 20px;
 	padding-bottom: 20px;
 	margin-top: 10px;
@@ -3971,14 +3980,14 @@ textarea
 
 .product-variant-line .giftCard dt
 {
-    clear: left;
-    float: left;
-    width: 150px;
+	clear: left;
+	float: left;
+	width: 150px;
 }
 
 .product-details-page .error
 {
-    font-weight: bold;
+	font-weight: bold;
 	color: Red;
 }
 
@@ -4085,7 +4094,7 @@ textarea
 }
 .producttags-box .producttags-list a
 {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 .tier-prices
@@ -4253,24 +4262,24 @@ textarea
 
 .sendpmbox
 {
-    background-color:#EEEEEE;
-    border:1px solid #A0A0A0;
-    color:#555555;
-    display:block;
-    float:left;
-    font-family:Arial;
-    font-size:10px;
-    font-weight:bold;
-    margin:2px 0 2px 2px;
-    padding:2px 2px 2px 2px;
-    text-decoration:none;
-    text-transform:uppercase;
+	background-color:#EEEEEE;
+	border:1px solid #A0A0A0;
+	color:#555555;
+	display:block;
+	float:left;
+	font-family:Arial;
+	font-size:10px;
+	font-weight:bold;
+	margin:2px 0 2px 2px;
+	padding:2px 2px 2px 2px;
+	text-decoration:none;
+	text-transform:uppercase;
 }
 
 .sendpmbox .pmlinkbutton
 {
-    line-height:14px;
-    padding:2px 6px 2px 18px;
+	line-height:14px;
+	padding:1px 6px 2px 18px;
 	background: url('images/ico-pm.png') no-repeat;
 }
 
@@ -4491,7 +4500,7 @@ textarea
 
 .forumsmain .forumsmainheader .currenttime
 {
-    padding-top: 20px;
+	padding-top: 20px;
 	font-size: 0.9em;
 	color: #555;
 	float: left;
@@ -4525,7 +4534,7 @@ textarea
 .forumbreadcrumb a
 {
 	text-decoration: none;
-	color: #3a3a3a;
+	color: #3a3a3a;	
 }
 
 .forumbreadcrumb a:hover
@@ -4647,7 +4656,7 @@ textarea
 
 .forum-subscriptions-box
 {
-    margin: 0px 0 0 0;
+	margin: 0px 0 0 0;
 	padding: 5px 5px 5px 5px;
 	font-size: 11px;
 	color: #555;
@@ -4872,6 +4881,20 @@ textarea
 	font-weight: bold;
 }
 
+.active-rss, .forum-rss
+{
+	background: url(images/icon_rss.gif) no-repeat;
+	background-position:center bottom;
+	height:14px;
+	width:20px;
+	display:inline-block;
+}
+.forum-rss
+{    
+	margin-top:5px;    
+	 background-position:left bottom;
+}
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
 	FORUM TOPIC EDIT
@@ -4995,6 +5018,9 @@ textarea
 {
 	float: left;
 	font-size: 12px;
+	height: 28px;
+	overflow: hidden;
+	width: 670px;
 }
 
 .forumtopic .title .manage
@@ -5167,7 +5193,10 @@ textarea
 
 .forumsearchbox
 {
-    font-size:0.9em;
+	font-size:0.9em;
+	float: right; 
+	text-align: right; 
+	padding: 5px 0;
 }
 
 .forumsearch
@@ -5208,8 +5237,8 @@ textarea
 
 .forum-search-panel table.adv-search
 {
-    border-top: solid #D3D3D3 1px;
-    margin-top:10px;
+	border-top: solid #D3D3D3 1px;
+	margin-top:10px;
 }
 
 .forum-search-panel table.adv-search td.title
@@ -5350,9 +5379,16 @@ textarea
 	padding: 5px 3px 5px 0;
 }
 
-.forumsearch .pager a:link
+.forumsearch .pager a:link, .pager a:link
 {
 	color: #555;
+}
+
+.pager span
+{
+	color: #555;
+	font-weight:bold; 
+	font-size:1.2em;    
 }
 
 .forumsearch .pager span
@@ -5384,7 +5420,7 @@ textarea
 
 .profile-page .body
 {
-    margin-top: 15px;
+	margin-top: 15px;
 }
 
 .profile-page .body .profileInfoBox
@@ -5467,7 +5503,7 @@ textarea
 
 .profile-page .body .userLastPosts .topicBody a
 {
-    color: #ff9933;
+	color: #ff9933;
 	text-decoration: underline;
 }
 
@@ -5532,8 +5568,8 @@ textarea
 
 .activediscussions .activediscussionstitle .viewall
 {
-    float:right;
-    text-align:right;
+	float:right;
+	text-align:right;
 }
 
 .activediscussions .topicsgroup

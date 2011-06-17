@@ -1,0 +1,96 @@
+﻿@model Nop.Web.Models.Boards.ForumTopicPostsModel
+@using Nop.Web.Models;
+@using Nop.Web.Models.Boards;
+@using Nop.Web;
+@using Nop.Services.Seo;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(Model.ForumTopic.Subject);
+}
+<script type="text/javascript">
+    function handleTopicWatch(context) {
+        $('#watchtopic-top').text(context.Text);
+        $('#watchtopic-bottom').text(context.Text);
+    }
+</script>
+<div class="forumtopic">    
+    @Html.Partial("_ForumBreadcrumb", Model.ForumBreadcrumbModel)
+    @Html.Partial("_SearchBox")
+    <div class="clear">
+    </div>
+    <div class="title">
+        <h2 class="topicname">
+            <span>@Model.ForumTopic.Subject</span></h2>
+        <div class="manage">
+            @if (Model.IsCustomerAllowedToEditTopic)
+            {
+                @Html.RouteLink(@T("Forum.EditTopic").ToString(), "TopicEdit", new { id = @Model.ForumTopic.Id }, new { @class = "edittopiclinkbutton" })
+            }
+            @if (Model.IsCustomerAllowedToDeleteTopic)
+            {                
+                @Html.RouteLink(@T("Forum.DeleteTopic").ToString(), "TopicDelete", new { id = @Model.ForumTopic.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "deletetopiclinkbutton" })
+            }
+            @if (Model.IsCustomerAllowedToMoveTopic)
+            {
+                @Html.RouteLink(@T("Forum.MoveTopic").ToString(), "TopicMove", new { id = @Model.ForumTopic.Id }, new { @class = "movetopiclinkbutton" })
+            }
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="topicheader">
+        <div class="topicoptions">            
+            @Html.RouteLink(@T("Forum.Reply").Text, "PostCreate", new { id = @Model.ForumTopic.Id }, new { @class = "replytopiclinkbutton" })
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                @Ajax.RouteLink(Model.WatchTopicText,
+                                "TopicWatch", 
+                                new { id = @Model.ForumTopic.Id },
+                                new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
+                                new { id = "watchtopic-top", @class = "watchtopiclinkbutton" })
+            }
+        </div>
+        <div class="pager">
+            @{
+                var pager = @Html.Pager(new PagerModel()
+                {
+                    PageSize = Model.PagedList.PageSize,
+                    TotalRecords = Model.PagedList.TotalCount,
+                    PageIndex = Model.PagedList.PageIndex,
+                    ShowTotalSummary = false,
+                    RouteActionName = "TopicSlugPaged",
+                    UseRouteLinks = true,
+                    RouteValues = new RouteValues { id = Model.ForumTopic.Id, slug = Model.ForumTopic.GetSeName() }
+                });
+            }
+            @pager
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="posts">
+        @foreach (var post in @Model.ForumPostModels)
+        {
+            Html.RenderPartial("_ForumPost", post);
+        }
+    </div>
+</div>
+<div class="topicfooter">
+    <div class="topicoptions">        
+        @Html.RouteLink(@T("Forum.Reply").Text, "PostCreate", new { id = @Model.ForumTopic.Id }, new { @class = "replytopiclinkbutton" })
+        @if (Model.IsCustomerAllowedToSubscribe)
+        {
+            @Ajax.RouteLink(Model.WatchTopicText,
+                            "TopicWatch",
+                            new { id = @Model.ForumTopic.Id },
+                            new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
+                            new { id = "watchtopic-bottom", @class = "watchtopiclinkbutton" })
+        }
+    </div>
+    <div class="pager">
+        @pager
+    </div>
+</div>
+<div class="clear">
+</div>

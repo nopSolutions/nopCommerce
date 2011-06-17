@@ -18,7 +18,15 @@ namespace Nop.Core.Domain.Customers
         public static string AvatarPictureId { get { return "AvatarPictureId"; } }
 
         //Other attributes
-        public static string LastShippingOption { get { return "LastShippingOption  "; } }
+        public static string LastShippingOption { get { return "LastShippingOption"; } }
+
+        public static string ForumPostCount { get { return "ForumPostCount"; } }
+
+        public static string Signature { get { return "Signature"; } }
+
+        public static string LocationCountryId { get { return "Location"; } }
+
+        public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
 
         public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
 

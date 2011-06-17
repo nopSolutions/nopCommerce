@@ -1,0 +1,130 @@
+﻿@model Nop.Web.Models.Boards.ForumPostModel
+@using Nop.Services.Customers;
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+@using Nop.Web.Framework;
+@{
+    var customerIsGuest = WorkContext.CurrentCustomer.IsGuest();
+}
+@Html.Raw(String.Format("<a name=\"{0}\"></a>", @Model.ForumPost.Id))
+<div class="forumpost" id="@Html.Encode(String.Format("post{0}", @Model.ForumPost.Id))">
+    <div class="postinfo">
+        <div class="manage">
+            @if (Model.IsCustomerAllowedToEditPost)
+            {                
+                @Html.RouteLink(@T("Forum.EditPost").Text, "PostEdit", new { id = @Model.ForumPost.Id }, new { @class = "editpostlinkbutton" })
+            }
+            @if (Model.IsCustomerAllowedToDeletePost)
+            {
+                @Html.RouteLink(@T("Forum.DeletePost").Text, "PostDelete", new { id = @Model.ForumPost.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "deletepostlinkbutton" })
+            }
+        </div>
+        <div class="userinfo">
+            @if (@Model.ForumPost.Customer != null)
+            {
+                var authorName = Html.Encode(@Model.ForumPost.Customer.FormatUserName(true));
+                var allowViewingProfiles = Model.CommonTopicSettingsModel.AllowViewingProfiles;
+
+                if (allowViewingProfiles && !customerIsGuest)
+                {
+                    @Html.RouteLink(authorName, "CustomerProfile", new { id = Model.ForumPost.Customer.Id }, new { @class = "username" })
+                }
+                else if (!allowViewingProfiles || customerIsGuest)
+                {                    
+                    <span class="username">@authorName</span>
+                }
+            }
+            @if (Model.CommonTopicSettingsModel.AllowCustomersToUploadAvatars)
+            {
+                <div class="avatar">
+                    @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                    {
+                        <img src="@(Model.AvatarUrl)" class="avatar-img" alt="Avatar" />
+                    }
+                    else if (Model.CommonTopicSettingsModel.DefaultAvatarEnabled)
+                    {
+                        <img src="@(Model.CommonTopicSettingsModel.DefaultAvatarUrl)" class="avatar-img" alt="Avatar" />
+                    }
+                </div>
+            }
+            <div class="userstats">
+                @if (Model.ForumPost.Customer.IsForumModerator())
+                {
+                    <div class="status">
+                        @T("Forum.Status"): <span class="statvalue">@T("Forum.Moderator")</span>
+                    </div>
+                }
+                @if (Model.CommonTopicSettingsModel.ShowCustomersPostCount)
+                {
+                    <div class="totalposts">
+                        @T("Forum.TotalPosts"): <span class="statvalue">
+                            @{
+                   var totalPosts = Model.ForumPost.Customer.GetAttribute<int>(Nop.Core.Domain.Customers.SystemCustomerAttributeNames.ForumPostCount);
+                            }
+                            @totalPosts</span>
+                    </div>
+                }
+                @if (Model.CommonTopicSettingsModel.ShowCustomersJoinDate && !customerIsGuest)
+                {
+                    <div class="joined">
+                        @T("Forum.Joined"): <span class="statvalue">@Model.ForumPost.Customer.CreatedOnUtc.ToString("d")</span>
+                    </div>
+                }
+                @if ((Model.CommonTopicSettingsModel.ShowCustomersLocation && !customerIsGuest) & !String.IsNullOrEmpty(Model.Location))
+                {
+                    <div class="location">
+                        @T("Forum.Location"): <span class="statvalue">@Model.Location</span>
+                    </div>
+                }
+                @if (Model.CommonTopicSettingsModel.AllowPrivateMessages && !customerIsGuest)
+                {
+                    // TODO create link for sending a PrivateMessage: /sendpm/{customerId}
+                    <div class="sendpmbox">
+                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { customerId = @Model.ForumPost.Customer.Id }, new { @class = "pmlinkbutton" })
+                        @*<a href="#sendpm-123" class="pmlinkbutton">@</a>*@
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="postcontent">
+        <div class="posttime">
+            @T("Forum.Posted"): <span class="statvalue">
+                @{
+                    string dateStr = string.Empty;
+                    if (Model.CommonTopicSettingsModel.RelativeDateTimeFormattingEnabled)
+                    {
+                        dateStr = @Model.ForumPost.CreatedOnUtc.RelativeFormat(true, "f");
+                    }
+                    else
+                    {
+                        @(Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(@Model.ForumPost.CreatedOnUtc).ToString("f"))
+                    }
+                    @dateStr
+                }</span>            
+            @Html.RouteLink(@T("Forum.QuotePost").Text, "PostCreateQuote", new { id = @Model.ForumPost.TopicId, quote = @Model.ForumPost.Id }, new { @class = "quotepostlinkbutton" })
+            @if (@ViewBag.Page > 1)
+            {                
+                @Html.RouteLink(String.Format("#{0}", @Model.ForumPost.Id.ToString()), "TopicSlugPaged", "http", string.Empty, @Model.ForumPost.Id.ToString(), new { id = @Model.ForumPost.TopicId, slug = @Model.ForumPost.ForumTopic.GetSeName(), page = @ViewBag.Page }, new { @class = "postlink", tittle = @T("Forum.PostLinkTitle") })
+            }
+            else
+            {                
+                @Html.RouteLink(String.Format("#{0}", @Model.ForumPost.Id.ToString()), "TopicSlug", "http", string.Empty, @Model.ForumPost.Id.ToString(), new { id = @Model.ForumPost.TopicId, slug = @Model.ForumPost.ForumTopic.GetSeName() }, new { @class = "postlink", title = @T("Forum.PostLinkTitle") })
+            }
+        </div>
+        <div class="postbody">
+            <div class="posttext">
+                @Html.Raw(@Model.ForumPost.FormatPostText())
+            </div>
+            @Html.Hidden("Id", @Model.ForumPost.Id)
+        </div>
+        @if (Model.CommonTopicSettingsModel.SignaturesEnabled & !String.IsNullOrEmpty(Model.Signature))
+        {            
+            <div class="signature">
+                @Html.Raw(@Model.Signature)
+            </div>
+        }
+    </div>
+    <div class="clear">
+    </div>
+</div>

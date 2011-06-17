@@ -23,10 +23,12 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Catalog;
 using Nop.Core.Html;
+using Nop.Services.Forums;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Tax;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Services.Messages
 {
@@ -539,6 +541,31 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ProductVariant.StockQuantity", HttpUtility.HtmlEncode(productVariant.StockQuantity)));
         }
 
+        public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic)
+        {
+            //TODO topic URL (SeoHelper.GetTopicUrl())
+            tokens.Add(new Token("Forums.TopicURL", "TopicURL Not Implemented"));
+            tokens.Add(new Token("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject)));
+        }
+
+        public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
+        {
+            tokens.Add(new Token("Forums.PostAuthor", HttpUtility.HtmlEncode(forumPost.Customer.FormatUserName())));
+            tokens.Add(new Token("Forums.PostBody", HttpUtility.HtmlEncode(forumPost.FormatPostText())));
+        }
+
+        public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
+        {
+            //TODO forum URL (SeoHelper.GetForumUrl())
+            tokens.Add(new Token("Forums.ForumURL", "ForumURL Not Implemented"));
+            tokens.Add(new Token("Forums.ForumName", HttpUtility.HtmlEncode(forum.Name)));
+        }
+
+        public virtual void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
+        {
+            tokens.Add(new Token("PrivateMessage.Subject", HttpUtility.HtmlEncode(privateMessage.Subject)));
+            tokens.Add(new Token("PrivateMessage.Text",  privateMessage.FormatPrivateMessageText()));
+        }
 
         /// <summary>
         /// Gets list of allowed (supported) message tokens for campaigns

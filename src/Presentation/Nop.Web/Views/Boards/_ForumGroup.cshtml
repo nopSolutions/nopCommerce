@@ -1,0 +1,47 @@
+﻿@model Nop.Web.Models.Boards.ForumGroupModel
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+<div class="forumgroup">
+    <div class="grouptitle">
+        @Html.RouteLink(Model.ForumGroup.Name, "ForumGroupSlug", new { id = Model.ForumGroup.Id, slug = Model.ForumGroup.GetSeName() })
+    </div>
+    <table class="groups">
+        <tr class="groupheader">
+            <td class="forumname" colspan="2">
+                @T("Forum.Forum")
+            </td>
+            <td class="topics">
+                @T("Forum.Topics")
+            </td>
+            <td class="posts">
+                @T("Forum.Posts")
+            </td>
+            <td class="lastpost">
+                @T("Forum.LatestPost")
+            </td>
+        </tr>
+        @foreach (var forum in Model.ForumGroup.Forums)
+        {
+            <tr class="forum">
+                <td class="image">
+                    <div />
+                </td>
+                <td class="forumname">
+                    <span class="forumtitle">
+                        @Html.RouteLink(@forum.Name, "ForumSlug", new { id = @forum.Id, slug = @forum.GetSeName() })
+                    </span>
+                    <br />
+                    <span class="forumdescription">@forum.Description
+                    </span>
+                </td>
+                <td class="topics">@forum.NumTopics
+                </td>
+                <td class="posts">@forum.NumPosts
+                </td>
+                <td class="lastpost">
+                    @{Html.RenderPartial("_LastPost", new Nop.Web.Models.Boards.LastPostModel(@forum.LastPost, true, Model.AllowViewingProfiles, Model.RelativeDateTimeFormattingEnabled));}
+                </td>
+            </tr>            
+        }
+    </table>
+</div>

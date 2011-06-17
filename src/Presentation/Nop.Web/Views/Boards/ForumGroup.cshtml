@@ -1,0 +1,17 @@
+﻿@model Nop.Web.Models.Boards.ForumGroupModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(Model.ForumGroup.Name);
+}
+<div class="forumgrouppage">
+    @Html.Partial("_ForumBreadcrumb", new Nop.Web.Models.Boards.ForumBreadcrumbModel { ForumGroupModel = @Model, Separator = " / " })
+    <div class="clear">
+    </div>
+    @Html.Partial("_SearchBox")
+    <div class="forumgroup">
+        @Html.Partial("_ForumGroup", Model)
+    </div>
+    <div class="clear">
+    </div>
+</div>

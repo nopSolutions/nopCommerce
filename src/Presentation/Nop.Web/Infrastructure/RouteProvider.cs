@@ -234,7 +234,141 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Blog", action = "List" },
                             new[] { "Nop.Web.Controllers" });
 
+            //forum
+            routes.MapRoute("Boards",
+                            "boards",
+                            new { controller = "Boards", action = "Index" },
+                            new[] { "Nop.Web.Controllers" });
 
+            routes.MapRoute("ActiveDiscussions",
+                            "boards/activediscussions",
+                            new { controller = "Boards", action = "ActiveDiscussions" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("ActiveDiscussionsRSS",
+                            "boards/activediscussionsrss",
+                            new { controller = "Boards", action = "ActiveDiscussionsRSS" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("PostEdit",
+                            "boards/postedit/{id}",
+                            new { controller = "Boards", action = "PostEdit" },
+                            new { id = @"\d+"},
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("PostDelete",
+                            "boards/postdelete/{id}",
+                            new { controller = "Boards", action = "PostDelete" },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("PostCreate",
+                            "boards/postcreate/{id}",
+                            new { controller = "Boards", action = "PostCreate"},
+                            new { id = @"\d+"},
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("PostCreateQuote",
+                            "boards/postcreate/{id}/{quote}",
+                            new { controller = "Boards", action = "PostCreate"},
+                            new { id = @"\d+", quote = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("TopicEdit",
+                            "boards/topicedit/{id}",
+                            new { controller = "Boards", action = "TopicEdit"},
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("TopicDelete",
+                            "boards/topicdelete/{id}",
+                            new { controller = "Boards", action = "TopicDelete"},
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("TopicCreate",
+                            "boards/topiccreate/{id}",
+                            new { controller = "Boards", action = "TopicCreate" },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("TopicMove",
+                            "boards/topicmove/{id}",
+                            new { controller = "Boards", action = "TopicMove" },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("TopicWatch",
+                            "boards/topicwatch/{id}",
+                            new { controller = "Boards", action = "TopicWatch" },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("TopicSlug",
+                            "boards/topic/{id}/{slug}",
+                            new { controller = "Boards", action = "Topic", slug = UrlParameter.Optional },
+                            new { id = @"\d+"},
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("TopicSlugPaged",
+                            "boards/topic/{id}/{slug}/page/{page}",
+                            new { controller = "Boards", action = "Topic", slug = UrlParameter.Optional, page = UrlParameter.Optional },
+                            new { id = @"\d+", page = @"\d+"},
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("ForumWatch",
+                            "boards/forumwatch/{id}",
+                            new { controller = "Boards", action = "ForumWatch" },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            
+            routes.MapRoute("ForumRSS",
+                            "boards/forumrss/{id}",
+                            new { controller = "Boards", action = "ForumRSS" },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("ForumSlug",
+                            "boards/forum/{id}/{slug}",
+                            new { controller = "Boards", action = "Forum", slug = UrlParameter.Optional },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("ForumSlugPaged",
+                            "boards/forum/{id}/{slug}/page/{page}",
+                            new { controller = "Boards", action = "Forum", slug = UrlParameter.Optional, page = UrlParameter.Optional },
+                            new { id = @"\d+", page = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("ForumGroupSlug",
+                            "boards/forumgroup/{id}/{slug}",
+                            new { controller = "Boards", action = "ForumGroup", slug = UrlParameter.Optional },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("Search",
+                            "boards/search",
+                            new { controller = "Boards", action = "Search" },
+                            new[] { "Nop.Web.Controllers" });
+
+            //private messages
+            routes.MapRoute("PrivateMessages",
+                            "privatemessages",
+                            new { controller = "PrivateMessages", action = "Index" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("SendPM",
+                            "sendpm/{customerId}",
+                            new { controller = "PrivateMessages", action = "SendPM" },
+                            new { customerId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("ViewPM",
+                            "viewpm/{privateMessageId}",
+                            new { controller = "PrivateMessages", action = "ViewPM" },
+                            new { privateMessageId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            
             //news
             routes.MapRoute("NewsArchive",
                             "news",

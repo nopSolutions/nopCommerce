@@ -89,6 +89,35 @@ namespace Nop.Services.Tests.Customers
             customer.IsAdmin().ShouldBeTrue();
         }
         [Test]
+        public void Can_check_whether_customer_is_forum_moderator()
+        {
+            var customer = new Customer();
+
+            customer.CustomerRoles.Add(new CustomerRole()
+            {
+                Active = true,
+                Name = "Registered",
+                SystemName = SystemCustomerRoleNames.Registered
+            });
+            customer.CustomerRoles.Add(new CustomerRole()
+            {
+                Active = true,
+                Name = "Guests",
+                SystemName = SystemCustomerRoleNames.Guests
+            });
+
+            customer.IsForumModerator().ShouldBeFalse();
+
+            customer.CustomerRoles.Add(
+                new CustomerRole()
+                {
+                    Active = true,
+                    Name = "ForumModerators",
+                    SystemName = SystemCustomerRoleNames.ForumModerators
+                });
+            customer.IsForumModerator().ShouldBeTrue();
+        }
+        [Test]
         public void Can_check_whether_customer_is_guest()
         {
             var customer = new Customer();

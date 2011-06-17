@@ -26,6 +26,7 @@ using Nop.Core.Html;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Services.Messages
 {
@@ -54,5 +55,13 @@ namespace Nop.Services.Messages
         void AddProductVariantTokens(IList<Token> tokens, ProductVariant productVariant);
 
         string[] GetListOfCampaignAllowedTokens();
+
+        void AddForumTokens(IList<Token> tokens, Forum forum);
+
+        void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic);
+
+        void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost);
+
+        void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage);
     }
 }

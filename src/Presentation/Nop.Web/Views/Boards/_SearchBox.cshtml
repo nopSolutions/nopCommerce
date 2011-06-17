@@ -1,0 +1,11 @@
+﻿<div class="forumsearchbox">
+    <script type="text/javascript">function cf(a,b){if(a.value==b)a.value=''}function rf(a,b){if(a.value=='')a.value=b} </script>
+    @using (Html.BeginForm("Search", "Boards", FormMethod.Get))
+    {
+        var searchText = T("Forum.SearchForumsTooltip");
+        @Html.TextBox("searchterms", searchText, new { @class = "forumsearchboxtext", onclick = String.Format("cf(this, '{0}')", searchText), onblur = String.Format("rf(this, '{0}')", searchText) })
+        <input type="submit" value="@T("Forum.SearchButton")" class="forumsearchboxbutton" />
+        <br />        
+        @Html.RouteLink(@T("Forum.AdvancedSearch").Text, "Search", new { adv = true }, new { title = @T("Forum.AdvancedSearch").Text })
+    }
+</div>

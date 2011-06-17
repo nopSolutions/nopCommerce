@@ -228,6 +228,9 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+            <LocaleResource Name="Location">
+                <Value>Location</Value>
+            </LocaleResource>
           <LocaleResource Name="Newsletter">
             <Value>Newsletter</Value>
           </LocaleResource>
@@ -250,6 +253,9 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+            <LocaleResource Name="Signature">
+                <Value>Signature</Value>
+            </LocaleResource>
           <LocaleResource Name="Timezone">
             <Value>Time zone</Value>
           </LocaleResource>
@@ -871,6 +877,13 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+    <LocaleResource Name="Customer">
+        <Children>
+            <LocaleResource Name="Guest">
+                <Value>Guest</Value>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>    
   <LocaleResource Name="DownloadableProducts">
     <Children>
       <LocaleResource Name="Fields">
@@ -1282,6 +1295,307 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+    <LocaleResource Name="Forum">
+        <Children>
+            <LocaleResource Name="ActiveDiscussions">
+                <Value>Active discussions</Value>
+                <Children>
+                    <LocaleResource Name="ViewAll">
+                        <Value>View all</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="ActiveDiscussionsFeedDescription">
+                <Value>Topics with active discussions.</Value>
+            </LocaleResource>
+            <LocaleResource Name="ActiveDiscussionsFeedTitle">
+                <Value>{0} - Active Discussions</Value>
+            </LocaleResource>
+            <LocaleResource Name="ActiveDiscussionsRSSLinkTitle">
+                <Value>Click here to be informed automatically of active discussion topics</Value>
+            </LocaleResource>
+            <LocaleResource Name="AdvancedSearch">
+                <Value>Advanced search</Value>
+            </LocaleResource>
+            <LocaleResource Name="Announcement">
+                <Value>Announcement</Value>
+            </LocaleResource>
+            <LocaleResource Name="Author">
+                <Value>Author</Value>
+            </LocaleResource>
+            <LocaleResource Name="BreadCrumb">
+                <Children>
+                    <LocaleResource Name="ForumGroupTitle">
+                        <Value>Forum Group</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="ForumHomeTitle">
+                        <Value>Forum Home Page</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="ForumTitle">
+                        <Value>Forum</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="HomeTitle">
+                        <Value>Home Page</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="TopicTitle">
+                        <Value>Topic</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="By">
+                <Value>By</Value>
+            </LocaleResource>
+            <LocaleResource Name="Cancel">
+                <Value>Cancel</Value>
+            </LocaleResource>
+            <LocaleResource Name="DeletePost">
+                <Value>Delete Post</Value>
+            </LocaleResource>
+            <LocaleResource Name="DeleteTopic">
+                <Value>Delete Topic</Value>
+            </LocaleResource>
+            <LocaleResource Name="EditPost">
+                <Value>Edit Post</Value>
+            </LocaleResource>
+            <LocaleResource Name="EditTopic">
+                <Value>Edit Topic</Value>
+            </LocaleResource>
+            <LocaleResource Name="Forum">
+                <Value>Forum</Value>
+            </LocaleResource>
+            <LocaleResource Name="ForumFeedDescription">
+                <Value>Forum's topics with newest posts.</Value>
+            </LocaleResource>
+            <LocaleResource Name="ForumFeedTitle">
+                <Value>{0} - Forum: {1}</Value>
+            </LocaleResource>
+            <LocaleResource Name="ForumRSSLinkTitle">
+                <Value>Click here to be informed automatically of new posts and topics in the forum</Value>
+            </LocaleResource>
+            <LocaleResource Name="ForumName">
+                <Value>Forum Name</Value>
+            </LocaleResource>
+            <LocaleResource Name="Forums">
+                <Value>Forums</Value>
+            </LocaleResource>
+            <LocaleResource Name="Home">
+                <Value>Home</Value>
+            </LocaleResource>
+            <LocaleResource Name="In">
+                <Value>In</Value>
+            </LocaleResource>
+            <LocaleResource Name="Joined">
+                <Value>Joined</Value>
+            </LocaleResource>
+            <LocaleResource Name="LatestPost">
+                <Value>Latest Post</Value>
+            </LocaleResource>
+            <LocaleResource Name="Location">
+                <Value>Location</Value>
+            </LocaleResource>
+            <LocaleResource Name="Moderator">
+                <Value>Moderator</Value>
+            </LocaleResource>
+            <LocaleResource Name="MoveTopic">
+                <Value>Move Topic</Value>
+            </LocaleResource>
+            <LocaleResource Name="NewPost">
+                <Value>New Post</Value>
+            </LocaleResource>
+            <LocaleResource Name="NewTopic">
+                <Value>New Topic</Value>
+            </LocaleResource>
+            <LocaleResource Name="NoPosts">
+                <Value>No Posts</Value>
+            </LocaleResource>
+            <LocaleResource Name="Normal">
+                <Value>Normal</Value>
+            </LocaleResource>
+            <LocaleResource Name="NotifyWhenSomeonePostsInThisTopic">
+                <Value>Notify me via email when someone posts in this topic</Value>
+            </LocaleResource>
+            <LocaleResource Name="Options">
+                <Value>Options</Value>
+            </LocaleResource>
+            <LocaleResource Name="PageTitle">
+                <Children>
+                    <LocaleResource Name="ActiveDiscussions">
+                        <Value>Active discussions</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Default">
+                        <Value>Forums</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="MoveTopic">
+                        <Value>Move Topic</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Search">
+                        <Value>Search Forums</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="PostEdit">
+                        <Value>Edit Post</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="PostNew">
+                        <Value>New Post</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="TopicEdit">
+                        <Value>Edit Topic</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="TopicNew">
+                        <Value>New Topic</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="PostLinkTitle">
+                <Value>Link to this post</Value>
+            </LocaleResource>
+            <LocaleResource Name="Posted">
+                <Value>Posted</Value>
+            </LocaleResource>
+            <LocaleResource Name="Posts">
+                <Value>Posts</Value>
+            </LocaleResource>
+            <LocaleResource Name="Priority">
+                <Value>Priority</Value>
+            </LocaleResource>
+            <LocaleResource Name="PrivateMessages">
+                <Children>
+                    <LocaleResource Name="PM">
+                        <Value>PM</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="QuotePost">
+                <Value>Quote</Value>
+            </LocaleResource>
+            <LocaleResource Name="Replies">
+                <Value>Replies</Value>
+            </LocaleResource>
+            <LocaleResource Name="Reply">
+                <Value>Reply</Value>
+            </LocaleResource>
+            <LocaleResource Name="Search">
+                <Value>Search Forums</Value>
+                <Children>
+                    <LocaleResource Name="AdvancedSearch">
+                        <Value>Advanced search</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="LimitResultsToPrevious">
+                        <Value>Limit results to previous:</Value>
+                        <Children>
+                            <LocaleResource Name="1day">
+                                <Value>1 day</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="1month">
+                                <Value>1 month</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="1year">
+                                <Value>1 year</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="2weeks">
+                                <Value>2 weeks</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="3months">
+                                <Value>3 months</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="6months">
+                                <Value>6 months</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="7days">
+                                <Value>7 days</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="AllResults">
+                                <Value>All results</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="SearchInForum">
+                        <Value>Search in forum:</Value>
+                        <Children>
+                            <LocaleResource Name="All">
+                                <Value>All forums</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="SearchWithin">
+                        <Value>Search within:</Value>
+                        <Children>
+                            <LocaleResource Name="All">
+                                <Value>Topic titles and post text</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="PostTextOnly">
+                                <Value>Post text only</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="TopicTitlesOnly">
+                                <Value>Topic titles only</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="SearchButton">
+                <Value>Search</Value>
+            </LocaleResource>
+            <LocaleResource Name="SearchForumsTooltip">
+                <Value>Search forums</Value>
+            </LocaleResource>
+            <LocaleResource Name="SearchNoResultsText">
+                <Value>No posts were found that matched your criteria.</Value>
+            </LocaleResource>
+            <LocaleResource Name="SearchTermMinimumLengthIsNCharacters">
+                <Value>Search term minimum length is {0} characters</Value>
+            </LocaleResource>
+            <LocaleResource Name="SelectTheForumToMoveTopic">
+                <Value>Select the forum you want to move the post to</Value>
+            </LocaleResource>
+            <LocaleResource Name="Status">
+                <Value>Status</Value>
+            </LocaleResource>
+            <LocaleResource Name="Sticky">
+                <Value>Sticky</Value>
+            </LocaleResource>
+            <LocaleResource Name="Submit">
+                <Value>Submit</Value>
+            </LocaleResource>
+            <LocaleResource Name="TextCannotBeEmpty">
+                <Value>Text cannot be empty</Value>
+            </LocaleResource>
+            <LocaleResource Name="Topics">
+                <Value>Topics</Value>
+                <Children>
+                    <LocaleResource Name="GotoPostPager">
+                        <Value>[Go to page: {0}]</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="TopicSubjectCannotBeEmpty">
+                <Value>Topic subject cannot be empty</Value>
+            </LocaleResource>
+            <LocaleResource Name="TopicTitle">
+                <Value>Topic Title</Value>
+            </LocaleResource>
+            <LocaleResource Name="TotalPosts">
+                <Value>Total Posts</Value>
+            </LocaleResource>
+            <LocaleResource Name="UnwatchForum">
+                <Value>Unwatch Forum</Value>
+            </LocaleResource>
+            <LocaleResource Name="UnwatchTopic">
+                <Value>Unwatch Topic</Value>
+            </LocaleResource>
+            <LocaleResource Name="Views">
+                <Value>Views</Value>
+            </LocaleResource>
+            <LocaleResource Name="WatchForum">
+                <Value>Watch Forum</Value>
+            </LocaleResource>
+            <LocaleResource Name="WatchTopic">
+                <Value>Watch Topic</Value>
+            </LocaleResource>
+            <LocaleResource Name="AdvancedSearch">
+                <Value>Advanced search</Value>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>
   <LocaleResource Name="GiftCardAttribute">
     <Children>
       <LocaleResource Name="From">
@@ -1930,9 +2244,153 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+    <LocaleResource Name="Pager">
+        <Children>
+            <LocaleResource Name="CurrentPage">
+                <Value>Page {0} of {1} ({2} total)</Value>
+            </LocaleResource>
+            <LocaleResource Name="First">
+                <Value>First</Value>
+            </LocaleResource>
+            <LocaleResource Name="FirstPageTitle">
+                <Value>First Page</Value>
+            </LocaleResource>
+            <LocaleResource Name="Last">
+                <Value>Last</Value>
+            </LocaleResource>
+            <LocaleResource Name="LastPageTitle">
+                <Value>Last Page</Value>
+            </LocaleResource>
+            <LocaleResource Name="PageLinkTitle">
+                <Value>Page {0}</Value>
+            </LocaleResource>
+            <LocaleResource Name="Previous">
+                <Value>Previous</Value>
+            </LocaleResource>
+            <LocaleResource Name="PreviousPageTitle">
+                <Value>Previous Page</Value>
+            </LocaleResource>
+            <LocaleResource Name="Next">
+                <Value>Next</Value>
+            </LocaleResource>
+            <LocaleResource Name="NextPageTitle">
+                <Value>Next Page</Value>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>  
   <LocaleResource Name="PrivacyNotice">
     <Value>Privacy Notice</Value>
   </LocaleResource>
+    <LocaleResource Name="PrivateMessages">
+        <Children>
+            <LocaleResource Name="Inbox">
+                <Value>Inbox</Value>
+                <Children>
+                    <LocaleResource Name="FromColumn">
+                        <Value>From</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SubjectColumn">
+                        <Value>Subject</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="DateColumn">
+                        <Value>Date</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="DeleteSelected">
+                        <Value>Delete selected</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="MessageCannotBeEmpty">
+                <Value>Message cannot be empty</Value>
+            </LocaleResource>
+            <LocaleResource Name="PM">
+                <Value>PM</Value>
+            </LocaleResource>
+            <LocaleResource Name="PrivateMessages">
+                <Value>Private Messages</Value>
+            </LocaleResource>
+            <LocaleResource Name="Send">
+                <Children>
+                    <LocaleResource Name="CancelButton">
+                        <Value>Cancel</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Message">
+                        <Value>Message:</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="PostMessage">
+                        <Value>Post a Private Message</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SendButton">
+                        <Value>Send</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Subject">
+                        <Value>Subject:</Value>
+                        <Children>
+                            <LocaleResource Name="Required">
+                                <Value>Subject is required.</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="To">
+                        <Value>To:</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="Sent">
+                <Children>
+                    <LocaleResource Name="DateColumn">
+                        <Value>Date</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="DeleteSelected">
+                        <Value>Delete selected</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SubjectColumn">
+                        <Value>Subject</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="ToColumn">
+                        <Value>To</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="SentItems">
+                <Value>Sent Items</Value>
+            </LocaleResource>
+            <LocaleResource Name="SubjectCannotBeEmpty">
+                <Value>Subject cannot be empty</Value>
+            </LocaleResource>
+            <LocaleResource Name="TotalUnread">
+                <Value>({0} Unread)</Value>
+            </LocaleResource>
+            <LocaleResource Name="View">
+                <Children>
+                    <LocaleResource Name="ViewMessage">
+                        <Value>View Message</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="From">
+                        <Value>From:</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="To">
+                        <Value>To:</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Subject">
+                        <Value>Subject:</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Message">
+                        <Value>Message:</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="ReplyButton">
+                        <Value>Reply</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="DeleteButton">
+                        <Value>Delete</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="BackButton">
+                        <Value>Back to messages</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>
   <LocaleResource Name="Products">
     <Children>
       <LocaleResource Name="AlsoPurchased">

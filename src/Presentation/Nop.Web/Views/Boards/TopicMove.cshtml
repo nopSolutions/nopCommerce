@@ -1,0 +1,38 @@
+﻿@model Nop.Web.Models.Boards.TopicMoveModel
+@using Nop.Services.Seo;
+@{    
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
+}
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.Id)
+    <div class="moveforumtopic">
+        @Html.Partial("_ForumBreadcrumb", @Model.ForumBreadCrumbModel)
+        <div class="title">
+            @T("Forum.MoveTopic")
+        </div>
+        <div class="wrapper">
+            <div class="clear">
+            </div>
+            <table class="movetopic">
+                <tr>
+                    <td class="fieldname">
+                        @T("Forum.SelectTheForumToMoveTopic"):
+                    </td>
+                    <td>
+                        @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"))
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="options">
+                        <input type="submit" value="@T("Forum.Submit")" class="submitforumtopicbutton" />
+                        <input type="button" class="cancelforumtopicbutton" value="@T("Forum.Cancel")" 
+                        onclick="window.location.href='@Url.RouteUrl("TopicSlug", new { id = @Model.Id, slug = @Model.ForumBreadCrumbModel.ForumTopicPostsModel.ForumTopic.GetSeName() })'" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}

@@ -4059,6 +4059,14 @@ namespace Nop.Services.Installation
                                             SystemName = SystemCustomerRoleNames.Administrators,
                                         };
             crAdministrators.Customers.Add(defaultCustomer);
+            var crForumModerators = new CustomerRole
+                                        {
+                                            Name = "ForumModerators",
+                                            Active = true,
+                                            IsSystemRole = true,
+                                            SystemName = SystemCustomerRoleNames.ForumModerators,
+                                        };
+            crForumModerators.Customers.Add(defaultCustomer);
             var crRegistered = new CustomerRole
                                         {
                                             Name = "Registered",
@@ -4077,6 +4085,7 @@ namespace Nop.Services.Installation
             var customerRoles = new List<CustomerRole>
                                 {
                                     crAdministrators,
+                                    crForumModerators,
                                     crRegistered,
                                     crGuests
                                 };
@@ -4686,31 +4695,32 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<ForumSettings>>()
                 .SaveSettings(new ForumSettings()
                 {
-                    ForumsEnabled = true,
+                    ForumsEnabled = false,
                     RelativeDateTimeFormattingEnabled = true,
-                    AllowCustomersToEditPosts = true,
-                    AllowCustomersToManageSubscriptions = true,
+                    AllowCustomersToDeletePosts = false,
+                    AllowCustomersToEditPosts = false,
+                    AllowCustomersToManageSubscriptions = false,
                     AllowGuestsToCreatePosts = false,
-                    AllowGuestsToCreateTopics = false,
-                    AllowCustomersToDeletePosts = true,
+                    AllowGuestsToCreateTopics = false,                    
                     TopicSubjectMaxLength = 450,
                     PostMaxLength = 4000,
+                    StrippedTopicMaxLength = 45,                    
                     TopicsPageSize = 10,
                     PostsPageSize = 10,
-                    TopicPostsPageLinkDisplayCount = 5,
-                    ForumTopicsPageLinkDisplayCount = 5,
-                    SearchPageLinkDisplayCount = 10,
-                    SearchResultsPageSize = 15,
+                    SearchResultsPageSize = 10,
                     LatestCustomerPostsPageSize = 5,
                     ShowCustomersPostCount = true,
                     ForumEditor = EditorType.BBCodeEditor,
                     SignaturesEnabled = true,
-                    AllowPrivateMessages = true,
+                    AllowPrivateMessages = false,
                     NotifyAboutPrivateMessages = false,
                     PMSubjectMaxLength = 450,
                     PMTextMaxLength = 4000,
-                    ActiveDiscussionsCount = 25,
+                    HomePageActiveDiscussionsTopicCount = 5,
+                    ActiveDiscussionsPageTopicCount = 50,
+                    ActiveDiscussionsFeedEnabled = false,
                     ActiveDiscussionsFeedCount = 25,
+                    ForumFeedsEnabled = false,
                     ForumFeedCount = 10,
                     ForumSearchTermMinimumLength = 3,
                 });
@@ -8565,95 +8575,62 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallForums()
         {
-
-            int forumGroupCount = 2;
-            int forumCount = 5;
-            int topicCount = 1;
-            int postCount = 1;
-
-            var customer = _customerRepository.Table.FirstOrDefault();
-
-            for (int a = 1; a <= forumGroupCount; a++)
+            var forumGroup = new ForumGroup()
             {
-                var forumGroup = new ForumGroup()
-                {
-                    Name = "Forum Group " + a.ToString(),
-                    Description = "ForumGroup " + a.ToString() + " Description",
-                    DisplayOrder = a,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    UpdatedOnUtc = DateTime.UtcNow,
-                };
+                Name = "General",
+                Description = "",
+                DisplayOrder = 5,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+            };
 
-                _forumGroupRepository.Insert(forumGroup);
+            _forumGroupRepository.Insert(forumGroup);
 
-                for (int b = 1; b <= forumCount; b++)
-                {
-                    var forum = new Forum()
-                    {
-                        Id = forumGroup.Id,
-                        Name = String.Format("FG{0} Forum {1}", a.ToString(), b.ToString()),
-                        Description = String.Format("FG{0}, Forum {1} Description", a.ToString(), b.ToString()),
-                        NumTopics = 0,
-                        NumPosts = 0,
-                        LastPostCustomerId = customer.Id,
-                        LastPostTime = DateTime.UtcNow,
-                        DisplayOrder = b,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow,
-                        ForumGroup = forumGroup,
-                    };
+            var newProductsForum = new Forum()
+            {
+                ForumGroupId = forumGroup.Id,
+                Name = "New Products",
+                Description = "Discuss new products and industry trends",
+                NumTopics = 0,
+                NumPosts = 0,
+                LastPostCustomerId = 0,
+                LastPostTime = null,
+                DisplayOrder = 1,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+            };
+            _forumRepository.Insert(newProductsForum);
 
-                    _forumRepository.Insert(forum);
-                    forumGroup.Forums.Add(forum);
+            var mobileDevicesForum = new Forum()
+            {
+                ForumGroupId = forumGroup.Id,
+                Name = "Mobile Devices Forum",
+                Description = "Discuss the mobile phone market",
+                NumTopics = 0,
+                NumPosts = 0,
+                LastPostCustomerId = 0,
+                LastPostTime = null,
+                DisplayOrder = 10,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+            };
+            _forumRepository.Insert(mobileDevicesForum);
 
-                    for (int c = 1; c <= topicCount; c++)
-                    {
-                        var forumTopic = new ForumTopic()
-                        {
-                            Id = forum.Id,
-                            Forum = forum,
-                            CustomerId = customer.Id,
-                            TopicTypeId = (int)ForumTopicType.Normal,
-                            Subject = String.Format("FG{0}, F{1}, Topic {2} Subject", a.ToString(), b.ToString(), c.ToString()),
-                            NumPosts = 0,
-                            Views = 0,
-                            LastPostId = 0,
-                            LastPostTime = DateTime.UtcNow,
-                            CreatedOnUtc = DateTime.UtcNow,
-                            UpdatedOnUtc = DateTime.UtcNow,
-                        };
-
-                        _forumTopicRepository.Insert(forumTopic);
-                        forum.ForumTopics.Add(forumTopic);
-                        forum.LastTopicId = forumTopic.Id;
-
-                        for (int d = 1; d <= postCount; d++)
-                        {
-                            var forumPost = new ForumPost()
-                            {
-                                Id = forumTopic.Id,
-                                ForumTopic = forumTopic,
-                                CustomerId = customer.Id,
-                                Text = String.Format("Post {0} Text. {1}", d.ToString(), forumTopic.Subject),
-                                IPAddress = "127.0.0.1",
-                                CreatedOnUtc = DateTime.UtcNow,
-                                UpdatedOnUtc = DateTime.UtcNow
-                            };
-                            _forumPostRepository.Insert(forumPost);
-                            forumTopic.ForumPosts.Add(forumPost);
-                            forum.LastPostId = forumPost.Id;
-                            forum.LastPostTime = DateTime.UtcNow;
-                            forumTopic.LastPostId = forumPost.Id;
-                            forumTopic.LastPostTime = DateTime.UtcNow;
-                        }
-
-                        forumTopic.NumPosts = postCount;
-                        forum.NumPosts += postCount;
-                    }
-                    forum.NumTopics = topicCount;
-                }
-            }
-        }
+            var packagingShippingForum = new Forum()
+            {
+                ForumGroupId = forumGroup.Id,
+                Name = "Packaging & Shipping",
+                Description = "Discuss packaging & shipping",
+                NumTopics = 0,
+                NumPosts = 0,
+                LastPostCustomerId = 0,
+                LastPostTime = null,
+                DisplayOrder = 20,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+            };
+            _forumRepository.Insert(packagingShippingForum);
+        }        
 
         protected virtual void InstallDiscounts()
         {

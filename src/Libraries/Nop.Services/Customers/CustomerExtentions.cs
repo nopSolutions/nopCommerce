@@ -8,6 +8,8 @@ using Nop.Core.Domain.Customers;
 using System.IO;
 using System.Xml.Serialization;
 using Nop.Core.Domain.Security;
+using Nop.Services.Localization;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Customers
 {
@@ -45,6 +47,17 @@ namespace Nop.Services.Customers
         public static bool IsAdmin(this Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return IsInCustomerRole(customer, SystemCustomerRoleNames.Administrators, onlyActiveCustomerRoles);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is a forum moderator
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public static bool IsForumModerator(this Customer customer, bool onlyActiveCustomerRoles = true)
+        {
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.ForumModerators, onlyActiveCustomerRoles);
         }
 
         /// <summary>
@@ -147,5 +160,60 @@ namespace Nop.Services.Customers
             }
             return fullName;
         }
+
+        /// <summary>
+        /// Formats the customer name
+        /// </summary>
+        /// <param name="customer">Source</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatUserName(this Customer customer)
+        {
+            return FormatUserName(customer, false);
+        }
+
+        /// <summary>
+        /// Formats the customer name
+        /// </summary>
+        /// <param name="customer">Source</param>
+        /// <param name="stripTooLong">Strip too long customer name</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatUserName(this Customer customer, bool stripTooLong)
+        {
+            if (customer == null)
+                return string.Empty;
+
+            if (customer.IsGuest())
+            {
+                return EngineContext.Current.Resolve<ILocalizationService>().GetResource("Customer.Guest");
+            }
+
+            string result = string.Empty;
+            switch (EngineContext.Current.Resolve<CustomerSettings>().CustomerNameFormat)
+            {
+                case CustomerNameFormat.ShowEmails:
+                    result = customer.GetDefaultUserAccountEmail();
+                    break;
+                case CustomerNameFormat.ShowFullNames:
+                    result = customer.GetFullName();
+                    break;
+                case CustomerNameFormat.ShowUsernames:
+                    result = customer.GetDefaultUserAccountUsername();
+                    break;
+                default:
+                    break;
+            }
+
+            if (stripTooLong)
+            {
+                int maxLength = 0; // EngineContext.Current.Resolve<CustomerSettings>().FormatNameMaxLength;
+                if (maxLength > 0 && result.Length > maxLength)
+                {
+                    result = result.Substring(0, maxLength);
+                }
+            }
+
+            return result;
+        }
+
     }
 }
