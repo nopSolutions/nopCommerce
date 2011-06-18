@@ -4006,14 +4006,14 @@ namespace Nop.Services.Installation
 
         }
 
-        protected virtual void InstallCustomersAndUsers()
+        protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
             var adminUser = new User()
             {
                 UserGuid = Guid.NewGuid(),
-                Email = "admin@yourStore.com",
-                Username = "admin@yourStore.com",
-                Password = "admin",
+                Email = defaultUserEmail,
+                Username = defaultUserEmail,
+                Password = defaultUserPassword,
                 PasswordFormat = PasswordFormat.Clear,
                 PasswordSalt = "",
                 IsApproved = true,
@@ -8806,7 +8806,8 @@ namespace Nop.Services.Installation
 
         #region Methods
 
-        public virtual void InstallData(bool installSampleData = true)
+        public virtual void InstallData(string defaultUserEmail, 
+            string defaultUserPassword, bool installSampleData = true)
         {
             InstallMeasures();
             InstallTaxCategories();
@@ -8814,7 +8815,7 @@ namespace Nop.Services.Installation
             InstallCurrencies();
             InstallCountriesAndStates();
             InstallShippingMethods();
-            InstallCustomersAndUsers();
+            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();
             InstallTopics();

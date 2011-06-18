@@ -11,6 +11,7 @@ using Autofac;
 using FluentValidation.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Installation;
 using Nop.Web.Framework;
 using Nop.Web.Framework.EmbeddedViews;
@@ -48,11 +49,8 @@ namespace Nop.Web
 
         protected void Application_Start()
         {
-            //subscrive to events
-            EventBroker.Instance.InstallingDatabase += InstallDatabase;
-
             //initialize engine context
-            EngineContext.Initialize(false);
+            EngineContext.Initialize(false, DataProviderHelper.DatabaseIsInstalled());
 
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
@@ -61,10 +59,13 @@ namespace Nop.Web
             //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel), new NopModelBinder());
 
-            //remove all view engines
-            ViewEngines.Engines.Clear();
-            //except the themeable razor view engine we use
-            ViewEngines.Engines.Add(new ThemableRazorViewEngine());
+            if (DataProviderHelper.DatabaseIsInstalled())
+            {
+                //remove all view engines
+                ViewEngines.Engines.Clear();
+                //except the themeable razor view engine we use
+                ViewEngines.Engines.Add(new ThemableRazorViewEngine());
+            }
 
             //Add some functionality on top of the deafult ModelMetadataProvider
             ModelMetadataProviders.Current = new NopMetadataProvider();
@@ -91,7 +92,8 @@ namespace Nop.Web
         }
         
         protected void Application_BeginRequest(object sender, EventArgs e)
-        { 
+        {
+            EnsureDatabaseIsInstalled();
         }
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
         { 
@@ -99,28 +101,39 @@ namespace Nop.Web
             SetWorkingCulture();
         }
 
-        protected void SetWorkingCulture()
+        protected void EnsureDatabaseIsInstalled()
         {
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            if (!webHelper.IsStaticResource(this.Request))
+            string installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
+            if (!webHelper.IsStaticResource(this.Request) &&
+                !DataProviderHelper.DatabaseIsInstalled() &&
+                !webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
             {
-                var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                if (workContext.CurrentCustomer != null && workContext.WorkingLanguage != null)
-                {
-                    var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
-                    Thread.CurrentThread.CurrentCulture = culture;
-                    Thread.CurrentThread.CurrentUICulture = culture;
-                }
+                this.Response.Redirect(installUrl);
             }
         }
 
-        protected void InstallDatabase(object sender, EventArgs e)
+        protected void SetWorkingCulture()
         {
-            EngineContext.Current.Resolve<IInstallationService>().InstallData();
+            if (DataProviderHelper.DatabaseIsInstalled())
+            {
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                if (!webHelper.IsStaticResource(this.Request))
+                {
+                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                    if (workContext.CurrentCustomer != null && workContext.WorkingLanguage != null)
+                    {
+                        var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                        Thread.CurrentThread.CurrentCulture = culture;
+                        Thread.CurrentThread.CurrentUICulture = culture;
+                    }
+                }
+            }
         }
-
+        
         protected void ContainerBuilding(object sender, NopEventArgs<ContainerBuilder> e)
         {
+            //TODO remove this method
             e.Value.Register(ctx => RouteTable.Routes).SingleInstance();
             e.Value.Register(ctx => ModelBinders.Binders).SingleInstance();
             e.Value.Register(ctx => ViewEngines.Engines).SingleInstance();

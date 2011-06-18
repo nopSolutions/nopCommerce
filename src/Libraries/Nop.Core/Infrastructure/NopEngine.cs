@@ -83,11 +83,19 @@ namespace Nop.Core.Infrastructure
         #endregion
 
         #region Methods
-
-        public void Initialize(NopConfig config)
+        
+        /// <summary>
+        /// Initialize components and plugins in the nop environment.
+        /// </summary>
+        /// <param name="config">Config</param>
+        /// <param name="databaseIsInstalled">A value indicating whether database is installed</param>
+        public void Initialize(NopConfig config, bool databaseIsInstalled)
         {
             //plugins
-            InitPlugins();
+            if (databaseIsInstalled)
+            {
+                InitPlugins();
+            }
 
             //start components
             this.ContainerManager.StartComponents();
@@ -95,7 +103,11 @@ namespace Nop.Core.Infrastructure
             //startup tasks
             RunStartupTasks();
 
-            StartScheduledTasks(config);
+            if (databaseIsInstalled)
+            {
+                //scheduled tasks
+                StartScheduledTasks(config);
+            }
         }
 
         public T Resolve<T>() where T : class

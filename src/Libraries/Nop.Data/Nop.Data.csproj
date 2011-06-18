@@ -37,6 +37,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,7 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatabaseInitializer.cs" />
+    <Compile Include="CreateTablesIfNotExists.cs" />
+    <Compile Include="DataProviderHelper.cs" />
+    <Compile Include="DataProviderManager.cs" />
+    <Compile Include="SqlServerDataProvider.cs" />
+    <Compile Include="SqlCeDataProvider.cs" />
+    <Compile Include="IDataProvider.cs" />
+    <Compile Include="DataProviderSettings.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="Mapping\Affiliates\AffiliateMap.cs" />
     <Compile Include="Mapping\Catalog\ProductTagMap.cs" />
@@ -128,7 +135,7 @@
     <Compile Include="NopObjectContext.cs" />
     <Compile Include="EfRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StartupTasks.cs" />
+    <Compile Include="EfStartUpTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nop.Core\Nop.Core.csproj">

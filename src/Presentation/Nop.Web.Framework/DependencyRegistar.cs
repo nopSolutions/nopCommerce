@@ -62,15 +62,23 @@ namespace Nop.Web.Framework
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
 
             //data layer
-            Database.DefaultConnectionFactory = new SqlCeConnectionFactory(
-                "System.Data.SqlServerCe.4.0", HostingEnvironment.MapPath("~/App_Data/"), "");
-            //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
-            string connectionString = "Data Source=" + HostingEnvironment.MapPath("~/App_Data/") + @"Nop.Db.sdf;Persist Security Info=False";
-            builder.Register<IDbContext>(c => new NopObjectContext(connectionString)).InstancePerHttpRequest();
+            var dataProviderManager = new DataProviderManager();
+            var dataProviderSettings = dataProviderManager.LoadSettings();
+            if (dataProviderSettings != null && dataProviderSettings.IsValid())
+            {
+                var dataProvider = dataProviderManager.LoadDataProvider(dataProviderSettings.DataProvider);
+                dataProvider.InitConnectionFactory();
+
+                builder.Register<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerHttpRequest();
+            }
+            else
+            {
+                builder.Register<IDbContext>(c => new NopObjectContext(new DataProviderManager().LoadSettings().DataConnectionString)).InstancePerHttpRequest();
+            }
+
 
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();
-
-
+            
             //register FakeHttpContext when HttpContext is not available
             builder.Register(c => HttpContext.Current != null ? 
                 (new HttpContextWrapper(HttpContext.Current) as HttpContextBase) : 

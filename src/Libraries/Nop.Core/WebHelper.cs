@@ -470,5 +470,54 @@ namespace Nop.Core
 
             return CommonHelper.To<T>(queryParam);
         }
+        
+        /// <summary>
+        /// Restart application domain
+        /// </summary>
+        public virtual void RestartAppDomain()
+        {
+            if (CommonHelper.GetTrustLevel() > AspNetHostingPermissionLevel.Medium)
+            {
+                //full trust
+                HttpRuntime.UnloadAppDomain();
+            }
+            else
+            {
+                //medium trust
+                bool success = TryWriteWebConfig();
+
+                if (!success)
+                {
+                    throw new NopException("Orchard needs to be restarted due to a configuration change, but was unable to do so.\r\n" +
+                        "To prevent this issue in the future, a change to the web server configuration is required:\r\n" +
+                        "- run the application in a full trust environment, or\r\n" +
+                        "- give the application write access to the 'web.config' file.");
+                }
+            }
+
+            // If setting up extensions/modules requires an AppDomain restart, it's very unlikely the
+            // current request can be processed correctly.  So, we redirect to the same URL, so that the
+            // new request will come to the newly started AppDomain.
+            var httpContext = HttpContext.Current;
+            if (httpContext != null)
+            {
+                httpContext.Response.Redirect(GetThisPageUrl(true), true /*endResponse*/);
+            }
+        }
+
+        private bool TryWriteWebConfig()
+        {
+            try
+            {
+                // In medium trust, "UnloadAppDomain" is not supported. Touch web.config
+                // to force an AppDomain restart.
+                File.SetLastWriteTimeUtc(MapPath("~/web.config"), DateTime.UtcNow);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

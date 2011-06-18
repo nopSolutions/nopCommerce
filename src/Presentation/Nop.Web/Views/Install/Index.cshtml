@@ -1,0 +1,197 @@
+﻿@model Nop.Web.Models.Install.InstallModel
+@{
+    Layout = "~/Views/Shared/_Installation.cshtml";
+}
+@using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installationform" }))
+{
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#installationform').submit(function () {
+                if ($('form').valid()) {
+                    $('input[type=submit]', this).attr('disabled', 'disabled');
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('input:radio[name=DataProvider]').click(toggleProvider);
+            
+            toggleProvider();
+        });
+
+        function toggleProvider() {
+            var selectedProvider = $("input[name=DataProvider]:checked").attr('id');
+            if (selectedProvider == 'provider_sqlce') {
+                $('#sqlDatabaseConnectionString').hide();
+            }
+            else if (selectedProvider == 'provider_sqlserver') {
+                $('#sqlDatabaseConnectionString').show();
+            }
+        }
+    </script>
+    
+    <table border="0" cellpadding="0" cellspacing="0" class="container-installer">
+        <tr class="top">
+            <td class="left">
+                &nbsp;
+            </td>
+            <td class="center">
+                &nbsp;
+            </td>
+            <td class="right">
+                &nbsp;
+            </td>
+        </tr>
+        <tr class="Middle">
+            <td class="left">
+                &nbsp;
+            </td>
+            <td class="center">
+                <span class="header-text">nopCommerce installation</span><br />
+                <div class="content">
+                    <table cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
+                        <tbody>
+                            <tr style="height: 100%;">
+                                <td>
+                                    <table class="wizard-step" border="0" cellpadding="0" cellspacing="10">
+                                        <tr>
+                                            <td colspan="2">
+                                                <label class="title">
+                                                    Thank you for choosing nopCommerce!</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <p>
+                                                    <a href="http://www.nopCommerce.com/" target="_blank">nopCommerce</a> is the leading
+                                                    ASP.NET online shop e-commerce solution. This wizard will guide you through the
+                                                    process of configuring <strong>nopCommerce</strong>
+                                                    <br />
+                                                    <br />
+                                                    To complete this wizard you must know some information regarding your database server
+                                                    ("connection string"). Please contact your ISP if necessary. If you're installing
+                                                    on a local machine or server you might need information from your System Admin.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="color: Red;">
+                                                @Html.ValidationSummary(false)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap" align="left">
+                                                <label for="AdminEmail">
+                                                    Admin user email:</label>
+                                            </td>
+                                            <td width="100%">
+                                                @Html.TextBoxFor(x => x.AdminEmail, new { @class = "textbox" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap" align="left">
+                                                <label for="AdminPassword">
+                                                    Admin user password:</label>
+                                            </td>
+                                            <td width="100%">
+                                                @Html.TextBoxFor(x => x.AdminPassword, new { @class = "textbox" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap" align="left">
+                                                <label for="ConfirmPassword">
+                                                    Confirm the password:</label>
+                                            </td>
+                                            <td width="100%">
+                                                @Html.TextBoxFor(x => x.ConfirmPassword, new { @class = "textbox" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td nowrap="nowrap" align="left">
+                                                <label for="InstallSampleData">
+                                                    Create sample data:</label>
+                                            </td>
+                                            <td width="100%">
+                                                @Html.CheckBoxFor(x => x.InstallSampleData)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="left">
+                                            @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
+                                                <label for="provider_sqlce">
+                                                    Use built-in data storage (SQL Server Compact)</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="left">
+                                            @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
+                                                <label for="provider_sqlserver">
+                                                    Use an existing SQL Server (or SQL Express) database</label>
+                                                <div id="sqlDatabaseConnectionString">
+                                                    <span style="white-space: nowrap;">
+                                                    <label for="DatabaseConnectionString">
+                                                        Connection string:</label>
+                                                    @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox", style="width:90%;" })
+                                                    </span>
+                                                    <br />
+                                                    <span class="hint">Example:<br />
+                                                        Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
+                                                        ID=userName;Password=password 
+                                                        <br />
+                                                        Find more info <a href="http://www.connectionstrings.com/" target="_blank">here</a>
+                                                        </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                If you need information on how to use nopCommerce, visit <a href="http://www.nopCommerce.com/documentation.aspx">
+                                                    the documentation section on nopCommerce.com</a>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <div style="float: right; padding: 0px 10px 0px 0px;">
+                                        <input type="submit" value="Install" style="width: 100px;" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+            <td class="right">
+            </td>
+        </tr>
+        <tr class="Bottom">
+            <td class="left">
+                &nbsp;
+            </td>
+            <td class="center">
+                &nbsp;
+            </td>
+            <td class="right">
+                &nbsp;
+            </td>
+        </tr>
+    </table>
+    <div class="container-footer">
+        <div style="text-align: right; padding: 0px 0px 0px 0px; color: #606060;">
+            All rights reserved
+        </div>
+    </div>
+}

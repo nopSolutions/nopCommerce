@@ -1,0 +1,2 @@
+DataProvider: sqlce
+DataConnectionString: Data Source=F:\Own\NopCommerce\Sources\src\Presentation\Nop.Web\App_Data\Nop.Db.sdf;Persist Security Info=False

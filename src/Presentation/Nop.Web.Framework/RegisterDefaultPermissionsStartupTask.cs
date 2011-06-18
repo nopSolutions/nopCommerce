@@ -1,6 +1,7 @@
 ﻿using System;
 using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
+using Nop.Data;
 using Nop.Services.Security.Permissions;
 
 namespace Nop.Web.Framework
@@ -9,13 +10,16 @@ namespace Nop.Web.Framework
     {
         public void Execute()
         {
-            //TODO register permission only after database is created or after new plugin installation
-            //register permissions
-            var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
-            foreach (var providerType in permissionProviders)
+            if (DataProviderHelper.DatabaseIsInstalled())
             {
-                dynamic provider = Activator.CreateInstance(providerType);
-                EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                //TODO register permission only after database is created or after new plugin installation
+                //register permissions
+                var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+                foreach (var providerType in permissionProviders)
+                {
+                    dynamic provider = Activator.CreateInstance(providerType);
+                    EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                }
             }
         }
 

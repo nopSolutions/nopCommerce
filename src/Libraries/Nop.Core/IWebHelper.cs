@@ -128,5 +128,10 @@ namespace Nop.Core
         /// <param name="name">Parameter name</param>
         /// <returns>Query string value</returns>
         T QueryString<T>(string name);
+        
+        /// <summary>
+        /// Restart application domain
+        /// </summary>
+        void RestartAppDomain();
     }
 }

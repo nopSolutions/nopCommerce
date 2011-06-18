@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
@@ -69,9 +70,12 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         {
             base.InitHelpers();
 
-            _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            _workContext = EngineContext.Current.Resolve<IWorkContext>();
-            _authenticationService = EngineContext.Current.Resolve<IAuthenticationService>();
+            if (DataProviderHelper.DatabaseIsInstalled())
+            {
+                _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                _workContext = EngineContext.Current.Resolve<IWorkContext>();
+                _authenticationService = EngineContext.Current.Resolve<IAuthenticationService>();
+            }
         }
 
         public HelperResult RenderWrappedSection(string name, object wrapperHtmlAttributes)
