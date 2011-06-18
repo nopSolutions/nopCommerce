@@ -130,13 +130,5 @@ namespace Nop.Web
                 }
             }
         }
-        
-        protected void ContainerBuilding(object sender, NopEventArgs<ContainerBuilder> e)
-        {
-            //TODO remove this method
-            e.Value.Register(ctx => RouteTable.Routes).SingleInstance();
-            e.Value.Register(ctx => ModelBinders.Binders).SingleInstance();
-            e.Value.Register(ctx => ViewEngines.Engines).SingleInstance();
-        }
     }
 }

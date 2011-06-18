@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using Autofac;
+using Autofac.Integration.Mvc;
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
