@@ -8,6 +8,7 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Installation;
 using Nop.Web.Models.Install;
@@ -172,6 +173,7 @@ namespace Nop.Web.Controllers
             if (DataProviderHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
 
+            //TODO Allow store owner to enter database name, username, password (for SQL Server)
             var model = new InstallModel()
             {
                 AdminEmail = "admin@yourStore.com",
@@ -294,7 +296,11 @@ namespace Nop.Web.Controllers
                     //reset cache
                     DataProviderHelper.ResetCache();
 
-                    //TODO install plugins
+                    //install plugins
+                    var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
+                    var plugins = pluginFinder.GetPlugins<IPlugin>();
+                    foreach (var plugin in plugins)
+                        plugin.Install();
 
                     //restart application
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();

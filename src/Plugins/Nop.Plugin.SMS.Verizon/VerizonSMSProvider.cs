@@ -21,18 +21,20 @@ namespace Nop.Plugin.SMS.Verizon
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILogger _logger;
+        private readonly ISettingService _settingService;
         private readonly StoreInformationSettings _storeSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
 
         public VerizonSmsProvider(VerizonSettings verizonSettings,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
-            ILogger logger, StoreInformationSettings storeSettigs,
+            ILogger logger, ISettingService settingService, StoreInformationSettings storeSettigs,
             EmailAccountSettings emailAccountSettings)
         {
             this._verizonSettings = verizonSettings;
             this._queuedEmailService = queuedEmailService;
             this._emailAccountService = emailAccountService;
             this._logger = logger;
+            this._settingService = settingService;
 
             this._storeSettings = storeSettigs;
             this._emailAccountSettings = emailAccountSettings;
@@ -118,6 +120,20 @@ namespace Nop.Plugin.SMS.Verizon
             actionName = "Configure";
             controllerName = "SmsVerizon";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.SMS.Verizon.Controllers" }, { "area", null } };
+        }
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            var settings = new VerizonSettings()
+            {
+                Email = "yournumber@vtext.com",
+            };
+            _settingService.SaveSetting(settings);
+
+            base.Install();
         }
 
     }

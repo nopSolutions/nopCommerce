@@ -12,7 +12,6 @@ namespace Nop.Plugin.Feed.Froogle.Models
             AvailableCurrencies = new List<SelectListItem>();
         }
 
-        //TODO set default values - 125
         [NopResourceDisplayName("Plugins.Feed.Froogle.ProductPictureSize")]
         public int ProductPictureSize { get; set; }
 
@@ -21,7 +20,6 @@ namespace Nop.Plugin.Feed.Froogle.Models
 
         public IList<SelectListItem> AvailableCurrencies { get; set; }
 
-        //TODO set default values - ftp://uploads.google.com
         [NopResourceDisplayName("Plugins.Feed.Froogle.FtpHostname")]
         public string FtpHostname { get; set; }
         [NopResourceDisplayName("Plugins.Feed.Froogle.FtpFilename")]

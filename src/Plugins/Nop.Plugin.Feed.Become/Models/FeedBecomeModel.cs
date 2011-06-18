@@ -12,7 +12,6 @@ namespace Nop.Plugin.Feed.Become.Models
             AvailableCurrencies = new List<SelectListItem>();
         }
 
-        //TODO set default values - 125
         [NopResourceDisplayName("Plugins.Feed.Become.ProductPictureSize")]
         public int ProductPictureSize { get; set; }
 

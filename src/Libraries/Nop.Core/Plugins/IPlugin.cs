@@ -38,5 +38,15 @@ namespace Nop.Core.Plugins
         int DisplayOrder { get; }
 
         bool IsAuthorized(IPrincipal user);
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        void Install();
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        void Uninstall();
     }
 }

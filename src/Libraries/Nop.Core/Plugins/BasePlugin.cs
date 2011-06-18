@@ -12,8 +12,8 @@ namespace Nop.Core.Plugins
         {
         }
 
-        protected BasePlugin(string friendlyName, string systemName, 
-            string version = "", string author = "",  int displayOrder = 0)
+        protected BasePlugin(string friendlyName, string systemName,
+            string version = "", string author = "", int displayOrder = 0)
         {
             this.FriendlyName = friendlyName;
             this.SystemName = systemName;
@@ -33,7 +33,7 @@ namespace Nop.Core.Plugins
         /// Gets or sets the system name
         /// </summary>
         public virtual string SystemName { get; protected set; }
-        
+
         /// <summary>
         /// Gets or sets the version
         /// </summary>
@@ -53,6 +53,16 @@ namespace Nop.Core.Plugins
         {
             return true;
         }
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public virtual void Install() { }
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public virtual void Uninstall() { }
 
         #endregion
 

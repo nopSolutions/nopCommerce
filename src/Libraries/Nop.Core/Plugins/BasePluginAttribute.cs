@@ -51,6 +51,16 @@ namespace Nop.Core.Plugins
             return true;
         }
 
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public virtual void Install() { }
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public virtual void Uninstall() { }
+
         #endregion
 
         public int CompareTo(IPlugin other)

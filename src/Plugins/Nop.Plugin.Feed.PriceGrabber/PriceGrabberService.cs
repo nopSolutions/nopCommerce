@@ -14,6 +14,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Html;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Media;
 using Nop.Services.PromotionFeed;
@@ -32,7 +33,7 @@ namespace Nop.Plugin.Feed.PriceGrabber
         private readonly IPictureService _pictureService;
         private readonly ICurrencyService _currencyService;
         private readonly IWebHelper _webHelper;
-        private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly ISettingService _settingService;
         private readonly PriceGrabberSettings _priceGrabberSettings;
         private readonly CurrencySettings _currencySettings;
 
@@ -43,7 +44,7 @@ namespace Nop.Plugin.Feed.PriceGrabber
             ICategoryService categoryService, 
             IManufacturerService manufacturerService, IPictureService pictureService,
             ICurrencyService currencyService, IWebHelper webHelper,
-            StoreInformationSettings storeInformationSettings,
+            ISettingService settingService,
             PriceGrabberSettings priceGrabberSettings, CurrencySettings currencySettings)
         {
             this._productService = productService;
@@ -52,7 +53,7 @@ namespace Nop.Plugin.Feed.PriceGrabber
             this._pictureService = pictureService;
             this._currencyService = currencyService;
             this._webHelper = webHelper;
-            this._storeInformationSettings = storeInformationSettings;
+            this._settingService = settingService;
             this._priceGrabberSettings = priceGrabberSettings;
             this._currencySettings = currencySettings;
         }
@@ -201,6 +202,20 @@ namespace Nop.Plugin.Feed.PriceGrabber
             }
         }
 
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            var settings = new PriceGrabberSettings()
+            {
+                ProductPictureSize = 125,
+            };
+            _settingService.SaveSetting(settings);
+
+            base.Install();
+        }
         #endregion
 
         #region Properties

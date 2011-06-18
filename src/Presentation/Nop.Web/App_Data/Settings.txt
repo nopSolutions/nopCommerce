@@ -1,2 +1,2 @@
-DataProvider: sqlce
-DataConnectionString: Data Source=F:\Own\NopCommerce\Sources\src\Presentation\Nop.Web\App_Data\Nop.Db.sdf;Persist Security Info=False
+DataProvider: sqlserver
+DataConnectionString: Data Source=nopserver;Initial Catalog=nopCommerce-2.00;Persist Security Info=True;User ID=nopdbuser;Password=dgs2002

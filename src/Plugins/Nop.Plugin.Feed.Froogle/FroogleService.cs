@@ -12,6 +12,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Media;
 using Nop.Services.PromotionFeed;
@@ -28,6 +29,7 @@ namespace Nop.Plugin.Feed.Froogle
         private readonly IPictureService _pictureService;
         private readonly ICurrencyService _currencyService;
         private readonly IWebHelper _webHelper;
+        private readonly ISettingService _settingService;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly FroogleSettings _froogleSettings;
         private readonly CurrencySettings _currencySettings;
@@ -38,7 +40,7 @@ namespace Nop.Plugin.Feed.Froogle
         public FroogleService(IProductService productService,
             IPictureService pictureService,
             ICurrencyService currencyService,
-            IWebHelper webHelper,
+            IWebHelper webHelper, ISettingService settingService,
             StoreInformationSettings storeInformationSettings,
             FroogleSettings froogleSettings,
             CurrencySettings currencySettings)
@@ -47,6 +49,7 @@ namespace Nop.Plugin.Feed.Froogle
             this._pictureService = pictureService;
             this._currencyService = currencyService;
             this._webHelper = webHelper;
+            this._settingService = settingService;
             this._storeInformationSettings = storeInformationSettings;
             this._froogleSettings = froogleSettings;
             this._currencySettings = currencySettings;
@@ -161,6 +164,21 @@ namespace Nop.Plugin.Feed.Froogle
                 writer.WriteEndElement(); // rss
                 writer.WriteEndDocument();
             }
+        }
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            var settings = new FroogleSettings()
+            {
+                ProductPictureSize = 125,
+                FtpHostname = "ftp://uploads.google.com"
+            };
+            _settingService.SaveSetting(settings);
+
+            base.Install();
         }
 
         #endregion

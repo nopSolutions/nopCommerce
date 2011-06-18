@@ -37,17 +37,19 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         private readonly IMeasureService _measureService;
         private readonly IShippingService _shippingService;
+        private readonly ISettingService _settingService;
         private readonly AustraliaPostSettings _australiaPostSettings;
 
         #endregion
 
         #region Ctor
         public AustraliaPostComputationMethod(IMeasureService measureService,
-            IShippingService shippingService,
+            IShippingService shippingService, ISettingService settingService,
             AustraliaPostSettings australiaPostSettings)
         {
             this._measureService = measureService;
             this._shippingService = shippingService;
+            this._settingService = settingService;
             this._australiaPostSettings = australiaPostSettings;
         }
         #endregion
@@ -298,6 +300,21 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             controllerName = "ShippingAustraliaPost";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.AustraliaPost.Controllers" }, { "area", null } };
         }
+        
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            var settings = new AustraliaPostSettings()
+            {
+                GatewayUrl = "http://drc.edeliver.com.au/ratecalc.asp",
+            };
+            _settingService.SaveSetting(settings);
+
+            base.Install();
+        }
+
         #endregion
 
         #region Properties
