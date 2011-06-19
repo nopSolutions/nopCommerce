@@ -1,4 +1,5 @@
 
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Services
@@ -8,8 +9,8 @@ namespace Nop.Services
     /// </summary>
     public partial interface IAuthenticationService 
     {
-        void SignIn(User user, bool createPersistentCookie);
+        void SignIn(Customer customer, bool createPersistentCookie);
         void SignOut();
-        User GetAuthenticatedUser();
+        Customer GetAuthenticatedCustomer();
     }
 }

@@ -31,6 +31,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Themes;
 using Telerik.Web.Mvc;
+using Nop.Services.Customers;
 
 namespace Nop.Admin.Controllers
 {
@@ -49,9 +50,9 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IOrderService _orderService;
-        private readonly IUserService _userService;
         private readonly IEncryptionService _encryptionService;
         private readonly IThemeProvider _themeProvider;
+        private readonly ICustomerService _customerService;
 
 
         private BlogSettings _blogSettings;
@@ -66,7 +67,6 @@ namespace Nop.Admin.Controllers
         private ShoppingCartSettings _shoppingCartSettings;
         private MediaSettings _mediaSettings;
         private CustomerSettings _customerSettings;
-        private UserSettings _userSettings;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly SeoSettings _seoSettings;
@@ -82,15 +82,15 @@ namespace Nop.Admin.Controllers
             IAddressService addressService, ITaxCategoryService taxCategoryService,
             ICurrencyService currencyService, IPictureService pictureService, 
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
-            IOrderService orderService, IUserService userService, 
-            IEncryptionService encryptionService, IThemeProvider themeProvider, 
+            IOrderService orderService, IEncryptionService encryptionService,
+            IThemeProvider themeProvider, ICustomerService customerService, 
             BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
             CurrencySettings currencySettings, OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings, MediaSettings mediaSettings,
-            CustomerSettings customerSettings, UserSettings userSettings,
+            CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings)
         {
@@ -104,9 +104,9 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._dateTimeHelper = dateTimeHelper;
             this._orderService = orderService;
-            this._userService = userService;
             this._encryptionService = encryptionService;
             this._themeProvider = themeProvider;
+            this._customerService = customerService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -120,7 +120,6 @@ namespace Nop.Admin.Controllers
             this._shoppingCartSettings = shoppingCartSettings;
             this._mediaSettings = mediaSettings;
             this._customerSettings = customerSettings;
-            this._userSettings = userSettings;
             this._dateTimeSettings = dateTimeSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._seoSettings = seoSettings;
@@ -471,7 +470,6 @@ namespace Nop.Admin.Controllers
             //merge settings
             var model = new CustomerUserSettingsModel();
             model.CustomerSettings = _customerSettings.ToModel();
-            model.UserSettings = _userSettings.ToModel();
 
             model.DateTimeSettings.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             model.DateTimeSettings.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;
@@ -491,11 +489,7 @@ namespace Nop.Admin.Controllers
         {
             _customerSettings = model.CustomerSettings.ToEntity(_customerSettings);
             _settingService.SaveSetting(_customerSettings);
-
-
-            _userSettings = model.UserSettings.ToEntity(_userSettings);
-            _settingService.SaveSetting(_userSettings);
-
+            
             _dateTimeSettings.DefaultStoreTimeZoneId = model.DateTimeSettings.DefaultStoreTimeZoneId;
             _dateTimeSettings.AllowCustomersToSetTimeZone = model.DateTimeSettings.AllowCustomersToSetTimeZone;
             _settingService.SaveSetting(_dateTimeSettings);
@@ -646,15 +640,16 @@ namespace Nop.Admin.Controllers
 
                 //update user information
                 //TODO optimization - load only users with PasswordFormat.Encrypted (don't filter them here)
-                var users = _userService.GetUsers(null, null, 0, int.MaxValue)
+                var customers = _customerService.GetAllCustomers(null, null, null,
+                    null,null,false, null, 0, int.MaxValue)
                     .Where(u => u.PasswordFormat == PasswordFormat.Encrypted);
-                foreach (var user in users)
+                foreach (var customer in customers)
                 {
-                    string decryptedPassword = _encryptionService.DecryptText(user.Password, oldEncryptionPrivateKey);
+                    string decryptedPassword = _encryptionService.DecryptText(customer.Password, oldEncryptionPrivateKey);
                     string encryptedPassword = _encryptionService.EncryptText(decryptedPassword, newEncryptionPrivateKey);
 
-                    user.Password = encryptedPassword;
-                    _userService.UpdateUser(user);
+                    customer.Password = encryptedPassword;
+                    _customerService.UpdateCustomer(customer);
                 }
 
                 _securitySettings.EncryptionKey = newEncryptionPrivateKey;

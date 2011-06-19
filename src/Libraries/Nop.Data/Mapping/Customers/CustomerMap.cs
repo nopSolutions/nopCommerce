@@ -12,10 +12,14 @@ namespace Nop.Data.Mapping.Customers
         {
             this.ToTable("Customer");
             this.HasKey(c => c.Id);
+            this.Property(u => u.Username);
+            this.Property(u => u.Email);
+            this.Property(u => u.Password);
             this.Property(c => c.AdminComment).IsMaxLength();
             this.Property(c => c.CheckoutAttributes).IsMaxLength();
             this.Property(c => c.GiftCardCouponCodes).IsMaxLength();
 
+            this.Ignore(u => u.PasswordFormat);
             this.Ignore(c => c.TaxDisplayType);
             this.Ignore(c => c.VatNumberStatus);
 
@@ -32,12 +36,6 @@ namespace Nop.Data.Mapping.Customers
                 .Map(m => m.ToTable("CustomerAddresses"));
             this.HasOptional<Address>(c => c.BillingAddress);
             this.HasOptional<Address>(c => c.ShippingAddress);
-
-
-            this.HasMany(c => c.AssociatedUsers)
-                .WithOptional(u => u.AssociatedCustomer)
-                .HasForeignKey(u => u.AssociatedCustomerId)
-                .WillCascadeOnDelete(false);
         }
     }
 }

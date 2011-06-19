@@ -1162,7 +1162,7 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var model = new WishlistEmailAFriendModel();
-            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
+            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.Email : null;
             return View(model);
         }
 

@@ -42,7 +42,6 @@ using Nop.Services.Payments;
 using Nop.Services.Polls;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
-using Nop.Services.Security.Permissions;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
@@ -191,7 +190,6 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerHttpRequest();
             builder.RegisterType<FormsAuthenticationService>().As<IAuthenticationService>().InstancePerHttpRequest();
-            builder.RegisterType<UserService>().As<IUserService>().InstancePerHttpRequest();
             
             builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerHttpRequest();
 

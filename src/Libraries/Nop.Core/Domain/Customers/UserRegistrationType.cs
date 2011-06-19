@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Security
+namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Represents the customer registration type fortatting enumeration

@@ -55,7 +55,6 @@ namespace Nop.Services.Installation
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<User> _userRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<Category> _categoryRepository;
@@ -88,7 +87,6 @@ namespace Nop.Services.Installation
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            IRepository<User> userRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<Category> categoryRepository,
@@ -117,7 +115,6 @@ namespace Nop.Services.Installation
             this._currencyRepository = currencyRepository;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
-            this._userRepository = userRepository;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._productAttributeRepository = productAttributeRepository;
             this._categoryRepository = categoryRepository;
@@ -3987,31 +3984,19 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
-            var adminUser = new User()
+            var adminUser = new Customer()
             {
-                UserGuid = Guid.NewGuid(),
+                CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
                 Username = defaultUserEmail,
                 Password = defaultUserPassword,
                 PasswordFormat = PasswordFormat.Clear,
                 PasswordSalt = "",
-                IsApproved = true,
-                IsLockedOut = false,
+                Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            _userRepository.Insert(adminUser);
 
-            var customers = new List<Customer>
-                                {
-                                    new Customer
-                                        {
-                                            CustomerGuid = Guid.NewGuid(),
-                                            Active = true,
-                                            CreatedOnUtc = DateTime.UtcNow,
-                                        }
-                                };
-            var defaultCustomer = customers.FirstOrDefault();
-            defaultCustomer.AddAddress(new Address()
+            adminUser.AddAddress(new Address()
             {
                 FirstName = "John",
                 LastName = "Smith",
@@ -4027,8 +4012,7 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             });
-            defaultCustomer.AssociatedUsers.Add(adminUser);
-            customers.ForEach(c => _customerRepository.Insert(c));
+            _customerRepository.Insert(adminUser);
 
             var crAdministrators = new CustomerRole
             {
@@ -4037,15 +4021,15 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Administrators,
             };
-            crAdministrators.Customers.Add(defaultCustomer);
+            crAdministrators.Customers.Add(adminUser);
             var crForumModerators = new CustomerRole
             {
-                Name = "ForumModerators",
+                Name = "Forum Moderators",
                 Active = true,
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.ForumModerators,
             };
-            crForumModerators.Customers.Add(defaultCustomer);
+            crForumModerators.Customers.Add(adminUser);
             var crRegistered = new CustomerRole
             {
                 Name = "Registered",
@@ -4053,7 +4037,7 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Registered,
             };
-            crRegistered.Customers.Add(defaultCustomer);
+            crRegistered.Customers.Add(adminUser);
             var crGuests = new CustomerRole
             {
                 Name = "Guests",
@@ -4188,7 +4172,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "NewCustomer.Notification",
                                            Subject = "New customer registration",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new customer registered with your store. Below are the customer''s details:<br />Full name: %Customer.FullName%<br />Email: %Customer.Email%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new customer registered with your store. Below are the customer's details:<br />Full name: %Customer.FullName%<br />Email: %Customer.Email%</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4471,6 +4455,10 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<CustomerSettings>>()
                 .SaveSettings(new CustomerSettings()
                 {
+                    UsernamesEnabled = false,
+                    AllowUsersToChangeUsernames = false,
+                    HashedPasswordFormat = "SHA1",
+                    UserRegistrationType = UserRegistrationType.Standard,
                     AllowCustomersToUploadAvatars = false,
                     AvatarMaximumSizeBytes = 20000,
                     DefaultAvatarEnabled = true,
@@ -4584,15 +4572,6 @@ namespace Nop.Services.Installation
                     OnePageCheckoutEnabled = false,
                     ReturnRequestActions = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
                     ReturnRequestReasons = new List<string>() { "Repair", "Replacement", "Store Credit" },
-                });
-
-            EngineContext.Current.Resolve<IConfigurationProvider<UserSettings>>()
-                .SaveSettings(new UserSettings()
-                {
-                    UsernamesEnabled = false,
-                    AllowUsersToChangeUsernames = false,
-                    HashedPasswordFormat = "SHA1",
-                    UserRegistrationType = UserRegistrationType.Standard
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()

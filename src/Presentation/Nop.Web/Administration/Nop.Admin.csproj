@@ -122,7 +122,6 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ProductVariantController.cs" />
     <Compile Include="Controllers\QueuedEmailController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
@@ -220,8 +219,6 @@
     <Compile Include="Models\Catalog\ProductVariantModel.cs" />
     <Compile Include="Models\Messages\QueuedEmailModel.cs" />
     <Compile Include="Models\Settings\TaxSettingsModel.cs" />
-    <Compile Include="Models\Security\UserListModel.cs" />
-    <Compile Include="Models\Security\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\Catalog\CategoryValidator.cs" />
     <Compile Include="Validators\Catalog\ManufacturerValidator.cs" />
@@ -263,7 +260,6 @@
     <Compile Include="Validators\Localization\LanguageResourceValidator.cs" />
     <Compile Include="Validators\Localization\LanguageValidator.cs" />
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
-    <Compile Include="Validators\Security\UserValidator.cs" />
     <Compile Include="Views\Shared\TestMenuPlugin1.cs" />
     <Compile Include="Views\Shared\TestMenuPlugin2.cs" />
   </ItemGroup>
@@ -498,12 +494,6 @@
     <Content Include="Views\Customer\List.cshtml" />
     <Content Include="Views\Customer\_CreateOrUpdate.cshtml" />
     <Content Include="Views\Customer\_CreateOrUpdateAddress.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\User\Create.cshtml" />
-    <Content Include="Views\User\Edit.cshtml" />
-    <Content Include="Views\User\List.cshtml" />
-    <Content Include="Views\User\_CreateOrUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\AccessDenied.cshtml" />

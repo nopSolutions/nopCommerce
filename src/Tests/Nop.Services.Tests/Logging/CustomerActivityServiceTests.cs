@@ -18,7 +18,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Logging
 {
     [TestFixture]
-    class CustomerActivityServiceTests
+    public class CustomerActivityServiceTests
     {
         ICacheManager _cacheManager;
         IRepository<ActivityLog> _activityLogRepository;
@@ -47,26 +47,16 @@ namespace Nop.Services.Tests.Logging
             };
             _customer1 = new Customer()
             {
+                Email = "test1@teststore1.com",
+                Username = "TestUser1",
                 Deleted = false,
             };
-            _customer1.AssociatedUsers.Add(
-                new User()
-                {
-                    Email = "test1@teststore1.com",
-                    Username = "TestUser1"
-                }
-           );
            _customer2 = new Customer()
            {
+               Email = "test2@teststore2.com",
+               Username = "TestUser2",
                Deleted = false,
            };
-           _customer2.AssociatedUsers.Add(
-               new User()
-               {
-                   Email = "test2@teststore2.com",
-                   Username = "TestUser2"
-               }
-               );
             _activity1 = new ActivityLog()
             {
                 Id = 1,

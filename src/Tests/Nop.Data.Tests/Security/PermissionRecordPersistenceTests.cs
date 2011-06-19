@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Nop.Core.Domain.Security.Permissions;
+using Nop.Core.Domain.Security;
 using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain;
@@ -14,7 +14,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 
-namespace Nop.Data.Tests.Security.Permissions
+namespace Nop.Data.Tests.Security
 {
     [TestFixture]
     public class PermissionRecordPersistenceTests : PersistenceTest

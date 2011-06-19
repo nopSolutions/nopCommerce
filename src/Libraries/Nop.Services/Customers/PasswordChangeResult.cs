@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Services.Security 
+namespace Nop.Services.Customers 
 {
     public class PasswordChangeResult
     {

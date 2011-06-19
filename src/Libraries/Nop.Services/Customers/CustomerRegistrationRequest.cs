@@ -1,21 +1,24 @@
 ﻿using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Services.Security
+namespace Nop.Services.Customers
 {
-    public class UserRegistrationRequest
+    public class CustomerRegistrationRequest
     {
+        public Customer Customer { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public PasswordFormat PasswordFormat { get; set; }
         public bool IsApproved { get; set; }
 
-        public UserRegistrationRequest(string email, string username,
+        public CustomerRegistrationRequest(Customer customer, string email, string username,
             string password, 
             PasswordFormat passwordFormat,
             bool isApproved = true)
         {
+            this.Customer = customer;
             this.Email = email;
             this.Username = username;
             this.Password = password;

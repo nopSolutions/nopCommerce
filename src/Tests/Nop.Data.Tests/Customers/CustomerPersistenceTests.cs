@@ -28,6 +28,12 @@ namespace Nop.Data.Tests.Customers
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
+            fromDb.Username.ShouldEqual("a@b.com");
+            fromDb.Password.ShouldEqual("password");
+            fromDb.PasswordFormat.ShouldEqual(PasswordFormat.Clear);
+            fromDb.PasswordSalt.ShouldEqual("");
+            fromDb.Email.ShouldEqual("a@b.com");
+            fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.TaxDisplayType.ShouldEqual(TaxDisplayType.IncludingTax);
             fromDb.IsTaxExempt.ShouldEqual(true);
@@ -268,28 +274,6 @@ namespace Nop.Data.Tests.Customers
             fromDb.Orders.First().Deleted.ShouldEqual(true);
         }
 
-        [Test]
-        public void Can_save_and_load_customer_with_associatedUsers()
-        {
-            var customer = GetTestCustomer();
-            customer.AssociatedUsers.Add
-            (
-                new User()
-                {
-                    Email = "a@b.com",
-                    Password = "password",
-                    CreatedOnUtc = DateTime.UtcNow
-                }
-            );
-
-            var fromDb = SaveAndLoadEntity(customer);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.AssociatedUsers.ShouldNotBeNull();
-            (fromDb.AssociatedUsers.Count == 1).ShouldBeTrue();
-            fromDb.AssociatedUsers.First().Email.ShouldEqual("a@b.com");
-        }
-
         protected Affiliate GetTestAffiliate()
         {
             return new Affiliate
@@ -328,6 +312,11 @@ namespace Nop.Data.Tests.Customers
         {
             return new Customer
             {
+                Username = "a@b.com",
+                Password = "password",
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
+                Email = "a@b.com",
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
                 TaxDisplayType = TaxDisplayType.IncludingTax,

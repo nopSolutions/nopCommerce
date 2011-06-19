@@ -4,11 +4,12 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Security;
+using Nop.Core;
 using Nop.Services;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Security.Permissions;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
@@ -19,7 +20,7 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
         private readonly ILogger _logger;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IWorkContext _workContext;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
@@ -28,12 +29,12 @@ namespace Nop.Admin.Controllers
 
 		#region Constructors
 
-        public SecurityController(ILogger logger, IAuthenticationService authenticationService,
+        public SecurityController(ILogger logger, IWorkContext workContext,
             IPermissionService permissionService,
             ICustomerService customerService, ILocalizationService localizationService)
 		{
             this._logger = logger;
-            this._authenticationService = authenticationService;
+            this._workContext = workContext;
             this._permissionService = permissionService;
             this._customerService = customerService;
             this._localizationService = localizationService;
@@ -45,15 +46,14 @@ namespace Nop.Admin.Controllers
 
         public ActionResult AccessDenied(string pageUrl)
         {
-            var currentUser = _authenticationService.GetAuthenticatedUser();
-
-            if (currentUser == null)
+            var currentCustomer = _workContext.CurrentCustomer;
+            if (currentCustomer == null || currentCustomer.IsGuest())
             {
                 _logger.Information(string.Format("Access denied to anonymous request on {0}", pageUrl));
                 return View();
             }
 
-            _logger.Information(string.Format("Access denied to user #{0} '{1}' on {2}", currentUser.Email, currentUser.Email, pageUrl));
+            _logger.Information(string.Format("Access denied to user #{0} '{1}' on {2}", currentCustomer.Email, currentCustomer.Email, pageUrl));
 
 
             return View();

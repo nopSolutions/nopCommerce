@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Services.Security 
+namespace Nop.Services.Customers 
 {
-    public class UserRegistrationResult 
+    public class CustomerRegistrationResult 
     {
-        public User User { get; set; }
         public IList<string> Errors { get; set; }
 
-        public UserRegistrationResult() 
+        public CustomerRegistrationResult() 
         {
             this.Errors = new List<string>();
         }
 
         public bool Success 
         {
-            get { return (this.User != null) && (this.Errors.Count == 0); }
+            get { return this.Errors.Count == 0; }
         }
 
         public void AddError(string error) 

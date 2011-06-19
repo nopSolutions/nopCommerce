@@ -1,10 +1,10 @@
 
 
 using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Security.Permissions;
+using Nop.Core.Domain.Security;
 
 
-namespace Nop.Data.Mapping.Security.Permissions
+namespace Nop.Data.Mapping.Security
 {
     public partial class PermissionRecordMap : EntityTypeConfiguration<PermissionRecord>
     {

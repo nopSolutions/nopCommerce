@@ -2,7 +2,7 @@
 using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
 using Nop.Data;
-using Nop.Services.Security.Permissions;
+using Nop.Services.Security;
 
 namespace Nop.Web.Framework
 {

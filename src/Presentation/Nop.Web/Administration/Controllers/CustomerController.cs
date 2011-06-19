@@ -45,7 +45,6 @@ namespace Nop.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressService _addressService;
-        private readonly IUserService _userService;
         private readonly CustomerSettings _customerSettings;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
@@ -61,7 +60,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
             ICountryService countryService, IStateProvinceService stateProvinceService, 
-            IAddressService addressService, IUserService userService, 
+            IAddressService addressService,
             CustomerSettings customerSettings, ITaxService taxService, 
             IWorkContext workContext, IPriceFormatter priceFormatter,
             IOrderService orderService)
@@ -76,7 +75,6 @@ namespace Nop.Admin.Controllers
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._addressService = addressService;
-            this._userService = userService;
             this._customerSettings = customerSettings;
             this._taxService = taxService;
             this._workContext = workContext;
@@ -115,25 +113,33 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            var customers = _customerService.GetAllCustomers(null,null, null, null, false, null, 0, 10);
-            var model = new CustomerListModel();
+            var customers = _customerService.GetAllCustomers(null,null, null, null, null, false, null, 0, 10);
+            var listModel = new CustomerListModel()
+            {
+                UsernamesEnabled = _customerSettings.UsernamesEnabled
+            };
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.ToList();
+            listModel.AvailableCustomerRoles = customerRoles.ToList();
             //customer list
-            model.Customers = new GridModel<CustomerModel>
+            listModel.Customers = new GridModel<CustomerModel>
             {
                 Data = customers.Select(x =>
                 {
-                    var model1 = x.ToModel();
-                    model1.FullName = x.GetFullName();
-                    model1.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
-                    model1.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    return model1;
+                    return new CustomerModel()
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        Username = x.Username,
+                        FullName = x.GetFullName(),
+                        CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
+                        Active = x.Active,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                    };
                 }),
                 Total = customers.TotalCount
             };
-            return View(model);
+            return View(listModel);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -149,19 +155,25 @@ namespace Nop.Admin.Controllers
             //var searchCustomerRoleIds = TypeDescriptor.GetConverter(typeof(List<int>)).ConvertFrom(searchCustomerRoleIdsStr) as List<int>;
 
             string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
+            string searchCustomerUsername = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerUsername");
 
             var customers = _customerService.GetAllCustomers(null, null,
-                searchCustomerRoleIds.ToArray(), searchCustomerEmail, false, null,
-                command.Page - 1, command.PageSize);
+                searchCustomerRoleIds.ToArray(), searchCustomerEmail, searchCustomerUsername, 
+                false, null, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
                 Data = customers.Select(x =>
                 {
-                    var model = x.ToModel();
-                    model.FullName = x.GetFullName();
-                    model.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
-                    model.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    return model;
+                    return new CustomerModel()
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        Username = x.Username,
+                        FullName = x.GetFullName(),
+                        CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
+                        Active = x.Active,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                    };
                 }),
                 Total = customers.TotalCount
             };
@@ -175,6 +187,8 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("search-customers")]
         public ActionResult Search(CustomerListModel model)
         {
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+
             //convert to string because passing int[] to grid is no possible
             string searchCustomerRoleIdsStr = "";
             if (model.SearchCustomerRoleIds != null)
@@ -186,6 +200,7 @@ namespace Nop.Admin.Controllers
                 //ViewData["searchCustomerRoleIds"] = TypeDescriptor.GetConverter(typeof(List<int>)).ConvertTo(model.SearchCustomerRoleIds, typeof(string)) as string;
 
             ViewData["searchCustomerEmail"] = model.SearchEmail;
+            ViewData["searchCustomerUsername"] = model.SearchUsername;
 
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
@@ -193,17 +208,22 @@ namespace Nop.Admin.Controllers
 
             //laod customers
             var customers = _customerService.GetAllCustomers(null, null,
-               model.SearchCustomerRoleIds, model.SearchEmail, false, null, 0, 10);
+               model.SearchCustomerRoleIds, model.SearchEmail, model.SearchUsername, false, null, 0, 10);
             //customer list
             model.Customers = new GridModel<CustomerModel>
             {
                 Data = customers.Select(x =>
                 {
-                    var model1 = x.ToModel();
-                    model1.FullName = x.GetFullName();
-                    model1.CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList());
-                    model1.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    return model1;
+                    return new CustomerModel()
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        Username = x.Username,
+                        FullName = x.GetFullName(),
+                        CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
+                        Active = x.Active,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                    };
                 }),
                 Total = customers.TotalCount
             };
@@ -213,6 +233,8 @@ namespace Nop.Admin.Controllers
         public ActionResult Create()
         {
             var model = new CustomerModel();
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
@@ -236,12 +258,33 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Create(CustomerModel model, bool continueEditing)
         {
+            if (!String.IsNullOrWhiteSpace(model.Email))
+            {
+                var cust2 = _customerService.GetCustomerByEmail(model.Email);
+                if (cust2 != null)
+                    ModelState.AddModelError("", "Email is already registered");
+            }
+            if (!String.IsNullOrWhiteSpace(model.Username) & _customerSettings.UsernamesEnabled)
+            {
+                var cust2 = _customerService.GetCustomerByEmail(model.Username);
+                if (cust2 != null)
+                    ModelState.AddModelError("", "Username is already registered");
+            }
             if (ModelState.IsValid)
             {
-                var customer = model.ToEntity();
-                customer.CustomerGuid = Guid.NewGuid();
-                customer.CreatedOnUtc = DateTime.UtcNow;
+                var customer = new Customer()
+                {
+                    CustomerGuid = Guid.NewGuid(),
+                    Email = model.Email,
+                    Username = model.Username,
+                    AdminComment = model.AdminComment,
+                    IsTaxExempt = model.IsTaxExempt,
+                    TimeZoneId = model.TimeZoneId,
+                    Active = model.Active,
+                    CreatedOnUtc = DateTime.UtcNow,
+                };
                 _customerService.InsertCustomer(customer);
+                
                 if (_customerSettings.GenderEnabled)
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
                 _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
@@ -250,6 +293,11 @@ namespace Nop.Admin.Controllers
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
                 if (_customerSettings.CompanyEnabled)
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+
+                //password
+                var changePassRequest = new ChangePasswordRequest(model.Email,
+                    false, PasswordFormat.Hashed, model.Password);
+                var changePassResult = _customerService.ChangePassword(changePassRequest);
 
                 //customer roles
                 var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -265,6 +313,8 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
@@ -285,8 +335,17 @@ namespace Nop.Admin.Controllers
             var customer = _customerService.GetCustomerById(id);
             if (customer == null || customer.Deleted)
                 throw new ArgumentException("No customer found with the specified id", "id");
-            
-            var model = customer.ToModel();
+
+            var model = new CustomerModel();
+            model.Id = customer.Id;
+            model.Email = customer.Email;
+            model.Username = customer.Username;
+            model.AdminComment = customer.AdminComment;
+            model.IsTaxExempt = customer.IsTaxExempt;
+            model.Active = customer.Active;
+            model.TimeZoneId = customer.TimeZoneId;
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == customer.TimeZoneId) });
@@ -321,65 +380,99 @@ namespace Nop.Admin.Controllers
         {
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null || customer.Deleted)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                throw new ArgumentException("No customer found with the specified id");
 
             if (ModelState.IsValid)
             {
-                string prevVatNumber = customer.VatNumber;
-                customer = model.ToEntity(customer);
-
-
-                //VAT number
-                if (_taxSettings.EuVatEnabled)
+                try
                 {
-                    customer.VatNumber = model.VatNumber;
-                    //set VAT number status
-                    if (!String.IsNullOrEmpty(customer.VatNumber))
-                    {
-                        if (!customer.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
-                            customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber);
-                    }
-                    else
-                        customer.VatNumberStatus = VatNumberStatus.Empty;
-                }
-                _customerService.UpdateCustomer(customer);
+                    string prevVatNumber = customer.VatNumber;
 
-                //customer attributes
-                if (_customerSettings.GenderEnabled)
-                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
-                _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
-                if (_customerSettings.DateOfBirthEnabled)
-                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
-                if (_customerSettings.CompanyEnabled)
-                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
-
-                //customer roles
-                var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
-                foreach (var customerRole in allCustomerRoles)
-                {
-                    if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                    customer.AdminComment = model.AdminComment;
+                    customer.IsTaxExempt = model.IsTaxExempt;
+                    customer.TimeZoneId = model.TimeZoneId;
+                    customer.Active = model.Active;
+                    //email
+                    if (!String.IsNullOrWhiteSpace(model.Email))
                     {
-                        //new role
-                        if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() == 0)
-                            customer.CustomerRoles.Add(customerRole);
+                        _customerService.SetEmail(customer, model.Email);
                     }
                     else
                     {
-                        //removed role
-                        if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() > 0)
-                            customer.CustomerRoles.Remove(customerRole);
+                        customer.Email = model.Email;
                     }
+
+                    //username
+                    if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
+                    {
+                        if (!String.IsNullOrWhiteSpace(model.Username))
+                        {
+                            _customerService.SetUsername(customer, model.Username);
+                        }
+                        else
+                        {
+                            customer.Username = model.Username;
+                        }
+                    }
+
+                    //VAT number
+                    if (_taxSettings.EuVatEnabled)
+                    {
+                        customer.VatNumber = model.VatNumber;
+                        //set VAT number status
+                        if (!String.IsNullOrEmpty(customer.VatNumber))
+                        {
+                            if (!customer.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
+                                customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber);
+                        }
+                        else
+                            customer.VatNumberStatus = VatNumberStatus.Empty;
+                    }
+                    _customerService.UpdateCustomer(customer);
+
+                    //customer attributes
+                    if (_customerSettings.GenderEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LastName, model.LastName);
+                    if (_customerSettings.DateOfBirthEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.DateOfBirth, model.DateOfBirth);
+                    if (_customerSettings.CompanyEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+
+                    //customer roles
+                    var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+                    foreach (var customerRole in allCustomerRoles)
+                    {
+                        if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                        {
+                            //new role
+                            if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() == 0)
+                                customer.CustomerRoles.Add(customerRole);
+                        }
+                        else
+                        {
+                            //removed role
+                            if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() > 0)
+                                customer.CustomerRoles.Remove(customerRole);
+                        }
+                    }
+                    _customerService.UpdateCustomer(customer);
+
+
+                    SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
+                    return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
                 }
-                _customerService.UpdateCustomer(customer);
-
-
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
-                return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
+                catch (Exception exc)
+                {
+                    ErrorNotification(exc.Message, false);
+                }
             }
 
 
             //If we got this far, something failed, redisplay form
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
@@ -399,7 +492,31 @@ namespace Nop.Admin.Controllers
             model.AddRewardPointsMessage = "Some comment here...";
             return View(model);
         }
-        
+
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("changepassword")]
+        public ActionResult ChangePassword(CustomerModel model)
+        {
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                var changePassRequest = new ChangePasswordRequest(model.Email,
+                    false, PasswordFormat.Hashed, model.Password);
+                var changePassResult = _customerService.ChangePassword(changePassRequest);
+                if (changePassResult.Success)
+                    SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.PasswordChanged"));
+                else
+                    foreach (var error in changePassResult.Errors)
+                        ErrorNotification(error);
+            }
+
+            return RedirectToAction("Edit", customer.Id);
+        }
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("markVatNumberAsValid")]
         public ActionResult MarkVatNumberAsValid(CustomerModel model)
@@ -662,99 +779,6 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
-
-        #region User accounts
-
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AssociatedUserSelect(GridCommand command, int customerId)
-        {
-            var customer = _customerService.GetCustomerById(customerId);
-            if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "customerId");
-
-            var users = customer.AssociatedUsers;
-            var gridModel = new GridModel<CustomerModel.UserAccountModel>
-            {
-                Data = users.Select(x =>
-                {
-                    return new CustomerModel.UserAccountModel()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        IsApproved = x.IsApproved,
-                        IsLockedOut = x.IsLockedOut,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                    };
-                }),
-                Total = users.Count
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
-        }
-
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult UserSelectAll(GridCommand command, string userEmailStartsWith)
-        {
-            var users = _userService.GetUsers(userEmailStartsWith, null, command.Page - 1, command.PageSize);
-
-            var gridModel = new GridModel<CustomerModel.UserAccountModel>
-            {
-                Data = users.Select(x =>
-                {
-                    return new CustomerModel.UserAccountModel()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        IsApproved = x.IsApproved,
-                        IsLockedOut = x.IsLockedOut,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                    };
-                }),
-                Total = users.TotalCount
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
-        }
-
-
-        [HttpPost]
-        public ActionResult AssociateNewUserAccount(int userId, int customerId)
-        {
-            var user = _userService.GetUserById(userId);
-            if (user == null)
-                throw new ArgumentException("No user found with the specified id", "userId");
-
-            var customer = _customerService.GetCustomerById(customerId);
-            if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "customerId");
-
-            customer.AssociatedUsers.Add(user);
-            _customerService.UpdateCustomer(customer);
-
-            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult DeassociateNewUserAccount(int userId, int customerId)
-        {
-            var user = _userService.GetUserById(userId);
-            if (user == null)
-                throw new ArgumentException("No user found with the specified id", "userId");
-
-            var customer = _customerService.GetCustomerById(customerId);
-            if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "customerId");
-
-            customer.AssociatedUsers.Remove(user);
-            _customerService.UpdateCustomer(customer);
-
-            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
-        }
         #endregion
 
         #region Orders

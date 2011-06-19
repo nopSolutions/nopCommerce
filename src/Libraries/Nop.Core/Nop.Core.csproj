@@ -113,7 +113,7 @@
     <Compile Include="Domain\Logging\ActivityLogType.cs" />
     <Compile Include="Domain\Media\MediaSettings.cs" />
     <Compile Include="Domain\Messages\Campaign.cs" />
-    <Compile Include="Domain\Security\UserRegistrationType.cs" />
+    <Compile Include="Domain\Customers\UserRegistrationType.cs" />
     <Compile Include="Domain\Customers\CustomerNameFormat.cs" />
     <Compile Include="Domain\Customers\SystemCustomerAttributeNames.cs" />
     <Compile Include="Domain\Directory\ExchangeRate.cs" />
@@ -148,15 +148,14 @@
     <Compile Include="Domain\Payments\PaymentSettings.cs" />
     <Compile Include="Domain\Payments\PaymentStatus.cs" />
     <Compile Include="Domain\Security\SecuritySettings.cs" />
-    <Compile Include="Domain\Security\UserSettings.cs" />
     <Compile Include="Domain\Shipping\ShippingStatus.cs" />
     <Compile Include="Domain\StoreInformationSettings.cs" />
     <Compile Include="GenericComparer.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="IPersistentCollection.cs" />
     <Compile Include="IWebHelper.cs" />
-    <Compile Include="Domain\Security\Permissions\DefaultPermissionRecord.cs" />
-    <Compile Include="Domain\Security\Permissions\PermissionRecord.cs" />
+    <Compile Include="Domain\Security\DefaultPermissionRecord.cs" />
+    <Compile Include="Domain\Security\PermissionRecord.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ComponentLifeStyle.cs" />
     <Compile Include="Infrastructure\EngineContext.cs" />
     <Compile Include="Infrastructure\AppDomainTypeFinder.cs" />
@@ -270,8 +269,7 @@
     <Compile Include="IO\IStorageFile.cs" />
     <Compile Include="IO\IStorageFolder.cs" />
     <Compile Include="IO\IStorageProvider.cs" />
-    <Compile Include="Domain\Security\PasswordFormat.cs" />
-    <Compile Include="Domain\Security\User.cs" />
+    <Compile Include="Domain\Customers\PasswordFormat.cs" />
     <Compile Include="Plugins\IAutoStart.cs" />
     <Compile Include="Plugins\InitializerCreatingAttribute.cs" />
     <Compile Include="Plugins\IPluginBootstrapper.cs" />
@@ -300,7 +298,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Domain\Security\Permissions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

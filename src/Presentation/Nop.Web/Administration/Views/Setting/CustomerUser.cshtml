@@ -17,7 +17,7 @@
         $(document).ready(function () {
 
             $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
-            $("#@Html.FieldIdFor(model => model.UserSettings.UsernamesEnabled)").click(toggleUsername);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
 
             toggleAvatar();
             toggleUsername();
@@ -33,7 +33,7 @@
         }
 
         function toggleUsername() {
-            if (getE('@Html.FieldIdFor(model => model.UserSettings.UsernamesEnabled)').checked) {
+            if (getE('@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)').checked) {
                 $('#pnlAllowUsersToChangeUsernames').show();
             }
             else {
@@ -49,13 +49,39 @@
     @Html.Telerik().TabStrip().Name("customersettings-edit").Items(x =>
 {
     x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.CustomerSettings").Text).Content(TabCustomerSettings().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.UserSettings").Text).Content(TabUserSettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings").Text).Content(TabDateTimeSettings().ToHtmlString());
 })
 }
 @helper TabCustomerSettings()
     {
     <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.UsernamesEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.UsernamesEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.UsernamesEnabled)
+            </td>
+        </tr>
+        <tr id="pnlAllowUsersToChangeUsernames">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.AllowUsersToChangeUsernames):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.UserRegistrationType):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CustomerSettings.UserRegistrationType, ((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList())
+                @Html.ValidationMessageFor(model => model.CustomerSettings.UserRegistrationType)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars):
@@ -178,38 +204,6 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.NewsletterEnabled)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.NewsletterEnabled)
-            </td>
-        </tr>
-    </table>
-}
-@helper TabUserSettings()
-    {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.UserSettings.UsernamesEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.UserSettings.UsernamesEnabled)
-                @Html.ValidationMessageFor(model => model.UserSettings.UsernamesEnabled)
-            </td>
-        </tr>
-        <tr id="pnlAllowUsersToChangeUsernames">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.UserSettings.AllowUsersToChangeUsernames):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.UserSettings.AllowUsersToChangeUsernames)
-                @Html.ValidationMessageFor(model => model.UserSettings.AllowUsersToChangeUsernames)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.UserSettings.UserRegistrationType):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.UserSettings.UserRegistrationType, ((UserRegistrationType)Model.UserSettings.UserRegistrationType).ToSelectList())
-                @Html.ValidationMessageFor(model => model.UserSettings.UserRegistrationType)
             </td>
         </tr>
     </table>

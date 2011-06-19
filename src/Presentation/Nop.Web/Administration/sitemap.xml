@@ -29,7 +29,6 @@
           <siteMapNode title="Bestsellers" nopResource="Admin.SalesReport.Bestsellers" controller="Order" action="BestsellersReport" />
         </siteMapNode>
         <siteMapNode title="Customers" nopResource="Admin.Customers" ImageUrl="~/Administration/Content/images/ico-customers.png" >
-          <siteMapNode title="Users" nopResource="Admin.Users" controller="User" action="List" />
           <siteMapNode title="Customers" nopResource="Admin.Customers.Customers" controller="Customer" action="List" />
           <siteMapNode title="Customer roles" nopResource="Admin.Customers.CustomerRoles" controller="CustomerRole" action="List" />
           <siteMapNode title="Customer reports" nopResource="Admin.Customers.Reports" controller="Customer" action="Reports" />

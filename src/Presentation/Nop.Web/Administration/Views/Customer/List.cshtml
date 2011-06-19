@@ -38,12 +38,22 @@
                 @Html.EditorFor(model => Model.SearchEmail)
             </td>
         </tr>
+        @if (Model.UsernamesEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SearchUsername):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => Model.SearchUsername)
+                </td>
+            </tr>
+        }
         <tr>
             <td colspan="2">
                 <button type="submit" name="search-customers" value="search-customers" class="t-button">@T("Admin.Common.Search")</button>
             </td>
         </tr>
-        @*TODO allow to search customers by username*@
     </table>
     <p>
     </p>
@@ -57,6 +67,15 @@
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Filterable(false);
+                        columns.Bound(x => x.Email)
+                            .Width(200)
+                            .Filterable(false);
+                        //Weird!!! We can't pass Model.UsernamesEnabled to Hidden method
+                        var usernameColumn = columns.Bound(x => x.Username)
+                            .Width(200)
+                            .Filterable(false);
+                        if (!Model.UsernamesEnabled)
+                            usernameColumn.Hidden(true);
                         columns.Bound(x => x.FullName)
                             .Width(200)
                             .Filterable(false);
@@ -69,6 +88,10 @@
                             .Filterable(false)
                             .Hidden(true);
                         columns.Bound(x => x.SearchCustomerEmail)
+                            .Width(50)
+                            .Filterable(false)
+                            .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerUsername)
                             .Width(50)
                             .Filterable(false)
                             .Hidden(true);
@@ -97,10 +120,15 @@
                         {
                             filters.Add(x => x.SearchCustomerRoleIds).Contains((string)ViewData["searchCustomerRoleIds"]);
                         }
-                        //customer role ids
+                        //customer email
                         if (!String.IsNullOrEmpty(ViewData["searchCustomerEmail"] as string))
                         {
                             filters.Add(x => x.SearchCustomerEmail).Contains((string)ViewData["searchCustomerEmail"]);
+                        }
+                        //customer username
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerUsername"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerUsername).Contains((string)ViewData["searchCustomerUsername"]);
                         }
                     }))
                     .EnableCustomBinding(true))

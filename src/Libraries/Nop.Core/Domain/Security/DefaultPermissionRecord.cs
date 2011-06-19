@@ -1,9 +1,8 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
 
-namespace Nop.Core.Domain.Security.Permissions
+namespace Nop.Core.Domain.Security
 {
     /// <summary>
     /// Represents a default permission record

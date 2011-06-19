@@ -69,7 +69,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult CurrentCarts(GridCommand command)
         {
-            var customers = _customerService.GetAllCustomers(null, null, null, null,
+            var customers = _customerService.GetAllCustomers(null, null, null, null, null,
                 true, ShoppingCartType.ShoppingCart, command.Page - 1, command.PageSize);
 
             var gridModel = new GridModel<ShoppingCartModel>

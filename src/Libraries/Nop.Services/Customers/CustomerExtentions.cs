@@ -115,31 +115,7 @@ namespace Nop.Services.Customers
 
             }
         }
-
-        public static User GetDefaultUserAccount(this Customer customer, bool onlyActiveUser = true)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-            
-            var user = customer.AssociatedUsers
-                .Where(u => !onlyActiveUser || (u.IsApproved && !u.IsLockedOut))
-                .OrderByDescending(u => u.CreatedOnUtc)
-                .FirstOrDefault();
-            return user;
-        }
-
-        public static string GetDefaultUserAccountEmail(this Customer customer, bool onlyActiveUser = true)
-        {
-            var user = GetDefaultUserAccount(customer, onlyActiveUser);
-            return user != null ? user.Email : null;
-        }
-
-        public static string GetDefaultUserAccountUsername(this Customer customer, bool onlyActiveUser = true)
-        {
-            var user = GetDefaultUserAccount(customer, onlyActiveUser);
-            return user != null ? user.Username : null;
-        }
-
+        
         public static string GetFullName(this Customer customer)
         {
             if (customer == null)
@@ -191,13 +167,13 @@ namespace Nop.Services.Customers
             switch (EngineContext.Current.Resolve<CustomerSettings>().CustomerNameFormat)
             {
                 case CustomerNameFormat.ShowEmails:
-                    result = customer.GetDefaultUserAccountEmail();
+                    result = customer.Email;
                     break;
                 case CustomerNameFormat.ShowFullNames:
                     result = customer.GetFullName();
                     break;
                 case CustomerNameFormat.ShowUsernames:
-                    result = customer.GetDefaultUserAccountUsername();
+                    result = customer.Username;
                     break;
                 default:
                     break;

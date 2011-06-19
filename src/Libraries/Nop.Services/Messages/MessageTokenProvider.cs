@@ -481,16 +481,16 @@ namespace Nop.Services.Messages
 
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
         {
-            tokens.Add(new Token("Customer.Email", HttpUtility.HtmlEncode(customer.GetDefaultUserAccountEmail())));
-            tokens.Add(new Token("Customer.Username", HttpUtility.HtmlEncode(customer.GetDefaultUserAccountUsername())));
+            tokens.Add(new Token("Customer.Email", HttpUtility.HtmlEncode(customer.Email)));
+            tokens.Add(new Token("Customer.Username", HttpUtility.HtmlEncode(customer.Username)));
             tokens.Add(new Token("Customer.FullName", HttpUtility.HtmlEncode(customer.GetFullName())));
             tokens.Add(new Token("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber)));
             tokens.Add(new Token("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString())));
 
 
             //TODO add a method for getting URL
-            tokens.Add(new Token("Customer.PasswordRecoveryURL", string.Format("{0}passwordrecovery/confirm/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.GetDefaultUserAccountEmail())));
-            tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}customer/activation/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.GetDefaultUserAccountEmail(false))));
+            tokens.Add(new Token("Customer.PasswordRecoveryURL", string.Format("{0}passwordrecovery/confirm/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.Email)));
+            tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}customer/activation/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.Username)));
             tokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
         }
 

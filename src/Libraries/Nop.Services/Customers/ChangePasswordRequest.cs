@@ -1,7 +1,7 @@
 ﻿using Nop.Core;
-using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Customers;
 
-namespace Nop.Services.Security
+namespace Nop.Services.Customers
 {
     public class ChangePasswordRequest
     {

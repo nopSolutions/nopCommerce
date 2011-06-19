@@ -21,10 +21,6 @@
     if (Model.Id > 0)
         tabAddresses = x.Add().Text(T("Admin.Customers.Customers.Addresses").Text).Content(TabAddresses().ToHtmlString());
     
-    TabStripItemBuilder tabUserAccount = null;
-    if (Model.Id > 0)
-        tabUserAccount = x.Add().Text(T("Admin.Customers.Customers.UserAccount").Text).Content(TabUserAccount().ToHtmlString());
-
     var selectedTab = (string)ViewData["selectedTab"];
     switch (selectedTab)
     {
@@ -43,9 +39,6 @@
         case "addresses":
             tabAddresses.Selected(true);
             break;
-        case "useraccount":
-            tabUserAccount.Selected(true);
-            break;
         default:
             tabInfo.Selected(true);
             break;
@@ -53,7 +46,58 @@
 })
 @helper TabInfo()
     { 
-    <table class="adminContent">
+        <table class="adminContent">
+        @if (Model.UsernamesEnabled)
+        {
+            if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
+            {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Username):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Username)
+                    @Html.ValidationMessageFor(model => model.Username)
+                </td>
+            </tr>
+            }
+            else
+            {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Username):
+                </td>
+                <td class="adminData">
+                    @Model.Username
+                    @Html.HiddenFor(model => model.Username)
+                </td>
+            </tr>
+            }
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Email):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Password):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+                @if (Model.Id > 0)
+                {
+                    <button type="submit" name="changepassword" value="changepassword" class="t-button">
+                        Change password</button>
+                }
+            </td>
+        </tr>
+
         @if (Model.GenderEnabled)
         {
             <tr>
@@ -360,143 +404,4 @@
             <input type="button" class="t-button" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")' />
         </strong>
     </p>
-}
-@helper TabUserAccount()
-    {
-    
-    <p>
-        <b>@T("Admin.Customers.Customers.UserAccount.AssociatedUsers")</b>
-    </p>
-    <div>
-        <script type="text/javascript">
-            function deassociateUser(userId) {
-                //TODO if(confirm('Are you sure?')) {
-                    $.ajax({
-                        cache:false,
-                        type: "POST",
-                        url: "@(Url.Action("DeassociateNewUserAccount", "Customer"))",
-                        data: "userId=" + userId + "&customerId=" + @Model.Id,
-                        success: function (data) {
-                             alert('Successfully deassociated.');
-                             var grid = $("#customer-useraccounts-existing-grid");
-                             grid.data('tGrid').ajaxRequest();
-                        },
-                        error:function (xhr, ajaxOptions, thrownError){
-                            alert('Failed to deassociate user.')
-                        }  
-                    });
-                //}
-            };
-        </script>
-        @(Html.Telerik().Grid<CustomerModel.UserAccountModel>()
-        .Name("customer-useraccounts-existing-grid")
-        .Columns(columns =>
-        {
-            columns.Bound(x => x.Id)
-                .ClientTemplate("<button type='button' name='deassociateUserAccount' id='deassociateUserAccount' onclick='deassociateUser(<#= Id #>)' class='t-button'>Deassociate</button>")
-                .Title("Deassociate")
-                .Width(50)
-                .Centered();
-            columns.Bound(x => x.Id)
-                .Width(50);
-            columns.Bound(x => x.Email)
-                .Width(200);
-            columns.Bound(x => x.IsLockedOut)
-                .Width(100)
-                .Template(x => x.IsLockedOut.ToString().ToLower())
-                .Centered();
-            columns.Bound(x => x.IsApproved)
-                .Width(100)
-                .Template(x => x.IsApproved.ToString().ToLower())
-                .Centered();
-            columns.Bound(x => x.CreatedOn)
-                .Width(100);
-        })
-        .DataBinding(binding =>
-        {
-            binding.Ajax().Select("AssociatedUserSelect", "Customer", new { customerID = Model.Id });
-        })
-        .EnableCustomBinding(true))
-    </div>
-    <hr />
-    <p>
-        <b>@T("Admin.Customers.Customers.UserAccount.AssociateTitle")</b>
-    </p>
-    <div>
-        <label for="userEmailStartsWith">
-            <strong>Email</strong> contains:</label>
-        <input id="useremailstartswith" name="useremailstartswith" type="text" value="">
-        <button type="submit" id="search-users" value="search-users" class="t-button">Search</button>
-    </div>
-    <div class="clear">
-    </div>
-    <div>
-        <script type="text/javascript">
-            function associateUser(userId) {
-                //TODO if(confirm('Are you sure?')) {
-                    $.ajax({
-                        cache:false,
-                        type: "POST",
-                        url: "@(Url.Action("AssociateNewUserAccount", "Customer"))",
-                        data: "userId=" + userId + "&customerId=" + @Model.Id,
-                        success: function (data) {
-                             alert('Successfully associated.');                             
-                             var grid = $("#customer-useraccounts-existing-grid");
-                             grid.data('tGrid').ajaxRequest();
-                        },
-                        error:function (xhr, ajaxOptions, thrownError){
-                            alert('Failed to associate user.')
-                        }  
-                    });
-                //}
-            };
-        </script>
-        @(Html.Telerik().Grid<CustomerModel.UserAccountModel>()
-        .Name("customer-useraccounts-all-grid")
-        .Columns(columns =>
-        {
-            columns.Bound(x => x.Id)
-                .ClientTemplate("<button type='button' name='associateUserAccount' id='associateUserAccount' onclick='associateUser(<#= Id #>)' class='t-button'>Associate</button>")
-                .Title("Associate")
-                .Width(50)
-                .Centered();
-            columns.Bound(x => x.Id)
-                .Width(50);
-            columns.Bound(x => x.Email)
-                .Width(200);
-            columns.Bound(x => x.IsLockedOut)
-                .Width(100)
-                .Template(x => x.IsLockedOut.ToString().ToLower())
-                .Centered();
-            columns.Bound(x => x.IsApproved)
-                .Width(100)
-                .Template(x => x.IsApproved.ToString().ToLower())
-                .Centered();
-            columns.Bound(x => x.CreatedOn)
-                .Width(100);
-        })
-        .Pageable(settings => settings.PageSize(10))
-        .DataBinding(binding =>
-        {
-            binding.Ajax().Select("UserSelectAll", "Customer");
-        })
-        .ClientEvents(events => events.OnDataBinding("onUserListAllDataBinding"))
-        .EnableCustomBinding(true))
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#search-users').click(function () {
-                    var grid = $('#customer-useraccounts-all-grid').data('tGrid');
-                    grid.ajaxRequest();
-                    return false;
-                });
-            });
-
-            function onUserListAllDataBinding(e) {
-                var searchModel = {
-                    UserEmailStartsWith: $('#useremailstartswith').val()
-                };
-                e.data = searchModel;
-            }
-        </script>
-    </div>
 }

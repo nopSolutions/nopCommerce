@@ -6,12 +6,13 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 
-using Nop.Core.Domain.Security.Permissions;
+using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
 
-namespace Nop.Services.Security.Permissions
+namespace Nop.Services.Security
 {
     /// <summary>
     /// Permission service

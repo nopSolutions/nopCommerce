@@ -1,8 +1,8 @@
 ﻿
 using System.Collections.Generic;
-using Nop.Core.Domain.Security.Permissions;
+using Nop.Core.Domain.Security;
 
-namespace Nop.Services.Security.Permissions
+namespace Nop.Services.Security
 {
     public interface IPermissionProvider
     {

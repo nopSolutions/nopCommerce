@@ -185,13 +185,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.EndDateUtc, dt => dt.Ignore());
             //customer roles
             ViceVersa<CustomerRole, CustomerRoleModel>();
-            //customers
-            Mapper.CreateMap<Customer, CustomerModel>();
-            Mapper.CreateMap<CustomerModel, Customer>()
-                .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
-                .ForMember(dest => dest.LastActivityDateUtc, dt => dt.Ignore())
-                .ForMember(dest => dest.AffiliateId, dt => dt.Ignore())
-                .ForMember(dest => dest.Deleted, dt => dt.Ignore());
 
             //product attributes
             ViceVersa<ProductAttribute, ProductAttributeModel>();
@@ -224,7 +217,6 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<ShoppingCartSettings, ShoppingCartSettingsModel>();
             ViceVersa<MediaSettings, MediaSettingsModel>();
             ViceVersa<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>();
-            ViceVersa<UserSettings, CustomerUserSettingsModel.UserSettingsModel>();
         }
 
         protected virtual void ViceVersa<T1, T2>()

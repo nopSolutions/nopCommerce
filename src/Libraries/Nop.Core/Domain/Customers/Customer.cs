@@ -30,13 +30,30 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ReturnRequest> _returnRequests;
         private ICollection<Address> _addresses;
         private ICollection<ActivityLog> _activityLog;
-        private ICollection<User> _associatedUsers;
+
+        public Customer()
+        {
+            this.CustomerGuid = Guid.NewGuid();
+            this.PasswordFormat = PasswordFormat.Clear;
+        }
 
         /// <summary>
         /// Gets or sets the customer Guid
         /// </summary>
         public virtual Guid CustomerGuid { get; set; }
 
+        public virtual string Username { get; set; }
+        public virtual string Email { get; set; }
+        public virtual string Password { get; set; }
+
+        public virtual int PasswordFormatId { get; set; }
+        public virtual PasswordFormat PasswordFormat
+        {
+            get { return (PasswordFormat)PasswordFormatId; }
+            set { this.PasswordFormatId = (int)value; }
+        }
+
+        public virtual string PasswordSalt { get; set; }
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
@@ -266,15 +283,6 @@ namespace Nop.Core.Domain.Customers
         {
             get { return _activityLog ?? (_activityLog = new List<ActivityLog>()); }
             protected set { _activityLog = value; }            
-        }
-
-        /// <summary>
-        /// Gets or sets the associated users
-        /// </summary>
-        public virtual ICollection<User> AssociatedUsers
-        {
-            get { return _associatedUsers ?? (_associatedUsers = new List<User>()); }
-            protected set { _associatedUsers = value; }
         }
 
         #endregion

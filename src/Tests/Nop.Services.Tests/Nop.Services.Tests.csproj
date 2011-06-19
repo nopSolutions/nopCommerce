@@ -68,6 +68,7 @@
     <Compile Include="Configuration\ConfigFileSettingService.cs" />
     <Compile Include="Configuration\ConfigurationProviderTests.cs" />
     <Compile Include="Customers\CustomerExtensionTests.cs" />
+    <Compile Include="Customers\CustomerServiceTests.cs" />
     <Compile Include="Directory\CurrencyServiceTests.cs" />
     <Compile Include="Directory\TestExchangeRateProvider.cs" />
     <Compile Include="Directory\MeasureServiceTests.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="Payments\TestPaymentMethod.cs" />
     <Compile Include="Payments\PaymentServiceTests.cs" />
     <Compile Include="Security\EncryptionServiceTests.cs" />
-    <Compile Include="Security\UserServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\ConfigFileSettingServiceTests.cs" />
     <Compile Include="Shipping\FixedRateTestShippingRateComputationMethod.cs" />

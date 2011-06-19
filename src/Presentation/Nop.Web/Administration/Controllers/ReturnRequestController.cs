@@ -39,7 +39,6 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly IUserService _userService;
 
         #endregion Fields
 
@@ -48,8 +47,7 @@ namespace Nop.Admin.Controllers
         public ReturnRequestController(IOrderService orderService,
             ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, IWorkContext workContext,
-            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
-            IUserService userService)
+            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
         {
             this._orderService = orderService;
             this._customerService = customerService;
@@ -58,7 +56,6 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
-            this._userService = userService;
         }
 
         #endregion

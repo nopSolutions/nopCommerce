@@ -21,6 +21,21 @@ namespace Nop.Admin.Models.Customers
             AvailableTimeZones = new List<SelectListItem>();
         }
 
+        public bool AllowUsersToChangeUsernames { get; set; }
+        public bool UsernamesEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Username")]
+        [AllowHtml]
+        public string Username { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Email")]
+        [AllowHtml]
+        public string Email { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Password")]
+        [AllowHtml]
+        public string Password { get; set; }
+
         //form fields & properties
         public bool GenderEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Gender")]
@@ -127,6 +142,7 @@ namespace Nop.Admin.Models.Customers
         //properties used for filtering (customer list page)
         public string SearchCustomerRoleIds { get; set; }
         public string SearchCustomerEmail { get; set; }
+        public string SearchCustomerUsername { get; set; }
         
 
         

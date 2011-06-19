@@ -40,10 +40,7 @@ namespace Nop.Web.Controllers
     public class CustomerController : BaseNopController
     {
         #region Fields
-
         private readonly IAuthenticationService _authenticationService;
-        private readonly IUserService _userService;
-        private readonly UserSettings _userSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly TaxSettings _taxSettings;
@@ -75,7 +72,7 @@ namespace Nop.Web.Controllers
         #region Ctor
 
         public CustomerController(IAuthenticationService authenticationService,
-            IUserService userService, UserSettings userSettings, IDateTimeHelper dateTimeHelper,
+            IDateTimeHelper dateTimeHelper,
             DateTimeSettings dateTimeSettings, TaxSettings taxSettings,
             ILocalizationService localizationService,
             IWorkContext workContext, ICustomerService customerService,
@@ -91,8 +88,6 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
         {
             this._authenticationService = authenticationService;
-            this._userService = userService;
-            this._userSettings = userSettings;
             this._dateTimeHelper = dateTimeHelper;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
@@ -128,8 +123,7 @@ namespace Nop.Web.Controllers
         private bool IsCurrentUserRegistered()
         {
             return _workContext.CurrentCustomer != null &&
-                _workContext.CurrentCustomer.IsRegistered() &&
-                _authenticationService.GetAuthenticatedUser() != null;
+                _workContext.CurrentCustomer.IsRegistered();
         }
 
         [NonAction]
@@ -152,7 +146,7 @@ namespace Nop.Web.Controllers
         public ActionResult Login(bool? checkoutAsGuest)
         {
             var model = new LoginModel();
-            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.CheckoutAsGuest = checkoutAsGuest.HasValue ? checkoutAsGuest.Value : false;
             return View(model);
         }
@@ -162,12 +156,12 @@ namespace Nop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_userService.ValidateUser(_userSettings.UsernamesEnabled ? model.UserName : model.Email, model.Password))
+                if (_customerService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.UserName : model.Email, model.Password))
                 {
                     //TODO migrate shopping cart
 
-                    var user = _userSettings.UsernamesEnabled ? _userService.GetUserByUsername(model.UserName) : _userService.GetUserByEmail(model.Email);
-                    _authenticationService.SignIn(user, model.RememberMe);
+                    var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(model.UserName) : _customerService.GetCustomerByEmail(model.Email);
+                    _authenticationService.SignIn(customer, model.RememberMe);
 
 
                     if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -186,7 +180,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             return View(model);
         }
 
@@ -194,7 +188,7 @@ namespace Nop.Web.Controllers
         public ActionResult Register()
         {
             //check whether registration is allowed
-            if (_userSettings.UserRegistrationType == UserRegistrationType.Disabled)
+            if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
             var model = new RegisterModel();
@@ -207,7 +201,7 @@ namespace Nop.Web.Controllers
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.LocationEnabled = _customerSettings.ShowCustomersLocation;
             if (_customerSettings.ShowCustomersLocation)
             {
@@ -224,32 +218,27 @@ namespace Nop.Web.Controllers
         public ActionResult Register(RegisterModel model)
         {
             //check whether registration is allowed
-            if (_userSettings.UserRegistrationType == UserRegistrationType.Disabled)
+            if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
+
+            if (_workContext.CurrentCustomer.IsRegistered())
+            {
+                //Already registered customer. 
+                _authenticationService.SignOut();
+                
+                //Save a new record
+                _workContext.CurrentCustomer = _customerService.InsertGuestCustomer();
+            }
+            var customer = _workContext.CurrentCustomer;
             if (ModelState.IsValid)
             {
-                //register 'User' entity
-                bool isApproved = _userSettings.UserRegistrationType == UserRegistrationType.Standard;
-                var registrationRequest = new UserRegistrationRequest(model.Email,
-                    model.Username, model.Password, PasswordFormat.Hashed, isApproved);
-                var registrationResult = _userService.RegisterUser(registrationRequest);
+                bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
+                var registrationRequest = new CustomerRegistrationRequest(customer, model.Email,
+                    _customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password, PasswordFormat.Hashed, isApproved);
+                var registrationResult = _customerService.RegisterCustomer(registrationRequest);
                 if (registrationResult.Success)
                 {
-                    if (_workContext.CurrentCustomer.IsRegistered())
-                    {
-                        //already registered customer. save a new record
-                        _workContext.CurrentCustomer = _customerService.InsertGuestCustomer();
-                    }
-
-                    var customer = _workContext.CurrentCustomer;
-                    if (isApproved)
-                    {
-                        //now register 'Customer' entity
-                        _customerService.RegisterCustomer(customer);
-                    }
-                    //associate it with this user
-                    customer.AssociatedUsers.Add(registrationResult.User);
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                         customer.TimeZoneId = model.TimeZoneId;
@@ -323,7 +312,7 @@ namespace Nop.Web.Controllers
 
                     //login customer now
                     if (isApproved)
-                        _authenticationService.SignIn(registrationResult.User, true);
+                        _authenticationService.SignIn(customer, true);
 
                     //notifications
                     //UNDONE perhaps, we need to load the latest user account (not default one) to appropriate email methods:
@@ -333,7 +322,7 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.NotifyNewCustomerRegistration)
                         _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, _localizationSettings.DefaultAdminLanguageId);
                     
-                    switch (_userSettings.UserRegistrationType)
+                    switch (_customerSettings.UserRegistrationType)
                     {
                         case UserRegistrationType.EmailValidation:
                             {
@@ -382,7 +371,7 @@ namespace Nop.Web.Controllers
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             if (_customerSettings.ShowCustomersLocation)
             {
                 foreach (var c in _countryService.GetAllCountries())
@@ -431,15 +420,11 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AccountActivation(Guid token, string email)
         {
-            var user = _userService.GetUserByEmail(email);
-            if (user == null)
-                return RedirectToAction("Index", "Home");
-
-            var customer = user.AssociatedCustomer;
+            var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
                 return RedirectToAction("Index", "Home");
 
-            var cToken = user.AssociatedCustomer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken);
+            var cToken = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken);
             if (String.IsNullOrEmpty(cToken))
                 return RedirectToAction("Index", "Home");
 
@@ -447,13 +432,8 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             //activate user account
-            user.IsApproved = true;
-            _userService.UpdateUser(user);
-            //register 'Customer' entity
-            if (!customer.IsRegistered())
-            {
-                _customerService.RegisterCustomer(customer);
-            }
+            customer.Active = true;
+            _customerService.UpdateCustomer(customer);
             _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, "");
             //send welcome message
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
@@ -482,10 +462,9 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
-            var user = _authenticationService.GetAuthenticatedUser();
 
             var model = new CustomerInfoModel();
-            PrepareCustomerInfoModel(model, customer, user, false);
+            PrepareCustomerInfoModel(model, customer, false);
 
             return View(model);
         }
@@ -498,14 +477,13 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
-            var user = _authenticationService.GetAuthenticatedUser();
 
             //email
             if (String.IsNullOrEmpty(model.Email))
                 ModelState.AddModelError("", "Email is not provided.");
             //username 
-            if (_userSettings.UsernamesEnabled &&
-                this._userSettings.AllowUsersToChangeUsernames)
+            if (_customerSettings.UsernamesEnabled &&
+                this._customerSettings.AllowUsersToChangeUsernames)
             {
                 if (String.IsNullOrEmpty(model.Username))
                     ModelState.AddModelError("", "Username is not provided.");
@@ -516,15 +494,15 @@ namespace Nop.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     //username 
-                    if (_userSettings.UsernamesEnabled &&
-                        this._userSettings.AllowUsersToChangeUsernames)
+                    if (_customerSettings.UsernamesEnabled &&
+                        this._customerSettings.AllowUsersToChangeUsernames)
                     {
-                        if (!user.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
-                            _userService.SetUsername(user, model.Username);
+                        if (!customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                            _customerService.SetUsername(customer, model.Username);
                     }
                     //email
-                    if (!user.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
-                        _userService.SetEmail(user, model.Email);
+                    if (!customer.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                        _customerService.SetEmail(customer, model.Email);
 
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
@@ -568,7 +546,7 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.NewsletterEnabled)
                     {
                         //save newsletter value
-                        var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.GetDefaultUserAccountEmail());
+                        var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
@@ -586,7 +564,7 @@ namespace Nop.Web.Controllers
                                 _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription()
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = customer.GetDefaultUserAccountEmail(),
+                                    Email = customer.Email,
                                     Active = true,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
@@ -614,22 +592,19 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            PrepareCustomerInfoModel(model, customer, user, true);
+            PrepareCustomerInfoModel(model, customer, true);
             return View(model);
         }
         
         [NonAction]
-        private void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, User user, bool excludeProperties)
+        private void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
 
             if (customer == null)
                 throw new ArgumentNullException("customer");
-
-            if (user == null)
-                throw new ArgumentNullException("user");
-
+            
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
@@ -655,19 +630,19 @@ namespace Nop.Web.Controllers
                 model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
 
                 //newsletter
-                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.GetDefaultUserAccountEmail());
+                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
                 model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);                
                 model.LocationCountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId);
 
-                model.Email = user.Email;
-                model.Username = user.Username;
+                model.Email = customer.Email;
+                model.Username = customer.Username;
             }
             else
             {
-                if (_userSettings.UsernamesEnabled && !_userSettings.AllowUsersToChangeUsernames)
-                    model.Username = user.Username;
+                if (_customerSettings.UsernamesEnabled && !_customerSettings.AllowUsersToChangeUsernames)
+                    model.Username = customer.Username;
             }
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
@@ -675,8 +650,8 @@ namespace Nop.Web.Controllers
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
-            model.UsernamesEnabled = _userSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _userSettings.AllowUsersToChangeUsernames;
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.SignatureEnabled = _forumSettings.SignaturesEnabled;
             model.LocationEnabled = _customerSettings.ShowCustomersLocation;
 
@@ -1128,7 +1103,6 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
-            var user = _authenticationService.GetAuthenticatedUser();
 
             var model = new ChangePasswordModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
@@ -1143,16 +1117,15 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
-            var user = _authenticationService.GetAuthenticatedUser();
 
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.ChangePassword;
 
             if (ModelState.IsValid)
             {
-                var changePasswordRequest = new ChangePasswordRequest(user.Email,
+                var changePasswordRequest = new ChangePasswordRequest(customer.Email,
                     true, PasswordFormat.Hashed, model.NewPassword, model.OldPassword);
-                var changePasswordResult = _userService.ChangePassword(changePasswordRequest);
+                var changePasswordResult = _customerService.ChangePassword(changePasswordRequest);
                 if (changePasswordResult.Success)
                 {
                     model.Result = _localizationService.GetResource("Account.ChangePassword.Success");
@@ -1298,13 +1271,12 @@ namespace Nop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                var user = _userService.GetUserByEmail(model.Email);
-                if (user != null && user.AssociatedCustomer != null)
+                var customer = _customerService.GetCustomerByEmail(model.Email);
+                if (customer != null)
                 {
                     var passwordRecoveryToken = Guid.NewGuid();
-                    _customerService.SaveCustomerAttribute(user.AssociatedCustomer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
-                    _workflowMessageService.SendCustomerPasswordRecoveryMessage(user.AssociatedCustomer, _workContext.WorkingLanguage.Id);
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
+                    _workflowMessageService.SendCustomerPasswordRecoveryMessage(customer, _workContext.WorkingLanguage.Id);
 
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
                 }
@@ -1322,11 +1294,11 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult PasswordRecoveryConfirm(Guid prt, string customerEmail)
         {
-            var user = _userService.GetUserByEmail(customerEmail);
-            if (user == null || user.AssociatedCustomer == null)
+            var customer = _customerService.GetCustomerByEmail(customerEmail);
+            if (customer == null )
                 return RedirectToAction("Index", "Home");
 
-            var cPrt = user.AssociatedCustomer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
+            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
             if (String.IsNullOrEmpty(cPrt))
                 return RedirectToAction("Index", "Home");
 
@@ -1341,11 +1313,11 @@ namespace Nop.Web.Controllers
         [FormValueRequired("set-password")]
         public ActionResult PasswordRecoveryConfirmPOST(Guid prt, string customerEmail, PasswordRecoveryConfirmModel model)
         {
-            var user = _userService.GetUserByEmail(customerEmail);
-            if (user == null || user.AssociatedCustomer == null)
+            var customer = _customerService.GetCustomerByEmail(customerEmail);
+            if (customer == null)
                 return RedirectToAction("Index", "Home");
 
-            var cPrt = user.AssociatedCustomer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
+            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
             if (String.IsNullOrEmpty(cPrt))
                 return RedirectToAction("Index", "Home");
 
@@ -1354,11 +1326,11 @@ namespace Nop.Web.Controllers
             
             if (ModelState.IsValid)
             {
-                var response = _userService.ChangePassword(new ChangePasswordRequest(customerEmail, 
+                var response = _customerService.ChangePassword(new ChangePasswordRequest(customerEmail, 
                     false, PasswordFormat.Hashed, model.NewPassword));
                 if (response.Success)
                 {
-                    _customerService.SaveCustomerAttribute(user.AssociatedCustomer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
+                    _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
 
                     model.SuccessfullyChanged = true;
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
