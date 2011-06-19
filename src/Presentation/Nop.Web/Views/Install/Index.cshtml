@@ -95,7 +95,7 @@
                                                     Admin user password:</label>
                                             </td>
                                             <td width="100%">
-                                                @Html.TextBoxFor(x => x.AdminPassword, new { @class = "textbox" })
+                                                @Html.PasswordFor(x => x.AdminPassword, new { @class = "textbox" })
                                             </td>
                                         </tr>
                                         <tr>
@@ -104,7 +104,7 @@
                                                     Confirm the password:</label>
                                             </td>
                                             <td width="100%">
-                                                @Html.TextBoxFor(x => x.ConfirmPassword, new { @class = "textbox" })
+                                                @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "textbox" })
                                             </td>
                                         </tr>
                                         <tr>

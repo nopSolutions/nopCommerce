@@ -177,8 +177,8 @@ namespace Nop.Web.Controllers
             var model = new InstallModel()
             {
                 AdminEmail = "admin@yourStore.com",
-                AdminPassword = "admin",
-                ConfirmPassword = "admin",
+                //AdminPassword = "admin",
+                //ConfirmPassword = "admin",
                 DatabaseConnectionString = "",
                 DataProvider = "sqlce",
                 InstallSampleData= true,
