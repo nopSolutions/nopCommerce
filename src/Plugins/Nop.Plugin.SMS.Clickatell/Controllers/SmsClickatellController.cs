@@ -51,7 +51,7 @@ namespace Nop.Plugin.Sms.Clickatell.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
             
             //save settings

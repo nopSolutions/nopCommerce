@@ -57,6 +57,38 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+          <LocaleResource Name="HasAllProducts">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="ProductVariants">
+                    <Value>Restricted product variants</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="HasOneProduct">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="ProductVariants">
+                    <Value>Restricted product variants</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
           <LocaleResource Name="HadSpentAmount">
             <Children>
               <LocaleResource Name="Fields">
@@ -66,6 +98,38 @@
                     <Children>
                       <LocaleResource Name="Hint">
                         <Value>Discount will be applied if customer has spent/purchased x.xx amount.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="PurchasedAllProducts">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="ProductVariants">
+                    <Value>Restricted product variants</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="PurchasedOneProduct">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="ProductVariants">
+                    <Value>Restricted product variants</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

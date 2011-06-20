@@ -5177,7 +5177,7 @@ namespace Nop.Services.Installation
             };
             product25GiftCard.ProductVariants.Add(new ProductVariant()
             {
-                Price = 5M,
+                Price = 25M,
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Virtual,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,

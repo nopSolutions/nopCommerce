@@ -65,7 +65,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
             
             //save settings
@@ -95,7 +95,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
 
 
@@ -136,7 +136,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
 
             try

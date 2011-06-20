@@ -45,7 +45,7 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
 
             //clear testing results
@@ -66,7 +66,7 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
 
             //clear testing results
@@ -101,7 +101,7 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
 
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
 
             //clear testing results
