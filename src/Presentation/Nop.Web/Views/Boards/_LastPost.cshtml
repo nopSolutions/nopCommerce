@@ -14,7 +14,7 @@
             }
             else
             {
-                dateStr = (Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(@Model.forumPost.CreatedOnUtc).ToString("f"));
+                dateStr = (Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(@Model.forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f"));
             }
             @dateStr <br />
         }

@@ -32,8 +32,7 @@ namespace Nop.Services
             this._httpContext = httpContext;
             this._customerService = customerService;
             this._customerSettings = customerSettings;
-            //TODO set correct timespan
-            ExpirationTimeSpan = TimeSpan.FromHours(24);
+            ExpirationTimeSpan = TimeSpan.FromDays(31);  //TODO make 31 configurable
         }
 
         public TimeSpan ExpirationTimeSpan { get; set; }

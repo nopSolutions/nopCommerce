@@ -98,7 +98,7 @@
                     }
                     else
                     {
-                        @(Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(@Model.ForumPost.CreatedOnUtc).ToString("f"))
+                        @(Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(@Model.ForumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f"))
                     }
                     @dateStr
                 }</span>            

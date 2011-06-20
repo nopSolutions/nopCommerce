@@ -66,6 +66,7 @@ namespace Nop.Web.Controllers
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly CustomerSettings _customerSettings;
         
         #endregion
 
@@ -85,7 +86,7 @@ namespace Nop.Web.Controllers
             IOrderReportService orderReportService, ICustomerService customerService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
-            LocalizationSettings localizationSettings)
+            LocalizationSettings localizationSettings, CustomerSettings customerSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -117,6 +118,7 @@ namespace Nop.Web.Controllers
             this._shoppingCartSettings = shoppingCartSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._localizationSettings = localizationSettings;
+            this._customerSettings = customerSettings;
         }
 
         #endregion
@@ -437,7 +439,9 @@ namespace Nop.Web.Controllers
                 model.Items.Add(new ProductReviewModel()
                 {
                     Id = pr.Id,
-                    CustomerName = "TODO customername/email/username here",
+                    CustomerId = pr.CustomerId,
+                    CustomerName = pr.Customer.FormatUserName(),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
                     Rating = pr.Rating,

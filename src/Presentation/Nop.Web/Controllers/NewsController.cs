@@ -99,7 +99,7 @@ namespace Nop.Web.Controllers
                     {
                         Id = nc.Id,
                         CustomerId = nc.CustomerId,
-                        CustomerName = "TODO customername/email/username here",
+                        CustomerName = nc.Customer.FormatUserName(),
                         CommentTitle = nc.CommentTitle,
                         CommentText = nc.CommentText,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(nc.CreatedOnUtc, DateTimeKind.Utc),

@@ -108,7 +108,7 @@ namespace Nop.Web.Controllers
                     {
                         Id = bc.Id,
                         CustomerId = bc.CustomerId,
-                        CustomerName = "TODO customername/email/username here",
+                        CustomerName = bc.Customer.FormatUserName(),
                         CommentText = bc.CommentText,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(bc.CreatedOnUtc, DateTimeKind.Utc),
                         AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
