@@ -10,6 +10,7 @@
             $('#installationform').submit(function () {
                 if ($('form').valid()) {
                     $('input[type=submit]', this).attr('disabled', 'disabled');
+                    //TODO display ajax loading icon
                 }
             });
         });

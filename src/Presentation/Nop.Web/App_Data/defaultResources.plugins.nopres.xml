@@ -332,6 +332,58 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Tax">
+        <Children>
+          <LocaleResource Name="CountryStateZip">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="Country">
+                    <Value>Country</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The country.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="StateProvince">
+                    <Value>State / province</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>If an asteriks is selected, then this tax rate will apply to all customers from the given country, regardless of the state.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Zip">
+                    <Value>Zip</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Zip / postal code. If zip is empty, then this tax rate will apply to all customers from the given country or state, regardless of the zip code.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="TaxCategory">
+                    <Value>Tax category</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The tax category.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Percentage">
+                    <Value>Percentage</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The tax rate.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Title">
         <Value>Plugins</Value>
       </LocaleResource>
