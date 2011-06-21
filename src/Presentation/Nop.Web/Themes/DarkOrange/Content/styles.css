@@ -766,14 +766,14 @@ textarea
 	text-align: right;
 }
 
-.forumtopictitletext
+.forumtopictitletext, .pmtitletext
 {
 	width: 500px;
 	border: 1px solid #acacac;
 	vertical-align: top;
 	font-size: 12px;
 }
-.forumposttext
+.forumposttext, .bbeditortext
 {
 	width:100%;
 	height:300px
@@ -911,6 +911,11 @@ textarea
 	padding: 0 5px 0 5px;
 	width: auto;
 	overflow: visible;
+}
+
+.deleteselectedpmbutton
+{
+    font-size: 11px;
 }
 
 .productlistaddtocartbutton, .productgridaddtocartbutton, .productemailafriendbutton, 
@@ -4259,7 +4264,6 @@ textarea
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-
 .sendpmbox
 {
 	background-color:#EEEEEE;
@@ -4275,19 +4279,16 @@ textarea
 	text-decoration:none;
 	text-transform:uppercase;
 }
-
 .sendpmbox .pmlinkbutton
 {
 	line-height:14px;
 	padding:1px 6px 2px 18px;
 	background: url('images/ico-pm.png') no-repeat;
 }
-
 .privatemessagesend
 {
 	background: url('images/pm-footer-bg.gif') repeat-x bottom;
 }
-
 .privatemessagesend .title
 {
 	background: url('images/pm-header-bg.gif') repeat-x 50%;
@@ -4298,43 +4299,34 @@ textarea
 	font-weight: bold;
 	padding-left: 3px;
 }
-
 .privatemessagesend .wrapper
 {
 	padding: 5px 5px 5px 5px;
 }
-
 .privatemessagesend table.postmessage
 {
 	width: 100%;
 	vertical-align: middle;
 	border-collapse: collapse;
 }
-
 .privatemessagesend table.postmessage td
 {
 	padding: 4px 4px 4px 4px;
 }
-
 .privatemessagesend table.postmessage td.fieldname
 {
 	font-weight: bold;
 	width: 20%;
 	color: #555;
 }
-
 .privatemessagesend table.postmessage td.options
 {
 	text-align: right;
 }
-
-
-
 .privatemessageview
 {
 	background: url('images/pm-footer-bg.gif') repeat-x bottom;
 }
-
 .privatemessageview .title
 {
 	background: url('images/pm-header-bg.gif') repeat-x 50%;
@@ -4345,54 +4337,45 @@ textarea
 	font-weight: bold;
 	padding-left: 3px;
 }
-
 .privatemessageview .wrapper
 {
 	padding: 5px 5px 5px 5px;
 }
-
 .privatemessageview table.viewmessage
 {
 	width: 100%;
 	vertical-align: middle;
 	border-collapse: collapse;
 }
-
 .privatemessageview table.viewmessage td
 {
 	padding: 4px 4px 4px 4px;
 }
-
 .privatemessageview table.viewmessage td.fieldname
 {
 	font-weight: bold;
 	width: 20%;
 	color: #555;
 }
-
 .privatemessageview table.viewmessage a
 {
 	color: #ff9933;
 	text-decoration: underline;
 }
-
 .privatemessageview table.viewmessage td.options
 {
 	text-align: right;
 }
-
 .private-messages-page
 {
 	margin-bottom: 15px;
 	padding-bottom: 5px;
 	padding-left: 0;
 }
-
 .private-messages-page .page-title
 {
 	border-bottom: 0 none;
 }
-
 .private-messages-page .body
 {
 	margin: 0px 0 0 0;
@@ -4400,7 +4383,6 @@ textarea
 	font-size: 11px;
 	color: #555;
 }
-
 .private-messages-box
 {
 	margin: 0px 0 0 0;
@@ -4408,22 +4390,18 @@ textarea
 	font-size: 11px;
 	color: #555;
 }
-
 .private-messages-box .section-body
 {
 	text-align: left;
 	padding: 10px;
 	height: auto;
 }
-
 .private-messages-box .button
 {
 	margin-bottom: 5px;
 	margin-top: 5px;
 	text-align: left;
 }
-
-
 .pmgridtablestyle
 {
 	font-family: arial;
@@ -4433,17 +4411,15 @@ textarea
 	margin-left: 0px;
 	width: 100%;
 }
-
 .pmgridtablestyle td a
 {
 	text-decoration: none;
+	display:block;
 }
-
 .pmgridaltrowstyle
 {
 	background-color: #F4FAFF;
 }
-
 .pmgridheaderstyle th
 {
 	background: url('images/grid-bg.gif') repeat-x 50%;
@@ -4454,31 +4430,30 @@ textarea
 	font-weight: bold;
 	border: solid 1px #676767;
 }
-
 .pmgridrowstyle td, .pmgridaltrowstyle td
 {
 	padding: 4px 10px 4px 10px;
 	border-right: solid 1px #A0C0E7;
 	border-right-color: #808080;
 }
-
 .pmgridpagerstyle, .latestpostsgridpagerstyle
 {
-	height: 28px;
-	background: url(Images/grid_header_back.png) repeat-x;
-	background: #EEEEEE;
+	padding:5px;
+	background: #eeeeee;
 	vertical-align: middle;
 }
-
-
-
-
-
-
-
-
-
-
+ .pmgridpagerstyle span
+ {
+	font-weight: bold;
+	font-size: 1.1em;
+ }
+.pmread
+{	
+}
+.pmunread
+{
+	font-weight:bold;
+}
 
 
 

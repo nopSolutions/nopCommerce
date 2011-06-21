@@ -70,16 +70,6 @@ namespace Nop.Core.Domain.Forums
         public int TopicPostsPageLinkDisplayCount { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of links to display for pagination of topics in forums
-        /// </summary>
-        public int ForumTopicsPageLinkDisplayCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of links to display for pagination of topics in search results
-        /// </summary>
-        public int SearchPageLinkDisplayCount { get; set; }
-
-        /// <summary>
         /// Gets or sets the page size for search result
         /// </summary>
         public int SearchResultsPageSize { get; set; }
@@ -108,6 +98,16 @@ namespace Nop.Core.Domain.Forums
         /// Gets or sets a value indicating whether private messages are allowed
         /// </summary>
         public bool AllowPrivateMessages { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether an alert should be shown for new private messages
+        /// </summary>
+        public bool ShowAlertForPM { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page size for private messages
+        /// </summary>
+        public int PrivateMessagesPageSize { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a customer should be notified about new private messages

@@ -432,5 +432,14 @@ namespace Nop.Web.Models
         public int page { get; set; }
     }
 
+    /// <summary>
+    /// Class that 
+    /// </summary>
+    public class PrivateMessageRouteValues : IRouteValues
+    {
+        public string tab { get; set; }
+        public int page { get; set; }
+    }
+
     #endregion Classes
 }

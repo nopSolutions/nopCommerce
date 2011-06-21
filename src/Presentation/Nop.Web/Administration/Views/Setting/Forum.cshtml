@@ -1,5 +1,4 @@
 ﻿@model ForumSettingsModel
-
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
@@ -12,7 +11,7 @@
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
         </div>
     </div>
-@Html.ValidationSummary(false)
+    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -106,6 +105,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchResultsPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SearchResultsPageSize)
+                @Html.ValidationMessageFor(model => model.SearchResultsPageSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ForumEditor):
             </td>
             <td class="adminData">
@@ -124,6 +132,79 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SignaturesEnabled)
                 @Html.ValidationMessageFor(model => model.SignaturesEnabled)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowPrivateMessages):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowPrivateMessages)
+                @Html.ValidationMessageFor(model => model.AllowPrivateMessages)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowAlertForPM):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowAlertForPM)
+                @Html.ValidationMessageFor(model => model.ShowAlertForPM)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NotifyAboutPrivateMessages):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NotifyAboutPrivateMessages)
+                @Html.ValidationMessageFor(model => model.NotifyAboutPrivateMessages)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ForumFeedsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ForumFeedsEnabled)
+                @Html.ValidationMessageFor(model => model.ForumFeedsEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ForumFeedCount):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ForumFeedCount)
+                @Html.ValidationMessageFor(model => model.ForumFeedCount)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ActiveDiscussionsFeedEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ActiveDiscussionsFeedEnabled)
+                @Html.ValidationMessageFor(model => model.ActiveDiscussionsFeedEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ActiveDiscussionsFeedCount):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ActiveDiscussionsFeedCount)
+                @Html.ValidationMessageFor(model => model.ActiveDiscussionsFeedCount)
             </td>
         </tr>
     </table>

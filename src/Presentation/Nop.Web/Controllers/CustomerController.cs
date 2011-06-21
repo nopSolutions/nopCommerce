@@ -490,8 +490,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        //[ValidateInput(false)]
+        [HttpPost]        
         public ActionResult Info(CustomerInfoModel model)
         {
             if (!IsCurrentUserRegistered())

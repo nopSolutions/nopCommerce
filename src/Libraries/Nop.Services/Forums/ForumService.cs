@@ -917,9 +917,11 @@ namespace Nop.Services.Forums
                         (toCustomerId == 0 || toCustomerId == pm.ToCustomerId) &&
                         (!isRead.HasValue || isRead.Value == pm.IsRead) &&
                         (!isDeletedByAuthor.HasValue || isDeletedByAuthor.Value == pm.IsDeletedByAuthor) &&
-                        (!isDeletedByRecipient.HasValue || isDeletedByRecipient.Value == pm.IsDeletedByRecipient) &&
-                        (String.IsNullOrEmpty(keywords) || pm.Subject.Contains(keywords)) &&
-                        (String.IsNullOrEmpty(keywords) || pm.Text.Contains(keywords))
+                        (!isDeletedByRecipient.HasValue || isDeletedByRecipient.Value == pm.IsDeletedByRecipient)                        
+                        // following lines causes SqlCeException on SQLCE4 (comparing parameter to IS NULL in query)
+                        //&&
+                        //(String.IsNullOrEmpty(keywords) || pm.Subject.Contains(keywords)) &&
+                        //(String.IsNullOrEmpty(keywords) || pm.Text.Contains(keywords))
                         orderby pm.CreatedOnUtc descending
                         select pm;
             var privateMessages = new PagedList<PrivateMessage>(query, pageIndex, pageSize);

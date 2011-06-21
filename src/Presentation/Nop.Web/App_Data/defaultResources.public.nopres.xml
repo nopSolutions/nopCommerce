@@ -2000,6 +2000,9 @@
       <LocaleResource Name="PasswordRecovery">
         <Value>Password Recovery</Value>
       </LocaleResource>
+      <LocaleResource Name="PrivateMessages">
+        <Value>Private Messages</Value>
+      </LocaleResource>
       <LocaleResource Name="ProductEmailAFriend">
         <Value>Email A Friend</Value>
       </LocaleResource>
@@ -2024,11 +2027,17 @@
       <LocaleResource Name="Search">
         <Value>Search</Value>
       </LocaleResource>
+      <LocaleResource Name="SendPM">
+        <Value>Post a private message</Value>
+      </LocaleResource>
       <LocaleResource Name="ShoppingCart">
         <Value>Shopping Cart</Value>
       </LocaleResource>
       <LocaleResource Name="Sitemap">
         <Value>Sitemap</Value>
+      </LocaleResource>
+      <LocaleResource Name="ViewPM">
+        <Value>View the private message</Value>
       </LocaleResource>
       <LocaleResource Name="Wishlist">
         <Value>Wishlist</Value>
@@ -2289,6 +2298,9 @@
                     <LocaleResource Name="FromColumn">
                         <Value>From</Value>
                     </LocaleResource>
+                    <LocaleResource Name="ToColumn">
+                        <Value>To</Value>
+                    </LocaleResource>
                     <LocaleResource Name="SubjectColumn">
                         <Value>Subject</Value>
                     </LocaleResource>
@@ -2297,6 +2309,9 @@
                     </LocaleResource>
                     <LocaleResource Name="DeleteSelected">
                         <Value>Delete selected</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="MarkAsUnread">
+                        <Value>Mark selected as unread</Value>
                     </LocaleResource>
                 </Children>
             </LocaleResource>
@@ -2360,6 +2375,9 @@
             </LocaleResource>
             <LocaleResource Name="TotalUnread">
                 <Value>({0} Unread)</Value>
+            </LocaleResource>
+            <LocaleResource Name="YouHaveUnreadPM">
+                <Value>You have {0} unread message(s) in your Inbox</Value>
             </LocaleResource>
             <LocaleResource Name="View">
                 <Children>

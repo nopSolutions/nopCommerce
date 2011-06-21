@@ -1,0 +1,57 @@
+﻿@model Nop.Web.Models.PrivateMessages.PrivateMessageModel
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.ViewPM").Text);
+}
+<div class="privatemessageview">
+    <div class="title">
+        @T("PrivateMessages.View.ViewMessage")
+    </div>
+    <div class="wrapper">
+        <table class="viewmessage">
+            <tr>
+                <td class="fieldname">
+                    @T("PrivateMessages.View.From")
+                </td>
+                <td>
+                    @Model.customerFromName
+                </td>
+            </tr>
+            <tr>
+                <td class="fieldname">
+                    @T("PrivateMessages.View.To")
+                </td>
+                <td>
+                    @Model.customerToName
+                </td>
+            </tr>
+            <tr>
+                <td class="fieldname">
+                    @T("PrivateMessages.View.Subject")
+                </td>
+                <td>
+                    @Html.Raw(@Model.Subject)
+                </td>
+            </tr>
+            <tr>
+                <td class="fieldname">
+                    @T("PrivateMessages.View.Message")
+                </td>
+                <td class="message">
+                    @Html.Raw(@Model.Message)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="options">
+                    <input type="button" class="replypmbutton" value="@T("PrivateMessages.View.ReplyButton")" 
+                        onclick="window.location.href='@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.ToCustomerId, replyToMessageId = @Model.Id })'" />
+                    <input type="button" class="deletepmbutton" value="@T("PrivateMessages.View.DeleteButton")" 
+                        onclick="window.location.href='@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })'" />
+                    <input type="button" class="backpmbutton" value="@T("PrivateMessages.View.BackButton")" 
+                        onclick="window.location.href='@Url.Action("Index", "PrivateMessages")'" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

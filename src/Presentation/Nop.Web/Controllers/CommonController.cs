@@ -29,6 +29,7 @@ using Nop.Web.Framework.Themes;
 using Nop.Web.Models;
 using Nop.Web.Models.Common;
 using Nop.Core.Domain.Forums;
+using Nop.Services.Forums;
 
 namespace Nop.Web.Controllers
 {
@@ -48,6 +49,8 @@ namespace Nop.Web.Controllers
         private readonly ISitemapGenerator _sitemapGenerator;
         private readonly IThemeContext _themeContext;
         private readonly IThemeProvider _themeProvider;
+        private readonly IForumService _forumservice;
+        private readonly ICustomerService _customerService;
 
         private readonly UserSettings _userSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -66,7 +69,8 @@ namespace Nop.Web.Controllers
             IWorkContext workContext, IAuthenticationService authenticationService,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
-            IThemeProvider themeProvider, 
+            IThemeProvider themeProvider, IForumService forumService,
+            ICustomerService customerService,
             UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
@@ -86,6 +90,8 @@ namespace Nop.Web.Controllers
             this._sitemapGenerator = sitemapGenerator;
             this._themeContext = themeContext;
             this._themeProvider = themeProvider;
+            this._forumservice = forumService;
+            this._customerService = customerService;
 
             this._userSettings = userSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -171,6 +177,23 @@ namespace Nop.Web.Controllers
         {
             var user = _authenticationService.GetAuthenticatedUser();
             var customer = _workContext.CurrentCustomer;
+
+            var unreadMessageCount = GetUnreadPrivateMessages();
+            var unreadMessage = string.Empty;
+            var alertMessage = string.Empty;
+            if (unreadMessageCount > 0)
+            {
+                unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
+
+                //notifications here
+                if (_forumsettings.ShowAlertForPM &&
+                   !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages))
+                {
+                    _customerService.SaveCustomerAttribute<bool>(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true);
+                    alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
+                }
+            }
+
             var model = new HeaderModel()
             {
                 IsAuthenticated = user != null,
@@ -181,9 +204,30 @@ namespace Nop.Web.Controllers
                 ShoppingCartItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts() : 0,
                 WishlistEnabled = _shoppingCartSettings.WishlistEnabled,
                 WishlistItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts() : 0,
+                AllowPrivateMessages = _forumsettings.AllowPrivateMessages,
+                UnreadPrivateMessages = unreadMessage,
+                AlertMessage = alertMessage,
             };
 
             return PartialView(model);
+        }
+
+        [NonAction]
+        private int GetUnreadPrivateMessages()
+        {
+            var result = 0;
+            var customer = _workContext.CurrentCustomer;
+            if (_forumsettings.AllowPrivateMessages && !customer.IsGuest())
+            {
+                var privateMessages = _forumservice.GetAllPrivateMessages(0, customer.Id, false, null, false, string.Empty, 0, 1);
+
+                if (privateMessages.TotalCount > 0)
+                {
+                    result = privateMessages.TotalCount;
+                }
+            }
+
+            return result;
         }
 
         //menu

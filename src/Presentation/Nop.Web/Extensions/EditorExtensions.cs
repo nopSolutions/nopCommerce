@@ -8,7 +8,7 @@ namespace Nop.Web
 {
     public static class EditorExtensions
     {
-        public static MvcHtmlString BBCodeEdtor<TModel>(this HtmlHelper<TModel> html, string name)
+        public static MvcHtmlString BBCodeEditor<TModel>(this HtmlHelper<TModel> html, string name)
         {
             var sb = new StringBuilder();
             

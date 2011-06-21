@@ -334,14 +334,36 @@ namespace Nop.Web.Infrastructure
 
             //private messages
             routes.MapRoute("PrivateMessages",
-                            "privatemessages",
-                            new { controller = "PrivateMessages", action = "Index" },
+                            "privatemessages/{tab}",
+                            new { controller = "PrivateMessages", action = "Index", tab = UrlParameter.Optional },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("PrivateMessagesPaged",
+                            "privatemessages/{tab}/page/{page}",
+                            new { controller = "PrivateMessages", action = "Index", tab = UrlParameter.Optional },
+                            new { page = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("PrivateMessagesInbox",
+                            "inboxupdate",
+                            new { controller = "PrivateMessages", action = "InboxUpdate" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("PrivateMessagesSent",
+                            "sentupdate",
+                            new { controller = "PrivateMessages", action = "SentUpdate" },
                             new[] { "Nop.Web.Controllers" });
 
             routes.MapRoute("SendPM",
-                            "sendpm/{customerId}",
+                            "sendpm/{toCustomerId}",
                             new { controller = "PrivateMessages", action = "SendPM" },
-                            new { customerId = @"\d+" },
+                            new { toCustomerId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapRoute("SendPMReply",
+                            "sendpm/{toCustomerId}/{replyToMessageId}",
+                            new { controller = "PrivateMessages", action = "SendPM" },
+                            new { toCustomerId = @"\d+", replyToMessageId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
             routes.MapRoute("ViewPM",
@@ -349,7 +371,13 @@ namespace Nop.Web.Infrastructure
                             new { controller = "PrivateMessages", action = "ViewPM" },
                             new { privateMessageId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            
+
+            routes.MapRoute("DeletePM",
+                            "deletepm/{privateMessageId}",
+                            new { controller = "PrivateMessages", action = "DeletePM" },
+                            new { privateMessageId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
             //news
             routes.MapRoute("NewsArchive",
                             "news",

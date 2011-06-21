@@ -159,6 +159,11 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("index", "home");
             }
 
+            if (!_forumSettings.ActiveDiscussionsFeedEnabled)
+            {
+                return RedirectToRoute("Boards");
+            }
+
             int topicLimit = _forumSettings.ActiveDiscussionsFeedCount;
             var topics = _forumService.GetActiveTopics(forumId, topicLimit);
             string url = Url.Action("ActiveDiscussionsRSS", "Boards", null, "http");
@@ -262,6 +267,11 @@ namespace Nop.Web.Controllers
             if (!ForumsEnabled())
             {
                 return RedirectToAction("index", "home");
+            }
+
+            if (!_forumSettings.ForumFeedsEnabled)
+            {
+                return RedirectToRoute("Boards");
             }
 
             int topicLimit = _forumSettings.ForumFeedCount;

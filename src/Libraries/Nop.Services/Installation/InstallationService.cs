@@ -4713,6 +4713,8 @@ namespace Nop.Services.Installation
                     ForumEditor = EditorType.BBCodeEditor,
                     SignaturesEnabled = true,
                     AllowPrivateMessages = false,
+                    ShowAlertForPM = false,
+                    PrivateMessagesPageSize = 10,
                     NotifyAboutPrivateMessages = false,
                     PMSubjectMaxLength = 450,
                     PMTextMaxLength = 4000,

@@ -59,7 +59,7 @@
                     <div class="totalposts">
                         @T("Forum.TotalPosts"): <span class="statvalue">
                             @{
-                   var totalPosts = Model.ForumPost.Customer.GetAttribute<int>(Nop.Core.Domain.Customers.SystemCustomerAttributeNames.ForumPostCount);
+                                var totalPosts = Model.ForumPost.Customer.GetAttribute<int>(Nop.Core.Domain.Customers.SystemCustomerAttributeNames.ForumPostCount);
                             }
                             @totalPosts</span>
                     </div>
@@ -77,11 +77,9 @@
                     </div>
                 }
                 @if (Model.CommonTopicSettingsModel.AllowPrivateMessages && !customerIsGuest)
-                {
-                    // TODO create link for sending a PrivateMessage: /sendpm/{customerId}
+                {                    
                     <div class="sendpmbox">
-                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { customerId = @Model.ForumPost.Customer.Id }, new { @class = "pmlinkbutton" })
-                        @*<a href="#sendpm-123" class="pmlinkbutton">@</a>*@
+                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.ForumPost.Customer.Id }, new { @class = "pmlinkbutton" })                        
                     </div>
                 }
             </div>

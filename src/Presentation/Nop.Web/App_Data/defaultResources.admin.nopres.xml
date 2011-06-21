@@ -3441,6 +3441,70 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="AllowPrivateMessages">
+                            <Value>Allow private messages</Value>
+                            <Children>
+                                <LocaleResource Name="Hint">
+                                    <Value>Determines whether to allow private messages.</Value>
+                                </LocaleResource>
+                            </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="ShowAlertForPM">
+                            <Value>Show alert for PM</Value>
+                            <Children>
+                                <LocaleResource Name="Hint">
+                                    <Value>Shows an alert for new Private Messages.</Value>
+                                </LocaleResource>
+                            </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="NotifyAboutPrivateMessages">
+                            <Value>Notify about private messages</Value>
+                            <Children>
+                                <LocaleResource Name="Hint">
+                                    <Value>Indicates whether a customer should be notified about new private messages.</Value>
+                                </LocaleResource>
+                            </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="ActiveDiscussionsFeedEnabled">
+                            <Value>Active discussions feed enabled</Value>
+                            <Children>
+                                <LocaleResource Name="Hint">
+                                    <Value>Enables RSS feed for Active Discussions topics.</Value>
+                                </LocaleResource>
+                            </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="ActiveDiscussionsFeedCount">
+                            <Value>Active discussions feed count</Value>
+                            <Children>
+                                <LocaleResource Name="Hint">
+                                    <Value>The count of topics to include in the Active Discussion feed.</Value>
+                                </LocaleResource>
+                            </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="ForumFeedsEnabled">
+                            <Value>Forum feeds enabled</Value>
+                            <Children>
+                                <LocaleResource Name="Hint">
+                                    <Value>Enables RSS feed for each forum.</Value>
+                                </LocaleResource>
+                            </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="ForumFeedCount">
+                            <Value>Forum feed count</Value>
+                            <Children>
+                                <LocaleResource Name="Hint">
+                                    <Value>The count of topics to include in the forum feed.</Value>
+                                </LocaleResource>
+                            </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="SearchResultsPageSize">
+                            <Value>Search results page size</Value>
+                            <Children>
+                                <LocaleResource Name="Hint">
+                                    <Value>Set the page size for search results e.g. '10' results per page.</Value>
+                                </LocaleResource>
+                            </Children>
+                        </LocaleResource>
                       </Children>
                 </LocaleResource>
                   <LocaleResource Name="GeneralCommon">

@@ -48,7 +48,7 @@
                     <td>
                         @if (Model.ForumEditor == EditorType.BBCodeEditor)
                         {
-                            @Html.BBCodeEdtor("Text");
+                            @Html.BBCodeEditor("Text");
                         }
                         @Html.TextAreaFor(model => model.Text, new { @class = "forumposttext", TextMode = "MultiLine" })
                         @Html.ValidationMessageFor(model => model.Text)

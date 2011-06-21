@@ -1,0 +1,56 @@
+﻿@model PrivateMessageListModel 
+@using Nop.Web.Models.PrivateMessages;
+@using MvcContrib.UI.Grid;
+@using MvcContrib;
+@using Nop.Web;
+<div class="private-messages-box">
+    <script type="text/javascript">
+        $(window).bind('load', function () {
+            var cbHeader = $(".cbHeaderPMInbox input");
+            var cbRowItem = $(".cbRowItemPMInbox input");
+            cbHeader.bind("click", function () {
+                cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+            });
+            cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
+        });    
+    </script>
+    @if (Model.Messages.Count > 0)
+    {
+        using (Html.BeginForm("Index", "InboxUpdate", FormMethod.Post))
+        {
+            @Html.Grid(Model.Messages).Columns(column =>
+            {
+                column.For(pm => "<span class=\"cbRowItemPMInbox\"><input type=\"checkbox\" name=\"pm" + pm.Id + "\" /></span>")
+                    .Encode(false)
+                    .Attributes(style => "width:5%;", align => "center")
+                    .Header("<th><span class=\"cbHeaderPMInbox\"><input type=\"checkbox\" id=\"selectall\" /></span></th>");
+                column.For(pm => pm.customerFromName).Named(@T("PrivateMessages.Inbox.FromColumn").Text)
+                    .Attributes(style => "width:20%;");
+                column.For(pm => @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = (pm.IsRead) ? "pmread" : "pmunread" }))
+                    .Encode(false)
+                    .Named(@T("PrivateMessages.Inbox.SubjectColumn").Text)
+                    .Attributes(style => "width:50%;");
+                column.For(pm => Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(
+                    pm.CreatedOnUtc, DateTimeKind.Utc).ToString())
+                    .Named(@T("PrivateMessages.Inbox.DateColumn").Text)
+                    .Attributes(style => "width:25%;", align => "center");
+            }).Attributes(style => "border-collapse: collapse;", @class => "pmgridtablestyle", cellspacing => "0", cellpadding => "4", border => "0").HeaderRowAttributes(new Hash(@class => "pmgridheaderstyle")).RowStart((row) =>
+            {
+                if (row.IsAlternate) { return "<tr class=\"pmgridaltrowstyle\">"; }
+                else { return "<tr class=\"pmgridrowstyle\">"; }
+            }).Empty("")
+           if (Model.PagerModel.TotalPages > 1)
+           {
+                <div class="pmgridpagerstyle">
+                    @Html.Pager(Model.PagerModel)
+                </div>
+           }
+            <div class="clear">
+            </div>
+            <div class="button">
+                <button class="deleteselectedpmbutton" value="delete" name="inboxupdate" type="submit">@T("PrivateMessages.Inbox.DeleteSelected")</button>
+                <button class="deleteselectedpmbutton" value="markunread" name="inboxupdate" type="submit">@T("PrivateMessages.Inbox.MarkAsUnread")</button>                
+            </div>
+        }
+    }
+</div>
