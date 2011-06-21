@@ -100,8 +100,7 @@
     <Compile Include="Mapping\Polls\PollMap.cs" />
     <Compile Include="Mapping\Polls\PollVotingRecordMap.cs" />
     <Compile Include="Mapping\Polls\PollAnswerMap.cs" />
-    <Compile Include="Mapping\Security\Permissions\PermissionRecordMap.cs" />
-    <Compile Include="Mapping\Security\UserMap.cs" />
+    <Compile Include="Mapping\Security\PermissionRecordMap.cs" />
     <Compile Include="Mapping\Directory\StateProvinceMap.cs" />
     <Compile Include="Mapping\Catalog\ProductReviewMap.cs" />
     <Compile Include="Mapping\Customers\CustomerContentMap.cs" />

@@ -21,7 +21,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         private ILocalizationService _localizationService;
         private Localizer _localizer;
         private IWorkContext _workContext;
-        private IAuthenticationService _authenticationService;
 
         public Localizer T
         {
@@ -58,13 +57,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             }
         }
 
-        public IAuthenticationService AuthenticationService
-        {
-            get
-            {
-                return _authenticationService;
-            }
-        }
 
         public override void InitHelpers()
         {
@@ -74,7 +66,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             {
                 _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 _workContext = EngineContext.Current.Resolve<IWorkContext>();
-                _authenticationService = EngineContext.Current.Resolve<IAuthenticationService>();
             }
         }
 

@@ -11,17 +11,24 @@ namespace Nop.Admin.Models.Settings
         public CustomerUserSettingsModel()
         {
             CustomerSettings = new CustomerSettingsModel();
-            UserSettings = new UserSettingsModel();
             DateTimeSettings = new DateTimeSettingsModel();
         }
         public CustomerSettingsModel CustomerSettings { get; set; }
-        public UserSettingsModel UserSettings { get; set; }
         public DateTimeSettingsModel DateTimeSettings { get; set; }
 
         #region Nested classes
         
         public class CustomerSettingsModel
         {
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernamesEnabled")]
+            public bool UsernamesEnabled { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeUsernames")]
+            public bool AllowUsersToChangeUsernames { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
+            public int UserRegistrationType { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowCustomersToUploadAvatars")]
             public bool AllowCustomersToUploadAvatars { get; set; }
 
@@ -64,18 +71,6 @@ namespace Nop.Admin.Models.Settings
             
         }
         
-        public class UserSettingsModel
-        {
-            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernamesEnabled")]
-            public bool UsernamesEnabled { get; set; }
-
-            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeUsernames")]
-            public bool AllowUsersToChangeUsernames { get; set; }
-
-            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
-            public int UserRegistrationType { get; set; }
-        }
-
         public class DateTimeSettingsModel
         {
             public DateTimeSettingsModel()

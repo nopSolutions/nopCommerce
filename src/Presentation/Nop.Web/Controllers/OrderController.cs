@@ -60,7 +60,6 @@ namespace Nop.Web.Controllers
         private readonly IPdfService _pdfService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IAuthenticationService _authenticationService;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly MeasureSettings _measureSettings;
@@ -79,8 +78,8 @@ namespace Nop.Web.Controllers
             IDateTimeHelper dateTimeHelper, IMeasureService measureService,
             IPaymentService paymentService, ILocalizationService localizationService,
             IPdfService pdfService, ICustomerService customerService,
-            IWorkflowMessageService workflowMessageService,
-            IAuthenticationService authenticationService, LocalizationSettings localizationSettings,
+            IWorkflowMessageService workflowMessageService, 
+            LocalizationSettings localizationSettings,
             MeasureSettings measureSettings, CatalogSettings catalogSettings,
             OrderSettings orderSettings, TaxSettings taxSettings, PdfSettings pdfSettings)
         {
@@ -96,7 +95,6 @@ namespace Nop.Web.Controllers
             this._pdfService = pdfService;
             this._customerService = customerService;
             this._workflowMessageService = workflowMessageService;
-            this._authenticationService = authenticationService;
 
             this._localizationSettings = localizationSettings;
             this._measureSettings = measureSettings;
@@ -163,7 +161,7 @@ namespace Nop.Web.Controllers
 
             //payment method
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
-            model.PaymentMethod = paymentMethod != null ? paymentMethod.FriendlyName : order.PaymentMethodSystemName;
+            model.PaymentMethod = paymentMethod != null ? paymentMethod.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
 
 
             //totals

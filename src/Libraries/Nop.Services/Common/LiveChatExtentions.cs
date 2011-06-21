@@ -19,7 +19,7 @@ namespace Nop.Services.Common
             if (liveChatSettings.ActiveLiveChatProviderSystemName == null)
                 return false;
             foreach (string activeProviderSystemName in liveChatSettings.ActiveLiveChatProviderSystemName)
-                if (liveChatProvider.SystemName.Equals(activeProviderSystemName, StringComparison.InvariantCultureIgnoreCase))
+                if (liveChatProvider.PluginDescriptor.SystemName.Equals(activeProviderSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             return false;
         }

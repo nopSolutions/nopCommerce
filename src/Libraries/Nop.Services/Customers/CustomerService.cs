@@ -11,6 +11,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 
 using Nop.Services.Localization;
+using Nop.Services.Security;
 
 namespace Nop.Services.Customers
 {
@@ -32,8 +33,10 @@ namespace Nop.Services.Customers
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
+        private readonly IEncryptionService _encryptionService;
         private readonly ICacheManager _cacheManager;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly CustomerSettings _customerSettings;
         
         #endregion
 
@@ -46,18 +49,23 @@ namespace Nop.Services.Customers
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
+        /// <param name="encryptionService">Encryption service</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
+        /// <param name="customerSettings">Customer settings</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerAttribute> customerAttributeRepository,
-            RewardPointsSettings rewardPointsSettings)
+            IEncryptionService encryptionService,
+            RewardPointsSettings rewardPointsSettings, CustomerSettings customerSettings)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._customerAttributeRepository = customerAttributeRepository;
+            this._encryptionService = encryptionService;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._customerSettings = customerSettings;
         }
 
         #endregion
@@ -72,14 +80,15 @@ namespace Nop.Services.Customers
         /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
         /// <param name="registrationTo">Customer registration to; null to load all customers</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
-        /// <param name="associatedUserEmail">Email of associated user; null to load all customers</param>
+        /// <param name="email">Email; null to load all customers</param>
+        /// <param name="username">Username; null to load all customers</param>
         /// <param name="loadOnlyWithShoppingCart">Value indicating whther to load customers only with shopping cart</param>
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         public virtual PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, int[] customerRoleIds, string associatedUserEmail,
+            DateTime? registrationTo, int[] customerRoleIds, string email, string username,
             bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize)
         {
             var query = _customerRepository.Table;
@@ -92,10 +101,10 @@ namespace Nop.Services.Customers
             {
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Count() > 0);
             }
-            if (!String.IsNullOrEmpty(associatedUserEmail))
-            {
-                query = query.Where(c => c.AssociatedUsers.Where(u => u.Email.Contains(associatedUserEmail)).Count() > 0);
-            }
+            if (!String.IsNullOrWhiteSpace(email))
+                query = query.Where(c => c.Email.Contains(email));
+            if (!String.IsNullOrWhiteSpace(username))
+                query = query.Where(c => c.Username.Contains(username));
             if (loadOnlyWithShoppingCart)
             {
                 int? sctId = null;
@@ -192,7 +201,331 @@ namespace Nop.Services.Customers
             var customer = query.FirstOrDefault();
             return customer;
         }
+
+        /// <summary>
+        /// Get customer by email
+        /// </summary>
+        /// <param name="email">Email</param>
+        /// <returns>Customer</returns>
+        public virtual Customer GetCustomerByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return null;
+
+            var query = from c in _customerRepository.Table
+                        orderby c.Id
+                        where c.Email == email
+                        select c;
+            var customer = query.FirstOrDefault();
+            return customer;
+        }
+
+        /// <summary>
+        /// Get customer by username
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <returns>Customer</returns>
+        public virtual Customer GetCustomerByUsername(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                return null;
+
+            var query = from c in _customerRepository.Table
+                        orderby c.Id
+                        where c.Username == username
+                        select c;
+            var customer = query.FirstOrDefault();
+            return customer;
+        }
+
+        /// <summary>
+        /// Validate customer
+        /// </summary>
+        /// <param name="usernameOrEmail">Username or email</param>
+        /// <param name="password">Password</param>
+        /// <returns>Result</returns>
+        public virtual bool ValidateCustomer(string usernameOrEmail, string password)
+        {
+            Customer customer = null;
+            if (_customerSettings.UsernamesEnabled)
+                customer = GetCustomerByUsername(usernameOrEmail);
+            else
+                customer = GetCustomerByEmail(usernameOrEmail);
+
+            if (customer == null || !customer.Active)
+                return false;
+
+            string pwd = string.Empty;
+            switch (customer.PasswordFormat)
+            {
+                case PasswordFormat.Encrypted:
+                    pwd = _encryptionService.EncryptText(password);
+                    break;
+                case PasswordFormat.Hashed:
+                    pwd = _encryptionService.CreatePasswordHash(password, customer.PasswordSalt, _customerSettings.HashedPasswordFormat);
+                    break;
+                default:
+                    pwd = password;
+                    break;
+            }
+
+            bool isValid = pwd == customer.Password;
+
+            //TODO implement LastLoginDateUtc (below)
+            //if (isValid)
+            //    user.LastLoginDateUtc = DateTime.UtcNow;
+            //else
+            //    user.FailedPasswordAttemptCount++;
+            //UpdateCustomer(user);
+
+            return isValid;
+        }
+
+        /// <summary>
+        /// Register customer
+        /// </summary>
+        /// <param name="request">Request</param>
+        /// <returns>Result</returns>
+        public virtual CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request)
+        {
+            var result = new CustomerRegistrationResult();
+            //validation
+            if (request == null || !request.IsValid)
+            {
+                result.AddError("The registration request was not valid.");
+                return result;
+            }
+            if (request.Customer == null)
+            {
+                result.AddError("Can't load current customer");
+                return result;
+            }
+            if (request.Customer.IsRegistered())
+            {
+                result.AddError("Current customer is already registered");
+                return result;
+            }
+            if (String.IsNullOrEmpty(request.Email))
+            {
+                result.AddError("Email is not provided");
+                return result;
+            }
+            if (!CommonHelper.IsValidEmail(request.Email))
+            {
+                result.AddError("Invalid email");
+                return result;
+            }
+            if (_customerSettings.UsernamesEnabled)
+            {
+                if (String.IsNullOrEmpty(request.Username))
+                {
+                    result.AddError("Username is not provided");
+                    return result;
+                }
+            }
+
+            //validate unique user
+            if (GetCustomerByEmail(request.Email) != null)
+            {
+                result.AddError("The specified email already exists");
+                return result;
+            }
+            if (_customerSettings.UsernamesEnabled)
+            {
+                if (GetCustomerByUsername(request.Username) != null)
+                {
+                    result.AddError("The specified username already exists");
+                    return result;
+                }
+            }
+
+            //at this point request is valid
+            request.Customer.Username = request.Username;
+            request.Customer.Email = request.Email;
+            request.Customer.PasswordFormat = request.PasswordFormat;
+
+            switch (request.PasswordFormat)
+            {
+                case PasswordFormat.Clear:
+                    {
+                        request.Customer.Password = request.Password;
+                    }
+                    break;
+                case PasswordFormat.Encrypted:
+                    {
+                        request.Customer.Password = _encryptionService.EncryptText(request.Password);
+                    }
+                    break;
+                case PasswordFormat.Hashed:
+                    {
+                        string saltKey = _encryptionService.CreateSaltKey(5);
+                        request.Customer.PasswordSalt = saltKey;
+                        request.Customer.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            request.Customer.Active = request.IsApproved;
+            
+            //add to 'Registered' role
+            var registeredRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            if (registeredRole == null)
+                throw new NopException("'Registered' role could not be loaded");
+            request.Customer.CustomerRoles.Add(registeredRole);
+            //remove from 'Guests' role
+            var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests);
+            if (guestRole != null)
+                request.Customer.CustomerRoles.Remove(guestRole);
+
+            //Add reward points for customer registration (if enabled)
+            if (_rewardPointsSettings.Enabled &&
+                _rewardPointsSettings.PointsForRegistration > 0)
+                request.Customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration, "Registered as customer");
+
+            UpdateCustomer(request.Customer);
+            return result;
+        }
         
+        /// <summary>
+        /// Change password
+        /// </summary>
+        /// <param name="request">Request</param>
+        /// <returns>Result</returns>
+        public virtual PasswordChangeResult ChangePassword(ChangePasswordRequest request)
+        {
+            var result = new PasswordChangeResult();
+            if (request == null || !request.IsValid)
+            {
+                result.AddError("The change password request was not valid.");
+                return result;
+            }
+
+            var customer = GetCustomerByEmail(request.Email);
+            if (customer == null)
+            {
+                result.AddError("The specified email could not be found");
+                return result;
+            }
+
+
+            var requestIsValid = false;
+            if (request.ValidateRequest)
+            {
+                //password
+                string oldPwd = string.Empty;
+                switch (customer.PasswordFormat)
+                {
+                    case PasswordFormat.Encrypted:
+                        oldPwd = _encryptionService.EncryptText(request.OldPassword);
+                        break;
+                    case PasswordFormat.Hashed:
+                        oldPwd = _encryptionService.CreatePasswordHash(request.OldPassword, customer.PasswordSalt, _customerSettings.HashedPasswordFormat);
+                        break;
+                    default:
+                        oldPwd = request.OldPassword;
+                        break;
+                }
+
+                bool oldPasswordIsValid = oldPwd == customer.Password;
+                if (!oldPasswordIsValid)
+                    result.AddError("Old password doesn't match");
+
+                if (oldPasswordIsValid)
+                    requestIsValid = true;
+            }
+            else
+                requestIsValid = true;
+
+
+            //at this point request is valid
+            if (requestIsValid)
+            {
+                switch (request.NewPasswordFormat)
+                {
+                    case PasswordFormat.Clear:
+                        {
+                            customer.Password = request.NewPassword;
+                        }
+                        break;
+                    case PasswordFormat.Encrypted:
+                        {
+                            customer.Password = _encryptionService.EncryptText(request.NewPassword);
+                        }
+                        break;
+                    case PasswordFormat.Hashed:
+                        {
+                            string saltKey = _encryptionService.CreateSaltKey(5);
+                            customer.PasswordSalt = saltKey;
+                            customer.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                customer.PasswordFormat = request.NewPasswordFormat;
+                UpdateCustomer(customer);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Sets a user email
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="newEmail">New email</param>
+        public virtual void SetEmail(Customer customer, string newEmail)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            newEmail = newEmail.Trim();
+
+            if (!CommonHelper.IsValidEmail(newEmail))
+                throw new NopException("New email is not valid");
+
+            if (newEmail.Length > 100)
+                throw new NopException("E-mail address is too long.");
+
+            var customer2 = GetCustomerByEmail(newEmail);
+            if (customer2 != null && customer.Id != customer2.Id)
+                throw new NopException("The e-mail address is already in use.");
+
+            customer.Email = newEmail;
+            UpdateCustomer(customer);
+        }
+
+        /// <summary>
+        /// Sets a customer username
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="newUsername">New Username</param>
+        public virtual void SetUsername(Customer customer, string newUsername)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (!_customerSettings.UsernamesEnabled)
+                throw new NopException("Usernames are disabled");
+
+            if (!_customerSettings.AllowUsersToChangeUsernames)
+                throw new NopException("Changing usernames is not allowed");
+
+            newUsername = newUsername.Trim();
+
+            if (newUsername.Length > 100)
+                throw new NopException("Username is too long.");
+
+            var user2 = GetCustomerByUsername(newUsername);
+            if (user2 != null && customer.Id != user2.Id)
+                throw new NopException("This username is already in use.");
+
+            customer.Username = newUsername;
+            UpdateCustomer(customer);
+        }
+
         /// <summary>
         /// Insert a guest customer
         /// </summary>
@@ -216,36 +549,7 @@ namespace Nop.Services.Customers
 
             return customer;
         }
-
-        /// <summary>
-        /// Register customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>Customer</returns>
-        public virtual void RegisterCustomer(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            //add to 'Registered' role
-            var registeredRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
-            if (registeredRole == null)
-                throw new NopException("'Registered' role could not be loaded");
-            customer.CustomerRoles.Add(registeredRole);
-            //remove from 'Guests' role
-            var guestRole = customer.CustomerRoles.FirstOrDefault(cr=>cr.SystemName == SystemCustomerRoleNames.Guests);
-            if (guestRole != null)
-                customer.CustomerRoles.Remove(guestRole);
-
-            //Add reward points for customer registration (if enabled)
-            if (_rewardPointsSettings.Enabled &&
-                _rewardPointsSettings.PointsForRegistration > 0 &&
-                !customer.IsGuest())
-                customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration, "Registered as customer");
-
-            _customerRepository.Update(customer);
-        }
-
+        
         /// <summary>
         /// Insert a customer
         /// </summary>
@@ -305,8 +609,7 @@ namespace Nop.Services.Customers
             }
             UpdateCustomer(customer);
         }
-
-
+        
         /// <summary>
         /// Delete guest customer records
         /// </summary>

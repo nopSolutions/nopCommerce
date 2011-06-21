@@ -294,7 +294,7 @@ namespace Nop.Services.Directory
         public virtual IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName)
         {
             var providers = LoadAllExchangeRateProviders();
-            var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return provider;
         }
 
@@ -305,7 +305,9 @@ namespace Nop.Services.Directory
         public virtual IList<IExchangeRateProvider> LoadAllExchangeRateProviders()
         {
             var exchangeRateProviders = _pluginFinder.GetPlugins<IExchangeRateProvider>();
-            return exchangeRateProviders.OrderBy(tp => tp.FriendlyName).ToList();
+            return exchangeRateProviders
+                .OrderBy(tp => tp.PluginDescriptor)
+                .ToList();
         }
         #endregion
     }

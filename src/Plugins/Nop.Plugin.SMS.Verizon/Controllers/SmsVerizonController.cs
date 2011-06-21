@@ -48,7 +48,7 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
             
             //save settings

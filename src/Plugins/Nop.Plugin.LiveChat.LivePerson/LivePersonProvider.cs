@@ -14,8 +14,6 @@ namespace Nop.Plugin.LiveChat.LivePerson
     /// </summary>
     public class LivePersonProvider : BasePlugin, ILiveChatProvider
     {
-        #region Methods
-        
         /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
@@ -41,44 +39,6 @@ namespace Nop.Plugin.LiveChat.LivePerson
             controllerName = "LiveChatLivePerson";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.LiveChat.LivePerson.Controllers" }, { "area", null } };
         }
-
-        #endregion
-
-        #region Properies
-
-        /// <summary>
-        /// Gets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "LivePerson"; }
-        }
-
-        /// <summary>
-        /// Gets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "LiveChat.LivePerson"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
-
-        #endregion
         
     }
 }

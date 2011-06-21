@@ -182,41 +182,5 @@ namespace Nop.Plugin.Feed.Froogle
         }
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "Froogle"; }
-        }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "PromotionFeed.Froogle"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
-        
-        #endregion
     }
 }

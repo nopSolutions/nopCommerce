@@ -215,11 +215,11 @@ namespace Nop.Services.Logging
             
             if (!String.IsNullOrEmpty(email))
             {
-                query = query.Where(c => c.Customer.AssociatedUsers.Where(u => u.Email.Contains(email)).Count() > 0);
+                query = query.Where(c => c.Customer.Email.Contains(email));
             };
             if (!String.IsNullOrEmpty(username))
             {
-                query = query.Where(c => c.Customer.AssociatedUsers.Where(u => u.Username.Contains(username)).Count() > 0);
+                query = query.Where(c => c.Customer.Username.Contains(username));
             };
 
             query = query.OrderByDescending(al => al.CreatedOnUtc);

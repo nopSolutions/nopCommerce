@@ -1,6 +1,6 @@
 
 using System.Collections.Generic;
-using Nop.Core.Domain.Security.Permissions;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Core.Domain.Customers
 {

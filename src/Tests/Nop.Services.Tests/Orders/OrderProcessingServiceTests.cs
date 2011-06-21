@@ -34,7 +34,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Orders
 {
     [TestFixture]
-    public class OrderProcessingServiceTests
+    public class OrderProcessingServiceTests : ServiceTest
     {
         IWorkContext _workContext;
         ITaxService _taxService;

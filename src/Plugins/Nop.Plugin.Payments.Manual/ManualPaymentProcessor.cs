@@ -272,38 +272,6 @@ namespace Nop.Plugin.Payments.Manual
             }
         }
 
-        /// <summary>
-        /// Gets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "Manual Processing"; }
-        }
-
-        /// <summary>
-        /// Gets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "Payments.Manual"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
-
         #endregion
         
     }

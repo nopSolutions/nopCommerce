@@ -61,7 +61,7 @@ namespace Nop.Services.Payments
         public virtual IPaymentMethod LoadPaymentMethodBySystemName(string systemName)
         {
             var providers = LoadAllPaymentMethods();
-            var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return provider;
         }
 
@@ -72,7 +72,7 @@ namespace Nop.Services.Payments
         public virtual IList<IPaymentMethod> LoadAllPaymentMethods()
         {
             var providers = _pluginFinder.GetPlugins<IPaymentMethod>();
-            return providers.OrderBy(tp => tp.FriendlyName).ToList();
+            return providers.ToList();
         }
 
 

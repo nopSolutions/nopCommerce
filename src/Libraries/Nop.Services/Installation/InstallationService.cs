@@ -55,7 +55,6 @@ namespace Nop.Services.Installation
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<User> _userRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<Category> _categoryRepository;
@@ -64,13 +63,8 @@ namespace Nop.Services.Installation
         private readonly IRepository<RelatedProduct> _relatedProductRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<QueuedEmail> _queuedEmailRepository;
         private readonly IRepository<ForumGroup> _forumGroupRepository;
         private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumTopic> _forumTopicRepository;
-        private readonly IRepository<ForumPost> _forumPostRepository;
-        private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
-        private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
@@ -93,7 +87,6 @@ namespace Nop.Services.Installation
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            IRepository<User> userRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<Category> categoryRepository,
@@ -102,13 +95,8 @@ namespace Nop.Services.Installation
             IRepository<RelatedProduct> relatedProductRepository,
             IRepository<EmailAccount> emailAccountRepository,
             IRepository<MessageTemplate> messageTemplateRepository,
-            IRepository<QueuedEmail> queuedEmailRepository,
             IRepository<ForumGroup> forumGroupRepository,
             IRepository<Forum> forumRepository,
-            IRepository<ForumTopic> forumTopicRepository,
-            IRepository<ForumPost> forumPostRepository,
-            IRepository<PrivateMessage> forumPrivateMessageRepository,
-            IRepository<ForumSubscription> forumSubscriptionRepository,
             IRepository<Country> countryRepository,
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<Discount> discountRepository,
@@ -127,35 +115,23 @@ namespace Nop.Services.Installation
             this._currencyRepository = currencyRepository;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
-            this._userRepository = userRepository;
-
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._productAttributeRepository = productAttributeRepository;
             this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
             this._relatedProductRepository = relatedProductRepository;
-
             this._emailAccountRepository = emailAccountRepository;
             this._messageTemplateRepository = messageTemplateRepository;
-            this._queuedEmailRepository = queuedEmailRepository;
-
             this._forumGroupRepository = forumGroupRepository;
             this._forumRepository = forumRepository;
-            this._forumTopicRepository = forumTopicRepository;
-            this._forumPostRepository = forumPostRepository;
-            this._forumPrivateMessageRepository = forumPrivateMessageRepository;
-            this._forumSubscriptionRepository = forumSubscriptionRepository;
-
             this._countryRepository = countryRepository;
             this._stateProvinceRepository = stateProvinceRepository;
-
             this._discountRepository = discountRepository;
             this._blogPostRepository = blogPostRepository;
             this._topicRepository = topicRepository;
             this._newsItemRepository = newsItemRepository;
             this._pollRepository = pollRepository;
-
             this._shippingMethodRepository = shippingMethodRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._productTagRepository = productTagRepository;
@@ -614,17 +590,17 @@ namespace Nop.Services.Installation
         protected virtual void InstallCountriesAndStates()
         {
             var cUsa = new Country
-                                        {
-                                            Name = "United States",
-                                            AllowsBilling = true,
-                                            AllowsShipping = true,
-                                            TwoLetterIsoCode = "US",
-                                            ThreeLetterIsoCode = "USA",
-                                            NumericIsoCode = 840,
-                                            SubjectToVat = false,
-                                            DisplayOrder = 1,
-                                            Published = true,
-                                        };
+            {
+                Name = "United States",
+                AllowsBilling = true,
+                AllowsShipping = true,
+                TwoLetterIsoCode = "US",
+                ThreeLetterIsoCode = "USA",
+                NumericIsoCode = 840,
+                SubjectToVat = false,
+                DisplayOrder = 1,
+                Published = true,
+            };
             cUsa.StateProvinces.Add(new StateProvince()
             {
                 Name = "AA (Armed Forces Americas)",
@@ -647,12 +623,12 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1,
             });
             cUsa.StateProvinces.Add(new StateProvince()
-                {
-                    Name = "Alaska",
-                    Abbreviation = "AK",
-                    Published = true,
-                    DisplayOrder = 1,
-                });
+            {
+                Name = "Alaska",
+                Abbreviation = "AK",
+                Published = true,
+                DisplayOrder = 1,
+            });
             cUsa.StateProvinces.Add(new StateProvince()
             {
                 Name = "American Samoa",
@@ -899,12 +875,12 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1,
             });
             cUsa.StateProvinces.Add(new StateProvince()
-                {
-                    Name = "New York",
-                    Abbreviation = "NY",
-                    Published = true,
-                    DisplayOrder = 1,
-                });
+            {
+                Name = "New York",
+                Abbreviation = "NY",
+                Published = true,
+                DisplayOrder = 1,
+            });
             cUsa.StateProvinces.Add(new StateProvince()
             {
                 Name = "North Carolina",
@@ -4008,31 +3984,19 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
-            var adminUser = new User()
+            var adminUser = new Customer()
             {
-                UserGuid = Guid.NewGuid(),
+                CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
                 Username = defaultUserEmail,
                 Password = defaultUserPassword,
                 PasswordFormat = PasswordFormat.Clear,
                 PasswordSalt = "",
-                IsApproved = true,
-                IsLockedOut = false,
+                Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            _userRepository.Insert(adminUser);
 
-            var customers = new List<Customer>
-                                {
-                                    new Customer
-                                        {
-                                            CustomerGuid = Guid.NewGuid(),
-                                            Active = true,
-                                            CreatedOnUtc = DateTime.UtcNow,
-                                        }
-                                };
-            var defaultCustomer = customers.FirstOrDefault();
-            defaultCustomer.AddAddress(new Address()
+            adminUser.AddAddress(new Address()
             {
                 FirstName = "John",
                 LastName = "Smith",
@@ -4048,40 +4012,39 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             });
-            defaultCustomer.AssociatedUsers.Add(adminUser);
-            customers.ForEach(c => _customerRepository.Insert(c));
+            _customerRepository.Insert(adminUser);
 
             var crAdministrators = new CustomerRole
-                                        {
-                                            Name = "Administrators",
-                                            Active = true,
-                                            IsSystemRole = true,
-                                            SystemName = SystemCustomerRoleNames.Administrators,
-                                        };
-            crAdministrators.Customers.Add(defaultCustomer);
+            {
+                Name = "Administrators",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Administrators,
+            };
+            crAdministrators.Customers.Add(adminUser);
             var crForumModerators = new CustomerRole
-                                        {
-                                            Name = "ForumModerators",
-                                            Active = true,
-                                            IsSystemRole = true,
-                                            SystemName = SystemCustomerRoleNames.ForumModerators,
-                                        };
-            crForumModerators.Customers.Add(defaultCustomer);
+            {
+                Name = "Forum Moderators",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.ForumModerators,
+            };
+            crForumModerators.Customers.Add(adminUser);
             var crRegistered = new CustomerRole
-                                        {
-                                            Name = "Registered",
-                                            Active = true,
-                                            IsSystemRole = true,
-                                            SystemName = SystemCustomerRoleNames.Registered,
-                                        };
-            crRegistered.Customers.Add(defaultCustomer);
+            {
+                Name = "Registered",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Registered,
+            };
+            crRegistered.Customers.Add(adminUser);
             var crGuests = new CustomerRole
-                                        {
-                                            Name = "Guests",
-                                            Active = true,
-                                            IsSystemRole = true,
-                                            SystemName = SystemCustomerRoleNames.Guests,
-                                        };
+            {
+                Name = "Guests",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Guests,
+            };
             var customerRoles = new List<CustomerRole>
                                 {
                                     crAdministrators,
@@ -4136,9 +4099,9 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallMessageTemplates()
         {
-            var eaGeneral = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("General contact", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-            var eaSale = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("Sales representative", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-            var eaCustomer = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("Customer support", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            var eaGeneral = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("General contact")).FirstOrDefault();
+            //var eaSale = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("Sales representative")).FirstOrDefault();
+            //var eaCustomer = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("Customer support")).FirstOrDefault();
             var messageTemplates = new List<MessageTemplate>
                                {
                                    new MessageTemplate
@@ -4209,7 +4172,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "NewCustomer.Notification",
                                            Subject = "New customer registration",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new customer registered with your store. Below are the customer''s details:<br />Full name: %Customer.FullName%<br />Email: %Customer.Email%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new customer registered with your store. Below are the customer's details:<br />Full name: %Customer.FullName%<br />Email: %Customer.Email%</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4478,7 +4441,7 @@ namespace Nop.Services.Installation
                     ProductSearchTermMinimumLength = 3,
                     ShowBestsellersOnHomepage = false,
                     NumberOfBestsellersOnHomepage = 3,
-                    SearchPageProductsPerPage  = 6,
+                    SearchPageProductsPerPage = 6,
                     ProductsAlsoPurchasedEnabled = true,
                     ProductsAlsoPurchasedNumber = 3,
                 });
@@ -4492,6 +4455,10 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<CustomerSettings>>()
                 .SaveSettings(new CustomerSettings()
                 {
+                    UsernamesEnabled = false,
+                    AllowUsersToChangeUsernames = false,
+                    HashedPasswordFormat = "SHA1",
+                    UserRegistrationType = UserRegistrationType.Standard,
                     AllowCustomersToUploadAvatars = false,
                     AvatarMaximumSizeBytes = 20000,
                     DefaultAvatarEnabled = true,
@@ -4607,15 +4574,6 @@ namespace Nop.Services.Installation
                     ReturnRequestReasons = new List<string>() { "Repair", "Replacement", "Store Credit" },
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<UserSettings>>()
-                .SaveSettings(new UserSettings()
-                {
-                    UsernamesEnabled = false,
-                    AllowUsersToChangeUsernames = false,
-                    HashedPasswordFormat = "SHA1",
-                    UserRegistrationType = UserRegistrationType.Standard
-                });
-
             EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()
                 .SaveSettings(new SecuritySettings()
                 {
@@ -4701,10 +4659,10 @@ namespace Nop.Services.Installation
                     AllowCustomersToEditPosts = false,
                     AllowCustomersToManageSubscriptions = false,
                     AllowGuestsToCreatePosts = false,
-                    AllowGuestsToCreateTopics = false,                    
+                    AllowGuestsToCreateTopics = false,
                     TopicSubjectMaxLength = 450,
                     PostMaxLength = 4000,
-                    StrippedTopicMaxLength = 45,                    
+                    StrippedTopicMaxLength = 45,
                     TopicsPageSize = 10,
                     PostsPageSize = 10,
                     SearchResultsPageSize = 10,
@@ -4737,80 +4695,80 @@ namespace Nop.Services.Installation
         protected virtual void InstallSpecificationAttributes()
         {
             var sa1 = new SpecificationAttribute
-                                        {
-                                            Name = "Screensize",
-                                            DisplayOrder = 1,
-                                        };
+            {
+                Name = "Screensize",
+                DisplayOrder = 1,
+            };
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                                {
-                                                    Name = "10.0''",
-                                                    DisplayOrder = 3,
-                                                });
+            {
+                Name = "10.0''",
+                DisplayOrder = 3,
+            });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                                {
-                                                    Name = "14.1''",
-                                                    DisplayOrder = 4,
-                                                });
+            {
+                Name = "14.1''",
+                DisplayOrder = 4,
+            });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                                {
-                                                    Name = "15.4''",
-                                                    DisplayOrder = 5,
-                                                });
+            {
+                Name = "15.4''",
+                DisplayOrder = 5,
+            });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                                {
-                                                    Name = "16.0''",
-                                                    DisplayOrder = 6,
-                                                });
+            {
+                Name = "16.0''",
+                DisplayOrder = 6,
+            });
             var sa2 = new SpecificationAttribute
-                                        {
-                                            Name = "CPU Type",
-                                            DisplayOrder = 2,
-                                        };
+            {
+                Name = "CPU Type",
+                DisplayOrder = 2,
+            };
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                                {
-                                                    Name = "AMD",
-                                                    DisplayOrder = 1,
-                                                });
+            {
+                Name = "AMD",
+                DisplayOrder = 1,
+            });
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                                {
-                                                    Name = "Intel",
-                                                    DisplayOrder = 2,
-                                                });
+            {
+                Name = "Intel",
+                DisplayOrder = 2,
+            });
             var sa3 = new SpecificationAttribute
-                                    {
-                                        Name = "Memory",
-                                        DisplayOrder = 3,
-                                    };
+            {
+                Name = "Memory",
+                DisplayOrder = 3,
+            };
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                                {
-                                                    Name = "1 GB",
-                                                    DisplayOrder = 1,
-                                                });
+            {
+                Name = "1 GB",
+                DisplayOrder = 1,
+            });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                                {
-                                                    Name = "3 GB",
-                                                    DisplayOrder = 2,
-                                                });
+            {
+                Name = "3 GB",
+                DisplayOrder = 2,
+            });
             var sa4 = new SpecificationAttribute
-                                {
-                                    Name = "Hardrive",
-                                    DisplayOrder = 5,
-                                };
+            {
+                Name = "Hardrive",
+                DisplayOrder = 5,
+            };
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                        {
-                                            Name = "320 GB",
-                                            DisplayOrder = 7,
-                                        });
+            {
+                Name = "320 GB",
+                DisplayOrder = 7,
+            });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                        {
-                                            Name = "250 GB",
-                                            DisplayOrder = 4,
-                                        });
+            {
+                Name = "250 GB",
+                DisplayOrder = 4,
+            });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
-                                        {
-                                            Name = "160 GB",
-                                            DisplayOrder = 3,
-                                        });
+            {
+                Name = "160 GB",
+                DisplayOrder = 3,
+            });
             var specificationAttributes = new List<SpecificationAttribute>
                                 {
                                     sa1,
@@ -4870,9 +4828,9 @@ namespace Nop.Services.Installation
             var sampleImagesPath = string.Format("{0}content\\samples\\", HttpContext.Current.Request.PhysicalApplicationPath);
 
 
-            
-            
-            
+
+
+
 
             //categories
             var categoryBooks = new Category
@@ -5221,7 +5179,7 @@ namespace Nop.Services.Installation
             };
             product25GiftCard.ProductVariants.Add(new ProductVariant()
             {
-                Price = 5M,
+                Price = 25M,
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Virtual,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
@@ -5281,15 +5239,15 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow,
             });
             product50GiftCard.ProductCategories.Add(new ProductCategory()
-                {
-                    Category = _categoryRepository.Table.Where(c => c.Name == "Gift Cards").Single(),
-                    DisplayOrder = 3,
-                });
+            {
+                Category = _categoryRepository.Table.Where(c => c.Name == "Gift Cards").Single(),
+                DisplayOrder = 3,
+            });
             product50GiftCard.ProductPictures.Add(new ProductPicture()
-                {
-                    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", true),
-                    DisplayOrder = 1,
-                });
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", true),
+                DisplayOrder = 1,
+            });
             _productRepository.Insert(product50GiftCard);
 
 
@@ -5376,7 +5334,7 @@ namespace Nop.Services.Installation
             });
             var pvaRockabillyPolka1 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single(),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -5529,34 +5487,34 @@ namespace Nop.Services.Installation
             });
             var pvaAdidasShoe1 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x=>x.Name == "Size").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single(),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
             pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
-                {
-                    Name = "8",
-                    DisplayOrder = 1,
-                });
+            {
+                Name = "8",
+                DisplayOrder = 1,
+            });
             pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
-                {
-                    Name = "9",
-                    DisplayOrder = 2,
-                });
+            {
+                Name = "9",
+                DisplayOrder = 2,
+            });
             pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
-                {
-                    Name = "10",
-                    DisplayOrder = 3,
-                });
+            {
+                Name = "10",
+                DisplayOrder = 3,
+            });
             pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
-                {
-                    Name = "11",
-                    DisplayOrder = 4,
-                });
+            {
+                Name = "11",
+                DisplayOrder = 4,
+            });
             productAdidasShoe.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaAdidasShoe1);
             var pvaAdidasShoe2 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Color").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Color").Single(),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -5799,32 +5757,32 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1,
             });
             productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
-                {
-                    AllowFiltering = false,
-                    ShowOnProductPage = true,
-                    DisplayOrder = 1,
-                    SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "10.0''").Single().Id
-                });
+            {
+                AllowFiltering = false,
+                ShowOnProductPage = true,
+                DisplayOrder = 1,
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "10.0''").Single()
+            });
             productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "AMD").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "AMD").Single()
             });
             productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single()
             });
             productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "160 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "160 GB").Single()
             });
             _productRepository.Insert(productAsusPc1000);
 
@@ -5884,21 +5842,21 @@ namespace Nop.Services.Installation
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "AMD").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "AMD").Single()
             });
             productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single()
             });
             productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "160 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "160 GB").Single()
             });
             _productRepository.Insert(productAsusPc900);
 
@@ -6085,7 +6043,7 @@ namespace Nop.Services.Installation
             });
             var pvaBuildComputer1 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Processor").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Processor").Single(),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -6104,7 +6062,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer1);
             var pvaBuildComputer2 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "RAM").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "RAM").Single(),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -6128,7 +6086,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer2);
             var pvaBuildComputer3 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "HDD").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "HDD").Single(),
                 AttributeControlType = AttributeControlType.RadioList,
                 IsRequired = true,
             };
@@ -6146,7 +6104,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer3);
             var pvaBuildComputer4 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "OS").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "OS").Single(),
                 AttributeControlType = AttributeControlType.RadioList,
                 IsRequired = true,
             };
@@ -6166,7 +6124,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer4);
             var pvaBuildComputer5 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Software").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Software").Single(),
                 AttributeControlType = AttributeControlType.Checkboxes,
             };
             pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
@@ -6520,12 +6478,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow,
             });
             productCustomTShirt.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(new ProductVariantAttribute()
-                {
-                    ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Custom Text").Single().Id,
-                    TextPrompt = "Enter your text:",
-                    AttributeControlType = AttributeControlType.TextBox,
-                    IsRequired = true,
-                });
+            {
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Custom Text").Single(),
+                TextPrompt = "Enter your text:",
+                AttributeControlType = AttributeControlType.TextBox,
+                IsRequired = true,
+            });
 
             productCustomTShirt.ProductCategories.Add(new ProductCategory()
             {
@@ -6729,7 +6687,7 @@ namespace Nop.Services.Installation
             });
             var pvaEtnies1 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single(),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -6756,7 +6714,7 @@ namespace Nop.Services.Installation
             productEtnies.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaEtnies1);
             var pvaEtnies2 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Color").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Color").Single(),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -6945,28 +6903,28 @@ namespace Nop.Services.Installation
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "14.1''").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "14.1''").Single()
             });
             productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single()
             });
             productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "3 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "3 GB").Single()
             });
             productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "250 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "250 GB").Single()
             });
             _productRepository.Insert(productHpPavilion1);
 
@@ -7084,28 +7042,28 @@ namespace Nop.Services.Installation
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "16.0''").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "16.0''").Single()
             });
             productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single()
             });
             productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "3 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "3 GB").Single()
             });
             productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "320 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "320 GB").Single()
             });
             _productRepository.Insert(productHpPavilion3);
 
@@ -7147,7 +7105,7 @@ namespace Nop.Services.Installation
             });
             var pvaHat1 = new ProductVariantAttribute()
             {
-                ProductAttributeId = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single().Id,
+                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single(),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -7270,10 +7228,10 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow,
             });
             productLeviJeans.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
-                {
-                    Quantity = 3,
-                    Price = 40
-                });
+            {
+                Quantity = 3,
+                Price = 40
+            });
             productLeviJeans.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
             {
                 Quantity = 6,
@@ -7790,28 +7748,28 @@ namespace Nop.Services.Installation
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "15.4''").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "15.4''").Single()
             });
             productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single()
             });
             productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single()
             });
             productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOptionId = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "250 GB").Single().Id
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "250 GB").Single()
             });
             _productRepository.Insert(productSatellite);
 
@@ -8027,22 +7985,22 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             var downloadPokerFace1 = new Download()
-                {
-                    ContentType = "application/x-zip-co",
-                    DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_PokerFace_1.zip"),
-                    Extension = ".zip",
-                    Filename = "Poker_Face_1",
-                    IsNew = true,
-                };
+            {
+                ContentType = "application/x-zip-co",
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_PokerFace_1.zip"),
+                Extension = ".zip",
+                Filename = "Poker_Face_1",
+                IsNew = true,
+            };
             downloadService.InsertDownload(downloadPokerFace1);
             var downloadPokerFace2 = new Download()
-                {
-                    ContentType = "text/plain",
-                    DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_PokerFace_2.txt"),
-                    Extension = ".txt",
-                    Filename = "Poker_Face_1",
-                    IsNew = true,
-                };
+            {
+                ContentType = "text/plain",
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_PokerFace_2.txt"),
+                Extension = ".txt",
+                Filename = "Poker_Face_1",
+                IsNew = true,
+            };
             downloadService.InsertDownload(downloadPokerFace2);
             productPokerFace.ProductVariants.Add(new ProductVariant()
             {
@@ -8625,14 +8583,13 @@ namespace Nop.Services.Installation
                 Description = "Discuss packaging & shipping",
                 NumTopics = 0,
                 NumPosts = 0,
-                LastPostCustomerId = 0,
                 LastPostTime = null,
                 DisplayOrder = 20,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
             };
             _forumRepository.Insert(packagingShippingForum);
-        }        
+        }
 
         protected virtual void InstallDiscounts()
         {
@@ -8673,7 +8630,7 @@ namespace Nop.Services.Installation
                                     new BlogPost
                                         {
                                              AllowComments = true,
-                                             LanguageId = defaultLanguage.Id,
+                                             Language = defaultLanguage,
                                              Title = "Online Discount Coupons",
                                              Body = "<p>Online discount coupons enable access to great offers from some of the world&rsquo;s best sites for Internet shopping. The online coupons are designed to allow compulsive online shoppers to access massive discounts on a variety of products. The regular shopper accesses the coupons in bulk and avails of great festive offers and freebies thrown in from time to time.  The coupon code option is most commonly used when using a shopping cart. The coupon code is entered on the order page just before checking out. Every online shopping resource has a discount coupon submission option to confirm the coupon code. The dedicated web sites allow the shopper to check whether or not a discount is still applicable. If it is, the sites also enable the shopper to calculate the total cost after deducting the coupon amount like in the case of grocery coupons.  Online discount coupons are very convenient to use. They offer great deals and professionally negotiated rates if bought from special online coupon outlets. With a little research and at times, insider knowledge the online discount coupons are a real steal. They are designed to promote products by offering &lsquo;real value for money&rsquo; packages. The coupons are legitimate and help with budgeting, in the case of a compulsive shopper. They are available for special trade show promotions, nightlife, sporting events and dinner shows and just about anything that could be associated with the promotion of a product. The coupons enable the online shopper to optimize net access more effectively. Getting a &lsquo;big deal&rsquo; is not more utopian amidst rising prices. The online coupons offer internet access to the best and cheapest products displayed online. Big discounts are only a code away! By Gaynor Borade (buzzle.com)</p>",
                                              Tags = "e-commerce, money",
@@ -8682,7 +8639,7 @@ namespace Nop.Services.Installation
                                     new BlogPost
                                         {
                                              AllowComments = true,
-                                             LanguageId = defaultLanguage.Id,
+                                             Language = defaultLanguage,
                                              Title = "Customer Service - Client Service",
                                              Body = "<p>Managing online business requires different skills and abilities than managing a business in the &lsquo;real world.&rsquo; Customers can easily detect the size and determine the prestige of a business when they have the ability to walk in and take a look around. Not only do &lsquo;real-world&rsquo; furnishings and location tell the customer what level of professionalism to expect, but &quot;real world&quot; personal encounters allow first impressions to be determined by how the business approaches its customer service. When a customer walks into a retail business just about anywhere in the world, that customer expects prompt and personal service, especially with regards to questions that they may have about products they wish to purchase.<br /><br />Customer service or the client service is the service provided to the customer for his satisfaction during and after the purchase. It is necessary to every business organization to understand the customer needs for value added service. So customer data collection is essential. For this, a good customer service is important. The easiest way to lose a client is because of the poor customer service. The importance of customer service changes by product, industry and customer. Client service is an important part of every business organization. Each organization is different in its attitude towards customer service. Customer service requires a superior quality service through a careful design and execution of a series of activities which include people, technology and processes. Good customer service starts with the design and communication between the company and the staff.<br /><br />In some ways, the lack of a physical business location allows the online business some leeway that their &lsquo;real world&rsquo; counterparts do not enjoy. Location is not important, furnishings are not an issue, and most of the visual first impression is made through the professional design of the business website.<br /><br />However, one thing still remains true. Customers will make their first impressions on the customer service they encounter. Unfortunately, in online business there is no opportunity for front- line staff to make a good impression. Every interaction the customer has with the website will be their primary means of making their first impression towards the business and its client service. Good customer service in any online business is a direct result of good website design and planning.</p><p>By Jayashree Pakhare (buzzle.com)</p>",
                                              Tags = "e-commerce, nopCommerce, asp.net, sample tag, money",
@@ -8701,7 +8658,7 @@ namespace Nop.Services.Installation
                                     new NewsItem
                                         {
                                              AllowComments = true,
-                                             LanguageId = defaultLanguage.Id,
+                                             Language = defaultLanguage,
                                              Title = "nopCommerce new release!",
                                              Short = "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!<br /><br />nopCommerce is a fully customizable shopping cart. It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
                                              Full = "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p><p>For full feature list go to <a href=\"http://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
@@ -8711,7 +8668,7 @@ namespace Nop.Services.Installation
                                     new NewsItem
                                         {
                                              AllowComments = true,
-                                             LanguageId = defaultLanguage.Id,
+                                             Language = defaultLanguage,
                                              Title = "New online store is open!",
                                              Short = "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.",
                                              Full = "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
@@ -8735,10 +8692,10 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1,
             };
             poll1.PollAnswers.Add(new PollAnswer()
-                {
-                    Name = "Excellent",
-                    DisplayOrder = 1,
-                });
+            {
+                Name = "Excellent",
+                DisplayOrder = 1,
+            });
             poll1.PollAnswers.Add(new PollAnswer()
             {
                 Name = "Good",
@@ -8780,7 +8737,7 @@ namespace Nop.Services.Installation
                                                   Name = "Delete category"
                                               }
                                       };
-            activityLogTypes.ForEach(alt=>_activityLogTypeRepository.Insert(alt));
+            activityLogTypes.ForEach(alt => _activityLogTypeRepository.Insert(alt));
         }
 
         private void AddProductTag(Product product, string tag)
@@ -8808,7 +8765,7 @@ namespace Nop.Services.Installation
 
         #region Methods
 
-        public virtual void InstallData(string defaultUserEmail, 
+        public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {
             InstallMeasures();

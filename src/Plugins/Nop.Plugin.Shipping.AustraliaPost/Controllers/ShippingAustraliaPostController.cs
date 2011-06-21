@@ -35,7 +35,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
             
             //save settings

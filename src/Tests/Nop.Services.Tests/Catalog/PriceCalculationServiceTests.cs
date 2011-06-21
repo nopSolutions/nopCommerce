@@ -13,7 +13,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Catalog
 {
     [TestFixture]
-    public class PriceCalculationServiceTests
+    public class PriceCalculationServiceTests : ServiceTest
     {
         IWorkContext _workContext;
         IDiscountService _discountService;

@@ -2,7 +2,9 @@
 using System;
 using System.Web;
 using System.Web.Security;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
+using Nop.Services.Customers;
 using Nop.Services.Security;
 
 namespace Nop.Services
@@ -13,40 +15,39 @@ namespace Nop.Services
     public partial class FormsAuthenticationService : IAuthenticationService
     {
         private readonly HttpContextBase _httpContext;
-        private readonly IUserService _userService;
-        private readonly UserSettings _userSettings;
+        private readonly ICustomerService _customerService;
+        private readonly CustomerSettings _customerSettings;
 
-        private User _cachedUser;
+        private Customer _cachedCustomer;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
-        /// <param name="userService">User service</param>
-        /// <param name="userSettings">User settings</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="customerSettings">Customer settings</param>
         public FormsAuthenticationService(HttpContextBase httpContext,
-            IUserService userService, UserSettings userSettings)
+            ICustomerService customerService, CustomerSettings customerSettings)
         {
             this._httpContext = httpContext;
-            this._userService = userService;
-            this._userSettings = userSettings;
-            //TODO set correct timespan
-            ExpirationTimeSpan = TimeSpan.FromHours(24);
+            this._customerService = customerService;
+            this._customerSettings = customerSettings;
+            ExpirationTimeSpan = TimeSpan.FromDays(31);  //TODO make 31 configurable
         }
 
         public TimeSpan ExpirationTimeSpan { get; set; }
 
-        public void SignIn(User user, bool createPersistentCookie)
+        public void SignIn(Customer customer, bool createPersistentCookie)
         {
             var now = DateTime.Now.ToLocalTime();
 
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,
-                _userSettings.UsernamesEnabled ? user.Username : user.Email,
+                _customerSettings.UsernamesEnabled ? customer.Username : customer.Email,
                 now,
                 now.Add(ExpirationTimeSpan),
                 createPersistentCookie,
-                _userSettings.UsernamesEnabled ? user.Username : user.Email,
+                _customerSettings.UsernamesEnabled ? customer.Username : customer.Email,
                 FormsAuthentication.FormsCookiePath);
 
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
@@ -61,19 +62,19 @@ namespace Nop.Services
             }
 
             _httpContext.Response.Cookies.Add(cookie);
-            _cachedUser = user;
+            _cachedCustomer = customer;
         }
 
         public void SignOut()
         {
-            _cachedUser = null;
+            _cachedCustomer = null;
             FormsAuthentication.SignOut();
         }
 
-        public User GetAuthenticatedUser()
+        public Customer GetAuthenticatedCustomer()
         {
-            if (_cachedUser != null)
-                return _cachedUser;
+            if (_cachedCustomer != null)
+                return _cachedCustomer;
 
             if (_httpContext == null ||
                 _httpContext.Request == null ||
@@ -88,12 +89,12 @@ namespace Nop.Services
 
             if (String.IsNullOrWhiteSpace(usernameOrEmail))
                 return null;
-            var user =_userSettings.UsernamesEnabled 
-                ? _userService.GetUserByUsername(usernameOrEmail)
-                : _userService.GetUserByEmail(usernameOrEmail);
-            if (user != null && user.IsApproved && !user.IsLockedOut)
-                _cachedUser = user;
-            return _cachedUser;
+            var customer = _customerSettings.UsernamesEnabled
+                ? _customerService.GetCustomerByUsername(usernameOrEmail)
+                : _customerService.GetCustomerByEmail(usernameOrEmail);
+            if (customer != null && customer.Active && !customer.Deleted && customer.IsRegistered())
+                _cachedCustomer = customer;
+            return _cachedCustomer;
         }
     }
 }

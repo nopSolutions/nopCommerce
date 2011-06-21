@@ -77,7 +77,7 @@
                     </div>
                 }
                 @if (Model.CommonTopicSettingsModel.AllowPrivateMessages && !customerIsGuest)
-                {                    
+                {
                     <div class="sendpmbox">
                         @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.ForumPost.Customer.Id }, new { @class = "pmlinkbutton" })                        
                     </div>
@@ -96,7 +96,7 @@
                     }
                     else
                     {
-                        @(Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(@Model.ForumPost.CreatedOnUtc).ToString("f"))
+                        @(Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(@Model.ForumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f"))
                     }
                     @dateStr
                 }</span>            

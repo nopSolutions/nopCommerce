@@ -177,8 +177,8 @@ namespace Nop.Web.Controllers
             var model = new InstallModel()
             {
                 AdminEmail = "admin@yourStore.com",
-                AdminPassword = "admin",
-                ConfirmPassword = "admin",
+                //AdminPassword = "admin",
+                //ConfirmPassword = "admin",
                 DatabaseConnectionString = "",
                 DataProvider = "sqlce",
                 InstallSampleData= true,
@@ -233,7 +233,7 @@ namespace Nop.Web.Controllers
             dirsToCheck.Add(rootDir + "content\\images");
             dirsToCheck.Add(rootDir + "content\\images\\thumbs");
             dirsToCheck.Add(rootDir + "content\files\\exportimport");
-            //TODO Add Google directory after 'Google payment module' is added
+            dirsToCheck.Add(rootDir + "plugins\bin");
             foreach (string dir in dirsToCheck)
                 if (!CheckPermissions(dir, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, dir));

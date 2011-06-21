@@ -1,9 +1,10 @@
 ﻿@using Telerik.Web.Mvc.UI;
 @using Telerik.Web.Mvc;
+@using Nop.Services.Customers;
 @using Nop.Web.Framework.UI;
 @{
-    var currentUser = this.AuthenticationService.GetAuthenticatedUser();
-    var usernamesEnabled = EngineContext.Current.Resolve<Nop.Core.Domain.Security.UserSettings>().UsernamesEnabled;
+    var currentCustomer = this.WorkContext.CurrentCustomer;
+    var usernamesEnabled = EngineContext.Current.Resolve<Nop.Core.Domain.Customers.CustomerSettings>().UsernamesEnabled;
 
     var currentVersion = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().CurrentVersion;
 }
@@ -48,15 +49,16 @@
                         @Html.ActionLink("Public store", "Index", "Home", new { area = "" }, null)
                         <span class="separator">|</span>                        
                         @Html.ActionLink("Clear Cache", "ClearCache", "Common")
+                        @*TODO add restart applciation button*@
                     </div>
                     <div class="login-info">
-                        @if (currentUser != null)
+                        @if (currentCustomer != null && currentCustomer.IsRegistered())
                     {
                             <text>Logged in as:</text> 
                         if (usernamesEnabled)
-                        { @currentUser.Username }
+                        { @currentCustomer.Username }
                         else
-                        { @currentUser.Email }
+                        { @currentCustomer.Email }
                             <text>, <a href="/admin/logout/">Logout?</a></text> 
                     }
                     </div>

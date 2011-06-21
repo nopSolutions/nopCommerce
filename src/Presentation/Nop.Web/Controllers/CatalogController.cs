@@ -53,7 +53,6 @@ namespace Nop.Web.Controllers
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ICustomerContentService _customerContentService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IAuthenticationService _authenticationService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly ICompareProductsService _compareProductsService;
@@ -67,6 +66,7 @@ namespace Nop.Web.Controllers
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly CustomerSettings _customerSettings;
         
         #endregion
 
@@ -80,13 +80,13 @@ namespace Nop.Web.Controllers
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
-            IAuthenticationService authenticationService, IShoppingCartService shoppingCartService,
+            IShoppingCartService shoppingCartService,
             IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
             IOrderReportService orderReportService, ICustomerService customerService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
-            LocalizationSettings localizationSettings)
+            LocalizationSettings localizationSettings, CustomerSettings customerSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -104,7 +104,6 @@ namespace Nop.Web.Controllers
             this._specificationAttributeService = specificationAttributeService;
             this._customerContentService = customerContentService;
             this._dateTimeHelper = dateTimeHelper;
-            this._authenticationService = authenticationService;
             this._shoppingCartService = shoppingCartService;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._compareProductsService = compareProductsService;
@@ -119,6 +118,7 @@ namespace Nop.Web.Controllers
             this._shoppingCartSettings = shoppingCartSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._localizationSettings = localizationSettings;
+            this._customerSettings = customerSettings;
         }
 
         #endregion
@@ -439,7 +439,9 @@ namespace Nop.Web.Controllers
                 model.Items.Add(new ProductReviewModel()
                 {
                     Id = pr.Id,
-                    CustomerName = "TODO customername/email/username here",
+                    CustomerId = pr.CustomerId,
+                    CustomerName = pr.Customer.FormatUserName(),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
                     Rating = pr.Rating,
@@ -578,9 +580,8 @@ namespace Nop.Web.Controllers
                 var customer = _workContext.CurrentCustomer;
                 if (customer != null)
                     model.GiftCard.SenderName = customer.GetFullName();
-                var user = _authenticationService.GetAuthenticatedUser();
-                if (user != null)
-                    model.GiftCard.SenderEmail = user.Email;
+                if (_workContext.CurrentCustomer != null)
+                    model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
             }
 
             #endregion
@@ -1817,7 +1818,7 @@ namespace Nop.Web.Controllers
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
-            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
+            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.Email : null;
             return View(model);
         }
 

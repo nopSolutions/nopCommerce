@@ -8,6 +8,19 @@ namespace Nop.Admin.Validators.Customers
     {
         public CustomerValidator(ILocalizationService localizationService)
         {
+            //we store 'UsernamesEnabled' and 'AllowUsersToChangeUsernames' as hidden fields; otherwise, they always be false.
+            //RuleFor(x => x.Username)
+            //    .NotNull()
+            //    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Username.Required"))
+            //    .When(x => x.UsernamesEnabled && x.AllowUsersToChangeUsernames);
+
+            //RuleFor(x => x.Email)
+            //    .NotNull()
+            //    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Email.Required"));
+
+            //RuleFor(x => x.Email)
+            //    .EmailAddress()
+            //    .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));
         }
     }
 }

@@ -1,117 +1,111 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Nop.Core.Infrastructure;
 using Autofac;
 
 namespace Nop.Core.Plugins
 {
-    public abstract class PluginDescriptor : IComparable<PluginDescriptor>
+    public class PluginDescriptor : IComparable<PluginDescriptor>
     {
+        /// <summary>
+        /// Plugin type
+        /// </summary>
+        public virtual string PluginFileName { get; set; }
+
+        /// <summary>
+        /// Plugin type
+        /// </summary>
+        public virtual Type PluginType { get; set; }
+
+        /// <summary>
+        /// The assembly that has been shadow copied that is active in the application
+        /// </summary>
+        public virtual Assembly ReferencedAssembly { get; internal set; }
+
+        /// <summary>
+        /// The original assembly file that a shadow copy was made from it
+        /// </summary>
+        public virtual FileInfo OriginalAssemblyFile { get; internal set; }
+
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
-        public virtual string FriendlyName { get; protected set; }
+        public virtual string FriendlyName { get; set; }
 
         /// <summary>
         /// Gets or sets the system name
         /// </summary>
-        public virtual string SystemName { get; protected set; }
+        public virtual string SystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the version
         /// </summary>
-        public virtual string Version { get; protected set; }
+        public virtual string Version { get; set; }
 
         /// <summary>
         /// Gets or sets the author
         /// </summary>
-        public virtual string Author { get; protected set; }
+        public virtual string Author { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; protected set; }
+        public virtual int DisplayOrder { get; set; }
 
-        public abstract Type PluginType { get; }
-
-        public abstract T Instance<T>() where T : class, IPlugin;
+        public virtual T Instance<T>() where T : class, IPlugin
+        {
+            object instance;
+            if (!EngineContext.Current.ContainerManager.Scope().TryResolve(PluginType, out instance))
+            {
+                //not resolved
+                try
+                {
+                    instance = Activator.CreateInstance(PluginType) as T;
+                }
+                catch (MissingMethodException ex)
+                {
+                    instance = EngineContext.Current.ContainerManager.ResolveUnregistered(PluginType) as T;
+                }
+            }
+            var typedInstance = instance as T;
+            if (typedInstance != null)
+                typedInstance.PluginDescriptor = this;
+            return typedInstance;
+        }
 
         public IPlugin Instance()
         {
             return Instance<IPlugin>();
         }
-        
+
         public int CompareTo(PluginDescriptor other)
         {
-            return DisplayOrder - other.DisplayOrder;
-        }
-    }
-
-    public class PluginAttributeDescriptor : PluginDescriptor
-    {
-        private IPlugin _pluginInstance = null;
-        private Type _pluginType = null;
-
-        public PluginAttributeDescriptor(IPlugin pluginInstance)
-        {
-            this._pluginInstance = pluginInstance;
-            this._pluginType = _pluginInstance.GetType();
-            var instance = Instance<IPlugin>();
-            this.FriendlyName = instance.FriendlyName;
-            this.SystemName = instance.SystemName;
-            this.Version = instance.Version;
-            this.Author = instance.Author;
-            this.DisplayOrder = instance.DisplayOrder;
+            if (DisplayOrder != other.DisplayOrder)
+                return DisplayOrder.CompareTo(other.DisplayOrder);
+            else
+                return FriendlyName.CompareTo(other.FriendlyName);
         }
 
-        public override Type PluginType
+        public override string ToString()
         {
-            get { return _pluginType; }
+            return FriendlyName;
         }
 
-        public override T Instance<T>()
+        public override bool Equals(object obj)
         {
-            return _pluginInstance as T;
-        }
-    }
-
-    public class PluginImplementationDescriptor : PluginDescriptor
-    {
-        private Type _pluginType = null;
-
-        public PluginImplementationDescriptor(Type pluginType)
-        {
-            this._pluginType = pluginType;
-            var instance = Instance<IPlugin>();
-            this.FriendlyName = instance.FriendlyName;
-            this.SystemName = instance.SystemName;
-            this.Version = instance.Version;
-            this.Author = instance.Author;
-            this.DisplayOrder = instance.DisplayOrder;
+            var other = obj as PluginDescriptor;
+            return other != null && 
+                SystemName != null &&
+                SystemName.Equals(other.SystemName);
         }
 
-        public override Type PluginType
+        public override int GetHashCode()
         {
-            get { return _pluginType; }
-        }
-
-        public override T Instance<T>()
-        {
-            object instance;
-            if (EngineContext.Current.ContainerManager.Scope().TryResolve(_pluginType, out instance))
-            {
-                return instance as T;
-            }
-            try
-            {
-                return Activator.CreateInstance(_pluginType) as T;
-            }
-            catch (MissingMethodException ex)
-            {
-                return EngineContext.Current.ContainerManager.ResolveUnregistered(_pluginType) as T;
-            }
+            return SystemName.GetHashCode();
         }
     }
 }

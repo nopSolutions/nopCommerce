@@ -118,38 +118,6 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
         #region Properties
 
         /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "Fixed Rate Shipping"; }
-        }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "Shipping.FixedRate"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
-
-        /// <summary>
         /// Gets a shipping rate computation method type
         /// </summary>
         public ShippingRateComputationMethodType ShippingRateComputationMethodType

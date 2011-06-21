@@ -216,17 +216,15 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Security\ChangePasswordRequest.cs" />
-    <Compile Include="Security\PasswordChangeResult.cs" />
+    <Compile Include="Customers\ChangePasswordRequest.cs" />
+    <Compile Include="Customers\PasswordChangeResult.cs" />
     <Compile Include="Security\EncryptionService.cs" />
     <Compile Include="Security\IEncryptionService.cs" />
-    <Compile Include="Security\IUserService.cs" />
-    <Compile Include="Security\Permissions\PermissionService.cs" />
-    <Compile Include="Security\Permissions\IPermissionService.cs" />
-    <Compile Include="Security\Permissions\IPermissionProvider.cs" />
-    <Compile Include="Security\UserRegistrationRequest.cs" />
-    <Compile Include="Security\UserRegistrationResult.cs" />
-    <Compile Include="Security\UserService.cs" />
+    <Compile Include="Security\PermissionService.cs" />
+    <Compile Include="Security\IPermissionService.cs" />
+    <Compile Include="Security\IPermissionProvider.cs" />
+    <Compile Include="Customers\CustomerRegistrationRequest.cs" />
+    <Compile Include="Customers\CustomerRegistrationResult.cs" />
     <Compile Include="Directory\StateProvinceService.cs" />
     <Compile Include="Seo\BaseSitemapGenerator.cs" />
     <Compile Include="Seo\SeoExtensions.cs" />

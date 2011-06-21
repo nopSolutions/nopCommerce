@@ -1,2 +1,0 @@
-DataProvider: sqlserver
-DataConnectionString: Data Source=nopserver;Initial Catalog=nopCommerce-2.00;Persist Security Info=True;User ID=nopdbuser;Password=dgs2002

@@ -14,8 +14,6 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
 {
     public class EcbExchangeRateProvider : BasePlugin, IExchangeRateProvider
     {
-        #region Methods
-
         /// <summary>
         /// Gets currency live rates
         /// </summary>
@@ -57,42 +55,5 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             }
             return exchangeRates;
         }
-
-        #endregion
-
-        #region Properties
-        /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "ECB exchange rate provider"; }
-        }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "CurrencyExchange.ECB"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
-
-        #endregion
     }
 }

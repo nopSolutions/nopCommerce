@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Nop.Core.Domain.Security.Permissions;
+using Nop.Core.Domain.Security;
 using NUnit.Framework;
 using Nop.Tests;
 using Nop.Core.Domain;

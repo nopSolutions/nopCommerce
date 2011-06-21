@@ -166,7 +166,7 @@ namespace Nop.Services.Tax
         public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
         {
             var providers = LoadAllTaxProviders();
-            var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return provider;
         }
 
@@ -177,7 +177,7 @@ namespace Nop.Services.Tax
         public virtual IList<ITaxProvider> LoadAllTaxProviders()
         {
             var taxProviders = _pluginFinder.GetPlugins<ITaxProvider>();
-            return taxProviders.OrderBy(tp => tp.FriendlyName).ToList();
+            return taxProviders.ToList();
         }
 
 

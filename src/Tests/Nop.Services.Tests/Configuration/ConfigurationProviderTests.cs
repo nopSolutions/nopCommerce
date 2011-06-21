@@ -10,7 +10,7 @@ using Nop.Services.Configuration;
 namespace Nop.Services.Tests.Configuration
 {
     [TestFixture]
-    public class ConfigurationProviderTests
+    public class ConfigurationProviderTests : ServiceTest
     {
         IConfigurationProvider<TestSettings> config;
 

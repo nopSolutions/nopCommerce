@@ -19,13 +19,10 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount.Controllers
     public class DiscountRulesHadSpentAmountController : Controller
     {
         private readonly IDiscountService _discountService;
-        private readonly ICustomerService _customerService;
 
-        public DiscountRulesHadSpentAmountController(IDiscountService discountService,
-            ICustomerService customerService)
+        public DiscountRulesHadSpentAmountController(IDiscountService discountService)
         {
             this._discountService = discountService;
-            this._customerService = customerService;
         }
 
         public ActionResult Configure(int discountId, int? discountRequirementId)

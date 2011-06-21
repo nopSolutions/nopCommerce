@@ -18,7 +18,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Localization
 {
     [TestFixture]
-    public class LanguageServiceTests
+    public class LanguageServiceTests : ServiceTest
     {
         IRepository<Language> _languageRepo;
         ILanguageService _languageService;

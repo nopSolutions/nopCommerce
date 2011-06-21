@@ -22,7 +22,6 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Security;
-using Nop.Core.Domain.Security.Permissions;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
@@ -115,7 +114,6 @@ namespace Nop.Data
         public DbSet<TaxCategory> TaxCategories { get; set; }
         public DbSet<TierPrice> TierPrices { get; set; }
         public DbSet<Topic> Topics { get; set; }
-        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

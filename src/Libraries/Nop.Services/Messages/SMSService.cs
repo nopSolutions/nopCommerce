@@ -34,7 +34,7 @@ namespace Nop.Services.Messages
         public virtual IList<ISmsProvider> LoadAllSmsProviders()
         {
             var smsProviders = _pluginFinder.GetPlugins<ISmsProvider>();
-            return smsProviders.OrderBy(tp => tp.FriendlyName).ToList();
+            return smsProviders.ToList();
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Nop.Services.Messages
         public virtual ISmsProvider LoadSmsProviderBySystemName(string systemName)
         {
             var providers = LoadAllSmsProviders();
-            var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return provider;
         }
 
@@ -56,7 +56,7 @@ namespace Nop.Services.Messages
         public virtual IList<ISmsProvider> LoadActiveSmsProviders()
         {
             return LoadAllSmsProviders()
-                .Where(smsProvider => _smsSettings.ActiveSmsProviderSystemNames.Contains(smsProvider.SystemName, StringComparer.InvariantCultureIgnoreCase))
+                .Where(smsProvider => _smsSettings.ActiveSmsProviderSystemNames.Contains(smsProvider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
                 .ToList();
         }
 

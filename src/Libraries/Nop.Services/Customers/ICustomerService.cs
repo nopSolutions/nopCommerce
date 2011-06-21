@@ -19,16 +19,17 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
         /// <param name="registrationTo">Customer registration to; null to load all customers</param>
-        /// <param name="associatedUserEmail">Email of associated user; null to load all customers</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
-        /// <param name="loadOnlyWithShoppingCart">Value indicating whether to load customers only with shopping cart</param>
+        /// <param name="email">Email; null to load all customers</param>
+        /// <param name="username">Username; null to load all customers</param>
+        /// <param name="loadOnlyWithShoppingCart">Value indicating whther to load customers only with shopping cart</param>
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, int[] customerRoleIds, string associatedUserEmail,
-            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
+           DateTime? registrationTo, int[] customerRoleIds, string email, string username,
+           bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all customers by customer role id
@@ -59,17 +60,60 @@ namespace Nop.Services.Customers
         Customer GetCustomerByGuid(Guid customerGuid);
 
         /// <summary>
-        /// Insert a guest customer
+        /// Get customer by email
         /// </summary>
+        /// <param name="email">Email</param>
         /// <returns>Customer</returns>
-        Customer InsertGuestCustomer();
+        Customer GetCustomerByEmail(string email);
+
+        /// <summary>
+        /// Get customer by username
+        /// </summary>
+        /// <param name="username">Username</param>
+        /// <returns>Customer</returns>
+        Customer GetCustomerByUsername(string username);
+
+        /// <summary>
+        /// Validate customer
+        /// </summary>
+        /// <param name="usernameOrEmail">Username or email</param>
+        /// <param name="password">Password</param>
+        /// <returns>Result</returns>
+        bool ValidateCustomer(string usernameOrEmail, string password);
 
         /// <summary>
         /// Register customer
         /// </summary>
+        /// <param name="request">Request</param>
+        /// <returns>Result</returns>
+        CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request);
+
+        /// <summary>
+        /// Change password
+        /// </summary>
+        /// <param name="request">Request</param>
+        /// <returns>Result</returns>
+        PasswordChangeResult ChangePassword(ChangePasswordRequest request);
+
+        /// <summary>
+        /// Sets a user email
+        /// </summary>
         /// <param name="customer">Customer</param>
+        /// <param name="newEmail">New email</param>
+        void SetEmail(Customer customer, string newEmail);
+
+        /// <summary>
+        /// Sets a customer username
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="newUsername">New Username</param>
+        void SetUsername(Customer customer, string newUsername);
+
+        /// <summary>
+        /// Insert a guest customer
+        /// </summary>
         /// <returns>Customer</returns>
-        void RegisterCustomer(Customer customer);
+        Customer InsertGuestCustomer();
 
         /// <summary>
         /// Insert a customer
@@ -82,14 +126,14 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomer(Customer customer);
-        
+
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
         void ResetCheckoutData(Customer customer, bool clearCouponCodes = false);
-        
+
         /// <summary>
         /// Delete guest customer records
         /// </summary>
@@ -98,7 +142,7 @@ namespace Nop.Services.Customers
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
         /// <returns>Number of deleted customers</returns>
         int DeleteGuestCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, bool onlyWithoutShoppingCart);
+           DateTime? registrationTo, bool onlyWithoutShoppingCart);
 
         #endregion
 

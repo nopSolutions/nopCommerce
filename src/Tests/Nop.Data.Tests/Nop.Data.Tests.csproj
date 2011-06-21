@@ -96,7 +96,7 @@
     <Compile Include="Messages\EmailAccountPersistenceTests.cs" />
     <Compile Include="Messages\MessageTemplatePersistenceTests.cs" />
     <Compile Include="Messages\NewsLetterSubscriptionPersistenceTests.cs" />
-    <Compile Include="Security\Permissions\PermissionRecordPersistenceTests.cs" />
+    <Compile Include="Security\PermissionRecordPersistenceTests.cs" />
     <Compile Include="Orders\GiftCardPersistenceTests.cs" />
     <Compile Include="Orders\GiftCardUsageHistoryPersistenceTests.cs" />
     <Compile Include="Discounts\DiscountUsageHistoryPersistenceTests.cs" />
@@ -139,7 +139,6 @@
     <Compile Include="PersistenceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaTests.cs" />
-    <Compile Include="Security\UserPersistenceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

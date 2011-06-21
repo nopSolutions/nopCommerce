@@ -79,7 +79,7 @@ namespace Nop.Admin.Controllers
             model.AvailableDiscountRequirementRules.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
             var discountRules = _discountService.LoadAllDiscountRequirementRules();
             foreach (var discountRule in discountRules)
-                model.AvailableDiscountRequirementRules.Add(new SelectListItem() { Text = discountRule.FriendlyName, Value = discountRule.SystemName });
+                model.AvailableDiscountRequirementRules.Add(new SelectListItem() { Text = discountRule.PluginDescriptor.FriendlyName, Value = discountRule.PluginDescriptor.SystemName });
 
             if (discount != null)
             {
@@ -92,7 +92,7 @@ namespace Nop.Admin.Controllers
                         model.DiscountRequirementMetaInfos.Add(new DiscountModel.DiscountRequirementMetaInfo()
                         {
                             DiscountRequirementId = dr.Id,
-                            RuleName = drr.FriendlyName,
+                            RuleName = drr.PluginDescriptor.FriendlyName,
                             ConfigurationUrl = GetRequirementUrlInternal(drr, discount, dr.Id)
                         });
                     }
@@ -243,7 +243,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("Discount requirement rule could not be loaded");
 
             string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
-            string ruleName = discountRequirementRule.FriendlyName;
+            string ruleName = discountRequirementRule.PluginDescriptor.FriendlyName;
             return Json(new { url = url, ruleName = ruleName }, JsonRequestBehavior.AllowGet);
         }
 

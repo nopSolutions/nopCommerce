@@ -10,7 +10,7 @@ using Nop.Services.Security;
 namespace Nop.Services.Tests.Security
 {
     [TestFixture]
-    public class EncryptionServiceTests
+    public class EncryptionServiceTests : ServiceTest
     {
         IEncryptionService _encryptionService;
         SecuritySettings _securitySettings;

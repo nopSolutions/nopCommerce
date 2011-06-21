@@ -61,7 +61,7 @@ namespace Nop.Plugin.Feed.PriceGrabber.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
             
             //save settings
@@ -87,7 +87,7 @@ namespace Nop.Plugin.Feed.PriceGrabber.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return Configure();
             }
 
 

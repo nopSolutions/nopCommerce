@@ -43,7 +43,6 @@ namespace Nop.Web.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
-        private readonly IAuthenticationService _authenticationService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ISitemapGenerator _sitemapGenerator;
@@ -52,7 +51,7 @@ namespace Nop.Web.Controllers
         private readonly IForumService _forumservice;
         private readonly ICustomerService _customerService;
 
-        private readonly UserSettings _userSettings;
+        private readonly CustomerSettings _customerSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -66,12 +65,12 @@ namespace Nop.Web.Controllers
             IManufacturerService manufacturerService, ITopicService topicService,
             ILanguageService languageService,
             ICurrencyService currencyService, ILocalizationService localizationService,
-            IWorkContext workContext, IAuthenticationService authenticationService,
+            IWorkContext workContext,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
             IThemeProvider themeProvider, IForumService forumService,
             ICustomerService customerService,
-            UserSettings userSettings, ShoppingCartSettings shoppingCartSettings,
+            CustomerSettings customerSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings)
@@ -84,7 +83,6 @@ namespace Nop.Web.Controllers
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._workContext = workContext;
-            this._authenticationService = authenticationService;
             this._queuedEmailService = queuedEmailService;
             this._emailAccountService = emailAccountService;
             this._sitemapGenerator = sitemapGenerator;
@@ -93,7 +91,7 @@ namespace Nop.Web.Controllers
             this._forumservice = forumService;
             this._customerService = customerService;
 
-            this._userSettings = userSettings;
+            this._customerSettings = customerSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
@@ -175,7 +173,6 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult Header()
         {
-            var user = _authenticationService.GetAuthenticatedUser();
             var customer = _workContext.CurrentCustomer;
 
             var unreadMessageCount = GetUnreadPrivateMessages();
@@ -196,8 +193,8 @@ namespace Nop.Web.Controllers
 
             var model = new HeaderModel()
             {
-                IsAuthenticated = user != null,
-                CustomerEmailUsername = user != null ? (_userSettings.UsernamesEnabled ? user.Username : user.Email) : "",
+                IsAuthenticated = customer.IsRegistered(),
+                CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 //TODO uncomment later
                 //DisplayAdminLink = customer != null && customer.IsAdmin(),
                 DisplayAdminLink = true,
@@ -265,7 +262,7 @@ namespace Nop.Web.Controllers
         public ActionResult ContactUs()
         {
             var model = new ContactUsModel();
-            model.Email = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
+            model.Email = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.Email : null;
             model.FullName = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetFullName() : null;
             return View(model);
         }

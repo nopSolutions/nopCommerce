@@ -18,7 +18,7 @@ namespace Nop.Services.Messages
             if (smsSettings.ActiveSmsProviderSystemNames == null)
                 return false;
             foreach (string activeMethodSystemName in smsSettings.ActiveSmsProviderSystemNames)
-                if (smsProvider.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                if (smsProvider.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             return false;
         }

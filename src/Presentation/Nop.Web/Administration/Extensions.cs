@@ -696,22 +696,6 @@ namespace Nop.Admin
             return Mapper.Map(model, destination);
         }
 
-        //customers
-        public static CustomerModel ToModel(this Customer entity)
-        {
-            return Mapper.Map<Customer, CustomerModel>(entity);
-        }
-
-        public static Customer ToEntity(this CustomerModel model)
-        {
-            return Mapper.Map<CustomerModel, Customer>(model);
-        }
-
-        public static Customer ToEntity(this CustomerModel model, Customer destination)
-        {
-            return Mapper.Map(model, destination);
-        }
-        
         #endregion
 
         #region Gift Cards
@@ -919,18 +903,6 @@ namespace Nop.Admin
             return Mapper.Map<CustomerUserSettingsModel.CustomerSettingsModel, CustomerSettings>(model);
         }
         public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model, CustomerSettings destination)
-        {
-            return Mapper.Map(model, destination);
-        }
-        public static CustomerUserSettingsModel.UserSettingsModel ToModel(this UserSettings entity)
-        {
-            return Mapper.Map<UserSettings, CustomerUserSettingsModel.UserSettingsModel>(entity);
-        }
-        public static UserSettings ToEntity(this CustomerUserSettingsModel.UserSettingsModel model)
-        {
-            return Mapper.Map<CustomerUserSettingsModel.UserSettingsModel, UserSettings>(model);
-        }
-        public static UserSettings ToEntity(this CustomerUserSettingsModel.UserSettingsModel model, UserSettings destination)
         {
             return Mapper.Map(model, destination);
         }

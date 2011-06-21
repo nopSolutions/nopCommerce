@@ -62,32 +62,23 @@ namespace Nop.Services.Tests.Shipping
         }
 
         #region Properties
-
-
-        public override string FriendlyName
+        
+        public override PluginDescriptor PluginDescriptor
         {
-            get { return "Fixed rate shipping computation method"; }
-        }
-
-        public override string SystemName
-        {
-            get { return "FixedRateTestShippingRateComputationMethod"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
+            get
+            {
+                return new PluginDescriptor()
+                {
+                    Author = "nopCommerce team",
+                    FriendlyName = "Fixed rate test shipping computation method",
+                    SystemName = "FixedRateTestShippingRateComputationMethod",
+                    Version = "1.00"
+                };
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>

@@ -3,8 +3,8 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Security.Permissions;
-using Nop.Services.Security.Permissions;
+using Nop.Core.Domain.Security;
+using Nop.Services.Security;
 
 namespace Nop.Services.Catalog
 {

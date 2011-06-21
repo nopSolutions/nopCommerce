@@ -19,7 +19,7 @@ namespace Nop.Services.Shipping
             if (shippingSettings.ActiveShippingRateComputationMethodSystemNames == null)
                 return false;
             foreach (string activeMethodSystemName in shippingSettings.ActiveShippingRateComputationMethodSystemNames)
-                if (srcm.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                if (srcm.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             return false;
         }

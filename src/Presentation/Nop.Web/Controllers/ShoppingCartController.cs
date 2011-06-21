@@ -527,7 +527,9 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Cart()
         {
-            return View();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
+            return View(model);
         }
 
         [ChildActionOnly]
@@ -1160,7 +1162,7 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var model = new WishlistEmailAFriendModel();
-            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetDefaultUserAccountEmail() : null;
+            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.Email : null;
             return View(model);
         }
 

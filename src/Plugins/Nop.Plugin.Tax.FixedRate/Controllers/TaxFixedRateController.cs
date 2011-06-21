@@ -76,7 +76,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return new JsonResult { Data = "error" };
             }
 
             int taxCategoryId = model.TaxCategoryId;

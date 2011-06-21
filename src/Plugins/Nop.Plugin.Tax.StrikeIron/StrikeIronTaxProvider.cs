@@ -22,12 +22,10 @@ namespace Nop.Plugin.Tax.StrikeIron
         private const string TAXRATEUSA_KEY = "Nop.taxrateusa.zipCode-{0}";
         private const string TAXRATECANADA_KEY = "Nop.taxratecanada.province-{0}";
         
-        private readonly ISettingService _settingService;
         private readonly StrikeIronTaxSettings _strikeIronTaxSettings;
 
-        public StrikeIronTaxProvider(ISettingService settingService, StrikeIronTaxSettings strikeIronTaxSettings)
+        public StrikeIronTaxProvider(StrikeIronTaxSettings strikeIronTaxSettings)
         {
-            this._settingService = settingService;
             this._strikeIronTaxSettings = strikeIronTaxSettings;
         }
 
@@ -260,38 +258,6 @@ namespace Nop.Plugin.Tax.StrikeIron
                 //TODO inject ICacheManager
                 return new MemoryCacheManager();
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "StrikeIron Basic (US and CA Only)"; }
-        }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "Tax.StrikeIron.Basic"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
         }
 
         /// <summary>

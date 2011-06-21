@@ -1,0 +1,129 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Tax.CountryStateZip.Models.TaxRateListModel
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using System.Linq;
+
+<table class="adminContent">
+    <tr>
+        <td>
+                    @(Html.Telerik().Grid(Model.TaxRates)
+                    .Name("Grid")
+                    .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.CountryName).Width(200).ReadOnly();
+                        columns.Bound(x => x.StateProvinceName).Width(200).ReadOnly();
+                        columns.Bound(x => x.Zip).Width(100);
+                        columns.Bound(x => x.TaxCategoryName).Width(200).ReadOnly();
+                        columns.Bound(x => x.Percentage).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        }).Width(100);
+
+                    })
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("RatesList", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } })
+                            .Update("RateUpdate", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } })
+                            .Delete("RateDelete", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } });
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>
+<p>
+</p>
+
+<script type="text/javascript">
+     $(function() {
+            $("#@Html.FieldIdFor(model => model.AddCountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.AddStateProvinceId)")
+                $.ajax({
+                    cache:false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country", new RouteValueDictionary() { { "area", "Admin" } }))",
+                    data: "countryId=" + selectedItem + "&addAsterisk=true",
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve states.')
+                    }  
+                });
+            });
+        });
+</script>
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+<tr>
+    <td class="adminTitle" colspan="2">
+        <b>Adding a new tax rate</b>
+    </td>
+</tr>
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.AddCountryId):
+    </td>
+    <td class="adminData">
+        @Html.DropDownListFor(model => model.AddCountryId, Model.AvailableCountries)
+        @Html.ValidationMessageFor(model => model.AddCountryId)
+    </td>
+</tr>
+<tr>
+    <td class="adminTitle">
+    @Html.NopLabelFor(model => model.AddStateProvinceId):
+    </td>
+    <td class="adminData">
+    @Html.DropDownListFor(model => model.AddStateProvinceId, Model.AvailableStates)
+    @Html.ValidationMessageFor(model => model.AddStateProvinceId)
+    </td>
+</tr>
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.AddZip):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.AddZip)
+        @Html.ValidationMessageFor(model => model.AddZip)
+    </td>
+</tr>
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.AddTaxCategoryId):
+    </td>
+    <td class="adminData">
+        @Html.DropDownListFor(model => model.AddTaxCategoryId, Model.AvailableTaxCategories)
+        @Html.ValidationMessageFor(model => model.AddTaxCategoryId)
+    </td>
+</tr>
+<tr>
+    <td class="adminTitle">
+        @Html.NopLabelFor(model => model.AddPercentage):
+    </td>
+    <td class="adminData">
+        @Html.EditorFor(model => model.AddPercentage)
+        @Html.ValidationMessageFor(model => model.AddPercentage)
+    </td>
+</tr>
+<tr>
+    <td colspan="2" align="left">
+        <button type="submit" name="addtaxrate" value="addtaxrate" class="t-button">Add tax rate</button>
+    </td>
+</tr>
+</table>
+}

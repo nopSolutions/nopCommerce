@@ -228,7 +228,8 @@ namespace Nop.Admin.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult GetStatesByCountryId(string countryId, bool addEmptyStateIfRequired)
+        public ActionResult GetStatesByCountryId(string countryId,
+            bool? addEmptyStateIfRequired, bool? addAsterisk)
         {
             // This action method gets called via an ajax request
             if (String.IsNullOrEmpty(countryId))
@@ -238,8 +239,10 @@ namespace Nop.Admin.Controllers
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, true).ToList() : new List<StateProvince>();
             var result = (from s in states
                          select new { id = s.Id, name = s.Name }).ToList();
-            if (addEmptyStateIfRequired && result.Count == 0)
+            if (addEmptyStateIfRequired.HasValue && addEmptyStateIfRequired.Value && result.Count == 0)
                 result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+            if (addAsterisk.HasValue && addAsterisk.Value)
+                result.Insert(0, new { id = 0, name = "*" });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

@@ -43,7 +43,11 @@ namespace Nop.Web.Models.Catalog
 
     public class ProductReviewModel : BaseNopEntityModel
     {
+        public int CustomerId { get; set; }
+
         public string CustomerName { get; set; }
+
+        public bool AllowViewingProfiles { get; set; }
         
         public string Title { get; set; }
 

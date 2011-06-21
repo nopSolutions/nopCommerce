@@ -16,7 +16,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Directory
 {
     [TestFixture]
-    public class CurrencyServiceTests
+    public class CurrencyServiceTests : ServiceTest
     {
         IRepository<Currency> _currencyRepository;
         CurrencySettings _currencySettings;

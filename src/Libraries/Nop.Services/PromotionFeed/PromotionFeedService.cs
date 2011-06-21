@@ -42,7 +42,7 @@ namespace Nop.Services.PromotionFeed
         public virtual IPromotionFeed LoadPromotionFeedBySystemName(string systemName)
         {
             var providers = LoadAllPromotionFeeds();
-            var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return provider;
         }
 
@@ -53,7 +53,7 @@ namespace Nop.Services.PromotionFeed
         public virtual IList<IPromotionFeed> LoadAllPromotionFeeds()
         {
             var providers = _pluginFinder.GetPlugins<IPromotionFeed>();
-            return providers.OrderBy(tp => tp.FriendlyName).ToList();
+            return providers.ToList();
         }
 
         #endregion

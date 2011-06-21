@@ -71,7 +71,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Configure");
+                return new JsonResult { Data = "error" };
             }
 
             int shippingMethodId = model.ShippingMethodId;

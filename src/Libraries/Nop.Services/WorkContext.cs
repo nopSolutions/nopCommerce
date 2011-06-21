@@ -57,16 +57,7 @@ namespace Nop.Services
             if (_httpContext != null)
             {
                 //registered user
-                var user = _authenticationService.GetAuthenticatedUser();
-                if (user != null)
-                {
-                    customer = user.AssociatedCustomer;
-                    if (customer == null || customer.Deleted || !customer.Active || !customer.IsRegistered())
-                    {
-                        //logout
-                        _authenticationService.SignOut();
-                    }
-                }
+                customer = _authenticationService.GetAuthenticatedCustomer();
                 
                 //guest customer
                 if (customer == null || customer.Deleted || !customer.Active)
@@ -79,7 +70,6 @@ namespace Nop.Services
                         {
                             var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
                             //this customer (from cookie) should not be registered
-                            //otherwise we'll have registered 'CurrentCustomer', but 'CurrentUser' is null
                             if (customerByCookie != null && !customerByCookie.IsRegistered())
                                 customer = customerByCookie;
                         }

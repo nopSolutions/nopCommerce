@@ -302,10 +302,6 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var user = customer.GetDefaultUserAccount();
-            if (user == null)
-                throw new ArgumentException("Can't load associated user account");
-
             languageId = EnsureLanguageIsActive(languageId);
 
             var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.WelcomeMessage", languageId);
@@ -315,7 +311,7 @@ namespace Nop.Services.Messages
             var customerTokens = GenerateTokens(customer);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var toEmail = user.Email;
+            var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, customerTokens, 
@@ -333,11 +329,6 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            //search all users because the latest one could be not approved yet
-            var user = customer.GetDefaultUserAccount(false);
-            if (user == null)
-                throw new ArgumentException("Can't load associated user account");
-
             languageId = EnsureLanguageIsActive(languageId);
 
             var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.EmailValidationMessage", languageId);
@@ -347,7 +338,7 @@ namespace Nop.Services.Messages
             var customerTokens = GenerateTokens(customer);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var toEmail = user.Email;
+            var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, customerTokens,
@@ -365,10 +356,6 @@ namespace Nop.Services.Messages
             if (customer == null)
                 throw new ArgumentNullException("customer");
             
-            var user = customer.GetDefaultUserAccount();
-            if (user == null)
-                throw new ArgumentException("Can't load associated user account");
-
             languageId = EnsureLanguageIsActive(languageId);
 
             var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.PasswordRecovery", languageId);
@@ -378,7 +365,7 @@ namespace Nop.Services.Messages
             var customerTokens = GenerateTokens(customer);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var toEmail = user.Email;
+            var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, customerTokens,
@@ -729,10 +716,6 @@ namespace Nop.Services.Messages
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
 
-            var user = returnRequest.Customer.GetDefaultUserAccount();
-            if (user == null)
-                throw new ArgumentException("Can't load associated user account");
-
             languageId = EnsureLanguageIsActive(languageId);
 
             var messageTemplate = GetLocalizedActiveMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", languageId);
@@ -742,7 +725,7 @@ namespace Nop.Services.Messages
             var orderTokens = GenerateTokens(returnRequest, opv);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var toEmail = user.Email;
+            var toEmail = returnRequest.Customer.Email;
             var toName = returnRequest.Customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, orderTokens,
@@ -778,7 +761,7 @@ namespace Nop.Services.Messages
             var tokens = GenerateTokens(forumTopic);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var toEmail = customer.GetDefaultUserAccountEmail();
+            var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
@@ -811,7 +794,7 @@ namespace Nop.Services.Messages
             var tokens = GenerateTokens(forumPost);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);            
-            var toEmail = customer.GetDefaultUserAccountEmail();
+            var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
@@ -839,7 +822,7 @@ namespace Nop.Services.Messages
             var privateMessageTokens = GenerateTokens(privateMessage);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);            
-            var toEmail = privateMessage.ToCustomer.GetDefaultUserAccountEmail();
+            var toEmail = privateMessage.ToCustomer.Email;
             var toName = privateMessage.ToCustomer.GetFullName();
 
             return SendNotification(messageTemplate, emailAccount, languageId, privateMessageTokens, toEmail, toName);
