@@ -49,6 +49,7 @@
                         @Html.ActionLink("Public store", "Index", "Home", new { area = "" }, null)
                         <span class="separator">|</span>                        
                         @Html.ActionLink("Clear Cache", "ClearCache", "Common")
+                        @*TODO add restart applciation button*@
                     </div>
                     <div class="login-info">
                         @if (currentCustomer != null && currentCustomer.IsRegistered())

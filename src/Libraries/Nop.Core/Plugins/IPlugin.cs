@@ -37,8 +37,6 @@ namespace Nop.Core.Plugins
         /// </summary>
         int DisplayOrder { get; }
 
-        bool IsAuthorized(IPrincipal user);
-
         /// <summary>
         /// Install plugin
         /// </summary>

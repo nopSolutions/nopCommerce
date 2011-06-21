@@ -223,6 +223,8 @@
     <Compile Include="Html\ResolveLinksHelper.cs" />
     <Compile Include="PersistentCollection.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
+    <Compile Include="Plugins\PluginImplementationDescriptor.cs" />
+    <Compile Include="Plugins\PluginManager2.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />
     <Compile Include="Plugins\PluginManager3.cs" />
     <Compile Include="Plugins\PluginManager.cs" />

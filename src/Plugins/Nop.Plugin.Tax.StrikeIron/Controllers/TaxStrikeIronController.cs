@@ -20,8 +20,7 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
         private readonly StrikeIronTaxSettings _strikeIronTaxSettings;
         private readonly ISettingService _settingService;
 
-        public TaxStrikeIronController(
-            StrikeIronTaxSettings strikeIronTaxSettings, ISettingService settingService)
+        public TaxStrikeIronController(StrikeIronTaxSettings strikeIronTaxSettings, ISettingService settingService)
         {
             this._strikeIronTaxSettings = strikeIronTaxSettings;
             this._settingService = settingService;
@@ -75,7 +74,7 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
 
             try
             {
-                var strikeIronTaxProvider = new StrikeIronTaxProvider(_settingService, _strikeIronTaxSettings);
+                var strikeIronTaxProvider = new StrikeIronTaxProvider(_strikeIronTaxSettings);
                 string zip = model.TestingUsaZip;
                 string userId = model.UserId;
                 string password = model.Password;
@@ -110,7 +109,7 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
 
             try
             {
-                var strikeIronTaxProvider = new StrikeIronTaxProvider(_settingService, _strikeIronTaxSettings);
+                var strikeIronTaxProvider = new StrikeIronTaxProvider(_strikeIronTaxSettings);
                 string province = model.TestingCanadaProvinceCode;
                 string userId = model.UserId;
                 string password = model.Password;

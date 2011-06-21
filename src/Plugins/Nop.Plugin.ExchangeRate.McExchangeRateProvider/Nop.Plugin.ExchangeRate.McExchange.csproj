@@ -8,8 +8,8 @@
     <ProjectGuid>{D449B6D7-8670-4081-B729-A40DF88B8699}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nop.Plugin.ExchangeRate.McExchangeRateProvider</RootNamespace>
-    <AssemblyName>Nop.Plugin.ExchangeRate.McExchangeRateProvider</AssemblyName>
+    <RootNamespace>Nop.Plugin.ExchangeRate.McExchange</RootNamespace>
+    <AssemblyName>Nop.Plugin.ExchangeRate.McExchange</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Presentation\Nop.Web\bin\</OutputPath>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\ExchangeRate.McExchange\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -52,6 +52,11 @@
       <Project>{210541AD-F659-47DA-8763-16F36C5CD2F4}</Project>
       <Name>Nop.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Description.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

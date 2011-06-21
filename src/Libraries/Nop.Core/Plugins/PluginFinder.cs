@@ -24,25 +24,7 @@ namespace Nop.Core.Plugins
         {
             this._typeFinder = typeFinder;
         }
-
-        /// <summary>
-        /// Gets plugins found in the environment sorted and filtered by the given user.
-        /// </summary>
-        /// <typeparam name="T">
-        /// The type of plugin to get.
-        /// </typeparam>
-        /// <param name="user">
-        /// The user that should be authorized for the plugin.
-        /// </param>
-        /// <returns>
-        /// An enumeration of plugins.</returns>
-        public IEnumerable<T> GetPlugins<T>(IPrincipal user) where T : class, IPlugin
-        {
-            foreach (T plugin in GetPlugins<T>())
-                if (plugin.IsAuthorized(user))
-                    yield return plugin;
-        }
-
+        
         public IEnumerable<T> GetPlugins<T>() where T : class, IPlugin
         {
             EnsurePluginsAreLoaded();

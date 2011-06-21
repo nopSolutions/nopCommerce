@@ -1,0 +1,5 @@
+﻿FriendlyName: StrikeIron Basic (US and CA Only)
+SystemName: Tax.StrikeIron.Basi
+Version: 1.00
+Author: nopCommerce team
+DisplayOrder: 1

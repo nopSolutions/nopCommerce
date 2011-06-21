@@ -22,12 +22,10 @@ namespace Nop.Plugin.Tax.StrikeIron
         private const string TAXRATEUSA_KEY = "Nop.taxrateusa.zipCode-{0}";
         private const string TAXRATECANADA_KEY = "Nop.taxratecanada.province-{0}";
         
-        private readonly ISettingService _settingService;
         private readonly StrikeIronTaxSettings _strikeIronTaxSettings;
 
-        public StrikeIronTaxProvider(ISettingService settingService, StrikeIronTaxSettings strikeIronTaxSettings)
+        public StrikeIronTaxProvider(StrikeIronTaxSettings strikeIronTaxSettings)
         {
-            this._settingService = settingService;
             this._strikeIronTaxSettings = strikeIronTaxSettings;
         }
 
