@@ -101,7 +101,7 @@ namespace Nop.Admin.Controllers
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _paymentSettings.ActivePaymentMethodSystemNames.Remove(pm.SystemName);
+                    _paymentSettings.ActivePaymentMethodSystemNames.Remove(pm.PluginDescriptor.SystemName);
                     _settingService.SaveSetting(_paymentSettings);
                 }
             }
@@ -110,7 +110,7 @@ namespace Nop.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _paymentSettings.ActivePaymentMethodSystemNames.Add(pm.SystemName);
+                    _paymentSettings.ActivePaymentMethodSystemNames.Add(pm.PluginDescriptor.SystemName);
                     _settingService.SaveSetting(_paymentSettings);
                 }
             }

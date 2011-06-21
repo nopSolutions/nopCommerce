@@ -20,7 +20,7 @@ using Nop.Core.Domain.Localization;
 namespace Nop.Services.Tests.Orders
 {
     [TestFixture]
-    public class CheckoutAttributeParserAndFormatterTests
+    public class CheckoutAttributeParserAndFormatterTests : ServiceTest
     {
         IRepository<CheckoutAttribute> _checkoutAttributeRepo;
         IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepo;

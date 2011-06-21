@@ -3,3 +3,4 @@ SystemName: Mobile.SMS.Verizon
 Version: 1.00
 Author: nopCommerce team
 DisplayOrder: 1
+FileName: Nop.Plugin.SMS.Verizon.dll

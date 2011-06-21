@@ -20,37 +20,6 @@ namespace Nop.Plugin.DiscountRules.PurchasedOneProduct
         {
             this._orderService = orderService;
         }
-        /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "Customer had previously purchased one of these product variants"; }
-        }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "DiscountRequirement.PurchasedOneProduct"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
 
         /// <summary>
         /// Check discount requirement

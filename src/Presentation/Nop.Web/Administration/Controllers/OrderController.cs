@@ -242,7 +242,7 @@ namespace Nop.Admin.Controllers
 
             //purchase order number
             var pm = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
-            if (pm != null && pm.SystemName == "PURCHASEORDER")
+            if (pm != null && pm.PluginDescriptor.SystemName == "PURCHASEORDER")
             {
                 model.DisplayPurchaseOrderNumber = true;
                 model.PurchaseOrderNumber = order.PurchaseOrderNumber;
@@ -254,7 +254,7 @@ namespace Nop.Admin.Controllers
             model.SubscriptionTransactionId = order.SubscriptionTransactionId;
 
             //payment method info
-            model.PaymentMethod = pm != null ? pm.FriendlyName : order.PaymentMethodSystemName;
+            model.PaymentMethod = pm != null ? pm.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
             model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
 
             //payment method buttons

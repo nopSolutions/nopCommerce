@@ -47,6 +47,7 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Methods
+
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -63,14 +64,27 @@ namespace Nop.Admin.Controllers
             {
                 try
                 {
-                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(_currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId).CurrencyCode);
+                    var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                    if (primaryExchangeCurrency == null)
+                        throw new NopException("Primary exchange rate currency is not set");
+
+                    ViewBag.Rates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
                 }
                 catch (Exception exc)
                 {
                     ErrorNotification(exc, false);
                 }
             }
-            ViewBag.ExchangeRateProviders = new SelectList(_currencyService.LoadAllExchangeRateProviders(), "SystemName", "FriendlyName", _currencySettings.ActiveExchangeRateProviderSystemName); ;
+            ViewBag.ExchangeRateProviders = new List<SelectListItem>();
+            foreach (var erp in _currencyService.LoadAllExchangeRateProviders())
+            {
+                ViewBag.ExchangeRateProviders.Add(new SelectListItem()
+                {
+                    Text = erp.PluginDescriptor.FriendlyName,
+                    Value = erp.PluginDescriptor.SystemName,
+                    Selected = erp.PluginDescriptor.SystemName.Equals(_currencySettings.ActiveExchangeRateProviderSystemName, StringComparison.InvariantCultureIgnoreCase)
+                });
+            }
             ViewBag.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
             var gridModel = new GridModel<CurrencyModel>
             {
@@ -96,9 +110,9 @@ namespace Nop.Admin.Controllers
         public ActionResult Save(FormCollection formValues)
         {
             _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
-            _currencySettings.AutoUpdateEnabled = formValues["autoUpdateEnabled"].Equals("false")?false:true;
+            _currencySettings.AutoUpdateEnabled = formValues["autoUpdateEnabled"].Equals("false") ? false : true;
             _settingService.SaveSetting(_currencySettings);
-            return RedirectToAction("List","Currency");
+            return RedirectToAction("List", "Currency");
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

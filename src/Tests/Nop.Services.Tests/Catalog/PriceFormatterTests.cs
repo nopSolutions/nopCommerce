@@ -20,7 +20,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Catalog
 {
     [TestFixture]
-    public class PriceFormatterTests
+    public class PriceFormatterTests : ServiceTest
     {
         IRepository<Currency> _currencyRepo;
         ICurrencyService _currencyService;

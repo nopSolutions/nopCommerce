@@ -9,7 +9,7 @@ using Nop.Tests;
 namespace Nop.Services.Tests.Customers
 {
     [TestFixture]
-    public class CustomerExtensionTests
+    public class CustomerExtensionTests : ServiceTest
     {
         [SetUp]
         public void SetUp()

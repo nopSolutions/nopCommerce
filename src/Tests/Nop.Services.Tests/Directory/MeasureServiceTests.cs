@@ -14,7 +14,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Directory
 {
     [TestFixture]
-    public class MeasureServiceTests
+    public class MeasureServiceTests : ServiceTest
     {
         IRepository<MeasureDimension> _measureDimensionRepository;
         IRepository<MeasureWeight> _measureWeightRepository;

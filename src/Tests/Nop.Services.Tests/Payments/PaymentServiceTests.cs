@@ -20,7 +20,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Payments
 {
     [TestFixture]
-    public class PaymentServiceTests
+    public class PaymentServiceTests : ServiceTest
     {
         PaymentSettings _paymentSettings;
         IPaymentService _paymentService;

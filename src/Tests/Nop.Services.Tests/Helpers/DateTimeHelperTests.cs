@@ -20,7 +20,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Helpers
 {
     [TestFixture]
-    public class DateTimeHelperTests
+    public class DateTimeHelperTests : ServiceTest
     {
         IWorkContext _workContext;
         ICustomerService _customerService;

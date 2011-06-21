@@ -261,7 +261,6 @@
     <Compile Include="Validators\Localization\LanguageValidator.cs" />
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
     <Compile Include="Views\Shared\TestMenuPlugin1.cs" />
-    <Compile Include="Views\Shared\TestMenuPlugin2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\images\1pix.gif" />

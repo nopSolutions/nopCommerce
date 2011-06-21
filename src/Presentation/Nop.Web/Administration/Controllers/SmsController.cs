@@ -94,7 +94,7 @@ namespace Nop.Admin.Controllers
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _smsSettings.ActiveSmsProviderSystemNames.Remove(smsProvider.SystemName);
+                    _smsSettings.ActiveSmsProviderSystemNames.Remove(smsProvider.PluginDescriptor.SystemName);
                     _settingService.SaveSetting(_smsSettings);
                 }
             }
@@ -103,7 +103,7 @@ namespace Nop.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _smsSettings.ActiveSmsProviderSystemNames.Add(smsProvider.SystemName);
+                    _smsSettings.ActiveSmsProviderSystemNames.Add(smsProvider.PluginDescriptor.SystemName);
                     _settingService.SaveSetting(_smsSettings);
                 }
             }

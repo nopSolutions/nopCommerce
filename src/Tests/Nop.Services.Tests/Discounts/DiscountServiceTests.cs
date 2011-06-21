@@ -20,7 +20,7 @@ using Nop.Core.Infrastructure;
 namespace Nop.Services.Tests.Discounts
 {
     [TestFixture]
-    public class DiscountServiceTests
+    public class DiscountServiceTests : ServiceTest
     {
         IRepository<Discount> _discountRepo;
         IRepository<DiscountRequirement> _discountRequirementRepo;

@@ -20,7 +20,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Catalog
 {
     [TestFixture]
-    public class ProductServiceTests
+    public class ProductServiceTests : ServiceTest
     {
         IRepository<Product> _productRepository;
         IRepository<ProductVariant> _productVariantRepository;

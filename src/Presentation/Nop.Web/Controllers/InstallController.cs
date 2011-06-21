@@ -233,6 +233,7 @@ namespace Nop.Web.Controllers
             dirsToCheck.Add(rootDir + "content\\images");
             dirsToCheck.Add(rootDir + "content\\images\\thumbs");
             dirsToCheck.Add(rootDir + "content\files\\exportimport");
+            dirsToCheck.Add(rootDir + "plugins\bin");
             foreach (string dir in dirsToCheck)
                 if (!CheckPermissions(dir, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, dir));

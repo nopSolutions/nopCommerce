@@ -12,38 +12,24 @@ namespace Nop.Services.Tests.Discounts
 {
     public partial class TestDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
-        /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        public override string FriendlyName
+        public override PluginDescriptor PluginDescriptor
         {
-            get { return "Tets discount requirement rule"; }
+            get
+            {
+                return new PluginDescriptor()
+                {
+                    Author = "nopCommerce team",
+                    FriendlyName = "Test discount requirement rule",
+                    SystemName = "TestDiscountRequirementRule",
+                    Version = "1.00"
+                };
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "TestDiscountRequirementRule"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
-
+        
         /// <summary>
         /// Check discount requirement
         /// </summary>

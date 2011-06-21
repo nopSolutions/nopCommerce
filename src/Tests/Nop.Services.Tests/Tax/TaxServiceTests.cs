@@ -24,7 +24,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Tax
 {
     [TestFixture]
-    public class TaxServiceTests
+    public class TaxServiceTests : ServiceTest
     {
         IAddressService _addressService;
         IWorkContext _workContext;

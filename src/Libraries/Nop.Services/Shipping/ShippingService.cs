@@ -107,7 +107,7 @@ namespace Nop.Services.Shipping
         public virtual IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName)
         {
             var providers = LoadAllShippingRateComputationMethods();
-            var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return provider;
         }
 
@@ -118,7 +118,7 @@ namespace Nop.Services.Shipping
         public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods()
         {
             var providers = _pluginFinder.GetPlugins<IShippingRateComputationMethod>();
-            return providers.OrderBy(tp => tp.FriendlyName).ToList();
+            return providers.ToList();
         }
 
         #endregion
@@ -401,13 +401,13 @@ namespace Nop.Services.Shipping
             foreach (var srcm in shippingRateComputationMethods)
             {
                 if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName) &&
-                   !allowedShippingRateComputationMethodSystemName.Equals(srcm.SystemName, StringComparison.InvariantCultureIgnoreCase))
+                   !allowedShippingRateComputationMethodSystemName.Equals(srcm.PluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
                 var getShippingOptionResponse = srcm.GetShippingOptions(getShippingOptionRequest);
                 foreach (var so2 in getShippingOptionResponse.ShippingOptions)
                 {
-                    so2.ShippingRateComputationMethodSystemName = srcm.SystemName;
+                    so2.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                     result.ShippingOptions.Add(so2);
                 }
 
@@ -417,7 +417,7 @@ namespace Nop.Services.Shipping
                     foreach (string error in getShippingOptionResponse.Errors)
                     {
                         result.AddError(error);
-                        _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.FriendlyName, error));
+                        _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.PluginDescriptor.FriendlyName, error));
                     }
                 }
             }

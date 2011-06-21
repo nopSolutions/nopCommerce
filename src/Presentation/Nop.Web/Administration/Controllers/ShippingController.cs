@@ -107,7 +107,7 @@ namespace Nop.Admin.Controllers
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(srcm.SystemName);
+                    _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(srcm.PluginDescriptor.SystemName);
                     _settingService.SaveSetting(_shippingSettings);
                 }
             }
@@ -116,7 +116,7 @@ namespace Nop.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.SystemName);
+                    _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.PluginDescriptor.SystemName);
                     _settingService.SaveSetting(_shippingSettings);
                 }
             }

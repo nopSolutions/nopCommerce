@@ -16,7 +16,7 @@ using Nop.Services.Security;
 namespace Nop.Services.Tests.Customers
 {
     [TestFixture]
-    public class CustomerServiceTests
+    public class CustomerServiceTests : ServiceTest
     {
         IRepository<Customer> _customerRepo;
         IRepository<CustomerRole> _customerRoleRepo;

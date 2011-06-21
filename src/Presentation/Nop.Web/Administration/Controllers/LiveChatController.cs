@@ -102,7 +102,7 @@ namespace Nop.Admin.Controllers
                 if (!model.IsActive)
                 {
                     //mark as disabled
-                    _liveChatSettings.ActiveLiveChatProviderSystemName.Remove(lcp.SystemName);
+                    _liveChatSettings.ActiveLiveChatProviderSystemName.Remove(lcp.PluginDescriptor.SystemName);
                     _settingService.SaveSetting(_liveChatSettings);
                 }
             }
@@ -111,7 +111,7 @@ namespace Nop.Admin.Controllers
                 if (model.IsActive)
                 {
                     //mark as active
-                    _liveChatSettings.ActiveLiveChatProviderSystemName.Add(lcp.SystemName);
+                    _liveChatSettings.ActiveLiveChatProviderSystemName.Add(lcp.PluginDescriptor.SystemName);
                     _settingService.SaveSetting(_liveChatSettings);
                 }
             }

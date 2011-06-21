@@ -19,7 +19,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Shipping
 {
     [TestFixture]
-    public class ShippingServiceTests
+    public class ShippingServiceTests : ServiceTest
     {
         IRepository<ShippingMethod> _shippingMethodRepository;
         ILogger _logger;

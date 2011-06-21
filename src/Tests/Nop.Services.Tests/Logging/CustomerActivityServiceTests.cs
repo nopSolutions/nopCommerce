@@ -18,7 +18,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Logging
 {
     [TestFixture]
-    public class CustomerActivityServiceTests
+    public class CustomerActivityServiceTests : ServiceTest
     {
         ICacheManager _cacheManager;
         IRepository<ActivityLog> _activityLogRepository;

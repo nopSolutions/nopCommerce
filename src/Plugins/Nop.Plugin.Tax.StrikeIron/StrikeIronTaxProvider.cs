@@ -261,38 +261,6 @@ namespace Nop.Plugin.Tax.StrikeIron
         }
 
         /// <summary>
-        /// Gets or sets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "StrikeIron Basic (US and CA Only)"; }
-        }
-
-        /// <summary>
-        /// Gets or sets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "Tax.StrikeIron.Basic"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
-
-        /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
         /// <param name="actionName">Action name</param>

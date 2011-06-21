@@ -9,7 +9,7 @@ using Nop.Services.Configuration;
 namespace Nop.Services.Tests.Configuration
 {
     [TestFixture]
-    public class ConfigFileSettingServiceTests
+    public class ConfigFileSettingServiceTests : ServiceTest
     {
         // requires following settings to exist in app.config
         // Setting1 : "SomeValue" : string

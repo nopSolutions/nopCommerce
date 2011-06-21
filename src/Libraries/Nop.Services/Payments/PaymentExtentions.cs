@@ -18,7 +18,7 @@ namespace Nop.Services.Payments
             if (paymentSettings.ActivePaymentMethodSystemNames == null)
                 return false;
             foreach (string activeMethodSystemName in paymentSettings.ActivePaymentMethodSystemNames)
-                if (paymentMethod.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                if (paymentMethod.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             return false;
         }

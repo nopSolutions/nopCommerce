@@ -28,38 +28,6 @@ namespace Nop.Plugin.SMS.Clickatell
         }
 
         /// <summary>
-        /// Gets the friendly name
-        /// </summary>
-        public override string FriendlyName
-        {
-            get { return "Clickatell SMS Provider"; }
-        }
-
-        /// <summary>
-        /// Gets the system name
-        /// </summary>
-        public override string SystemName
-        {
-            get { return "Mobile.SMS.Clickatell"; }
-        }
-
-        /// <summary>
-        /// Gets the author
-        /// </summary>
-        public override string Author
-        {
-            get { return "nopCommerce team"; }
-        }
-
-        /// <summary>
-        /// Gets the version
-        /// </summary>
-        public override string Version
-        {
-            get { return "1.00"; }
-        }
-
-        /// <summary>
         /// Sends SMS
         /// </summary>
         /// <param name="text">Text</param>

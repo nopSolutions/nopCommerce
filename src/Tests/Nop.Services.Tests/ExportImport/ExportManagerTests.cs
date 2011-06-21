@@ -21,7 +21,7 @@ using Nop.Core.Domain.Tax;
 namespace Nop.Services.Tests.ExportImport
 {
     [TestFixture]
-    public class ExportManagerTests
+    public class ExportManagerTests : ServiceTest
     {
         ICategoryService _categoryService;
         IManufacturerService _manufacturerService;

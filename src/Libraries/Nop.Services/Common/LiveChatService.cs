@@ -69,7 +69,7 @@ namespace Nop.Services.Common
         public virtual ILiveChatProvider LoadLiveChatProviderBySystemName(string systemName)
         {
             var providers = LoadAllLiveChatProviders();
-            var provider = providers.SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return provider;
         }
 
@@ -80,7 +80,7 @@ namespace Nop.Services.Common
         public virtual IList<ILiveChatProvider> LoadAllLiveChatProviders()
         {
             var taxProviders = _pluginFinder.GetPlugins<ILiveChatProvider>();
-            return taxProviders.OrderBy(tp => tp.FriendlyName).ToList();
+            return taxProviders.ToList();
         }
         
         #endregion

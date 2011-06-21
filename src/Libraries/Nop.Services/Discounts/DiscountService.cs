@@ -232,7 +232,7 @@ namespace Nop.Services.Discounts
         public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName)
         {
             var rules = LoadAllDiscountRequirementRules();
-            var rule = rules.SingleOrDefault(r => r.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            var rule = rules.SingleOrDefault(r => r.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             return rule;
         }
 
@@ -243,7 +243,7 @@ namespace Nop.Services.Discounts
         public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules()
         {
             var rules = _pluginFinder.GetPlugins<IDiscountRequirementRule>();
-            return rules.OrderBy(drr => drr.FriendlyName).ToList();
+            return rules.ToList();
         }
 
         /// <summary>

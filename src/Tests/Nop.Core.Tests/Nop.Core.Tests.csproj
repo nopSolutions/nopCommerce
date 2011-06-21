@@ -70,7 +70,6 @@
     <Compile Include="Infrastructure\DependencyManagement\ContainerSanityTests.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ServiceDiscovererTests.cs" />
     <Compile Include="Infrastructure\DependencyManagement\Services\Services.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\ServiceContainerTests.cs" />
     <Compile Include="Infrastructure\SingletonTests.cs" />
     <Compile Include="Infrastructure\TypeFinderTests.cs" />
     <Compile Include="Plugin\PluginFinderTests.cs" />
