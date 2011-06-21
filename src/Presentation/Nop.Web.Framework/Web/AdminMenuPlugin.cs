@@ -24,23 +24,4 @@ namespace Nop.Web.Framework.Web
     {
         void BuildMenuItem(MenuItemBuilder menuItemBuilder);
     }
-
-    public class AdminMenuPluginAttribute : BasePluginAttribute, IAdminMenuPlugin
-    {
-        private readonly string _title;
-        private readonly string _url;
-
-        public AdminMenuPluginAttribute(string friendlyName, string systemName,
-            string title, string url, int displayOrder)
-            : base(friendlyName, "IAdminMenuPlugin." + systemName, "", "", displayOrder)
-        {
-            _url = url;
-            _title = title;
-        }
-
-        public void BuildMenuItem(MenuItemBuilder menuItemBuilder)
-        {
-            menuItemBuilder.Text(_title).Url(_url);
-        }
-    }
 }

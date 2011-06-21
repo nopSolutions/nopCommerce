@@ -42,9 +42,9 @@ namespace Nop.Core.Infrastructure
 
         private void InitPlugins()
         {
-            var bootstrapper = _containerManager.Resolve<IPluginBootstrapper>();
-            var plugins = bootstrapper.GetPluginDefinitions();
-            bootstrapper.InitializePlugins(this, plugins);
+            //var bootstrapper = _containerManager.Resolve<IPluginBootstrapper>();
+            //var plugins = bootstrapper.GetPluginDefinitions();
+            //bootstrapper.InitializePlugins(this, plugins);
         }
 
         private void RunStartupTasks()

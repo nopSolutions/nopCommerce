@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Domain\Common\SeoSettings.cs" />
     <Compile Include="Domain\Common\LiveChatSettings.cs" />
     <Compile Include="Domain\Polls\PollVotingRecord.cs" />
@@ -222,17 +223,15 @@
     <Compile Include="Html\ResolveLinksHelper.cs" />
     <Compile Include="PersistentCollection.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
-    <Compile Include="Plugins\BasePluginAttribute.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />
+    <Compile Include="Plugins\PluginManager3.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Infrastructure\DependencyManagement\DependencyAttribute.cs" />
     <Compile Include="Infrastructure\DependencyManagement\DependencyAttributeRegistrator.cs" />
     <Compile Include="Infrastructure\Singleton.cs" />
-    <Compile Include="Plugins\AutoInitializeAttribute.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\IPluginFinder.cs" />
     <Compile Include="Plugins\PluginFinder.cs" />
-    <Compile Include="Plugins\PluginInitializationException.cs" />
     <Compile Include="Infrastructure\DependencyManagement\AutofacRequestLifetimeHttpModule.cs" />
     <Compile Include="StartupTasks.cs" />
     <Compile Include="Infrastructure\WebAppTypeFinder.cs" />
@@ -271,12 +270,6 @@
     <Compile Include="IO\IStorageProvider.cs" />
     <Compile Include="Domain\Customers\PasswordFormat.cs" />
     <Compile Include="Plugins\IAutoStart.cs" />
-    <Compile Include="Plugins\InitializerCreatingAttribute.cs" />
-    <Compile Include="Plugins\IPluginBootstrapper.cs" />
-    <Compile Include="Plugins\IPluginDefinition.cs" />
-    <Compile Include="Plugins\IPluginInitializer.cs" />
-    <Compile Include="Plugins\PluginInitializerAttribute.cs" />
-    <Compile Include="Plugins\PluginBootstrapper.cs" />
     <Compile Include="Tasks\IStartupTask.cs" />
     <Compile Include="Tasks\ITask.cs" />
     <Compile Include="Tasks\Task.cs" />

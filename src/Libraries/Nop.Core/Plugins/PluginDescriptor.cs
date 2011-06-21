@@ -49,34 +49,6 @@ namespace Nop.Core.Plugins
         }
     }
 
-    public class PluginAttributeDescriptor : PluginDescriptor
-    {
-        private IPlugin _pluginInstance = null;
-        private Type _pluginType = null;
-
-        public PluginAttributeDescriptor(IPlugin pluginInstance)
-        {
-            this._pluginInstance = pluginInstance;
-            this._pluginType = _pluginInstance.GetType();
-            var instance = Instance<IPlugin>();
-            this.FriendlyName = instance.FriendlyName;
-            this.SystemName = instance.SystemName;
-            this.Version = instance.Version;
-            this.Author = instance.Author;
-            this.DisplayOrder = instance.DisplayOrder;
-        }
-
-        public override Type PluginType
-        {
-            get { return _pluginType; }
-        }
-
-        public override T Instance<T>()
-        {
-            return _pluginInstance as T;
-        }
-    }
-
     public class PluginImplementationDescriptor : PluginDescriptor
     {
         private Type _pluginType = null;

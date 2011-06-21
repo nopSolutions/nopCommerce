@@ -88,20 +88,6 @@ namespace Nop.Core.Plugins
 
         private IEnumerable<PluginDescriptor> FindPluginsIn(Assembly a)
         {
-            
-            // return plugin attributes
-            foreach (IPlugin attribute in a.GetCustomAttributes(typeof(IPlugin), false))
-            {
-                yield return new PluginAttributeDescriptor(attribute);
-            }
-            foreach (Type t in a.GetTypes())
-            {
-                foreach (IPlugin attribute in t.GetCustomAttributes(typeof(IPlugin), false))
-                {
-                    yield return new PluginAttributeDescriptor(attribute);
-                }
-            }
-            
             //return plugin implementations
             foreach (var plugin in _typeFinder.FindClassesOfType<IPlugin>(new List<Assembly> { a }))
             {

@@ -5,8 +5,6 @@ using System.Text;
 using Nop.Core.Plugins;
 using Nop.Core.Tests.Plugin;
 
-[assembly: TestPlugin]
-
 namespace Nop.Core.Tests.Plugin
 {
 
@@ -14,18 +12,17 @@ namespace Nop.Core.Tests.Plugin
     {
     }
 
-    public class TestPluginImplementation : BasePlugin, ITestPlugin1
+    public class TestPlugin1Implementation1 : BasePlugin, ITestPlugin1
     {
-        public TestPluginImplementation()
-            : base("TestPluginImplementation", "TestPluginImplementation") { }
+        public TestPlugin1Implementation1()
+            : base("TestPlugin1Implementation1", "TestPlugin1Implementation1") { }
     }
 
-    public class TestPluginAttribute : BasePluginAttribute, ITestPlugin1
+    public class TestPlugin1Implementation2 : BasePlugin, ITestPlugin1
     {
-        public TestPluginAttribute()
-            :base("TestPluginAttribute", "TestPluginAttribute", "", "", 5){}
+        public TestPlugin1Implementation2()
+            : base("TestPlugin1Implementation2", "TestPlugin1Implementation2") { }
     }
-
     
 }
 

@@ -23,7 +23,7 @@ namespace Nop.Core.Tests.Plugin
 
         protected override Type[] GetTypes()
         {
-            return new[]{typeof(TestPluginImplementation)};
+            return new[] { typeof(TestPlugin1Implementation1), typeof(TestPlugin1Implementation2) };
         }
 
         [Test]

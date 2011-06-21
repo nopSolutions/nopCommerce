@@ -99,7 +99,6 @@ namespace Nop.Web.Framework
 
 
             //plugins
-            builder.RegisterType<PluginBootstrapper>().As<IPluginBootstrapper>().InstancePerHttpRequest();
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerHttpRequest();
 
             //cache manager
