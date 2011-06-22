@@ -117,6 +117,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping rate computation methods</returns>
         public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods()
         {
+            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var providers = _pluginFinder.GetPlugins<IShippingRateComputationMethod>();
             return providers.ToList();
         }

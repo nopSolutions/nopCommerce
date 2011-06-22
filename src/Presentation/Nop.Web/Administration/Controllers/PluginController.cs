@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Plugins;
+using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
@@ -16,16 +18,18 @@ namespace Nop.Admin.Controllers
 
         private readonly IPluginFinder _pluginFinder;
         private readonly ILocalizationService _localizationService;
+        private readonly IWebHelper _webHelper;
 
 	    #endregion
 
 		#region Constructors
 
         public PluginController(IPluginFinder pluginFinder,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, IWebHelper webHelper)
 		{
             this._pluginFinder = pluginFinder;
             this._localizationService = localizationService;
+            this._webHelper = webHelper;
 		}
 
 		#endregion 
@@ -39,7 +43,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            var pluginDescriptors = _pluginFinder.GetPluginDescriptors();
+            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
             var model = new GridModel<PluginModel>
             {
                 Data = pluginDescriptors.Select(x => x.ToModel())
@@ -54,7 +58,7 @@ namespace Nop.Admin.Controllers
         {
             try
             {
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptors()
+                var pluginDescriptor = _pluginFinder.GetPluginDescriptors(false)
                     .Where(x => x.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                     .FirstOrDefault();
                 if (pluginDescriptor == null)
@@ -67,6 +71,9 @@ namespace Nop.Admin.Controllers
                 //install plugin
                 pluginDescriptor.Instance().Install();
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Installed"));
+
+                //restart application
+                _webHelper.RestartAppDomain("~/Admin/Plugin/List");
             }
             catch (Exception exc)
             {
@@ -80,7 +87,7 @@ namespace Nop.Admin.Controllers
         {
             try
             {
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptors()
+                var pluginDescriptor = _pluginFinder.GetPluginDescriptors(false)
                     .Where(x => x.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                     .FirstOrDefault();
                 if (pluginDescriptor == null)
@@ -93,6 +100,9 @@ namespace Nop.Admin.Controllers
                 //uninstall plugin
                 pluginDescriptor.Instance().Uninstall();
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uninstalled"));
+
+                //restart application
+                _webHelper.RestartAppDomain("~/Admin/Plugin/List");
             }
             catch (Exception exc)
             {
