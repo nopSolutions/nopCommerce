@@ -14,8 +14,6 @@ namespace Nop.Core
     /// </summary>
     public partial class WebHelper : IWebHelper
     {
-        //TODO inject HttpContextBase (don't use HttpContext.Current)
-
         /// <summary>
         /// Get URL referrer
         /// </summary>

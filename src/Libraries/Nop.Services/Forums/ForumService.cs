@@ -748,7 +748,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        public virtual PagedList<ForumPost> GetAllPosts(int forumTopicId,
+        public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId,
             int customerId, string keywords, int pageIndex, int pageSize)
         {
             return GetAllPosts(forumTopicId, customerId, keywords, true,
@@ -765,7 +765,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
-        public virtual PagedList<ForumPost> GetAllPosts(int forumTopicId, int customerId,
+        public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId, int customerId,
             string keywords, bool ascSort, int pageIndex, int pageSize)
         {
             var query = _forumPostRepository.Table;
@@ -907,23 +907,28 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        public virtual PagedList<PrivateMessage> GetAllPrivateMessages(int fromCustomerId,
+        public virtual IPagedList<PrivateMessage> GetAllPrivateMessages(int fromCustomerId,
             int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex, int pageSize)
         {
-            var query = from pm in _forumPrivateMessageRepository.Table
-                        where
-                        (fromCustomerId == 0 || fromCustomerId == pm.FromCustomerId) &&
-                        (toCustomerId == 0 || toCustomerId == pm.ToCustomerId) &&
-                        (!isRead.HasValue || isRead.Value == pm.IsRead) &&
-                        (!isDeletedByAuthor.HasValue || isDeletedByAuthor.Value == pm.IsDeletedByAuthor) &&
-                        (!isDeletedByRecipient.HasValue || isDeletedByRecipient.Value == pm.IsDeletedByRecipient)                        
-                        // following lines causes SqlCeException on SQLCE4 (comparing parameter to IS NULL in query)
-                        //&&
-                        //(String.IsNullOrEmpty(keywords) || pm.Subject.Contains(keywords)) &&
-                        //(String.IsNullOrEmpty(keywords) || pm.Text.Contains(keywords))
-                        orderby pm.CreatedOnUtc descending
-                        select pm;
+            var query =  _forumPrivateMessageRepository.Table;
+            if (fromCustomerId > 0)
+                query = query.Where(pm => fromCustomerId == pm.FromCustomerId);
+            if (toCustomerId > 0)
+                query = query.Where(pm => toCustomerId == pm.ToCustomerId);
+            if (isRead.HasValue)
+                query = query.Where(pm => isRead.Value == pm.IsRead);
+            if (isDeletedByAuthor.HasValue)
+                query = query.Where(pm => isDeletedByAuthor.Value == pm.IsDeletedByAuthor);
+            if (isDeletedByRecipient.HasValue)
+                query = query.Where(pm => isDeletedByRecipient.Value == pm.IsDeletedByRecipient);
+            if (!String.IsNullOrEmpty(keywords))
+            {
+                query = query.Where(pm => pm.Subject.Contains(keywords));
+                query = query.Where(pm => pm.Text.Contains(keywords));
+            }
+            query = query.OrderByDescending(pm => pm.CreatedOnUtc);
+
             var privateMessages = new PagedList<PrivateMessage>(query, pageIndex, pageSize);
 
             return privateMessages;
@@ -1020,7 +1025,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        public virtual PagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
+        public virtual IPagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
             int topicId, int pageIndex, int pageSize)
         {
             var fsQuery = from fs in _forumSubscriptionRepository.Table
@@ -1267,9 +1272,7 @@ namespace Nop.Services.Forums
 
             return false;
         }
-
-
-
+        
         /// <summary>
         /// Check whether customer is allowed to delete post
         /// </summary>

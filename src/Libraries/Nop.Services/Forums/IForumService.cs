@@ -160,7 +160,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        PagedList<ForumPost> GetAllPosts(int forumTopicId,
+        IPagedList<ForumPost> GetAllPosts(int forumTopicId,
             int customerId, string keywords, int pageIndex, int pageSize);
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
-        PagedList<ForumPost> GetAllPosts(int forumTopicId, int customerId,
+        IPagedList<ForumPost> GetAllPosts(int forumTopicId, int customerId,
             string keywords, bool ascSort, int pageIndex, int pageSize);
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        PagedList<PrivateMessage> GetAllPrivateMessages(int fromCustomerId,
+        IPagedList<PrivateMessage> GetAllPrivateMessages(int fromCustomerId,
             int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex, int pageSize);
 
@@ -252,7 +252,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        PagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
+        IPagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
             int topicId, int pageIndex, int pageSize);
 
         /// <summary>

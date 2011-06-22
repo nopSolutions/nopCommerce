@@ -45,11 +45,11 @@
             <tr>
                 <td colspan="2" class="options">
                     <input type="button" class="replypmbutton" value="@T("PrivateMessages.View.ReplyButton")" 
-                        onclick="window.location.href='@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.ToCustomerId, replyToMessageId = @Model.Id })'" />
+                        onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.ToCustomerId, replyToMessageId = @Model.Id })')" />
                     <input type="button" class="deletepmbutton" value="@T("PrivateMessages.View.DeleteButton")" 
-                        onclick="window.location.href='@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })'" />
+                        onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })')" />
                     <input type="button" class="backpmbutton" value="@T("PrivateMessages.View.BackButton")" 
-                        onclick="window.location.href='@Url.Action("Index", "PrivateMessages")'" />
+                        onclick="setLocation('@Url.Action("Index", "PrivateMessages")')" />
                 </td>
             </tr>
         </table>
