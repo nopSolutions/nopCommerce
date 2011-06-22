@@ -2099,7 +2099,13 @@
                   <LocaleResource Name="ExportToXml">
                     <Value>Export to XML</Value>
                   </LocaleResource>
-                  <LocaleResource Name="Go">
+                <LocaleResource Name="ExportToCsv">
+                  <Value>Export to CSV</Value>
+                </LocaleResource>
+                <LocaleResource Name="ExportFromCsv">
+                  <Value>Export from CSV</Value>
+                </LocaleResource>
+                <LocaleResource Name="Go">
                     <Value>Go</Value>
                   </LocaleResource>
                   <LocaleResource Name="List">
@@ -6793,6 +6799,9 @@
                         <Value>Subscribed on</Value>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ImportEmailsSuccess">
+                    <Value>{0} emails have been successfully imported</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

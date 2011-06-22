@@ -134,6 +134,7 @@
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Common\LiveChatProviderModel.cs" />
     <Compile Include="Models\Logging\LogListModel.cs" />
+    <Compile Include="Models\Messages\NewsLetterSubscriptionListModel.cs" />
     <Compile Include="Models\Polls\PollAnswerModel.cs" />
     <Compile Include="Models\Polls\PollModel.cs" />
     <Compile Include="Models\Security\PermissionRecordModel.cs" />
