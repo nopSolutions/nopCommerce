@@ -44,6 +44,11 @@ namespace Nop.Core.Plugins
         public virtual FileInfo OriginalAssemblyFile { get; internal set; }
 
         /// <summary>
+        /// Gets or sets the plugin group
+        /// </summary>
+        public virtual string Group { get; set; }
+
+        /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
         public virtual string FriendlyName { get; set; }
@@ -67,6 +72,11 @@ namespace Nop.Core.Plugins
         /// Gets or sets the display order
         /// </summary>
         public virtual int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether plugin is installed
+        /// </summary>
+        public virtual bool Installed { get; set; }
 
         public virtual T Instance<T>() where T : class, IPlugin
         {

@@ -1,4 +1,5 @@
-﻿FriendlyName: Money converter exchange rate provider
+﻿Group: Exchange rate providers
+FriendlyName: Money converter exchange rate provider
 SystemName: CurrencyExchange.MoneyConverter
 Version: 1.00
 Author: nopCommerce team

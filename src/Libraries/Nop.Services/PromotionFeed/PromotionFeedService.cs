@@ -52,6 +52,7 @@ namespace Nop.Services.PromotionFeed
         /// <returns>Promotion feeds</returns>
         public virtual IList<IPromotionFeed> LoadAllPromotionFeeds()
         {
+            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var providers = _pluginFinder.GetPlugins<IPromotionFeed>();
             return providers.ToList();
         }

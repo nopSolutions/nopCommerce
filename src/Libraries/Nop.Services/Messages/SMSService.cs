@@ -33,6 +33,7 @@ namespace Nop.Services.Messages
         /// <returns>SMS provider list</returns>
         public virtual IList<ISmsProvider> LoadAllSmsProviders()
         {
+            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var smsProviders = _pluginFinder.GetPlugins<ISmsProvider>();
             return smsProviders.ToList();
         }

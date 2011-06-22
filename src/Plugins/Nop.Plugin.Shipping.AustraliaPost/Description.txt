@@ -1,4 +1,5 @@
-﻿FriendlyName: Australia Post
+﻿Group: Shipping rate computation
+FriendlyName: Australia Post
 SystemName: Shipping.AustraliaPost
 Version: 1.00
 Author: nopCommerce team

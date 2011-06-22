@@ -75,12 +75,10 @@ namespace Nop.Data
             
             string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), Filename);
             if (!File.Exists(filePath))
-            {
                 using (File.Create(filePath))
                 {
                     //we use 'using' to close the file after it's created
                 }
-            }
             
             var text = ComposeSettings(settings);
             File.WriteAllText(filePath, text);

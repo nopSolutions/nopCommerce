@@ -1,4 +1,5 @@
-﻿FriendlyName: Must be assigned to customer role
+﻿Group: Discount requirements
+FriendlyName: Must be assigned to customer role
 SystemName: DiscountRequirement.MustBeAssignedToCustomerRole
 Version: 1.00
 Author: nopCommerce team

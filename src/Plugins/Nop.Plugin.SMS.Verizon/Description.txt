@@ -1,4 +1,5 @@
-﻿FriendlyName: Verizon SMS Provider
+﻿Group: SMS providers
+FriendlyName: Verizon SMS Provider
 SystemName: Mobile.SMS.Verizon
 Version: 1.00
 Author: nopCommerce team

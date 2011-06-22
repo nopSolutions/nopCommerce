@@ -19,7 +19,7 @@
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.FriendlyName).Width(150);
+                        columns.Bound(x => x.FriendlyName).Width(250);
                         columns.Bound(x => x.IsPrimaryTaxProvider)
                             .Template(x => x.IsPrimaryTaxProvider.ToString().ToLower())
                             .Width(100)
@@ -34,9 +34,7 @@
                             .Width(100)
                             .Centered()
                             .Title(T("Admin.Configuration.Tax.Providers.Configure").Text);
-                        columns.Bound(x => x.SystemName).Width(150);
-                        columns.Bound(x => x.Version).Width(150);
-                        columns.Bound(x => x.Author).Width(150);
+                        columns.Bound(x => x.SystemName).Width(250);
                     })
                     .DataBinding(dataBinding =>
                     {

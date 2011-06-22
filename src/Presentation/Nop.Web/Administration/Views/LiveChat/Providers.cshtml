@@ -19,7 +19,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.FriendlyName)
-                            .Width(150)
+                            .Width(250)
                             .ReadOnly();
                         columns.Template(
                                 @<div>
@@ -30,9 +30,7 @@
                             .Width(100)
                             .Centered()
                             .Title(T("Admin.Configuration.LiveChats.Configure").Text);
-                        columns.Bound(x => x.SystemName).Width(150).ReadOnly();
-                        columns.Bound(x => x.Version).Width(100).ReadOnly();
-                        columns.Bound(x => x.Author).Width(100).ReadOnly();
+                        columns.Bound(x => x.SystemName).Width(250).ReadOnly();
                         columns.Bound(x => x.DisplayOrder)
                             .Width(100)
                             .ReadOnly();

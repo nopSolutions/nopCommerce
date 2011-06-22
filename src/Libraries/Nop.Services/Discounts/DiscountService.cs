@@ -242,6 +242,7 @@ namespace Nop.Services.Discounts
         /// <returns>Discount requirement rules</returns>
         public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules()
         {
+            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var rules = _pluginFinder.GetPlugins<IDiscountRequirementRule>();
             return rules.ToList();
         }

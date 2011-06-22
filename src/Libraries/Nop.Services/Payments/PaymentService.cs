@@ -71,6 +71,7 @@ namespace Nop.Services.Payments
         /// <returns>Payment providers</returns>
         public virtual IList<IPaymentMethod> LoadAllPaymentMethods()
         {
+            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var providers = _pluginFinder.GetPlugins<IPaymentMethod>();
             return providers.ToList();
         }

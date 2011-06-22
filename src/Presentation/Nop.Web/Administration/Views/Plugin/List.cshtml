@@ -1,0 +1,54 @@
+﻿@model Telerik.Web.Mvc.GridModel<PluginModel>
+@using Telerik.Web.Mvc.UI
+
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+        @T("Admin.Configuration.Plugins")
+    </div>
+    <div class="options">
+        
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<PluginModel>()
+                    .Name("plugins-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Group)
+                            .Width(150)
+                            .Centered();
+                        columns.Bound(x => x.FriendlyName)
+                             .Width(150)
+                             .Centered();
+                        columns.Bound(x => x.SystemName)
+                            .Width(150)
+                            .Centered();
+                        columns.Bound(x => x.Version)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.Author)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(50)
+                            .Centered();
+                        columns.Bound(x => x.Installed)
+                             .Width(50)
+                             .Template(x => x.Installed.ToString().ToLower())
+                             .Centered();
+                        columns.Bound(x => x.SystemName)
+                            .Template(x =>
+                                Html.ActionLink(x.Installed ? T("Admin.Configuration.Plugins.Fields.Uninstall").Text : T("Admin.Configuration.Plugins.Fields.Install").Text, 
+                                x.Installed ? "Uninstall" : "Install", new { systemName = x.SystemName }))
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate("Installation");
+                    })
+                    .Footer(false))
+        </td>
+    </tr>
+</table>

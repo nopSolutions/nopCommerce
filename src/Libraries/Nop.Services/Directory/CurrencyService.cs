@@ -304,6 +304,7 @@ namespace Nop.Services.Directory
         /// <returns>Exchange rate providers</returns>
         public virtual IList<IExchangeRateProvider> LoadAllExchangeRateProviders()
         {
+            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var exchangeRateProviders = _pluginFinder.GetPlugins<IExchangeRateProvider>();
             return exchangeRateProviders
                 .OrderBy(tp => tp.PluginDescriptor)

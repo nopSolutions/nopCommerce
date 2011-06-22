@@ -1,4 +1,5 @@
-﻿FriendlyName: Customer had spent x.xx amount
+﻿Group: Discount requirements
+FriendlyName: Customer had spent x.xx amount
 SystemName: DiscountRequirement.HadSpentAmount
 Version: 1.00
 Author: nopCommerce team

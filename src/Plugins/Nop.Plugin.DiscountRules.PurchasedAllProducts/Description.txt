@@ -1,4 +1,5 @@
-﻿FriendlyName: Customer had previously purchased all of these product variants
+﻿Group: Discount requirements
+FriendlyName: Customer had previously purchased all of these product variants
 SystemName: DiscountRequirement.PurchasedAllProducts
 Version: 1.00
 Author: nopCommerce team

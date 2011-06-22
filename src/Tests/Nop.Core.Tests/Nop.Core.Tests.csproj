@@ -72,8 +72,6 @@
     <Compile Include="Infrastructure\DependencyManagement\Services\Services.cs" />
     <Compile Include="Infrastructure\SingletonTests.cs" />
     <Compile Include="Infrastructure\TypeFinderTests.cs" />
-    <Compile Include="Plugin\PluginFinderTests.cs" />
-    <Compile Include="Plugin\Plugins.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingTestFixture.cs" />
     <Compile Include="TypeFindingBase.cs" />

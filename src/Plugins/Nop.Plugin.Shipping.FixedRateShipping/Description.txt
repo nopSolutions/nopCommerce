@@ -1,4 +1,5 @@
-﻿FriendlyName: Fixed Rate Shipping
+﻿Group: Shipping rate computation
+FriendlyName: Fixed Rate Shipping
 SystemName: Shipping.FixedRate
 Version: 1.00
 Author: nopCommerce team
