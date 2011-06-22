@@ -4666,7 +4666,7 @@ namespace Nop.Services.Installation
                     TopicsPageSize = 10,
                     PostsPageSize = 10,
                     SearchResultsPageSize = 10,
-                    LatestCustomerPostsPageSize = 5,
+                    LatestCustomerPostsPageSize = 10,
                     ShowCustomersPostCount = true,
                     ForumEditor = EditorType.BBCodeEditor,
                     SignaturesEnabled = true,

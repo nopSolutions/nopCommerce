@@ -200,6 +200,10 @@
     <Compile Include="Models\PrivateMessages\PrivateMessageIndexModel.cs" />
     <Compile Include="Models\PrivateMessages\PrivateMessageListModel.cs" />
     <Compile Include="Models\PrivateMessages\PrivateMessageModel.cs" />
+    <Compile Include="Models\Profile\ProfileInfoModel.cs" />
+    <Compile Include="Models\Profile\ProfileIndexModel.cs" />
+    <Compile Include="Models\Profile\PostsModel.cs" />
+    <Compile Include="Models\Profile\ProfilePostsModel.cs" />
     <Compile Include="Models\ShoppingCart\MiniShoppingCartModel.cs" />
     <Compile Include="Models\ShoppingCart\WishlistEmailAFriendModel.cs" />
     <Compile Include="Models\ShoppingCart\WishlistModel.cs" />
@@ -1320,6 +1324,9 @@
     <Content Include="Views\PrivateMessages\ViewPM.cshtml" />
     <Content Include="Views\PrivateMessages\Inbox.cshtml" />
     <Content Include="Views\PrivateMessages\SentItems.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Profile\Info.cshtml" />
+    <Content Include="Views\Profile\Posts.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

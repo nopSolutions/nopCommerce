@@ -206,9 +206,14 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("CustomerProfile",
                             "profile/{id}",
-                            new { controller = "Profile", action = "Info" },
+                            new { controller = "Profile", action = "Index" },
+                            new { id = @"\d+"},
                             new[] { "Nop.Web.Controllers" });
-
+            routes.MapRoute("CustomerProfilePaged",
+                            "profile/{id}/page/{page}",
+                            new { controller = "Profile", action = "Index"},
+                            new {  id = @"\d+", page = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
 
             //blog
             routes.MapRoute("Blog",

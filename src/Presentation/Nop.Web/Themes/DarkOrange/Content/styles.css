@@ -4442,7 +4442,7 @@ textarea
 	background: #eeeeee;
 	vertical-align: middle;
 }
- .pmgridpagerstyle span
+ .pmgridpagerstyle span, .latestpostsgridpagerstyle span
  {
 	font-weight: bold;
 	font-size: 1.1em;
@@ -5393,8 +5393,7 @@ textarea
 
 .profile-page .body .profileInfoBox
 {
-	background: url('images/forum-footer-bg.gif') repeat-x bottom;
-	margin-bottom: 15px;
+	background: url('images/forum-footer-bg.gif') repeat-x bottom;	
 }
 
 .profile-page .body .profileInfoBox .title

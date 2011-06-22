@@ -1,0 +1,25 @@
+﻿@model Nop.Web.Models.Profile.ProfilePostsModel           
+@using MvcContrib.UI.Grid;
+@using MvcContrib;
+@using Nop.Web;
+<div class="userLastPosts">
+    <div class="section-title">
+        @Html.Grid(Model.Posts).Columns(column =>
+        {
+            column.For(p =>
+                "<div class=\"topic\"><div class=\"topicTitle\"><span>" + @T("Profile.Topic").Text + "</span>: " +
+                @Html.RouteLink(p.ForumTopicTitle, "TopicSlug", new { id = p.ForumTopicId, slug = p.ForumTopicSlug }) +
+                "</div><div class=\"topicBody\"><span>" + p.ForumPostText + "</span> </div><div class=\"topicData\"><span>" + 
+                @T("Profile.PostedOn").Text + "</span>: <span>" + p.Posted + "</span></div></div>")
+                .Encode(false)
+                .Attributes(style => "width:100%;")
+                .Named("");
+        }).Attributes(style => "border-collapse: collapse; width:100%;", cellspacing => "0", cellpadding => "4", border => "0").Empty(@T("Profile.LatestPosts.NoPosts").Text)
+        @if (Model.PagerModel.TotalPages > 1)
+        {
+            <div class="latestpostsgridpagerstyle">
+                @Html.Pager(Model.PagerModel)
+            </div>
+        }
+    </div>
+</div>

@@ -4279,7 +4279,7 @@ textarea
 	background: #eeeeee;
 	vertical-align: middle;
 }
- .pmgridpagerstyle span
+ .pmgridpagerstyle span, .latestpostsgridpagerstyle span
  {
 	font-weight: bold;
 	font-size: 1.1em;
@@ -5228,7 +5228,6 @@ textarea
 .profile-page .body .profileInfoBox
 {
 	border-bottom: solid 1px #e3e3e3;
-	margin-bottom: 15px;
 }
 
 .profile-page .body .profileInfoBox .title

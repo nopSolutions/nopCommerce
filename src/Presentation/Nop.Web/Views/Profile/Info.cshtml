@@ -1,0 +1,50 @@
+﻿@model Nop.Web.Models.Profile.ProfileInfoModel
+<div class="profileInfoBox">
+    <div class="userDetails">
+        @if (Model.AvatarEnabled && !String.IsNullOrEmpty(Model.AvatarUrl))
+        {
+            <div class="avatar">
+                <img src="@(Model.AvatarUrl)" class="avatar-img" alt="Avatar" />
+            </div>         
+        }
+        @if (Model.LocationEnabled)
+        {            
+            <div class="profileStat">
+                @T("Profile.Country"): <span class="profileStatValue">@Model.Location</span>
+            </div>  
+        }
+        @if (Model.PMEnabled)
+        {
+            <div class="profileStat">
+                <div class="sendpmbox">
+                    @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.CustomerProfileId }, new { @class = "pmlinkbutton" })
+                </div>
+            </div>  
+        }
+    </div>
+    <div class="userStats">
+        <div class="section-title">
+            @T("Profile.Statistics")
+        </div>
+        @if (Model.TotalPostsEnabled)
+        {
+            <div class="profileStat">
+                @T("Profile.TotalPosts"): <span class="profileStatValue">@Model.TotalPosts</span>
+            </div>         
+        }
+        @if (Model.JoinDateEnabled)
+        {        
+            <div class="profileStat">
+                @T("Profile.JoinDate"): <span class="profileStatValue">@Model.JoinDate</span>
+            </div>
+        }
+        @if (Model.DateOfBirthEnabled)
+        {
+            <div class="profileStat">
+                @T("Profile.DateOfBirth"): <span class="profileStatValue">@Model.DateOfBirth</span>
+            </div>
+        }
+    </div>
+    <div class="clear">
+    </div>
+</div>

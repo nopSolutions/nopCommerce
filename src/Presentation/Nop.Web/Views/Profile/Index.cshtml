@@ -1,0 +1,46 @@
+﻿@model Nop.Web.Models.Profile.ProfileIndexModel
+@{    
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.Profile").Text);
+}
+<div class="profile-page">
+    <div class="title">
+        @Model.ProfileTitle
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        @{
+            var selectPostsTab = String.Empty;
+            if (@Model.ForumsEnabled && @Model.PagingPosts)
+            {
+                selectPostsTab = ".tabs('select', 1)";
+            }
+        }
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('head').append('<link href="/Content/smoothness/jquery-ui-1.8.13.custom.css" rel="stylesheet" type="text/css" />');
+                $("#tabs").tabs()@Html.Raw(selectPostsTab);
+            });
+        </script>
+        <div id="tabs">
+            <ul>
+                <li><a href="#tabs-1">@T("Profile.PersonalInfo")</a></li>
+                @if (Model.ForumsEnabled)
+                {
+                    <li><a href="#tabs-2">@T("Profile.LatestPosts")</a></li>
+                }
+            </ul>
+            <div id="tabs-1">
+                @Html.Action("info", new { customerProfileId = Model.CustomerProfileId })
+            </div>
+            @if (Model.ForumsEnabled)
+            {
+                <div id="tabs-2">
+                    @Html.Action("posts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -2012,6 +2012,9 @@
       <LocaleResource Name="ProductsByTag">
         <Value>Products tagged with '{0}'</Value>
       </LocaleResource>
+      <LocaleResource Name="Profile">
+        <Value>Profile</Value>
+      </LocaleResource>
       <LocaleResource Name="RecentlyAddedProducts">
         <Value>Recently Added Products</Value>
       </LocaleResource>
@@ -2614,6 +2617,50 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+    <LocaleResource Name="Profile">
+        <Children>
+            <LocaleResource Name="ProfileOf">
+                <Value>Profile: {0}</Value>
+            </LocaleResource>
+            <LocaleResource Name="PersonalInfo">
+                <Value>Profile Info</Value>
+            </LocaleResource>
+            <LocaleResource Name="FullName">
+                <Value>Full Name</Value>
+            </LocaleResource>
+            <LocaleResource Name="Country">
+                <Value>Country</Value>
+            </LocaleResource>
+            <LocaleResource Name="JoinDate">
+                <Value>Join Date</Value>
+            </LocaleResource>
+            <LocaleResource Name="Statistics">
+                <Value>Statistics</Value>
+            </LocaleResource>
+            <LocaleResource Name="TotalPosts">
+                <Value>Total Posts</Value>
+            </LocaleResource>
+            <LocaleResource Name="DateOfBirth">
+                <Value>Date Of Birth</Value>
+            </LocaleResource>
+            <LocaleResource Name="LatestPosts">
+                <Value>Latest Posts</Value>
+            </LocaleResource>
+            <LocaleResource Name="PostedOn">
+                <Value>Posted</Value>
+            </LocaleResource>
+            <LocaleResource Name="Topic">
+                <Value>Topic</Value>
+            </LocaleResource>
+            <LocaleResource Name="LatestPosts">
+                <Children>
+                    <LocaleResource Name="NoPosts">
+                        <Value>No posts found</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>        
   <LocaleResource Name="ReturnRequests">
     <Children>
       <LocaleResource Name="Comments">
