@@ -32,9 +32,6 @@
                             .Centered()
                             .Title(T("Admin.Configuration.Payment.Methods.Configure").Text);
                         columns.Bound(x => x.SystemName).Width(150).ReadOnly();
-                        //display Version and Author?
-                        //columns.Bound(x => x.Version).Width(100).ReadOnly();
-                        //columns.Bound(x => x.Author).Width(100).ReadOnly();
                         columns.Bound(x => x.SupportCapture)
                             .Template(x => x.SupportCapture.ToString().ToLower())
                             .Width(100)

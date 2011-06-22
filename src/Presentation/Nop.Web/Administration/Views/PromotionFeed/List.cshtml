@@ -19,7 +19,7 @@
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.FriendlyName).Width(150).ReadOnly();
+                        columns.Bound(x => x.FriendlyName).Width(250).ReadOnly();
                         columns.Template(
                                 @<div>
                                     @Html.ActionLink(T("Admin.Promotions.Feeds.Configure").Text, "ConfigureMethod", new { systemName = @item.SystemName })
@@ -29,9 +29,7 @@
                             .Width(100)
                             .Centered()
                             .Title(T("Admin.Promotions.Feeds.Configure").Text);
-                        columns.Bound(x => x.SystemName).Width(150).ReadOnly();
-                        columns.Bound(x => x.Version).Width(150).ReadOnly();
-                        columns.Bound(x => x.Author).Width(150).ReadOnly();
+                        columns.Bound(x => x.SystemName).Width(250).ReadOnly();
                     })
                     .DataBinding(dataBinding =>
                     {

@@ -12,24 +12,6 @@ namespace Nop.Services.Tests.Discounts
 {
     public partial class TestDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
-        public override PluginDescriptor PluginDescriptor
-        {
-            get
-            {
-                return new PluginDescriptor()
-                {
-                    Author = "nopCommerce team",
-                    FriendlyName = "Test discount requirement rule",
-                    SystemName = "TestDiscountRequirementRule",
-                    Version = "1.00"
-                };
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-        
         /// <summary>
         /// Check discount requirement
         /// </summary>

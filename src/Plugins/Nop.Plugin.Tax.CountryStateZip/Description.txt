@@ -1,4 +1,5 @@
-﻿FriendlyName: Tax By Country & State & Zip
+﻿Group: Tax providers
+FriendlyName: Tax By Country & State & Zip
 SystemName: Tax.CountryStateZip
 Version: 1.00
 Author: nopCommerce team

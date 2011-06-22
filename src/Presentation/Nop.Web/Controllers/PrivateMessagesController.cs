@@ -462,14 +462,11 @@ namespace Nop.Web.Controllers
                     _forumService.UpdatePrivateMessage(pm);
                 }
 
-                if (pm != null)
+                if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
                 {
-                    if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
-                    {
-                        pm.IsDeletedByRecipient = true;
-                        _forumService.UpdatePrivateMessage(pm);
-                    }
-                }
+                    pm.IsDeletedByRecipient = true;
+                    _forumService.UpdatePrivateMessage(pm);
+                }       
             }
             return RedirectToAction("Index");
         }

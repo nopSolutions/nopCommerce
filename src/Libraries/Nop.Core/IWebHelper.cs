@@ -132,6 +132,7 @@ namespace Nop.Core
         /// <summary>
         /// Restart application domain
         /// </summary>
-        void RestartAppDomain();
+        /// <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
+        void RestartAppDomain(string redirectUrl = "");
     }
 }

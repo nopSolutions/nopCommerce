@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using AutoMapper;
-using Nop.Admin.Models;
+﻿using AutoMapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Common;
@@ -14,6 +12,7 @@ using Nop.Admin.Models.Messages;
 using Nop.Admin.Models.News;
 using Nop.Admin.Models.Orders;
 using Nop.Admin.Models.Payments;
+using Nop.Admin.Models.Plugins;
 using Nop.Admin.Models.Polls;
 using Nop.Admin.Models.PromotionFeeds;
 using Nop.Admin.Models.Settings;
@@ -34,10 +33,10 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Plugins;
 using Nop.Core.Tasks;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -145,38 +144,32 @@ namespace Nop.Admin.Infrastructure
             ViceVersa<MeasureDimension, MeasureDimensionModel>();
             //tax providers
             Mapper.CreateMap<ITaxProvider, TaxProviderModel>()
-                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.PluginDescriptor.Author))
                 .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
-                .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.PluginDescriptor.Version));
+                .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName));
             //tax categories
             ViceVersa<TaxCategory, TaxCategoryModel>();
             //shipping methods
             ViceVersa<ShippingMethod, ShippingMethodModel>();
             //shipping rate computation methods
             Mapper.CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>()
-                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.PluginDescriptor.Author))
                 .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
                 .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.PluginDescriptor.Version));
+                .ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.PluginDescriptor.DisplayOrder));
             //payment methods
             Mapper.CreateMap<IPaymentMethod, PaymentMethodModel>()
-                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.PluginDescriptor.Author))
                 .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
                 .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.PluginDescriptor.Version));
+                .ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.PluginDescriptor.DisplayOrder));
             //SMS providers
             Mapper.CreateMap<ISmsProvider, SmsProviderModel>()
-                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.PluginDescriptor.Author))
                 .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
-                .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.PluginDescriptor.Version));
+                .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName));
             //Promotion feeds
             Mapper.CreateMap<IPromotionFeed, PromotionFeedModel>()
-                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.PluginDescriptor.Author))
                 .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
-                .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.PluginDescriptor.Version));
+                .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName));
+            //plugins
+            Mapper.CreateMap<PluginDescriptor, PluginModel>();
             //newsLetter subscriptions
             Mapper.CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>();
             Mapper.CreateMap<NewsLetterSubscriptionModel, NewsLetterSubscription>()
@@ -224,10 +217,9 @@ namespace Nop.Admin.Infrastructure
 
             //live chat providers
             Mapper.CreateMap<ILiveChatProvider, LiveChatProviderModel>()
-                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.PluginDescriptor.Author))
                 .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
                 .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.PluginDescriptor.Version));
+                .ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.PluginDescriptor.DisplayOrder));
 
             //Settings
             ViceVersa<TaxSettings, TaxSettingsModel>();

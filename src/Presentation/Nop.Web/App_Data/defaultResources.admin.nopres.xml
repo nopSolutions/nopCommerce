@@ -2099,7 +2099,13 @@
                   <LocaleResource Name="ExportToXml">
                     <Value>Export to XML</Value>
                   </LocaleResource>
-                  <LocaleResource Name="Go">
+                <LocaleResource Name="ExportToCsv">
+                  <Value>Export to CSV</Value>
+                </LocaleResource>
+                <LocaleResource Name="ExportFromCsv">
+                  <Value>Export from CSV</Value>
+                </LocaleResource>
+                <LocaleResource Name="Go">
                     <Value>Go</Value>
                   </LocaleResource>
                   <LocaleResource Name="List">
@@ -2791,12 +2797,6 @@
                         <LocaleResource Name="SystemName">
                           <Value>System name</Value>
                         </LocaleResource>
-                        <LocaleResource Name="Version">
-                          <Value>Version</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="Author">
-                          <Value>Author</Value>
-                        </LocaleResource>
                         <LocaleResource Name="DisplayOrder">
                           <Value>Display order</Value>
                         </LocaleResource>
@@ -2902,12 +2902,6 @@
                           <LocaleResource Name="SystemName">
                             <Value>System name</Value>
                           </LocaleResource>
-                          <LocaleResource Name="Version">
-                            <Value>Version</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Author">
-                            <Value>Author</Value>
-                          </LocaleResource>
                           <LocaleResource Name="DisplayOrder">
                             <Value>Display order</Value>
                           </LocaleResource>
@@ -2935,6 +2929,48 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+                <LocaleResource Name="Plugins">
+                  <Value>Plugins</Value>
+                  <Children>
+                    <LocaleResource Name="Fields">
+                      <Children>
+                        <LocaleResource Name="Group">
+                          <Value>Group</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="FriendlyName">
+                          <Value>Friendly name</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="SystemName">
+                          <Value>System name</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Author">
+                          <Value>Author</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Version">
+                          <Value>Version</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="DisplayOrder">
+                          <Value>Display order</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Install">
+                          <Value>Install</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Installed">
+                          <Value>Installed</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Uninstall">
+                          <Value>Uninstall</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Installed">
+                      <Value>The plugin has been installed.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Uninstalled">
+                      <Value>The plugin has been uninstalled.</Value>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
                 <LocaleResource Name="Settings">
                 <Value>Settings</Value>
                 <Children>
@@ -4267,12 +4303,6 @@
                           <LocaleResource Name="SystemName">
                             <Value>System name</Value>
                           </LocaleResource>
-                          <LocaleResource Name="Version">
-                            <Value>Version</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Author">
-                            <Value>Author</Value>
-                          </LocaleResource>
                           <LocaleResource Name="DisplayOrder">
                             <Value>Display order</Value>
                           </LocaleResource>
@@ -4318,12 +4348,6 @@
                       </LocaleResource>
                       <LocaleResource Name="SystemName">
                         <Value>System name</Value>
-                      </LocaleResource>
-                      <LocaleResource Name="Version">
-                        <Value>Version</Value>
-                      </LocaleResource>
-                      <LocaleResource Name="Author">
-                        <Value>Author</Value>
                       </LocaleResource>
                       <LocaleResource Name="IsActive">
                         <Value>Is active</Value>
@@ -4371,12 +4395,6 @@
                           </LocaleResource>
                           <LocaleResource Name="SystemName">
                             <Value>System name</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Version">
-                            <Value>Version</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Author">
-                            <Value>Author</Value>
                           </LocaleResource>
                           <LocaleResource Name="IsPrimaryTaxProvider">
                             <Value>Is primary provider</Value>
@@ -6768,12 +6786,6 @@
                           <LocaleResource Name="SystemName">
                             <Value>System name</Value>
                           </LocaleResource>
-                          <LocaleResource Name="Version">
-                            <Value>Version</Value>
-                          </LocaleResource>
-                          <LocaleResource Name="Author">
-                            <Value>Author</Value>
-                          </LocaleResource>
                         </Children>
                       </LocaleResource>
                     </Children>
@@ -6793,6 +6805,9 @@
                         <Value>Subscribed on</Value>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ImportEmailsSuccess">
+                    <Value>{0} emails have been successfully imported</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

@@ -16,6 +16,8 @@ using Nop.Admin.Models.Messages;
 using Nop.Admin.Models.News;
 using Nop.Admin.Models.Orders;
 using Nop.Admin.Models.Payments;
+using Nop.Admin.Models.Plugins;
+using Nop.Admin.Models.Polls;
 using Nop.Admin.Models.PromotionFeeds;
 using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Shipping;
@@ -34,10 +36,11 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
@@ -45,8 +48,6 @@ using Nop.Services.PromotionFeed;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
-using Nop.Admin.Models.Polls;
-using Nop.Core.Domain.Polls;
 
 
 namespace Nop.Admin
@@ -547,6 +548,7 @@ namespace Nop.Admin
         }
 
         #endregion
+
         #region NewsLetter subscriptions
 
         public static NewsLetterSubscriptionModel ToModel(this NewsLetterSubscription entity)
@@ -906,6 +908,15 @@ namespace Nop.Admin
         {
             return Mapper.Map(model, destination);
         }
+        #endregion
+
+        #region Plugins
+
+        public static PluginModel ToModel(this PluginDescriptor entity)
+        {
+            return Mapper.Map<PluginDescriptor, PluginModel>(entity);
+        }
+
         #endregion
     }
 

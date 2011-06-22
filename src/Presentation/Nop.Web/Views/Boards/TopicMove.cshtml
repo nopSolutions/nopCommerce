@@ -29,7 +29,7 @@
                     <td colspan="2" class="options">
                         <input type="submit" value="@T("Forum.Submit")" class="submitforumtopicbutton" />
                         <input type="button" class="cancelforumtopicbutton" value="@T("Forum.Cancel")" 
-                        onclick="window.location.href='@Url.RouteUrl("TopicSlug", new { id = @Model.Id, slug = @Model.ForumBreadCrumbModel.ForumTopicPostsModel.ForumTopic.GetSeName() })'" />
+                        onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = @Model.Id, slug = @Model.ForumBreadCrumbModel.ForumTopicPostsModel.ForumTopic.GetSeName() })')" />
                     </td>
                 </tr>
             </table>

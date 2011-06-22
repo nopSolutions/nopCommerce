@@ -25,26 +25,5 @@ namespace Nop.Services.Tests.Directory
 
         #endregion
 
-        #region Properties
-
-        public override PluginDescriptor PluginDescriptor
-        {
-            get
-            {
-                return new PluginDescriptor()
-                {
-                    Author = "nopCommerce team",
-                    FriendlyName = "Test exchange rate provider",
-                    SystemName = "CurrencyExchange.TestProvider",
-                    Version = "1.00"
-                };
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-        
-        #endregion
     }
 }

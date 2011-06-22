@@ -14,8 +14,6 @@ namespace Nop.Core
     /// </summary>
     public partial class WebHelper : IWebHelper
     {
-        //TODO inject HttpContextBase (don't use HttpContext.Current)
-
         /// <summary>
         /// Get URL referrer
         /// </summary>
@@ -474,7 +472,8 @@ namespace Nop.Core
         /// <summary>
         /// Restart application domain
         /// </summary>
-        public virtual void RestartAppDomain()
+        /// <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
+        public virtual void RestartAppDomain(string redirectUrl = "")
         {
             if (CommonHelper.GetTrustLevel() > AspNetHostingPermissionLevel.Medium)
             {
@@ -501,7 +500,9 @@ namespace Nop.Core
             var httpContext = HttpContext.Current;
             if (httpContext != null)
             {
-                httpContext.Response.Redirect(GetThisPageUrl(true), true /*endResponse*/);
+                if (String.IsNullOrEmpty(redirectUrl))
+                    redirectUrl = GetThisPageUrl(true);
+                httpContext.Response.Redirect(redirectUrl, true /*endResponse*/);
             }
         }
 

@@ -12,24 +12,6 @@ namespace Nop.Services.Tests.Tax
 {
     public class FixedRateTestTaxProvider : BasePlugin, ITaxProvider
     {
-        public override PluginDescriptor PluginDescriptor
-        {
-            get
-            {
-                return new PluginDescriptor()
-                {
-                    Author = "nopCommerce team",
-                    FriendlyName = "Fixed tax test rate provider",
-                    SystemName = "FixedTaxRateTest",
-                    Version = "1.00"
-                };
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
         {
             var result = new CalculateTaxResult()

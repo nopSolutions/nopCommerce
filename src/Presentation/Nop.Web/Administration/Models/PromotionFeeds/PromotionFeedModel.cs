@@ -16,14 +16,6 @@ namespace Nop.Admin.Models.PromotionFeeds
         [AllowHtml]
         public string SystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Feeds.Fields.Version")]
-        [AllowHtml]
-        public string Version { get; set; }
-
-        [NopResourceDisplayName("Admin.Promotions.Feeds.Fields.Author")]
-        [AllowHtml]
-        public string Author { get; set; }
-
         public string ConfigurationActionName { get; set; }
         public string ConfigurationControllerName { get; set; }
         public RouteValueDictionary ConfigurationRouteValues { get; set; }

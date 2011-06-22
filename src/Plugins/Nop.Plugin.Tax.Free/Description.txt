@@ -1,4 +1,5 @@
-﻿FriendlyName: Free tax rate provider
+﻿Group: Tax providers
+FriendlyName: Free tax rate provider
 SystemName: Tax.FreeTaxRate
 Version: 1.00
 Author: nopCommerce team

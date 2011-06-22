@@ -156,7 +156,7 @@
     <Compile Include="Models\Common\AddressModel.cs" />
     <Compile Include="Models\Common\PagerModel.cs" />
     <Compile Include="Models\Common\StoreThemeModel.cs" />
-    <Compile Include="Models\Common\Copy of LanguageSelectorModel.cs" />
+    <Compile Include="Models\Common\LanguageSelectorModel.cs" />
     <Compile Include="Models\Common\SitemapModel.cs" />
     <Compile Include="Models\Install\InstallModel.cs" />
     <Compile Include="Models\LiveChat\LiveChatModel.cs" />

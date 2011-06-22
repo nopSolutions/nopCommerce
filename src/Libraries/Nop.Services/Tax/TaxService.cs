@@ -176,6 +176,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax providers</returns>
         public virtual IList<ITaxProvider> LoadAllTaxProviders()
         {
+            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var taxProviders = _pluginFinder.GetPlugins<ITaxProvider>();
             return taxProviders.ToList();
         }

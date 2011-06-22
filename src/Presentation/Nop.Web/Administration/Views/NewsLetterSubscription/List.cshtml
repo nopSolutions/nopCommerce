@@ -1,29 +1,171 @@
-﻿@model Telerik.Web.Mvc.GridModel<NewsLetterSubscriptionModel>
+﻿@model NewsLetterSubscriptionListModel
 @using Telerik.Web.Mvc.UI
 
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
-        @T("Admin.Promotions.newsLetterSubscriptions")
-    </div>
-        <div class="options">
-            @*TODO export/import support*@
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" />
+            @T("Admin.Promotions.newsLetterSubscriptions")
         </div>
-</div>
-<table class="adminContent">
-    <tr>
-        <td>
-            @(Html.Telerik().Grid<NewsLetterSubscriptionModel>()
-                    .Name("newsLetterSubscriptions-grid")
-                    .BindTo(Model.Data)
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Email);
-                        columns.Bound(x => x.Active);
-                        columns.Bound(x => x.CreatedOn);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "NewsLetterSubscription"))
-                    .EnableCustomBinding(true))
-        </td>
-    </tr>
-</table>
+            <div class="options">
+                <a href="@Url.Action("ExportCsv")" class="t-button">@T("Admin.Common.ExportToCsv")</a>
+                <button type="submit" id="importcsv" name="importcsv" value="importcsv" class="t-button">@T("Admin.Common.ExportFromCsv")</button>
+            </div>
+    </div>
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.SearchEmail)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="search-newsLetterSubscriptions" value="search-newsLetterSubscriptions" class="t-button">@T("Admin.Common.Search")</button>        
+            </td>
+        </tr>
+    </table>
+    <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<NewsLetterSubscriptionModel>()
+                        .Name("newsLetterSubscriptions-grid")                        
+                        .BindTo(Model.NewsLetterSubscriptions.Data)
+                        .Columns(columns =>
+                        {
+                            columns.Bound(x => x.Id)
+                                .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
+                                .Title("<input id='mastercheckbox' type='checkbox'/>")
+                                .Width(50)
+                                .HtmlAttributes(new { style = "text-align:center" })
+                                .HeaderHtmlAttributes(new { style = "text-align:center" })
+                                .Filterable(false); 
+
+                            columns.Bound(x => x.Email)
+                                .Filterable(false);
+                            columns.Bound(x => x.Active)
+                                .Filterable(false); ;
+                            columns.Bound(x => x.CreatedOn)
+                                .Filterable(false); ;
+                            columns.Bound(x => x.SearchCustomerEmail)
+                                .Filterable(false)
+                                .Hidden(true);
+
+                        })
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("SubscriptionList", "NewsLetterSubscription"))
+                        .Filterable(filtering => filtering.Filters(filters =>
+                        {
+                            //customer email
+                            if (!String.IsNullOrEmpty(ViewData["searchCustomerEmail"] as string))
+                            {
+                                filters.Add(x => x.SearchCustomerEmail).Contains((string)ViewData["searchCustomerEmail"]);
+                            }
+                        }))
+
+                        .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        var selectedIds = [];
+
+        $(document).ready(function () {
+
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').attr('checked', $(this).is(':checked') ? 'checked' : '').change();
+            });
+
+            //wire up checkboxes. 
+            $('#newsLetterSubscriptions-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
+                var $check = $(this);
+                if ($check.attr("checked") == true) {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked == -1) {
+                        //add id to selectedIds.  
+                        selectedIds.push($check.val());
+                    }
+                }
+                else {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked > -1) {
+                        //remove id from selectedIds.  
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
+                    }
+                }
+                updateMasterCheckbox();
+            });
+        });
+
+        function onDataBound(e) {
+
+            $('#newsLetterSubscriptions-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                var currentId = $(this).val();
+                var checked = jQuery.inArray(currentId, selectedIds);
+                //set checked based on if current checkbox's value is in selectedIds.  
+                $(this).attr('checked', checked > -1);
+            });
+
+            updateMasterCheckbox();
+        }
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#newsLetterSubscriptions-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#newsLetterSubscriptions-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+            if (numChkBoxes == numChkBoxesChecked && numChkBoxes > 0) {
+                $('#mastercheckbox').attr('checked', 'checked');
+            }
+            else {
+                $('#mastercheckbox').attr('checked', '');
+            }
+
+        }
+   </script>    
+}
+
+@*import emails form*@
+@{Html.Telerik().Window()
+        .Name("importcsv-window")
+        .Title(T("Admin.Common.ExportFromCsv").Text)
+        .Content(@<text>
+        @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <table style="text-align: left;">
+            <tr>
+                <td>
+                    CSV file:
+                </td>
+                <td>
+                    <input type="file" id="importcsvfile" name="importcsvfile"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit" class="t-button t-state-default">@T("Admin.Common.ExportFromCsv")</button>
+                </td>
+            </tr>
+        </table>
+        }
+        </text>)
+        .Width(400)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#importcsv").click(function (e) {
+            e.preventDefault();
+            $('#importcsv-window').data('tWindow').center().open();
+        });
+    });
+</script>

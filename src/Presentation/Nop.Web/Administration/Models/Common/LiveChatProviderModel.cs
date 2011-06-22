@@ -22,14 +22,6 @@ namespace Nop.Admin.Models.Common
         [AllowHtml]
         public string SystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.LiveChats.Fields.Version")]
-        [AllowHtml]
-        public string Version { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.LiveChats.Fields.Author")]
-        [AllowHtml]
-        public string Author { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.LiveChats.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 

@@ -23,14 +23,6 @@ namespace Nop.Admin.Models.Shipping
         [AllowHtml]
         public string SystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.Version")]
-        [AllowHtml]
-        public string Version { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.Author")]
-        [AllowHtml]
-        public string Author { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 

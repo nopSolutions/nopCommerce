@@ -210,23 +210,6 @@ namespace Nop.Services.Tests.Payments
             }
         }
 
-        public override PluginDescriptor PluginDescriptor
-        {
-            get
-            {
-                return new PluginDescriptor()
-                {
-                    Author = "nopCommerce team",
-                    FriendlyName = "Test payment method",
-                    SystemName = "Payments.TestMethod",
-                    Version = "1.00"
-                };
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
         #endregion
     }
 }

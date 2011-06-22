@@ -22,14 +22,6 @@ namespace Nop.Admin.Models.Tax
         [AllowHtml]
         public string SystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.Version")]
-        [AllowHtml]
-        public string Version { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.Author")]
-        [AllowHtml]
-        public string Author { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider")]
         public bool IsPrimaryTaxProvider { get; set; }
 

@@ -1,4 +1,5 @@
-﻿FriendlyName: LivePerson
+﻿Group: Live chats
+FriendlyName: LivePerson
 SystemName: LiveChat.LivePerson
 Version: 1.00
 Author: nopCommerce team

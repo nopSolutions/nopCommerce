@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Web.Hosting;
@@ -228,7 +229,9 @@ namespace Nop.Web.Controllers
             string rootDir = Server.MapPath("~/");
             var dirsToCheck = new List<string>();
             dirsToCheck.Add(rootDir);
-            dirsToCheck.Add(rootDir + "bin");
+            dirsToCheck.Add(rootDir + "App_Data");
+            dirsToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
+            dirsToCheck.Add(rootDir + "App_Data\\Settings.txt");
             dirsToCheck.Add(rootDir + "content");
             dirsToCheck.Add(rootDir + "content\\images");
             dirsToCheck.Add(rootDir + "content\\images\\thumbs");
@@ -297,10 +300,17 @@ namespace Nop.Web.Controllers
                     DataProviderHelper.ResetCache();
 
                     //install plugins
+                    PluginManager.MarkAllPluginsAsUninstalled();
                     var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-                    var plugins = pluginFinder.GetPlugins<IPlugin>();
+                    var plugins = pluginFinder.GetPlugins<IPlugin>(false)
+                        .ToList()
+                        .OrderBy(x => x.PluginDescriptor.Group)
+                        .ThenBy(x => x.PluginDescriptor.DisplayOrder)
+                        .ToList();
                     foreach (var plugin in plugins)
+                    {
                         plugin.Install();
+                    }
 
                     //restart application
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();

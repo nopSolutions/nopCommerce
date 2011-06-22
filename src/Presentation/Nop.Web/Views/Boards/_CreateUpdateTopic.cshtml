@@ -81,7 +81,7 @@
                     <td colspan="2" class="options">
                         <input type="submit" value="@T("Forum.Submit")" class="submitforumtopicbutton" />
                         <input type="button" class="cancelforumtopicbutton" value="@T("Forum.Cancel")" 
-                        onclick="window.location.href='@Url.RouteUrl("ForumSlug", new { id = @Model.ForumId, slug = @Model.Forum.GetSeName() })'" />
+                        onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = @Model.ForumId, slug = @Model.Forum.GetSeName() })')" />
                     </td>
                 </tr>
             </table>

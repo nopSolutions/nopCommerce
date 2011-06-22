@@ -25,14 +25,33 @@ namespace Nop.Core.Plugins
             this._typeFinder = typeFinder;
         }
         
-        public IEnumerable<T> GetPlugins<T>() where T : class, IPlugin
+        public IEnumerable<T> GetPlugins<T>(bool installedOnly = true) where T : class, IPlugin
         {
             EnsurePluginsAreLoaded();
 
-            //TODO performance optimization: do nto return instances, return a list of PluginDescriptor
             foreach (var plugin in _plugins)
                 if (typeof(T).IsAssignableFrom(plugin.PluginType))
-                    yield return plugin.Instance<T>();
+                    if (!installedOnly || plugin.Installed)
+                        yield return plugin.Instance<T>();
+        }
+
+        public IEnumerable<PluginDescriptor> GetPluginDescriptors(bool installedOnly = true)
+        {
+            EnsurePluginsAreLoaded();
+
+            foreach (var plugin in _plugins)
+                if (!installedOnly || plugin.Installed)
+                    yield return plugin;
+        }
+
+        public IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(bool installedOnly = true) where T : class, IPlugin
+        {
+            EnsurePluginsAreLoaded();
+
+            foreach (var plugin in _plugins)
+                if (typeof(T).IsAssignableFrom(plugin.PluginType))
+                    if (!installedOnly || plugin.Installed)
+                        yield return plugin;
         }
 
         /// <summary>
@@ -44,18 +63,8 @@ namespace Nop.Core.Plugins
         protected virtual IList<PluginDescriptor> FindAllPlugins()
         {
             var foundPlugins = PluginManager.ReferencedPlugins.ToList();
-            
-            //find plugin type implementations
-            foreach (var plugin in foundPlugins)
-            {
-                var types = _typeFinder.FindClassesOfType<IPlugin>(new List<Assembly> { plugin.ReferencedAssembly }).ToList();
-                if (types.Count > 0)
-                    plugin.PluginType = types.FirstOrDefault();
-            }
-
             //sort
             foundPlugins.Sort();
-
             return foundPlugins.ToList();
         }
 

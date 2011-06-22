@@ -79,8 +79,9 @@ namespace Nop.Services.Common
         /// <returns>Live chat providers</returns>
         public virtual IList<ILiveChatProvider> LoadAllLiveChatProviders()
         {
-            var taxProviders = _pluginFinder.GetPlugins<ILiveChatProvider>();
-            return taxProviders.ToList();
+            //TODO Do not return plugin instances, return a list of PluginDescriptor
+            var providers = _pluginFinder.GetPlugins<ILiveChatProvider>();
+            return providers.ToList();
         }
         
         #endregion
