@@ -11,6 +11,18 @@ namespace Nop.Core.Plugins
 {
     public class PluginDescriptor : IComparable<PluginDescriptor>
     {
+        public PluginDescriptor()
+        {
+        }
+
+
+        public PluginDescriptor(Assembly referencedAssembly, FileInfo originalAssemblyFile,
+            Type pluginType)
+        {
+            this.ReferencedAssembly = referencedAssembly;
+            this.OriginalAssemblyFile = originalAssemblyFile;
+            this.PluginType = pluginType;
+        }
         /// <summary>
         /// Plugin type
         /// </summary>

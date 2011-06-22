@@ -44,18 +44,8 @@ namespace Nop.Core.Plugins
         protected virtual IList<PluginDescriptor> FindAllPlugins()
         {
             var foundPlugins = PluginManager.ReferencedPlugins.ToList();
-            
-            //find plugin type implementations
-            foreach (var plugin in foundPlugins)
-            {
-                var types = _typeFinder.FindClassesOfType<IPlugin>(new List<Assembly> { plugin.ReferencedAssembly }).ToList();
-                if (types.Count > 0)
-                    plugin.PluginType = types.FirstOrDefault();
-            }
-
             //sort
             foundPlugins.Sort();
-
             return foundPlugins.ToList();
         }
 

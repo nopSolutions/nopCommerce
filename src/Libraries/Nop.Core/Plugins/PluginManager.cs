@@ -98,6 +98,17 @@ namespace Nop.Core.Plugins
                             //    PerformFileDeploy(plugin);
 
 
+                            //init plugin type (only one plguin per assembly is allowed)
+                            foreach (var t in description.ReferencedAssembly.GetTypes())
+                                    if (typeof(IPlugin).IsAssignableFrom(t))
+                                        if (!t.IsInterface)
+                                            if (t.IsClass && !t.IsAbstract)
+                                            {
+                                                description.PluginType = t;
+                                                break;
+                                            }
+
+
                             referencedPlugins.Add(description);
                         }
                         catch (Exception ex)
