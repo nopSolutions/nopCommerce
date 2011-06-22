@@ -1,4 +1,5 @@
-﻿FriendlyName: Billing country is
+﻿Group: Discount requirements
+FriendlyName: Billing country is
 SystemName: DiscountRequirement.BillingCountryIs
 Version: 1.00
 Author: nopCommerce team

@@ -1,4 +1,5 @@
-﻿FriendlyName: Shipping country is
+﻿Group: Discount requirements
+FriendlyName: Shipping country is
 SystemName: DiscountRequirement.ShippingCountryIs
 Version: 1.00
 Author: nopCommerce team

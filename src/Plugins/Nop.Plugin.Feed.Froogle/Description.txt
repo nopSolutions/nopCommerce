@@ -1,4 +1,5 @@
-﻿FriendlyName: Froogle
+﻿Group: Promotion feeds
+FriendlyName: Froogle
 SystemName: PromotionFeed.Froogle
 Version: 1.00
 Author: nopCommerce team

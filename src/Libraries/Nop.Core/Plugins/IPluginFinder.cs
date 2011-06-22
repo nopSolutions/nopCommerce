@@ -12,5 +12,9 @@ namespace Nop.Core.Plugins
         /// <typeparam name="T">The type of plugin to get.</typeparam>
         /// <returns>An enumeration of plugins.</returns>
         IEnumerable<T> GetPlugins<T>() where T : class, IPlugin;
+
+        IEnumerable<PluginDescriptor> GetPluginDescriptors();
+
+        IEnumerable<PluginDescriptor> GetPluginDescriptors<T>() where T : class, IPlugin;
     }
 }

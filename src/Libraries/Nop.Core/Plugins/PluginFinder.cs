@@ -35,6 +35,23 @@ namespace Nop.Core.Plugins
                     yield return plugin.Instance<T>();
         }
 
+        public IEnumerable<PluginDescriptor> GetPluginDescriptors()
+        {
+            EnsurePluginsAreLoaded();
+
+            foreach (var plugin in _plugins)
+                    yield return plugin;
+        }
+
+        public IEnumerable<PluginDescriptor> GetPluginDescriptors<T>() where T : class, IPlugin
+        {
+            EnsurePluginsAreLoaded();
+
+            foreach (var plugin in _plugins)
+                if (typeof(T).IsAssignableFrom(plugin.PluginType))
+                    yield return plugin;
+        }
+
         /// <summary>
         /// Finds and sorts plugin defined in known assemblies.
         /// </summary>

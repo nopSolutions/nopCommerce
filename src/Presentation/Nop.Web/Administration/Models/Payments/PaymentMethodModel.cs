@@ -16,14 +16,6 @@ namespace Nop.Admin.Models.Payments
         [AllowHtml]
         public string SystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.Version")]
-        [AllowHtml]
-        public string Version { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.Author")]
-        [AllowHtml]
-        public string Author { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 

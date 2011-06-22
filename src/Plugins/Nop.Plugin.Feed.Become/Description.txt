@@ -1,4 +1,5 @@
-﻿FriendlyName: Become.com
+﻿Group: Promotion feeds
+FriendlyName: Become.com
 SystemName: PromotionFeed.Become
 Version: 1.00
 Author: nopCommerce team

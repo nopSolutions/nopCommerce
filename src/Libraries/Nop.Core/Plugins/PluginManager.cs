@@ -153,6 +153,9 @@ namespace Nop.Core.Plugins
 
                 switch (key)
                 {
+                    case "Group":
+                        descriptor.Group = value;
+                        break;
                     case "FriendlyName":
                         descriptor.FriendlyName = value;
                         break;

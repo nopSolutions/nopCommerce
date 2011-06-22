@@ -1,4 +1,5 @@
-﻿FriendlyName: Manual Processing
+﻿Group: Payment methods
+FriendlyName: Manual Processing
 SystemName: Payments.Manual
 Version: 1.00
 Author: nopCommerce team

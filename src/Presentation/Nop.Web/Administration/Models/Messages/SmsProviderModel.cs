@@ -16,14 +16,6 @@ namespace Nop.Admin.Models.Messages
         [AllowHtml]
         public string SystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.SMSProviders.Fields.Version")]
-        [AllowHtml]
-        public string Version { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.SMSProviders.Fields.Author")]
-        [AllowHtml]
-        public string Author { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.SMSProviders.Fields.IsActive")]
         public bool IsActive { get; set; }
         

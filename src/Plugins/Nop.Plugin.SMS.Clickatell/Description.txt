@@ -1,4 +1,5 @@
-﻿FriendlyName: Clickatell SMS Provider
+﻿Group: SMS providers
+FriendlyName: Clickatell SMS Provider
 SystemName: Mobile.SMS.Clickatell
 Version: 1.00
 Author: nopCommerce team
