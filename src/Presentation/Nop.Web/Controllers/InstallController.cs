@@ -12,6 +12,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Installation;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Install;
 
@@ -311,6 +312,14 @@ namespace Nop.Web.Controllers
                     foreach (var plugin in plugins)
                     {
                         plugin.Install();
+                    }
+
+                    //register default permissions
+                    var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+                    foreach (var providerType in permissionProviders)
+                    {
+                        dynamic provider = Activator.CreateInstance(providerType);
+                        EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
                     }
 
                     //restart application
