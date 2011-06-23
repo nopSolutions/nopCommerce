@@ -1,0 +1,6 @@
+﻿@model Nop.Web.Models.Common.FaviconModel
+@if (Model.Uploaded)
+{
+    <link rel="icon" href="@Model.FaviconUrl" />
+    <link rel="shortcut icon" href="@Model.FaviconUrl" />
+}

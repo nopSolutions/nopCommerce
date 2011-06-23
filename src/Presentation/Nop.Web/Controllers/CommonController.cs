@@ -50,6 +50,7 @@ namespace Nop.Web.Controllers
         private readonly IThemeProvider _themeProvider;
         private readonly IForumService _forumservice;
         private readonly ICustomerService _customerService;
+        private readonly IWebHelper _webHelper;
 
         private readonly CustomerSettings _customerSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -69,7 +70,7 @@ namespace Nop.Web.Controllers
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
             IThemeProvider themeProvider, IForumService forumService,
-            ICustomerService customerService,
+            ICustomerService customerService, IWebHelper webHelper,
             CustomerSettings customerSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
@@ -90,6 +91,7 @@ namespace Nop.Web.Controllers
             this._themeProvider = themeProvider;
             this._forumservice = forumService;
             this._customerService = customerService;
+            this._webHelper = webHelper;
 
             this._customerSettings = customerSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -405,6 +407,19 @@ namespace Nop.Web.Controllers
                 })
                 .ToList();
             return PartialView("StoreThemeSelector", model);
+        }
+
+        //favicon
+        [ChildActionOnly]
+        public ActionResult Favicon()
+        {
+            var model = new FaviconModel()
+            {
+                Uploaded = System.IO.File.Exists(Request.PhysicalApplicationPath + "favicon.ico"),
+                FaviconUrl = _webHelper.GetStoreLocation() + "favicon.ico"
+            };
+            
+            return PartialView(model);
         }
 
     }
