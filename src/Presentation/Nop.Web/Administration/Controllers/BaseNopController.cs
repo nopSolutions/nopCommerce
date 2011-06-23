@@ -23,7 +23,7 @@ namespace Nop.Admin.Controllers
             EngineContext.Current.Resolve<IWorkContext>().IsAdmin = true;
 
             //validate IP address
-            ValidateIpAddress();
+            ValidateIpAddress(filterContext);
 
             base.OnActionExecuting(filterContext);
         }
@@ -34,9 +34,8 @@ namespace Nop.Admin.Controllers
             base.OnException(filterContext);
         }
 
-        protected virtual void ValidateIpAddress()
+        protected virtual void ValidateIpAddress(ActionExecutingContext filterContext)
         {
-            //TODO 'Access denied' page should not validate IP address
             bool ok = false;
             var ipAddresses = EngineContext.Current.Resolve<SecuritySettings>().AdminAreaAllowedIpAddresses;
             if (ipAddresses!= null && ipAddresses.Count > 0)
@@ -57,8 +56,14 @@ namespace Nop.Admin.Controllers
 
             if (!ok)
             {
-                //TODO redirect to public store 'Access denied page'
-                //(previous 'AccessDenied.aspx' page)
+                //ensure that it's not 'Access denied' page
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                var thisPageUrl = webHelper.GetThisPageUrl(false);
+                if (!thisPageUrl.StartsWith(string.Format("{0}admin/security/accessdenied",webHelper.GetStoreLocation()), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    //redirect to 'Access denied' page
+                    filterContext.Result = RedirectToAction("AccessDenied", "Security");
+                }
             }
         }
 
