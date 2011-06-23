@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Core.Domain;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 
 namespace Nop.Services.ExportImport
 {
@@ -808,7 +809,7 @@ namespace Nop.Services.ExportImport
                     sb.Append('"'); sb.Append(customer.VatNumber != null ? customer.VatNumber.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append(customer.VatNumberStatusId); sb.Append(',');
                     sb.Append('"'); sb.Append(customer.TimeZoneId != null ? customer.TimeZoneId.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(customer.LanguageId.HasValue ? customer.LanguageId.Value : 0); sb.Append(",");
+                    sb.Append(customer.AffiliateId.HasValue ? customer.AffiliateId.Value : 0); sb.Append(",");
                     sb.Append('"'); sb.Append(customer.Active); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.Deleted); sb.Append("\",");
 
@@ -841,7 +842,66 @@ namespace Nop.Services.ExportImport
                 }
             }
         }
-       
+
+        /// <summary>
+        /// Export customer list to xml
+        /// </summary>
+        /// <param name="customers">Customers</param>
+        /// <returns>Result in XML format</returns>
+        public string ExportCustomersToXml(IList<Customer> customers)
+        {
+            var sb = new StringBuilder();
+            var stringWriter = new StringWriter(sb);
+            var xmlWriter = new XmlTextWriter(stringWriter);
+            xmlWriter.WriteStartDocument();
+            xmlWriter.WriteStartElement("Customers");
+            xmlWriter.WriteAttributeString("Version", _storeInformationSettings.CurrentVersion);
+
+            foreach (var customer in customers)
+            {
+                xmlWriter.WriteStartElement("Customer");
+                xmlWriter.WriteElementString("CustomerId", null, customer.Id.ToString());
+                xmlWriter.WriteElementString("CustomerGuid", null, customer.CustomerGuid.ToString());
+                xmlWriter.WriteElementString("Email", null, customer.Email);
+                xmlWriter.WriteElementString("Username", null, customer.Username);
+                xmlWriter.WriteElementString("Password", null, customer.Password);
+                xmlWriter.WriteElementString("PasswordFormatId", null, customer.PasswordFormatId.ToString());
+                xmlWriter.WriteElementString("PasswordSalt", null, customer.PasswordSalt);
+                xmlWriter.WriteElementString("LanguageId", null, customer.LanguageId.HasValue ? customer.LanguageId.ToString() : "0");
+                xmlWriter.WriteElementString("CurrencyId", null, customer.CurrencyId.HasValue ? customer.CurrencyId.ToString() : "0");
+                xmlWriter.WriteElementString("TaxDisplayTypeId", null, customer.TaxDisplayTypeId.ToString());
+                xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
+                xmlWriter.WriteElementString("VatNumber", null, customer.VatNumber);
+                xmlWriter.WriteElementString("VatNumberStatusId", null, customer.VatNumberStatusId.ToString());
+                xmlWriter.WriteElementString("TimeZoneId", null, customer.TimeZoneId);
+                xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.HasValue ? customer.AffiliateId.ToString() : "0");
+                xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
+                xmlWriter.WriteElementString("Deleted", null, customer.Deleted.ToString());
+
+
+                xmlWriter.WriteElementString("IsGuest", null, customer.IsGuest().ToString());
+                xmlWriter.WriteElementString("IsRegistered", null, customer.IsRegistered().ToString());
+                xmlWriter.WriteElementString("IsAdministrator", null, customer.IsAdmin().ToString());
+                xmlWriter.WriteElementString("IsForumModerator", null, customer.IsForumModerator().ToString());
+
+                xmlWriter.WriteElementString("FirstName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName));
+                xmlWriter.WriteElementString("LastName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+                xmlWriter.WriteElementString("Gender", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender));
+                xmlWriter.WriteElementString("Company", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Company));
+                xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId).ToString());
+                xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount).ToString());
+                xmlWriter.WriteElementString("Signature", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature));
+                xmlWriter.WriteElementString("LocationCountryId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId).ToString());
+                
+                xmlWriter.WriteEndElement();
+            }
+
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteEndDocument();
+            xmlWriter.Close();
+            return stringWriter.ToString();
+        }
+
         #endregion
     }
 }

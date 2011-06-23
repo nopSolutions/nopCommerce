@@ -28,6 +28,7 @@ using Nop.Services.Catalog;
 using Nop.Admin.Models.Common;
 using Nop.Services.Orders;
 using Nop.Services.ExportImport;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -987,6 +988,23 @@ namespace Nop.Admin.Controllers
 
                 var bytes = System.IO.File.ReadAllBytes(filePath);
                 return File(bytes, "text/xls", fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        public ActionResult ExportXml()
+        {
+            try
+            {
+                var customers = _customerService.GetAllCustomers(null, null, null, null, null, false, null, 0, int.MaxValue);
+                
+                var fileName = string.Format("customers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+                var xml = _exportManager.ExportCustomersToXml(customers);
+                return new XmlDownloadResult(xml, fileName);
             }
             catch (Exception exc)
             {

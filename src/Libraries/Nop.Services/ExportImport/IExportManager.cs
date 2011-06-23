@@ -60,5 +60,12 @@ namespace Nop.Services.ExportImport
         /// <param name="filePath">File path to use</param>
         /// <param name="customers">Customers</param>
         void ExportCustomersToXls(string filePath, IList<Customer> customers);
+        
+        /// <summary>
+        /// Export customer list to xml
+        /// </summary>
+        /// <param name="customers">Customers</param>
+        /// <returns>Result in XML format</returns>
+        string ExportCustomersToXml(IList<Customer> customers);
     }
 }
