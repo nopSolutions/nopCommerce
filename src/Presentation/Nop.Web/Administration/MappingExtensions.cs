@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
-using AutoMapper;
+﻿using AutoMapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Common;
@@ -47,12 +43,10 @@ using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
-using Nop.Web.Framework;
 
 
 namespace Nop.Admin
 {
-    //TODO separate MappingExtensions and HtmlExtensions to two distinct .cs files
     public static class MappingExtensions
     {
         #region Category
@@ -918,41 +912,5 @@ namespace Nop.Admin
         }
 
         #endregion
-    }
-
-    public static class HtmlExtensions
-    {
-        public static MvcHtmlString NopField<TModel>(this HtmlHelper<TModel> helper, 
-            System.Linq.Expressions.Expression<Func<TModel, string>> expression)
-        {
-            return helper.NopCommonField(expression, (x => helper.TextBoxFor(x)));
-        }
-
-        private static MvcHtmlString NopCommonField<TModel, TValue>(this HtmlHelper<TModel> helper, 
-            System.Linq.Expressions.Expression<Func<TModel, TValue>> expression,
-            Func<System.Linq.Expressions.Expression<Func<TModel, TValue>>,MvcHtmlString> editor)
-        {
-            var sb = new StringBuilder();
-            var tr = new TagBuilder("tr");
-
-            sb.Append(tr.ToString(TagRenderMode.StartTag));
-
-            var builder = new TagBuilder("td");
-            builder.Attributes.Add("class", "adminTitle");
-            sb.Append(builder.ToString(TagRenderMode.StartTag));
-            sb.Append(helper.NopLabelFor(expression).ToHtmlString() + ":");
-            sb.Append(builder.ToString(TagRenderMode.EndTag));
-
-            builder = new TagBuilder("td");
-            builder.Attributes.Add("class", "adminData");
-            sb.Append(builder.ToString(TagRenderMode.StartTag));
-            sb.Append(editor.Invoke(expression).ToHtmlString());
-            sb.Append(helper.ValidationMessageFor(expression).ToHtmlString());
-            sb.Append(builder.ToString(TagRenderMode.EndTag));
-
-            sb.Append(tr.ToString(TagRenderMode.EndTag));
-
-            return MvcHtmlString.Create(sb.ToString());
-        }
     }
 }

@@ -123,7 +123,8 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ProductVariantController.cs" />
     <Compile Include="Controllers\QueuedEmailController.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="HtmlExtensions.cs" />
+    <Compile Include="MappingExtensions.cs" />
     <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
