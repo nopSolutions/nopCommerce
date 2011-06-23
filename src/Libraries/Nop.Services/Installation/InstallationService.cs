@@ -4292,7 +4292,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "Service.EmailAFriend",
                                            Subject = "%Store.Name%. Referred Item",
-                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%Customer.Email% was shopping on %Store.Name% and wanted to share the following item with you. <br /><br /><b><a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">%Product.Name%</a></b> <br />%Product.ShortDescription% <br /><br />For more info click <a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">here</a> <br /><br /><br />%EmailAFriend.PersonalMessage%<br /><br />%Store.Name%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%EmailAFriend.Email% was shopping on %Store.Name% and wanted to share the following item with you. <br /><br /><b><a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">%Product.Name%</a></b> <br />%Product.ShortDescription% <br /><br />For more info click <a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">here</a> <br /><br /><br />%EmailAFriend.PersonalMessage%<br /><br />%Store.Name%</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4300,7 +4300,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "Wishlist.EmailAFriend",
                                            Subject = "%Store.Name%. Wishlist",
-                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%Customer.Email% was shopping on %Store.Name% and wanted to share a wishlist with you. <br /><br /><br />For more info click <a target=\"_blank\" href=\"%Wishlist.URLForCustomer%\">here</a> <br /><br /><br />%EmailAFriend.PersonalMessage%<br /><br />%Store.Name%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%Wishlist.Email% was shopping on %Store.Name% and wanted to share a wishlist with you. <br /><br /><br />For more info click <a target=\"_blank\" href=\"%Wishlist.URLForCustomer%\">here</a> <br /><br /><br />%Wishlist.PersonalMessage%<br /><br />%Store.Name%</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },

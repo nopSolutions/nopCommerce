@@ -629,7 +629,7 @@ namespace Nop.Services.Messages
 
             var customerProductTokens = GenerateTokens(customer, product);
             customerProductTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
-            //UNDONE use customerEmail
+            customerProductTokens.Add(new Token("EmailAFriend.Email", customerEmail));
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = friendsEmail;
@@ -663,8 +663,8 @@ namespace Nop.Services.Messages
             var customerTokens = GenerateTokens(customer);
             //TODO add a method for getting URL (e.g. SEOHelper.GetWishlistUrl)
             customerTokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
-            customerTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
-            //UNDONE use customerEmail
+            customerTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage));
+            customerTokens.Add(new Token("Wishlist.Email", customerEmail));
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = friendsEmail;
