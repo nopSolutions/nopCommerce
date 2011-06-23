@@ -43,14 +43,9 @@ namespace Nop.Services.Payments
         /// <returns>Payment methods</returns>
         public virtual IList<IPaymentMethod> LoadActivePaymentMethods()
         {
-            var systemNames = _paymentSettings.ActivePaymentMethodSystemNames;
-            var providers = new List<IPaymentMethod>();
-            foreach (var systemName in systemNames)
-            {
-                var provider = LoadPaymentMethodBySystemName(systemName);
-                providers.Add(provider);
-            }
-            return providers;
+            return LoadAllPaymentMethods()
+                   .Where(provider => _paymentSettings.ActivePaymentMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
+                   .ToList();
         }
 
         /// <summary>

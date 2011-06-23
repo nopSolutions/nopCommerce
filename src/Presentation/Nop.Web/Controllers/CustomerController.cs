@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
@@ -12,7 +11,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services;
 using Nop.Services.Catalog;
@@ -21,19 +19,16 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
-using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Models;
+using Nop.Web.Framework.Security;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
-using Nop.Services.Media;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
@@ -62,6 +57,7 @@ namespace Nop.Web.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly IShoppingCartService _shoppingCartService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -84,7 +80,7 @@ namespace Nop.Web.Controllers
             IOrderProcessingService orderProcessingService, IOrderService orderService,
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
             IPictureService pictureService, INewsLetterSubscriptionService newsLetterSubscriptionService,
-            MediaSettings mediaSettings,
+            IShoppingCartService shoppingCartService, MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
         {
             this._authenticationService = authenticationService;
@@ -109,6 +105,7 @@ namespace Nop.Web.Controllers
             this._priceFormatter = priceFormatter;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._shoppingCartService = shoppingCartService;
 
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
@@ -158,20 +155,19 @@ namespace Nop.Web.Controllers
             {
                 if (_customerService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.UserName : model.Email, model.Password))
                 {
-                    //TODO migrate shopping cart
-
                     var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(model.UserName) : _customerService.GetCustomerByEmail(model.Email);
+
+                    //migrate shopping cart
+                    _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer);
+
+                    //sign in new customer
                     _authenticationService.SignIn(customer, model.RememberMe);
 
 
                     if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                    {
                         return Redirect(returnUrl);
-                    }
                     else
-                    {
                         return RedirectToAction("Index", "Home");
-                    }
                 }
                 else
                 {
@@ -307,8 +303,6 @@ namespace Nop.Web.Controllers
                     {
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LocationCountryId, model.LocationCountryId);
                     }
-
-                    //TODO migrate shopping cart
 
                     //login customer now
                     if (isApproved)

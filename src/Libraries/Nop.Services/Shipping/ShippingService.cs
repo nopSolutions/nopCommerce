@@ -89,14 +89,9 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping rate computation methods</returns>
         public virtual IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods()
         {
-            var systemNames = _shippingSettings.ActiveShippingRateComputationMethodSystemNames;
-            var providers = new List<IShippingRateComputationMethod>();
-            foreach (var systemName in systemNames)
-            {
-                var provider = LoadShippingRateComputationMethodBySystemName(systemName);
-                providers.Add(provider);
-            }
-            return providers;
+            return LoadAllShippingRateComputationMethods()
+                   .Where(provider => _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
+                   .ToList();
         }
 
         /// <summary>

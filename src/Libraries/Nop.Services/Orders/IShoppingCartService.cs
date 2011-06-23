@@ -96,6 +96,12 @@ namespace Nop.Services.Orders
         /// <param name="productVariantId">Default product variant identifier for adding to cart</param>
         /// <returns>A value indicating whether direct add to cart is allowed</returns>
         bool DirectAddToCartAllowed(int productId, out int productVariantId);
-
+        
+        /// <summary>
+        /// Migrate shopping cart
+        /// </summary>
+        /// <param name="fromCustomer">From customer</param>
+        /// <param name="toCustomer">To customer</param>
+        void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer);
     }
 }

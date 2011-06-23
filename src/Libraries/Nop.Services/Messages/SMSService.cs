@@ -57,7 +57,7 @@ namespace Nop.Services.Messages
         public virtual IList<ISmsProvider> LoadActiveSmsProviders()
         {
             return LoadAllSmsProviders()
-                .Where(smsProvider => _smsSettings.ActiveSmsProviderSystemNames.Contains(smsProvider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
+                .Where(provider => _smsSettings.ActiveSmsProviderSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
                 .ToList();
         }
 

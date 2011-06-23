@@ -51,14 +51,9 @@ namespace Nop.Services.Common
         /// <returns>Active live chat providers</returns>
         public virtual IList<ILiveChatProvider> LoadActiveLiveChatProviders()
         {
-            var systemNames = _liveChatSettings.ActiveLiveChatProviderSystemName;
-            var providers = new List<ILiveChatProvider>();
-            foreach (var systemName in systemNames)
-            {
-                var provider = LoadLiveChatProviderBySystemName(systemName);
-                providers.Add(provider);
-            }
-            return providers;
+            return LoadAllLiveChatProviders()
+                   .Where(provider => _liveChatSettings.ActiveLiveChatProviderSystemName.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
+                   .ToList();
         }
 
        /// <summary>

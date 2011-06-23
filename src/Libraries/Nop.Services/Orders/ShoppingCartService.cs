@@ -34,7 +34,6 @@ namespace Nop.Services.Orders
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerService _customerService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly CatalogSettings _catalogSettings;
         #endregion
 
         #region Ctor
@@ -45,6 +44,7 @@ namespace Nop.Services.Orders
         /// <param name="sciRepository">Shopping cart repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="currencyService">Currency service</param>
+        /// <param name="productService">Product settings</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="checkoutAttributeService">Checkout attribute service</param>
@@ -52,7 +52,6 @@ namespace Nop.Services.Orders
         /// <param name="priceFormatter">Price formatter</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        /// <param name="catalogSettings">Catalog settings</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, ICurrencyService currencyService,
             IProductService productService, ILocalizationService localizationService,
@@ -61,8 +60,7 @@ namespace Nop.Services.Orders
             ICheckoutAttributeParser checkoutAttributeParser,
             IPriceFormatter priceFormatter,
             ICustomerService customerService,
-            ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings)
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -75,7 +73,6 @@ namespace Nop.Services.Orders
             this._priceFormatter = priceFormatter;
             this._customerService = customerService;
             this._shoppingCartSettings = shoppingCartSettings;
-            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -733,6 +730,37 @@ namespace Nop.Services.Orders
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Migrate shopping cart
+        /// </summary>
+        /// <param name="fromCustomer">From customer</param>
+        /// <param name="toCustomer">To customer</param>
+        public virtual void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer)
+        {
+            if (fromCustomer == null)
+                throw new ArgumentNullException("fromCustomer");
+            if (toCustomer == null)
+                throw new ArgumentNullException("toCustomer");
+
+            if (fromCustomer.Id == toCustomer.Id)
+                return; //the same customer
+
+            var fromCart = fromCustomer.ShoppingCartItems.ToList();
+            for (int i = 0; i < fromCart.Count; i++)
+            {
+                var sci = fromCart[i];
+                AddToCart(toCustomer, sci.ProductVariant, sci.ShoppingCartType,
+                    sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity);
+            }
+            for (int i = 0; i < fromCart.Count; i++)
+            {
+                var sci = fromCart[i];
+                DeleteShoppingCartItem(sci);
+            }
+
+            //TODO apply current discount & gift card codes
         }
 
         #endregion
