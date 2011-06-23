@@ -140,6 +140,11 @@ namespace Nop.Core.Domain.Customers
         public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the date and time of last login
+        /// </summary>
+        public virtual DateTime? LastLoginDateUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of last activity
         /// </summary>
         public virtual DateTime? LastActivityDateUtc { get; set; }

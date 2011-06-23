@@ -271,12 +271,17 @@ namespace Nop.Services.Customers
 
             bool isValid = pwd == customer.Password;
 
-            //TODO implement LastLoginDateUtc (below)
-            //if (isValid)
-            //    user.LastLoginDateUtc = DateTime.UtcNow;
+            //save last login date
+            if (isValid)
+            {
+                customer.LastLoginDateUtc = DateTime.UtcNow;
+                UpdateCustomer(customer);
+            }
             //else
-            //    user.FailedPasswordAttemptCount++;
-            //UpdateCustomer(user);
+            //{
+            //    customer.FailedPasswordAttemptCount++;
+            //    UpdateCustomer(customer);
+            //}
 
             return isValid;
         }

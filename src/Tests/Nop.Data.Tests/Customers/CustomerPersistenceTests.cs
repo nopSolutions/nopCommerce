@@ -46,7 +46,8 @@ namespace Nop.Data.Tests.Customers
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
-            fromDb.LastActivityDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.LastLoginDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.LastActivityDateUtc.ShouldEqual(new DateTime(2010, 01, 03));
         }
 
         [Test]
@@ -330,7 +331,8 @@ namespace Nop.Data.Tests.Customers
                 Active = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                LastActivityDateUtc = new DateTime(2010, 01, 02)
+                LastLoginDateUtc = new DateTime(2010, 01, 02),
+                LastActivityDateUtc = new DateTime(2010, 01, 03)
             };
         }
 
