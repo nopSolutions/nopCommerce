@@ -76,7 +76,7 @@ namespace Nop.Web.Controllers
             }
 
             var name = customer.FormatUserName();
-            var title = string.Format(_localizationService.GetResource("Profile.ProfileOf"), Server.HtmlEncode(name));
+            var title = string.Format(_localizationService.GetResource("Profile.ProfileOf"), name);
 
             var model = new ProfileIndexModel()
             {

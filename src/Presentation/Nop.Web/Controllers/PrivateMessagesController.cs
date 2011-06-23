@@ -391,7 +391,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception ex)
             {
-                model.PostError = Server.HtmlEncode(ex.Message);
+                model.PostError = ex.Message;
             }
 
             return View(model);

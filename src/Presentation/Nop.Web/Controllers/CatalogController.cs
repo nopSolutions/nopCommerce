@@ -441,7 +441,7 @@ namespace Nop.Web.Controllers
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
                     CustomerName = pr.Customer.FormatUserName(),
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && pr.Customer != null && !pr.Customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
                     Rating = pr.Rating,

@@ -750,7 +750,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception ex)
             {
-                model.PostError = Server.HtmlEncode(ex.Message);
+                model.PostError = ex.Message;
             }
 
             // redisplay form
@@ -967,7 +967,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception ex)
             {
-                model.PostError = Server.HtmlEncode(ex.Message);
+                model.PostError = ex.Message;
             }
 
             // redisplay form
@@ -1209,7 +1209,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception ex)
             {
-                model.PostError = Server.HtmlEncode(ex.Message);
+                model.PostError = ex.Message;
             }
 
             // redisplay form
@@ -1397,7 +1397,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception ex)
             {
-                model.PostError = Server.HtmlEncode(ex.Message);
+                model.PostError = ex.Message;
             }
 
             // redisplay form            
@@ -1599,7 +1599,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception ex)
             {
-                model.Error = Server.HtmlEncode(ex.Message);
+                model.Error = ex.Message;
             }
             model.PagedList = new PagedList<ForumTopic>(new List<ForumTopic>(), page, pageSize);
 

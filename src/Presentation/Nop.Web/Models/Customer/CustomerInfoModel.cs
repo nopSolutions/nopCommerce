@@ -18,11 +18,13 @@ namespace Nop.Web.Models.Customer
         }
 
         [NopResourceDisplayName("Account.Fields.Email")]
+        [AllowHtml]
         public string Email { get; set; }
 
         public bool AllowUsersToChangeUsernames { get; set; }
         public bool UsernamesEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Username")]
+        [AllowHtml]
         public string Username { get; set; }
 
         //form fields & properties
@@ -31,8 +33,10 @@ namespace Nop.Web.Models.Customer
         public string Gender { get; set; }
 
         [NopResourceDisplayName("Account.Fields.FirstName")]
+        [AllowHtml]
         public string FirstName { get; set; }
         [NopResourceDisplayName("Account.Fields.LastName")]
+        [AllowHtml]
         public string LastName { get; set; }
 
 
@@ -46,6 +50,7 @@ namespace Nop.Web.Models.Customer
 
         public bool CompanyEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Company")]
+        [AllowHtml]
         public string Company { get; set; }
 
         public bool NewsletterEnabled { get; set; }
@@ -71,6 +76,7 @@ namespace Nop.Web.Models.Customer
 
         //EU VAT
         [NopResourceDisplayName("Account.Fields.VatNumber")]
+        [AllowHtml]
         public string VatNumber { get; set; }
         public string VatNumberStatusNote { get; set; }
         public bool DisplayVatNumber { get; set; }

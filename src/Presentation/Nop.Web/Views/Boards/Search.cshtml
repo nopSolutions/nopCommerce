@@ -189,14 +189,14 @@
                                             var authorText = @T("Forum.Author").ToString();
                                             var authorName = Html.Encode(@topic.Customer.FormatUserName(true));
                                             var allowViewingProfiles = Model.AllowViewingProfiles;
-                                            var customerGuest = WorkContext.CurrentCustomer.IsGuest();
+                                            var customerGuest = @topic.Customer.IsGuest();
 
                                             if (allowViewingProfiles && !customerGuest)
                                             {
                                                 var output = String.Format("{0}: <a href=\"{2}\">{1}</a>", authorText, authorName, @Url.RouteUrl("CustomerProfile", new { id = topic.Customer.Id }));
                                                 @Html.Raw(output)
                                             }
-                                            else if (!allowViewingProfiles || customerGuest)
+                                            else
                                             {
                                                 var output = String.Format("{0}: {1}", authorText, authorName);
                                                 @output

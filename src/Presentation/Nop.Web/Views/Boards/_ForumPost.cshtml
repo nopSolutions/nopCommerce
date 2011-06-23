@@ -4,7 +4,7 @@
 @using Nop.Services.Seo;
 @using Nop.Web.Framework;
 @{
-    var customerIsGuest = WorkContext.CurrentCustomer.IsGuest();
+    var customerIsGuest = @Model.ForumPost.Customer.IsGuest();
 }
 @Html.Raw(String.Format("<a name=\"{0}\"></a>", @Model.ForumPost.Id))
 <div class="forumpost" id="@Html.Encode(String.Format("post{0}", @Model.ForumPost.Id))">
@@ -22,14 +22,14 @@
         <div class="userinfo">
             @if (@Model.ForumPost.Customer != null)
             {
-                var authorName = Html.Encode(@Model.ForumPost.Customer.FormatUserName(true));
+                var authorName = @Model.ForumPost.Customer.FormatUserName(true);
                 var allowViewingProfiles = Model.CommonTopicSettingsModel.AllowViewingProfiles;
 
                 if (allowViewingProfiles && !customerIsGuest)
                 {
                     @Html.RouteLink(authorName, "CustomerProfile", new { id = Model.ForumPost.Customer.Id }, new { @class = "username" })
                 }
-                else if (!allowViewingProfiles || customerIsGuest)
+                else
                 {                    
                     <span class="username">@authorName</span>
                 }

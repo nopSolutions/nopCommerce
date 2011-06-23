@@ -111,7 +111,7 @@ namespace Nop.Web.Controllers
                         CustomerName = bc.Customer.FormatUserName(),
                         CommentText = bc.CommentText,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(bc.CreatedOnUtc, DateTimeKind.Utc),
-                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
+                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles && bc.Customer != null && !bc.Customer.IsGuest(),
                     };
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {

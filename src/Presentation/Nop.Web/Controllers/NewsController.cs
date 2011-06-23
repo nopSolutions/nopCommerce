@@ -103,7 +103,7 @@ namespace Nop.Web.Controllers
                         CommentTitle = nc.CommentTitle,
                         CommentText = nc.CommentText,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(nc.CreatedOnUtc, DateTimeKind.Utc),
-                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
+                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles && nc.Customer != null && !nc.Customer.IsGuest(),
                     };
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
