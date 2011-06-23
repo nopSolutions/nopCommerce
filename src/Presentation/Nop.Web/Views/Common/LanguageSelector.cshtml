@@ -1,19 +1,34 @@
 ﻿@model Nop.Web.Models.Common.LanguageSelectorModel
 @if (Model.AvailableLanguages.Count > 1)
 {
-    using (Ajax.BeginForm("LanguageSelected", "Common", new AjaxOptions { OnComplete = "onLanguageChangedRequestCompleted();" }, new { id = "form-languageselector" }))
+    if (Model.UseImages)
     {
-        var languages = Model.AvailableLanguages.Select(x => new SelectListItem
+    <ul class="languagelist">
+        @foreach (var lang in Model.AvailableLanguages)
         {
-            Text = x.Name,
-            Value = x.Id.ToString(),
-            Selected = x.Id.Equals(Model.CurrentLanguage.Id)
-        });
+            <li>
+                <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguage.Id ? " class=selected" : null)
+                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " onclick="setLocation('@(@Url.Action("LanguageSelected", "Common", new { customerlanguage = lang.Id }))')" />
+            </li>
+        }
+    </ul>
+    }
+    else
+    {
+
+        using (Ajax.BeginForm("LanguageSelected", "Common", new AjaxOptions { OnComplete = "onLanguageChangedRequestCompleted();" }, new { id = "form-languageselector" }))
+        {
+            var languages = Model.AvailableLanguages.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+                Selected = x.Id.Equals(Model.CurrentLanguage.Id)
+            });
     
-        @Html.DropDownList("customerlanguage",
+    @Html.DropDownList("customerlanguage",
             languages,
             new { onChange = "onLanguageChanged();" })
-    }
+            
     <script type="text/javascript">
         function onLanguageChanged() {
             $("#form-languageselector").submit();
@@ -22,5 +37,6 @@
             location.reload();
         }
     </script>
+        }
+    }
 }
-@*TODO Add 'Use images for language selection' option *@

@@ -860,6 +860,27 @@ textarea
 
 }
 
+
+ul.languagelist
+{
+	display: inline;
+	line-height: 25px;
+}
+ul.languagelist li
+{
+	list-style: none;
+	display: inline;
+	padding: 0px 5px 0 5px;	
+}
+ul.languagelist li .selected
+{
+	border: solid 1px #cccccc !important;
+}
+ul.languagelist li:hover
+{
+	cursor:pointer
+}
+
 .storethemelist
 {
 	border: solid 1px #E3E3E3;

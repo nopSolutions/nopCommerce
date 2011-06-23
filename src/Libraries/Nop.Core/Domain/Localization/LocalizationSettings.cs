@@ -8,5 +8,10 @@ namespace Nop.Core.Domain.Localization
         /// Default admin area language identifer
         /// </summary>
         public int DefaultAdminLanguageId { get; set; }
+
+        /// <summary>
+        /// Use images for language selection
+        /// </summary>
+        public bool UseImagesForLanguageSelection { get; set; }
     }
 }

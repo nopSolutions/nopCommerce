@@ -3555,6 +3555,9 @@
                       <LocaleResource Name="SecuritySettings">
                         <Value>Security settings</Value>
                       </LocaleResource>
+                      <LocaleResource Name="LocalizationSettings">
+                        <Value>Localization settings</Value>
+                      </LocaleResource>
                       <LocaleResource Name="StoreName">
                         <Value>Store name</Value>
                         <Children>
@@ -3648,6 +3651,14 @@
                         <Children>
                           <LocaleResource Name="Hint">
                             <Value>IP addresses allowed to access the Back End. Leave this field empty, if you do not want to restict access to the Back End. Use comma to separate them (e.g. 127.0.0.10,232.18.204.16)</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="UseImagesForLanguageSelection">
+                        <Value>Use images for language selection</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want to use images for language selection.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

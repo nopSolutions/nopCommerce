@@ -14,11 +14,13 @@ namespace Nop.Admin.Models.Settings
             SeoSettings = new SeoSettingsModel();
             SecuritySettings = new SecuritySettingsModel();
             PdfSettings = new PdfSettingsModel();
+            LocalizationSettings = new LocalizationSettingsModel();
         }
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
         public SeoSettingsModel SeoSettings { get; set; }
         public SecuritySettingsModel SecuritySettings { get; set; }
         public PdfSettingsModel PdfSettings { get; set; }
+        public LocalizationSettingsModel LocalizationSettings { get; set; }
 
         #region Nested classes
 
@@ -73,6 +75,12 @@ namespace Nop.Admin.Models.Settings
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfEnabled")]
             public bool Enabled { get; set; }
+        }
+
+        public class LocalizationSettingsModel
+        {
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseImagesForLanguageSelection")]
+            public bool UseImagesForLanguageSelection { get; set; }
         }
         #endregion
     }

@@ -23,6 +23,7 @@
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SEOSettings").Text).Content(TabSEOSettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings").Text).Content(TabLocalizationSettings().ToHtmlString());
 
 })
 }
@@ -152,6 +153,20 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.PdfSettings.Enabled)
                 @Html.ValidationMessageFor(model => model.PdfSettings.Enabled)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabLocalizationSettings()
+    {
+<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
             </td>
         </tr>
     </table>

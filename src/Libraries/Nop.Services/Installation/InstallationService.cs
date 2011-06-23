@@ -4449,7 +4449,8 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
                 .SaveSettings(new LocalizationSettings()
                 {
-                    DefaultAdminLanguageId = _languageRepository.Table.Where(l => l.Name == "English").Single().Id
+                    DefaultAdminLanguageId = _languageRepository.Table.Where(l => l.Name == "English").Single().Id,
+                    UseImagesForLanguageSelection = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<CustomerSettings>>()

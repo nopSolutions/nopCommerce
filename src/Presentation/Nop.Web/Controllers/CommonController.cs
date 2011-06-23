@@ -10,6 +10,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -60,7 +61,8 @@ namespace Nop.Web.Controllers
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
-        private readonly ForumSettings _forumsettings;
+        private readonly ForumSettings _forumSettings;
+        private readonly LocalizationSettings _localizationSettings;
 
         public CommonController(ICategoryService categoryService, IProductService productService,
             IManufacturerService manufacturerService, ITopicService topicService,
@@ -74,7 +76,8 @@ namespace Nop.Web.Controllers
             CustomerSettings customerSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
-            CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings)
+            CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings,
+            LocalizationSettings localizationSettings)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -101,16 +104,20 @@ namespace Nop.Web.Controllers
             this._emailAccountSettings = emailAccountSettings;
             this._commonSettings = commonSettings;
             this._blogSettings = blogSettings;
-            this._forumsettings = forumSettings;
+            this._forumSettings = forumSettings;
+            this._localizationSettings = localizationSettings;
         }
 
         //language
         [ChildActionOnly]
         public ActionResult LanguageSelector()
         {
-            var model = new LanguageSelectorModel();
-            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
+            var model = new LanguageSelectorModel()
+            {
+                CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
+                AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList(),
+                UseImages = _localizationSettings.UseImagesForLanguageSelection
+            };
             return PartialView(model);
         }
 
@@ -121,10 +128,13 @@ namespace Nop.Web.Controllers
             {
                 _workContext.WorkingLanguage = language;
             }
-            var model = new LanguageSelectorModel();
-            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
-            return PartialView("LanguageSelector", model);
+            //var model = new LanguageSelectorModel()
+            //{
+            //    CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
+            //    AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList(),
+            //    UseImages = _localizationSettings.UseImagesForLanguageSelection
+            //};
+            return RedirectToAction("Index", "Home");
         }
 
         //currency
@@ -185,7 +195,7 @@ namespace Nop.Web.Controllers
                 unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
 
                 //notifications here
-                if (_forumsettings.ShowAlertForPM &&
+                if (_forumSettings.ShowAlertForPM &&
                    !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages))
                 {
                     _customerService.SaveCustomerAttribute<bool>(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true);
@@ -203,7 +213,7 @@ namespace Nop.Web.Controllers
                 ShoppingCartItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts() : 0,
                 WishlistEnabled = _shoppingCartSettings.WishlistEnabled,
                 WishlistItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts() : 0,
-                AllowPrivateMessages = _forumsettings.AllowPrivateMessages,
+                AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
                 AlertMessage = alertMessage,
             };
@@ -216,7 +226,7 @@ namespace Nop.Web.Controllers
         {
             var result = 0;
             var customer = _workContext.CurrentCustomer;
-            if (_forumsettings.AllowPrivateMessages && !customer.IsGuest())
+            if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
             {
                 var privateMessages = _forumservice.GetAllPrivateMessages(0, customer.Id, false, null, false, string.Empty, 0, 1);
 
@@ -237,7 +247,7 @@ namespace Nop.Web.Controllers
             {
                 RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
-                ForumEnabled = _forumsettings.ForumsEnabled
+                ForumEnabled = _forumSettings.ForumsEnabled
             };
 
             return PartialView(model);
@@ -254,7 +264,7 @@ namespace Nop.Web.Controllers
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
                 SitemapEnabled = _commonSettings.SitemapEnabled,
-                ForumEnabled = _forumsettings.ForumsEnabled
+                ForumEnabled = _forumSettings.ForumsEnabled
             };
 
             return PartialView(model);

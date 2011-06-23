@@ -32,6 +32,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Themes;
 using Telerik.Web.Mvc;
 using Nop.Services.Customers;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Admin.Controllers
 {
@@ -72,6 +73,7 @@ namespace Nop.Admin.Controllers
         private readonly SeoSettings _seoSettings;
         private readonly SecuritySettings _securitySettings;
         private readonly PdfSettings _pdfSettings;
+        private readonly LocalizationSettings _localizationSettings;
 
 		#endregion
 
@@ -92,7 +94,8 @@ namespace Nop.Admin.Controllers
             ShoppingCartSettings shoppingCartSettings, MediaSettings mediaSettings,
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
-            SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings)
+            SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
+            LocalizationSettings localizationSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -125,6 +128,7 @@ namespace Nop.Admin.Controllers
             this._seoSettings = seoSettings;
             this._securitySettings = securitySettings;
             this._pdfSettings = pdfSettings;
+            this._localizationSettings = localizationSettings;
         }
 
 		#endregion 
@@ -543,6 +547,9 @@ namespace Nop.Admin.Controllers
             //PDF settings
             model.PdfSettings.Enabled = _pdfSettings.Enabled;
 
+            //lcoalization
+            model.LocalizationSettings.UseImagesForLanguageSelection = _localizationSettings.UseImagesForLanguageSelection;
+
             return View(model);
         }
         [HttpPost]
@@ -585,6 +592,11 @@ namespace Nop.Admin.Controllers
             //PDF settings
             _pdfSettings.Enabled = model.PdfSettings.Enabled;
             _settingService.SaveSetting(_pdfSettings);
+
+
+            //localization settings
+            _localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
+            _settingService.SaveSetting(_localizationSettings);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("GeneralCommon");
