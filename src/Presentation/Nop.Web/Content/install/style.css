@@ -178,3 +178,34 @@ body
     font-size: 90%;
     font-style: italic;
 }
+
+
+#setUpHeader {font-size: 145%;}
+
+#throbber {
+    display:none;
+}
+#throbber .curtain 
+{
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background-color:#3e4d45;
+    opacity: 0.9;
+    filter:alpha(opacity=90);
+}
+#throbber .curtain-content 
+{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+}
+#throbber .curtain-content div {
+    text-align:center;
+    padding:250px;
+    color:White;
+}

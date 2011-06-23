@@ -12,6 +12,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services.Installation;
+using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Install;
 
 namespace Nop.Web.Controllers
@@ -332,6 +333,19 @@ namespace Nop.Web.Controllers
                 }
             }
             return View(model);
+        }
+
+        public ActionResult RestartInstall()
+        {
+            if (DataProviderHelper.DatabaseIsInstalled())
+                return RedirectToAction("Index", "Home");
+            
+            //restart application
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            webHelper.RestartAppDomain("~/Install/Index");
+
+            //Redirect to home page
+            return RedirectToAction("Index", "Home");
         }
 
         #endregion

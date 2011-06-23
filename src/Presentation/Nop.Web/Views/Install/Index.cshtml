@@ -10,14 +10,13 @@
             $('#installationform').submit(function () {
                 if ($('form').valid()) {
                     $('input[type=submit]', this).attr('disabled', 'disabled');
-                    //TODO display ajax loading icon
                 }
             });
         });
 
         $(document).ready(function () {
             $('input:radio[name=DataProvider]').click(toggleProvider);
-            
+
             toggleProvider();
         });
 
@@ -30,6 +29,21 @@
                 $('#sqlDatabaseConnectionString').show();
             }
         }
+
+        (function () {
+            function show() {
+                window.setTimeout(function () {
+                    document.getElementById("throbber").style.display = "block";
+                }, 1000);
+            }
+
+            if (document.addEventListener) {
+                document.addEventListener("submit", show, false);
+            }
+            else {
+                document.forms[0].attachEvent("onsubmit", show);
+            }
+        })();
     </script>
     
     <table border="0" cellpadding="0" cellspacing="0" class="container-installer">
@@ -119,29 +133,29 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2" align="left">
-                                            @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
+                                                @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
                                                 <label for="provider_sqlce">
                                                     Use built-in data storage (SQL Server Compact)</label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" align="left">
-                                            @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
+                                                @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
                                                 <label for="provider_sqlserver">
                                                     Use an existing SQL Server (or SQL Express) database</label>
                                                 <div id="sqlDatabaseConnectionString">
                                                     <span style="white-space: nowrap;">
-                                                    <label for="DatabaseConnectionString">
-                                                        Connection string:</label>
-                                                    @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox", style="width:90%;" })
+                                                        <label for="DatabaseConnectionString">
+                                                            Connection string:</label>
+                                                        @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox", style = "width:90%;" })
                                                     </span>
                                                     <br />
                                                     <span class="hint">Example:<br />
                                                         Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
-                                                        ID=userName;Password=password 
+                                                        ID=userName;Password=password
                                                         <br />
                                                         Find more info <a href="http://www.connectionstrings.com/" target="_blank">here</a>
-                                                        </span>
+                                                    </span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -191,8 +205,25 @@
         </tr>
     </table>
     <div class="container-footer">
-        <div style="text-align: right; padding: 0px 0px 0px 0px; color: #606060;">
+        <div style="text-align: left; padding: 0px 0px 0px 0px; color: #606060; float: left;">
+            <a href="@Url.Action("RestartInstall", "Install")" title="Click to restart the installation process (clear all cached values)">
+                Restart installation</a>
+        </div>
+        <div style="text-align: right; padding: 0px 0px 0px 0px; color: #606060; float: right;">
             All rights reserved
+        </div>
+    </div>
+    <div id="throbber">
+        <div class="curtain">
+        </div>
+        <div class="curtain-content">
+            <div>
+                <h1 id="setUpHeader">
+                    Installing nopCommerce...</h1>
+                <p>
+                    <img src="@Url.Content("~/content/images/install-synchronizing.gif")" alt="" />
+                </p>
+            </div>
         </div>
     </div>
 }
