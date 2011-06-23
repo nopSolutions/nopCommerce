@@ -92,9 +92,7 @@ namespace Nop.Admin.Controllers
             {
                 return RedirectToAction("Methods");
             }
-
-            //UNDONE allow store owner to edit display order of payment methods
-
+            
             var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
             if (pm.IsPaymentMethodActive(_paymentSettings))
             {

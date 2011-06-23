@@ -142,7 +142,7 @@ namespace Nop.Admin.Controllers
             var activityLog = _customerActivityService.GetActivityById(id);
             _customerActivityService.DeleteActivity(activityLog);
 
-            //UNDONE pass and return current ActivityLogSearchModel
+            //TODO pass and return current ActivityLogSearchModel
             return ListLogs(command, new ActivityLogSearchModel());
         }
 

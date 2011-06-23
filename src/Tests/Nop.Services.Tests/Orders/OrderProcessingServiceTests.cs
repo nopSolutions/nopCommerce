@@ -67,6 +67,7 @@ namespace Nop.Services.Tests.Orders
         IWorkflowMessageService _workflowMessageService;
         ISmsService _smsService;
         ICustomerActivityService _customerActivityService;
+        PaymentSettings _paymentSettings;
         OrderSettings _orderSettings;
         LocalizationSettings _localizationSettings;
 
@@ -138,6 +139,13 @@ namespace Nop.Services.Tests.Orders
             _smsService = MockRepository.GenerateMock<ISmsService>();
             _customerActivityService = MockRepository.GenerateMock<ICustomerActivityService>();
 
+            _paymentSettings = new PaymentSettings()
+            {
+                ActivePaymentMethodSystemNames = new List<string>()
+                {
+                    "Payments.TestMethod"
+                }
+            };
             _orderSettings = new OrderSettings();
 
             _localizationSettings = new LocalizationSettings();
@@ -151,7 +159,7 @@ namespace Nop.Services.Tests.Orders
                 _shippingService, _taxService,
                 _customerService, _discountService,
                 _encryptionService, _workContext, _workflowMessageService,
-                _smsService, _customerActivityService, _rewardPointsSettings,
+                _smsService, _customerActivityService, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings);
         }
 

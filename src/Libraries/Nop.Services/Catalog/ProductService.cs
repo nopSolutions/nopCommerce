@@ -218,7 +218,7 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
         {
-            //UNDONE temporary solution (requires optimization)
+            //TODO temporary solution (requires optimization)
 
             var allProducts = GetAllProducts(showHidden);
             var filteredProducts = new List<Product>();

@@ -59,6 +59,7 @@ namespace Nop.Services.Orders
         private readonly ISmsService _smsService;
         private readonly ICustomerActivityService _customerActivityService;
 
+        private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
@@ -95,6 +96,7 @@ namespace Nop.Services.Orders
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="smsService">SMS service</param>
         /// <param name="customerActivityService">Customer activityservice</param>
+        /// <param name="paymentSettings">Payment settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
         /// <param name="taxSettings">Tax settings</param>
@@ -123,6 +125,7 @@ namespace Nop.Services.Orders
             IWorkflowMessageService workflowMessageService,
             ISmsService smsService,
             ICustomerActivityService customerActivityService,
+            PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
@@ -152,6 +155,7 @@ namespace Nop.Services.Orders
             this._encryptionService = encryptionService;
             this._smsService = smsService;
             this._customerActivityService = customerActivityService;
+            this._paymentSettings = paymentSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
@@ -722,9 +726,9 @@ namespace Nop.Services.Orders
                     if (paymentMethod == null)
                         throw new NopException("Payment method couldn't be loaded");
 
-                    //TODO ensure that payment method is active (commented)
-                    //if (!paymentMethod.IsActive)
-                    //    throw new NopException("Payment method is not active");
+                    //ensure that payment method is active
+                    if (!paymentMethod.IsPaymentMethodActive(_paymentSettings))
+                        throw new NopException("Payment method is not active");
                 }
                 else
                     processPaymentRequest.PaymentMethodSystemName = "";

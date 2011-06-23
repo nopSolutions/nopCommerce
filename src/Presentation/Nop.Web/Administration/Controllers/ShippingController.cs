@@ -99,8 +99,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Providers");
             }
 
-            //UNDONE allow store owner to edit display order of shipping rate computation methods
-
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(model.SystemName);
             if (srcm.IsShippingRateComputationMethodActive(_shippingSettings))
             {

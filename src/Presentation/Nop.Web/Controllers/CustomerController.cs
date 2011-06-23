@@ -315,10 +315,6 @@ namespace Nop.Web.Controllers
                         _authenticationService.SignIn(customer, true);
 
                     //notifications
-                    //UNDONE perhaps, we need to load the latest user account (not default one) to appropriate email methods:
-                    //1. SendCustomerRegisteredNotificationMessage
-                    //2. SendCustomerEmailValidationMessage
-                    //3. SendCustomerWelcomeMessage
                     if (_customerSettings.NotifyNewCustomerRegistration)
                         _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, _localizationSettings.DefaultAdminLanguageId);
                     

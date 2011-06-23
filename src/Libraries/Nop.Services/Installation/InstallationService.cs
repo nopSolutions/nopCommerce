@@ -6650,8 +6650,7 @@ namespace Nop.Services.Installation
 
 
 
-            //UNDONE add attribute combinations for 'etnies Men's Digit Sneaker' and set 'ManageInventoryMethod.ManageStockByAttributes'
-            //
+            //TODO add attribute combinations for 'etnies Men's Digit Sneaker' and set 'ManageInventoryMethod.ManageStockByAttributes'
             var productEtnies = new Product()
             {
                 Name = "etnies Men's Digit Sneaker",

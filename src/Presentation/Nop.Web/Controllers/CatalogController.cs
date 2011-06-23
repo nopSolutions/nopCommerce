@@ -1190,7 +1190,7 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", error);
 
                 //If we got this far, something failed, redisplay form
-                //UNDONE set already entered values (quantity, customer entered price, gift card attributes, product attributes
+                //TODO set already entered values (quantity, customer entered price, gift card attributes, product attributes
                 var model = PrepareProductDetailsPageModel(product);
                 return View(model);
             }

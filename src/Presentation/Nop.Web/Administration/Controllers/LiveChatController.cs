@@ -93,9 +93,7 @@ namespace Nop.Admin.Controllers
             {
                 return RedirectToAction("Providers");
             }
-
-            //UNDONE allow store owner to edit display order of providers
-
+            
             var lcp = _liveChatService.LoadLiveChatProviderBySystemName(model.SystemName);
             if (lcp.IsLiveChatProviderActive(_liveChatSettings))
             {

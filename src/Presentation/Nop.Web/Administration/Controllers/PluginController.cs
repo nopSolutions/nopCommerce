@@ -43,6 +43,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            //TODO allow store owner to edit display order of plugins
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
             var model = new GridModel<PluginModel>
             {

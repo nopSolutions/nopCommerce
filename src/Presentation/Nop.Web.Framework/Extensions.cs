@@ -210,7 +210,7 @@ namespace Nop.Web.Framework
         {
             string result = string.Empty;
 
-            //UNDONE localise hard-coded strings
+            //TODO localize hard-coded strings
             var ts = new TimeSpan(DateTime.UtcNow.Ticks - source.Ticks);
             double delta = ts.TotalSeconds;
 

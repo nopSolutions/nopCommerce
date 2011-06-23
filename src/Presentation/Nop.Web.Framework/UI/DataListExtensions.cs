@@ -19,7 +19,7 @@ namespace Nop.Web.Framework.UI
                 return new HtmlString("");
 
             var sb = new StringBuilder();
-            //UNDONE support custom attributes
+            //TODO support custom attributes
             sb.Append("<table>");
 
             int cellIndex = 0;

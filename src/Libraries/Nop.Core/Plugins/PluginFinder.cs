@@ -25,7 +25,7 @@ namespace Nop.Core.Plugins
             this._typeFinder = typeFinder;
         }
         
-        public IEnumerable<T> GetPlugins<T>(bool installedOnly = true) where T : class, IPlugin
+        public virtual IEnumerable<T> GetPlugins<T>(bool installedOnly = true) where T : class, IPlugin
         {
             EnsurePluginsAreLoaded();
 
@@ -35,7 +35,7 @@ namespace Nop.Core.Plugins
                         yield return plugin.Instance<T>();
         }
 
-        public IEnumerable<PluginDescriptor> GetPluginDescriptors(bool installedOnly = true)
+        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors(bool installedOnly = true)
         {
             EnsurePluginsAreLoaded();
 
@@ -44,7 +44,7 @@ namespace Nop.Core.Plugins
                     yield return plugin;
         }
 
-        public IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(bool installedOnly = true) where T : class, IPlugin
+        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(bool installedOnly = true) where T : class, IPlugin
         {
             EnsurePluginsAreLoaded();
 

@@ -580,7 +580,7 @@ namespace Nop.Services.Customers
 
             _customerRepository.Update(customer);
 
-            //UNDONE update newsletter subscription
+            //TODO update newsletter subscription
             //if (subscriptionOld != null && !customer.Email.ToLower().Equals(subscriptionOld.Email.ToLower()))
             //{
             //    subscriptionOld.Email = customer.Email;
@@ -641,7 +641,7 @@ namespace Nop.Services.Customers
             query = query.Where(c => c.Orders.Count() == 0);
             //no customer content
             query = query.Where(c => c.CustomerContent.Count() == 0);
-            //UNDONE ensure that customers doesn't have forum posts or topics
+            //TODO ensure that customers doesn't have forum posts or topics
             
 
             var customers = query.ToList();

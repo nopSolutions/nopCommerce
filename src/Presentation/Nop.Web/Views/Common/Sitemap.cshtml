@@ -16,7 +16,7 @@
     @if (Model.Topics.Count > 0)
     {
         <div class="entity">
-            @*UNDONE Specify width 100% for datalist (pass htmlattributes)*@
+            @*TODO Specify width 100% for datalist (pass htmlattributes)*@
             @(Html.DataList<TopicModel>(Model.Topics, 4,
                 @<div class="topic-box">
                     <div class="item">

@@ -169,7 +169,7 @@
             <div class="clear">
             </div> 
     
-    @*UNDONE allow customer to select page size*@
+    @*TODO allow customer to select page size*@
     @*pager*@
     @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
 </div>
