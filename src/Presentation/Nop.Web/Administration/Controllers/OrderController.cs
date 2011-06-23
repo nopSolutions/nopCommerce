@@ -450,26 +450,42 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportXml()
         {
-            var orders = _orderService.SearchOrders(null, null, null,
-                null, null, null, null, 0, int.MaxValue);
+            try
+            {
+                var orders = _orderService.SearchOrders(null, null, null,
+                    null, null, null, null, 0, int.MaxValue);
 
-            var fileName = string.Format("orders_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            var xml = _exportManager.ExportOrdersToXml(orders);
-            return new XmlDownloadResult(xml, fileName);
+                var fileName = string.Format("orders_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+                var xml = _exportManager.ExportOrdersToXml(orders);
+                return new XmlDownloadResult(xml, fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         public ActionResult ExportExcel()
         {
-            var orders = _orderService.SearchOrders(null, null, null,
-                null, null, null, null, 0, int.MaxValue);
+            try
+            {
+                var orders = _orderService.SearchOrders(null, null, null,
+                    null, null, null, null, 0, int.MaxValue);
 
-            string fileName = string.Format("orders_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+                string fileName = string.Format("orders_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+                string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
 
-            _exportManager.ExportOrdersToXls(filePath, orders);
+                _exportManager.ExportOrdersToXls(filePath, orders);
 
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "text/xls", fileName);
+                var bytes = System.IO.File.ReadAllBytes(filePath);
+                return File(bytes, "text/xls", fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion

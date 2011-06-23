@@ -10,6 +10,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Core.Domain;
+using Nop.Services.Customers;
 
 namespace Nop.Services.ExportImport
 {
@@ -738,6 +739,109 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        /// <summary>
+        /// Export customer list to XLS
+        /// </summary>
+        /// <param name="filePath">File path to use</param>
+        /// <param name="customers">Customers</param>
+        public void ExportCustomersToXls(string filePath, IList<Customer> customers)
+        {
+            using (var excelHelper = new ExcelHelper(filePath))
+            {
+                excelHelper.Hdr = "YES";
+                excelHelper.Imex = "0";
+                var tableDefinition = new Dictionary<string, string>();
+                //standard properties
+                tableDefinition.Add("CustomerId", "int");
+                tableDefinition.Add("CustomerGuid", "uniqueidentifier");
+                tableDefinition.Add("Email", "nvarchar(255)");
+                tableDefinition.Add("Username", "nvarchar(255)");
+                tableDefinition.Add("PasswordStr", "nvarchar(255)"); //why can't we use 'Password' name?
+                tableDefinition.Add("PasswordFormatId", "int");
+                tableDefinition.Add("PasswordSalt", "nvarchar(255)");
+                tableDefinition.Add("LanguageId", "int");
+                tableDefinition.Add("CurrencyId", "int");
+                tableDefinition.Add("TaxDisplayTypeId", "int");
+                tableDefinition.Add("IsTaxExempt", "nvarchar(5)");
+                tableDefinition.Add("VatNumber", "nvarchar(100)");
+                tableDefinition.Add("VatNumberStatusId", "int");
+                tableDefinition.Add("TimeZoneId", "nvarchar(200)");
+                tableDefinition.Add("AffiliateId", "int");
+                tableDefinition.Add("Active", "nvarchar(5)");
+                tableDefinition.Add("Deleted", "nvarchar(5)");
+
+                //roles
+                tableDefinition.Add("IsGuest", "nvarchar(5)");
+                tableDefinition.Add("IsRegistered", "nvarchar(5)");
+                tableDefinition.Add("IsAdministrator", "nvarchar(5)");
+                tableDefinition.Add("IsForumModerator", "nvarchar(5)");
+
+                //attributes
+                tableDefinition.Add("FirstName", "nvarchar(100)");
+                tableDefinition.Add("LastName", "nvarchar(100)");
+                tableDefinition.Add("Gender", "nvarchar(100)");
+                tableDefinition.Add("Company", "nvarchar(100)");
+                tableDefinition.Add("AvatarPictureId", "int");
+                tableDefinition.Add("ForumPostCount", "int");
+                tableDefinition.Add("Signature", "nvarchar(255)");
+                tableDefinition.Add("LocationCountryId", "int");
+                excelHelper.WriteTable("Customers", tableDefinition);
+
+                //string decimalQuoter = (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(",") ? "\"" : String.Empty);
+
+                foreach (var customer in customers)
+                {
+                    var sb = new StringBuilder();
+                    sb.Append("INSERT INTO [Customers] (CustomerId,CustomerGuid,Email,Username,PasswordStr,PasswordFormatId,PasswordSalt,LanguageId,CurrencyId,TaxDisplayTypeId,IsTaxExempt,VatNumber,VatNumberStatusId,TimeZoneId,AffiliateId,Active,Deleted,IsGuest,IsRegistered,IsAdministrator,IsForumModerator,FirstName,LastName,Gender,Company,AvatarPictureId,ForumPostCount,Signature,LocationCountryId) VALUES (");
+
+                    sb.Append(customer.Id); sb.Append(",");
+                    sb.Append('"'); sb.Append(customer.CustomerGuid); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.Email!=null?customer.Email.Replace('"', '\''):""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.Username != null ? customer.Username.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.Password != null ? customer.Password.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append(customer.PasswordFormatId); sb.Append(",");
+                    sb.Append('"'); sb.Append(customer.PasswordSalt != null ? customer.PasswordSalt.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append(customer.LanguageId.HasValue ? customer.LanguageId.Value : 0); sb.Append(",");
+                    sb.Append(customer.CurrencyId.HasValue ? customer.CurrencyId.Value : 0); sb.Append(",");
+                    sb.Append(customer.TaxDisplayTypeId); sb.Append(',');
+                    sb.Append('"'); sb.Append(customer.IsTaxExempt); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.VatNumber != null ? customer.VatNumber.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append(customer.VatNumberStatusId); sb.Append(',');
+                    sb.Append('"'); sb.Append(customer.TimeZoneId != null ? customer.TimeZoneId.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append(customer.LanguageId.HasValue ? customer.LanguageId.Value : 0); sb.Append(",");
+                    sb.Append('"'); sb.Append(customer.Active); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.Deleted); sb.Append("\",");
+
+                    //roles
+                    sb.Append('"'); sb.Append(customer.IsGuest()); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.IsRegistered()); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.IsAdmin()); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.IsForumModerator()); sb.Append("\",");
+
+                    
+                    var firstName  =customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+                    var lastName  =customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+                    var gender  =customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
+                    var company  =customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
+                    var avatarPictureId  =customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
+                    var forumPostCount  =customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
+                    var signature  =customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
+                    var locationCountryId  =customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId);
+                    sb.Append('"'); sb.Append(firstName != null ? firstName.Replace('"', '\''):""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(lastName != null ? lastName.Replace('"', '\''):""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(gender != null ? gender.Replace('"', '\''):""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(company != null ? company.Replace('"', '\''):""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(avatarPictureId); sb.Append("\",");
+                    sb.Append(forumPostCount); sb.Append(",");
+                    sb.Append('"'); sb.Append(signature != null ? signature.Replace('"', '\''):""); sb.Append("\",");
+                    sb.Append(locationCountryId);
+                    sb.Append(")");
+
+                    excelHelper.ExecuteCommand(sb.ToString());
+                }
+            }
+        }
+       
         #endregion
     }
 }

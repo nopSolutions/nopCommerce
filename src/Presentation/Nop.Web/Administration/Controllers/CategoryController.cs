@@ -420,9 +420,17 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportXml()
         {
-            var fileName = string.Format("categories_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            var xml = _exportManager.ExportCategoriesToXml();
-            return new XmlDownloadResult(xml, fileName);
+            try
+            {
+                var fileName = string.Format("categories_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+                var xml = _exportManager.ExportCategoriesToXml();
+                return new XmlDownloadResult(xml, fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion

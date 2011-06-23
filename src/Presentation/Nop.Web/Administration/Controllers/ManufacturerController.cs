@@ -234,10 +234,18 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportXml()
         {
-            var fileName = string.Format("manufacturers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            var manufacturers = _manufacturerService.GetAllManufacturers(true);
-            var xml = _exportManager.ExportManufacturersToXml(manufacturers);
-            return new XmlDownloadResult(xml, fileName);
+            try
+            {
+                var fileName = string.Format("manufacturers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+                var manufacturers = _manufacturerService.GetAllManufacturers(true);
+                var xml = _exportManager.ExportManufacturersToXml(manufacturers);
+                return new XmlDownloadResult(xml, fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion

@@ -1237,40 +1237,64 @@ namespace Nop.Admin.Controllers
 
         public ActionResult DownloadCatalogAsPdf()
         {
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, int.MaxValue, true);
-            string fileName = string.Format("pdfcatalog_{0}_{1}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
-            _pdfService.PrintProductsToPdf(products, _workContext.WorkingLanguage, filePath);
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "application/pdf", fileName);
+            try
+            {
+                var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                    _workContext.WorkingLanguage.Id, new List<int>(),
+                    ProductSortingEnum.Position, 0, int.MaxValue, true);
+                string fileName = string.Format("pdfcatalog_{0}_{1}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+                string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+                _pdfService.PrintProductsToPdf(products, _workContext.WorkingLanguage, filePath);
+                var bytes = System.IO.File.ReadAllBytes(filePath);
+                return File(bytes, "application/pdf", fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         public ActionResult ExportXml()
         {
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, int.MaxValue, true);
+            try
+            {
+                var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                    _workContext.WorkingLanguage.Id, new List<int>(),
+                    ProductSortingEnum.Position, 0, int.MaxValue, true);
 
-            var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            var xml = _exportManager.ExportProductsToXml(products);
-            return new XmlDownloadResult(xml, fileName);
+                var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+                var xml = _exportManager.ExportProductsToXml(products);
+                return new XmlDownloadResult(xml, fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         public ActionResult ExportExcel()
         {
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, int.MaxValue, true);
+            try
+            {
+                var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+                    _workContext.WorkingLanguage.Id, new List<int>(),
+                    ProductSortingEnum.Position, 0, int.MaxValue, true);
 
-            string fileName = string.Format("products_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
-            
-            _exportManager.ExportProductsToXls(filePath, products);
+                string fileName = string.Format("products_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+                string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
 
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "text/xls", fileName);
+                _exportManager.ExportProductsToXls(filePath, products);
+
+                var bytes = System.IO.File.ReadAllBytes(filePath);
+                return File(bytes, "text/xls", fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost]

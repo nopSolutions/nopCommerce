@@ -27,6 +27,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Admin.Models.Common;
 using Nop.Services.Orders;
+using Nop.Services.ExportImport;
 
 namespace Nop.Admin.Controllers
 {
@@ -50,6 +51,7 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderService _orderService;
+        private readonly IExportManager _exportManager;
 
         #endregion
 
@@ -63,7 +65,7 @@ namespace Nop.Admin.Controllers
             IAddressService addressService,
             CustomerSettings customerSettings, ITaxService taxService, 
             IWorkContext workContext, IPriceFormatter priceFormatter,
-            IOrderService orderService)
+            IOrderService orderService, IExportManager exportManager)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -80,6 +82,7 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._priceFormatter = priceFormatter;
             this._orderService = orderService;
+            this._exportManager = exportManager;
         }
 
         #endregion
@@ -967,6 +970,31 @@ namespace Nop.Admin.Controllers
             };
         }
         
+        #endregion
+
+        #region Export / Import
+
+        public ActionResult ExportExcel()
+        {
+            try
+            {
+                var customers = _customerService.GetAllCustomers(null, null, null, null, null, false, null, 0, int.MaxValue);
+
+                string fileName = string.Format("customers_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+                string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+
+                _exportManager.ExportCustomersToXls(filePath, customers);
+
+                var bytes = System.IO.File.ReadAllBytes(filePath);
+                return File(bytes, "text/xls", fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
         #endregion
     }
 }
