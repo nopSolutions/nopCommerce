@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.ExportImport
@@ -67,5 +68,12 @@ namespace Nop.Services.ExportImport
         /// <param name="customers">Customers</param>
         /// <returns>Result in XML format</returns>
         string ExportCustomersToXml(IList<Customer> customers);
+        
+        /// <summary>
+        /// Export language resources to xml
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <returns>Result in XML format</returns>
+        string ExportLanguageToXml(Language language);
     }
 }

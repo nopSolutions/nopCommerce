@@ -2090,9 +2090,6 @@
                   <LocaleResource Name="Edit">
                     <Value>Edit</Value>
                   </LocaleResource>
-                  <LocaleResource Name="ExportFromExcel">
-                    <Value>Export from Excel</Value>
-                  </LocaleResource>
                   <LocaleResource Name="ExportToExcel">
                     <Value>Export to Excel</Value>
                   </LocaleResource>
@@ -2102,12 +2099,15 @@
                 <LocaleResource Name="ExportToCsv">
                   <Value>Export to CSV</Value>
                 </LocaleResource>
-                <LocaleResource Name="ExportFromCsv">
-                  <Value>Export from CSV</Value>
-                </LocaleResource>
                 <LocaleResource Name="Go">
                     <Value>Go</Value>
                   </LocaleResource>
+                <LocaleResource Name="ImportFromCsv">
+                  <Value>Import from CSV</Value>
+                </LocaleResource>
+                <LocaleResource Name="ImportFromExcel">
+                  <Value>Import from Excel</Value>
+                </LocaleResource>
                   <LocaleResource Name="List">
                     <Value>List</Value>
                   </LocaleResource>
@@ -2693,6 +2693,12 @@
                     <LocaleResource Name="EditLanguageDetails">
                       <Value>Edit language details</Value>
                     </LocaleResource>
+                    <LocaleResource Name="Export">
+                      <Value>Export resources</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Import">
+                      <Value>Import resources</Value>
+                    </LocaleResource>
                     <LocaleResource Name="Resources">
                       <Value>Language resources</Value>
                       <Children>
@@ -2774,6 +2780,9 @@
                     </LocaleResource>
                     <LocaleResource Name="Deleted">
                       <Value>The language has been deleted successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Imported">
+                      <Value>The resources have been imported.</Value>
                     </LocaleResource>
                     <LocaleResource Name="Updated">
                       <Value>The language has been updated successfully.</Value>

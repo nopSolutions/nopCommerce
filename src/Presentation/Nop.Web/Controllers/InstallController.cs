@@ -176,6 +176,9 @@ namespace Nop.Web.Controllers
             if (DataProviderHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
 
+            //set page timeout to 5 minutes
+            this.Server.ScriptTimeout = 300;
+
             //TODO Allow store owner to enter database name, username, password (for SQL Server)
             var model = new InstallModel()
             {
@@ -194,6 +197,9 @@ namespace Nop.Web.Controllers
         {
             if (DataProviderHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
+
+            //set page timeout to 5 minutes
+            this.Server.ScriptTimeout = 300;
 
             if (model.DatabaseConnectionString != null)
                 model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();
@@ -289,11 +295,7 @@ namespace Nop.Web.Controllers
                     dataProviderInstance.InitConnectionFactory();
                     dataProviderInstance.SetDatabaseInitializer();
                     
-
-
-                    //set page timeout to 5 minutes
-                    this.Server.ScriptTimeout = 300;
-
+                    
                     //only now resolve installation service
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);

@@ -14,7 +14,7 @@
             <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
             <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
             <a href="@Url.Action("ExportExcel")" class="t-button">@T("Admin.Common.ExportToExcel")</a>
-            <button type="submit" id="importexcel" name="importexcel" value="importexcel" class="t-button">@T("Admin.Common.ExportFromExcel")</button>
+            <button type="submit" id="importexcel" name="importexcel" value="importexcel" class="t-button">@T("Admin.Common.ImportFromExcel")</button>
         </div>
     </div>
 
@@ -160,7 +160,7 @@
 @*import products form*@
 @{Html.Telerik().Window()
         .Name("importexcel-window")
-        .Title(T("Admin.Common.ExportFromExcel").Text)
+        .Title(T("Admin.Common.ImportFromExcel").Text)
         .Content(@<text>
         @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
@@ -175,7 +175,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button type="submit" class="t-button t-state-default">@T("Admin.Common.ExportFromExcel")</button>
+                    <button type="submit" class="t-button t-state-default">@T("Admin.Common.ImportFromExcel")</button>
                 </td>
             </tr>
         </table>

@@ -10,7 +10,7 @@
         </div>
             <div class="options">
                 <a href="@Url.Action("ExportCsv")" class="t-button">@T("Admin.Common.ExportToCsv")</a>
-                <button type="submit" id="importcsv" name="importcsv" value="importcsv" class="t-button">@T("Admin.Common.ExportFromCsv")</button>
+                <button type="submit" id="importcsv" name="importcsv" value="importcsv" class="t-button">@T("Admin.Common.ImportFromCsv")</button>
             </div>
     </div>
     <table width="100%">
@@ -132,7 +132,7 @@
 @*import emails form*@
 @{Html.Telerik().Window()
         .Name("importcsv-window")
-        .Title(T("Admin.Common.ExportFromCsv").Text)
+        .Title(T("Admin.Common.ImportFromCsv").Text)
         .Content(@<text>
         @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
@@ -147,7 +147,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button type="submit" class="t-button t-state-default">@T("Admin.Common.ExportFromCsv")</button>
+                    <button type="submit" class="t-button t-state-default">@T("Admin.Common.ImportFromCsv")</button>
                 </td>
             </tr>
         </table>

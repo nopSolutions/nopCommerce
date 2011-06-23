@@ -12,6 +12,8 @@ using Nop.Services.Catalog;
 using Nop.Core.Domain;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.ExportImport
 {
@@ -745,7 +747,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="customers">Customers</param>
-        public void ExportCustomersToXls(string filePath, IList<Customer> customers)
+        public virtual void ExportCustomersToXls(string filePath, IList<Customer> customers)
         {
             using (var excelHelper = new ExcelHelper(filePath))
             {
@@ -848,7 +850,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="customers">Customers</param>
         /// <returns>Result in XML format</returns>
-        public string ExportCustomersToXml(IList<Customer> customers)
+        public virtual string ExportCustomersToXml(IList<Customer> customers)
         {
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
@@ -893,6 +895,37 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("Signature", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature));
                 xmlWriter.WriteElementString("LocationCountryId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId).ToString());
                 
+                xmlWriter.WriteEndElement();
+            }
+
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteEndDocument();
+            xmlWriter.Close();
+            return stringWriter.ToString();
+        }
+
+        /// <summary>
+        /// Export language resources to xml
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <returns>Result in XML format</returns>
+        public virtual string ExportLanguageToXml(Language language)
+        {
+            if (language == null)
+                throw new ArgumentNullException("language");
+            var sb = new StringBuilder();
+            var stringWriter = new StringWriter(sb);
+            var xmlWriter = new XmlTextWriter(stringWriter);
+            xmlWriter.WriteStartDocument();
+            xmlWriter.WriteStartElement("Language");
+            xmlWriter.WriteAttributeString("Name", language.Name);
+
+            var resources = language.LocaleStringResources.OrderBy(x => x.ResourceName).ToList();
+            foreach (var resource in resources)
+            {
+                xmlWriter.WriteStartElement("LocaleResource");
+                xmlWriter.WriteAttributeString("Name", resource.ResourceName);
+                xmlWriter.WriteElementString("Value", null, resource.ResourceValue);
                 xmlWriter.WriteEndElement();
             }
 

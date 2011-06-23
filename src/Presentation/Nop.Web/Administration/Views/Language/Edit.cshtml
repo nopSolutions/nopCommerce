@@ -1,4 +1,5 @@
 ﻿@model LanguageModel
+@using Telerik.Web.Mvc.UI
 
 @using (Html.BeginForm())
 {
@@ -10,9 +11,69 @@
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
             <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+            <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="t-button">@T("Admin.Configuration.Languages.Export")</a>
+            <button type="submit" id="importxml" name="importxml" value="importxml" class="t-button">@T("Admin.Configuration.Languages.Import")</button>
             <span id="language-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("language-delete")
+@*import resources form*@
+@{Html.Telerik().Window()
+        .Name("importxml-window")
+        .Title(T("Admin.Configuration.Languages.Import").Text)
+        .Content(@<text>
+    @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table style="text-align: left;">
+            <tr>
+                <td>
+                    Xml file:
+                </td>
+                <td>
+                    <input type="file" id="importxmlfile" name="importxmlfile" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <b>NOTE: It can take up to several minutes.</b>
+                    <br />
+                    <b>NOTE: DO NOT click twice</b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="importxmlsubmit" type="submit" class="t-button t-state-default">@T("Admin.Configuration.Languages.Import")</button>
+                </td>
+            </tr>
+        </table>
+    }
+    </text>)
+        .Width(400)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#importxml").click(function (e) {
+            e.preventDefault();
+            $('#importxml-window').data('tWindow').center().open();
+        });
+    });
+</script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#installationform').submit(function () {
+                if ($('form').valid()) {
+                    $('input[type=submit]', this).attr('disabled', 'disabled');
+                }
+            });
+        });
+
+    </script>

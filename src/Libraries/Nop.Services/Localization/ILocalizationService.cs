@@ -60,5 +60,9 @@ namespace Nop.Services.Localization
         string GetResource(string resourceKey, int languageId,
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotNotFound = false);
 
+        /// <summary>
+        /// Clear cache
+        /// </summary>
+        void ClearCache();
     }
 }

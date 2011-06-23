@@ -190,6 +190,14 @@ namespace Nop.Services.Localization
             return result;
         }
 
+        /// <summary>
+        /// Clear cache
+        /// </summary>
+        public virtual void ClearCache()
+        {
+            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+        }
+
         #endregion
     }
 }

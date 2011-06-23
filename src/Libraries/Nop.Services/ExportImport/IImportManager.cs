@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.ExportImport
 {
@@ -15,5 +16,12 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="filePath">Excel file path</param>
         void ImportProductsFromXls(string filePath);
+        
+        /// <summary>
+        /// Import language resources from XML file
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <param name="xml">XML</param>
+        void ImportLanguageFromXml(Language language, string xml);
     }
 }

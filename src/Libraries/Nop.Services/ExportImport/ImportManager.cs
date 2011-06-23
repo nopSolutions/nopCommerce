@@ -14,11 +14,12 @@
 
 using System;
 using System.Data;
-using Nop.Core.Domain.Tax;
-using Nop.Services.Customers;
-using Nop.Core.Domain.Customers;
+using System.Linq;
+using System.Xml;
 using Nop.Services.Catalog;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Localization;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.ExportImport
 {
@@ -27,14 +28,18 @@ namespace Nop.Services.ExportImport
     /// </summary>
     public partial class ImportManager : IImportManager
     {
-        IProductService _productService;
+        private readonly IProductService _productService;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
 
-        public ImportManager(IProductService productService)
+        public ImportManager(IProductService productService, ILanguageService languageService,
+            ILocalizationService localizationService)
         {
             this._productService = productService;
+            this._languageService = languageService;
+            this._localizationService = localizationService;
         }
-
-
+        
         /// <summary>
         /// Import products from XLS file
         /// </summary>
@@ -246,6 +251,56 @@ namespace Nop.Services.ExportImport
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Import language resources from XML file
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <param name="xml">XML</param>
+        public virtual void ImportLanguageFromXml(Language language, string xml)
+        {
+            if (language == null)
+                throw new ArgumentNullException("language");
+
+            if (String.IsNullOrEmpty(xml))
+                return;
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xml);
+
+            var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
+            foreach (XmlNode node in nodes)
+            {
+                string name = node.Attributes["Name"].InnerText.Trim();
+                string value = "";
+                var valueNode = node.SelectSingleNode("Value");
+                if (valueNode != null)
+                    value = valueNode.InnerText;
+
+                if (String.IsNullOrEmpty(name))
+                    continue;
+
+
+                //do not use localizationservice because it'll clear cache and after adding each resoruce
+                //let's bulk insert
+                var resource = language.LocaleStringResources.Where(x => x.ResourceName.Contains(name)).FirstOrDefault();
+                if (resource != null)
+                    resource.ResourceValue = value;
+                else
+                {
+                    language.LocaleStringResources.Add(
+                        new LocaleStringResource()
+                        {
+                            ResourceName = name,
+                            ResourceValue = value
+                        });
+                }
+            }
+            _languageService.UpdateLanguage(language);
+
+            //clear cache
+            _localizationService.ClearCache();
         }
     }
 }

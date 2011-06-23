@@ -1,12 +1,17 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models;
 using Nop.Admin.Models.Localization;
+using Nop.Core;
 using Nop.Core.Domain.Localization;
+using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
 
@@ -18,16 +23,20 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
 		private readonly ILanguageService _languageService;
-		private ILocalizationService _localizationService;
-
+		private readonly ILocalizationService _localizationService;
+        private readonly IExportManager _exportManager;
+        private readonly IImportManager _importManager;
 		#endregion
 
 		#region Constructors
 
-		public LanguageController(ILanguageService languageService, ILocalizationService localizationService)
+		public LanguageController(ILanguageService languageService, ILocalizationService localizationService,
+            IExportManager exportManager, IImportManager importManager)
 		{
 			this._localizationService = localizationService;
             this._languageService = languageService;
+            this._exportManager = exportManager;
+            this._importManager = importManager;
 		}
 
 		#endregion 
@@ -94,6 +103,10 @@ namespace Nop.Admin.Controllers
 			var language = _languageService.GetLanguageById(id);
 			if (language == null) 
                 throw new ArgumentException("No language found with the specified id", "id");
+
+            //set page timeout to 5 minutes
+            this.Server.ScriptTimeout = 300;
+            
 			return View(language.ToModel());
 		}
         
@@ -209,6 +222,68 @@ namespace Nop.Admin.Controllers
 
 
             return Resources(languageId, command);
+        }
+
+        #endregion
+        
+        #region Export / Import
+
+        public ActionResult ExportXml(int id)
+        {
+            var language = _languageService.GetLanguageById(id);
+            if (language == null)
+                throw new ArgumentException("No language found with the specified id", "id");
+
+            try
+            {
+                var fileName = string.Format("language_{0}.xml", id);
+                var xml = _exportManager.ExportLanguageToXml(language);
+                return new XmlDownloadResult(xml, fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ImportXml(int id, FormCollection form)
+        {
+            var language = _languageService.GetLanguageById(id);
+            if (language == null)
+                throw new ArgumentException("No language found with the specified id", "id");
+
+            //set page timeout to 5 minutes
+            this.Server.ScriptTimeout = 300;
+
+            try
+            {
+                var file = Request.Files["importxmlfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    using (var sr = new StreamReader(file.InputStream, Encoding.UTF8))
+                    {
+                        string content = sr.ReadToEnd();
+                        _importManager.ImportLanguageFromXml(language, content);
+                    }
+
+                }
+                else
+                {
+                    ErrorNotification("Please upload a file");
+                    return RedirectToAction("Edit", new { id = language.Id });
+                }
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Imported"));
+                return RedirectToAction("Edit", new { id = language.Id });
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("Edit", new { id = language.Id });
+            }
+
         }
 
         #endregion
