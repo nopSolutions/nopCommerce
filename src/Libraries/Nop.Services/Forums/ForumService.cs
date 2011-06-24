@@ -612,8 +612,11 @@ namespace Nop.Services.Forums
                         continue;
                     }
 
-                    _workflowMessageService.SendNewForumTopicMessage(subscription.Customer, forumTopic,
-                        forum, languageId);
+                    if (!String.IsNullOrEmpty(subscription.Customer.Email))
+                    {
+                        _workflowMessageService.SendNewForumTopicMessage(subscription.Customer, forumTopic,
+                            forum, languageId);
+                    }
                 }
             }
         }
@@ -837,8 +840,11 @@ namespace Nop.Services.Forums
                         continue;
                     }
 
-                    _workflowMessageService.SendNewForumPostMessage(subscription.Customer, forumPost,
-                        forumTopic, forum, languageId);
+                    if (!String.IsNullOrEmpty(subscription.Customer.Email))
+                    {
+                        _workflowMessageService.SendNewForumPostMessage(subscription.Customer, forumPost,
+                            forumTopic, forum, languageId);
+                    }
                 }
             }
         }

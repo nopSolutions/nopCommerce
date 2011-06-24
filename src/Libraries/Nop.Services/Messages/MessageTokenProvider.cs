@@ -9,26 +9,20 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
+using Nop.Core.Html;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Catalog;
-using Nop.Core.Html;
-using Nop.Services.Forums;
-using Nop.Services.Media;
-using Nop.Services.Orders;
 using Nop.Services.Seo;
-using Nop.Services.Tax;
-using Nop.Core.Domain.Forums;
 
 namespace Nop.Services.Messages
 {
@@ -449,7 +443,7 @@ namespace Nop.Services.Messages
                 tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
             }
 
-            //TODO add a method for getting URL (e.g. SEOHelper.GetOrderUrl)
+            //TODO add a method for getting URL
             tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id)));
         }
 
@@ -529,8 +523,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.ShortDescription", product.ShortDescription));
 
             //TODO add a method for getting URL
-            var productSeName = product.GetSeName();
-            var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, productSeName);
+            var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl));
         }
 
@@ -543,8 +536,9 @@ namespace Nop.Services.Messages
 
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic)
         {
-            //TODO topic URL (SeoHelper.GetTopicUrl())
-            tokens.Add(new Token("Forums.TopicURL", "TopicURL Not Implemented"));
+            //TODO add a method for getting URL
+            var topicUrl = string.Format("{0}boards/topic/{1}/{2}", _webHelper.GetStoreLocation(false), forumTopic.Id, forumTopic.GetSeName());
+            tokens.Add(new Token("Forums.TopicURL", topicUrl));
             tokens.Add(new Token("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject)));
         }
 
@@ -556,8 +550,9 @@ namespace Nop.Services.Messages
 
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
         {
-            //TODO forum URL (SeoHelper.GetForumUrl())
-            tokens.Add(new Token("Forums.ForumURL", "ForumURL Not Implemented"));
+            //TODO add a method for getting URL
+            var forumUrl = string.Format("{0}boards/forum/{1}/{2}", _webHelper.GetStoreLocation(false), forum.Id, forum.GetSeName());
+            tokens.Add(new Token("Forums.ForumURL", forumUrl));
             tokens.Add(new Token("Forums.ForumName", HttpUtility.HtmlEncode(forum.Name)));
         }
 

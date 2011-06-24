@@ -661,7 +661,7 @@ namespace Nop.Services.Messages
                 return 0;
 
             var customerTokens = GenerateTokens(customer);
-            //TODO add a method for getting URL (e.g. SEOHelper.GetWishlistUrl)
+            //TODO add a method for getting URL
             customerTokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
             customerTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage));
             customerTokens.Add(new Token("Wishlist.Email", customerEmail));
