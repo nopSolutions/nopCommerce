@@ -112,6 +112,13 @@ namespace Nop.Admin.Controllers
 
             return RedirectToAction("List");
         }
+
+        public ActionResult ReloadList()
+        {
+            //restart application
+            _webHelper.RestartAppDomain("~/Admin/Plugin/List");
+            return RedirectToAction("List");
+        }
         #endregion
     }
 }

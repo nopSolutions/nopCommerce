@@ -2975,6 +2975,9 @@
                     <LocaleResource Name="Installed">
                       <Value>The plugin has been installed.</Value>
                     </LocaleResource>
+                    <LocaleResource Name="ReloadList">
+                      <Value>Reload list of plugins</Value>
+                    </LocaleResource>
                     <LocaleResource Name="Uninstalled">
                       <Value>The plugin has been uninstalled.</Value>
                     </LocaleResource>
