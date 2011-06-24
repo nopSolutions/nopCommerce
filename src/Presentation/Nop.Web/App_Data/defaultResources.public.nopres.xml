@@ -443,11 +443,116 @@
       <LocaleResource Name="AddNewCategory">
         <Value>Added a new category ('{0}')</Value>
       </LocaleResource>
+      <LocaleResource Name="AddNewCheckoutAttribute">
+        <Value>Added a new checkout attribute ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewCustomer">
+        <Value>Added a new customer (ID = {0})</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewCustomerRole">
+        <Value>Added a new customer role ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewDiscount">
+        <Value>Added a new discount ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewGiftCard">
+        <Value>Added a new gift card ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewManufacturer">
+        <Value>Added a new manufacturer ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewProduct">
+        <Value>Added a new product ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewProductAttribute">
+        <Value>Added a new product attribute ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewProductVariant">
+        <Value>Added a new product variant ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewSetting">
+        <Value>Added a new setting ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="AddNewSpecAttribute">
+        <Value>Added a new specification attribute ('{0}')</Value>
+      </LocaleResource>
       <LocaleResource Name="DeleteCategory">
         <Value>Deleted a category ('{0}')</Value>
       </LocaleResource>
+      <LocaleResource Name="DeleteCheckoutAttribute">
+        <Value>Deleted a checkout attribute ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteCustomer">
+        <Value>Deleted a customer (ID = {0})</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteCustomerRole">
+        <Value>Deleted a customer role ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteDiscount">
+        <Value>Deleted a discount ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteGiftCard">
+        <Value>Deleted a gift card ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteManufacturer">
+        <Value>Deleted a manufacturer ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteProduct">
+        <Value>Deleted a product ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteProductAttribute">
+        <Value>Deleted a product attribute ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteProductVariant">
+        <Value>Deleted a product variant ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteReturnRequest">
+        <Value>Deleted a return request (ID = {0})</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteSetting">
+        <Value>Deleted a setting ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="DeleteSpecAttribute">
+        <Value>Deleted a specification attribute ('{0}')</Value>
+      </LocaleResource>
       <LocaleResource Name="EditCategory">
         <Value>Edited a category ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditCheckoutAttribute">
+        <Value>Edited a checkout attribute ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditCustomer">
+        <Value>Edited a customer (ID = {0})</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditCustomerRole">
+        <Value>Edited a customer role ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditDiscount">
+        <Value>Edited a discount ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditGiftCard">
+        <Value>Edited a gift card ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditManufacturer">
+        <Value>Edited a manufacturer ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditProduct">
+        <Value>Edited a product ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditProductAttribute">
+        <Value>Edited a product attribute ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditProductVariant">
+        <Value>Edited a product variant ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditReturnRequest">
+        <Value>Edited a return request (ID = {0})</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditSettings">
+        <Value>Edited settings</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditSpecAttribute">
+        <Value>Edited a specification attribute ('{0}')</Value>
       </LocaleResource>
       <LocaleResource Name="PlaceOrder">
         <Value>Placed a new order</Value>
@@ -1596,7 +1701,7 @@
             </LocaleResource>
         </Children>
     </LocaleResource>
-    <LocaleResource Name="ForumSubscriptions">
+  <LocaleResource Name="ForumSubscriptions">
         <Children>
             <LocaleResource Name="DeleteSelected">
                 <Value>Delete Selected</Value>
@@ -2630,7 +2735,7 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
-    <LocaleResource Name="Profile">
+  <LocaleResource Name="Profile">
         <Children>
             <LocaleResource Name="ProfileOf">
                 <Value>Profile: {0}</Value>

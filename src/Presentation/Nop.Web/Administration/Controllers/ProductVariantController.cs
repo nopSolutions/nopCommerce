@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Catalog;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
-using Nop.Core.Domain.Orders;
-using System.Text;
 
 namespace Nop.Admin.Controllers
 {
@@ -42,6 +38,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
@@ -57,7 +54,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, IProductAttributeService productAttributeService,
             ITaxCategoryService taxCategoryService, IWorkContext workContext,
             IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
-            IProductAttributeParser productAttributeParser,
+            IProductAttributeParser productAttributeParser, ICustomerActivityService customerActivityService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings)
         {
@@ -73,6 +70,7 @@ namespace Nop.Admin.Controllers
             this._productAttributeFormatter = productAttributeFormatter;
             this._shoppingCartService = shoppingCartService;
             this._productAttributeParser = productAttributeParser;
+            this._customerActivityService = customerActivityService;
 
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
@@ -269,6 +267,9 @@ namespace Nop.Admin.Controllers
                 }
                 _productService.UpdateProductVariant(variant);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewProductVariant", _localizationService.GetResource("ActivityLog.AddNewProductVariant"), variant.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Variants.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = variant.Id }) : RedirectToAction("Edit", "Product", new { id = variant.ProductId });
             }
@@ -343,6 +344,9 @@ namespace Nop.Admin.Controllers
                 }
                 _productService.UpdateProductVariant(variant);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditProductVariant", _localizationService.GetResource("ActivityLog.EditProductVariant"), variant.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Variants.Updated"));
                 return continueEditing ? RedirectToAction("Edit", model.Id) : RedirectToAction("Edit", "Product", new { id = variant.ProductId });
             }
@@ -366,6 +370,9 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product variant found with the specified id");
             var productId = variant.ProductId;
             _productService.DeleteProductVariant(variant);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteProductVariant", _localizationService.GetResource("ActivityLog.DeleteProductVariant"), variant.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Variants.Deleted"));
             return RedirectToAction("Edit", "Product", new { id = productId });

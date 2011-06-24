@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -21,8 +18,9 @@ namespace Nop.Admin.Controllers
 
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService; 
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion Fields
 
@@ -30,12 +28,13 @@ namespace Nop.Admin.Controllers
 
         public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, ICustomerActivityService customerActivityService)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -120,6 +119,9 @@ namespace Nop.Admin.Controllers
                 _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
                 UpdateAttributeLocales(specificationAttribute, model);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewSpecAttribute", _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = specificationAttribute.Id }) : RedirectToAction("List");
             }
@@ -157,6 +159,9 @@ namespace Nop.Admin.Controllers
 
                 UpdateAttributeLocales(specificationAttribute, model);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditSpecAttribute", _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Updated"));
                 return continueEditing ? RedirectToAction("Edit", specificationAttribute.Id) : RedirectToAction("List");
             }
@@ -171,6 +176,9 @@ namespace Nop.Admin.Controllers
         {
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteSpecAttribute", _localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
             return RedirectToAction("List");

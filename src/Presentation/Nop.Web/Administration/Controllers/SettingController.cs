@@ -33,6 +33,7 @@ using Nop.Web.Framework.Themes;
 using Telerik.Web.Mvc;
 using Nop.Services.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -54,6 +55,7 @@ namespace Nop.Admin.Controllers
         private readonly IEncryptionService _encryptionService;
         private readonly IThemeProvider _themeProvider;
         private readonly ICustomerService _customerService;
+        private readonly ICustomerActivityService _customerActivityService;
 
 
         private BlogSettings _blogSettings;
@@ -86,6 +88,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             IOrderService orderService, IEncryptionService encryptionService,
             IThemeProvider themeProvider, ICustomerService customerService, 
+            ICustomerActivityService customerActivityService,
             BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
@@ -110,6 +113,7 @@ namespace Nop.Admin.Controllers
             this._encryptionService = encryptionService;
             this._themeProvider = themeProvider;
             this._customerService = customerService;
+            this._customerActivityService = customerActivityService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -146,6 +150,9 @@ namespace Nop.Admin.Controllers
             _blogSettings = model.ToEntity(_blogSettings);
             _settingService.SaveSetting(_blogSettings);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Blog");
         }
@@ -165,6 +172,9 @@ namespace Nop.Admin.Controllers
             _forumSettings = model.ToEntity(_forumSettings);
             _settingService.SaveSetting(_forumSettings);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Forum");
         }
@@ -182,6 +192,9 @@ namespace Nop.Admin.Controllers
         {
             _newsSettings = model.ToEntity(_newsSettings);
             _settingService.SaveSetting(_newsSettings);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("News");
@@ -245,7 +258,9 @@ namespace Nop.Admin.Controllers
 
             _shippingSettings.ShippingOriginAddressId = originAddress.Id;
             _settingService.SaveSetting(_shippingSettings);
-
+            
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Shipping");
@@ -326,6 +341,8 @@ namespace Nop.Admin.Controllers
             _taxSettings.DefaultTaxAddressId = defaultAddress.Id;
             _settingService.SaveSetting(_taxSettings);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Tax");
@@ -344,6 +361,9 @@ namespace Nop.Admin.Controllers
         {
             _catalogSettings = model.ToEntity(_catalogSettings);
             _settingService.SaveSetting(_catalogSettings);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Catalog");
@@ -366,11 +386,13 @@ namespace Nop.Admin.Controllers
             {
                 _rewardPointsSettings = model.ToEntity(_rewardPointsSettings);
                 _settingService.SaveSetting(_rewardPointsSettings);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+                
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"), false);
             }
-
-            //If we got this far, something failed, redisplay form
-
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"), false);
+            
             return View(model);
         }
 
@@ -416,6 +438,9 @@ namespace Nop.Admin.Controllers
 
             _settingService.SaveSetting(_orderSettings);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Order");
         }
@@ -433,6 +458,9 @@ namespace Nop.Admin.Controllers
         {
             _shoppingCartSettings = model.ToEntity(_shoppingCartSettings);
             _settingService.SaveSetting(_shoppingCartSettings);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("ShoppingCart");
@@ -454,6 +482,9 @@ namespace Nop.Admin.Controllers
             _mediaSettings = model.ToEntity(_mediaSettings);
             _settingService.SaveSetting(_mediaSettings);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Media");
         }
@@ -462,6 +493,9 @@ namespace Nop.Admin.Controllers
         public ActionResult ChangePictureStorage()
         {
             _pictureService.StoreInDb = !_pictureService.StoreInDb;
+
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Media");
@@ -497,6 +531,9 @@ namespace Nop.Admin.Controllers
             _dateTimeSettings.DefaultStoreTimeZoneId = model.DateTimeSettings.DefaultStoreTimeZoneId;
             _dateTimeSettings.AllowCustomersToSetTimeZone = model.DateTimeSettings.AllowCustomersToSetTimeZone;
             _settingService.SaveSetting(_dateTimeSettings);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("CustomerUser");
@@ -597,6 +634,9 @@ namespace Nop.Admin.Controllers
             //localization settings
             _localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
             _settingService.SaveSetting(_localizationSettings);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("GeneralCommon");
@@ -736,6 +776,9 @@ namespace Nop.Admin.Controllers
 
             _settingService.SetSetting(model.Name, model.Value);
 
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
             return AllSettings(command);
         }
         [GridAction(EnableCustomBinding = true)]
@@ -747,7 +790,10 @@ namespace Nop.Admin.Controllers
             }
 
             _settingService.SetSetting(model.Name, model.Value);
-            
+
+            //activity log
+            _customerActivityService.InsertActivity("AddNewSetting", _localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name);
+
             return AllSettings(command);
         }
         [GridAction(EnableCustomBinding = true)]
@@ -755,7 +801,10 @@ namespace Nop.Admin.Controllers
         {
             var setting = _settingService.GetSettingById(id);
             _settingService.DeleteSetting(setting);
-            
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteSetting", _localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name);
+
             return AllSettings(command);
         }
 

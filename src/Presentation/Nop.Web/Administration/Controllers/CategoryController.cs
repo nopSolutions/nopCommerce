@@ -268,7 +268,6 @@ namespace Nop.Admin.Controllers
                 _categoryService.UpdateCategory(category);
 
                 //activity log
-                //TODO add activity log to all other pages
                 _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Added"));

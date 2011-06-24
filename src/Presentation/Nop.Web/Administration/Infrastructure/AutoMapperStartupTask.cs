@@ -126,7 +126,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ActivityLogTypeName,
                            opt => opt.MapFrom(src => src.ActivityLogType.Name))
                 .ForMember(dest => dest.CustomerName,
-                           opt => opt.MapFrom(src => src.Customer.GetFullName()));
+                           opt => opt.MapFrom(src => src.Customer.Email));
             //currencies
             ViceVersa<Currency, CurrencyModel>();
             //locale resource

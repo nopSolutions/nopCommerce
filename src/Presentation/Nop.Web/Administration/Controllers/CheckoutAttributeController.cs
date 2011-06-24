@@ -12,6 +12,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
@@ -35,6 +36,7 @@ namespace Nop.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -43,7 +45,8 @@ namespace Nop.Admin.Controllers
         public CheckoutAttributeController(ICheckoutAttributeService checkoutAttributeService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService, ITaxCategoryService taxCategoryService,
-            IWorkContext workContext, ICurrencyService currencyService, CurrencySettings currencySettings,
+            IWorkContext workContext, ICurrencyService currencyService, 
+            ICustomerActivityService customerActivityService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings)
         {
             this._checkoutAttributeService = checkoutAttributeService;
@@ -53,6 +56,7 @@ namespace Nop.Admin.Controllers
             this._taxCategoryService = taxCategoryService;
             this._workContext = workContext;
             this._currencyService = currencyService;
+            this._customerActivityService = customerActivityService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
@@ -169,6 +173,9 @@ namespace Nop.Admin.Controllers
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
                 UpdateAttributeLocales(checkoutAttribute, model);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewCheckoutAttribute", _localizationService.GetResource("ActivityLog.AddNewCheckoutAttribute"), checkoutAttribute.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = checkoutAttribute.Id }) : RedirectToAction("List");
             }
@@ -209,6 +216,8 @@ namespace Nop.Admin.Controllers
 
                 UpdateAttributeLocales(checkoutAttribute, model);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditCheckoutAttribute", _localizationService.GetResource("ActivityLog.EditCheckoutAttribute"), checkoutAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Updated"));
                 return continueEditing ? RedirectToAction("Edit", checkoutAttribute.Id) : RedirectToAction("List");
@@ -225,6 +234,9 @@ namespace Nop.Admin.Controllers
         {
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
             _checkoutAttributeService.DeleteCheckoutAttribute(checkoutAttribute);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteCheckoutAttribute", _localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Deleted"));
             return RedirectToAction("List");

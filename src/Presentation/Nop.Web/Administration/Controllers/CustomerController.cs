@@ -29,6 +29,7 @@ using Nop.Admin.Models.Common;
 using Nop.Services.Orders;
 using Nop.Services.ExportImport;
 using Nop.Web.Framework.Mvc;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -53,6 +54,7 @@ namespace Nop.Admin.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderService _orderService;
         private readonly IExportManager _exportManager;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -66,7 +68,8 @@ namespace Nop.Admin.Controllers
             IAddressService addressService,
             CustomerSettings customerSettings, ITaxService taxService, 
             IWorkContext workContext, IPriceFormatter priceFormatter,
-            IOrderService orderService, IExportManager exportManager)
+            IOrderService orderService, IExportManager exportManager,
+            ICustomerActivityService customerActivityService)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -84,6 +87,7 @@ namespace Nop.Admin.Controllers
             this._priceFormatter = priceFormatter;
             this._orderService = orderService;
             this._exportManager = exportManager;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -312,6 +316,9 @@ namespace Nop.Admin.Controllers
                 }
                 _customerService.UpdateCustomer(customer);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
             }
@@ -463,6 +470,8 @@ namespace Nop.Admin.Controllers
                     }
                     _customerService.UpdateCustomer(customer);
 
+                    //activity log
+                    _customerActivityService.InsertActivity("EditCustomer", _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
                     return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
@@ -557,6 +566,9 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No customer found with the specified id", "id");
 
             _customerService.DeleteCustomer(customer);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteCustomer", _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
             return RedirectToAction("List");

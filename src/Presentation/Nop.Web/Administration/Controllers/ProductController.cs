@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Catalog;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
@@ -18,9 +16,8 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
-using Telerik.Web.Mvc.Extensions;
 using Nop.Services.Common;
-using Nop.Web.Framework.Security;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -44,6 +41,7 @@ namespace Nop.Admin.Controllers
         private readonly IPdfService _pdfService;
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -56,7 +54,8 @@ namespace Nop.Admin.Controllers
             ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
             ITaxCategoryService taxCategoryService, IProductTagService productTagService,
             ICopyProductService copyProductService, IPdfService pdfService,
-            IExportManager exportManager, IImportManager importManager)
+            IExportManager exportManager, IImportManager importManager,
+            ICustomerActivityService customerActivityService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -73,6 +72,7 @@ namespace Nop.Admin.Controllers
             this._pdfService = pdfService;
             this._exportManager = exportManager;
             this._importManager = importManager;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion 
@@ -469,6 +469,9 @@ namespace Nop.Admin.Controllers
                 _productService.InsertProductVariant(variant);
                 FirstVariant_UpdateLocales(variant, model.FirstProductVariantModel);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewProduct", _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
+                
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
@@ -534,6 +537,9 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(product, model);
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
 
+                //activity log
+                _customerActivityService.InsertActivity("EditProduct", _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
+                
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
@@ -556,6 +562,9 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(id);
             _productService.DeleteProduct(product);
 
+            //activity log
+            _customerActivityService.InsertActivity("DeleteProduct", _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
+                
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Deleted"));
             return RedirectToAction("List");
         }

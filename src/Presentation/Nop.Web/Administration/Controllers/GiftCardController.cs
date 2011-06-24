@@ -23,6 +23,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -39,6 +40,7 @@ namespace Nop.Admin.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly ILocalizationService _localizationService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -48,7 +50,8 @@ namespace Nop.Admin.Controllers
             IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,
             IDateTimeHelper dateTimeHelper, LocalizationSettings localizationSettings,
             ICurrencyService currencyService, CurrencySettings currencySettings,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ICustomerActivityService customerActivityService)
         {
             this._giftCardService = giftCardService;
             this._priceFormatter = priceFormatter;
@@ -58,6 +61,7 @@ namespace Nop.Admin.Controllers
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._localizationService = localizationService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -136,6 +140,9 @@ namespace Nop.Admin.Controllers
                 giftCard.CreatedOnUtc = DateTime.UtcNow;
                 _giftCardService.InsertGiftCard(giftCard);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewGiftCard", _localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode);
+
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
             }
@@ -177,6 +184,9 @@ namespace Nop.Admin.Controllers
             {
                 giftCard = model.ToEntity(giftCard);
                 _giftCardService.UpdateGiftCard(giftCard);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditGiftCard", _localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode);
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
                 return continueEditing ? RedirectToAction("Edit", giftCard.Id) : RedirectToAction("List");
@@ -233,6 +243,9 @@ namespace Nop.Admin.Controllers
         {
             var giftCard = _giftCardService.GetGiftCardById(id);
             _giftCardService.DeleteGiftCard(giftCard);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteGiftCard", _localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode);
 
             SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
             return RedirectToAction("List");

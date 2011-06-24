@@ -205,6 +205,7 @@ namespace Nop.Services.Orders
             var orders = query.ToList();
             return orders;
         }
+
         /// <summary>
         /// Gets all orders by affiliate identifier
         /// </summary>

@@ -7,6 +7,7 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -17,16 +18,19 @@ namespace Nop.Admin.Controllers
 
 		private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICustomerActivityService _customerActivityService;
+
 
 		#endregion
 
 		#region Constructors
 
         public CustomerRoleController(ICustomerService customerService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, ICustomerActivityService customerActivityService)
 		{
             this._customerService = customerService;
             this._localizationService = localizationService;
+            this._customerActivityService = customerActivityService;
 		}
 
 		#endregion 
@@ -80,6 +84,9 @@ namespace Nop.Admin.Controllers
                 var customerRole = model.ToEntity();
                 _customerService.InsertCustomerRole(customerRole);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewCustomerRole", _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
             }
@@ -107,6 +114,9 @@ namespace Nop.Admin.Controllers
                 customerRole = model.ToEntity(customerRole);
                 _customerService.UpdateCustomerRole(customerRole);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
                 return continueEditing ? RedirectToAction("Edit", customerRole.Id) : RedirectToAction("List");
             }
@@ -125,6 +135,9 @@ namespace Nop.Admin.Controllers
             try
             {
                 _customerService.DeleteCustomerRole(customerRole);
+
+                //activity log
+                _customerActivityService.InsertActivity("DeleteCustomerRole", _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
                 return RedirectToAction("List");

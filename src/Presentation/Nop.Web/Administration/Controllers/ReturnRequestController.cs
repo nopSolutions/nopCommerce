@@ -24,6 +24,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -39,6 +40,7 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion Fields
 
@@ -47,7 +49,8 @@ namespace Nop.Admin.Controllers
         public ReturnRequestController(IOrderService orderService,
             ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, IWorkContext workContext,
-            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
+            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
+            ICustomerActivityService customerActivityService)
         {
             this._orderService = orderService;
             this._customerService = customerService;
@@ -56,6 +59,7 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -161,6 +165,9 @@ namespace Nop.Admin.Controllers
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
                 _customerService.UpdateCustomer(returnRequest.Customer);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditReturnRequest", _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
+
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
                 return continueEditing ? RedirectToAction("Edit", returnRequest.Id) : RedirectToAction("List");
             }
@@ -193,6 +200,9 @@ namespace Nop.Admin.Controllers
         {
             var returnRequest = _orderService.GetReturnRequestById(id);
             _orderService.DeleteReturnRequest(returnRequest);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteReturnRequest", _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Deleted"));
             return RedirectToAction("List");

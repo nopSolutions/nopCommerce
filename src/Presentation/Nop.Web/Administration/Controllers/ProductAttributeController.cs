@@ -8,6 +8,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -18,8 +19,9 @@ namespace Nop.Admin.Controllers
 
         private readonly IProductAttributeService _productAttributeService;
         private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService; 
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion Fields
 
@@ -27,12 +29,14 @@ namespace Nop.Admin.Controllers
 
         public ProductAttributeController(IProductAttributeService productAttributeService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ICustomerActivityService customerActivityService)
         {
             this._productAttributeService = productAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -116,6 +120,9 @@ namespace Nop.Admin.Controllers
                 _productAttributeService.InsertProductAttribute(productAttribute);
                 UpdateLocales(productAttribute, model);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewProductAttribute", _localizationService.GetResource("ActivityLog.AddNewProductAttribute"), productAttribute.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = productAttribute.Id }) : RedirectToAction("List");
             }
@@ -160,6 +167,9 @@ namespace Nop.Admin.Controllers
 
                 UpdateLocales(productAttribute, model);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditProductAttribute", _localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Updated"));
                 return continueEditing ? RedirectToAction("Edit", productAttribute.Id) : RedirectToAction("List");
             }
@@ -174,6 +184,9 @@ namespace Nop.Admin.Controllers
         {
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             _productAttributeService.DeleteProductAttribute(productAttribute);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteProductAttribute", _localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
             return RedirectToAction("List");

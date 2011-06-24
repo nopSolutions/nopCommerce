@@ -21,6 +21,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -33,6 +34,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
 
@@ -42,13 +44,15 @@ namespace Nop.Admin.Controllers
 
         public DiscountController(IDiscountService discountService, 
             ILocalizationService localizationService, ICurrencyService currencyService,
-            IWebHelper webHelper, IDateTimeHelper dateTimeHelper, CurrencySettings currencySettings)
+            IWebHelper webHelper, IDateTimeHelper dateTimeHelper,
+            ICustomerActivityService customerActivityService, CurrencySettings currencySettings)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
             this._currencyService = currencyService;
             this._webHelper = webHelper;
             this._dateTimeHelper = dateTimeHelper;
+            this._customerActivityService = customerActivityService;
             this._currencySettings = currencySettings;
         }
 
@@ -155,6 +159,9 @@ namespace Nop.Admin.Controllers
                 var discount = model.ToEntity();
                 _discountService.InsertDiscount(discount);
 
+                //activity log
+                _customerActivityService.InsertActivity("AddNewDiscount", _localizationService.GetResource("ActivityLog.AddNewDiscount"), discount.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = discount.Id }) : RedirectToAction("List");
             }
@@ -186,6 +193,9 @@ namespace Nop.Admin.Controllers
                 discount = model.ToEntity(discount);
                 _discountService.UpdateDiscount(discount);
 
+                //activity log
+                _customerActivityService.InsertActivity("EditDiscount", _localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", discount.Id) : RedirectToAction("List");
             }
@@ -201,6 +211,9 @@ namespace Nop.Admin.Controllers
         {
             var discount = _discountService.GetDiscountById(id);
             _discountService.DeleteDiscount(discount);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteDiscount", _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Deleted"));
             return RedirectToAction("List");
