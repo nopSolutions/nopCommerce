@@ -21,6 +21,7 @@ namespace Nop.Web.Controllers
     public class InstallController : BaseNopController
     {
         #region Utilities
+
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
@@ -42,6 +43,16 @@ namespace Nop.Web.Controllers
                 return false;
             }
         }
+
+        /// <summary>
+        /// Check permissions
+        /// </summary>
+        /// <param name="path">Path</param>
+        /// <param name="checkRead">Check read</param>
+        /// <param name="checkWrite">Check write</param>
+        /// <param name="checkModify">Check modify</param>
+        /// <param name="checkDelete">Check delete</param>
+        /// <returns>Resulr</returns>
         private bool CheckPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
             bool flag = false;
@@ -166,7 +177,37 @@ namespace Nop.Web.Controllers
             }
             return false;
         }
-        
+
+        /// <summary>
+        /// Create contents of connection strings used by the SqlConnection class
+        /// </summary>
+        /// <param name="trustedConnection">Avalue that indicates whether User ID and Password are specified in the connection (when false) or whether the current Windows account credentials are used for authentication (when true)</param>
+        /// <param name="serverName">The name or network address of the instance of SQL Server to connect to</param>
+        /// <param name="databaseName">The name of the database associated with the connection</param>
+        /// <param name="userName">The user ID to be used when connecting to SQL Server</param>
+        /// <param name="password">The password for the SQL Server account</param>
+        /// <param name="timeout">The connection timeout</param>
+        /// <returns>Connection string</returns>
+        private string CreateConnectionString(bool trustedConnection,
+            string serverName, string databaseName, string userName, string password, int timeout = 0)
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.IntegratedSecurity = trustedConnection;
+            builder.DataSource = serverName;
+            builder.InitialCatalog = databaseName;
+            if (!trustedConnection)
+            {
+                builder.UserID = userName;
+                builder.Password = password;
+            }
+            builder.PersistSecurityInfo = false;
+            builder.MultipleActiveResultSets = true;
+            if (timeout > 0)
+            {
+                builder.ConnectTimeout = timeout;
+            }
+            return builder.ConnectionString;
+        }
         #endregion
 
         #region Methods
@@ -185,9 +226,11 @@ namespace Nop.Web.Controllers
                 AdminEmail = "admin@yourStore.com",
                 //AdminPassword = "admin",
                 //ConfirmPassword = "admin",
+                InstallSampleData = true,
                 DatabaseConnectionString = "",
                 DataProvider = "sqlce",
-                InstallSampleData= true,
+                SqlAuthenticationType = "sqlauthentication",
+                SqlConnectionInfo = "sqlconnectioninfo_values"
             };
             return View(model);
         }
@@ -204,31 +247,41 @@ namespace Nop.Web.Controllers
             if (model.DatabaseConnectionString != null)
                 model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();
 
-            //validate conncetion string
+            //SQL Server
             if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
             {
-                //SQL Server
-                if (string.IsNullOrEmpty(model.DatabaseConnectionString))
+                if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    ModelState.AddModelError("", "A SQL connection string is required");
-                }
-                else
-                {
+                    //raw connection string
+                    if (string.IsNullOrEmpty(model.DatabaseConnectionString))
+                        ModelState.AddModelError("", "A SQL connection string is required");
+
                     try
                     {
                         //try to create connection string
                         new SqlConnectionStringBuilder(model.DatabaseConnectionString);
-
-
-                        //check whether database exists
-                        if (!SqlServerDatabaseExists(model.DatabaseConnectionString))
-                        {
-                            ModelState.AddModelError("", "Database does not exist or you don't have permissions to connect to it");
-                        }
                     }
                     catch (Exception exc)
                     {
                         ModelState.AddModelError("", "Wrong SQL connection string format");
+                    }
+                }
+                else
+                {
+                    //values
+                    if (string.IsNullOrEmpty(model.SqlServerName))
+                        ModelState.AddModelError("", "SQL Server name is required");
+                    if (string.IsNullOrEmpty(model.SqlDatabaseName))
+                        ModelState.AddModelError("", "Database name is required");
+
+                    //authentication type
+                    if (model.SqlAuthenticationType.Equals("sqlauthentication", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        //SQL authentication
+                        if (string.IsNullOrEmpty(model.SqlServerUsername))
+                            ModelState.AddModelError("", "SQL Username is required");
+                        if (string.IsNullOrEmpty(model.SqlServerPassword))
+                            ModelState.AddModelError("", "SQL Password is required");
                     }
                 }
             }
@@ -266,7 +319,23 @@ namespace Nop.Web.Controllers
                     if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //SQL Server
-                        connectionString = model.DatabaseConnectionString;
+
+                        if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            //raw connection string
+                            connectionString = model.DatabaseConnectionString;
+                        }
+                        else
+                        {
+                            //values
+                            connectionString = CreateConnectionString(model.SqlAuthenticationType == "windowsauthentication",
+                                model.SqlServerName, model.SqlDatabaseName,
+                                model.SqlServerUsername, model.SqlServerPassword);
+                        }
+                        
+                        //check whether database exists
+                        if (!SqlServerDatabaseExists(connectionString))
+                            throw new Exception("Database does not exist or you don't have permissions to connect to it");
                     }
                     else
                     {
@@ -274,7 +343,7 @@ namespace Nop.Web.Controllers
                         //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
                         string databasePath = HostingEnvironment.MapPath("~/App_Data/") + @"Nop.Db.sdf";
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
-                        
+
                         //drop database if exists
                         if (System.IO.File.Exists(databasePath))
                         {

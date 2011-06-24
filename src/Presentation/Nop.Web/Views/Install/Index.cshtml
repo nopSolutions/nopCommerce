@@ -16,19 +16,49 @@
 
         $(document).ready(function () {
             $('input:radio[name=DataProvider]').click(toggleProvider);
+            $('input:radio[name=SqlConnectionInfo]').click(toggleSqlConnectionInfo);
+            $('input:radio[name=SqlAuthenticationType]').click(toggleSqlAuthenticationType);
 
             toggleProvider();
+            toggleSqlConnectionInfo();
+            toggleSqlAuthenticationType();
         });
+
 
         function toggleProvider() {
             var selectedProvider = $("input[name=DataProvider]:checked").attr('id');
             if (selectedProvider == 'provider_sqlce') {
-                $('#sqlDatabaseConnectionString').hide();
+                $('#sqlConnectionInfo').hide();
             }
             else if (selectedProvider == 'provider_sqlserver') {
+                $('#sqlConnectionInfo').show();
+            }
+        }
+
+        function toggleSqlConnectionInfo() {
+            var selectedProvider = $("input[name=SqlConnectionInfo]:checked").attr('id');
+            if (selectedProvider == 'sqlconnectioninfo_values') {
+                $('#sqlDatabaseInfo').show();
+                $('#sqlDatabaseConnectionString').hide();
+            }
+            else if (selectedProvider == 'sqlconnectioninfo_raw') {
+                $('#sqlDatabaseInfo').hide();
                 $('#sqlDatabaseConnectionString').show();
             }
         }
+
+        function toggleSqlAuthenticationType() {
+            var selectedProvider = $("input[name=SqlAuthenticationType]:checked").attr('id');
+            if (selectedProvider == 'sqlauthenticationtype_sql') {
+                $('#pnlSqlServerUsername').show();
+                $('#pnlSqlServerPassword').show();
+            }
+            else if (selectedProvider == 'sqlauthenticationtype_windows') {
+                $('#pnlSqlServerUsername').hide();
+                $('#pnlSqlServerPassword').hide();
+            }
+        }
+
 
         (function () {
             function show() {
@@ -70,29 +100,33 @@
                             <tr style="height: 100%;">
                                 <td>
                                     <table class="wizard-step" border="0" cellpadding="0" cellspacing="10">
-                                        <tr>
+                                        @*<tr>
                                             <td colspan="2">
                                                 <label class="title">
                                                     Thank you for choosing nopCommerce!</label>
                                             </td>
-                                        </tr>
+                                        </tr>*@
                                         <tr>
                                             <td colspan="2">
                                                 <p>
-                                                    <a href="http://www.nopCommerce.com/" target="_blank">nopCommerce</a> is the leading
+                                                    @*<a href="http://www.nopCommerce.com/" target="_blank">nopCommerce</a> is the leading
                                                     ASP.NET online shop e-commerce solution. This wizard will guide you through the
                                                     process of configuring <strong>nopCommerce</strong>
                                                     <br />
-                                                    <br />
+                                                    <br />*@
                                                     To complete this wizard you must know some information regarding your database server
                                                     ("connection string"). Please contact your ISP if necessary. If you're installing
                                                     on a local machine or server you might need information from your System Admin.
+                                                    <br />
+                                                    <div style="color: Red;">
+                                                @Html.ValidationSummary(false)
+                                                </div>
                                                 </p>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" style="color: Red;">
-                                                @Html.ValidationSummary(false)
+                                            <td colspan="2" align="left">
+                                                <h3>Store information</h3>
                                             </td>
                                         </tr>
                                         <tr>
@@ -133,6 +167,12 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2" align="left">
+                                                <h3>Database information</h3>
+                                                <hr />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="left">
                                                 @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
                                                 <label for="provider_sqlce">
                                                     Use built-in data storage (SQL Server Compact)</label>
@@ -143,19 +183,80 @@
                                                 @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
                                                 <label for="provider_sqlserver">
                                                     Use an existing SQL Server (or SQL Express) database</label>
-                                                <div id="sqlDatabaseConnectionString">
-                                                    <span style="white-space: nowrap;">
-                                                        <label for="DatabaseConnectionString">
-                                                            Connection string:</label>
-                                                        @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox", style = "width:90%;" })
-                                                    </span>
+                                                <div id="sqlConnectionInfo">
                                                     <br />
-                                                    <span class="hint">Example:<br />
-                                                        Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
-                                                        ID=userName;Password=password
+                                                    <hr />
+                                                    <br />
+                                                    @Html.RadioButton("SqlConnectionInfo", "sqlconnectioninfo_values", (Model.SqlConnectionInfo == "sqlconnectioninfo_values"), new { id = "sqlconnectioninfo_values" })
+                                                    <label for="sqlconnectioninfo_values">
+                                                        Enter SQL connection values</label>
+                                                    @Html.RadioButton("SqlConnectionInfo", "sqlconnectioninfo_raw", (Model.SqlConnectionInfo == "sqlconnectioninfo_raw"), new { id = "sqlconnectioninfo_raw" })
+                                                    <label for="sqlconnectioninfo_raw">
+                                                        Enter raw connection string (advanced)</label>
+                                                    <div id="sqlDatabaseInfo">
+                                                        <table>
+                                                            <tr>
+                                                                <td nowrap="nowrap" align="left">
+                                                                    <label for="SqlServerName">
+                                                                        SQL Server name:</label>
+                                                                </td>
+                                                                <td width="100%">
+                                                                    @Html.TextBoxFor(x => x.SqlServerName, new { @class = "textbox" })
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td nowrap="nowrap" align="left">
+                                                                    <label for="SqlDatabaseName">
+                                                                        Database name:</label>
+                                                                </td>
+                                                                <td width="100%">
+                                                                    @Html.TextBoxFor(x => x.SqlDatabaseName, new { @class = "textbox" })
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="left" colspan="2">
+                                                                    @Html.RadioButton("SqlAuthenticationType", "sqlauthentication", (Model.SqlAuthenticationType == "sqlauthentication"), new { id = "sqlauthenticationtype_sql" })
+                                                                    <label for="sqlauthenticationtype_sql">
+                                                                        Use SQL Server account</label>
+                                                                    @Html.RadioButton("SqlAuthenticationType", "windowsauthentication", (Model.SqlAuthenticationType == "windowsauthentication"), new { id = "sqlauthenticationtype_windows" })
+                                                                    <label for="sqlauthenticationtype_windows">
+                                                                        Use integrated Windows authentication</label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="pnlSqlServerUsername">
+                                                                <td nowrap="nowrap" align="left">
+                                                                    <label for="SqlServerUsername">
+                                                                        SQL Username:</label>
+                                                                </td>
+                                                                <td width="100%">
+                                                                    @Html.TextBoxFor(x => x.SqlServerUsername, new { @class = "textbox" })
+                                                                </td>
+                                                            </tr>
+                                                            <tr id="pnlSqlServerPassword">
+                                                                <td nowrap="nowrap" align="left">
+                                                                    <label for="SqlServerPassword">
+                                                                        SQL Password:</label>
+                                                                </td>
+                                                                <td width="100%">
+                                                                    @Html.PasswordFor(x => x.SqlServerPassword, new { @class = "textbox" })
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div id="sqlDatabaseConnectionString">
+                                                        <span style="white-space: nowrap;">
+                                                            <label for="DatabaseConnectionString">
+                                                                Connection string:</label>
+                                                            @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox", style = "width:90%;" })
+                                                        </span>
                                                         <br />
-                                                        Find more info <a href="http://www.connectionstrings.com/" target="_blank">here</a>
-                                                    </span>
+                                                        <span class="hint">Example:<br />
+                                                            Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
+                                                            ID=userName;Password=password
+                                                            <br />
+                                                            Find more info <a href="http://www.connectionstrings.com/" target="_blank">here</a>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -166,7 +267,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2">
-                                                If you need information on how to use nopCommerce, visit <a href="http://www.nopCommerce.com/documentation.aspx">
+                                                If you need information on how to use nopCommerce, visit <a href="http://www.nopCommerce.com/documentation.aspx" target="_blank">
                                                     the documentation section on nopCommerce.com</a>.
                                             </td>
                                         </tr>
