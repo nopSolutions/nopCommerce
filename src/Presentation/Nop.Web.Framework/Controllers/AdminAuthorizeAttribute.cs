@@ -15,17 +15,9 @@ namespace Nop.Web.Framework.Controllers
     {
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            bool isAdmin = false;
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var user = workContext.CurrentCustomer;
-            if (user != null)
-            {
-                //TODO uncomment code below after we add authrorization pages (login/register)
-                //isAdmin = user.IsAdmin();
-            }
-
-            //remove code below after we add authrorization pages (login/register)
-            isAdmin = true;
+            bool isAdmin = user != null && user.IsAdmin();
             return isAdmin;
         }
     }
