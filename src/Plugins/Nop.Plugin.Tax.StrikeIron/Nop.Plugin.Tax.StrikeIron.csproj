@@ -124,6 +124,7 @@
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\TaxDataBasic\TaxDataBasic5.wsdl" />
+    <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Description.txt">

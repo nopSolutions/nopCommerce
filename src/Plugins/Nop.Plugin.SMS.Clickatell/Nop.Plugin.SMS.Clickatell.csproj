@@ -79,6 +79,7 @@
   <ItemGroup>
     <None Include="Service References\Clickatell\webservice_vs.wsdl" />
     <EmbeddedResource Include="Views\SmsClickatell\Configure.cshtml" />
+    <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\Clickatell\" />

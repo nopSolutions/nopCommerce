@@ -75,7 +75,9 @@
     </Content>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="web.config" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\TaxFixedRate\Configure.cshtml" />
   </ItemGroup>
