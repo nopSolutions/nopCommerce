@@ -551,7 +551,7 @@ namespace Nop.Services.Messages
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
             tokens.Add(new Token("Forums.PostAuthor", HttpUtility.HtmlEncode(forumPost.Customer.FormatUserName())));
-            tokens.Add(new Token("Forums.PostBody", HttpUtility.HtmlEncode(forumPost.FormatPostText())));
+            tokens.Add(new Token("Forums.PostBody", forumPost.FormatPostText()));
         }
 
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)

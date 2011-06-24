@@ -17,6 +17,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -29,6 +30,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+using Nop.Web.Models;
 
 namespace Nop.Web.Controllers
 {
@@ -57,6 +59,7 @@ namespace Nop.Web.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly IForumService _forumService;
         private readonly IShoppingCartService _shoppingCartService;
 
         private readonly MediaSettings _mediaSettings;
@@ -80,7 +83,8 @@ namespace Nop.Web.Controllers
             IOrderProcessingService orderProcessingService, IOrderService orderService,
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
             IPictureService pictureService, INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IShoppingCartService shoppingCartService, MediaSettings mediaSettings,
+            IForumService forumService, IShoppingCartService shoppingCartService,
+            MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
         {
             this._authenticationService = authenticationService;
@@ -105,6 +109,7 @@ namespace Nop.Web.Controllers
             this._priceFormatter = priceFormatter;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._forumService = forumService;
             this._shoppingCartService = shoppingCartService;
 
             this._mediaSettings = mediaSettings;
@@ -1334,6 +1339,112 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        #endregion
+
+        #region Forum Subscriptions
+
+        public ActionResult ForumSubscriptions(int? page)
+        {
+            if (!_forumSettings.AllowCustomersToManageSubscriptions)
+            {
+                return RedirectToAction("MyAccount");
+            }
+
+            int pageIndex = 0;
+            if (page > 0)
+            {
+                pageIndex = page.Value - 1;
+            }
+
+            var customer = _workContext.CurrentCustomer;
+
+            var pageSize = _forumSettings.ForumSubscriptionsPageSize;
+
+            var list = _forumService.GetAllSubscriptions(customer.Id, 0, 0, pageIndex, pageSize);
+
+            var model = new CustomerForumSubscriptionsModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.ForumSubscriptions;
+
+            foreach (var forumSubscription in list)
+            {
+                var forumTopicId = forumSubscription.TopicId;
+                var forumId = forumSubscription.ForumId;
+                bool topicSubscription = false;
+                var title = string.Empty;
+                var slug = string.Empty;
+
+                if (forumTopicId > 0)
+                {
+                    topicSubscription = true;
+                    var forumTopic = _forumService.GetTopicById(forumTopicId);
+                    if (forumTopic != null)
+                    {
+                        title = forumTopic.Subject;
+                        slug = forumTopic.GetSeName();
+                    }
+                }
+                else
+                {
+                    var forum = _forumService.GetForumById(forumId);
+                    if (forum != null)
+                    {
+                        title = forum.Name;
+                        slug = forum.GetSeName();
+                    }
+                }
+
+                model.ForumSubscriptions.Add(new ForumSubscriptionModel()
+                {
+                    Id = forumSubscription.Id,
+                    ForumTopicId = forumTopicId,
+                    ForumId = forumSubscription.ForumId,
+                    TopicSubscription = topicSubscription,
+                    Title = title,
+                    Slug = slug,
+                });
+            }
+
+            model.PagerModel = new PagerModel()
+            {
+                PageSize = list.PageSize,
+                TotalRecords = list.TotalCount,
+                PageIndex = list.PageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "CustomerForumSubscriptionsPaged",
+                UseRouteLinks = true,
+                RouteValues = new ForumSubscriptionsRouteValues { page = pageIndex }
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ForumSubscriptions(FormCollection formCollection)
+        {
+            foreach (var key in formCollection.AllKeys)
+            {
+                var value = formCollection[key];
+
+                if (value.Equals("on") && key.StartsWith("fs", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var id = key.Replace("fs", "").Trim();
+                    int forumSubscriptionId = 0;
+
+                    if (Int32.TryParse(id, out forumSubscriptionId))
+                    {
+                        var forumSubscription = _forumService.GetSubscriptionById(forumSubscriptionId);
+                        if (forumSubscription != null && forumSubscription.CustomerId == _workContext.CurrentCustomer.Id)
+                        {
+                            _forumService.DeleteSubscription(forumSubscription);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("ForumSubscriptions");
         }
 
         #endregion

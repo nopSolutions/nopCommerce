@@ -433,11 +433,19 @@ namespace Nop.Web.Models
     }
 
     /// <summary>
-    /// Class that 
+    /// Class that has a slug and page for route values. Used for Private Messages pagination
     /// </summary>
     public class PrivateMessageRouteValues : IRouteValues
     {
         public string tab { get; set; }
+        public int page { get; set; }
+    }
+
+    /// <summary>
+    /// Class that has only page for route value. Used for (My Account) Forum Subscriptions pagination
+    /// </summary>
+    public class ForumSubscriptionsRouteValues : IRouteValues
+    {        
         public int page { get; set; }
     }
 

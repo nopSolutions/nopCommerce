@@ -214,6 +214,15 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Profile", action = "Index"},
                             new {  id = @"\d+", page = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("CustomerForumSubscriptions",
+                            "customer/forumsubscriptions",
+                            new { controller = "Customer", action = "ForumSubscriptions"},
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("CustomerForumSubscriptionsPaged",
+                            "customer/forumsubscriptions/{page}",
+                            new { controller = "Customer", action = "ForumSubscriptions", page = UrlParameter.Optional },
+                            new { page = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
 
             //blog
             routes.MapRoute("Blog",

@@ -110,6 +110,11 @@ namespace Nop.Core.Domain.Forums
         public int PrivateMessagesPageSize { get; set; }
 
         /// <summary>
+        /// Gets or sets the page size for (My Account) Forum Subscriptions
+        /// </summary>
+        public int ForumSubscriptionsPageSize { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether a customer should be notified about new private messages
         /// </summary>
         public bool NotifyAboutPrivateMessages { get; set; }

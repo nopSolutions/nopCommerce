@@ -636,7 +636,7 @@ a.linkButton:hover
 }
 
 
-checkbox, input, radio, select
+checkbox, input, radio, select, button
 {
 	font-family: Verdana, Arial, sans-serif;
 	font-size: 11px;
@@ -842,11 +842,6 @@ textarea
 .useragreementbutton, .deleteselectedfsbutton, .submitreturnrequestbutton, .uploadavatarbutton
 {
 
-}
-
-.deleteselectedpmbutton
-{
-    font-size: 11px;
 }
 
 .productlistaddtocartbutton, .productgridaddtocartbutton, .productemailafriendbutton, 
@@ -4294,13 +4289,13 @@ ul.languagelist li:hover
 	border-right: solid 1px #A0C0E7;
 	border-right-color: #808080;
 }
-.pmgridpagerstyle, .latestpostsgridpagerstyle
+.pmgridpagerstyle, .latestpostsgridpagerstyle, .fsgridpagerstyle
 {
 	padding:5px;	
 	background: #eeeeee;
 	vertical-align: middle;
 }
- .pmgridpagerstyle span, .latestpostsgridpagerstyle span
+ .pmgridpagerstyle span, .latestpostsgridpagerstyle span, .pager span, .fsgridpagerstyle span
  {
 	font-weight: bold;
 	font-size: 1.1em;
@@ -4502,7 +4497,7 @@ ul.languagelist li:hover
 	height: auto;
 }
 
-.forum-subscriptions-box .forum-subscriptions .forum-subscriptions-grid
+.forum-subscriptions-box .forum-subscriptions-grid
 {
 
 	font-family: arial;
@@ -4511,6 +4506,12 @@ ul.languagelist li:hover
 	background-color: #FFFFFF;
 	margin-left: 0px;
 	width: 100%;
+	border-collapse: collapse;
+}
+.forum-subscriptions-box .forum-subscriptions-grid a
+{
+	display: block;
+	margin-left:5px;
 }
 
 .forum-subscriptions-box .button

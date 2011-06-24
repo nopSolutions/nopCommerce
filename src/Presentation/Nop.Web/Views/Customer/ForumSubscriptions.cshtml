@@ -1,0 +1,64 @@
+﻿@model Nop.Web.Models.Customer.CustomerForumSubscriptionsModel
+@using Nop.Web;
+@using Nop.Web.Framework;
+@using MvcContrib.UI.Grid;
+@{    
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.ForumSubscriptions").Text);
+}
+@section left
+{
+    @Html.Partial("~/Views/Customer/MyAccountNavigation.cshtml", Model.NavigationModel, new ViewDataDictionary())
+}
+<div class="account-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.ForumSubscriptions")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        @if (Model.ForumSubscriptions.Count > 0)
+        {
+            <script type="text/javascript">
+                $(window).bind('load', function () {
+                    var cbHeader = $(".cbHeader input");
+                    var cbRowItem = $(".cbRowItem input");
+                    cbHeader.bind("click", function () {
+                        cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+                    });
+                    cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
+                });
+            </script>            
+            using (Html.BeginForm("forumsubscriptions", "customer", FormMethod.Post))
+            {
+                <div class="forum-subscriptions-box">
+                    @Html.Grid(Model.ForumSubscriptions).Columns(column =>
+                       {
+                           column.For(fs => "<span class=\"cbRowItem\"><input type=\"checkbox\" name=\"fs" + fs.Id + "\" /></span>")
+                               .Encode(false)
+                               .Attributes(style => "width:5%;", align => "center")
+                               .Header("<th align=\"center\"><span class=\"cbHeader\"><input type=\"checkbox\" id=\"selectall\" /></span></th>");
+                           column.For(fs => (fs.TopicSubscription) ?
+                                        @Html.RouteLink(fs.Title, "TopicSlug", new { Id = fs.ForumTopicId, slug = fs.Slug }) :
+                                        @Html.RouteLink(fs.Title, "ForumSlug", new { Id = fs.ForumId, slug = fs.Slug })
+                               )
+                               .Named(@T("ForumSubscriptions.InfoColumn").Text)
+                               .HeaderAttributes(align => "center");
+                       }).Attributes(style => "width:100%", @class => "forum-subscriptions-grid", cellspacing => "0", cellpadding => "4", border => "1").Empty("")
+                    @if (Model.PagerModel.TotalPages > 1)
+                    {
+                        <div class="fsgridpagerstyle">
+                            @Html.Pager(Model.PagerModel)
+                        </div>
+                    }
+                    <div class="clear">
+                    </div>
+                    <div class="button">
+                        <input type="submit" value="@T("ForumSubscriptions.DeleteSelected")" class="deleteselectedfsbutton" />
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

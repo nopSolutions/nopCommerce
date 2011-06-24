@@ -671,7 +671,7 @@ a.linkButton:hover
 	border-bottom:1px dotted #ADACAC;
 }
 
-checkbox, input, radio, select
+checkbox, input, radio, select, button
 {
 	font-size: 11px;
 }
@@ -911,11 +911,6 @@ textarea
 	padding: 0 5px 0 5px;
 	width: auto;
 	overflow: visible;
-}
-
-.deleteselectedpmbutton
-{
-    font-size: 11px;
 }
 
 .productlistaddtocartbutton, .productgridaddtocartbutton, .productemailafriendbutton, 
@@ -4456,13 +4451,13 @@ ul.languagelist li:hover
 	border-right: solid 1px #A0C0E7;
 	border-right-color: #808080;
 }
-.pmgridpagerstyle, .latestpostsgridpagerstyle
+.pmgridpagerstyle, .latestpostsgridpagerstyle, .fsgridpagerstyle
 {
 	padding:5px;
 	background: #eeeeee;
 	vertical-align: middle;
 }
- .pmgridpagerstyle span, .latestpostsgridpagerstyle span
+ .pmgridpagerstyle span, .latestpostsgridpagerstyle span, .pager span, .fsgridpagerstyle span
  {
 	font-weight: bold;
 	font-size: 1.1em;
@@ -4673,7 +4668,7 @@ ul.languagelist li:hover
 	text-align: left;
 }
 
-.forum-subscriptions-box .forum-subscriptions .forum-subscriptions-grid
+.forum-subscriptions-box .forum-subscriptions-grid
 {
 	font-family: arial;
 	font-size: 11px;
@@ -4681,6 +4676,12 @@ ul.languagelist li:hover
 	background-color: #FFFFFF;
 	margin-left: 0px;
 	width: 100%;
+	border-collapse: collapse;
+}
+.forum-subscriptions-box .forum-subscriptions-grid a
+{
+	display: block;
+	margin-left:5px;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*

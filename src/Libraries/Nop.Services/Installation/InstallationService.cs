@@ -4674,6 +4674,7 @@ namespace Nop.Services.Installation
                     AllowPrivateMessages = false,
                     ShowAlertForPM = false,
                     PrivateMessagesPageSize = 10,
+                    ForumSubscriptionsPageSize = 10,
                     NotifyAboutPrivateMessages = false,
                     PMSubjectMaxLength = 450,
                     PMTextMaxLength = 4000,

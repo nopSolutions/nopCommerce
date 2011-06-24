@@ -159,6 +159,8 @@
     <Compile Include="Models\Common\StoreThemeModel.cs" />
     <Compile Include="Models\Common\LanguageSelectorModel.cs" />
     <Compile Include="Models\Common\SitemapModel.cs" />
+    <Compile Include="Models\Customer\CustomerForumSubscriptionsModel.cs" />
+    <Compile Include="Models\Customer\ForumSubscriptionsModel.cs" />
     <Compile Include="Models\Install\InstallModel.cs" />
     <Compile Include="Models\LiveChat\LiveChatModel.cs" />
     <Compile Include="Models\News\AddNewsCommentModel.cs" />
@@ -1330,6 +1332,7 @@
     <Content Include="Views\Profile\Info.cshtml" />
     <Content Include="Views\Profile\Posts.cshtml" />
     <Content Include="Views\Common\Favicon.cshtml" />
+    <Content Include="Views\Customer\ForumSubscriptions.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

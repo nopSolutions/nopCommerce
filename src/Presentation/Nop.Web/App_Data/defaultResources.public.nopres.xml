@@ -1596,6 +1596,16 @@
             </LocaleResource>
         </Children>
     </LocaleResource>
+    <LocaleResource Name="ForumSubscriptions">
+        <Children>
+            <LocaleResource Name="DeleteSelected">
+                <Value>Delete Selected</Value>
+            </LocaleResource>
+            <LocaleResource Name="InfoColumn">
+                <Value>Forum/Topic</Value>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>            
   <LocaleResource Name="GiftCardAttribute">
     <Children>
       <LocaleResource Name="From">
@@ -1984,6 +1994,9 @@
       </LocaleResource>
       <LocaleResource Name="ContactUs">
         <Value>Contact Us</Value>
+      </LocaleResource>
+      <LocaleResource Name="ForumSubscriptions">
+        <Value>Forum Subscriptions</Value>
       </LocaleResource>
       <LocaleResource Name="Login">
         <Value>Login</Value>
