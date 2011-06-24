@@ -35,6 +35,7 @@ namespace Nop.Services.Orders
         private readonly IGiftCardService _giftCardService;
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly ShippingSettings _shippingSettings;
         #endregion
 
         #region Ctor
@@ -52,6 +53,7 @@ namespace Nop.Services.Orders
         /// <param name="giftCardService">Gift card service</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
+        /// <param name="shippingSettings">Shipping settings</param>
         public OrderTotalCalculationService(IWorkContext workContext,
             IPriceCalculationService priceCalculationService,
             ITaxService taxService,
@@ -61,7 +63,8 @@ namespace Nop.Services.Orders
             IDiscountService discountService,
             IGiftCardService giftCardService,
             TaxSettings taxSettings,
-            RewardPointsSettings rewardPointsSettings)
+            RewardPointsSettings rewardPointsSettings,
+            ShippingSettings shippingSettings)
         {
             this._workContext = workContext;
             this._priceCalculationService = priceCalculationService;
@@ -73,6 +76,7 @@ namespace Nop.Services.Orders
             this._giftCardService = giftCardService;
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -378,6 +382,23 @@ namespace Nop.Services.Orders
             bool isFreeShipping = _shippingService.IsFreeShipping(cart);
             if (isFreeShipping)
                 return decimal.Zero;
+
+
+            //free shipping over $X
+            if (_shippingSettings.FreeShippingOverXEnabled)
+            {
+                //check whether we have subtotal enough to have free shipping
+                decimal subTotalDiscountAmount = decimal.Zero;
+                Discount subTotalAppliedDiscount = null;
+                decimal subTotalWithoutDiscountBase = decimal.Zero;
+                decimal subTotalWithDiscountBase = decimal.Zero;
+                GetShoppingCartSubTotal(cart, includingTax, out subTotalDiscountAmount,
+                    out subTotalAppliedDiscount, out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+
+                if (subTotalWithDiscountBase > _shippingSettings.FreeShippingOverXValue)
+                    return decimal.Zero;
+            }
+
 
             ShippingOption lastShippingOption = null;
             if (customer != null)

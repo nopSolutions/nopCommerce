@@ -311,24 +311,6 @@ namespace Nop.Services.Shipping
             if (!shoppingCartRequiresShipping)
                 return true;
 
-            //TODO uncomment below (free shipping over $X)
-            //check whether we have subtotal enough to have free shipping
-            //decimal subTotalBase = decimal.Zero;
-            //decimal orderSubTotalDiscountAmount = decimal.Zero;
-            //Discount orderSubTotalAppliedDiscount = null;
-            //decimal subTotalWithoutDiscountBase = decimal.Zero; 
-            //decimal subTotalWithDiscountBase = decimal.Zero;
-            //string subTotalError = _shoppingCartService.GetShoppingCartSubTotal(cart,
-            //    customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
-            //    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-            //subTotalBase = subTotalWithDiscountBase;
-            //if (_settingManager.GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled"))
-            //{
-            //    decimal freeShippingOverX = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
-            //    if (subTotalBase > freeShippingOverX)
-            //        return true;
-            //}
-
             //check whether all shopping cart items are marked as free shipping
             bool allItemsAreFreeShipping = true;
             foreach (var sc in cart)

@@ -96,7 +96,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _taxSettings, _rewardPointsSettings);
+                _taxSettings, _rewardPointsSettings, _shippingSettings);
         }
 
         [Test]
