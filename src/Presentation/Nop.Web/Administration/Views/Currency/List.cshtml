@@ -22,7 +22,7 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider")
+                @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider"):
             </td>
             <td class="adminData">
                 @(Html.DropDownList("exchangeRateProvider", ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>))
@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
+                @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled"):
             </td>
             <td class="adminData">
                 @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled)
