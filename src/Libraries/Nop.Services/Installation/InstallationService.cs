@@ -8544,7 +8544,7 @@ namespace Nop.Services.Installation
 
             var newProductsForum = new Forum()
             {
-                ForumGroupId = forumGroup.Id,
+                ForumGroup = forumGroup,
                 Name = "New Products",
                 Description = "Discuss new products and industry trends",
                 NumTopics = 0,
@@ -8559,7 +8559,7 @@ namespace Nop.Services.Installation
 
             var mobileDevicesForum = new Forum()
             {
-                ForumGroupId = forumGroup.Id,
+                ForumGroup = forumGroup,
                 Name = "Mobile Devices Forum",
                 Description = "Discuss the mobile phone market",
                 NumTopics = 0,
@@ -8574,7 +8574,7 @@ namespace Nop.Services.Installation
 
             var packagingShippingForum = new Forum()
             {
-                ForumGroupId = forumGroup.Id,
+                ForumGroup = forumGroup,
                 Name = "Packaging & Shipping",
                 Description = "Discuss packaging & shipping",
                 NumTopics = 0,
@@ -8681,7 +8681,7 @@ namespace Nop.Services.Installation
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
             var poll1 = new Poll
             {
-                LanguageId = defaultLanguage.Id,
+                Language = defaultLanguage,
                 Name = "Do you like nopCommerce?",
                 SystemKeyword = "RightColumnPoll",
                 Published = true,

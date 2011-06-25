@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
-using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac;
 using FluentValidation.Mvc;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Infrastructure;
-using Nop.Data;
-using Nop.Services.Installation;
 using Nop.Web.Framework;
 using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc;
@@ -50,7 +45,7 @@ namespace Nop.Web
         protected void Application_Start()
         {
             //initialize engine context
-            EngineContext.Initialize(false, DataProviderHelper.DatabaseIsInstalled());
+            EngineContext.Initialize(false, SettingsHelper.DatabaseIsInstalled());
 
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
@@ -59,7 +54,7 @@ namespace Nop.Web
             //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel), new NopModelBinder());
 
-            if (DataProviderHelper.DatabaseIsInstalled())
+            if (SettingsHelper.DatabaseIsInstalled())
             {
                 //remove all view engines
                 ViewEngines.Engines.Clear();
@@ -106,7 +101,7 @@ namespace Nop.Web
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             string installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
             if (!webHelper.IsStaticResource(this.Request) &&
-                !DataProviderHelper.DatabaseIsInstalled() &&
+                !SettingsHelper.DatabaseIsInstalled() &&
                 !webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Response.Redirect(installUrl);
@@ -115,7 +110,7 @@ namespace Nop.Web
 
         protected void SetWorkingCulture()
         {
-            if (DataProviderHelper.DatabaseIsInstalled())
+            if (SettingsHelper.DatabaseIsInstalled())
             {
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 if (!webHelper.IsStaticResource(this.Request))

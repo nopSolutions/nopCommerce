@@ -61,18 +61,24 @@ namespace Nop.Web.Framework
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
 
             //data layer
-            var dataProviderManager = new DataProviderManager();
-            var dataProviderSettings = dataProviderManager.LoadSettings();
+            var dataSettingsManager = new SettingsManager();
+            var dataProviderSettings = dataSettingsManager.LoadSettings();
+            builder.Register(c => dataSettingsManager.LoadSettings()).As<Settings>();
+            builder.Register(x => new EfDataProviderManager(x.Resolve<Settings>())).As<BaseDataProviderManager>().InstancePerDependency();
+
+            builder.Register(x => (IEfDataProvider)x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IEfDataProvider>().As<IDataProvider>().InstancePerDependency();
+
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
-                var dataProvider = dataProviderManager.LoadDataProvider(dataProviderSettings.DataProvider);
+                var efDataProviderManager = new EfDataProviderManager(dataSettingsManager.LoadSettings());
+                var dataProvider = (IEfDataProvider)efDataProviderManager.LoadDataProvider();
                 dataProvider.InitConnectionFactory();
 
                 builder.Register<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerHttpRequest();
             }
             else
             {
-                builder.Register<IDbContext>(c => new NopObjectContext(new DataProviderManager().LoadSettings().DataConnectionString)).InstancePerHttpRequest();
+                builder.Register<IDbContext>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString)).InstancePerHttpRequest();
             }
 
 

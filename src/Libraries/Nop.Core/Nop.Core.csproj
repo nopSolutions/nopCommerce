@@ -65,6 +65,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
+    <Compile Include="Data\BaseDataProviderManager.cs" />
+    <Compile Include="Data\IDataProvider.cs" />
+    <Compile Include="Data\Settings.cs" />
+    <Compile Include="Data\SettingsHelper.cs" />
+    <Compile Include="Data\SettingsManager.cs" />
     <Compile Include="Domain\Common\SeoSettings.cs" />
     <Compile Include="Domain\Common\LiveChatSettings.cs" />
     <Compile Include="Domain\Polls\PollVotingRecord.cs" />

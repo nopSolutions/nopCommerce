@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Hosting;
 using Nop.Core;
 
-namespace Nop.Data
+namespace Nop.Core.Data
 {
-    public partial class DataProviderManager
+    public partial class SettingsManager
     {
         public const char Separator = ':';
         public const string Filename = "Settings.txt";
 
-        protected virtual DataProviderSettings ParseSettings(string text)
+        protected virtual Settings ParseSettings(string text)
         {
-            var shellSettings = new DataProviderSettings();
+            var shellSettings = new Settings();
             if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
@@ -39,13 +38,16 @@ namespace Nop.Data
                     case "DataConnectionString":
                         shellSettings.DataConnectionString = value;
                         break;
+                    default:
+                        shellSettings.RawDataSettings.Add(key,value);
+                        break;
                 }
             }
 
             return shellSettings;
         }
 
-        protected virtual string ComposeSettings(DataProviderSettings settings)
+        protected virtual string ComposeSettings(Settings settings)
         {
             if (settings == null)
                 return "";
@@ -56,7 +58,7 @@ namespace Nop.Data
                 );
         }
 
-        public virtual DataProviderSettings LoadSettings()
+        public virtual Settings LoadSettings()
         {
             string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), Filename);
             if (File.Exists(filePath))
@@ -65,39 +67,25 @@ namespace Nop.Data
                 return ParseSettings(text);
             }
             else
-                return new DataProviderSettings();
+                return new Settings();
         }
 
-        public virtual void SaveSettings(DataProviderSettings settings)
+        public virtual void SaveSettings(Settings settings)
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
             
             string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), Filename);
             if (!File.Exists(filePath))
+            {
                 using (File.Create(filePath))
                 {
                     //we use 'using' to close the file after it's created
                 }
+            }
             
             var text = ComposeSettings(settings);
             File.WriteAllText(filePath, text);
-        }
-
-        public virtual IDataProvider LoadDataProvider(string providerName)
-        {
-            if (String.IsNullOrWhiteSpace(providerName))
-                throw new ArgumentNullException("providerName");
-
-            switch (providerName.ToLowerInvariant())
-            {
-                case "sqlserver":
-                    return new SqlServerDataProvider();
-                case "sqlce":
-                    return new SqlCeDataProvider();
-                default:
-                    throw new NopException(string.Format("Not supported dataprovider name: {0}", providerName));
-            }
         }
     }
 }

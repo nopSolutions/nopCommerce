@@ -46,13 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseEfDataProvider.cs" />
     <Compile Include="CreateTablesIfNotExists.cs" />
-    <Compile Include="DataProviderHelper.cs" />
-    <Compile Include="DataProviderManager.cs" />
+    <Compile Include="EfDataProviderManager.cs" />
+    <Compile Include="IEfDataProvider.cs" />
     <Compile Include="SqlServerDataProvider.cs" />
     <Compile Include="SqlCeDataProvider.cs" />
-    <Compile Include="IDataProvider.cs" />
-    <Compile Include="DataProviderSettings.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="Mapping\Affiliates\AffiliateMap.cs" />
     <Compile Include="Mapping\Catalog\ProductTagMap.cs" />

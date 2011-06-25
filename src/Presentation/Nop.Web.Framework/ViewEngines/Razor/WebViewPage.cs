@@ -5,9 +5,8 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.WebPages;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Infrastructure;
-using Nop.Data;
-using Nop.Services;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 
@@ -62,7 +61,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         {
             base.InitHelpers();
 
-            if (DataProviderHelper.DatabaseIsInstalled())
+            if (SettingsHelper.DatabaseIsInstalled())
             {
                 _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 _workContext = EngineContext.Current.Resolve<IWorkContext>();

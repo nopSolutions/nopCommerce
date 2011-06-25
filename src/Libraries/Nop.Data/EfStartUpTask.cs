@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using Nop.Core;
+using Nop.Core.Data;
+using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
 
 namespace Nop.Data
@@ -7,11 +9,12 @@ namespace Nop.Data
     {
         public void Execute()
         {
-            var dataProviderManager = new DataProviderManager();
-            var settings = dataProviderManager.LoadSettings();
+            var settings = EngineContext.Current.Resolve<Settings>();
             if (settings != null && settings.IsValid())
             {
-                var provider = dataProviderManager.LoadDataProvider(settings.DataProvider);
+                var provider = EngineContext.Current.Resolve<IEfDataProvider>();
+                if (provider == null)
+                    throw new NopException("No IEfDataProvider found");
                 provider.SetDatabaseInitializer();
             }
         }

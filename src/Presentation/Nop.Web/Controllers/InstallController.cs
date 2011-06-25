@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Data;
@@ -214,7 +215,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult Index()
         {
-            if (DataProviderHelper.DatabaseIsInstalled())
+            if (SettingsHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
 
             //set page timeout to 5 minutes
@@ -238,7 +239,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult Index(InstallModel model)
         {
-            if (DataProviderHelper.DatabaseIsInstalled())
+            if (SettingsHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
 
             //set page timeout to 5 minutes
@@ -312,7 +313,7 @@ namespace Nop.Web.Controllers
             
             if (ModelState.IsValid)
             {
-                var dataProviderManager = new DataProviderManager();
+                var settingsManager = new SettingsManager();
                 try
                 {
                     string connectionString = null;
@@ -352,17 +353,18 @@ namespace Nop.Web.Controllers
                     }
 
                     //save settings
+                    //save settings
                     var dataProvider = model.DataProvider;
-                    dataProviderManager.SaveSettings(new DataProviderSettings()
-                        {
-                            DataProvider = dataProvider,
-                            DataConnectionString = connectionString
-                        });
+                    var settings = new Settings()
+                    {
+                        DataProvider = dataProvider,
+                        DataConnectionString = connectionString
+                    };
+                    settingsManager.SaveSettings(settings);
 
                     //init data provider
-                    var dataProviderInstance = dataProviderManager.LoadDataProvider(dataProvider);
-                    dataProviderInstance.InitConnectionFactory();
-                    dataProviderInstance.SetDatabaseInitializer();
+                    var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
+                    dataProviderInstance.InitDatabase();
                     
                     
                     //only now resolve installation service
@@ -370,7 +372,7 @@ namespace Nop.Web.Controllers
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
                     //reset cache
-                    DataProviderHelper.ResetCache();
+                    SettingsHelper.ResetCache();
 
                     //install plugins
                     PluginManager.MarkAllPluginsAsUninstalled();
@@ -403,7 +405,7 @@ namespace Nop.Web.Controllers
                 catch (Exception exception)
                 {
                     //clear provider settings if something got wrong
-                    dataProviderManager.SaveSettings(new DataProviderSettings()
+                    settingsManager.SaveSettings(new Settings
                     {
                         DataProvider = null,
                         DataConnectionString = null
@@ -417,7 +419,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult RestartInstall()
         {
-            if (DataProviderHelper.DatabaseIsInstalled())
+            if (SettingsHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
             
             //restart application

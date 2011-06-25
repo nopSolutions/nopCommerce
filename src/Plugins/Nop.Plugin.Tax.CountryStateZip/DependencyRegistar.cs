@@ -21,8 +21,9 @@ namespace Nop.Plugin.Tax.CountryStateZip
             builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerHttpRequest();
 
             //data layer
-            var dataProviderManager = new DataProviderManager();
-            var dataProviderSettings = dataProviderManager.LoadSettings();
+            var dataSettingsManager = new SettingsManager();
+            var dataProviderSettings = dataSettingsManager.LoadSettings();
+
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
                 //register named context
@@ -36,11 +37,11 @@ namespace Nop.Plugin.Tax.CountryStateZip
             else
             {
                 //register named context
-                builder.Register<IDbContext>(c => new TaxRateObjectContext(new DataProviderManager().LoadSettings().DataConnectionString))
+                builder.Register<IDbContext>(c => new TaxRateObjectContext(c.Resolve<Settings>().DataConnectionString))
                     .Named<IDbContext>("nop_object_context_tax_country_state_zip")
                     .InstancePerHttpRequest();
 
-                builder.Register<TaxRateObjectContext>(c => new TaxRateObjectContext(new DataProviderManager().LoadSettings().DataConnectionString))
+                builder.Register<TaxRateObjectContext>(c => new TaxRateObjectContext(c.Resolve<Settings>().DataConnectionString))
                     .InstancePerHttpRequest();
             }
 

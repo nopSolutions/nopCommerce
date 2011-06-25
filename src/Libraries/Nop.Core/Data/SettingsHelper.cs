@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core;
+using Nop.Core.Infrastructure;
 
-namespace Nop.Data
+namespace Nop.Core.Data
 {
-    public partial class DataProviderHelper
+    public partial class SettingsHelper
     {
         private static bool? _databaseIsInstalled;
         public static bool DatabaseIsInstalled()
         {
             if (!_databaseIsInstalled.HasValue)
             {
-                var manager = new DataProviderManager();
+                var manager = new SettingsManager();
                 var settings = manager.LoadSettings();
                 _databaseIsInstalled = settings != null && !String.IsNullOrEmpty(settings.DataConnectionString);
             }

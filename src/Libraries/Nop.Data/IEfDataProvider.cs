@@ -1,11 +1,9 @@
-﻿using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using Nop.Core;
+﻿using System.Data.Entity.Infrastructure;
+using Nop.Core.Data;
 
 namespace Nop.Data
 {
-    public interface IDataProvider
+    public interface IEfDataProvider: IDataProvider
     {
         IDbConnectionFactory GetConnectionFactory();
 
