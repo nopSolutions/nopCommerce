@@ -3905,6 +3905,28 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="GiftCards_Activated">
+                        <Value>Gift card activation order status</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Gift cards are activated when the order status is...</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Pending">
+                            <Value>Order status could not be set to Pending</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="GiftCards_Deactivated">
+                        <Value>Gift card deactivation order status</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Gift cards are deactivated when the order status is...</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Pending">
+                            <Value>Order status could not be set to Pending</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="RewardPoints">

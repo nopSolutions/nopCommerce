@@ -18,8 +18,8 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(gc => gc.GiftCardType);
 
             this.HasOptional(gc => gc.PurchasedWithOrderProductVariant)
-                .WithOptionalDependent(opv => opv.AssociatedGiftCard)
-                .WillCascadeOnDelete(false);
+                .WithMany(opv => opv.AssociatedGiftCards)
+                .HasForeignKey(gc => gc.PurchasedWithOrderProductVariantId);
         }
     }
 }

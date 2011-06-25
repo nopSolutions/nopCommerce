@@ -12,6 +12,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
@@ -20,9 +21,11 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -31,9 +34,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Themes;
 using Telerik.Web.Mvc;
-using Nop.Services.Customers;
-using Nop.Core.Domain.Localization;
-using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -404,6 +404,13 @@ namespace Nop.Admin.Controllers
             var model = _orderSettings.ToModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
+            //gift card activation/deactivation
+            model.GiftCards_Activated_OrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.GiftCards_Activated_OrderStatuses.Insert(0, new SelectListItem() { Text = "---", Value = "0" });
+            model.GiftCards_Deactivated_OrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.GiftCards_Deactivated_OrderStatuses.Insert(0, new SelectListItem() { Text = "---", Value = "0" });
+
+
             //parse return request actions
             for (int i = 0; i < _orderSettings.ReturnRequestActions.Count; i++)
             {
@@ -424,24 +431,33 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Order(OrderSettingsModel model)
         {
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            _orderSettings = model.ToEntity(_orderSettings);
+            if (ModelState.IsValid)
+            {
+                model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+                _orderSettings = model.ToEntity(_orderSettings);
 
-            //parse return request actions
-            _orderSettings.ReturnRequestActions.Clear();
-            foreach (var returnAction in model.ReturnRequestActionsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                _orderSettings.ReturnRequestActions.Add(returnAction);
-            //parse return request reasons
-            _orderSettings.ReturnRequestReasons.Clear();
-            foreach (var returnReason in model.ReturnRequestReasonsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                _orderSettings.ReturnRequestReasons.Add(returnReason);
+                //parse return request actions
+                _orderSettings.ReturnRequestActions.Clear();
+                foreach (var returnAction in model.ReturnRequestActionsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    _orderSettings.ReturnRequestActions.Add(returnAction);
+                //parse return request reasons
+                _orderSettings.ReturnRequestReasons.Clear();
+                foreach (var returnReason in model.ReturnRequestReasonsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    _orderSettings.ReturnRequestReasons.Add(returnReason);
 
-            _settingService.SaveSetting(_orderSettings);
+                _settingService.SaveSetting(_orderSettings);
 
-            //activity log
-            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+                //activity log
+                _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            }
+            else
+            {
+                foreach (var modelState in ModelState.Values)
+                    foreach (var error in modelState.Errors)
+                        ErrorNotification(error.ErrorMessage);
+            }
             return RedirectToAction("Order");
         }
 

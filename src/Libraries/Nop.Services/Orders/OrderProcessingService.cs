@@ -262,59 +262,46 @@ namespace Nop.Services.Orders
                 }
             }
 
-            //TODO implement gift cards activation (perhaps, it'll not be possible due to the new GiftCard implementation)
-            //if (this.GiftCards_Activated.HasValue &&
-            //   this.GiftCards_Activated.Value == order.OrderStatus)
-            //{
-            //    var giftCards = GetAllGiftCards(order.OrderId, null, null, null, null, null, null, false, string.Empty);
-            //    foreach (var gc in giftCards)
-            //    {
-            //        bool isRecipientNotified = gc.IsRecipientNotified;
-            //        switch (gc.PurchasedOrderProductVariant.ProductVariant.GiftCardType)
-            //        {
-            //            case (int)GiftCardType.Virtual:
-            //                {
-            //                    //send email for virtual gift card
-            //                    if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
-            //                        !String.IsNullOrEmpty(gc.SenderEmail))
-            //                    {
-            //                        var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
-            //                        if (customerLang == null)
-            //                            customerLang = NopContext.Current.WorkingLanguage;
-            //                        int queuedEmailId = _messageService.SendGiftCardNotification(gc, customerLang.LanguageId);
-            //                        if (queuedEmailId > 0)
-            //                        {
-            //                            isRecipientNotified = true;
-            //                        }
-            //                    }
-            //                }
-            //                break;
-            //            case (int)GiftCardTypeEnum.Physical:
-            //                {
-            //                }
-            //                break;
-            //            default:
-            //                break;
-            //        }
+            //gift cards activation
+            if (_orderSettings.GiftCards_Activated_OrderStatusId > 0 &&
+               _orderSettings.GiftCards_Activated_OrderStatusId == (int)order.OrderStatus)
+            {
+                var giftCards = _giftCardService.GetAllGiftCards(order.Id, null, null, false);
+                foreach (var gc in giftCards)
+                {
+                    bool isRecipientNotified = gc.IsRecipientNotified;
+                    if (gc.GiftCardType == GiftCardType.Virtual)
+                    {
+                        //send email for virtual gift card
+                        if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
+                            !String.IsNullOrEmpty(gc.SenderEmail))
+                        {
+                            var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
+                            if (customerLang == null)
+                                customerLang = _workContext.WorkingLanguage;
+                            int queuedEmailId = _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
+                            if (queuedEmailId > 0)
+                                isRecipientNotified = true;
+                        }
+                    }
 
-            //        gc.IsGiftCardActivated = true;
-            //        gc.IsRecipientNotified = isRecipientNotified;
-            //        this.UpdateGiftCard(gc);
-            //    }
-            //}
+                    gc.IsGiftCardActivated = true;
+                    gc.IsRecipientNotified = isRecipientNotified;
+                    _giftCardService.UpdateGiftCard(gc);
+                }
+            }
 
-            //TODO implement gift cards deactivation (perhaps, it'll not be possible due to new GiftCard implementation)
-            //if (this.GiftCards_Deactivated.HasValue &&
-            //   this.GiftCards_Deactivated.Value == order.OrderStatus)
-            //{
-            //    var giftCards = GetAllGiftCards(order.OrderId,
-            //        null, null, null, null, null, null, true, string.Empty);
-            //    foreach (var gc in giftCards)
-            //    {
-            //        gc.IsGiftCardActivated = false;
-            //        this.UpdateGiftCard(gc);
-            //    }
-            //}
+            //gift cards deactivation
+            if (_orderSettings.GiftCards_Deactivated_OrderStatusId > 0 &&
+               _orderSettings.GiftCards_Deactivated_OrderStatusId == (int)order.OrderStatus)
+            {
+                var giftCards = _giftCardService.GetAllGiftCards(order.Id, null, null, true);
+                foreach (var gc in giftCards)
+                {
+                    gc.IsGiftCardActivated = false;
+                    _giftCardService.UpdateGiftCard(gc);
+                }
+            }
         }
 
         /// <summary>
@@ -967,7 +954,8 @@ namespace Nop.Services.Orders
                                     {
                                         var gc = new GiftCard()
                                         {
-                                            //PurchasedOrderProductVariantId = opv.OrderProductVariantId,
+                                            GiftCardType = sc.ProductVariant.GiftCardType,
+                                            PurchasedWithOrderProductVariant = opv,
                                             Amount = scUnitPriceExclTax,
                                             IsGiftCardActivated = false,
                                             GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
@@ -1033,7 +1021,8 @@ namespace Nop.Services.Orders
                                     {
                                         var gc = new GiftCard()
                                         {
-                                            //PurchasedOrderProductVariantId = newOpv.OrderProductVariantId,
+                                            GiftCardType = opv.ProductVariant.GiftCardType,
+                                            PurchasedWithOrderProductVariant = newOpv,
                                             Amount = opv.UnitPriceExclTax,
                                             IsGiftCardActivated = false,
                                             GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),

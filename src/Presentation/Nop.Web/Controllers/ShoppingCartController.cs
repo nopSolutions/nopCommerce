@@ -747,7 +747,7 @@ namespace Nop.Web.Controllers
             {
                 if (!String.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
-                    var giftCard = _giftCardService.GetAllGiftCards(null, null, null, giftcardcouponcode).FirstOrDefault();
+                    var giftCard = _giftCardService.GetAllGiftCards(null, null, null, null, giftcardcouponcode).FirstOrDefault();
                     bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {

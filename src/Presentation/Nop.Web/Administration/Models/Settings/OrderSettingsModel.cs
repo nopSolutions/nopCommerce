@@ -1,11 +1,21 @@
 ﻿using System.Web.Mvc;
+using Nop.Admin.Validators.Settings;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Orders;
 using Nop.Web.Framework;
+using FluentValidation.Attributes;
+using System.Collections.Generic;
 
 namespace Nop.Admin.Models.Settings
 {
+    [Validator(typeof(OrderSettingsValidator))]
     public class OrderSettingsModel
     {
+        public OrderSettingsModel()
+        {
+            GiftCards_Activated_OrderStatuses = new List<SelectListItem>();
+            GiftCards_Deactivated_OrderStatuses = new List<SelectListItem>();
+        }
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.IsReOrderAllowed")]
         public bool IsReOrderAllowed { get; set; }
 
@@ -32,7 +42,14 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions")]
         public string ReturnRequestActionsParsed { get; set; }
+        
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.GiftCards_Activated")]
+        public int GiftCards_Activated_OrderStatusId { get; set; }
+        public IList<SelectListItem> GiftCards_Activated_OrderStatuses { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.GiftCards_Deactivated")]
+        public int GiftCards_Deactivated_OrderStatusId { get; set; }
+        public IList<SelectListItem> GiftCards_Deactivated_OrderStatuses { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
     }

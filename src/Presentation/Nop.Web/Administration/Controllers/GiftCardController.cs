@@ -104,7 +104,7 @@ namespace Nop.Admin.Controllers
                 isGiftCardActivated = true;
             else if (model.ActivatedId == 2)
                 isGiftCardActivated = false;
-            var giftCards = _giftCardService.GetAllGiftCards(null, null, isGiftCardActivated, model.CouponCode);
+            var giftCards = _giftCardService.GetAllGiftCards(null, null, null, isGiftCardActivated, model.CouponCode);
             var gridModel = new GridModel<GiftCardModel>
             {
                 Data = giftCards.PagedForCommand(command).Select(x =>

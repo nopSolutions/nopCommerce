@@ -68,15 +68,19 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets all gift cards
         /// </summary>
+        /// <param name="purchasedWithOrderId">Associated order ID; null to load all records</param>
         /// <param name="startTime">Order start time; null to load all records</param>
         /// <param name="endTime">Order end time; null to load all records</param>
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
         /// <param name="giftCardCouponCode">Gift card coupon code; null or string.empty to load all records</param>
         /// <returns>Gift cards</returns>
-        public virtual IList<GiftCard> GetAllGiftCards(DateTime? startTime = null, DateTime? endTime = null,
+        public virtual IList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId, 
+            DateTime? startTime = null, DateTime? endTime = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = "")
         {
             var query = _giftCardRepository.Table;
+            if (purchasedWithOrderId.HasValue)
+                query = query.Where(gc => gc.PurchasedWithOrderProductVariant != null && gc.PurchasedWithOrderProductVariant.OrderId == purchasedWithOrderId.Value);
             if (startTime.HasValue)
                 query = query.Where(gc => startTime.Value <= gc.CreatedOnUtc);
             if (endTime.HasValue)
@@ -130,7 +134,7 @@ namespace Nop.Services.Orders
             string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
             foreach (var couponCode in couponCodes)
             {
-                var giftCards = GetAllGiftCards(null, null, true, couponCode);
+                var giftCards = GetAllGiftCards(null, null, null, true, couponCode);
                 foreach (var gc in giftCards)
                 {
                     if (gc.IsGiftCardValid())
