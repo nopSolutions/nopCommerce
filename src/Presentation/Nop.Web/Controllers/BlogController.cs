@@ -208,9 +208,7 @@ namespace Nop.Web.Controllers
                     writer.WriteCData(blogPost.Body);
                     writer.WriteEndElement(); // description
                     writer.WriteStartElement("link");
-                    //TODO add a method for getting blog URL (e.g. SEOHelper.GetBlogUrl)
-                    var productUrl = string.Format("{0}blog/{1}/{2}", _webHelper.GetStoreLocation(false), blogPost.Id, blogPost.GetSeName());
-                    writer.WriteCData(productUrl);
+                    writer.WriteCData(Url.RouteUrl("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() }, "http"));
                     writer.WriteEndElement(); // link
                     writer.WriteStartElement("pubDate");
                     writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc)));

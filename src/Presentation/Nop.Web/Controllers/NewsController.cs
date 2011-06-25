@@ -210,9 +210,7 @@ namespace Nop.Web.Controllers
                     writer.WriteCData(n.Short);
                     writer.WriteEndElement(); // description
                     writer.WriteStartElement("link");
-                    //TODO add a method for getting news URL (e.g. SEOHelper.GetNewsUrl)
-                    var productUrl = string.Format("{0}news/{1}/{2}", _webHelper.GetStoreLocation(false), n.Id, n.GetSeName());
-                    writer.WriteCData(productUrl);
+                    writer.WriteCData(Url.RouteUrl("NewsItem", new { newsItemId = n.Id, SeName = n.GetSeName() }, "http"));
                     writer.WriteEndElement(); // link
                     writer.WriteStartElement("pubDate");
                     writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(n.CreatedOnUtc, DateTimeKind.Utc)));
