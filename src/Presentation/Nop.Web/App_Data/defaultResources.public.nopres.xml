@@ -1861,15 +1861,18 @@
       <LocaleResource Name="Comments">
         <Value>Comments</Value>
         <Children>
-          <LocaleResource Name="CommentText">
+          <LocaleResource Name="CommentTitle">
             <Value>Title</Value>
             <Children>
               <LocaleResource Name="Required">
                 <Value>Enter comment title</Value>
               </LocaleResource>
+              <LocaleResource Name="MaxLengthValidation">
+                <Value>Max length of comment title is {0} chars</Value>
+              </LocaleResource>
             </Children>
           </LocaleResource>
-          <LocaleResource Name="CommentTitle">
+          <LocaleResource Name="CommentText">
             <Value>Comment</Value>
             <Children>
               <LocaleResource Name="Required">
@@ -2858,6 +2861,9 @@
             <Children>
               <LocaleResource Name="Required">
                 <Value>Review title is required.</Value>
+              </LocaleResource>
+              <LocaleResource Name="MaxLengthValidation">
+                <Value>Max length of product review is {0} chars</Value>
               </LocaleResource>
             </Children>
           </LocaleResource>
