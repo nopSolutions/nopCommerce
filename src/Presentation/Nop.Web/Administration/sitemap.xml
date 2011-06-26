@@ -78,7 +78,7 @@
             <siteMapNode title="Activity Types" nopResource="Admin.Configuration.ActivityLog.ActivityLogType" controller="ActivityLog" action="ListTypes"/>
             <siteMapNode title="Activity Log" nopResource="Admin.Configuration.ActivityLog.ActivityLog" controller="ActivityLog" action="ListLogs"/>
           </siteMapNode>
-          <!--TODO uncomment menu item
+          <!--TODO uncomment menu item (after ACL support is finished)
           <siteMapNode title="Access control list" nopResource="Admin.Configuration.ACL" controller="Security" action="Permissions" />-->
           <siteMapNode title="SMS providers" nopResource="Admin.Configuration.SMSProviders" controller="SMS" action="Providers" />
           <siteMapNode title="Live chat providers" nopResource="Admin.Configuration.LiveChats" controller="LiveChat" action="Providers" />

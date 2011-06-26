@@ -12,7 +12,6 @@ namespace Nop.Plugin.Feed.PriceGrabber.Models
             AvailableCurrencies = new List<SelectListItem>();
         }
 
-        //TODO set default values - 125
         [NopResourceDisplayName("Plugins.Feed.PriceGrabber.ProductPictureSize")]
         public int ProductPictureSize { get; set; }
 

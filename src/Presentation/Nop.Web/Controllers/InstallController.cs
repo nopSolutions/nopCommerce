@@ -221,7 +221,6 @@ namespace Nop.Web.Controllers
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
 
-            //TODO Allow store owner to enter database name, username, password (for SQL Server)
             var model = new InstallModel()
             {
                 AdminEmail = "admin@yourStore.com",

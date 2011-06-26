@@ -85,7 +85,7 @@ namespace Nop.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Methods");
+                return new JsonResult { Data = "error" };
             }
 
             var smsProvider = _smsService.LoadSmsProviderBySystemName(model.SystemName);
@@ -114,7 +114,8 @@ namespace Nop.Admin.Controllers
         public ActionResult ConfigureProvider(string systemName)
         {
             var smsProvider = _smsService.LoadSmsProviderBySystemName(systemName);
-            if (smsProvider == null) throw new ArgumentException("No SMS provider found with the specified system name", "systemName");
+            if (smsProvider == null) 
+                throw new ArgumentException("No SMS provider found with the specified system name", "systemName");
 
             var model = smsProvider.ToModel();
             string actionName, controllerName;

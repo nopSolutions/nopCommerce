@@ -1,43 +1,30 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Tax;
-using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Discounts;
-using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Models;
-using Nop.Web.Models.Catalog;
+using Nop.Web.Framework.Security;
 using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
-using Nop.Web.Models.Media;
-using Nop.Web.Models.ShoppingCart;
-using Nop.Web.Framework.Security;
+using Nop.Core.Domain.Payments;
 
 namespace Nop.Web.Controllers
 {
@@ -65,6 +52,7 @@ namespace Nop.Web.Controllers
 
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly PaymentSettings _paymentSettings;
 
         #endregion
 
@@ -78,7 +66,8 @@ namespace Nop.Web.Controllers
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IPaymentService paymentService, IOrderTotalCalculationService orderTotalCalculationService,
             ILogger logger, IOrderService orderService, 
-            OrderSettings orderSettings, RewardPointsSettings rewardPointsSettings)
+            OrderSettings orderSettings, RewardPointsSettings rewardPointsSettings,
+            PaymentSettings paymentSettings)
         {
             this._workContext = workContext;
             this._shoppingCartService = shoppingCartService;
@@ -98,6 +87,7 @@ namespace Nop.Web.Controllers
 
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._paymentSettings = paymentSettings;
         }
 
         #endregion
@@ -582,8 +572,7 @@ namespace Nop.Web.Controllers
             _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
-            if (paymentMethodInst == null)
-                //TODO check whether payment method is active if (paymentMethodInst == null && !paymentMethodInst.IsActive)
+            if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
                 return PaymentMethod();
 
             //save
