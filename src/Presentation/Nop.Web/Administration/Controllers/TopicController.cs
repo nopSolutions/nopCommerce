@@ -150,8 +150,7 @@ namespace Nop.Admin.Controllers
             if (topic == null)
                 throw new ArgumentException("No topic found with the specified id", "id");
             var model = topic.ToModel();
-            //TODO add a method for getting the URL (e.g. SEOHelper.GetEntityUrl)
-            model.Url = string.Format("{0}t/{1}", _webHelper.GetStoreLocation(false), topic.SystemName).ToLowerInvariant();
+            model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -177,8 +176,7 @@ namespace Nop.Admin.Controllers
             foreach (var localized in model.Locales)
                 localized.Body = HttpUtility.HtmlDecode(localized.Body);
 
-            //TODO add a method for getting the URL (e.g. SEOHelper.GetEntityUrl)
-            model.Url = string.Format("{0}t/{1}", _webHelper.GetStoreLocation(false), topic.SystemName).ToLowerInvariant();
+            model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
 
             if (ModelState.IsValid)
             {

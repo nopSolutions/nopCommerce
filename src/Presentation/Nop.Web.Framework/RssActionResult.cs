@@ -12,8 +12,8 @@ namespace Nop.Web.Framework
         {
             context.HttpContext.Response.ContentType = "application/rss+xml";
 
-            Rss20FeedFormatter rssFormatter = new Rss20FeedFormatter(Feed);
-            using (XmlWriter writer = XmlWriter.Create(context.HttpContext.Response.Output))
+            var rssFormatter = new Rss20FeedFormatter(Feed);
+            using (var writer = XmlWriter.Create(context.HttpContext.Response.Output))
             {
                 rssFormatter.WriteTo(writer);
             }

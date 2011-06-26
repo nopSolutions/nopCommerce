@@ -12,6 +12,11 @@ namespace Nop.Core.Domain.Orders
     public partial class GiftCard : BaseEntity
     {
         private ICollection<GiftCardUsageHistory> _giftCardUsageHistory;
+        
+        /// <summary>
+        /// Gets or sets the associated order product variant identifier
+        /// </summary>
+        public virtual int? PurchasedWithOrderProductVariantId { get; set; }
 
         /// <summary>
         /// Gets or sets the gift card type identifier
@@ -93,7 +98,7 @@ namespace Nop.Core.Domain.Orders
         }
         
         /// <summary>
-        /// Gets the product variant
+        /// Gets or sets the associated order product variant
         /// </summary>
         public virtual OrderProductVariant PurchasedWithOrderProductVariant { get; set; }
 

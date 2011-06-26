@@ -1454,9 +1454,7 @@ namespace Nop.Web.Controllers
                         writer.WriteCData(product.GetLocalized(x => x.ShortDescription));
                         writer.WriteEndElement(); // description
                         writer.WriteStartElement("link");
-                        //TODO add a method for getting product URL (e.g. SEOHelper.GetProductUrl)
-                        var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
-                        writer.WriteCData(productUrl);
+                        writer.WriteCData(Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http"));
                         writer.WriteEndElement(); // link
                         writer.WriteStartElement("pubDate");
                         writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc)));

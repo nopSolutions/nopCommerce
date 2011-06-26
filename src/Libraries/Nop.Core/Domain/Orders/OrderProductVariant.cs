@@ -9,6 +9,8 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public partial class OrderProductVariant : BaseEntity
     {
+        private ICollection<GiftCard> _associatedGiftCards;
+
         /// <summary>
         /// Gets or sets the order product variant identifier
         /// </summary>
@@ -95,9 +97,12 @@ namespace Nop.Core.Domain.Orders
         public virtual ProductVariant ProductVariant { get; set; }
 
         /// <summary>
-        /// Gets or sets the reward points history record
+        /// Gets or sets the associated gift card
         /// </summary>
-        public virtual GiftCard AssociatedGiftCard { get; set; }
-
+        public virtual ICollection<GiftCard> AssociatedGiftCards
+        {
+            get { return _associatedGiftCards ?? (_associatedGiftCards = new List<GiftCard>()); }
+            protected set { _associatedGiftCards = value; }
+        }
     }
 }

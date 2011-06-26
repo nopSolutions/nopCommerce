@@ -1,5 +1,6 @@
 ﻿@model OrderSettingsModel
 @using Telerik.Web.Mvc.UI;
+@using Nop.Core.Domain.Orders;
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -76,6 +77,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.OnePageCheckoutEnabled)
                 @Html.ValidationMessageFor(model => model.OnePageCheckoutEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GiftCards_Activated_OrderStatusId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.GiftCards_Activated_OrderStatusId, Model.GiftCards_Activated_OrderStatuses)
+                @Html.ValidationMessageFor(model => model.GiftCards_Activated_OrderStatusId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GiftCards_Deactivated_OrderStatusId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.GiftCards_Deactivated_OrderStatusId, Model.GiftCards_Deactivated_OrderStatuses)
+                @Html.ValidationMessageFor(model => model.GiftCards_Deactivated_OrderStatusId)
             </td>
         </tr>
     </table>

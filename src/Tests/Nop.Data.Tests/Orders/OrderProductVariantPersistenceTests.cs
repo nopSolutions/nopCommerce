@@ -64,13 +64,15 @@ namespace Nop.Data.Tests.Orders
             {
                 Order = GetTestOrder(),
                 ProductVariant = GetTestProductVariant(),
-                AssociatedGiftCard = GetTestGiftCard()
             };
+            opv.AssociatedGiftCards.Add(GetTestGiftCard());
 
             var fromDb = SaveAndLoadEntity(opv);
             fromDb.ShouldNotBeNull();
-            fromDb.AssociatedGiftCard.ShouldNotBeNull();
-            fromDb.AssociatedGiftCard.Amount.ShouldEqual(10);
+
+            fromDb.AssociatedGiftCards.ShouldNotBeNull();
+            (fromDb.AssociatedGiftCards.Count == 1).ShouldBeTrue();
+            fromDb.AssociatedGiftCards.First().Amount.ShouldEqual(10);
         }
 
         protected GiftCard GetTestGiftCard()

@@ -50,6 +50,16 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a list of return request actions
         /// </summary>
         public List<string> ReturnRequestActions { get; set; }
+        
+        /// <summary>
+        ///  Gift cards are activated when the order status is
+        /// </summary>
+        public int GiftCards_Activated_OrderStatusId { get; set; }
+
+        /// <summary>
+        ///  Gift cards are deactivated when the order status is
+        /// </summary>
+        public int GiftCards_Deactivated_OrderStatusId { get; set; }
 
     }
 }

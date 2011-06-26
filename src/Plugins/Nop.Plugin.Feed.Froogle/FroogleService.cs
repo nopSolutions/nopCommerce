@@ -116,7 +116,6 @@ namespace Nop.Plugin.Feed.Froogle
 
                     foreach (var productVariant in productVariants)
                     {
-                        //TODO add a method for getting product URL (e.g. SEOHelper.GetProductUrl)
                         var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
                         writer.WriteStartElement("item");
                         writer.WriteElementString("link", productUrl);

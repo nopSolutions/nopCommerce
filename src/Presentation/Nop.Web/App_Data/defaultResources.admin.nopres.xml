@@ -2538,13 +2538,13 @@
                           </Children>
                         </LocaleResource>
                         <LocaleResource Name="ExchangeRateProvider">
-                          <Value>Current exchange rate provider:</Value>
+                          <Value>Current exchange rate provider</Value>
                           <LocaleResource Name="Hint">
                             <Value>Select an exchange rate provider that will be used to get live rates.</Value>
                           </LocaleResource>
                         </LocaleResource>
                         <LocaleResource Name="CurrencyRateAutoUpdateEnabled">
-                          <Value>Auto update enabled:</Value>
+                          <Value>Auto update enabled</Value>
                           <LocaleResource Name="Hint">
                             <Value>Click to enable auto update of currency rates each one hour.</Value>
                           </LocaleResource>
@@ -3902,6 +3902,28 @@
                         <Children>
                           <LocaleResource Name="Hint">
                             <Value>A comma-separated list of actions a customer will be able to choose when submitting a return request.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="GiftCards_Activated">
+                        <Value>Gift card activation order status</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Gift cards are activated when the order status is...</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Pending">
+                            <Value>Order status could not be set to Pending</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="GiftCards_Deactivated">
+                        <Value>Gift card deactivation order status</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Gift cards are deactivated when the order status is...</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Pending">
+                            <Value>Order status could not be set to Pending</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
@@ -7699,16 +7721,16 @@
                         <Value>nopCommerce version</Value>
                       </LocaleResource>
                       <LocaleResource Name="OperatingSystem">
-                        <Value>Operating system:</Value>
+                        <Value>Operating system</Value>
                       </LocaleResource>
                       <LocaleResource Name="ServerLocalTime">
-                        <Value>Server local time:</Value>
+                        <Value>Server local time</Value>
                       </LocaleResource>
                       <LocaleResource Name="ServerTimeZone">
-                        <Value>Server time zone:</Value>
+                        <Value>Server time zone</Value>
                       </LocaleResource>
                       <LocaleResource Name="UTCTime">
-                        <Value>Greenwich mean time (GMT/UTC):</Value>
+                        <Value>Greenwich mean time (GMT/UTC)</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
