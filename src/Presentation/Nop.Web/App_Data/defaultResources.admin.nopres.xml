@@ -3230,6 +3230,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="EnableDynamicPriceUpdate">
+                        <Value>Enable dynamic price update</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if you want to enable dynamic price update on product details page in case a product has product attributes with price adjustments.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>                  
                   <LocaleResource Name="CustomerUser">

@@ -4439,6 +4439,7 @@ namespace Nop.Services.Installation
                     SearchPageProductsPerPage = 6,
                     ProductsAlsoPurchasedEnabled = true,
                     ProductsAlsoPurchasedNumber = 3,
+                    EnableDynamicPriceUpdate = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

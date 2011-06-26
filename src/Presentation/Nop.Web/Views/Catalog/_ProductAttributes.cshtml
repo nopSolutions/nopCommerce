@@ -1,9 +1,125 @@
-﻿@model IList<Nop.Web.Models.Catalog.ProductModel.ProductVariantModel.ProductVariantAttributeModel>
+﻿@model IList<ProductModel.ProductVariantModel.ProductVariantAttributeModel>
+@using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure;
+@using Nop.Core;
+@using System.Text;
+@using System.Globalization;
 @using Nop.Web.Framework;
+@using Nop.Services.Customers;
+@{
+    var hidePrices = !(!EngineContext.Current.Resolve<CatalogSettings>().HidePricesForNonRegistered ||
+                            (EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer != null &&
+                            !EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsGuest()));
+                            
+    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
+    var adjustmentTableScripts = new StringBuilder();
+    var attributeScripts = new StringBuilder();
+            
+    string adjustmentTableName = "";
+    string adjustmentFuncName = "";
+    string priceVarName = "";
+    string priceVarClass = "";
+            
+    if (dynamicPriceUpdate && !hidePrices)
+    {
+        foreach (var attribute in Model)
+        {
+            string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
+                
+            adjustmentTableName = string.Format("adjustmentTable_{0}", attribute.ProductVariantId);
+            adjustmentFuncName = string.Format("adjustPrice_{0}", attribute.ProductVariantId);
+            priceVarName = string.Format("priceValForDynUpd_{0}", attribute.ProductVariantId);
+            priceVarClass = string.Format("price-val-for-dyn-upd-{0}", attribute.ProductVariantId);
+            
+            switch (attribute.AttributeControlType)
+            {
+                case AttributeControlType.DropdownList:
+                    {
+                        adjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", adjustmentTableName, controlId);
+                        attributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, adjustmentFuncName);
+                        int numberOfJsArrayItems = 0;
+                        if (!attribute.IsRequired)
+                        {
+                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                            numberOfJsArrayItems++;
+                        }
+
+                        foreach (var pvaValue in attribute.Values)
+                        {
+                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)pvaValue.PriceAdjustmentValue);
+                            numberOfJsArrayItems++;
+                        }
+                        
+                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
+                        //so have a little hack here (we need at least two elements)
+                        if (numberOfJsArrayItems == 1)
+                        {
+                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                        }
+                        adjustmentTableScripts.Length -= 1;
+                        adjustmentTableScripts.Append(");\n");
+                    }
+                    break;
+                case AttributeControlType.RadioList:
+                    {
+                        foreach (var pvaValue in attribute.Values)
+                        {
+                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", adjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
+                            attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, adjustmentFuncName);
+                        }
+                    }
+                    break;
+                case AttributeControlType.Checkboxes:
+                    {
+                        foreach (var pvaValue in attribute.Values)
+                        {
+                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", adjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
+                            attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, adjustmentFuncName);
+                        }
+                    }
+                    break;
+                default: 
+                    break;
+            }
+                        
+        }
+    }
+}
 @if (Model.Count > 0)
 {
-    //TODO dynamic price update (if enabled)
+    if (dynamicPriceUpdate && !hidePrices)
+    {
+    <script type="text/javascript">
+    // Adjustment table
+    var @(adjustmentTableName) = new Array();
+    // Adjustment table initialize
+    @Html.Raw(adjustmentTableScripts.ToString())
+    // Adjustment function
+    function @(adjustmentFuncName)() {
+        var sum = 0;
+        for(var i in @(adjustmentTableName)) {
+            var ctrl = $('#' + i);
+            if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
+                sum += @(adjustmentTableName)[i];
+            }
+            else if(ctrl.is('select')) {
+                var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
+                if(idx != -1) {
+                    sum += @(adjustmentTableName)[i][idx];
+                }
+            }
+        }
+        var res = (@(priceVarName) + sum).toFixed(2);
+        $(".@(priceVarClass)").text(res);
+    }
+    // Attributes handlers
+    $(document).ready(function() {
+        @(adjustmentFuncName)();
+        @Html.Raw(attributeScripts.ToString())
+    });
+    </script>
+    }
     <div class="attributes">
         @foreach (var attribute in Model)
         {
@@ -56,8 +172,8 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
-                    <label for="@(controlId)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
+                    <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                             }
                         }
                         break;
@@ -65,8 +181,8 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
-                    <label for="@(controlId)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
+                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                             }
                         }
                         break;
@@ -82,7 +198,7 @@
                         break;
                     case AttributeControlType.Datepicker:
                         {
-                            @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
+                    @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
                         }
                         break;
                 }

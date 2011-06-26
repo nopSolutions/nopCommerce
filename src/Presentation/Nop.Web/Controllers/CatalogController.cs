@@ -485,11 +485,13 @@ namespace Nop.Web.Controllers
             #endregion
 
             #region Product variant price
-            
+            model.ProductVariantPrice.ProductVariantId = productVariant.Id;
+            model.ProductVariantPrice.DynamicPriceUpdate = _catalogSettings.EnableDynamicPriceUpdate;
             if (!_catalogSettings.HidePricesForNonRegistered ||
                         (_workContext.CurrentCustomer != null &&
                         !_workContext.CurrentCustomer.IsGuest()))
             {
+                model.ProductVariantPrice.HidePrices = false;
                 if (productVariant.CustomerEntersPrice)
                 {
                     model.ProductVariantPrice.CustomerEntersPrice = true;
@@ -518,11 +520,15 @@ namespace Nop.Web.Controllers
 
                         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
                             model.ProductVariantPrice.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+
+                        model.ProductVariantPrice.PriceValue = finalPriceWithoutDiscount;
+                        model.ProductVariantPrice.PriceWithDiscountValue = finalPriceWithDiscount;
                     }
                 }
             }
             else
             {
+                model.ProductVariantPrice.HidePrices = true;
                 model.ProductVariantPrice.OldPrice = null;
                 model.ProductVariantPrice.Price = null;
             }
@@ -600,7 +606,7 @@ namespace Nop.Web.Controllers
                         Description = attribute.ProductAttribute.GetLocalized(x => x.Description),
                         TextPrompt = attribute.TextPrompt,
                         IsRequired = attribute.IsRequired,
-                        AttributeControlType = attribute.AttributeControlType
+                        AttributeControlType = attribute.AttributeControlType,
                     };
 
                 if (attribute.ShouldHaveValues())
@@ -613,7 +619,7 @@ namespace Nop.Web.Controllers
                         {
                             Id = pvaValue.Id,
                             Name = pvaValue.GetLocalized(x=>x.Name),
-                            IsPreSelected = pvaValue.IsPreSelected
+                            IsPreSelected = pvaValue.IsPreSelected,
                         };
                         pvaModel.Values.Add(pvaValueModel);
                         
@@ -629,6 +635,8 @@ namespace Nop.Web.Controllers
                                 pvaValueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
                             else if (priceAdjustmentBase < decimal.Zero)
                                 pvaValueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+
+                            pvaValueModel.PriceAdjustmentValue = priceAdjustment;
                         }
                     }
                 }

@@ -131,12 +131,20 @@ namespace Nop.Web.Models.Catalog
                 public string OldPrice { get; set; }
 
                 public string Price { get; set; }
-
                 public string PriceWithDiscount { get; set; }
+
+                public decimal PriceValue { get; set; }
+                public decimal PriceWithDiscountValue { get; set; }
 
                 public bool CustomerEntersPrice { get; set; }
 
                 public bool CallForPrice { get; set; }
+
+                public int ProductVariantId { get; set; }
+
+                public bool HidePrices { get; set; }
+
+                public bool DynamicPriceUpdate { get; set; }
             }
 
             public class GiftCardModel : BaseNopModel
@@ -191,6 +199,7 @@ namespace Nop.Web.Models.Catalog
                 public AttributeControlType AttributeControlType { get; set; }
 
                 public IList<ProductVariantAttributeValueModel> Values { get; set; }
+
             }
 
             public class ProductVariantAttributeValueModel : BaseNopEntityModel
@@ -198,6 +207,8 @@ namespace Nop.Web.Models.Catalog
                 public string Name { get; set; }
 
                 public string PriceAdjustment { get; set; }
+
+                public decimal PriceAdjustmentValue { get; set; }
 
                 public bool IsPreSelected { get; set; }
             }

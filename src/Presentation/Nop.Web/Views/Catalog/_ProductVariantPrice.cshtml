@@ -1,4 +1,24 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel.ProductVariantPriceModel
+@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure;
+@using Nop.Core;
+@using System.Text;
+@using System.Globalization;
+@using Nop.Web.Framework;
+@using Nop.Services.Customers;
+@using System.Text.RegularExpressions;
+@{
+    string pattern = "(?<val>(\\d+[\\s\\,\\.]?)+)";
+    string replacement = String.Format("<span class=\"price-val-for-dyn-upd-{0}\">${{val}}</span> ", Model.ProductVariantId);  
+}
+@if (Model.DynamicPriceUpdate)
+{
+    <script type="text/javascript">    
+//<![CDATA[
+        var priceValForDynUpd_@(Model.ProductVariantId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString());//]]>
+    </script>
+}
 <div class="price">
     @if (Model.CustomerEntersPrice)
     {
@@ -21,17 +41,40 @@
         {
         @T("Products.Price")<text>:</text>
         }
+        
+        
         <span 
         @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {
             <text>class="productPrice"</text>
         }
-        >@Model.Price</span>                                               
-    if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-    {
+        >
+            @if (Model.DynamicPriceUpdate && !Model.HidePrices && String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            {
+                @Html.Raw(Regex.Replace(Model.Price, pattern, replacement))
+            }
+            else
+            {
+                @Html.Raw(Model.Price)
+            }
+        </span>
+        
+        
+        
+            if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            {
         <br />
         @T("Products.Price.WithDiscount")<text>:</text>
-        <span class="productPrice">@Model.PriceWithDiscount</span>
-    }
+        <span class="productPrice">
+            @if (Model.DynamicPriceUpdate && !Model.HidePrices)
+            {
+                @Html.Raw(Regex.Replace(Model.PriceWithDiscount, pattern, replacement))
+            }
+            else
+            {
+                @Html.Raw(Model.PriceWithDiscount)
+            }
+        </span>
+            }
     }
 </div>

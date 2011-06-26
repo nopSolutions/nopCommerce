@@ -296,5 +296,14 @@
                 @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedNumber)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EnableDynamicPriceUpdate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EnableDynamicPriceUpdate)
+                @Html.ValidationMessageFor(model => model.EnableDynamicPriceUpdate)
+            </td>
+        </tr>
     </table>
 }

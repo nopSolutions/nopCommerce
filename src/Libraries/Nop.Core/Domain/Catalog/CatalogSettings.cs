@@ -129,6 +129,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a number of products also purchased by other customers to display
         /// </summary>
         public int ProductsAlsoPurchasedNumber { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether dynamic price update is enabled
+        /// </summary>
+        public bool EnableDynamicPriceUpdate { get; set; }
+
     }
 }
