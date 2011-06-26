@@ -57,6 +57,7 @@
                                 .Hidden(true);
 
                         })
+                        .Pageable(settings => settings.Total(Model.NewsLetterSubscriptions.Total).PageSize(10).Position(GridPagerPosition.Both))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("SubscriptionList", "NewsLetterSubscription"))
                         .Filterable(filtering => filtering.Filters(filters =>
                         {
@@ -104,7 +105,7 @@
         });
 
         function onDataBound(e) {
-
+            alert('1');
             $('#newsLetterSubscriptions-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
                 var currentId = $(this).val();
                 var checked = jQuery.inArray(currentId, selectedIds);

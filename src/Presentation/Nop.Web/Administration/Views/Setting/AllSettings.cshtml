@@ -34,7 +34,7 @@
                         x.Mode(GridEditMode.InLine);
                     })
                     .Filterable()
-                    .Pageable(settings => settings.PageSize(20).Total(Model.Total))
+                    .Pageable(settings => settings.PageSize(20).Total(Model.Total).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax().Select("AllSettings", "Setting")

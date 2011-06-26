@@ -79,7 +79,7 @@
                             .Template(x => x.Published.ToString().ToLower())
                             .Centered();
                     })
-                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10))
+                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("CrossSellProductAddPopupList", "Product"))
                     .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                     .EnableCustomBinding(true))

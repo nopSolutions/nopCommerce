@@ -70,7 +70,7 @@
                                 .Centered()
                                 .Title("Edit");
                         })
-                        .Pageable(settings => settings.PageSize(10))
+                        .Pageable(settings => settings.PageSize(10).Position(GridPagerPosition.Both))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("LogList", "Log", Model))
                         .EnableCustomBinding(true))
             </td>

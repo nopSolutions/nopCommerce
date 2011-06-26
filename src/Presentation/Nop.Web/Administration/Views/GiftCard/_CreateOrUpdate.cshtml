@@ -185,7 +185,7 @@
                         columns.Bound(x => x.CreatedOn).Width(200);
 
                     })
-                    .Pageable(settings => settings.PageSize(20))
+                    .Pageable(settings => settings.PageSize(20).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax().Select("UsageHistoryList", "GiftCard", new { giftCardId = Model.Id });

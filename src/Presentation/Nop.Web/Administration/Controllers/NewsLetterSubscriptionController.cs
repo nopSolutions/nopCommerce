@@ -37,7 +37,7 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult List()
 		{
-			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty, true);
+			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty, 0, 10, true);
 			var model = new NewsLetterSubscriptionListModel();
 
 			model.NewsLetterSubscriptions = new GridModel<NewsLetterSubscriptionModel>
@@ -48,7 +48,7 @@ namespace Nop.Admin.Controllers
 					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
 					return m;
 				}),
-				Total = newsletterSubscriptions.Count()
+				Total = newsletterSubscriptions.TotalCount
 			};
 			return View(model);
 		}
@@ -58,26 +58,23 @@ namespace Nop.Admin.Controllers
 		{
 			string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
 
-			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(searchCustomerEmail, true);
+			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(searchCustomerEmail, 
+                command.Page - 1, command.PageSize, true);
 
-			var model = new NewsLetterSubscriptionListModel();
-			model.SearchEmail = searchCustomerEmail;
-
-			model.NewsLetterSubscriptions = new GridModel<NewsLetterSubscriptionModel>
-			{
-				Data = newsletterSubscriptions.Select(x =>
+            var gridModel = new GridModel<NewsLetterSubscriptionModel>
+            {
+                Data = newsletterSubscriptions.Select(x =>
 				{
 					var m = x.ToModel();
 					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
 					return m;
 				}),
-				Total = newsletterSubscriptions.Count()
-			};
-
-			return new JsonResult
-			{
-				Data = model
-			};
+                Total = newsletterSubscriptions.TotalCount
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
 		}
 
 		[HttpPost, ActionName("List")]
@@ -86,7 +83,8 @@ namespace Nop.Admin.Controllers
 		{
 			ViewData["searchCustomerEmail"] = model.SearchEmail;
 
-			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, true);
+            //TODO add paging support
+			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 0, 10, true);
 
 			model.NewsLetterSubscriptions = new GridModel<NewsLetterSubscriptionModel>
 			{
@@ -96,7 +94,7 @@ namespace Nop.Admin.Controllers
 					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
 					return m;
 				}),
-				Total = newsletterSubscriptions.Count()
+				Total = newsletterSubscriptions.TotalCount
 			};
 
 			return View(model);
@@ -107,7 +105,7 @@ namespace Nop.Admin.Controllers
 			string fileName = String.Format("newsletter_emails_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 
 			var sb = new StringBuilder();
-			var newsLetterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, true);
+			var newsLetterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 0, int.MaxValue, true);
 			if (newsLetterSubscriptions.Count == 0)
 			{
 				throw new NopException("No emails to export");

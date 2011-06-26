@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
@@ -50,7 +51,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="email">Email to search or string. Empty to load all records.</param>
         /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entity list</returns>
-        IList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden = false);
+        IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email,
+            int pageIndex, int pageSize, bool showHidden = false);
     }
 }

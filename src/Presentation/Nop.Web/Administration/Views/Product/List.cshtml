@@ -1,7 +1,5 @@
 ﻿@model ProductListModel
-
 @using Telerik.Web.Mvc.UI
-
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -10,8 +8,7 @@
             @T("Admin.Catalog.Products.Manage")
         </div>
         <div class="options">
-            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-            <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
+            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a> <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
             <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
             <a href="@Url.Action("ExportExcel")" class="t-button">@T("Admin.Common.ExportToExcel")</a>
             <button type="submit" id="importexcel" name="importexcel" value="importexcel" class="t-button">@T("Admin.Common.ImportFromExcel")</button>
@@ -60,7 +57,7 @@
     </table>
     <p>
     </p>
-    //TODO Bulk product variant editing
+                                                                                               //TODO Bulk product variant editing
     <table class="adminContent">
         <tr>
             <td>
@@ -108,7 +105,7 @@
 
 
                             @<text>
-                            @(Html.Telerik().Grid(item.ProductVariantModels)
+                @(Html.Telerik().Grid(item.ProductVariantModels)
                                     .Name("variants-grid-" + item.Id)
                                     .Columns(columns =>
                                     {
@@ -124,12 +121,12 @@
                                         .Centered();
                                     })
                             )
-                            </text>
+                </text>
 
 
                                             )
                                             )
-                                            .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10))
+                                            .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10).Position(GridPagerPosition.Both))
                                             .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
                                             .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                                             .EnableCustomBinding(true))
@@ -156,21 +153,20 @@
         }
     </script>  
 }
-
 @*import products form*@
 @{Html.Telerik().Window()
         .Name("importexcel-window")
         .Title(T("Admin.Common.ImportFromExcel").Text)
         .Content(@<text>
-        @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            <table style="text-align: left;">
+    @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table style="text-align: left;">
             <tr>
                 <td>
                     Excel file:
                 </td>
                 <td>
-                    <input type="file" id="importexcelfile" name="importexcelfile"/>
+                    <input type="file" id="importexcelfile" name="importexcelfile" />
                 </td>
             </tr>
             <tr>
@@ -179,8 +175,8 @@
                 </td>
             </tr>
         </table>
-        }
-        </text>)
+    }
+    </text>)
         .Width(400)
         .Draggable(true)
         .Modal(true)

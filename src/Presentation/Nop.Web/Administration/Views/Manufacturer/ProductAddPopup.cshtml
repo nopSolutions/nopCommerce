@@ -79,8 +79,8 @@
                             .Template(x => x.Published.ToString().ToLower())
                             .Centered();
                     })
-                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10))
-                                                .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductAddPopupList", "Manufacturer"))
+                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10).Position(GridPagerPosition.Both))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductAddPopupList", "Manufacturer"))
                     .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                     .EnableCustomBinding(true))
             </td>

@@ -35,7 +35,7 @@
                                     .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                                     .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(20))
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(20).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("LowStockReportList", "ProductVariant"))
                     .EnableCustomBinding(true))
             </td>

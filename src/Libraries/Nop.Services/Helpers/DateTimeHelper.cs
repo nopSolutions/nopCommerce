@@ -183,11 +183,11 @@ namespace Nop.Services.Helpers
         {
             get
             {
-                string defaultTimeZoneId = _dateTimeSettings.DefaultStoreTimeZoneId;
                 TimeZoneInfo timeZoneInfo = null;
                 try
                 {
-                    timeZoneInfo = FindTimeZoneById(defaultTimeZoneId);
+                    if (!String.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
+                        timeZoneInfo = FindTimeZoneById(_dateTimeSettings.DefaultStoreTimeZoneId);
                 }
                 catch (Exception exc)
                 {

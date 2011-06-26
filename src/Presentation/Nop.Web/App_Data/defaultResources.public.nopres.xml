@@ -1269,6 +1269,28 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Payments.PaymentStatus">
+        <Children>
+          <LocaleResource Name="Pending">
+            <Value>Pending</Value>
+          </LocaleResource>
+          <LocaleResource Name="Authorized">
+            <Value>Authorized</Value>
+          </LocaleResource>
+          <LocaleResource Name="Paid">
+            <Value>Paid</Value>
+          </LocaleResource>
+          <LocaleResource Name="PartiallyRefunded">
+            <Value>Partially refunded</Value>
+          </LocaleResource>
+          <LocaleResource Name="Refunded">
+            <Value>Refunded</Value>
+          </LocaleResource>
+          <LocaleResource Name="Voided">
+            <Value>Voided</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Nop.Core.Domain.Security.PasswordFormat">
         <Children>
           <LocaleResource Name="Clear">

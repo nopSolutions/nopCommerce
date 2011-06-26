@@ -112,7 +112,7 @@
                             .Title(T("Admin.Common.Edit").Text)
                             .Filterable(false);
                     })
-                    .Pageable(settings => settings.Total(Model.Customers.Total).PageSize(10))
+                    .Pageable(settings => settings.Total(Model.Customers.Total).PageSize(10).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("CustomerList", "Customer"))
                     .Filterable(filtering => filtering.Filters(filters =>
                     {

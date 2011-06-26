@@ -138,8 +138,11 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="email">Email to search or string. Empty to load all records.</param>
         /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entity list</returns>
-        public virtual IList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden = false)
+        public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, 
+            int pageIndex, int pageSize, bool showHidden = false)
         {
             //var query1 = from nls in _newsLetterSubscriptionRepository.Table
             //             from c in _customersRepository.Table
@@ -169,7 +172,7 @@ namespace Nop.Services.Messages
             }
             query = query.OrderBy(nls => nls.Email);
 
-            var newsletterSubscriptions = query.ToList();
+            var newsletterSubscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
             return newsletterSubscriptions;
         }
     }
