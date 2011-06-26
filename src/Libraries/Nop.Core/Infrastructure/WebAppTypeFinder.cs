@@ -10,11 +10,8 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class WebAppTypeFinder : AppDomainTypeFinder
     {
-        private bool ensureBinFolderAssembliesLoaded = true;
-        private bool binFolderAssembliesLoaded = false;
-
-        //private bool ensurePluginFolderAssembliesLoaded = true;
-        //private bool pluginFolderAssembliesLoaded = false;
+        private bool _ensureBinFolderAssembliesLoaded = true;
+        private bool _binFolderAssembliesLoaded = false;
 
         private IWebHelper _webHelper;
 
@@ -26,8 +23,8 @@ namespace Nop.Core.Infrastructure
         public WebAppTypeFinder(IWebHelper webHelper, NopConfig config)
         {
             this._webHelper = webHelper;
-            this.ensureBinFolderAssembliesLoaded = config.DynamicDiscovery;
-            //this.ensurePluginFolderAssembliesLoaded = config.DynamicDiscovery;
+            this._ensureBinFolderAssembliesLoaded = config.DynamicDiscovery;
+            //this_.ensurePluginFolderAssembliesLoaded = config.DynamicDiscovery;
         }
 
         #region Properties
@@ -37,18 +34,9 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         public bool EnsureBinFolderAssembliesLoaded
         {
-            get { return ensureBinFolderAssembliesLoaded; }
-            set { ensureBinFolderAssembliesLoaded = value; }
+            get { return _ensureBinFolderAssembliesLoaded; }
+            set { _ensureBinFolderAssembliesLoaded = value; }
         }
-
-        ///// <summary>
-        ///// Gets or sets wether assemblies in the bin folder of the web application should be specificly checked for beeing loaded on application load. This is need in situations where plugins need to be loaded in the AppDomain after the application been reloaded.
-        ///// </summary>
-        //public bool EnsurePluginFolderAssembliesLoaded
-        //{
-        //    get { return ensurePluginFolderAssembliesLoaded; }
-        //    set { ensurePluginFolderAssembliesLoaded = value; }
-        //}
 
 
         #endregion
@@ -56,15 +44,9 @@ namespace Nop.Core.Infrastructure
         #region Methods
         public override IList<Assembly> GetAssemblies()
         {
-            //if (this.EnsurePluginFolderAssembliesLoaded && !pluginFolderAssembliesLoaded)
-            //{
-            //    pluginFolderAssembliesLoaded = true;
-            //    LoadMatchingAssemblies(_webHelper.MapPath("~/Plugins"));
-            //}
-
-            if (this.EnsureBinFolderAssembliesLoaded && !binFolderAssembliesLoaded)
+            if (this.EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)
             {
-                binFolderAssembliesLoaded = true;
+                _binFolderAssembliesLoaded = true;
                 LoadMatchingAssemblies(_webHelper.MapPath("~/bin"));
             }
 

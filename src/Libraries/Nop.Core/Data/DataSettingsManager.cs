@@ -6,8 +6,8 @@ namespace Nop.Core.Data
 {
     public partial class DataSettingsManager
     {
-        public const char Separator = ':';
-        public const string Filename = "Settings.txt";
+        protected const char separator = ':';
+        protected const string filename = "Settings.txt";
 
         protected virtual DataSettings ParseSettings(string text)
         {
@@ -18,7 +18,7 @@ namespace Nop.Core.Data
             var settings = text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var setting in settings)
             {
-                var separatorIndex = setting.IndexOf(Separator);
+                var separatorIndex = setting.IndexOf(separator);
                 if (separatorIndex == -1)
                 {
                     continue;
@@ -56,7 +56,7 @@ namespace Nop.Core.Data
 
         public virtual DataSettings LoadSettings()
         {
-            string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), Filename);
+            string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), filename);
             if (File.Exists(filePath))
             {
                 string text = File.ReadAllText(filePath);
@@ -71,7 +71,7 @@ namespace Nop.Core.Data
             if (settings == null)
                 throw new ArgumentNullException("settings");
             
-            string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), Filename);
+            string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {
                 using (File.Create(filePath))

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Nop.Core
 {
-    public static class ICollectionTExtensions
+    public static class CollectionTExtensions
     {
         public static ICollection<T> SetupBeforeAndAfterActions<T>(
             this ICollection<T> value,

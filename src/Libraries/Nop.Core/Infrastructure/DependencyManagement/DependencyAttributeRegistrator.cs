@@ -9,18 +9,18 @@ namespace Nop.Core.Infrastructure.DependencyManagement
     /// </summary>
     public class DependencyAttributeRegistrator
     {
-        ITypeFinder finder;
-        private IEngine engine;
+        private readonly ITypeFinder _finder;
+        private readonly IEngine _engine;
 
         public DependencyAttributeRegistrator(ITypeFinder finder, IEngine engine)
         {
-            this.finder = finder;
-            this.engine = engine;
+            this._finder = finder;
+            this._engine = engine;
         }
 
         public virtual IEnumerable<AttributeInfo<DependencyAttribute>> FindServices()
         {
-            foreach (Type type in finder.FindClassesOfType<object>())
+            foreach (Type type in _finder.FindClassesOfType<object>())
             {
                 var attributes = type.GetCustomAttributes(typeof(DependencyAttribute), false);
                 foreach (DependencyAttribute attribute in attributes)
@@ -34,7 +34,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         {
             foreach (var info in services)
             {
-                info.Attribute.RegisterService(info, engine.ContainerManager);
+                info.Attribute.RegisterService(info, _engine.ContainerManager);
             }
         }
 

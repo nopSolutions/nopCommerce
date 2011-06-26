@@ -17,7 +17,7 @@ namespace Nop.Core.ComponentModel
                 throw new InvalidOperationException("No type converter exists for type " + typeof(T).FullName);
         }
 
-        protected string[] GetStringArray(string input)
+        protected virtual string[] GetStringArray(string input)
         {
             if (!String.IsNullOrEmpty(input))
             {

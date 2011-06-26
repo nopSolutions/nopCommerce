@@ -85,7 +85,7 @@ namespace Nop.Core.Plugins
                 {
                     instance = Activator.CreateInstance(PluginType) as T;
                 }
-                catch (MissingMethodException ex)
+                catch (MissingMethodException)
                 {
                     instance = EngineContext.Current.ContainerManager.ResolveUnregistered(PluginType) as T;
                 }
