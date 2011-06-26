@@ -165,23 +165,14 @@ namespace Nop.Services.Messages
             var query = _newsLetterSubscriptionRepository.Table;
             if (!String.IsNullOrEmpty(email))
                 query = query.Where(nls => nls.Email.Contains(email));
-            query = query.Where(nls => showHidden || nls.Active);
+            if (!showHidden)
+            {
+                query = query.Where(nls => nls.Active);
+            }
             query = query.OrderBy(nls => nls.Email);
 
             var newsletterSubscriptions = query.ToList();
             return newsletterSubscriptions;
         }
-
-        /// <summary>
-        /// Gets a customer subscribed to newsletter subscription
-        /// </summary>
-        /// <param name="newsLetterSubscription">The newsLetter subscription</param>
-        /// <returns>Customer</returns>
-        public virtual Customer GetNewsLetterSubscriptionCustomer(NewsLetterSubscription newsLetterSubscription)
-        {
-            //TODO remove this method.
-            throw new NotImplementedException();
-        }
-
     }
 }

@@ -32,8 +32,6 @@ namespace Nop.Services.Customers
             {
                 return (!CommonHelper.AreNullOrEmpty(
                             this.Email,
-                            //TODO validate Username only when usernames are enabled
-                            //this.Username,
                             this.Password
                             ));
             }

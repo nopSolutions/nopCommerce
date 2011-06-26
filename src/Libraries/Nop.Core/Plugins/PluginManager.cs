@@ -106,6 +106,7 @@ namespace Nop.Core.Plugins
                             //shadow copy files
                             description.ReferencedAssembly = PerformFileDeploy(mainPluginFile);
                             //TODO uncomment code below in order to load all referenced assemblies
+                            //ensure that the same assebly should not be loaded twice
                             //foreach (var plugin in pluginFiles.Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase)))
                             //    PerformFileDeploy(plugin);
 

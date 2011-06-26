@@ -117,8 +117,9 @@ namespace Nop.Admin.Controllers
 			{
 				var subscription = newsLetterSubscriptions[i];
 				sb.Append(subscription.Email);
-				if (i != newsLetterSubscriptions.Count - 1)
-					sb.AppendLine(",");
+                sb.Append("\t");
+                sb.Append(subscription.Active);
+                sb.Append("\r\n");  //new line
 			}
 			string result = sb.ToString();
 

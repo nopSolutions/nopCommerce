@@ -11,6 +11,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 
 namespace Nop.Services.Customers
@@ -35,6 +36,7 @@ namespace Nop.Services.Customers
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly IEncryptionService _encryptionService;
         private readonly ICacheManager _cacheManager;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
         
@@ -50,13 +52,14 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
         /// <param name="encryptionService">Encryption service</param>
+        /// <param name="newsLetterSubscriptionService">Newsletter subscription service</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerAttribute> customerAttributeRepository,
-            IEncryptionService encryptionService,
+            IEncryptionService encryptionService, INewsLetterSubscriptionService newsLetterSubscriptionService,
             RewardPointsSettings rewardPointsSettings, CustomerSettings customerSettings)
         {
             this._cacheManager = cacheManager;
@@ -64,6 +67,7 @@ namespace Nop.Services.Customers
             this._customerRoleRepository = customerRoleRepository;
             this._customerAttributeRepository = customerAttributeRepository;
             this._encryptionService = encryptionService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
         }
@@ -487,6 +491,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customer");
 
             newEmail = newEmail.Trim();
+            string oldEmail = customer.Email;
 
             if (!CommonHelper.IsValidEmail(newEmail))
                 throw new NopException("New email is not valid");
@@ -500,6 +505,17 @@ namespace Nop.Services.Customers
 
             customer.Email = newEmail;
             UpdateCustomer(customer);
+
+            //update newsletter subscription (if required)
+            if (!String.IsNullOrEmpty(oldEmail) && !oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(oldEmail);
+                if (subscriptionOld != null)
+                {
+                    subscriptionOld.Email = newEmail;
+                    _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
+                }
+            }
         }
 
         /// <summary>
@@ -576,16 +592,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            //var subscriptionOld = customer.NewsLetterSubscription;
-
             _customerRepository.Update(customer);
-
-            //TODO update newsletter subscription
-            //if (subscriptionOld != null && !customer.Email.ToLower().Equals(subscriptionOld.Email.ToLower()))
-            //{
-            //    subscriptionOld.Email = customer.Email;
-            //    IoC.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscriptionOld);
-            //}
         }
 
         /// <summary>

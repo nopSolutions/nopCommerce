@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
+using Nop.Services.Messages;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Nop.Tests;
@@ -24,6 +25,7 @@ namespace Nop.Services.Tests.Customers
         IEncryptionService _encryptionService;
         ICustomerService _customerService;
         CustomerSettings _customerSettings;
+        INewsLetterSubscriptionService newsLetterSubscriptionService;
         RewardPointsSettings _rewardPointsSettings;
         SecuritySettings _securitySettings;
 
@@ -77,8 +79,11 @@ namespace Nop.Services.Tests.Customers
 
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
             _customerAttributeRepo = MockRepository.GenerateMock<IRepository<CustomerAttribute>>();
+            _customerAttributeRepo = MockRepository.GenerateMock<IRepository<CustomerAttribute>>();
+            newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
-                _customerAttributeRepo, _encryptionService, _rewardPointsSettings, _customerSettings);
+                _customerAttributeRepo, _encryptionService, newsLetterSubscriptionService,
+                _rewardPointsSettings, _customerSettings);
         }
 
         //[Test]
