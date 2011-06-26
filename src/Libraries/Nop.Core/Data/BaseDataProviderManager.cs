@@ -7,13 +7,13 @@ namespace Nop.Core.Data
 {
     public abstract class BaseDataProviderManager
     {
-        protected BaseDataProviderManager(Settings settings)
+        protected BaseDataProviderManager(DataSettings settings)
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
             this.Settings = settings;
         }
-        protected Settings Settings { get; private set; }
+        protected DataSettings Settings { get; private set; }
         public abstract IDataProvider LoadDataProvider();
     }
 }

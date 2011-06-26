@@ -6,9 +6,9 @@ using Nop.Core;
 
 namespace Nop.Core.Data
 {
-    public partial class Settings
+    public partial class DataSettings
     {
-        public Settings()
+        public DataSettings()
         {
             RawDataSettings=new Dictionary<string, string>();
         }

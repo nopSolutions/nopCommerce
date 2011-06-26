@@ -6,7 +6,7 @@ namespace Nop.Data
 {
     public partial class EfDataProviderManager : BaseDataProviderManager
     {
-        public EfDataProviderManager(Settings settings):base(settings)
+        public EfDataProviderManager(DataSettings settings):base(settings)
         {
         }
 

@@ -45,7 +45,7 @@ namespace Nop.Web
         protected void Application_Start()
         {
             //initialize engine context
-            EngineContext.Initialize(false, SettingsHelper.DatabaseIsInstalled());
+            EngineContext.Initialize(false, DataSettingsHelper.DatabaseIsInstalled());
 
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
@@ -54,7 +54,7 @@ namespace Nop.Web
             //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel), new NopModelBinder());
 
-            if (SettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 //remove all view engines
                 ViewEngines.Engines.Clear();
@@ -101,7 +101,7 @@ namespace Nop.Web
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             string installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
             if (!webHelper.IsStaticResource(this.Request) &&
-                !SettingsHelper.DatabaseIsInstalled() &&
+                !DataSettingsHelper.DatabaseIsInstalled() &&
                 !webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Response.Redirect(installUrl);
@@ -110,7 +110,7 @@ namespace Nop.Web
 
         protected void SetWorkingCulture()
         {
-            if (SettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 if (!webHelper.IsStaticResource(this.Request))

@@ -3,14 +3,14 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Data
 {
-    public partial class SettingsHelper
+    public partial class DataSettingsHelper
     {
         private static bool? _databaseIsInstalled;
         public static bool DatabaseIsInstalled()
         {
             if (!_databaseIsInstalled.HasValue)
             {
-                var manager = new SettingsManager();
+                var manager = new DataSettingsManager();
                 var settings = manager.LoadSettings();
                 _databaseIsInstalled = settings != null && !String.IsNullOrEmpty(settings.DataConnectionString);
             }

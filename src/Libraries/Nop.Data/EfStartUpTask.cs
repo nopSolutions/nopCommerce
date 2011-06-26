@@ -9,7 +9,7 @@ namespace Nop.Data
     {
         public void Execute()
         {
-            var settings = EngineContext.Current.Resolve<Settings>();
+            var settings = EngineContext.Current.Resolve<DataSettings>();
             if (settings != null && settings.IsValid())
             {
                 var provider = EngineContext.Current.Resolve<IEfDataProvider>();

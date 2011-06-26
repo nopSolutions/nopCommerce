@@ -215,7 +215,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult Index()
         {
-            if (SettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
 
             //set page timeout to 5 minutes
@@ -239,7 +239,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult Index(InstallModel model)
         {
-            if (SettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
 
             //set page timeout to 5 minutes
@@ -313,7 +313,7 @@ namespace Nop.Web.Controllers
             
             if (ModelState.IsValid)
             {
-                var settingsManager = new SettingsManager();
+                var settingsManager = new DataSettingsManager();
                 try
                 {
                     string connectionString = null;
@@ -355,7 +355,7 @@ namespace Nop.Web.Controllers
                     //save settings
                     //save settings
                     var dataProvider = model.DataProvider;
-                    var settings = new Settings()
+                    var settings = new DataSettings()
                     {
                         DataProvider = dataProvider,
                         DataConnectionString = connectionString
@@ -372,7 +372,7 @@ namespace Nop.Web.Controllers
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
                     //reset cache
-                    SettingsHelper.ResetCache();
+                    DataSettingsHelper.ResetCache();
 
                     //install plugins
                     PluginManager.MarkAllPluginsAsUninstalled();
@@ -405,7 +405,7 @@ namespace Nop.Web.Controllers
                 catch (Exception exception)
                 {
                     //clear provider settings if something got wrong
-                    settingsManager.SaveSettings(new Settings
+                    settingsManager.SaveSettings(new DataSettings
                     {
                         DataProvider = null,
                         DataConnectionString = null
@@ -419,7 +419,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult RestartInstall()
         {
-            if (SettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToAction("Index", "Home");
             
             //restart application

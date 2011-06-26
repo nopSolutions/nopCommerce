@@ -61,10 +61,10 @@ namespace Nop.Web.Framework
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
 
             //data layer
-            var dataSettingsManager = new SettingsManager();
+            var dataSettingsManager = new DataSettingsManager();
             var dataProviderSettings = dataSettingsManager.LoadSettings();
-            builder.Register(c => dataSettingsManager.LoadSettings()).As<Settings>();
-            builder.Register(x => new EfDataProviderManager(x.Resolve<Settings>())).As<BaseDataProviderManager>().InstancePerDependency();
+            builder.Register(c => dataSettingsManager.LoadSettings()).As<DataSettings>();
+            builder.Register(x => new EfDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
 
             builder.Register(x => (IEfDataProvider)x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IEfDataProvider>().As<IDataProvider>().InstancePerDependency();
 

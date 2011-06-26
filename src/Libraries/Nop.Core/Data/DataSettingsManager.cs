@@ -8,14 +8,14 @@ using Nop.Core;
 
 namespace Nop.Core.Data
 {
-    public partial class SettingsManager
+    public partial class DataSettingsManager
     {
         public const char Separator = ':';
         public const string Filename = "Settings.txt";
 
-        protected virtual Settings ParseSettings(string text)
+        protected virtual DataSettings ParseSettings(string text)
         {
-            var shellSettings = new Settings();
+            var shellSettings = new DataSettings();
             if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
@@ -47,7 +47,7 @@ namespace Nop.Core.Data
             return shellSettings;
         }
 
-        protected virtual string ComposeSettings(Settings settings)
+        protected virtual string ComposeSettings(DataSettings settings)
         {
             if (settings == null)
                 return "";
@@ -58,7 +58,7 @@ namespace Nop.Core.Data
                 );
         }
 
-        public virtual Settings LoadSettings()
+        public virtual DataSettings LoadSettings()
         {
             string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), Filename);
             if (File.Exists(filePath))
@@ -67,10 +67,10 @@ namespace Nop.Core.Data
                 return ParseSettings(text);
             }
             else
-                return new Settings();
+                return new DataSettings();
         }
 
-        public virtual void SaveSettings(Settings settings)
+        public virtual void SaveSettings(DataSettings settings)
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");

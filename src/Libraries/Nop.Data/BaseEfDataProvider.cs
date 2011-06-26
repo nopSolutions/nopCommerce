@@ -14,7 +14,7 @@ namespace Nop.Data
 
         public virtual void SetDatabaseInitializer()
         {
-            var initializer = new CreateTablesIfNotExists<NopObjectContext>();
+            var initializer = new CreateTablesIfNotExist<NopObjectContext>();
             Database.SetInitializer<NopObjectContext>(initializer);
         }
 

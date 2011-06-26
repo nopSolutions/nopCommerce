@@ -8,7 +8,7 @@ using Nop.Core;
 
 namespace Nop.Data
 {
-    public class CreateTablesIfNotExists<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
+    public class CreateTablesIfNotExist<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
     {
         public void InitializeDatabase(TContext context)
         {

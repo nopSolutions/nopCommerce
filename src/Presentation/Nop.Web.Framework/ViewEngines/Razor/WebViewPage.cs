@@ -61,7 +61,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         {
             base.InitHelpers();
 
-            if (SettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 _workContext = EngineContext.Current.Resolve<IWorkContext>();

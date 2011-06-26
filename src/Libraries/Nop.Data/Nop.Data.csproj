@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEfDataProvider.cs" />
-    <Compile Include="CreateTablesIfNotExists.cs" />
+    <Compile Include="CreateTablesIfNotExist.cs" />
     <Compile Include="EfDataProviderManager.cs" />
     <Compile Include="IEfDataProvider.cs" />
     <Compile Include="SqlServerDataProvider.cs" />
