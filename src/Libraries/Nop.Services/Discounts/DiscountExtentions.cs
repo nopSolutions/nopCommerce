@@ -1,7 +1,5 @@
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts

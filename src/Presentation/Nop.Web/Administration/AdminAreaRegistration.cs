@@ -1,5 +1,4 @@
 ﻿using System.Web.Mvc;
-using Nop.Web.Framework;
 
 namespace Nop.Admin
 {

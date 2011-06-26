@@ -1,5 +1,3 @@
-
-
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 

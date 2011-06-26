@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Principal;
 using System.Web.Routing;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
-using Nop.Services.Shipping;
 using Nop.Services.Configuration;
-using Nop.Services.Directory;
+using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Shipping.FixedRateShipping
 {

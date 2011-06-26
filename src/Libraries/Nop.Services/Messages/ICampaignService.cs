@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Messages;
-
-using Nop.Core;
 
 namespace Nop.Services.Messages
 {

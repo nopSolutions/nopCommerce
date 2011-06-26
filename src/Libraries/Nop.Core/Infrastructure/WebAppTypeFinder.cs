@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure

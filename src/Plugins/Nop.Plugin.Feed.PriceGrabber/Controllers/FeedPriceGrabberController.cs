@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Feed.PriceGrabber.Models;
@@ -10,7 +7,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.PromotionFeed;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Feed.PriceGrabber.Controllers

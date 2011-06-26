@@ -1,11 +1,8 @@
-
 using System;
 using System.Web;
 using System.Web.Security;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
-using Nop.Services.Security;
 
 namespace Nop.Services
 {

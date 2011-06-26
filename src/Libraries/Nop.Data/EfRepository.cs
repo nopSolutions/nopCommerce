@@ -1,10 +1,8 @@
-using System.Linq;
-using Nop.Core;
 using System;
 using System.Data.Entity;
+using System.Linq;
+using Nop.Core;
 using Nop.Core.Data;
-using Nop.Core.Infrastructure;
-
 
 namespace Nop.Data
 {

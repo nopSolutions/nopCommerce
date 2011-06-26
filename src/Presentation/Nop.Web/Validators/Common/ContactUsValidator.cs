@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Nop.Services.Localization;
-using Nop.Web.Models.Customer;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Validators.Common

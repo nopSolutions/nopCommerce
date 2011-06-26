@@ -1,8 +1,5 @@
-
 using System.Collections.Generic;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
-using Nop.Services.Directory;
 
 namespace Nop.Services.Directory
 {

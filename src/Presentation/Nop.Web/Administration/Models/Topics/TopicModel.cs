@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators;
 using Nop.Admin.Validators.Topics;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
-
 
 namespace Nop.Admin.Models.Topics
 {

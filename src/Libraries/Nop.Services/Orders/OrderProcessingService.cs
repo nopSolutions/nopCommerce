@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
@@ -20,10 +21,9 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
+using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
-using Nop.Core.Domain.Common;
-using Nop.Services.Security;
 
 namespace Nop.Services.Orders
 {

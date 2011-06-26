@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Nop.Core.Domain.Forums;
 using Nop.Tests;
 using NUnit.Framework;

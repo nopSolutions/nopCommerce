@@ -1,8 +1,7 @@
 ﻿using System;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
-using Nop.Core.Domain.Forums;
-using System.Text.RegularExpressions;
 
 namespace Nop.Services.Forums
 {

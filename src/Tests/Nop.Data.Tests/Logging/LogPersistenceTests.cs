@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
-using Nop.Core.Domain.Messages;
 using Nop.Tests;
-
 using NUnit.Framework;
 
 namespace Nop.Data.Tests.Logging

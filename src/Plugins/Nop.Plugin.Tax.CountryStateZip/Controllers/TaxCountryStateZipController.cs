@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Web;
 using System.Web.Mvc;
-using Nop.Core.Domain.Directory;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
 using Nop.Plugin.Tax.CountryStateZip.Models;
-using Nop.Core.Infrastructure;
 using Nop.Plugin.Tax.CountryStateZip.Services;
-using Nop.Services.Configuration;
 using Nop.Services.Directory;
-using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Tax;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 

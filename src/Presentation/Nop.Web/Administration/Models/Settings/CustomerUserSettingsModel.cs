@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Forums;
 using Nop.Web.Framework;
 
 namespace Nop.Admin.Models.Settings

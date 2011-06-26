@@ -1,6 +1,4 @@
-﻿using Nop.Core.Domain.Forums;
-
-namespace Nop.Web.Models.Boards
+﻿namespace Nop.Web.Models.Boards
 {
     public class ForumBreadcrumbModel
     {

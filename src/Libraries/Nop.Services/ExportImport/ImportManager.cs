@@ -16,10 +16,10 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Xml;
-using Nop.Services.Catalog;
 using Nop.Core.Domain.Catalog;
-using Nop.Services.Localization;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Catalog;
+using Nop.Services.Localization;
 
 namespace Nop.Services.ExportImport
 {

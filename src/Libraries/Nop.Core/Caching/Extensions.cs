@@ -1,4 +1,5 @@
 using System;
+
 namespace Nop.Core.Caching
 {
     /// <summary>

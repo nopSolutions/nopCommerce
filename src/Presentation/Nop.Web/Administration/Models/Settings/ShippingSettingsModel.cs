@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Admin.Models.Common;
-using Nop.Core.Domain.Tax;
+﻿using Nop.Admin.Models.Common;
 using Nop.Web.Framework;
 
 namespace Nop.Admin.Models.Settings

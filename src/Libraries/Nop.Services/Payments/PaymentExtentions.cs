@@ -1,4 +1,3 @@
-
 using System;
 using Nop.Core.Domain.Payments;
 

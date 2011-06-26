@@ -1,9 +1,6 @@
 using System;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Payments

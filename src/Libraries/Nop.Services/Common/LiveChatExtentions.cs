@@ -1,7 +1,5 @@
-
 using System;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Payments;
 
 namespace Nop.Services.Common
 {

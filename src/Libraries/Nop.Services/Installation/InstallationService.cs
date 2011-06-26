@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,7 +34,6 @@ using Nop.Core.Infrastructure;
 using Nop.Core.IO;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
-
 
 namespace Nop.Services.Installation
 {

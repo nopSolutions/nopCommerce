@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Nop.Core.Domain.Customers;
-using System.IO;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
-using Nop.Core.Domain;
 using Nop.Services.Customers;
-using Nop.Services.Directory;
-using Nop.Services.Localization;
-using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.ExportImport
 {

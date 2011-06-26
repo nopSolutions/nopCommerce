@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Collections.Generic;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Caching
 {

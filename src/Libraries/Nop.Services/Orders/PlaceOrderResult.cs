@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
 
 namespace Nop.Services.Orders
 {

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
-using NUnit.Framework;
 using Nop.Tests;
-using Nop.Core.Domain;
-using Nop.Core.Domain.Blogs;
+using NUnit.Framework;
 
 namespace Nop.Data.Tests.News
 {

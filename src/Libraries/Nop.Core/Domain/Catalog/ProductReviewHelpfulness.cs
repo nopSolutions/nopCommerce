@@ -1,5 +1,6 @@
 
 using Nop.Core.Domain.Customers;
+
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>

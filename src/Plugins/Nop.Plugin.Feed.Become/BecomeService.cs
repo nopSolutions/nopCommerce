@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Web.Routing;
-using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
@@ -19,7 +17,6 @@ using Nop.Services.Directory;
 using Nop.Services.Media;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Seo;
-using Nop.Web.Framework;
 
 namespace Nop.Plugin.Feed.Become
 {

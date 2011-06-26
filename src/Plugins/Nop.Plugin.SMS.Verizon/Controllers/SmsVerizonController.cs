@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.SMS.Verizon;
 using Nop.Plugin.Sms.Verizon.Models;
-using Nop.Core.Infrastructure;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Messages;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Sms.Verizon.Controllers

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,7 +9,6 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
-
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Media

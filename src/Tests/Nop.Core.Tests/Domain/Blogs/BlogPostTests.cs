@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core.Domain.Blogs;
-using NUnit.Framework;
+﻿using Nop.Core.Domain.Blogs;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Blogs
 {

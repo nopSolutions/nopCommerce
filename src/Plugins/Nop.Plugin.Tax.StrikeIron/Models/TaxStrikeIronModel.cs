@@ -4,7 +4,7 @@ namespace Nop.Plugin.Tax.StrikeIron.Models
 {
     public class TaxStrikeIronModel
     {
-        [DisplayNameAttribute("StrikeIron User ID")]
+        [DisplayName("StrikeIron User ID")]
         public string UserId { get; set; }
 
         [DisplayNameAttribute("StrikeIron Password")]

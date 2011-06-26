@@ -5,7 +5,6 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 
-
 namespace Nop.Services.Directory
 {
     /// <summary>

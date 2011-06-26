@@ -1,15 +1,9 @@
-
-
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using Nop.Core.Data;
-using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Customers;
-using System.Xml;
-using System.Diagnostics;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Orders
 {

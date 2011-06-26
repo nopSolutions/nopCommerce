@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Directory;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Configuration;

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Validators.Affiliates;

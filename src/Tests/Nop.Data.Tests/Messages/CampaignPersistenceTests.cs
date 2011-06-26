@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Nop.Core.Domain.Messages;
-using NUnit.Framework;
 using Nop.Tests;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
+using NUnit.Framework;
 
 namespace Nop.Data.Tests.Messages
 {

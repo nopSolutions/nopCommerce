@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Web.Mvc;
-using Nop.Plugin.Tax.CountryStateZip.Domain;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 

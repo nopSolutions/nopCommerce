@@ -1,21 +1,10 @@
 ﻿using System.Collections.Generic;
-using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Data;
-using Nop.Services.Catalog;
-using Nop.Services.Logging;
-using Nop.Services.Orders;
 using Nop.Services.Payments;
-using Nop.Services.Shipping;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Payments
 {

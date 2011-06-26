@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using AutoMapper;
+﻿using AutoMapper;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Topics;
-using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Topics;

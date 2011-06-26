@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Catalog;
 using Nop.Services.Localization;
 

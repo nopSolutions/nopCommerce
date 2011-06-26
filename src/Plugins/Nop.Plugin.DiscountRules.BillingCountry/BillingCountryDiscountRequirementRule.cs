@@ -1,5 +1,4 @@
 using System;
-using System.Security.Principal;
 using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Discounts;

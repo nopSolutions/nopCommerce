@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Transactions;
-using System.Web.Hosting;
-using Nop.Core;
 
 namespace Nop.Data
 {

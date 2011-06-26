@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Text;
 using Nop.Core;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Data.Tests

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Core.Plugins;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Infrastructure.DependencyManagement

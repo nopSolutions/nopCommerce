@@ -1,6 +1,6 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using System.Collections.Generic;
 using Nop.Core;
-using System.Collections.Generic;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Models.Boards
 {

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Plugins;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;

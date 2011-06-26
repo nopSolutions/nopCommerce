@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Services.Media;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {

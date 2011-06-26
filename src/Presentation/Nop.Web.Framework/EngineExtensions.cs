@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework

@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Nop.Admin;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Directory;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
-using Nop.Services.Directory;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers

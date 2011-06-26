@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Web;
 
 namespace Nop.Web.Framework.Localization

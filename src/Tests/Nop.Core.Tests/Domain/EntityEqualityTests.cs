@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Nop.Core.Domain.Catalog;
 using NUnit.Framework;
-using Nop.Tests;
-using Nop.Core.Domain.Catalog;
 
 namespace Nop.Core.Tests.Domain
 {

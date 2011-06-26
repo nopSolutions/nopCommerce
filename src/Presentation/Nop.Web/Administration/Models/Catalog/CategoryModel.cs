@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Catalog;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
-
 
 namespace Nop.Admin.Models.Catalog
 {

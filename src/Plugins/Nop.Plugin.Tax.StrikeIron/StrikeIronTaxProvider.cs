@@ -1,15 +1,12 @@
 ﻿// Contributor(s): Bill Eisenman, ALOM Technologies, USA. Upgraded to TaxBasic v5
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
+using System.Text;
 using System.Web.Routing;
 using Nop.Core.Caching;
 using Nop.Core.Plugins;
 using Nop.Plugin.Tax.StrikeIron.TaxDataBasic;
-using Nop.Services.Configuration;
 using Nop.Services.Tax;
 
 namespace Nop.Plugin.Tax.StrikeIron

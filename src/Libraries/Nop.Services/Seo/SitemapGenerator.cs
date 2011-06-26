@@ -1,11 +1,8 @@
-
 using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Topics;
 using Nop.Services.Catalog;
-using Nop.Services.Localization;
 using Nop.Services.Topics;
 
 namespace Nop.Services.Seo

@@ -1,8 +1,5 @@
-
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
-
 
 namespace Nop.Data.Mapping.Customers
 {

@@ -44,7 +44,6 @@ using Nop.Services.PromotionFeed;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 
-
 namespace Nop.Admin
 {
     public static class MappingExtensions

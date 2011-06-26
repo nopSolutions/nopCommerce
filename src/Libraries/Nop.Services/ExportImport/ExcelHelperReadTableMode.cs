@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nop.Services.ExportImport
+﻿namespace Nop.Services.ExportImport
 {
     /// <summary>
     /// Represents a read table mode for ExcelHelper.ReadTable method

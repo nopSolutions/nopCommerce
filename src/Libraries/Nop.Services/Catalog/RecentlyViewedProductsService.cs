@@ -1,15 +1,7 @@
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Orders;
-
-using Nop.Core;
-using Nop.Services.Customers;
 
 namespace Nop.Services.Catalog
 {

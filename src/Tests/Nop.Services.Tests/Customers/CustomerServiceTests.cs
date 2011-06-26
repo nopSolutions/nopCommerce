@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
 using Nop.Services.Messages;
+using Nop.Services.Security;
+using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Nop.Tests;
-using Nop.Core.Domain.Security;
-using Nop.Data;
-using Nop.Services.Security;
 
 namespace Nop.Services.Tests.Customers
 {

@@ -1,26 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Nop.Admin.Models;
-using Nop.Admin.Models.Directory;
-using Nop.Admin.Models.News;
 using Nop.Admin.Models.Polls;
-using Nop.Core;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.News;
 using Nop.Core.Domain.Polls;
-using Nop.Services.Configuration;
-using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.News;
-using Nop.Web.Framework;
+using Nop.Services.Polls;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
-using Telerik.Web.Mvc.UI;
-using Nop.Services.Polls;
 
 namespace Nop.Admin.Controllers
 {

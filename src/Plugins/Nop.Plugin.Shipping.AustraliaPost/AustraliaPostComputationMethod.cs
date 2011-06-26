@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
-using System.Security.Principal;
 using System.Text;
 using System.Web.Routing;
+using Nop.Core;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
-using Nop.Services.Shipping;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
-using Nop.Core.Domain.Shipping;
-using Nop.Core;
-using Nop.Services.Orders;
-using Nop.Core.Domain.Directory;
+using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Shipping.AustraliaPost
 {

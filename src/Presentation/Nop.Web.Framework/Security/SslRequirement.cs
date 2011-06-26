@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Nop.Core;
-using Nop.Core.Infrastructure;
-using Nop.Services.Localization;
-using Nop.Web.Framework.Mvc;
-
-namespace Nop.Web.Framework.Security
+﻿namespace Nop.Web.Framework.Security
 {
     public enum SslRequirement
     {

@@ -1,15 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Discounts;
-using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
-
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
+using Nop.Core.Plugins;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Discounts

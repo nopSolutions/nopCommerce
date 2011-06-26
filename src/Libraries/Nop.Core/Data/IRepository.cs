@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core;
+﻿using System.Linq;
 
 namespace Nop.Core.Data
 {

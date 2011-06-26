@@ -1,8 +1,5 @@
-
 using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Blogs;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
-
 
 namespace Nop.Plugin.Tax.CountryStateZip.Data
 {

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Xml;
 using Nop.Core.Configuration;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
-using Nop.Services.Directory;
 using Nop.Services.Configuration;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Directory
 {

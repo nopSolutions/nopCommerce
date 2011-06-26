@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators;
 using Nop.Admin.Validators.Common;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;

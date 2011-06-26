@@ -6,7 +6,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Models
     {
         public int ShippingMethodId { get; set; }
 
-        [DisplayNameAttribute("Shipping method")]
+        [DisplayName("Shipping method")]
         public string ShippingMethodName { get; set; }
 
         [DisplayNameAttribute("Rate")]

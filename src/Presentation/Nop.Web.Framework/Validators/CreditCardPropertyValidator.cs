@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using FluentValidation.Validators;
 
-
 namespace Nop.Web.Framework.Validators
 {
     public class CreditCardPropertyValidator : PropertyValidator

@@ -7,7 +7,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Logging;
 using Nop.Services.Orders;

@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
 using System.Web.Routing;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Services.Payments;
-using Nop.Services.Configuration;
 
 namespace Nop.Services.Tests.Payments
 {

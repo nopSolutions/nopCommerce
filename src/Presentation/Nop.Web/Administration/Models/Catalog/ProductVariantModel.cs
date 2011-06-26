@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Catalog;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Principal;
 using System.Web.Routing;
-using Nop.Core.Domain.Logging;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
-using Nop.Core.Domain;
 
 namespace Nop.Plugin.SMS.Verizon
 {

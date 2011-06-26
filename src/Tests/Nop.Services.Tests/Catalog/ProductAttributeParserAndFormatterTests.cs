@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -7,7 +6,6 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Localization;

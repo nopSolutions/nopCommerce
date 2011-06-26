@@ -4,11 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
-
-using Nop.Services.Customers;
 
 namespace Nop.Services.Logging
 {

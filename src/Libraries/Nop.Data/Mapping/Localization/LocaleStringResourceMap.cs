@@ -1,8 +1,5 @@
-
-
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Localization;
-
 
 namespace Nop.Data.Mapping.Localization
 {

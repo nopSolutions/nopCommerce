@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Nop.Services.Localization;
 using Nop.Web.Models.Install;
 
 namespace Nop.Web.Validators.Install

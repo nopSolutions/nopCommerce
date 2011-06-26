@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Mapping.Topics

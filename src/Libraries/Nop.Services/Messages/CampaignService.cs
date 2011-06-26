@@ -5,8 +5,6 @@ using System.Net.Mail;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
 
-using Nop.Core;
-
 namespace Nop.Services.Messages
 {
     public partial class CampaignService : ICampaignService

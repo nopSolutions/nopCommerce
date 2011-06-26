@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Linq;
+﻿using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;

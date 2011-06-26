@@ -9,7 +9,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Localization;

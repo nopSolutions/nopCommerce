@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using System.Web.Hosting;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
@@ -50,7 +47,6 @@ using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
-
 
 namespace Nop.Web.Framework
 {

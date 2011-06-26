@@ -1,15 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-
-using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
 {

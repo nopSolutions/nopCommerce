@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
 using System.Web.Routing;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
-using Nop.Services.Directory;
 using Nop.Services.Shipping;
-using Nop.Services.Configuration;
-using Nop.Services.Tax;
 
 namespace Nop.Services.Tests.Shipping
 {

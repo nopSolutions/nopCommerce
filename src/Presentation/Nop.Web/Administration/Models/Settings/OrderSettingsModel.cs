@@ -1,10 +1,8 @@
-﻿using System.Web.Mvc;
-using Nop.Admin.Validators.Settings;
-using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Orders;
-using Nop.Web.Framework;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
-using System.Collections.Generic;
+using Nop.Admin.Validators.Settings;
+using Nop.Web.Framework;
 
 namespace Nop.Admin.Models.Settings
 {

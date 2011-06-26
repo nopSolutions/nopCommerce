@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators;
 using Nop.Admin.Validators.Forums;
 using Nop.Core.Domain.Forums;
 using Nop.Web.Framework;

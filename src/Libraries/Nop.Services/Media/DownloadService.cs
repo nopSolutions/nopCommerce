@@ -1,13 +1,6 @@
-
 using System;
-using System.Linq;
-using Nop.Core;
 using Nop.Core.Data;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
-using Nop.Core.Domain.Orders;
-
-using Nop.Services.Configuration;
 
 namespace Nop.Services.Media
 {

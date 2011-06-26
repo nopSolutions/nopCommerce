@@ -1,8 +1,7 @@
 ﻿using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Web.Validators.Boards;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Customers;
+using Nop.Web.Validators.Boards;
 
 namespace Nop.Web.Models.Boards
 {

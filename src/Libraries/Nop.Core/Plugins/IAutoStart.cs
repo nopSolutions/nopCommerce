@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nop.Core.Plugins
+﻿namespace Nop.Core.Plugins
 {
     /// <summary>
     /// Informs the IServiceContainer that a component should be started 

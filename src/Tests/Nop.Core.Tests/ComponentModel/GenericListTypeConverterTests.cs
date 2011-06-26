@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using Nop.Tests;
 using Nop.Core.ComponentModel;
+using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests.ComponentModel
 {

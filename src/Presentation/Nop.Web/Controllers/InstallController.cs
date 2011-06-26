@@ -11,10 +11,8 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Data;
 using Nop.Services.Installation;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Install;
 
 namespace Nop.Web.Controllers

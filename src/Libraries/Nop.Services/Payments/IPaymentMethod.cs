@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Web.Routing;
 using Nop.Core.Plugins;
 

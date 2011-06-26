@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using Nop.Core.Domain.Orders;
 using Nop.Tests;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Orders;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Orders
 {

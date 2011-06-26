@@ -1,6 +1,3 @@
-
-
-using System.Collections.Generic;
 using FluentValidation;
 
 namespace Nop.Web.Framework.Validators

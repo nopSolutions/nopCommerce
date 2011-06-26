@@ -1,17 +1,11 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-
-using Nop.Services.Configuration;
-using Nop.Services.Directory;
 
 namespace Nop.Services.Directory
 {

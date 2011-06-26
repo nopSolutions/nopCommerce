@@ -1,18 +1,15 @@
-
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Xml;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Domain.Discounts;
-using System.Diagnostics;
-using System.Xml;
 
 namespace Nop.Core.Domain.Customers
 {

@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -25,9 +23,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
-using Nop.Core.Infrastructure;
 using Nop.Data.Mapping.Localization;
-
 
 namespace Nop.Data
 {

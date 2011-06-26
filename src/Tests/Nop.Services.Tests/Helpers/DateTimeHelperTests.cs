@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core.Caching;
-using Nop.Core.Domain;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
-using Nop.Services.Security;
 using Nop.Tests;
 using NUnit.Framework;
-using Nop.Core;
-using Nop.Services.Localization;
-using Nop.Core.Domain.Localization;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Helpers

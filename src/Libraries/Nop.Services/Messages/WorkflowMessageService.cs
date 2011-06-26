@@ -2,20 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Tax;
-using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Directory;
-using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Core.Domain.Forums;
 
 namespace Nop.Services.Messages
 {

@@ -1,6 +1,6 @@
-
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
+
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>

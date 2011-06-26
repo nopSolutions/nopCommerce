@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.ExportImport;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Tests.ExportImport
 {

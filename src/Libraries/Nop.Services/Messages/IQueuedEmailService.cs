@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-
-using Nop.Core.Domain.Messages;
 using Nop.Core;
+using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using Nop.Core.Domain.Directory;
 using Nop.Tests;
-using Nop.Core.Domain;
-using Nop.Core.Domain.Directory;
+using NUnit.Framework;
 
 namespace Nop.Data.Tests.Directory
 {

@@ -1,5 +1,4 @@
-﻿
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts

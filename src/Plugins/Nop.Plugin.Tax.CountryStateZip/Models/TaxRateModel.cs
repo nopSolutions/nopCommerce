@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Nop.Web.Framework;
+﻿using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Tax.CountryStateZip.Models

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core.Domain;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Tests;
 using NUnit.Framework;

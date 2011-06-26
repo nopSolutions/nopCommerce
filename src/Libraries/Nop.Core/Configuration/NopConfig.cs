@@ -1,9 +1,7 @@
 using System;
 using System.Configuration;
-using System.Web.Configuration;
 using System.Xml;
 using Nop.Core.Infrastructure;
-
 
 namespace Nop.Core.Configuration
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;

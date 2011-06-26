@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using Nop.Tests;
 using Nop.Services.Configuration;
+using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Services.Tests.Configuration
 {

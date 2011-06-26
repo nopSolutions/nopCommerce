@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using FluentValidation.Attributes;
-using Nop.Admin.Validators;
-using Nop.Core.Domain.Localization;
-using Nop.Services.Shipping;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 

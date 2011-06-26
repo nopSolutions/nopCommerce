@@ -1,12 +1,12 @@
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Web.Hosting;
+
 namespace Nop.Web.Framework.EmbeddedViews
 {
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Web.Hosting;
-
     public class EmbeddedResourceVirtualFile : VirtualFile
     {
         private readonly EmbeddedViewMetadata _embeddedViewMetadata;

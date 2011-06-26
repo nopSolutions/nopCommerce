@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
-using Nop.Core.Domain.Security;
 using Nop.Services.Logging;
-using NUnit.Framework;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;

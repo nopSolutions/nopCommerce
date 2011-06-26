@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Web;
 using System.Web.Mvc;
-using Nop.Core;
 using Nop.Core.Domain.Discounts;
 using Nop.Plugin.DiscountRules.HadSpentAmount.Models;
-using Nop.Services.Configuration;
-using Nop.Services.Customers;
 using Nop.Services.Discounts;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.DiscountRules.HadSpentAmount.Controllers

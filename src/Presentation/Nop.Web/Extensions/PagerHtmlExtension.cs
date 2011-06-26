@@ -4,11 +4,11 @@ using System.Text;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Nop.Core;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Models;
-using Nop.Core.Domain.Forums;
 
 namespace Nop.Web
 {

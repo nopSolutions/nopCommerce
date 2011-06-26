@@ -6,9 +6,9 @@ using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
-using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {

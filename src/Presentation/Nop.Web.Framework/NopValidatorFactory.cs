@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using FluentValidation;
 using FluentValidation.Attributes;
 using FluentValidation.Internal;

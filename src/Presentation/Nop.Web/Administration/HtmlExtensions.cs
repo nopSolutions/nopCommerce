@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Nop.Web.Framework;
 
-
 namespace Nop.Admin
 {
     public static class HtmlExtensions

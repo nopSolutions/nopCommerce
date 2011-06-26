@@ -1,6 +1,3 @@
-
-
-using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;

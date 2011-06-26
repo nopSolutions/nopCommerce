@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Nop.Core.Domain.Messages;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Messages

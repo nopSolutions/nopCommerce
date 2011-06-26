@@ -1,6 +1,4 @@
-
 using System.Collections.Generic;
-using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
 
 namespace Nop.Plugin.Tax.CountryStateZip.Services

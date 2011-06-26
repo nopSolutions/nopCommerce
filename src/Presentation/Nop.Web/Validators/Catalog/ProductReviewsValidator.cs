@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Nop.Services.Localization;
 using Nop.Web.Models.Catalog;
-using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Validators.Catalog
 {

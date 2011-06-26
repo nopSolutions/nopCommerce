@@ -1,6 +1,4 @@
-
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 

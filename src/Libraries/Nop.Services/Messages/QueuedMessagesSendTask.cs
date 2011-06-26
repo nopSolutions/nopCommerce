@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Web;
 using System.Xml;
-
-using Nop.Core.Domain.Logging;
 using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
-using Nop.Services.Configuration;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Messages

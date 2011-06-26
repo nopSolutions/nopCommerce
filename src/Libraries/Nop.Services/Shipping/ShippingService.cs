@@ -1,26 +1,17 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
-using Nop.Services.Discounts;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
-using Nop.Services.Tax;
-
-using Nop.Core.Caching;
 
 namespace Nop.Services.Shipping
 {

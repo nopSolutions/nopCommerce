@@ -7,10 +7,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-
-using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 

@@ -1,6 +1,5 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Customers
 {

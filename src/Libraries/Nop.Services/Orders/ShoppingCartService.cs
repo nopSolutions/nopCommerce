@@ -1,18 +1,15 @@
-
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
-using Nop.Services.Customers;
-using Nop.Services.Localization;
-using Nop.Services.Catalog;
-using Nop.Core.Domain.Orders;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
-
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
+using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Orders
 {

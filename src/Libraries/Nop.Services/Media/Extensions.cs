@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Web;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;

@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
-using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Orders;
 

@@ -6,7 +6,6 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Blogs;
 
-
 namespace Nop.Services.Blogs
 {
     /// <summary>

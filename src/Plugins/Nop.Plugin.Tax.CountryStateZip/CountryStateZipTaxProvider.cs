@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Web.Routing;
+﻿using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Plugin.Tax.CountryStateZip.Data;
-using Nop.Plugin.Tax.CountryStateZip.Domain;
 using Nop.Plugin.Tax.CountryStateZip.Services;
 using Nop.Services.Tax;
-using Nop.Services.Configuration;
 
 namespace Nop.Plugin.Tax.CountryStateZip
 {

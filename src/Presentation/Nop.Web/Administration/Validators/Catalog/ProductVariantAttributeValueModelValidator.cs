@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using FluentValidation;
+﻿using FluentValidation;
 using Nop.Admin.Models.Catalog;
 using Nop.Services.Localization;
 

@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Security.Principal;
-using System.Text;
 using System.Xml;
 using Nop.Core.Plugins;
 using Nop.Services.Directory;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Plugin.ExchangeRate.McExchange
 {

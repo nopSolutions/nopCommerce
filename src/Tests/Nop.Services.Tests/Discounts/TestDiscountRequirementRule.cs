@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
 using Nop.Core.Plugins;
 using Nop.Services.Discounts;
-using Nop.Services.Tax;
-using Nop.Services.Configuration;
 
 namespace Nop.Services.Tests.Discounts
 {

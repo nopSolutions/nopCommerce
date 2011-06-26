@@ -1,8 +1,5 @@
-
-
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Media;
-
 
 namespace Nop.Data.Mapping.Media
 {

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -24,7 +24,6 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
-using Nop.Core.Domain.Payments;
 
 namespace Nop.Web.Controllers
 {

@@ -1,12 +1,6 @@
-
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
-using System.IO;
-using System.Xml.Serialization;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Services.Polls

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace Nop.Core.ComponentModel
 {

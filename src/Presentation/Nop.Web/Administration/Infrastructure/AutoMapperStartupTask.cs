@@ -39,7 +39,6 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Plugins;
 using Nop.Core.Tasks;
 using Nop.Services.Common;
-using Nop.Services.Customers;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;

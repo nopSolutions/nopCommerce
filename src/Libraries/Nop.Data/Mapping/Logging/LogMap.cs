@@ -1,8 +1,5 @@
-
-
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Logging;
-
 
 namespace Nop.Data.Mapping.Logging
 {

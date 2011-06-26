@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Runtime.Caching;
+using System.Text.RegularExpressions;
 
 namespace Nop.Core.Caching
 {

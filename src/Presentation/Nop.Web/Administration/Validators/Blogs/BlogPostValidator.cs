@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Blogs;
 using Nop.Services.Localization;
 

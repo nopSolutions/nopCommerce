@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.News;
 using Nop.Admin.Models.Polls;
 using Nop.Services.Localization;
 

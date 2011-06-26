@@ -1,15 +1,8 @@
-
-
-using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Reflection;
 using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
-
 
 namespace Nop.Plugin.Tax.CountryStateZip.Data
 {

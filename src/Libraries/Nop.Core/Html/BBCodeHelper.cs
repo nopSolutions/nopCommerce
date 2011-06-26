@@ -1,4 +1,3 @@
-
 using System;
 using System.Text.RegularExpressions;
 using Nop.Core.Html.CodeFormatter;

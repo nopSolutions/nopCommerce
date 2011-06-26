@@ -1,6 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
 using Nop.Core.Configuration;
-using System.Collections.Generic;
 
 namespace Nop.Core.Domain.Payments
 {

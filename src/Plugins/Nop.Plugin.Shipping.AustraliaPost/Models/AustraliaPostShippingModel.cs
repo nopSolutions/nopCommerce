@@ -4,7 +4,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Models
 {
     public class AustraliaPostShippingModel
     {
-        [DisplayNameAttribute("Gateway URL")]
+        [DisplayName("Gateway URL")]
         public string GatewayUrl { get; set; }
 
         [DisplayNameAttribute("Additional handling charge")]

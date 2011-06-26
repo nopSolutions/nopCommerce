@@ -1,10 +1,8 @@
 using System;
 using System.Web.Routing;
-using Nop.Core;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.Manual.Controllers;
-using Nop.Services.Configuration;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.Manual

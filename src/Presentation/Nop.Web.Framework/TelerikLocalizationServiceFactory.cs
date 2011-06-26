@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Nop.Core;
+﻿using Nop.Core;
 using Telerik.Web.Mvc.Infrastructure;
 
 namespace Nop.Web.Framework

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using FluentValidation.Attributes;
+﻿using System.Collections.Generic;
 using Nop.Web.Framework.Mvc;
-using Nop.Web.Validators.News;
 
 namespace Nop.Web.Models.Polls
 {

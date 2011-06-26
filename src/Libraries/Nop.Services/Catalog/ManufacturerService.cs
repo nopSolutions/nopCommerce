@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
-
 
 namespace Nop.Services.Catalog
 {

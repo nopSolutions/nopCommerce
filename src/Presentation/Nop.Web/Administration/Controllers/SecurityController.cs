@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Security;
 using Nop.Core;
-using Nop.Services;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;

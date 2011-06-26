@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Orders;
@@ -15,7 +14,6 @@ using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.Tests.Orders
 {

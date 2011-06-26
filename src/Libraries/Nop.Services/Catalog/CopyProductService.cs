@@ -1,8 +1,6 @@
-
 using System;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
-
 using Nop.Services.Localization;
 using Nop.Services.Media;
 

@@ -1,7 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
-using System;
 
 namespace Nop.Admin.Models.Messages
 {

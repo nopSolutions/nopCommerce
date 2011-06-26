@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
-using Nop.Web.Models.Media;
 using Nop.Web.Validators.Catalog;
-using Nop.Web.Validators.Common;
 
 namespace Nop.Web.Models.Catalog
 {

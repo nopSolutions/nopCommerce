@@ -1,33 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
-using Nop.Admin.Models;
-using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.ShoppingCart;
-using Nop.Core;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Security;
-using Nop.Core.Domain.Tax;
-using Nop.Services.Common;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Directory;
 using Nop.Services.Helpers;
-using Nop.Services.Localization;
-using Nop.Services.Security;
+using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework;
 using Telerik.Web.Mvc;
-using Nop.Core.Domain.Shipping;
-using Nop.Services.Catalog;
-using Nop.Admin.Models.Common;
-using Nop.Services.Orders;
 
 namespace Nop.Admin.Controllers
 {

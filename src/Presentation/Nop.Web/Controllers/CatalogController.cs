@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -13,7 +11,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
-using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -25,9 +22,7 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Models;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
 

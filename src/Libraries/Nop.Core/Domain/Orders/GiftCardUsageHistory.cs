@@ -1,6 +1,4 @@
-
 using System;
-using System.Linq;
 
 namespace Nop.Core.Domain.Orders
 {

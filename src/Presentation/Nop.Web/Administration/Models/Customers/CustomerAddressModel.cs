@@ -1,5 +1,4 @@
-﻿
-using Nop.Admin.Models.Common;
+﻿using Nop.Admin.Models.Common;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Customers

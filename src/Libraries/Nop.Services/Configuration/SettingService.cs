@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +7,6 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Infrastructure;
-
 
 namespace Nop.Services.Configuration
 {

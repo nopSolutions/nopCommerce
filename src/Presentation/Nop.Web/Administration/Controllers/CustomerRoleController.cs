@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
-using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {

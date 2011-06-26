@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.Compilation;
-using System.Web.Hosting;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using System.Web.Routing;
-using Nop.Core;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Themes
 {

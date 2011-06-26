@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Forums;
-using Nop.Core.Domain.Forums;
-using Nop.Services.Configuration;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers

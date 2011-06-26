@@ -1,30 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Tax;
-
-using Nop.Services.Catalog;
-using Nop.Services.Customers;
-using Nop.Services.Discounts;
-using Nop.Services.Localization;
-using Nop.Services.Logging;
-using Nop.Services.Payments;
-using Nop.Services.Shipping;
-using Nop.Services.Tax;
-using Nop.Core.Domain.Common;
-using Nop.Services.Security;
 
 namespace Nop.Services.Orders
 {

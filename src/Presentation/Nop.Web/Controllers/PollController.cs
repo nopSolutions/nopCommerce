@@ -2,15 +2,10 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Polls;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
-using Nop.Services.Messages;
 using Nop.Services.Polls;
-using Nop.Web.Models.Newsletter;
 using Nop.Web.Models.Polls;
 
 namespace Nop.Web.Controllers

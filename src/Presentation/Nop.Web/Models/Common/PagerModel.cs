@@ -1,5 +1,5 @@
-﻿using Nop.Services.Localization;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 
 namespace Nop.Web.Models
 {

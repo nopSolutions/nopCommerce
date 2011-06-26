@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
-using FluentValidation.Attributes;
 using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer

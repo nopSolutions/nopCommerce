@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
-using Nop.Core.Configuration;
 using Nop.Core;
+using Nop.Core.Configuration;
 
 namespace Nop.Web.Framework.Themes
 {

@@ -1,11 +1,6 @@
-using System;
 using System.Web.Routing;
-using Nop.Core;
-using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
-using Nop.Services.Configuration;
-using Nop.Services.Payments;
 
 namespace Nop.Plugin.LiveChat.LivePerson
 {

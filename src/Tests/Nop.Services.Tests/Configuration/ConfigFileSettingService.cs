@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core.Configuration;
-using Nop.Core.Domain;
 using System.Configuration;
-using Nop.Core.Infrastructure;
-using Nop.Services.Configuration;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
+using Nop.Services.Configuration;
 
 namespace Nop.Services.Tests.Configuration
 {

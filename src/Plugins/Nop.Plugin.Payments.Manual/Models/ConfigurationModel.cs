@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Web.Mvc;
 using Nop.Web.Framework.Mvc;
 
@@ -9,7 +8,7 @@ namespace Nop.Plugin.Payments.Manual.Models
     {
         public int TransactModeId { get; set; }
 
-        [DisplayNameAttribute("Additional fee")]
+        [DisplayName("Additional fee")]
         public decimal AdditionalFee { get; set; }
 
         [DisplayNameAttribute("After checkout mark payment as")]

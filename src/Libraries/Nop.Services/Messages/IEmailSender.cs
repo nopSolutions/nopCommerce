@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Net.Mail;
-
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages

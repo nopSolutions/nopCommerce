@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Security.Principal;
+using System.ServiceModel;
 using System.Web.Routing;
 using Nop.Core;
-using Nop.Core.Domain.Logging;
 using Nop.Core.Plugins;
 using Nop.Plugin.SMS.Clickatell.Clickatell;
-using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
-using System.ServiceModel;
 
 namespace Nop.Plugin.SMS.Clickatell
 {

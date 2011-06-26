@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Nop.Services.Localization;
-using Nop.Web.Models.Catalog;
 using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Validators.ShoppingCart

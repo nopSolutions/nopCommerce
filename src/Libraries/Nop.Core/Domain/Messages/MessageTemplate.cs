@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Messages
 {

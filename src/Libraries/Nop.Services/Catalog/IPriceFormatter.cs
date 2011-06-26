@@ -1,5 +1,3 @@
-
-
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 

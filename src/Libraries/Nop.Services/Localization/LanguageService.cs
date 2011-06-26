@@ -1,11 +1,9 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
-
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Localization

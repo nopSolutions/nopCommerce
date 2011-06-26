@@ -1,8 +1,5 @@
-using System.Collections.Generic;
 using System.Web.Routing;
 using Nop.Core.Plugins;
-using Nop.Services.Configuration;
-using Nop.Services.Directory;
 
 namespace Nop.Services.Shipping
 {

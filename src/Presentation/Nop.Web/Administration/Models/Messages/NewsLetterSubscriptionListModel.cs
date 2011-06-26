@@ -1,5 +1,4 @@
-﻿using Nop.Core.Domain.Messages;
-using Nop.Web.Framework;
+﻿using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 

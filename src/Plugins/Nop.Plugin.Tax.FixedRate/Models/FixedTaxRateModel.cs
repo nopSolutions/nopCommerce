@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using Nop.Core.Domain.Tax;
-using Nop.Web.Framework;
+﻿using System.ComponentModel;
 
 namespace Nop.Plugin.Tax.FixedRate.Models
 {
@@ -9,7 +6,7 @@ namespace Nop.Plugin.Tax.FixedRate.Models
     {
         public int TaxCategoryId { get; set; }
 
-        [DisplayNameAttribute("Tax category")]
+        [DisplayName("Tax category")]
         public string TaxCategoryName { get; set; }
 
         [DisplayNameAttribute("Rate")]

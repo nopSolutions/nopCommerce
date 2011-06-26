@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators;
 using Nop.Admin.Validators.Messages;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -57,7 +56,7 @@ namespace Nop.Admin.Models.Messages
         public int SentTries { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentOn")]
-        [DisplayFormatAttribute(DataFormatString="{0}", NullDisplayText="Not sent yet")]
+        [DisplayFormat(DataFormatString="{0}", NullDisplayText="Not sent yet")]
         public DateTime? SentOn { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccountName")]

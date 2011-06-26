@@ -3,33 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security;
-using System.ServiceModel.Syndication;
 using System.Web.Mvc;
-using System.Web.Routing;
-using System.Xml;
-using Nop.Admin.Models;
 using Nop.Admin.Models.Common;
-using Nop.Admin.Models.Directory;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
-using Nop.Services.Common;
-using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
-using Nop.Services.Tax;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {

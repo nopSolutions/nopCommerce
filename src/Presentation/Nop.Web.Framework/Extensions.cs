@@ -5,11 +5,11 @@ using System.Reflection;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
 using Telerik.Web.Mvc.UI.Fluent;
-using Nop.Services.Helpers;
 
 namespace Nop.Web.Framework
 {

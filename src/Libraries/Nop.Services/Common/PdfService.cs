@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,23 +6,21 @@ using System.Web;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
-using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Html;
-
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Common
 {

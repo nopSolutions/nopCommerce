@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Web;
-using System.Web.Mvc;
-using Nop.Core;
+﻿using System.Web.Mvc;
 using Nop.Plugin.LiveChat.LivePerson.Models;
 using Nop.Services.Configuration;
-using Nop.Services.Localization;
-using Nop.Services.Payments;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.LiveChat.LivePerson.Controllers

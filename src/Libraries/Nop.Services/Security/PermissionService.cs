@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Security;
-using Nop.Core.Infrastructure;
-
 using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
 
