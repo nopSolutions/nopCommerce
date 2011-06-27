@@ -225,6 +225,17 @@
         {
             <tr>
                 <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.LastIpAddress):
+                </td>
+                <td class="adminData">
+                    @Html.DisplayFor(model => model.LastIpAddress)
+                </td>
+            </tr>
+        }
+        @if (Model.Id > 0)
+        {
+            <tr>
+                <td class="adminTitle">
                     @Html.NopLabelFor(model => model.CreatedOn):
                 </td>
                 <td class="adminData">

@@ -26,6 +26,7 @@ namespace Nop.Services
         private readonly ICurrencyService _currencyService;
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly IWebHelper _webHelper;
 
         private Customer _cachedCustomer;
         private bool _cachedIsAdmin;
@@ -35,7 +36,8 @@ namespace Nop.Services
             IAuthenticationService authenticationService,
             ILanguageService languageService,
             ICurrencyService currencyService,
-            TaxSettings taxSettings, CurrencySettings currencySettings)
+            TaxSettings taxSettings, CurrencySettings currencySettings,
+            IWebHelper webHelper)
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
@@ -44,6 +46,7 @@ namespace Nop.Services
             this._currencyService = currencyService;
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
+            this._webHelper = webHelper;
         }
 
         protected Customer GetCurrentCustomer()
@@ -98,6 +101,17 @@ namespace Nop.Services
                 {
                     customer.LastActivityDateUtc = DateTime.UtcNow;
                     _customerService.UpdateCustomer(customer);
+                }
+
+                //update IP address
+                string currentIpAddress = _webHelper.GetCurrentIpAddress();
+                if (!String.IsNullOrEmpty(currentIpAddress))
+                {
+                    if (!currentIpAddress.Equals(customer.LastIpAddress))
+                    {
+                        customer.LastIpAddress = currentIpAddress;
+                        _customerService.UpdateCustomer(customer);
+                    }
                 }
 
                 _cachedCustomer = customer;

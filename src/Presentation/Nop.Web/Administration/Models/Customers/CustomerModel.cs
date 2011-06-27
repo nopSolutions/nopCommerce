@@ -109,6 +109,9 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastActivityDate")]
         public DateTime LastActivityDate { get; set; }
 
+        //IP adderss
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.IPAddress")]
+        public string LastIpAddress { get; set; }
 
 
 

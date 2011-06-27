@@ -5452,6 +5452,14 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="IPAddress">
+                          <Value>IP Address</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The last used IP address.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                         <LocaleResource Name="CustomerRoles">
                           <Value>Customer roles</Value>
                         </LocaleResource>

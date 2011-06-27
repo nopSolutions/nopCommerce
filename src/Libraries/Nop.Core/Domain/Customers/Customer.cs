@@ -132,6 +132,11 @@ namespace Nop.Core.Domain.Customers
         public virtual bool Deleted { get; set; }
 
         /// <summary>
+        /// Gets or sets the last IP address
+        /// </summary>
+        public virtual string LastIpAddress { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public virtual DateTime CreatedOnUtc { get; set; }

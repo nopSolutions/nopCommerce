@@ -380,6 +380,7 @@ namespace Nop.Admin.Controllers
             model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
+            model.LastIpAddress = customer.LastIpAddress;
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -503,6 +504,8 @@ namespace Nop.Admin.Controllers
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
+            model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
+            model.LastIpAddress = model.LastIpAddress;
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
