@@ -23,10 +23,10 @@ namespace Nop.Services.Messages
         /// <param name="node">Xml node that represents a task description</param>
         public void Execute(XmlNode node)
         {
-            var maxTriesSttribute = node.Attributes["maxTries"];
-            if (maxTriesSttribute != null && !string.IsNullOrWhiteSpace(maxTriesSttribute.Value))
+            var maxTriesAttribute = node.Attributes["maxTries"];
+            if (maxTriesAttribute != null && !string.IsNullOrWhiteSpace(maxTriesAttribute.Value))
             {
-                this._maxTries = int.Parse(maxTriesSttribute.Value);
+                this._maxTries = int.Parse(maxTriesAttribute.Value);
             }
 
             var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null,
