@@ -33,8 +33,6 @@ namespace Nop.Services.Messages
 
         void AddProductVariantTokens(IList<Token> tokens, ProductVariant productVariant);
 
-        string[] GetListOfCampaignAllowedTokens();
-
         void AddForumTokens(IList<Token> tokens, Forum forum);
 
         void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic);
@@ -42,5 +40,9 @@ namespace Nop.Services.Messages
         void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost);
 
         void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage);
+
+        string[] GetListOfCampaignAllowedTokens();
+
+        string[] GetListOfAllowedTokens();
     }
 }

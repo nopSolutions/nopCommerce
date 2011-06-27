@@ -5,8 +5,15 @@
 
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@*TODO display a list of all allowed message tokens*@
 <table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AllowedTokens):
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.AllowedTokens)
+        </td>
+    </tr>
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.Name):

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
@@ -20,6 +21,7 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMessageTokenProvider _messageTokenProvider;
 
         private readonly EmailAccountSettings _emailAccountSettings;
         #endregion Fields
@@ -29,16 +31,31 @@ namespace Nop.Admin.Controllers
         public MessageTemplateController(IMessageTemplateService messageTemplateService, 
             IEmailAccountService emailAccountService, ILanguageService languageService, 
             ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService, EmailAccountSettings emailAccountSettings)
+            ILocalizationService localizationService, IMessageTokenProvider messageTokenProvider, 
+            EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
+            this._messageTokenProvider = messageTokenProvider;
             this._emailAccountSettings = emailAccountSettings;
         }
 
+        private string FormatTokens(string[] tokens)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                string token = tokens[i];
+                sb.Append(token);
+                if (i != tokens.Length - 1)
+                    sb.Append(", ");
+            }
+
+            return sb.ToString();
+        }
         #endregion
         
         #region Utilities
@@ -115,6 +132,7 @@ namespace Nop.Admin.Controllers
             if (messageTemplate == null)
                 throw new ArgumentException("No message template found with the specified id", "id");
             var model = messageTemplate.ToModel();
+            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
@@ -138,7 +156,7 @@ namespace Nop.Admin.Controllers
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
             if (messageTemplate == null)
                 throw new ArgumentException("No message template found with the specified id");
-
+            
             if (ModelState.IsValid)
             {
                 messageTemplate = model.ToEntity(messageTemplate);
@@ -152,6 +170,7 @@ namespace Nop.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
+            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());

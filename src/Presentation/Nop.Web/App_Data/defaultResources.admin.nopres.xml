@@ -4772,6 +4772,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="AllowedTokens">
+                        <Value>Allowed message tokens</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>This is a list of the message tokens you can use in your emails.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Updated">

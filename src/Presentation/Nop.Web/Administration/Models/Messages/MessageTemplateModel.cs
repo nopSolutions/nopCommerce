@@ -17,6 +17,10 @@ namespace Nop.Admin.Models.Messages
             AvailableEmailAccounts = new List<EmailAccountModel>();
         }
 
+
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")]
+        public string AllowedTokens { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
