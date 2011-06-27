@@ -115,12 +115,29 @@ namespace Nop.Web
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 if (!webHelper.IsStaticResource(this.Request))
                 {
-                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                    if (workContext.CurrentCustomer != null && workContext.WorkingLanguage != null)
+                    if (webHelper.GetThisPageUrl(false).StartsWith(string.Format("{0}admin", webHelper.GetStoreLocation()), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                        //admin area
+
+
+                        //always set culture to 'en-US'
+                        //we set culture of admin area to 'en-US' because current implementation of Telerik grid 
+                        //doesn't work well in other cultures
+                        //e.g., editing decimal value in russian culture
+                        var culture = new CultureInfo("en-US");
                         Thread.CurrentThread.CurrentCulture = culture;
                         Thread.CurrentThread.CurrentUICulture = culture;
+                    }
+                    else
+                    {
+                        //public store
+                        var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                        if (workContext.CurrentCustomer != null && workContext.WorkingLanguage != null)
+                        {
+                            var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                            Thread.CurrentThread.CurrentCulture = culture;
+                            Thread.CurrentThread.CurrentUICulture = culture;
+                        }
                     }
                 }
             }

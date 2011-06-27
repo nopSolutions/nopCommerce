@@ -277,14 +277,13 @@ namespace Nop.Services.ExportImport
                 var valueNode = node.SelectSingleNode("Value");
                 if (valueNode != null)
                     value = valueNode.InnerText;
-
+                
                 if (String.IsNullOrEmpty(name))
                     continue;
-
-
+                
                 //do not use localizationservice because it'll clear cache and after adding each resoruce
                 //let's bulk insert
-                var resource = language.LocaleStringResources.Where(x => x.ResourceName.Contains(name)).FirstOrDefault();
+                var resource = language.LocaleStringResources.Where(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                 if (resource != null)
                     resource.ResourceValue = value;
                 else

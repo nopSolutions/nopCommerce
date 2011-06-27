@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Security;
@@ -15,16 +17,22 @@ namespace Nop.Admin.Controllers
     [NopHttpsRequirement(SslRequirement.Yes)]
     public class BaseNopController : Controller
     {
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
             //set work context to admin mode
             EngineContext.Current.Resolve<IWorkContext>().IsAdmin = true;
 
+            base.Initialize(requestContext);
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
             //validate IP address
             ValidateIpAddress(filterContext);
 
             base.OnActionExecuting(filterContext);
         }
+
         protected override void OnException(ExceptionContext filterContext)
         {
             if (filterContext.Exception != null)

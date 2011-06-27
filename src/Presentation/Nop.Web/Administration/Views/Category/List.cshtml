@@ -14,6 +14,7 @@
 <table class="adminContent">
     <tr>
         <td>
+        @*TODO add AdminGridPageSize setting that will be used in admin area views and controllers (where paging is supported)*@
             @(Html.Telerik().Grid<CategoryModel>(Model.Data)
                     .Name("categories-grid")
                     .Columns(columns =>
