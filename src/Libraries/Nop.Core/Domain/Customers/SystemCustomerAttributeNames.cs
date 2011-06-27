@@ -4,7 +4,6 @@ namespace Nop.Core.Domain.Customers
     public static class SystemCustomerAttributeNames
     {
         //Form fields
-
         public static string FirstName { get { return "FirstName"; } }
 
         public static string LastName { get { return "LastName"; } }
@@ -37,5 +36,7 @@ namespace Nop.Core.Domain.Customers
         public static string LastVisitedPage { get { return "LastVisitedPage"; } }
 
         public static string WorkingThemeName { get { return "WorkingThemeName"; } }
+
+        public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
     }
 }

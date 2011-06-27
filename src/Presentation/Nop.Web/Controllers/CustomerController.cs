@@ -407,9 +407,22 @@ namespace Nop.Web.Controllers
         
         public ActionResult Logout()
         {
-            _authenticationService.SignOut();
+            if (_workContext.OriginalCustomerIfImpersonated != null)
+            {
+                //logout impersonated customer
+                _customerService.SaveCustomerAttribute<int?>(_workContext.OriginalCustomerIfImpersonated,
+                    SystemCustomerAttributeNames.ImpersonatedCustomerId, null);
+                //redirect back to customer details page (admin area)
+                return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
 
-            return this.RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                //standard logout 
+                _authenticationService.SignOut();
+                return this.RedirectToAction("Index", "Home");
+            }
+
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]

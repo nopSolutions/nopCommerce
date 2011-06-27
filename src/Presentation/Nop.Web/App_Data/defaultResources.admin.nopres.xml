@@ -5487,6 +5487,24 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Impersonate">
+                      <Value>Place order (Impersonate)</Value>
+                      <Children>
+                        <LocaleResource Name="Description1">
+                          <Value>
+                            During the order placement process, you will see almost exactly what the customer would see while browsing this site, with the exception of the header menu (you will see the following text 'Impersonated as customer@email.here - finish session'). Navigate to the products the customer wants and add them to the cart exactly as the customer would, then use the 'Checkout' button to proceed through the usual checkout process.                            
+                          </Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Description2">
+                          <Value>
+                            Note: Click 'finish session' link in order to finish this session
+                          </Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Button">
+                          <Value>Place order</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Info">
                       <Value>Customer Info</Value>
                     </LocaleResource>

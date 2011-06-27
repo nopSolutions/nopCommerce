@@ -58,7 +58,7 @@
                         { @currentCustomer.Username }
                         else
                         { @currentCustomer.Email }
-                            <text>, <a href="/admin/logout/">Logout?</a></text> 
+                            <text>, @Html.ActionLink("Logout?", "Logout", "Customer", new { area = "" }, null)</text> 
                     }
                     </div>
                     <div class="version">

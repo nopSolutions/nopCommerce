@@ -29,6 +29,10 @@
     if (Model.Id > 0)
         tabWishlist = x.Add().Text(T("Admin.Customers.Customers.CurrentWishlist").Text).Content(TabCurrentWishlist().ToHtmlString());
 
+    TabStripItemBuilder tabImpersonate = null;
+    if (Model.Id > 0)
+        tabImpersonate = x.Add().Text(T("Admin.Customers.Customers.Impersonate").Text).Content(TabImpersonate().ToHtmlString());
+
     var selectedTab = (string)ViewData["selectedTab"];
     switch (selectedTab)
     {
@@ -52,6 +56,9 @@
             break;
         case "wishlist":
             tabWishlist.Selected(true);
+            break;
+        case "impersonate":
+            tabImpersonate.Selected(true);
             break;
         default:
             tabInfo.Selected(true);
@@ -502,6 +509,21 @@
                                 cartTypeId = (int)ShoppingCartType.Wishlist
                             }))
                         )
+            </td>
+        </tr>
+    </table>
+}
+@helper TabImpersonate()
+    {
+    <table class="adminContent">
+        <tr>
+            <td>
+            @T("Admin.Customers.Customers.Impersonate.Description1")
+                <br />
+                @T("Admin.Customers.Customers.Impersonate.Description2")
+            <br /><br />
+            
+            <button type="submit" name="impersonate" value="impersonate" class="t-button">@T("Admin.Customers.Customers.Impersonate.Button")</button>
             </td>
         </tr>
     </table>

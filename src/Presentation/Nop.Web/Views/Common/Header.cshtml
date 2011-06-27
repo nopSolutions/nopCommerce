@@ -1,25 +1,33 @@
-﻿@model Nop.Web.Models.Common.HeaderModel
+﻿@model HeaderModel
+@using Nop.Web.Models.Common;
 <div class="header-links">
     <ul>
+        @if (Model.IsCustomerImpersonated)
+        {
+@*customer is impersonated *@
+            <li><span class="impersonate">(@(string.Format(T("Account.ImpersonatedAs").Text, Model.CustomerEmailUsername)))
+                - <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
+                ) </span></li>
+        }
         @if (Model.IsAuthenticated)
         {
             <li><a href="@Url.Action("myaccount", "customer")" class="account">@Model.CustomerEmailUsername</a></li>
             <li><a href="@Url.RouteUrl("Logout")" class="account">@T("Account.Logout")</a></li>
             
-            if (Model.AllowPrivateMessages)
-            {
-                <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
+                                                             if (Model.AllowPrivateMessages)
+                                                             {
+            <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
                 @Model.UnreadPrivateMessages</li>
-                if (!string.IsNullOrEmpty(Model.AlertMessage))
-                {
-                    // using $(document).bind instead of $(document).ready to execute the alert after tabs load (on privatemessages page)
-                    <script type="text/javascript">
-                        $(document).bind("ready", function () {
-                            alert('@Model.AlertMessage');
-                        });
-                    </script>
-                }
-            }
+           if (!string.IsNullOrEmpty(Model.AlertMessage))
+           {
+               //using $(document).bind instead of $(document).ready to execute the alert after tabs load (on privatemessages page)
+            <script type="text/javascript">
+                $(document).bind("ready", function () {
+                    alert('@Model.AlertMessage');
+                });
+            </script>
+           }
+                                                             }
         }
         else
         {
@@ -30,8 +38,8 @@
             <a href="@Url.RouteUrl("ShoppingCart")">(@Model.ShoppingCartItems)</a> </li>
         @if (Model.WishlistEnabled)
         {
-            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a>
-                <a href="@Url.RouteUrl("Wishlist")">(@Model.WishlistItems)</a> </li>
+            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a> <a href="@Url.RouteUrl("Wishlist")">
+                (@Model.WishlistItems)</a> </li>
         }
         @if (Model.DisplayAdminLink)
         {

@@ -278,6 +278,19 @@
       <LocaleResource Name="ForumSubscriptions">
         <Value>Forum subscriptions</Value>
       </LocaleResource>
+      <LocaleResource Name="ImpersonatedAs">
+        <Value>Impersonated as {0}</Value>
+        <Children>
+          <LocaleResource Name="Finish">
+            <Value>finish impersonated session</Value>
+            <Children>
+              <LocaleResource Name="Hint">
+                <Value>Click here to finish impersonated session</Value>
+              </LocaleResource>
+              </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Login">
         <Value>Log in</Value>
         <Children>

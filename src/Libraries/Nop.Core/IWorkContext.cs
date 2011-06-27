@@ -16,6 +16,10 @@ namespace Nop.Core
         Customer CurrentCustomer { get; set; }
 
         /// <summary>
+        /// Gets or sets the original customer (in case the current one is impersonated)
+        /// </summary>
+        Customer OriginalCustomerIfImpersonated { get; }
+        /// <summary>
         /// Get or set current user working language
         /// </summary>
         Language WorkingLanguage { get; set; }

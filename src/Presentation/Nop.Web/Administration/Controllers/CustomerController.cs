@@ -549,7 +549,7 @@ namespace Nop.Admin.Controllers
 
             return RedirectToAction("Edit", customer.Id);
         }
-
+        
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("markVatNumberAsValid")]
         public ActionResult MarkVatNumberAsValid(CustomerModel model)
@@ -593,7 +593,20 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
             return RedirectToAction("List");
         }
-        
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("impersonate")]
+        public ActionResult Impersonate(int id)
+        {
+            var customer = _customerService.GetCustomerById(id);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "id");
+            _customerService.SaveCustomerAttribute<int?>(_workContext.CurrentCustomer,
+                SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);
+
+            return RedirectToAction("Index", "Home", new { area = "" });
+        }
+
         #endregion
         
         #region Reward points history

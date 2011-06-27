@@ -29,6 +29,7 @@ namespace Nop.Services
         private readonly IWebHelper _webHelper;
 
         private Customer _cachedCustomer;
+        private Customer _originalCustomerIfImpersonated;
         private bool _cachedIsAdmin;
 
         public WorkContext(HttpContextBase httpContext,
@@ -59,8 +60,43 @@ namespace Nop.Services
             {
                 //registered user
                 customer = _authenticationService.GetAuthenticatedCustomer();
-                
-                //guest customer
+
+                //impersonate user if required (currently used for 'phone order' support)
+                //and validate that the current user is admin
+                if (customer != null && !customer.Deleted && customer.Active)
+                {
+                    if (customer.IsAdmin()) 
+                    {
+                        int? impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
+                        if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
+                        {
+                            var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
+                            if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
+                            {
+                                //set impersonated customer
+                                _originalCustomerIfImpersonated = customer;
+                                customer = impersonatedCustomer;
+                            }
+                        }
+                    }
+                }
+                if (customer == null || customer.Deleted || !customer.Active)
+                {
+                    var customerCookie = GetCustomerCookie();
+                    if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
+                    {
+                        var customerGuid = Guid.Empty;
+                        if (Guid.TryParse(customerCookie.Value, out customerGuid))
+                        {
+                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
+                            //this customer (from cookie) should not be registered
+                            if (customerByCookie != null && !customerByCookie.IsRegistered())
+                                customer = customerByCookie;
+                        }
+                    }
+                }
+
+                //load guest customer
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
                     var customerCookie = GetCustomerCookie();
@@ -161,6 +197,17 @@ namespace Nop.Services
             {
                 SetCustomerCookie(value.CustomerGuid);
                 _cachedCustomer = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the original customer (in case the current one is impersonated)
+        /// </summary>
+        public Customer OriginalCustomerIfImpersonated
+        {
+            get
+            {
+                return _originalCustomerIfImpersonated;
             }
         }
 
