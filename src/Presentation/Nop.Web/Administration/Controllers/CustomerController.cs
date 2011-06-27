@@ -117,14 +117,23 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            var customers = _customerService.GetAllCustomers(null,null, null, null, null, false, null, 0, 10);
+            //load registered customers by default
+            var defaultRoleIds = new int[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
+
+            //convert to string because passing int[] to grid is no possible
+            string searchCustomerRoleIdsStr = "";
+                foreach (var i in defaultRoleIds)
+                    searchCustomerRoleIdsStr += i + ",";
+            ViewData["searchCustomerRoleIds"] = searchCustomerRoleIdsStr;
+
             var listModel = new CustomerListModel()
             {
-                UsernamesEnabled = _customerSettings.UsernamesEnabled
+                UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).ToList(),
+                SearchCustomerRoleIds = defaultRoleIds
             };
-            //customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            listModel.AvailableCustomerRoles = customerRoles.ToList();
+            
+            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null, null, false, null, 0, 10);
             //customer list
             listModel.Customers = new GridModel<CustomerModel>
             {
