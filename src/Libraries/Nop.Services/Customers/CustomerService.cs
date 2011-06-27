@@ -555,6 +555,7 @@ namespace Nop.Services.Customers
                 CustomerGuid = Guid.NewGuid(),
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
             };
 
             //add to 'Guests' role

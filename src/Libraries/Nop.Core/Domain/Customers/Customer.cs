@@ -144,7 +144,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the date and time of last activity
         /// </summary>
-        public virtual DateTime? LastActivityDateUtc { get; set; }
+        public virtual DateTime LastActivityDateUtc { get; set; }
         
         #region Custom properties
 

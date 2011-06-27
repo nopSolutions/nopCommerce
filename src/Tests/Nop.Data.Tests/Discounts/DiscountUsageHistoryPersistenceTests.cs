@@ -38,7 +38,8 @@ namespace Nop.Data.Tests.Discounts
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
         }
 

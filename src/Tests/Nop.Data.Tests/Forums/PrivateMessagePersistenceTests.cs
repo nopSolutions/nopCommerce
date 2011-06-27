@@ -12,11 +12,11 @@ namespace Nop.Data.Tests.Forums
         [Test]
         public void Can_save_and_load_privatemessage()
         {
-            var customer1 = GetTestCustomer("1");
+            var customer1 = GetTestCustomer();
             var customer1FromDb = SaveAndLoadEntity(customer1);
             customer1FromDb.ShouldNotBeNull();
 
-            var customer2 = GetTestCustomer("2");
+            var customer2 = GetTestCustomer();
             var customer2FromDb = SaveAndLoadEntity(customer2);
             customer2FromDb.ShouldNotBeNull();
 
@@ -41,7 +41,7 @@ namespace Nop.Data.Tests.Forums
             fromDb.IsRead.ShouldBeFalse();
         }
 
-        protected Customer GetTestCustomer(string number)
+        protected Customer GetTestCustomer()
         {
             return new Customer
             {
@@ -49,7 +49,8 @@ namespace Nop.Data.Tests.Forums
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
         }
     }

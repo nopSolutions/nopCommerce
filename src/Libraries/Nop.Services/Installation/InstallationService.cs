@@ -3987,6 +3987,7 @@ namespace Nop.Services.Installation
                 PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc= DateTime.UtcNow,
             };
 
             adminUser.AddAddress(new Address()
@@ -4003,7 +4004,7 @@ namespace Nop.Services.Installation
                 StateProvince = _stateProvinceRepository.Table.Where(sp => sp.Name == "New York").FirstOrDefault(),
                 Country = _countryRepository.Table.Where(c => c.ThreeLetterIsoCode == "USA").FirstOrDefault(),
                 ZipPostalCode = "10021",
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedOnUtc = DateTime.UtcNow,
             });
             _customerRepository.Insert(adminUser);
 

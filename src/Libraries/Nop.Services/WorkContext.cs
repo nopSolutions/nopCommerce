@@ -92,7 +92,16 @@ namespace Nop.Services
 
             //validation
             if (customer != null && !customer.Deleted && customer.Active)
+            {
+                //update last activity date
+                if (customer.LastActivityDateUtc.AddMinutes(1.0) < DateTime.UtcNow)
+                {
+                    customer.LastActivityDateUtc = DateTime.UtcNow;
+                    _customerService.UpdateCustomer(customer);
+                }
+
                 _cachedCustomer = customer;
+            }
 
             return _cachedCustomer;
         }

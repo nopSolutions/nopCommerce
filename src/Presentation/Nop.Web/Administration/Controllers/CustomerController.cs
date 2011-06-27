@@ -148,6 +148,7 @@ namespace Nop.Admin.Controllers
                         CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
                         Active = x.Active,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
                     };
                 }),
                 Total = customers.TotalCount
@@ -186,6 +187,7 @@ namespace Nop.Admin.Controllers
                         CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
                         Active = x.Active,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
                     };
                 }),
                 Total = customers.TotalCount
@@ -236,6 +238,7 @@ namespace Nop.Admin.Controllers
                         CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
                         Active = x.Active,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
                     };
                 }),
                 Total = customers.TotalCount
@@ -295,6 +298,7 @@ namespace Nop.Admin.Controllers
                     TimeZoneId = model.TimeZoneId,
                     Active = model.Active,
                     CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
                 };
                 _customerService.InsertCustomer(customer);
                 
@@ -359,6 +363,7 @@ namespace Nop.Admin.Controllers
             model.AdminComment = customer.AdminComment;
             model.IsTaxExempt = customer.IsTaxExempt;
             model.Active = customer.Active;
+            model.AffiliateId = customer.AffiliateId;
             model.TimeZoneId = customer.TimeZoneId;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
@@ -374,6 +379,7 @@ namespace Nop.Admin.Controllers
             model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
             model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
+            model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;

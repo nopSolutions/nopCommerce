@@ -69,11 +69,11 @@
                             .Width(50)
                             .Filterable(false);
                         columns.Bound(x => x.Email)
-                            .Width(200)
+                            .Width(150)
                             .Filterable(false);
                         //Weird!!! We can't pass Model.UsernamesEnabled to Hidden method
                         var usernameColumn = columns.Bound(x => x.Username)
-                            .Width(200)
+                            .Width(150)
                             .Filterable(false);
                         if (!Model.UsernamesEnabled)
                             usernameColumn.Hidden(true);
@@ -85,23 +85,26 @@
                             .Filterable(false);
                         //hidden column used for filtering
                         columns.Bound(x => x.SearchCustomerRoleIds)
-                            .Width(50)
+                            .Width(5)
                             .Filterable(false)
                             .Hidden(true);
                         columns.Bound(x => x.SearchCustomerEmail)
-                            .Width(50)
+                            .Width(5)
                             .Filterable(false)
                             .Hidden(true);
                         columns.Bound(x => x.SearchCustomerUsername)
-                            .Width(50)
+                            .Width(5)
                             .Filterable(false)
                             .Hidden(true);
                         columns.Bound(x => x.Active)
-                             .Width("100px")
+                             .Width(100)
                              .Template(x => x.Active.ToString().ToLower())
                              .Centered()
                              .Filterable(false);
                         columns.Bound(x => x.CreatedOn)
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.LastActivityDate)
                             .Width(100)
                             .Filterable(false);
                         columns.Bound(x => x.Id)

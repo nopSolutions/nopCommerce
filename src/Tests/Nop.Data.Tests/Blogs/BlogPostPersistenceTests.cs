@@ -80,7 +80,8 @@ namespace Nop.Data.Tests.Blogs
             return new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
         }
     }

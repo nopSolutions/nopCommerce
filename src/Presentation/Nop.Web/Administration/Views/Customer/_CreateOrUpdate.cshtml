@@ -232,6 +232,17 @@
                 </td>
             </tr>
         }
+        @if (Model.Id > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.LastActivityDate):
+                </td>
+                <td class="adminData">
+                    @Html.DisplayFor(model => model.LastActivityDate)
+                </td>
+            </tr>
+        }
     </table>
 }
 @helper TabCustomerRoles()

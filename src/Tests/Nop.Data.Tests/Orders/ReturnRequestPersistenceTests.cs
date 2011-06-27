@@ -49,17 +49,8 @@ namespace Nop.Data.Tests.Orders
                 AdminComment = "some comment here",
                 Active = true,
                 Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-        }
-
-        protected OrderProductVariant GetTestOrderProductVariant()
-        {
-            return new OrderProductVariant()
-            {
-                Order = GetTestOrder(),
-                ProductVariant = GetTestProductVariant(),
-                Quantity = 1,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
         }
 

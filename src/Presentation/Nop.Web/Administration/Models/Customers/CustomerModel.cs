@@ -106,6 +106,8 @@ namespace Nop.Admin.Models.Customers
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastActivityDate")]
+        public DateTime LastActivityDate { get; set; }
 
 
 

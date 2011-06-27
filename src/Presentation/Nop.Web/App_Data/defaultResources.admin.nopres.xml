@@ -5444,6 +5444,14 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="LastActivityDate">
+                          <Value>Last activity</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The last activity date.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                         <LocaleResource Name="CustomerRoles">
                           <Value>Customer roles</Value>
                         </LocaleResource>
@@ -5543,33 +5551,6 @@
                               </Children>
                             </LocaleResource>
                           </Children>
-                        </LocaleResource>
-                      </Children>
-                    </LocaleResource>
-                    <LocaleResource Name="UserAccount">
-                      <Value>User account</Value>
-                      <Children>
-                        <LocaleResource Name="Fields">
-                          <Children>
-                            <LocaleResource Name="Email">
-                              <Value>Email</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="IsApproved">
-                              <Value>Is approved</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="IsLockedOut">
-                              <Value>Is locked out</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="CreatedOn">
-                              <Value>Registartion date</Value>
-                            </LocaleResource>
-                          </Children>
-                        </LocaleResource>
-                        <LocaleResource Name="AssociatedUsers">
-                          <Value>Associated users</Value>
-                        </LocaleResource>
-                        <LocaleResource Name="AssociateTitle">
-                          <Value>Associate the customer with a user account</Value>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>

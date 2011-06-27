@@ -35,7 +35,8 @@ namespace Nop.Data.Tests.Customers
                     CustomerGuid = Guid.NewGuid(),
                     AdminComment = "some comment here",
                     Active = true,
-                    CreatedOnUtc = new DateTime(2010, 01, 01)
+                    CreatedOnUtc = new DateTime(2010, 01, 01),
+                    LastActivityDateUtc = new DateTime(2010, 01, 01),
                 }
             );
 

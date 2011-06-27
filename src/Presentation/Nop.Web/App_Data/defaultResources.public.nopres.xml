@@ -2386,7 +2386,7 @@
         <Value>Community poll</Value>
       </LocaleResource>
       <LocaleResource Name="TotalVotes">
-        <Value>{0} votes...</Value>
+        <Value>{0} vote(s)...</Value>
       </LocaleResource>
       <LocaleResource Name="Vote">
         <Value>Vote</Value>
@@ -2395,7 +2395,7 @@
         <Value>Thank you for voting! Please refresh the page in order to see results.</Value>
       </LocaleResource>
       <LocaleResource Name="votes">
-        <Value>votes - {0}</Value>
+        <Value>{0} vote(s)</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>
