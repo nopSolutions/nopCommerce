@@ -114,6 +114,9 @@ namespace Nop.Admin.Models.Customers
         public string LastIpAddress { get; set; }
 
 
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastVisitedPage")]
+        public string LastVisitedPage { get; set; }
+
 
         //customer roles
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]

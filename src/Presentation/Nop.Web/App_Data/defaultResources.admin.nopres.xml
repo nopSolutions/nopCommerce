@@ -5466,6 +5466,14 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="LastVisitedPage">
+                          <Value>Last visited page</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The last visited date (public store).</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                         <LocaleResource Name="IPAddress">
                           <Value>IP Address</Value>
                           <Children>

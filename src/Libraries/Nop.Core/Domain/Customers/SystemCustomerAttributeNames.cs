@@ -34,6 +34,8 @@ namespace Nop.Core.Domain.Customers
 
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
 
+        public static string LastVisitedPage { get { return "LastVisitedPage"; } }
+
         public static string WorkingThemeName { get { return "WorkingThemeName"; } }
     }
 }

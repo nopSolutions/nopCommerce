@@ -385,6 +385,7 @@ namespace Nop.Admin.Controllers
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             model.LastIpAddress = customer.LastIpAddress;
+            model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -510,6 +511,7 @@ namespace Nop.Admin.Controllers
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             model.LastIpAddress = model.LastIpAddress;
+            model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;

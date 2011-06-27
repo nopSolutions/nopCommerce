@@ -267,6 +267,17 @@
                 </td>
             </tr>
         }
+        @if (Model.Id > 0 && !String.IsNullOrEmpty(Model.LastVisitedPage))
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.LastVisitedPage):
+                </td>
+                <td class="adminData">
+                    @Html.DisplayFor(model => model.LastVisitedPage)
+                </td>
+            </tr>
+        }
     </table>
 }
 @helper TabCustomerRoles()
