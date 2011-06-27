@@ -1,6 +1,6 @@
 ﻿@model CustomerModel
-
 @using Telerik.Web.Mvc.UI;
+@using Nop.Core.Domain.Orders;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("customer-edit").Items(x =>
@@ -12,15 +12,23 @@
     TabStripItemBuilder tabOrders = null;
     if (Model.Id > 0)
         tabOrders = x.Add().Text(T("Admin.Customers.Customers.Orders").Text).Content(TabOrders().ToHtmlString());
-    
+
     TabStripItemBuilder tabRewardPoints = null;
     if (Model.DisplayRewardPointsHistory)
         tabRewardPoints = x.Add().Text(T("Admin.Customers.Customers.RewardPoints").Text).Content(TabRewardPoints().ToHtmlString());
-    
+
     TabStripItemBuilder tabAddresses = null;
     if (Model.Id > 0)
         tabAddresses = x.Add().Text(T("Admin.Customers.Customers.Addresses").Text).Content(TabAddresses().ToHtmlString());
-    
+
+    TabStripItemBuilder tabShoppingCart = null;
+    if (Model.Id > 0)
+        tabShoppingCart = x.Add().Text(T("Admin.Customers.Customers.CurrentShoppingCart").Text).Content(TabCurrentShoppingCart().ToHtmlString());
+
+    TabStripItemBuilder tabWishlist = null;
+    if (Model.Id > 0)
+        tabWishlist = x.Add().Text(T("Admin.Customers.Customers.CurrentWishlist").Text).Content(TabCurrentWishlist().ToHtmlString());
+
     var selectedTab = (string)ViewData["selectedTab"];
     switch (selectedTab)
     {
@@ -39,6 +47,12 @@
         case "addresses":
             tabAddresses.Selected(true);
             break;
+        case "shoppingcart":
+            tabShoppingCart.Selected(true);
+            break;
+        case "wishlist":
+            tabWishlist.Selected(true);
+            break;
         default:
             tabInfo.Selected(true);
             break;
@@ -46,7 +60,7 @@
 })
 @helper TabInfo()
     { 
-        <table class="adminContent">
+    <table class="adminContent">
         @if (Model.UsernamesEnabled)
         {
             if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
@@ -97,7 +111,6 @@
                 }
             </td>
         </tr>
-
         @if (Model.GenderEnabled)
         {
             <tr>
@@ -276,7 +289,6 @@
     @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
         }
 }
-
 @helper TabOrders()
     { 
     
@@ -426,4 +438,60 @@
             <input type="button" class="t-button" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")' />
         </strong>
     </p>
+}
+@helper TabCurrentShoppingCart()
+    {
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ShoppingCartItemModel>()
+                            .Name("currentshoppingcart-grid")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(sci => sci.FullProductName)
+                                .Template(sci => Html.ActionLink(sci.FullProductName, "Edit", "ProductVariant", new { id = sci.ProductVariantId }, new { }))
+                                .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= ProductVariantId #>\"><#= FullProductName #></a>");
+                                columns.Bound(sci => sci.Quantity).Width(100);
+                                columns.Bound(sci => sci.UnitPrice).Width(100);
+                                columns.Bound(sci => sci.Total).Width(100);
+                                columns.Bound(sci => sci.UpdatedOn).Width(100);
+                            })
+                            .DataBinding(dataBinding => dataBinding.Ajax()
+                            .Select("GetCartList", "Customer", new
+                            {
+                                customerId = Model.Id,
+                                cartTypeId = (int)ShoppingCartType.ShoppingCart
+                            }))
+                        )
+            </td>
+        </tr>
+    </table>
+}
+@helper TabCurrentWishlist()
+    {
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ShoppingCartItemModel>()
+                            .Name("currentwishlist-grid")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(sci => sci.FullProductName)
+                                .Template(sci => Html.ActionLink(sci.FullProductName, "Edit", "ProductVariant", new { id = sci.ProductVariantId }, new { }))
+                                .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= ProductVariantId #>\"><#= FullProductName #></a>");
+                                columns.Bound(sci => sci.Quantity).Width(100);
+                                columns.Bound(sci => sci.UnitPrice).Width(100);
+                                columns.Bound(sci => sci.Total).Width(100);
+                                columns.Bound(sci => sci.UpdatedOn).Width(100);
+                            })
+                            .DataBinding(dataBinding => dataBinding.Ajax()
+                            .Select("GetCartList", "Customer", new
+                            {
+                                customerId = Model.Id,
+                                cartTypeId = (int)ShoppingCartType.Wishlist
+                            }))
+                        )
+            </td>
+        </tr>
+    </table>
 }

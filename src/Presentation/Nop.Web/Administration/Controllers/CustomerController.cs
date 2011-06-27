@@ -5,6 +5,7 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
+using Nop.Admin.Models.ShoppingCart;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -51,6 +52,7 @@ namespace Nop.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IPriceCalculationService _priceCalculationService;
 
         #endregion
 
@@ -65,7 +67,8 @@ namespace Nop.Admin.Controllers
             CustomerSettings customerSettings, ITaxService taxService, 
             IWorkContext workContext, IPriceFormatter priceFormatter,
             IOrderService orderService, IExportManager exportManager,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            IPriceCalculationService priceCalculationService)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -84,6 +87,7 @@ namespace Nop.Admin.Controllers
             this._orderService = orderService;
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
+            this._priceCalculationService = priceCalculationService;
         }
 
         #endregion
@@ -997,6 +1001,43 @@ namespace Nop.Admin.Controllers
             };
         }
         
+        #endregion
+
+        #region Current shopping cart/ wishlist
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult GetCartList(int customerId, int cartTypeId)
+        {
+            var customer = _customerService.GetCustomerById(customerId);
+            var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == cartTypeId).ToList();
+
+            var gridModel = new GridModel<ShoppingCartItemModel>()
+            {
+                Data = cart.Select(sci =>
+                {
+                    decimal taxRate;
+                    var sciModel = new ShoppingCartItemModel()
+                    {
+                        Id = sci.Id,
+                        ProductVariantId = sci.ProductVariantId,
+                        Quantity = sci.Quantity,
+                        FullProductName = !String.IsNullOrEmpty(sci.ProductVariant.Name) ?
+                            string.Format("{0} ({1})", sci.ProductVariant.Product.Name, sci.ProductVariant.Name) :
+                            sci.ProductVariant.Product.Name,
+                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate)),
+                        Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetSubTotal(sci, true), out taxRate)),
+                        UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
+                    };
+                    return sciModel;
+                }),
+                Total = cart.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
         #endregion
 
         #region Export / Import

@@ -5281,6 +5281,12 @@
                     <LocaleResource Name="BackToList">
                       <Value>back to customer list</Value>
                     </LocaleResource>
+                    <LocaleResource Name="CurrentShoppingCart">
+                      <Value>Current shopping cart</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="CurrentWishlist">
+                      <Value>Current wishlist</Value>
+                    </LocaleResource>
                     <LocaleResource Name="CustomerRoles">
                       <Value>Customer Roles</Value>
                       <Children>

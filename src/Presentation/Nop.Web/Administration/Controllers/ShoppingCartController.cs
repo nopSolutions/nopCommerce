@@ -39,9 +39,8 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-
-
-        #region Shopping carts
+        
+        #region Methods
 
         public ActionResult CurrentCarts()
         {
