@@ -29,14 +29,14 @@ namespace Nop.Services
             this._httpContext = httpContext;
             this._customerService = customerService;
             this._customerSettings = customerSettings;
-            ExpirationTimeSpan = TimeSpan.FromDays(31);  //TODO make 31 configurable
+            this.ExpirationTimeSpan = TimeSpan.FromHours(6);
         }
 
         public TimeSpan ExpirationTimeSpan { get; set; }
 
         public void SignIn(Customer customer, bool createPersistentCookie)
         {
-            var now = DateTime.Now.ToLocalTime();
+            var now = DateTime.UtcNow.ToLocalTime();
 
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,

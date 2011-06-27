@@ -18,7 +18,6 @@ namespace Nop.Services
     public partial class WorkContext : IWorkContext
     {
         private const string CustomerCookieName = "Nop.customer";
-        private const string IsAdminKey = "NopCommerce.IsAdmin";
 
         private readonly HttpContextBase _httpContext;
         private readonly ICustomerService _customerService;
@@ -79,7 +78,11 @@ namespace Nop.Services
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
                     //TODO we should not create guest customer if request is made by search engine?
-                    //perhaps, use a single built-in system record for search engines (don't allow it to be registered, etc)
+                    //perhaps, use a single built-in system record for search engines
+                    //don't allow it to be registered
+                    //ensure that it can't be loaded by GUID from cookie (below) - so noone can be impersonated as search engine
+                    //ensure that it'll not be deleted in ICustomerService.DeleteGuestCustomers
+
 
                     customer = _customerService.InsertGuestCustomer();
                 }
