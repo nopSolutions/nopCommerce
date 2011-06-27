@@ -9,7 +9,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             this.ToTable("SpecificationAttributeOption");
             this.HasKey(sao => sao.Id);
-            this.Property(sao => sao.Name).IsRequired().HasMaxLength(400);
+            this.Property(sao => sao.Name).IsRequired();
             
             this.HasRequired(sao => sao.SpecificationAttribute)
                 .WithMany(sa => sa.SpecificationAttributeOptions)

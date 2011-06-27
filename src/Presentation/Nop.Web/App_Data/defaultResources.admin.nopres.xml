@@ -3561,7 +3561,7 @@
                       </Children>
                 </LocaleResource>
                   <LocaleResource Name="GeneralCommon">
-                    <Value>General and common settings</Value>
+                    <Value>General and miscellaneous settings</Value>
                     <Children>
                       <LocaleResource Name="StoreInformationSettings">
                         <Value>Store information</Value>

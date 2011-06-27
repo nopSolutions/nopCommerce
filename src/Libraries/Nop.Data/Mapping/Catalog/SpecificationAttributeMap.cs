@@ -9,7 +9,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             this.ToTable("SpecificationAttribute");
             this.HasKey(sa => sa.Id);
-            this.Property(sa => sa.Name).IsRequired().HasMaxLength(400);
+            this.Property(sa => sa.Name).IsRequired();
         }
     }
 }
