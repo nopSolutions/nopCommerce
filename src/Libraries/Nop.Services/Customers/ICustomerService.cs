@@ -26,7 +26,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
+        IPagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
            DateTime? registrationTo, int[] customerRoleIds, string email, string username,
            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
 

@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Forums
                 .HasForeignKey(ft => ft.ForumId);
 
             this.HasRequired(ft => ft.Customer)
-               .WithMany()
+               .WithMany(c => c.ForumTopics)
                .HasForeignKey(ft => ft.CustomerId)
                .WillCascadeOnDelete(false);
         }

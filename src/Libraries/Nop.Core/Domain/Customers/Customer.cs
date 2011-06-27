@@ -6,6 +6,7 @@ using System.Xml;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
@@ -27,6 +28,8 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ReturnRequest> _returnRequests;
         private ICollection<Address> _addresses;
         private ICollection<ActivityLog> _activityLog;
+        private ICollection<ForumTopic> _forumTopics;
+        private ICollection<ForumPost> _forumPosts;
 
         public Customer()
         {
@@ -228,6 +231,7 @@ namespace Nop.Core.Domain.Customers
             get { return _customerAttributes ?? (_customerAttributes = new List<CustomerAttribute>()); }
             protected set { _customerAttributes = value; }
         }
+
         /// <summary>
         /// Gets or sets shopping cart items
         /// </summary>
@@ -292,6 +296,24 @@ namespace Nop.Core.Domain.Customers
             protected set { _activityLog = value; }            
         }
 
+        /// <summary>
+        /// Gets or sets the created forum topics
+        /// </summary>
+        public virtual ICollection<ForumTopic> ForumTopics
+        {
+            get { return _forumTopics ?? (_forumTopics = new List<ForumTopic>()); }
+            protected set { _forumTopics = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the created forum posts
+        /// </summary>
+        public virtual ICollection<ForumPost> ForumPosts
+        {
+            get { return _forumPosts ?? (_forumPosts = new List<ForumPost>()); }
+            protected set { _forumPosts = value; }
+        }
+        
         #endregion
 
         #region Addresses

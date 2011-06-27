@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -88,7 +89,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        public virtual PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
+        public virtual IPagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, int[] customerRoleIds, string email, string username,
             bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize)
         {
@@ -646,15 +647,27 @@ namespace Nop.Services.Customers
             query = query.Where(c => c.Orders.Count() == 0);
             //no customer content
             query = query.Where(c => c.CustomerContent.Count() == 0);
-            //TODO ensure that customers doesn't have forum posts or topics
-            
-
+            //ensure that customers doesn't have forum posts or topics
+            query = query.Where(c => c.ForumTopics.Count() == 0);
+            query = query.Where(c => c.ForumPosts.Count() == 0);
             var customers = query.ToList();
-            //delete from database
+
+
+            int numberOfDeletedCustomers = 0;
             foreach (var c in customers)
-                _customerRepository.Delete(c);
-            int numberOfCustomers = customers.Count;
-            return numberOfCustomers;
+            {
+                try
+                {
+                    //delete from database
+                    _customerRepository.Delete(c);
+                    numberOfDeletedCustomers++;
+                }
+                catch (Exception exc)
+                {
+                    Debug.WriteLine(exc);
+                }
+            }
+            return numberOfDeletedCustomers;
         }
 
         #endregion
