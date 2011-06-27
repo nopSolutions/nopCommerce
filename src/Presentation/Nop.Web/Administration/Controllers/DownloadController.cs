@@ -1,23 +1,30 @@
 ﻿using System;
 using System.IO;
 using System.Web.Mvc;
+using System.Web.Security;
 using Nop.Core;
 using Nop.Core.Domain.Media;
+using Nop.Services;
+using Nop.Services.Customers;
 using Nop.Services.Media;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
+    //[AdminAuthorize] Do not use [AdminAuthorzie] attribute because of flash cookie bug used in uploadify
+    //we apply it only to requried methods (e.g. DownloadFile and SaveDownloadUrl)
     public class DownloadController : BaseNopController
     {
-        private IDownloadService _downloadService;
+        private readonly IDownloadService _downloadService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public DownloadController(IDownloadService downloadService)
+        public DownloadController(IDownloadService downloadService, IAuthenticationService authenticationService)
         {
             this._downloadService = downloadService;
+            this._authenticationService = authenticationService;
         }
-        
+
+        [AdminAuthorize]
         public ActionResult DownloadFile(int downloadId)
         {
             var download = _downloadService.GetDownloadById(downloadId);
@@ -42,18 +49,9 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
+        [AdminAuthorize]
         public ActionResult SaveDownloadUrl(string downloadUrl)
         {
-            //var download = _downloadService.GetDownloadById(downloadId);
-            //if (download != null)
-            //{
-            //    //update
-            //    download.UseDownloadUrl = true;
-            //    download.DownloadUrl = downloadUrl;
-            //    _downloadService.UpdateDownload(download);
-            //}
-            //else
-            //{
             //insert
             var download = new Download()
               {
@@ -62,14 +60,33 @@ namespace Nop.Admin.Controllers
                   IsNew = true
               };
             _downloadService.InsertDownload(download);
-            //}
 
             return Json(new { downloadId = download.Id }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AsyncUpload()
+        public ActionResult AsyncUpload(string authToken)
         {
             var httpPostedFile = Request.Files[0];
+            if (httpPostedFile == null)
+                throw new ArgumentException("No file uploaded");
+
+            //Workaround for flash cookie bug
+            //http://stackoverflow.com/questions/1729179/uploadify-session-and-authentication-with-asp-net-mvc
+            //http://geekswithblogs.net/apopovsky/archive/2009/05/06/working-around-flash-cookie-bug-in-asp.net-mvc.aspx
+
+            var ticket = FormsAuthentication.Decrypt(authToken);
+            if (ticket == null)
+                throw new Exception("No token provided");
+
+            var identity = new FormsIdentity(ticket);
+            if (!identity.IsAuthenticated)
+                throw new Exception("User is not authenticated");
+
+            var customer = ((FormsAuthenticationService)_authenticationService).GetAuthenticatedCustomerFromTicket(ticket);
+            if (!customer.IsAdmin())
+                throw new Exception("User is not admin");
+
+
             var download = new Download()
             {
                 UseDownloadUrl = false,

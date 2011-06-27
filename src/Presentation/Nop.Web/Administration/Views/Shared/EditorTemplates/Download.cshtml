@@ -91,9 +91,13 @@
                     <script type="text/javascript">
                     $(function () {
                         $(function () {
+                        
+                            var authToken = '@(this.Context.Request.Cookies[FormsAuthentication.FormsCookieName]==null ? string.Empty : Request.Cookies[FormsAuthentication.FormsCookieName].Value)';
+
                             $("#@clientId").uploadify({
                                 "uploader": "@(Url.Content("~/Content/Flash/uploadify.swf"))",
                                 "script": "/Admin/Download/AsyncUpload",
+                                "scriptData": { authToken: authToken },
                                 "multi": "false",
                                 "auto": true,
                                 "buttonText": "Upload",

@@ -14,6 +14,7 @@ namespace Nop.Services
         private readonly HttpContextBase _httpContext;
         private readonly ICustomerService _customerService;
         private readonly CustomerSettings _customerSettings;
+        private readonly TimeSpan _expirationTimeSpan;
 
         private Customer _cachedCustomer;
 
@@ -29,12 +30,11 @@ namespace Nop.Services
             this._httpContext = httpContext;
             this._customerService = customerService;
             this._customerSettings = customerSettings;
-            this.ExpirationTimeSpan = TimeSpan.FromHours(6);
+            this._expirationTimeSpan = TimeSpan.FromHours(6);
         }
 
-        public TimeSpan ExpirationTimeSpan { get; set; }
 
-        public void SignIn(Customer customer, bool createPersistentCookie)
+        public virtual void SignIn(Customer customer, bool createPersistentCookie)
         {
             var now = DateTime.UtcNow.ToLocalTime();
 
@@ -42,7 +42,7 @@ namespace Nop.Services
                 1 /*version*/,
                 _customerSettings.UsernamesEnabled ? customer.Username : customer.Email,
                 now,
-                now.Add(ExpirationTimeSpan),
+                now.Add(_expirationTimeSpan),
                 createPersistentCookie,
                 _customerSettings.UsernamesEnabled ? customer.Username : customer.Email,
                 FormsAuthentication.FormsCookiePath);
@@ -62,13 +62,13 @@ namespace Nop.Services
             _cachedCustomer = customer;
         }
 
-        public void SignOut()
+        public virtual void SignOut()
         {
             _cachedCustomer = null;
             FormsAuthentication.SignOut();
         }
 
-        public Customer GetAuthenticatedCustomer()
+        public virtual Customer GetAuthenticatedCustomer()
         {
             if (_cachedCustomer != null)
                 return _cachedCustomer;
@@ -82,16 +82,25 @@ namespace Nop.Services
             }
 
             var formsIdentity = (FormsIdentity)_httpContext.User.Identity;
-            var usernameOrEmail = formsIdentity.Ticket.UserData;
+            var customer = GetAuthenticatedCustomerFromTicket(formsIdentity.Ticket);
+            if (customer != null && customer.Active && !customer.Deleted && customer.IsRegistered())
+                _cachedCustomer = customer;
+            return _cachedCustomer;
+        }
+
+        public virtual Customer GetAuthenticatedCustomerFromTicket(FormsAuthenticationTicket ticket)
+        {
+            if (ticket == null)
+                throw new ArgumentNullException("ticket");
+
+            var usernameOrEmail = ticket.UserData;
 
             if (String.IsNullOrWhiteSpace(usernameOrEmail))
                 return null;
             var customer = _customerSettings.UsernamesEnabled
                 ? _customerService.GetCustomerByUsername(usernameOrEmail)
                 : _customerService.GetCustomerByEmail(usernameOrEmail);
-            if (customer != null && customer.Active && !customer.Deleted && customer.IsRegistered())
-                _cachedCustomer = customer;
-            return _cachedCustomer;
+            return customer;
         }
     }
 }
