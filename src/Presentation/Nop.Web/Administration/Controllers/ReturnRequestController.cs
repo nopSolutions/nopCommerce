@@ -14,6 +14,7 @@ using Nop.Services.Orders;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -30,6 +31,7 @@ namespace Nop.Admin.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
@@ -39,7 +41,7 @@ namespace Nop.Admin.Controllers
             ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, IWorkContext workContext,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService, IPermissionService permissionService)
         {
             this._orderService = orderService;
             this._customerService = customerService;
@@ -49,6 +51,7 @@ namespace Nop.Admin.Controllers
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._customerActivityService = customerActivityService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -100,6 +103,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+                return AccessDeniedView();
+
             var gridModel = new GridModel<ReturnRequestModel>();
             return View(gridModel);
         }
@@ -107,6 +113,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+                return AccessDeniedView();
+
             var returnRequests = _orderService.SearchReturnRequests(0, 0, null);
             var gridModel = new GridModel<ReturnRequestModel>
             {
@@ -127,6 +136,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+                return AccessDeniedView();
+
             var returnRequest = _orderService.GetReturnRequestById(id);
             if (returnRequest == null)
                 throw new ArgumentException("No return request found with the specified id", "id");
@@ -140,6 +152,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(ReturnRequestModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+                return AccessDeniedView();
+
             var returnRequest = _orderService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
                 throw new ArgumentException("No return request found with the specified id");
@@ -171,6 +186,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("notify-customer")]
         public ActionResult NotifyCustomer(ReturnRequestModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+                return AccessDeniedView();
+
             var returnRequest = _orderService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
                 throw new ArgumentException("No return request found with the specified id");
@@ -187,6 +205,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+                return AccessDeniedView();
+
             var returnRequest = _orderService.GetReturnRequestById(id);
             _orderService.DeleteReturnRequest(returnRequest);
 

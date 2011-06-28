@@ -9,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -22,6 +23,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
@@ -29,14 +31,15 @@ namespace Nop.Admin.Controllers
 
         public ProductAttributeController(IProductAttributeService productAttributeService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService)
+            ILocalizationService localizationService, ICustomerActivityService customerActivityService,
+            IPermissionService permissionService)
         {
             this._productAttributeService = productAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -73,6 +76,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productAttributes = _productAttributeService.GetAllProductAttributes();
             var gridModel = new GridModel<ProductAttributeModel>
             {
@@ -85,6 +91,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productAttributes = _productAttributeService.GetAllProductAttributes();
             var gridModel = new GridModel<ProductAttributeModel>
             {
@@ -100,6 +109,9 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var model = new ProductAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -109,6 +121,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(ProductAttributeModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             //decode description
             model.Description = HttpUtility.HtmlDecode(model.Description);
             foreach (var localized in model.Locales)
@@ -134,6 +149,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             if (productAttribute == null)
                 throw new ArgumentException("No product attribute found with the specified id", "id");
@@ -151,6 +169,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(ProductAttributeModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productAttribute = _productAttributeService.GetProductAttributeById(model.Id);
             if (productAttribute == null)
                 throw new ArgumentException("No product attribute found with the specified id");
@@ -182,6 +203,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             _productAttributeService.DeleteProductAttribute(productAttribute);
 

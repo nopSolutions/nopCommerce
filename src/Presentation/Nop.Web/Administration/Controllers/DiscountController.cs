@@ -13,6 +13,7 @@ using Nop.Services.Logging;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -28,6 +29,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -36,7 +38,8 @@ namespace Nop.Admin.Controllers
         public DiscountController(IDiscountService discountService, 
             ILocalizationService localizationService, ICurrencyService currencyService,
             IWebHelper webHelper, IDateTimeHelper dateTimeHelper,
-            ICustomerActivityService customerActivityService, CurrencySettings currencySettings)
+            ICustomerActivityService customerActivityService, CurrencySettings currencySettings,
+            IPermissionService permissionService)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
@@ -45,6 +48,7 @@ namespace Nop.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._customerActivityService = customerActivityService;
             this._currencySettings = currencySettings;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -108,6 +112,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discounts = _discountService.GetAllDiscounts(null, true);
             var gridModel = new GridModel<DiscountModel>
             {
@@ -120,6 +127,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discounts = _discountService.GetAllDiscounts(null, true);
             var gridModel = new GridModel<DiscountModel>
             {
@@ -135,6 +145,9 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var model = new DiscountModel();
             PrepareDiscountModel(model, null);
             //default values
@@ -145,6 +158,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(DiscountModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var discount = model.ToEntity();
@@ -165,6 +181,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discount = _discountService.GetDiscountById(id);
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id", "id");
@@ -176,6 +195,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(DiscountModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discount = _discountService.GetDiscountById(model.Id);
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
@@ -200,6 +222,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discount = _discountService.GetDiscountById(id);
             _discountService.DeleteDiscount(discount);
 
@@ -217,6 +242,9 @@ namespace Nop.Admin.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
             
@@ -234,6 +262,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult GetDiscountRequirementMetaInfo(int discountRequirementId, int discountId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
@@ -253,6 +284,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult DeleteDiscountRequirement(int discountRequirementId, int discountId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
@@ -273,6 +307,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult UsageHistoryList(int discountId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
@@ -304,6 +341,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult UsageHistoryDelete(int discountId, int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");

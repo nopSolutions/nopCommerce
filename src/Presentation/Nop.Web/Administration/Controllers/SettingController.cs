@@ -56,6 +56,7 @@ namespace Nop.Admin.Controllers
         private readonly IThemeProvider _themeProvider;
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IPermissionService _permissionService;
 
 
         private BlogSettings _blogSettings;
@@ -88,7 +89,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             IOrderService orderService, IEncryptionService encryptionService,
             IThemeProvider themeProvider, ICustomerService customerService, 
-            ICustomerActivityService customerActivityService,
+            ICustomerActivityService customerActivityService, IPermissionService permissionService,
             BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
@@ -114,6 +115,7 @@ namespace Nop.Admin.Controllers
             this._themeProvider = themeProvider;
             this._customerService = customerService;
             this._customerActivityService = customerActivityService;
+            this._permissionService = permissionService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -141,12 +143,18 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Blog()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _blogSettings.ToModel();
             return View(model);
         }
         [HttpPost]
         public ActionResult Blog(BlogSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _blogSettings = model.ToEntity(_blogSettings);
             _settingService.SaveSetting(_blogSettings);
 
@@ -162,6 +170,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Forum()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _forumSettings.ToModel();
             model.ForumEditorValues = _forumSettings.ForumEditor.ToSelectList();
             return View(model);
@@ -169,6 +180,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Forum(ForumSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _forumSettings = model.ToEntity(_forumSettings);
             _settingService.SaveSetting(_forumSettings);
 
@@ -184,12 +198,18 @@ namespace Nop.Admin.Controllers
 
         public ActionResult News()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _newsSettings.ToModel();
             return View(model);
         }
         [HttpPost]
         public ActionResult News(NewsSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _newsSettings = model.ToEntity(_newsSettings);
             _settingService.SaveSetting(_newsSettings);
 
@@ -205,6 +225,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Shipping()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _shippingSettings.ToModel();
 
             //shipping origin
@@ -243,6 +266,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Shipping(ShippingSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _shippingSettings = model.ToEntity(_shippingSettings);
 
             var originAddress = _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId) ??
@@ -271,6 +297,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Tax()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _taxSettings.ToModel();
             model.TaxBasedOnValues = _taxSettings.TaxBasedOn.ToSelectList();
             model.TaxDisplayTypeValues = _taxSettings.TaxDisplayType.ToSelectList();
@@ -325,6 +354,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Tax(TaxSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _taxSettings = model.ToEntity(_taxSettings);
 
             var defaultAddress = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId) ??
@@ -353,12 +385,18 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Catalog()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _catalogSettings.ToModel();
             return View(model);
         }
         [HttpPost]
         public ActionResult Catalog(CatalogSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _catalogSettings = model.ToEntity(_catalogSettings);
             _settingService.SaveSetting(_catalogSettings);
 
@@ -373,6 +411,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult RewardPoints()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _rewardPointsSettings.ToModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             return View(model);
@@ -380,6 +421,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult RewardPoints(RewardPointsSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
             if (ModelState.IsValid)
@@ -401,6 +445,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Order()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _orderSettings.ToModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
@@ -431,6 +478,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Order(OrderSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
@@ -466,12 +516,18 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ShoppingCart()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _shoppingCartSettings.ToModel();
             return View(model);
         }
         [HttpPost]
         public ActionResult ShoppingCart(ShoppingCartSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _shoppingCartSettings = model.ToEntity(_shoppingCartSettings);
             _settingService.SaveSetting(_shoppingCartSettings);
 
@@ -487,6 +543,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Media()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var model = _mediaSettings.ToModel();
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
             return View(model);
@@ -495,6 +554,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult Media(MediaSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _mediaSettings = model.ToEntity(_mediaSettings);
             _settingService.SaveSetting(_mediaSettings);
 
@@ -508,6 +570,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("change-picture-storage")]
         public ActionResult ChangePictureStorage()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _pictureService.StoreInDb = !_pictureService.StoreInDb;
 
             //activity log
@@ -521,6 +586,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult CustomerUser()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             //merge settings
             var model = new CustomerUserSettingsModel();
             model.CustomerSettings = _customerSettings.ToModel();
@@ -541,6 +609,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult CustomerUser(CustomerUserSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             _customerSettings = model.CustomerSettings.ToEntity(_customerSettings);
             _settingService.SaveSetting(_customerSettings);
             
@@ -562,6 +633,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult GeneralCommon()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             //store information
             var model = new GeneralCommonSettingsModel();
             model.StoreInformationSettings.StoreName = _storeInformationSettings.StoreName;
@@ -609,6 +683,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult GeneralCommon(GeneralCommonSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             //store information
             _storeInformationSettings.StoreName = model.StoreInformationSettings.StoreName;
             if (model.StoreInformationSettings.StoreUrl == null)
@@ -661,6 +738,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("changeencryptionkey")]
         public ActionResult ChangeEnryptionKey(GeneralCommonSettingsModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             try
             {
                 if (model.SecuritySettings.EncryptionKey == null)
@@ -737,6 +817,9 @@ namespace Nop.Admin.Controllers
         //all settings
         public ActionResult AllSettings()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var settings = _settingService.GetAllSettings().Select(x => x.Value).OrderBy(x => x.Name).ToList();
             var model = new GridModel<SettingModel>
             {
@@ -756,6 +839,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult AllSettings(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var settings = _settingService.GetAllSettings().Select(x => x.Value).OrderBy(x => x.Name)
                 .Select(x => 
                 {
@@ -781,6 +867,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult SettingUpdate(SettingModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("AllSettings");
@@ -800,6 +889,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult SettingAdd([Bind(Exclude = "Id")] SettingModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -815,6 +907,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult SettingDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
             var setting = _settingService.GetSettingById(id);
             _settingService.DeleteSetting(setting);
 

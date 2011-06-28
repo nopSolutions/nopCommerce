@@ -7,6 +7,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -18,18 +19,20 @@ namespace Nop.Admin.Controllers
 		private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
-
+        private readonly IPermissionService _permissionService;
 
 		#endregion
 
 		#region Constructors
 
         public CustomerRoleController(ICustomerService customerService,
-            ILocalizationService localizationService, ICustomerActivityService customerActivityService)
+            ILocalizationService localizationService, ICustomerActivityService customerActivityService,
+            IPermissionService permissionService)
 		{
             this._customerService = customerService;
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -42,7 +45,10 @@ namespace Nop.Admin.Controllers
         }
 
 		public ActionResult List()
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+                return AccessDeniedView();
+            
 			var customerRoles = _customerService.GetAllCustomerRoles(true);
 			var gridModel = new GridModel<CustomerRoleModel>
 			{
@@ -55,6 +61,9 @@ namespace Nop.Admin.Controllers
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+                return AccessDeniedView();
+            
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             var gridModel = new GridModel<CustomerRoleModel>
 			{
@@ -69,6 +78,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+                return AccessDeniedView();
+            
             var model = new CustomerRoleModel();
             //default values
             model.Active = true;
@@ -78,6 +90,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(CustomerRoleModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+                return AccessDeniedView();
+            
             if (ModelState.IsValid)
             {
                 var customerRole = model.ToEntity();
@@ -95,7 +110,10 @@ namespace Nop.Admin.Controllers
         }
 
 		public ActionResult Edit(int id)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+                return AccessDeniedView();
+            
             var customerRole = _customerService.GetCustomerRoleById(id);
             if (customerRole == null) throw new ArgumentException("No customer role found with the specified id", "id");
             return View(customerRole.ToModel());
@@ -104,6 +122,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(CustomerRoleModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+                return AccessDeniedView();
+            
             var customerRole = _customerService.GetCustomerRoleById(model.Id);
             if (customerRole == null) 
                 throw new ArgumentException("No customer role found with the specified id");
@@ -127,6 +148,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+                return AccessDeniedView();
+            
             var customerRole = _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
                 throw new ArgumentException("No customer role found with the specified id");

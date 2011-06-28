@@ -64,7 +64,6 @@
     <Compile Include="Blogs\BlogService.cs" />
     <Compile Include="Blogs\BlogExtensions.cs" />
     <Compile Include="Blogs\IBlogService.cs" />
-    <Compile Include="Catalog\CatalogPermissionProvider.cs" />
     <Compile Include="Catalog\CategoryService.cs" />
     <Compile Include="Catalog\CategoryExtensions.cs" />
     <Compile Include="Catalog\CompareProductsService.cs" />
@@ -229,6 +228,7 @@
     <Compile Include="Customers\CustomerRegistrationRequest.cs" />
     <Compile Include="Customers\CustomerRegistrationResult.cs" />
     <Compile Include="Directory\StateProvinceService.cs" />
+    <Compile Include="Security\StandardPermissionProvider.cs" />
     <Compile Include="Seo\BaseSitemapGenerator.cs" />
     <Compile Include="Seo\SeoExtensions.cs" />
     <Compile Include="Seo\ISitemapGenerator.cs" />

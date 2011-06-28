@@ -7,6 +7,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -18,16 +19,19 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
         #endregion Fields
 
         #region Constructors
 
         public ActivityLogController(ICustomerActivityService customerActivityService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            IPermissionService permissionService)
 		{
             this._customerActivityService = customerActivityService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -36,6 +40,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ListTypes()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
             var activityLogTypeModel = _customerActivityService.GetAllActivityTypes().Select(x => x.ToModel());
             var gridModel = new GridModel<ActivityLogTypeModel>
             {
@@ -63,6 +70,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult SaveTypes(FormCollection formCollection)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
             var keys = formCollection.AllKeys.Where(c => c.StartsWith("checkBox_")).Select(c => c.Substring(9));
             foreach (var key in keys)
             {
@@ -85,6 +95,9 @@ namespace Nop.Admin.Controllers
         
         public ActionResult ListLogs()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
             var activityLogSearchModel = new ActivityLogSearchModel();
             activityLogSearchModel.ActivityLogType.Add(new SelectListItem()
             {
@@ -134,6 +147,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult AcivityLogDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
             var activityLog = _customerActivityService.GetActivityById(id);
             _customerActivityService.DeleteActivity(activityLog);
 
@@ -143,6 +159,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ClearAll()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
             _customerActivityService.ClearAllActivities();
             return RedirectToAction("ListLogs");
         }

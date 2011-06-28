@@ -10,6 +10,7 @@ using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -20,8 +21,9 @@ namespace Nop.Admin.Controllers
 
         private readonly ICustomerContentService _customerContentService;
         private readonly IProductService _productService;
-        private readonly IDateTimeHelper _dateTimeHelper; 
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
@@ -29,12 +31,13 @@ namespace Nop.Admin.Controllers
 
         public ProductReviewController(ICustomerContentService customerContentService,
             IProductService productService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, IPermissionService permissionService)
         {
             this._customerContentService = customerContentService;
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -81,6 +84,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var gridModel = new GridModel<ProductReviewModel>();
             return View(gridModel);
         }
@@ -88,6 +94,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productReviews = _customerContentService.GetAllCustomerContent<ProductReview>(0, null);
             var gridModel = new GridModel<ProductReviewModel>
             {
@@ -108,6 +117,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
             if (productReview == null)
                 throw new ArgumentException("No product review found with the specified id", "id");
@@ -120,6 +132,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(ProductReviewModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productReview = _customerContentService.GetCustomerContentById(model.Id) as ProductReview;
             if (productReview == null)
                 throw new ArgumentException("No product review found with the specified id");
@@ -149,6 +164,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
             if (productReview == null)
                 throw new ArgumentException("No product review found with the specified id");

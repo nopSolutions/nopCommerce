@@ -96,7 +96,7 @@ namespace Nop.Services.Security
         public virtual IList<PermissionRecord> GetAllPermissionRecords()
         {
             var query = from cr in _permissionPecordRepository.Table
-                        orderby cr.Category, cr.Name
+                        orderby cr.Name
                         select cr;
             var permissions = query.ToList();
             return permissions;

@@ -11,6 +11,7 @@ using Nop.Services.Payments;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -25,6 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPaymentService _paymentService;
+        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
@@ -32,7 +34,8 @@ namespace Nop.Admin.Controllers
 
         public RecurringPaymentController(IOrderService orderService,
             IOrderProcessingService orderProcessingService, ILocalizationService localizationService,
-            IWorkContext workContext, IDateTimeHelper dateTimeHelper, IPaymentService paymentService)
+            IWorkContext workContext, IDateTimeHelper dateTimeHelper, IPaymentService paymentService,
+            IPermissionService permissionService)
         {
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
@@ -40,6 +43,7 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._dateTimeHelper = dateTimeHelper;
             this._paymentService = paymentService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -111,6 +115,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var gridModel = new GridModel<RecurringPaymentModel>();
             return View(gridModel);
         }
@@ -118,6 +125,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var payments = _orderService.SearchRecurringPayments(0, 0, null, true);
             var gridModel = new GridModel<RecurringPaymentModel>
             {
@@ -138,6 +148,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null || payment.Deleted)
                 throw new ArgumentException("No recurring payment found with the specified id", "id");
@@ -150,6 +163,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(RecurringPaymentModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var payment = _orderService.GetRecurringPaymentById(model.Id);
             if (payment == null || payment.Deleted)
                 throw new ArgumentException("No recurring payment found with the specified id");
@@ -168,6 +184,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var payment = _orderService.GetRecurringPaymentById(id);
             _orderService.DeleteRecurringPayment(payment);
 
@@ -182,6 +201,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult HistoryList(int recurringPaymentId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var payment = _orderService.GetRecurringPaymentById(recurringPaymentId);
             if (payment == null)
                 throw new ArgumentException("No recurring payment found with the specified id");
@@ -210,6 +232,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("processnextpayment")]
         public ActionResult ProcessNextPayment(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null)
                 throw new ArgumentException("No recurring payment found with the specified id");
@@ -239,6 +264,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("cancelpayment")]
         public ActionResult CancelRecurringPayment(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null)
                 throw new ArgumentException("No recurring payment found with the specified id");

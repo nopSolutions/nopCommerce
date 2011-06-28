@@ -7,6 +7,7 @@ using Nop.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Configuration;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -19,19 +20,21 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
         private readonly ISmsService _smsService;
-        private SmsSettings _smsSettings;
+        private readonly SmsSettings _smsSettings;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
 		#endregion
 
 		#region Constructors
 
         public SmsController(ISmsService smsService, SmsSettings smsSettings,
-            ISettingService settingService)
+            ISettingService settingService, IPermissionService permissionService)
 		{
             this._smsService = smsService;
             this._smsSettings = smsSettings;
             this._settingService = settingService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -40,6 +43,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Providers()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSmsProviders))
+                return AccessDeniedView();
+
             var smsProvidersModel = new List<SmsProviderModel>();
             var smsProviders = _smsService.LoadAllSmsProviders();
             foreach (var smsProvider in smsProviders)
@@ -59,6 +65,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Providers(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSmsProviders))
+                return AccessDeniedView();
+
             var smsProvidersModel = new List<SmsProviderModel>();
             var smsProviders = _smsService.LoadAllSmsProviders();
             foreach (var smsProvider in smsProviders)
@@ -82,6 +91,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProviderUpdate(SmsProviderModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSmsProviders))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -112,6 +124,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ConfigureProvider(string systemName)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSmsProviders))
+                return AccessDeniedView();
+
             var smsProvider = _smsService.LoadSmsProviderBySystemName(systemName);
             if (smsProvider == null) 
                 throw new ArgumentException("No SMS provider found with the specified system name", "systemName");

@@ -10,6 +10,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -22,11 +23,13 @@ namespace Nop.Admin.Controllers
         private readonly IEmailSender _emailSender;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly StoreInformationSettings _storeSettings;
+        private readonly IPermissionService _permissionService;
 
 		public EmailAccountController(IEmailAccountService emailAccountService,
             ILocalizationService localizationService, ISettingService settingService, 
             IEmailSender emailSender, 
-            EmailAccountSettings emailAccountSettings, StoreInformationSettings storeSettings)
+            EmailAccountSettings emailAccountSettings, StoreInformationSettings storeSettings,
+            IPermissionService permissionService)
 		{
             this._emailAccountService = emailAccountService;
             this._localizationService = localizationService;
@@ -34,10 +37,14 @@ namespace Nop.Admin.Controllers
             this._emailSender = emailSender;
             this._settingService = settingService;
             this._storeSettings = storeSettings;
+            this._permissionService = permissionService;
 		}
 
 		public ActionResult List(string id)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
 			//mark as default email account (if selected)
 			if (!String.IsNullOrEmpty(id))
 			{
@@ -66,7 +73,10 @@ namespace Nop.Admin.Controllers
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult List(GridCommand command)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
             var emailAccountModels = _emailAccountService.GetAllEmailAccounts()
                                     .Select(x => x.ToModel())
                                     .ToList();
@@ -87,6 +97,9 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
             var model = new EmailAccountModel();
             //default values
             model.Port = 25;
@@ -95,7 +108,10 @@ namespace Nop.Admin.Controllers
         
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
 		public ActionResult Create(EmailAccountModel model, bool continueEditing)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var emailAccount = model.ToEntity();
@@ -110,7 +126,10 @@ namespace Nop.Admin.Controllers
 		}
 
 		public ActionResult Edit(int id)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
 			var emailAccount = _emailAccountService.GetEmailAccountById(id);
 			if (emailAccount == null) 
                 throw new ArgumentException("No email account found with the specified id", "id");
@@ -121,6 +140,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(EmailAccountModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
                 throw new ArgumentException("No email account found with the specified id");
@@ -142,6 +164,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("sendtestemail")]
         public ActionResult SendTestEmail(EmailAccountModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
                 throw new ArgumentException("No email account found with the specified id");
@@ -167,6 +192,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
             var emailAccount = _emailAccountService.GetEmailAccountById(id);
             if (emailAccount == null)
                 throw new ArgumentException("No email account found with the specified id", "id");

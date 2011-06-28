@@ -6,6 +6,7 @@ using Nop.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -22,7 +23,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
-
+        private readonly IPermissionService _permissionService;
         private readonly EmailAccountSettings _emailAccountSettings;
         #endregion Fields
 
@@ -32,7 +33,7 @@ namespace Nop.Admin.Controllers
             IEmailAccountService emailAccountService, ILanguageService languageService, 
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService, IMessageTokenProvider messageTokenProvider, 
-            EmailAccountSettings emailAccountSettings)
+            IPermissionService permissionService, EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
@@ -40,6 +41,7 @@ namespace Nop.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
             this._messageTokenProvider = messageTokenProvider;
+            this._permissionService = permissionService;
             this._emailAccountSettings = emailAccountSettings;
         }
 
@@ -89,7 +91,7 @@ namespace Nop.Admin.Controllers
         
         #endregion
         
-        #region List
+        #region Methods
 
         public ActionResult Index()
         {
@@ -98,6 +100,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates();
             var gridModel = new GridModel<MessageTemplateModel>
             {
@@ -110,6 +115,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates();
             var gridModel = new GridModel<MessageTemplateModel>
             {
@@ -122,12 +130,11 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        #endregion
-
-        #region Create / Edit / Delete
-        
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
             if (messageTemplate == null)
                 throw new ArgumentException("No message template found with the specified id", "id");
@@ -153,6 +160,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(MessageTemplateModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
             if (messageTemplate == null)
                 throw new ArgumentException("No message template found with the specified id");

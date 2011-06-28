@@ -18,6 +18,7 @@ using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -39,6 +40,7 @@ namespace Nop.Admin.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IPermissionService _permissionService;
 
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
@@ -55,6 +57,7 @@ namespace Nop.Admin.Controllers
             ITaxCategoryService taxCategoryService, IWorkContext workContext,
             IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
             IProductAttributeParser productAttributeParser, ICustomerActivityService customerActivityService,
+            IPermissionService permissionService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings)
         {
@@ -71,6 +74,7 @@ namespace Nop.Admin.Controllers
             this._shoppingCartService = shoppingCartService;
             this._productAttributeParser = productAttributeParser;
             this._customerActivityService = customerActivityService;
+            this._permissionService = permissionService;
 
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
@@ -227,6 +231,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create(int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id", "productId");
@@ -249,6 +256,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(ProductVariantModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var variant = model.ToEntity();
@@ -291,6 +301,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var variant = _productService.GetProductVariantById(id);
             if (variant == null || variant.Deleted)
                 throw new ArgumentException("No product variant found with the specified id", "id");
@@ -314,6 +327,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(ProductVariantModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var variant = _productService.GetProductVariantById(model.Id);
             if (variant == null || variant.Deleted)
                 throw new ArgumentException("No product variant found with the specified id");
@@ -365,6 +381,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var variant = _productService.GetProductVariantById(id);
             if (variant == null)
                 throw new ArgumentException("No product variant found with the specified id");
@@ -380,6 +399,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult LowStockReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var variants = _productService.GetLowStockProductVariants().Take(20).ToList();
             var model = new GridModel<ProductVariantModel>()
             {
@@ -398,6 +420,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult LowStockReportList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var variants = _productService.GetLowStockProductVariants();
 
             var model = new GridModel<ProductVariantModel>()
@@ -424,6 +449,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult TierPriceList(GridCommand command, int productVariantId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var tierPrices = _productService.GetTierPricesByProductVariantId(productVariantId);
             var tierPricesModel = tierPrices
                 .Select(x =>
@@ -455,6 +483,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult TierPriceInsert(GridCommand command, ProductVariantModel.TierPriceModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var tierPrice = new TierPrice()
             {
                 ProductVariantId = model.ProductVariantId,
@@ -470,6 +501,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult TierPriceUpdate(GridCommand command, ProductVariantModel.TierPriceModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var tierPrice = _productService.GetTierPriceById(model.Id);
             if (tierPrice == null)
                 throw new ArgumentException("No tier price found with the specified id");
@@ -486,6 +520,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult TierPriceDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var tierPrice = _productService.GetTierPriceById(id);
             if (tierPrice == null)
                 throw new ArgumentException("No tier price found with the specified id");
@@ -503,6 +540,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductVariantAttributeList(GridCommand command, int productVariantId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariantId);
             var productVariantAttributesModel = productVariantAttributes
                 .Select(x =>
@@ -544,6 +584,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductVariantAttributeInsert(GridCommand command, ProductVariantModel.ProductVariantAttributeModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pva = new ProductVariantAttribute()
             {
                 ProductVariantId = model.ProductVariantId,
@@ -561,6 +604,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductVariantAttrbiuteUpdate(GridCommand command, ProductVariantModel.ProductVariantAttributeModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pva = _productAttributeService.GetProductVariantAttributeById(model.Id);
             if (pva == null)
                 throw new ArgumentException("No product variant attribute found with the specified id");
@@ -580,6 +626,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductVariantAttributeDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pva = _productAttributeService.GetProductVariantAttributeById(id);
             if (pva == null)
                 throw new ArgumentException("No product variant attribute found with the specified id");
@@ -597,6 +646,9 @@ namespace Nop.Admin.Controllers
         //list
         public ActionResult EditAttributeValues(int productVariantAttributeId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pva = _productAttributeService.GetProductVariantAttributeById(productVariantAttributeId);
             var model = new ProductVariantModel.ProductVariantAttributeValueListModel()
             {
@@ -612,6 +664,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductAttributeValueList(int productVariantAttributeId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var values = _productAttributeService.GetProductVariantAttributeValues(productVariantAttributeId);
 
 
@@ -642,6 +697,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductAttributeValueDelete(int pvavId, int productVariantAttributeId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pvav = _productAttributeService.GetProductVariantAttributeValueById(pvavId);
             _productAttributeService.DeleteProductVariantAttributeValue(pvav);
 
@@ -652,6 +710,9 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult ProductAttributeValueCreatePopup(int productAttributeAttributeId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var model = new ProductVariantModel.ProductVariantAttributeValueModel();
             model.ProductVariantAttributeId = productAttributeAttributeId;
             //locales
@@ -662,6 +723,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ProductAttributeValueCreatePopup(string btnId, ProductVariantModel.ProductVariantAttributeValueModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pva = _productAttributeService.GetProductVariantAttributeById(model.ProductVariantAttributeId);
             if (pva == null)
                 throw new ArgumentException("No product variant attribute found with the specified id");
@@ -693,6 +757,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult ProductAttributeValueEditPopup(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pvav = _productAttributeService.GetProductVariantAttributeValueById(id);
             if (pvav == null)
                 throw new ArgumentException("No attribute value found with the specified id", "id");
@@ -717,6 +784,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ProductAttributeValueEditPopup(string btnId, ProductVariantModel.ProductVariantAttributeValueModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pvav = _productAttributeService.GetProductVariantAttributeValueById(model.Id);
             if (pvav == null)
                 throw new ArgumentException("No attribute value found with the specified id");
@@ -747,6 +817,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductVariantAttributeCombinationList(GridCommand command, int productVariantId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productVariantAttributeCombinations = _productAttributeService.GetAllProductVariantAttributeCombinations(productVariantId);
             var productVariantAttributesModel = productVariantAttributeCombinations
                 .Select(x =>
@@ -788,6 +861,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductVariantAttrbiuteCombinationUpdate(GridCommand command, ProductVariantModel.ProductVariantAttributeCombinationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pvac = _productAttributeService.GetProductVariantAttributeCombinationById(model.Id);
             if (pvac == null)
                 throw new ArgumentException("No product variant attribute combination found with the specified id");
@@ -802,6 +878,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductVariantAttributeCombinationDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var pvac = _productAttributeService.GetProductVariantAttributeCombinationById(id);
             if (pvac == null)
                 throw new ArgumentException("No product variant attribute combination found with the specified id");
@@ -818,6 +897,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult AddAttributeCombinationPopup(int productVariantId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var variant = _productService.GetProductVariantById(productVariantId);
             if (variant == null)
                 throw new ArgumentException("No product variant found with the specified id", "productVariantId");
@@ -832,6 +914,9 @@ namespace Nop.Admin.Controllers
         public ActionResult AddAttributeCombinationPopup(string btnId, int productVariantId, 
             AddProductVariantAttributeCombinationModel model, FormCollection form)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var variant = _productService.GetProductVariantById(productVariantId);
             if (variant == null)
                 throw new ArgumentException("No product variant found with the specified id", "productVariantId");

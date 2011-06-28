@@ -19,6 +19,7 @@ using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Web.Extensions;
@@ -46,6 +47,7 @@ namespace Nop.Web.Controllers
         private readonly IForumService _forumservice;
         private readonly ICustomerService _customerService;
         private readonly IWebHelper _webHelper;
+        private readonly IPermissionService _permissionService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -67,6 +69,7 @@ namespace Nop.Web.Controllers
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
             IThemeProvider themeProvider, IForumService forumService,
             ICustomerService customerService, IWebHelper webHelper,
+            IPermissionService permissionService, 
             CustomerSettings customerSettings, ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
@@ -89,6 +92,7 @@ namespace Nop.Web.Controllers
             this._forumservice = forumService;
             this._customerService = customerService;
             this._webHelper = webHelper;
+            this._permissionService = permissionService;
 
             this._customerSettings = customerSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -202,7 +206,8 @@ namespace Nop.Web.Controllers
                 IsAuthenticated = customer.IsRegistered(),
                 CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
-                DisplayAdminLink = customer != null && customer.IsAdmin(),
+                //DisplayAdminLink = customer != null && customer.IsAdmin(), //old implementation
+                DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 ShoppingCartItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts() : 0,
                 WishlistEnabled = _shoppingCartSettings.WishlistEnabled,
                 WishlistItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts() : 0,

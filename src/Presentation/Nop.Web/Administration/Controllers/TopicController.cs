@@ -6,6 +6,7 @@ using Nop.Admin.Models.Topics;
 using Nop.Core;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Services.Topics;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -20,22 +21,22 @@ namespace Nop.Admin.Controllers
         private readonly ITopicService _topicService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
-        private readonly IWebHelper _webHelper; 
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
         #region Constructors
 
         public TopicController(ITopicService topicService, ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService, IWebHelper webHelper,
-            ILocalizationService localizationService)
+            ILocalizedEntityService localizedEntityService, ILocalizationService localizationService,
+            IPermissionService permissionService)
         {
             this._topicService = topicService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
-            this._webHelper = webHelper;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -76,7 +77,7 @@ namespace Nop.Admin.Controllers
         
         #endregion
         
-        #region List / tree
+        #region List
 
         public ActionResult Index()
         {
@@ -85,6 +86,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                return AccessDeniedView();
+
             var topics = _topicService.GetAllTopics();
             var gridModel = new GridModel<TopicModel>
             {
@@ -97,6 +101,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                return AccessDeniedView();
+
             var topics = _topicService.GetAllTopics();
             var gridModel = new GridModel<TopicModel>
             {
@@ -115,6 +122,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                return AccessDeniedView();
+
             var model = new TopicModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -124,6 +134,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(TopicModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                return AccessDeniedView();
+
             //decode description
             model.Body = HttpUtility.HtmlDecode(model.Body);
             foreach (var localized in model.Locales)
@@ -146,6 +159,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                return AccessDeniedView();
+
             var topic = _topicService.GetTopicById(id);
             if (topic == null)
                 throw new ArgumentException("No topic found with the specified id", "id");
@@ -167,6 +183,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(TopicModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                return AccessDeniedView();
+
             var topic = _topicService.GetTopicById(model.Id);
             if (topic == null)
                 throw new ArgumentException("No topic found with the specified id");
@@ -197,6 +216,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                return AccessDeniedView();
+
             var topic = _topicService.GetTopicById(id);
             _topicService.DeleteTopic(topic);
 

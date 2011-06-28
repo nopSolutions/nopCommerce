@@ -16,6 +16,7 @@ using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Web.Framework.Controllers;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -36,6 +37,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly IWorkContext _workContext;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -46,7 +48,8 @@ namespace Nop.Admin.Controllers
             ICustomerService customerService, IWebHelper webHelper,
             StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
             MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper,
-            ILanguageService languageService, IWorkContext workContext)
+            ILanguageService languageService, IWorkContext workContext,
+            IPermissionService permissionService)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -60,6 +63,7 @@ namespace Nop.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._languageService = languageService;
             this._workContext = workContext;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -208,6 +212,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Maintenance()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
             var model = new MaintenanceModel();
             model.DeleteGuests.EndDate = DateTime.UtcNow.AddDays(-7);
             model.DeleteGuests.OnlyWithoutShoppingCart = true;
@@ -218,6 +225,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("delete-guests")]
         public ActionResult MaintenanceDeleteGuests(MaintenanceModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
             DateTime? startDateValue = (model.DeleteGuests.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -233,6 +243,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("delete-exported-files")]
         public ActionResult MaintenanceDeleteFiles(MaintenanceModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
             DateTime? startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 

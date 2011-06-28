@@ -13,6 +13,7 @@ using Nop.Services.Shipping;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -22,10 +23,11 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
         private readonly IShippingService _shippingService;
-        private ShippingSettings _shippingSettings;
+        private readonly ShippingSettings _shippingSettings;
         private readonly ISettingService _settingService;
-        private readonly ICountryService _countryService; 
+        private readonly ICountryService _countryService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
 		#endregion
 
@@ -33,13 +35,14 @@ namespace Nop.Admin.Controllers
 
         public ShippingController(IShippingService shippingService, ShippingSettings shippingSettings,
             ISettingService settingService, ICountryService countryService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, IPermissionService permissionService)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
             this._settingService = settingService;
             this._countryService = countryService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -48,6 +51,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Providers()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var shippingProvidersModel = new List<ShippingRateComputationMethodModel>();
             var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
             foreach (var shippingProvider in shippingProviders)
@@ -67,6 +73,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Providers(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var shippingProvidersModel = new List<ShippingRateComputationMethodModel>();
             var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
             foreach (var shippingProvider in shippingProviders)
@@ -90,6 +99,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProviderUpdate(ShippingRateComputationMethodModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Providers");
@@ -121,8 +133,12 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ConfigureProvider(string systemName)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(systemName);
-            if (srcm == null) throw new ArgumentException("No shipping rate computation method found with the specified system name", "systemName");
+            if (srcm == null) 
+                throw new ArgumentException("No shipping rate computation method found with the specified system name", "systemName");
 
             var model = srcm.ToModel();
             string actionName, controllerName;
@@ -140,6 +156,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Methods()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var shippingMethodsModel = _shippingService.GetAllShippingMethods()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -154,6 +173,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Methods(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var shippingMethodsModel = _shippingService.GetAllShippingMethods()
                 .Select(x => x.ToModel())
                 .ForCommand(command)
@@ -173,6 +195,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult MethodUpdate(ShippingMethodModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Methods");
@@ -188,6 +213,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult MethodAdd([Bind(Exclude = "Id")] ShippingMethodModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -203,6 +231,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult MethodDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var shippingMethod = _shippingService.GetShippingMethodById(id);
             _shippingService.DeleteShippingMethod(shippingMethod);
 
@@ -215,6 +246,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Restrictions()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var model = new ShippingMethodRestrictionModel();
 
             var countries = _countryService.GetAllCountries(true);
@@ -250,6 +284,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Restrictions")]
         public ActionResult RestrictionSave(FormCollection form)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var countries = _countryService.GetAllCountries(true);
             var shippingMethods = _shippingService.GetAllShippingMethods();
 

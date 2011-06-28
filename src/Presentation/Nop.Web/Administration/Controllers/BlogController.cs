@@ -12,6 +12,7 @@ using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -25,6 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerContentService _customerContentService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -32,13 +34,14 @@ namespace Nop.Admin.Controllers
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, IPermissionService permissionService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._customerContentService = customerContentService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -51,7 +54,10 @@ namespace Nop.Admin.Controllers
         }
 
 		public ActionResult List()
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
 			var blogPosts = _blogService.GetAllBlogPosts(0, null, null, 0, 10);
             var gridModel = new GridModel<BlogPostModel>
             {
@@ -71,6 +77,9 @@ namespace Nop.Admin.Controllers
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             var blogPosts = _blogService.GetAllBlogPosts(0, null, null, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<BlogPostModel>
             {
@@ -92,6 +101,9 @@ namespace Nop.Admin.Controllers
         
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new BlogPostModel();
             //default values
@@ -102,6 +114,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(BlogPostModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             //decode body
             model.Body = HttpUtility.HtmlDecode(model.Body);
 
@@ -122,6 +137,9 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
                 throw new ArgumentException("No blog post found with the specified id", "id");
@@ -134,6 +152,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
 		public ActionResult Edit(BlogPostModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             var blogPost = _blogService.GetBlogPostById(model.Id);
             if (blogPost == null)
                 throw new ArgumentException("No blog post found with the specified id");
@@ -158,6 +179,9 @@ namespace Nop.Admin.Controllers
 		[HttpPost, ActionName("Delete")]
 		public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
                 throw new ArgumentException("No blog post found with the specified id", "id");
@@ -173,6 +197,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Comments(int? filterByBlogPostId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             ViewBag.FilterByBlogPostId = filterByBlogPostId;
             var model = new GridModel<BlogCommentModel>();
             return View(model);
@@ -181,6 +208,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Comments(int? filterByBlogPostId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             IList<BlogComment> comments;
             if (filterByBlogPostId.HasValue)
             {
@@ -219,6 +249,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult CommentDelete(int? filterByBlogPostId, int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
             var comment = _customerContentService.GetCustomerContentById(id);
             _customerContentService.DeleteCustomerContent(comment);
 

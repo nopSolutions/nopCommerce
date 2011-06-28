@@ -12,6 +12,7 @@ using Nop.Services.Messages;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -21,13 +22,16 @@ namespace Nop.Admin.Controllers
 		private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 		private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
 		public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
-			IDateTimeHelper dateTimeHelper,ILocalizationService localizationService)
+			IDateTimeHelper dateTimeHelper,ILocalizationService localizationService,
+            IPermissionService permissionService)
 		{
 			this._newsLetterSubscriptionService = newsLetterSubscriptionService;
 			this._dateTimeHelper = dateTimeHelper;
-		    this._localizationService = localizationService;
+            this._localizationService = localizationService;
+            this._permissionService = permissionService;
 		}
 
 		public ActionResult Index()
@@ -36,7 +40,10 @@ namespace Nop.Admin.Controllers
 		}
 
 		public ActionResult List()
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+                return AccessDeniedView();
+
 			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty, 0, 10, true);
 			var model = new NewsLetterSubscriptionListModel();
 
@@ -55,7 +62,10 @@ namespace Nop.Admin.Controllers
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult SubscriptionList(GridCommand command)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+                return AccessDeniedView();
+
 			string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
 
 			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(searchCustomerEmail, 
@@ -80,7 +90,10 @@ namespace Nop.Admin.Controllers
 		[HttpPost, ActionName("List")]
 		[FormValueRequired("search-newsLetterSubscriptions")]
 		public ActionResult Search(NewsLetterSubscriptionListModel model)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+                return AccessDeniedView();
+
 			ViewData["searchCustomerEmail"] = model.SearchEmail;
 
             //TODO add paging support
@@ -101,7 +114,10 @@ namespace Nop.Admin.Controllers
 		}
 
 		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+                return AccessDeniedView();
+
 			string fileName = String.Format("newsletter_emails_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 
 			var sb = new StringBuilder();
@@ -125,7 +141,10 @@ namespace Nop.Admin.Controllers
 
 		[HttpPost]
 		public ActionResult ImportCsv(FormCollection form)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+                return AccessDeniedView();
+
 			try
 			{
 				var file = Request.Files["importcsvfile"];

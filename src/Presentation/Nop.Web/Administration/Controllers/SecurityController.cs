@@ -60,6 +60,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Permissions()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                return AccessDeniedView();
+
             var model = new PermissionMappingModel();
 
             var permissionRecords = _permissionService.GetAllPermissionRecords();
@@ -95,6 +98,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Permissions")]
         public ActionResult PermissionsSave(FormCollection form)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                return AccessDeniedView();
+
             var permissionRecords = _permissionService.GetAllPermissionRecords();
             var customerRoles = _customerService.GetAllCustomerRoles(true);
 

@@ -15,6 +15,7 @@ using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -31,6 +32,7 @@ namespace Nop.Admin.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IAffiliateService _affiliateService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -39,7 +41,8 @@ namespace Nop.Admin.Controllers
         public AffiliateController(ILocalizationService localizationService,
             IWorkContext workContext, IDateTimeHelper dateTimeHelper, IWebHelper webHelper,
             ICountryService countryService, IStateProvinceService stateProvinceService,
-            IPriceFormatter priceFormatter, IAffiliateService affiliateService)
+            IPriceFormatter priceFormatter, IAffiliateService affiliateService,
+            IPermissionService permissionService)
         {
             this._localizationService = localizationService;
             this._workContext = workContext;
@@ -49,6 +52,7 @@ namespace Nop.Admin.Controllers
             this._stateProvinceService = stateProvinceService;
             this._priceFormatter = priceFormatter;
             this._affiliateService = affiliateService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -99,6 +103,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             var gridModel = new GridModel<AffiliateModel>();
             return View(gridModel);
         }
@@ -106,6 +113,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             var affiliates = _affiliateService.GetAllAffiliates(true);
             var gridModel = new GridModel<AffiliateModel>
             {
@@ -127,6 +137,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             var model = new AffiliateModel();
             PrepareAffiliateModel(model, null, false);
             return View(model);
@@ -136,6 +149,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Create(AffiliateModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var affiliate = new Affiliate();
@@ -164,6 +180,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             var affiliate = _affiliateService.GetAffiliateById(id);
             if (affiliate == null || affiliate.Deleted)
                 throw new ArgumentException("No affiliate found with the specified id", "id");
@@ -176,6 +195,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(AffiliateModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             var affiliate = _affiliateService.GetAffiliateById(model.Id);
             if (affiliate == null || affiliate.Deleted)
                 throw new ArgumentException("No affiliate found with the specified id");
@@ -204,6 +226,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             var affiliate = _affiliateService.GetAffiliateById(id);
             _affiliateService.DeleteAffiliate(affiliate);
             SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Deleted"));
@@ -213,6 +238,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult AffiliatedOrderList(int affiliateId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             var affiliate = _affiliateService.GetAffiliateById(affiliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
@@ -247,6 +275,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult AffiliatedCustomerList(int affiliateId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return AccessDeniedView();
+
             var affiliate = _affiliateService.GetAffiliateById(affiliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");

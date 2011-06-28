@@ -15,6 +15,7 @@ using Nop.Services.Orders;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -32,6 +33,7 @@ namespace Nop.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -41,8 +43,8 @@ namespace Nop.Admin.Controllers
             IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,
             IDateTimeHelper dateTimeHelper, LocalizationSettings localizationSettings,
             ICurrencyService currencyService, CurrencySettings currencySettings,
-            ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService)
+            ILocalizationService localizationService, ICustomerActivityService customerActivityService,
+            IPermissionService permissionService)
         {
             this._giftCardService = giftCardService;
             this._priceFormatter = priceFormatter;
@@ -53,6 +55,7 @@ namespace Nop.Admin.Controllers
             this._currencySettings = currencySettings;
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -67,6 +70,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             var model = new GiftCardListModel();
             model.ActivatedList.Add(new SelectListItem()
                 {
@@ -90,6 +96,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GiftCardList(GridCommand command, GiftCardListModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             bool? isGiftCardActivated = null;
             if (model.ActivatedId == 1)
                 isGiftCardActivated = true;
@@ -116,6 +125,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             var model = new GiftCardModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
@@ -125,6 +137,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(GiftCardModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var giftCard = model.ToEntity();
@@ -145,6 +160,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             var giftCard = _giftCardService.GetGiftCardById(id);
             if (giftCard == null) 
                 throw new ArgumentException("No gift card found with the specified id", "id");
@@ -163,6 +181,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(GiftCardModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.Id : null;
@@ -197,6 +218,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("notifyRecipient")]
         public ActionResult NotifyRecipient(GiftCardModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
             model = giftCard.ToModel();
@@ -228,10 +252,12 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         
-
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             var giftCard = _giftCardService.GetGiftCardById(id);
             _giftCardService.DeleteGiftCard(giftCard);
 
@@ -241,13 +267,14 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
             return RedirectToAction("List");
         }
-
-
-
+        
         //Gif card usage history
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult UsageHistoryList(int giftCardId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+                return AccessDeniedView();
+
             var giftCard = _giftCardService.GetGiftCardById(giftCardId);
             if (giftCard == null)
                 throw new ArgumentException("No gift card found with the specified id");

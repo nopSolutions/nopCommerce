@@ -12,6 +12,7 @@ using Nop.Services.News;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -23,23 +24,24 @@ namespace Nop.Admin.Controllers
         private readonly INewsService _newsService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICustomerContentService _customerContentService; 
+        private readonly ICustomerContentService _customerContentService;
         private readonly ILocalizationService _localizationService;
-
-
+        private readonly IPermissionService _permissionService;
+        
 		#endregion
 
 		#region Constructors
 
         public NewsController(INewsService newsService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, IPermissionService permissionService)
         {
             this._newsService = newsService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._customerContentService = customerContentService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -53,6 +55,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             var news = _newsService.GetAllNews(0, null, null, 0, 10, true);
             var gridModel = new GridModel<NewsItemModel>
             {
@@ -72,6 +77,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             var news = _newsService.GetAllNews(0, null, null, command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<NewsItemModel>
             {
@@ -93,6 +101,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new NewsItemModel();
             //default values
@@ -104,6 +115,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(NewsItemModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             //decode body
             model.Full = HttpUtility.HtmlDecode(model.Full);
 
@@ -124,6 +138,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             var newsItem = _newsService.GetNewsById(id);
             if (newsItem == null)
                 throw new ArgumentException("No news item found with the specified id", "id");
@@ -136,6 +153,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(NewsItemModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             var newsItem = _newsService.GetNewsById(model.Id);
             if (newsItem == null)
                 throw new ArgumentException("No news item found with the specified id");
@@ -160,6 +180,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             var newsItem = _newsService.GetNewsById(id);
             if (newsItem == null)
                 throw new ArgumentException("No news item found with the specified id", "id");
@@ -175,6 +198,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Comments(int? filterByNewsItemId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             ViewBag.FilterByNewsItemId = filterByNewsItemId;
             var model = new GridModel<NewsCommentModel>();
             return View(model);
@@ -183,6 +209,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Comments(int? filterByNewsItemId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             IList<NewsComment> comments;
             if (filterByNewsItemId.HasValue)
             {
@@ -222,6 +251,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult CommentDelete(int? filterByNewsItemId, int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
             var comment = _customerContentService.GetCustomerContentById(id);
             _customerContentService.DeleteCustomerContent(comment);
 

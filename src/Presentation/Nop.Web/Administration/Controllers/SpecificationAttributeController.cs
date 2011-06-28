@@ -8,6 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -21,6 +22,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
@@ -28,13 +30,15 @@ namespace Nop.Admin.Controllers
 
         public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService, ICustomerActivityService customerActivityService)
+            ILocalizationService localizationService, ICustomerActivityService customerActivityService,
+            IPermissionService permissionService)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -77,6 +81,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
             var gridModel = new GridModel<SpecificationAttributeModel>
             {
@@ -89,6 +96,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
             var gridModel = new GridModel<SpecificationAttributeModel>
             {
@@ -104,6 +114,9 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var model = new SpecificationAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -113,6 +126,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(SpecificationAttributeModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var specificationAttribute = model.ToEntity();
@@ -133,6 +149,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
                 throw new ArgumentException("No specification attribute found with the specified id", "id");
@@ -149,6 +168,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(SpecificationAttributeModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.Id);
             if (specificationAttribute == null)
                 throw new ArgumentException("No specification attribute found with the specified id");
@@ -174,6 +196,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
 
@@ -192,6 +217,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult OptionList(int specificationAttributeId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttributeId);
             var gridModel = new GridModel<SpecificationAttributeOptionModel>
             {
@@ -216,6 +244,9 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult OptionCreatePopup(int specificationAttributeId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var model = new SpecificationAttributeOptionModel();
             model.SpecificationAttributeId = specificationAttributeId;
             //locales
@@ -226,6 +257,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult OptionCreatePopup(string btnId, SpecificationAttributeOptionModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
             if (specificationAttribute == null)
                 throw new ArgumentException("No specification attribute found with the specified id");
@@ -249,6 +283,9 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult OptionEditPopup(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(id);
             if (sao == null)
                 throw new ArgumentException("No specification attribute option found with the specified id", "id");
@@ -265,6 +302,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult OptionEditPopup(string btnId, SpecificationAttributeOptionModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(model.Id);
             if (sao == null)
                 throw new ArgumentException("No specification attribute option found with the specified id");
@@ -288,6 +328,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult OptionDelete(int optionId, int specificationAttributeId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(optionId);
             _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 
@@ -299,6 +342,9 @@ namespace Nop.Admin.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetOptionsByAttributeId(string attributeId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             // This action method gets called via an ajax request
             if (String.IsNullOrEmpty(attributeId))
                 throw new ArgumentNullException("attributeId");

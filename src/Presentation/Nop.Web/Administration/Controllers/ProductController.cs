@@ -18,6 +18,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -42,6 +43,7 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -55,7 +57,8 @@ namespace Nop.Admin.Controllers
             ITaxCategoryService taxCategoryService, IProductTagService productTagService,
             ICopyProductService copyProductService, IPdfService pdfService,
             IExportManager exportManager, IImportManager importManager,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            IPermissionService permissionService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -73,6 +76,7 @@ namespace Nop.Admin.Controllers
             this._exportManager = exportManager;
             this._importManager = importManager;
             this._customerActivityService = customerActivityService;
+            this._permissionService = permissionService;
         }
 
         #endregion 
@@ -361,6 +365,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, 10, true);
@@ -392,6 +399,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductList(GridCommand command, ProductListModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var gridModel = new GridModel();
             var products = _productService.SearchProducts(model.SearchCategoryId,
                 model.SearchManufacturerId, null, null, null, 0, 0, model.SearchProductName, false,
@@ -421,6 +431,9 @@ namespace Nop.Admin.Controllers
         //create product
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var model = new ProductModel();
 
             //product
@@ -444,6 +457,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(ProductModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             //decode description
             model.FullDescription = HttpUtility.HtmlDecode(model.FullDescription);
             foreach (var localized in model.Locales)
@@ -491,6 +507,9 @@ namespace Nop.Admin.Controllers
         //edit product
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var product = _productService.GetProductById(id);
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id", "id");
@@ -520,6 +539,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(ProductModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var product = _productService.GetProductById(model.Id);
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
@@ -559,6 +581,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var product = _productService.GetProductById(id);
             _productService.DeleteProduct(product);
 
@@ -572,6 +597,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GetVariants(int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var variants = _productService.GetProductVariantsByProductId(productId, true);
 
             var gridModel = new GridModel<ProductVariantModel>()
@@ -594,6 +622,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult CopyProduct(ProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var copyModel = model.CopyProductModel;
             try
             {
@@ -615,6 +646,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductCategoryList(GridCommand command, int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productCategories = _categoryService.GetProductCategoriesByProductId(productId, true);
             var productCategoriesModel = productCategories
                 .Select(x =>
@@ -646,6 +680,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductCategoryInsert(GridCommand command, ProductModel.ProductCategoryModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productCategory = new ProductCategory()
             {
                 ProductId = model.ProductId,
@@ -661,6 +698,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductCategoryUpdate(GridCommand command, ProductModel.ProductCategoryModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productCategory = _categoryService.GetProductCategoryById(model.Id);
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
@@ -677,6 +717,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductCategoryDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productCategory = _categoryService.GetProductCategoryById(id);
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
@@ -694,6 +737,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductManufacturerList(GridCommand command, int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(productId, true);
             var productManufacturersModel = productManufacturers
                 .Select(x =>
@@ -725,6 +771,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductManufacturerInsert(GridCommand command, ProductModel.ProductManufacturerModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productManufacturer = new ProductManufacturer()
             {
                 ProductId = model.ProductId,
@@ -740,6 +789,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductManufacturerUpdate(GridCommand command, ProductModel.ProductManufacturerModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productManufacturer = _manufacturerService.GetProductManufacturerById(model.Id);
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
@@ -756,6 +808,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductManufacturerDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productManufacturer = _manufacturerService.GetProductManufacturerById(id);
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
@@ -773,6 +828,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult RelatedProductList(GridCommand command, int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var relatedProducts = _productService.GetRelatedProductsByProductId1(productId, true);
             var relatedProductsModel = relatedProducts
                 .Select(x =>
@@ -803,6 +861,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult RelatedProductUpdate(GridCommand command, ProductModel.RelatedProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var relatedProduct = _productService.GetRelatedProductById(model.Id);
             if (relatedProduct == null)
                 throw new ArgumentException("No related product found with the specified id");
@@ -816,6 +877,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult RelatedProductDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var relatedProduct = _productService.GetRelatedProductById(id);
             if (relatedProduct == null)
                 throw new ArgumentException("No related product found with the specified id");
@@ -828,6 +892,9 @@ namespace Nop.Admin.Controllers
         
         public ActionResult RelatedProductAddPopup(int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, 10, true);
@@ -854,6 +921,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult RelatedProductAddPopupList(GridCommand command, ProductModel.AddRelatedProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var gridModel = new GridModel();
             var products = _productService.SearchProducts(model.SearchCategoryId, model.SearchManufacturerId, 
                 null, null, null, 0, 0, model.SearchProductName, false,
@@ -871,6 +941,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult RelatedProductAddPopup(string btnId, ProductModel.AddRelatedProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             if (model.SelectedProductIds != null)
             {
                 foreach (int id in model.SelectedProductIds)
@@ -906,6 +979,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult CrossSellProductList(GridCommand command, int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var crossSellProducts = _productService.GetCrossSellProductsByProductId1(productId, true);
             var crossSellProductsModel = crossSellProducts
                 .Select(x =>
@@ -935,6 +1011,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult CrossSellProductDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var crossSellProduct = _productService.GetCrossSellProductById(id);
             if (crossSellProduct == null)
                 throw new ArgumentException("No cross-sell product found with the specified id");
@@ -947,6 +1026,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult CrossSellProductAddPopup(int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, 10, true);
@@ -973,6 +1055,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult CrossSellProductAddPopupList(GridCommand command, ProductModel.AddCrossSellProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var gridModel = new GridModel();
             var products = _productService.SearchProducts(model.SearchCategoryId,
                 model.SearchManufacturerId
@@ -991,6 +1076,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult CrossSellProductAddPopup(string btnId, ProductModel.AddCrossSellProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             if (model.SelectedProductIds != null)
             {
                 foreach (int id in model.SelectedProductIds)
@@ -1024,6 +1112,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ProductPictureAdd(int pictureId, int displayOrder, int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             if (productId == 0)
                 throw new ArgumentException();
 
@@ -1043,6 +1134,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductPictureList(GridCommand command, int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productPictures = _productService.GetProductPicturesByProductId(productId);
             var productPicturesModel = productPictures
                 .Select(x =>
@@ -1073,6 +1167,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductPictureUpdate(ProductModel.ProductPictureModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -1091,6 +1188,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductPictureDelete(int productPictureId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productPicture = _productService.GetProductPictureById(productPictureId);
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
@@ -1108,6 +1208,9 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductSpecificationAttributeAdd(int specificationAttributeOptionId, 
             bool allowFiltering, bool showOnProductPage, int displayOrder, int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var psa = new ProductSpecificationAttribute()
             {
                 SpecificationAttributeOptionId = specificationAttributeOptionId,
@@ -1124,6 +1227,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductSpecAttrList(GridCommand command, int productId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productrSpecs = _specificationAttributeService.GetProductSpecificationAttributesByProductId(productId);
 
             var productrSpecsModel = productrSpecs
@@ -1158,6 +1264,9 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductSpecAttrUpdate(int psaId, ProductSpecificationAttributeModel model,
             GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -1175,6 +1284,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductSpecAttrDelete(int psaId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
             var productId = psa.ProductId;
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
@@ -1188,6 +1300,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ProductTags()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var tags = _productTagService.GetAllProductTags();
             var model = new GridModel<ProductTagModel>
             {
@@ -1208,6 +1323,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductTags(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var tags = _productTagService.GetAllProductTags()
                 .Select(x =>
                 {
@@ -1234,6 +1352,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductTagDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var tag = _productTagService.GetProductById(id);
             _productTagService.DeleteProductTag(tag);
 
@@ -1246,6 +1367,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult DownloadCatalogAsPdf()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             try
             {
                 var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
@@ -1266,6 +1390,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportXml()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             try
             {
                 var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
@@ -1285,6 +1412,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportExcel()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             try
             {
                 var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
@@ -1309,6 +1439,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ImportExcel(FormCollection form)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             try
             {
                 var file = Request.Files["importexcelfile"];

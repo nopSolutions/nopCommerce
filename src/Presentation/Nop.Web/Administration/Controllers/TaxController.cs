@@ -9,6 +9,7 @@ using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -19,8 +20,9 @@ namespace Nop.Admin.Controllers
 
         private readonly ITaxService _taxService;
         private readonly ITaxCategoryService _taxCategoryService;
-        private TaxSettings _taxSettings;
+        private readonly TaxSettings _taxSettings;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
 	    #endregion
 
@@ -28,12 +30,13 @@ namespace Nop.Admin.Controllers
 
         public TaxController(ITaxService taxService,
             ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
-            ISettingService settingService)
+            ISettingService settingService, IPermissionService permissionService)
 		{
             this._taxService = taxService;
             this._taxCategoryService = taxCategoryService;
             this._taxSettings = taxSettings;
             this._settingService = settingService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -42,6 +45,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Providers(string systemName)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             //mark as active tax provider (if selected)
             if (!String.IsNullOrEmpty(systemName))
             {
@@ -68,6 +74,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Providers(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             var taxProvidersModel = _taxService.LoadAllTaxProviders()
                 .Select(x => x.ToModel())
                 .ForCommand(command)
@@ -87,6 +96,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ConfigureProvider(string systemName)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
             if (taxProvider == null) throw new ArgumentException("No tax provider found with the specified system name", "systemName");
 
@@ -106,6 +118,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Categories()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             var categoriesModel = _taxCategoryService.GetAllTaxCategories()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -120,6 +135,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Categories(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             var categoriesModel = _taxCategoryService.GetAllTaxCategories()
                 .Select(x => x.ToModel())
                 .ForCommand(command)
@@ -139,6 +157,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult CategoryUpdate(TaxCategoryModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Categories");
@@ -154,6 +175,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult CategoryAdd([Bind(Exclude = "Id")] TaxCategoryModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -169,6 +193,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult CategoryDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             var taxCategory = _taxCategoryService.GetTaxCategoryById(id);
             _taxCategoryService.DeleteTaxCategory(taxCategory);
 

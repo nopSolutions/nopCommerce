@@ -8,6 +8,7 @@ using Nop.Services.PromotionFeed;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -17,14 +18,17 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
         private readonly IPromotionFeedService _promotionFeedService;
+        private readonly IPermissionService _permissionService;
 
 		#endregion
 
 		#region Constructors
 
-        public PromotionFeedController(IPromotionFeedService promotionFeedService)
+        public PromotionFeedController(IPromotionFeedService promotionFeedService,
+            IPermissionService permissionService)
 		{
             this._promotionFeedService = promotionFeedService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -33,6 +37,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePromotionFeeds))
+                return AccessDeniedView();
+
             var feedsModel = new List<PromotionFeedModel>();
             var feeds = _promotionFeedService.LoadAllPromotionFeeds();
             foreach (var feed in feeds)
@@ -48,6 +55,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePromotionFeeds))
+                return AccessDeniedView();
+
             var feedsModel = new List<PromotionFeedModel>();
             var feeds = _promotionFeedService.LoadAllPromotionFeeds();
             foreach (var feed in feeds)
@@ -66,6 +76,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ConfigureMethod(string systemName)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePromotionFeeds))
+                return AccessDeniedView();
+
             var feed = _promotionFeedService.LoadPromotionFeedBySystemName(systemName);
             if (feed == null) 
                 throw new ArgumentException("No feed found with the specified system name", "systemName");

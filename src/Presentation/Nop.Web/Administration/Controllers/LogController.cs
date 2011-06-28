@@ -11,6 +11,7 @@ using Nop.Services.Logging;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -21,14 +22,17 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IPermissionService _permissionService;
 
         public LogController(ILogger logger, IWorkContext workContext,
-            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper)
+            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
+            IPermissionService permissionService)
         {
             this._logger = logger;
             this._workContext = workContext;
             this._localizationService = localizationService;
             this._dateTimeHelper = dateTimeHelper;
+            this._permissionService = permissionService;
         }
 
         public ActionResult Index()
@@ -38,6 +42,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+                return AccessDeniedView();
+
             var model = new LogListModel();
             model.AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList();
             model.AvailableLogLevels.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -48,6 +55,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult LogList(GridCommand command, LogListModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+                return AccessDeniedView();
+
             DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -89,6 +99,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("clearall")]
         public ActionResult ClearAll()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+                return AccessDeniedView();
+
             _logger.ClearLog();
 
             SuccessNotification(_localizationService.GetResource("Admin.System.Log.Cleared"));
@@ -97,6 +110,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult View(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+                return AccessDeniedView();
+
             var log = _logger.GetLogById(id);
             if (log == null)
                 throw new ArgumentException("No log found with the specified id", "id");
@@ -121,6 +137,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+                return AccessDeniedView();
+
             var log = _logger.GetLogById(id);
             if (log == null)
                 throw new ArgumentException("No log found with the specified id", "id");

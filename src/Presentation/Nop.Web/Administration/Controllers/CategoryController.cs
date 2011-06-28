@@ -113,8 +113,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-	        //TODO add the same logic to other controllers
-            if (!_permissionService.Authorize(CatalogPermissionProvider.ManageCategories))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
             var categories = _categoryService.GetAllCategories(0, 10, true);
@@ -134,6 +133,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<CategoryModel>
             {
@@ -171,6 +173,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Tree()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var rootCategories = _categoryService.GetAllCategoriesByParentCategoryId(0, true);
             return View(rootCategories);
         }
@@ -226,6 +231,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var model = new CategoryModel();
             //parent categories
             model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
@@ -242,6 +250,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(CategoryModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             //decode description
             model.Description = HttpUtility.HtmlDecode(model.Description);
             foreach (var localized in model.Locales)
@@ -289,6 +300,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var category = _categoryService.GetCategoryById(id);
             if (category == null || category.Deleted) 
                 throw new ArgumentException("No category found with the specified id", "id");
@@ -322,6 +336,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(CategoryModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var category = _categoryService.GetCategoryById(model.Id);
             if (category == null || category.Deleted)
                 throw new ArgumentException("No category found with the specified id");
@@ -385,6 +402,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var category = _categoryService.GetCategoryById(id);
             _categoryService.DeleteCategory(category);
 
@@ -416,6 +436,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportXml()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             try
             {
                 var fileName = string.Format("categories_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
@@ -436,6 +459,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductList(GridCommand command, int categoryId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, true);
             var productCategoriesModel = productCategories
                 .Select(x =>
@@ -467,6 +493,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductUpdate(GridCommand command, CategoryModel.CategoryProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productCategory = _categoryService.GetProductCategoryById(model.Id);
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
@@ -481,6 +510,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var productCategory = _categoryService.GetProductCategoryById(id);
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
@@ -493,6 +525,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ProductAddPopup(int categoryId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, 10, true);
@@ -519,6 +554,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductAddPopupList(GridCommand command, CategoryModel.AddCategoryProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             var gridModel = new GridModel();
             var products = _productService.SearchProducts(model.SearchCategoryId,
                 model.SearchManufacturerId, null, null, null, 0, 0, model.SearchProductName, false,
@@ -536,6 +574,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult ProductAddPopup(string btnId, CategoryModel.AddCategoryProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
             if (model.SelectedProductIds != null)
             {
                 foreach (int id in model.SelectedProductIds)

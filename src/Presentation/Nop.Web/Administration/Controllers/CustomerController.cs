@@ -27,6 +27,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -53,6 +54,7 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -68,7 +70,8 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext, IPriceFormatter priceFormatter,
             IOrderService orderService, IExportManager exportManager,
             ICustomerActivityService customerActivityService,
-            IPriceCalculationService priceCalculationService)
+            IPriceCalculationService priceCalculationService,
+            IPermissionService permissionService)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -88,6 +91,7 @@ namespace Nop.Admin.Controllers
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
             this._priceCalculationService = priceCalculationService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -109,7 +113,35 @@ namespace Nop.Admin.Controllers
             }
             return sb.ToString();
         }
-        
+
+        [NonAction]
+        private IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
+        {
+            var report = new List<RegisteredCustomerReportLineModel>();
+            report.Add(new RegisteredCustomerReportLineModel()
+            {
+                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.7days"),
+                Customers = _customerReportService.GetRegisteredCustomersReport(7)
+            });
+
+            report.Add(new RegisteredCustomerReportLineModel()
+            {
+                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.14days"),
+                Customers = _customerReportService.GetRegisteredCustomersReport(14)
+            });
+            report.Add(new RegisteredCustomerReportLineModel()
+            {
+                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.month"),
+                Customers = _customerReportService.GetRegisteredCustomersReport(30)
+            });
+            report.Add(new RegisteredCustomerReportLineModel()
+            {
+                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year"),
+                Customers = _customerReportService.GetRegisteredCustomersReport(365)
+            });
+
+            return report;
+        }
         #endregion
 
         #region Customers
@@ -121,6 +153,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             //load registered customers by default
             var defaultRoleIds = new int[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
 
@@ -163,6 +198,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult CustomerList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             //filtering
             //convert to string because passing int[] to grid is no possible
             string searchCustomerRoleIdsStr = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerRoleIds");
@@ -206,6 +244,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("search-customers")]
         public ActionResult Search(CustomerListModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
 
             //convert to string because passing int[] to grid is no possible
@@ -252,6 +293,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var model = new CustomerModel();
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
@@ -278,6 +322,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Create(CustomerModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             if (!String.IsNullOrWhiteSpace(model.Email))
             {
                 var cust2 = _customerService.GetCustomerByEmail(model.Email);
@@ -356,6 +403,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(id);
             if (customer == null || customer.Deleted)
                 throw new ArgumentException("No customer found with the specified id", "id");
@@ -406,6 +456,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(CustomerModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null || customer.Deleted)
                 throw new ArgumentException("No customer found with the specified id");
@@ -525,12 +578,14 @@ namespace Nop.Admin.Controllers
             model.AddRewardPointsMessage = "Some comment here...";
             return View(model);
         }
-
-
+        
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
         public ActionResult ChangePassword(CustomerModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
@@ -554,6 +609,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("markVatNumberAsValid")]
         public ActionResult MarkVatNumberAsValid(CustomerModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "id");
@@ -568,6 +626,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("markVatNumberAsInvalid")]
         public ActionResult MarkVatNumberAsInvalid(CustomerModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "id");
@@ -581,6 +642,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(id);
             if (customer == null) 
                 throw new ArgumentException("No customer found with the specified id", "id");
@@ -598,6 +662,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("impersonate")]
         public ActionResult Impersonate(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(id);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "id");
@@ -614,6 +681,9 @@ namespace Nop.Admin.Controllers
         [GridAction]
         public ActionResult RewardPointsHistorySelect(int customerId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "id");
@@ -643,6 +713,9 @@ namespace Nop.Admin.Controllers
         [ValidateInput(false)]
         public ActionResult RewardPointsHistoryAdd(int customerId, int addRewardPointsValue, string addRewardPointsMessage)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
@@ -660,6 +733,9 @@ namespace Nop.Admin.Controllers
         [GridAction]
         public ActionResult AddressesSelect(int customerId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "customerId");
@@ -687,6 +763,9 @@ namespace Nop.Admin.Controllers
         [GridAction]
         public ActionResult AddressDelete(int customerId, int addressId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "customerId");
@@ -701,6 +780,9 @@ namespace Nop.Admin.Controllers
         
         public ActionResult AddressCreate(int customerId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "customerId");
@@ -720,6 +802,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult AddressCreate(CustomerAddressModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
@@ -760,6 +845,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult AddressEdit(int addressId, int customerId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
@@ -791,6 +879,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult AddressEdit(CustomerAddressModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
@@ -835,6 +926,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult OrderList(int customerId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var orders = _orderService.GetOrdersByCustomerId(customerId);
 
             var model = new GridModel<CustomerModel.OrderModel>
@@ -867,6 +961,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Reports()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var model = new CustomerReportsModel();
             //customers by number of orders
             model.BestCustomersByNumberOfOrders = new BestCustomersReportModel();
@@ -927,7 +1024,6 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ReportBestCustomersByNumberOfOrdersList(GridCommand command, BestCustomersReportModel model)
         {
@@ -967,34 +1063,6 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [NonAction]
-        protected virtual IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
-        {
-            var report = new List<RegisteredCustomerReportLineModel>();
-            report.Add(new RegisteredCustomerReportLineModel()
-            {
-                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.7days"),
-                Customers = _customerReportService.GetRegisteredCustomersReport(7)
-            });
-
-            report.Add(new RegisteredCustomerReportLineModel()
-            {
-                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.14days"),
-                Customers = _customerReportService.GetRegisteredCustomersReport(14)
-            });
-            report.Add(new RegisteredCustomerReportLineModel()
-            {
-                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.month"),
-                Customers = _customerReportService.GetRegisteredCustomersReport(30)
-            });
-            report.Add(new RegisteredCustomerReportLineModel()
-            {
-                Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year"),
-                Customers = _customerReportService.GetRegisteredCustomersReport(365)
-            });
-
-            return report;
-        }
         [ChildActionOnly]
         public ActionResult ReportRegisteredCustomers()
         {
@@ -1059,6 +1127,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportExcel()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             try
             {
                 var customers = _customerService.GetAllCustomers(null, null, null, null, null, false, null, 0, int.MaxValue);
@@ -1080,6 +1151,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportXml()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             try
             {
                 var customers = _customerService.GetAllCustomers(null, null, null, null, null, false, null, 0, int.MaxValue);

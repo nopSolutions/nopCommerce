@@ -11,6 +11,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -22,8 +23,9 @@ namespace Nop.Admin.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly ISettingService _settingService;
-        private readonly IDateTimeHelper _dateTimeHelper; 
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -31,13 +33,15 @@ namespace Nop.Admin.Controllers
 
         public CurrencyController(ICurrencyService currencyService, 
             CurrencySettings currencySettings, ISettingService settingService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            IPermissionService permissionService)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._settingService = settingService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
         }
         
         #endregion
@@ -51,6 +55,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List(bool liveRates = false)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
@@ -92,6 +99,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ApplyRate(string currencyCode, decimal rate)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             Currency currency = _currencyService.GetCurrencyByCode(currencyCode);
             if (currency != null)
             {
@@ -105,6 +115,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Save(FormCollection formValues)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
             _currencySettings.AutoUpdateEnabled = formValues["autoUpdateEnabled"].Equals("false") ? false : true;
             _settingService.SaveSetting(_currencySettings);
@@ -114,6 +127,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             var currencies = _currencyService.GetAllCurrencies(true);
             var gridModel = new GridModel<CurrencyModel>
             {
@@ -125,10 +141,12 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-
-
+        
         public ActionResult MarkAsPrimaryExchangeRateCurrency(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             _currencySettings.PrimaryExchangeRateCurrencyId = id;
             _settingService.SaveSetting(_currencySettings);
             return RedirectToAction("List");
@@ -136,6 +154,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult MarkAsPrimaryStoreCurrency(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             _currencySettings.PrimaryStoreCurrencyId = id;
             _settingService.SaveSetting(_currencySettings);
             return RedirectToAction("List");
@@ -147,6 +168,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             var model = new CurrencyModel();
             //default values
             model.Published = true;
@@ -157,6 +181,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(CurrencyModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var currency = model.ToEntity();
@@ -174,6 +201,9 @@ namespace Nop.Admin.Controllers
         
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             var currency = _currencyService.GetCurrencyById(id);
             if (currency == null) 
                 throw new ArgumentException("No currency found with the specified id", "id");
@@ -185,6 +215,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(CurrencyModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             var currency = _currencyService.GetCurrencyById(model.Id);
             if (currency == null)
                 throw new ArgumentException("No currency found with the specified id");
@@ -207,6 +240,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
             var currency = _currencyService.GetCurrencyById(id);
             if (currency == null)
                 throw new ArgumentException("No currency found with the specified id", "id");

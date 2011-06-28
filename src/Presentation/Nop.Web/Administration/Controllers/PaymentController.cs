@@ -10,6 +10,7 @@ using Nop.Services.Payments;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -19,19 +20,21 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
         private readonly IPaymentService _paymentService;
-        private PaymentSettings _paymentSettings;
+        private readonly PaymentSettings _paymentSettings;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
 		#endregion
 
 		#region Constructors
 
         public PaymentController(IPaymentService paymentService, PaymentSettings paymentSettings,
-            ISettingService settingService)
+            ISettingService settingService, IPermissionService permissionService)
 		{
             this._paymentService = paymentService;
             this._paymentSettings = paymentSettings;
             this._settingService = settingService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -40,6 +43,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Methods()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             var paymentMethodsModel = new List<PaymentMethodModel>();
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             foreach (var paymentMethod in paymentMethods)
@@ -59,6 +65,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Methods(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             var paymentMethodsModel = new List<PaymentMethodModel>();
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             foreach (var paymentMethod in paymentMethods)
@@ -82,6 +91,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult MethodUpdate(PaymentMethodModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Methods");
@@ -112,6 +124,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ConfigureMethod(string systemName)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             var pm = _paymentService.LoadPaymentMethodBySystemName(systemName);
             if (pm == null) throw new ArgumentException("No payment method found with the specified system name", "systemName");
 

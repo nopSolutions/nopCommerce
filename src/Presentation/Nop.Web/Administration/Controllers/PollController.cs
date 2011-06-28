@@ -8,6 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Polls;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -19,20 +20,22 @@ namespace Nop.Admin.Controllers
         private readonly IPollService _pollService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService; 
-
+        private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
 		#endregion
 
 		#region Constructors
 
         public PollController(IPollService pollService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            IPermissionService permissionService)
         {
             this._pollService = pollService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -46,6 +49,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             var polls = _pollService.GetPolls(0, false, 0, 10, true);
             var gridModel = new GridModel<PollModel>
             {
@@ -67,6 +73,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             var polls = _pollService.GetPolls(0, false, command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<PollModel>
             {
@@ -90,6 +99,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new PollModel();
             //default values
@@ -101,6 +113,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(PollModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var poll = model.ToEntity();
@@ -119,6 +134,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             var poll = _pollService.GetPollById(id);
             if (poll == null)
                 throw new ArgumentException("No poll found with the specified id", "id");
@@ -133,6 +151,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(PollModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             var poll = _pollService.GetPollById(model.Id);
             if (poll == null)
                 throw new ArgumentException("No poll found with the specified id");
@@ -156,6 +177,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             var poll = _pollService.GetPollById(id);
             if (poll == null)
                 throw new ArgumentException("No poll found with the specified id", "id");
@@ -173,6 +197,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult PollAnswers(int pollId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             var poll = _pollService.GetPollById(pollId);
             if (poll == null)
                 throw new ArgumentException("No poll found with the specified id", "pollId");
@@ -204,6 +231,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult PollAnswerUpdate(PollAnswerModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -220,6 +250,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult PollAnswerAdd(int pollId, PollAnswerModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -243,6 +276,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult PollAnswerDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
             var pollAnswer = _pollService.GetPollAnswerById(id);
 
             int pollId = pollAnswer.PollId;

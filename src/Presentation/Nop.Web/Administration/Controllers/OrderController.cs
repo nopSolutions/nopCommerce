@@ -48,6 +48,7 @@ namespace Nop.Admin.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IProductService _productService;
         private readonly IExportManager _exportManager;
+        private readonly IPermissionService _permissionService;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -66,7 +67,7 @@ namespace Nop.Admin.Controllers
             IMeasureService measureService, IPdfService pdfService,
             IAddressService addressService, ICountryService countryService,
             IStateProvinceService stateProvinceService, IProductService productService,
-            IExportManager exportManager, 
+            IExportManager exportManager, IPermissionService permissionService,
             CurrencySettings currencySettings, TaxSettings taxSettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings)
 		{
@@ -87,6 +88,7 @@ namespace Nop.Admin.Controllers
             this._stateProvinceService = stateProvinceService;
             this._productService = productService;
             this._exportManager = exportManager;
+            this._permissionService = permissionService;
 
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -374,7 +376,10 @@ namespace Nop.Admin.Controllers
         }
 
         public ActionResult List()
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var model = new OrderListModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -390,7 +395,10 @@ namespace Nop.Admin.Controllers
 
 		[GridAction(EnableCustomBinding = true)]
 		public ActionResult OrderList(GridCommand command, OrderListModel model)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -444,6 +452,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportXml()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             try
             {
                 var orders = _orderService.SearchOrders(null, null, null,
@@ -462,6 +473,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportExcel()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             try
             {
                 var orders = _orderService.SearchOrders(null, null, null,
@@ -488,6 +502,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null || order.Deleted)
                 throw new ArgumentException("No order found with the specified id", "id");
@@ -502,6 +519,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("cancelorder")]
         public ActionResult CancelOrder(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -527,6 +547,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("captureorder")]
         public ActionResult CaptureOrder(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -555,6 +578,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("markorderaspaid")]
         public ActionResult MarkOrderAsPaid(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -580,6 +606,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("refundorder")]
         public ActionResult RefundOrder(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -607,6 +636,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("refundorderoffline")]
         public ActionResult RefundOrderOffline(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -632,6 +664,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("voidorder")]
         public ActionResult VoidOrder(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -659,6 +694,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("voidorderoffline")]
         public ActionResult VoidOrderOffline(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -684,6 +722,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("btnSaveCC")]
         public ActionResult EditCreditCardInfo(int id, OrderModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -715,6 +756,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("btnSaveOrderTotals")]
         public ActionResult EditOrderTotals(int id, OrderModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -740,6 +784,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             _orderService.DeleteOrder(order);
             return RedirectToAction("List");
@@ -747,6 +794,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult PdfInvoice(int orderId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(orderId);
 
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
@@ -758,6 +808,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult PdfPackagingSlip(int orderId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(orderId);
             var orders = new List<Order>();
             orders.Add(order);
@@ -772,6 +825,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("settrackingnumber")]
         public ActionResult SetTrackingNumber(OrderModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(model.Id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -788,6 +844,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("setasshipped")]
         public ActionResult SetAsShipped(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -815,6 +874,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("setasdelivered")]
         public ActionResult SetAsDelivered(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -840,6 +902,9 @@ namespace Nop.Admin.Controllers
         
         public ActionResult PartiallyRefundOrderPopup(int id, bool online)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -854,6 +919,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("partialrefundorder")]
         public ActionResult PartiallyRefundOrderPopup(string btnId, int id, bool online, OrderModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -906,6 +974,9 @@ namespace Nop.Admin.Controllers
         [ValidateInput(false)]
         public ActionResult EditOrderProductVariant(int id, FormCollection form)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -966,6 +1037,9 @@ namespace Nop.Admin.Controllers
         [ValidateInput(false)]
         public ActionResult DeleteOrderProductVariant(int id, FormCollection form)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -994,6 +1068,9 @@ namespace Nop.Admin.Controllers
         [ValidateInput(false)]
         public ActionResult ActivateDownloadOrderProductVariant(int id, FormCollection form)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1020,6 +1097,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult UploadLicenseFilePopup(int id, int opvId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1045,6 +1125,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("uploadlicense")]
         public ActionResult UploadLicenseFilePopup(string btnId, OrderModel.UploadLicenseModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1071,6 +1154,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("deletelicense")]
         public ActionResult DeleteLicenseFilePopup(string btnId, OrderModel.UploadLicenseModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1095,6 +1181,9 @@ namespace Nop.Admin.Controllers
         
         public ActionResult AddressEdit(int addressId, int orderId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1126,6 +1215,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult AddressEdit(OrderAddressModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1165,11 +1257,13 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Order notes
-
-
+        
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult OrderNotesSelect(int orderId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1204,6 +1298,9 @@ namespace Nop.Admin.Controllers
         [ValidateInput(false)]
         public ActionResult OrderNoteAdd(int orderId, bool displayToCustomer, string message)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1219,10 +1316,12 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
         
-        
         [GridAction(EnableCustomBinding = true)]
         public ActionResult OrderNoteDelete(int orderId, int orderNoteId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");

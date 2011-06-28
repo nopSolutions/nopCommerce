@@ -10,6 +10,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -23,12 +24,14 @@ namespace Nop.Admin.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
+        private readonly IPermissionService _permissionService;
 
         public CampaignController(ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper, IEmailAccountService emailAccountService,
             EmailAccountSettings emailAccountSettings,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            ILocalizationService localizationService, IMessageTokenProvider messageTokenProvider)
+            ILocalizationService localizationService, IMessageTokenProvider messageTokenProvider,
+            IPermissionService permissionService)
 		{
             this._campaignService = campaignService;
             this._dateTimeHelper = dateTimeHelper;
@@ -37,6 +40,7 @@ namespace Nop.Admin.Controllers
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._localizationService = localizationService;
             this._messageTokenProvider = messageTokenProvider;
+            this._permissionService = permissionService;
 		}
 
         private string FormatTokens(string[] tokens)
@@ -60,6 +64,9 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             var campaigns = _campaignService.GetAllCampaigns();
             var gridModel = new GridModel<CampaignModel>
             {
@@ -77,6 +84,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             var campaigns = _campaignService.GetAllCampaigns();
             var gridModel = new GridModel<CampaignModel>
             {
@@ -96,6 +106,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             var model = new CampaignModel();
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             return View(model);
@@ -104,6 +117,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(CampaignModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var campaign = model.ToEntity();
@@ -120,7 +136,10 @@ namespace Nop.Admin.Controllers
         }
 
 		public ActionResult Edit(int id)
-		{
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
                 throw new ArgumentException("No campaign found with the specified id", "id");
@@ -135,6 +154,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(CampaignModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 throw new ArgumentException("No campaign found with the specified id");
@@ -157,6 +179,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("send-test-email")]
         public ActionResult SendTestEmail(CampaignModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 throw new ArgumentException("No campaign found with the specified id");
@@ -186,6 +211,9 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("send-mass-email")]
         public ActionResult SendMassEmail(CampaignModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 throw new ArgumentException("No campaign found with the specified id");
@@ -216,6 +244,9 @@ namespace Nop.Admin.Controllers
 		[HttpPost, ActionName("Delete")]
 		public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
                 throw new ArgumentException("No campaign found with the specified id", "id");

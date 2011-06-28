@@ -6,6 +6,7 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -15,13 +16,16 @@ namespace Nop.Admin.Controllers
         private readonly IForumService _forumService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         public ForumController(IForumService forumService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            IPermissionService permissionService)
         {
             this._forumService = forumService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
         }
 
         #region List
@@ -33,6 +37,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             var forumGroupsModel = _forumService.GetAllForumGroups()
                 .Select(fg =>
                 {
@@ -53,14 +60,21 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Create
+
         public ActionResult CreateForumGroup()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             return View(new ForumGroupModel { DisplayOrder = 1 });
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult CreateForumGroup(ForumGroupModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var forumGroup = model.ToEntity();
@@ -78,6 +92,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult CreateForum()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             var model = new ForumModel();
             model.ForumGroups = _forumService.GetAllForumGroups().ToList();
             model.DisplayOrder = 1;
@@ -87,6 +104,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult CreateForum(ForumModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var forum = model.ToEntity();
@@ -102,11 +122,16 @@ namespace Nop.Admin.Controllers
             model.ForumGroups = _forumService.GetAllForumGroups().ToList();
             return View(model);
         }
+
         #endregion
 
         #region Edit
+
         public ActionResult EditForumGroup(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             var forumGroup = _forumService.GetForumGroupById(id);
             if (forumGroup == null) 
                 throw new ArgumentException("No Forum Group found with the specified id", "id");
@@ -117,6 +142,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult EditForumGroup(ForumGroupModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             var forumGroup = _forumService.GetForumGroupById(model.Id);
 
             if (ModelState.IsValid)
@@ -135,6 +163,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult EditForum(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             var forum = _forumService.GetForumById(id);
             if (forum == null) 
                 throw new ArgumentException("No Forum found with the specified id", "id");
@@ -146,6 +177,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult EditForum(ForumModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             var forum = _forumService.GetForumById(model.Id);
             if (ModelState.IsValid)
             {
@@ -161,12 +195,17 @@ namespace Nop.Admin.Controllers
             model.ForumGroups = _forumService.GetAllForumGroups().ToList();
             return View(model);
         }
+
         #endregion
 
         #region Delete
+
         [HttpPost]
         public ActionResult DeleteForumGroup(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             var forumGroup = _forumService.GetForumGroupById(id);
             _forumService.DeleteForumGroup(forumGroup);
 
@@ -177,12 +216,16 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult DeleteForum(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
             var forum = _forumService.GetForumById(id);
             _forumService.DeleteForum(forum);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Deleted"));
             return RedirectToAction("List");
         }
+
         #endregion
     }
 }
