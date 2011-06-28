@@ -100,9 +100,7 @@ namespace Nop.Services.Customers
                 query = query.Where(c => registrationTo.Value >= c.CreatedOnUtc);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-            {
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Count() > 0);
-            }
             if (!String.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email.Contains(email));
             if (!String.IsNullOrWhiteSpace(username))
@@ -120,6 +118,28 @@ namespace Nop.Services.Customers
             
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
+            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
+            return customers;
+        }
+
+        /// <summary>
+        /// Gets online customers
+        /// </summary>
+        /// <param name="lastActivityFromUtc">Customer last activity date (from)</param>
+        /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Customer collection</returns>
+        public virtual IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
+            int[] customerRoleIds, int pageIndex, int pageSize)
+        {
+            var query = _customerRepository.Table;
+            query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
+            query = query.Where(c => !c.Deleted);
+            if (customerRoleIds != null && customerRoleIds.Length > 0)
+                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Count() > 0);
+            
+            query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
             return customers;
         }

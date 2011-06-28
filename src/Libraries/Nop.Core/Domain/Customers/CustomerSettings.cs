@@ -99,5 +99,10 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether to hide newsletter box
         /// </summary>
         public bool HideNewsletterBlock { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating the number of minutes for 'online customers' module
+        /// </summary>
+        public int OnlineCustomerMinutes { get; set; }
     }
 }

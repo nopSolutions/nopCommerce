@@ -138,6 +138,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerHttpRequest();
             builder.RegisterType<PermissionService>().As<IPermissionService>().InstancePerHttpRequest();
 
+            builder.RegisterType<GeoCountryLookup>().As<IGeoCountryLookup>().InstancePerHttpRequest();
             builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();
             builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerHttpRequest();
             builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerHttpRequest();

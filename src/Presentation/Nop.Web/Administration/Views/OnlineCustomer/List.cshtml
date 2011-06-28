@@ -1,0 +1,34 @@
+﻿@model Telerik.Web.Mvc.GridModel<OnlineCustomerModel>
+@using Telerik.Web.Mvc.UI
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
+        @T("Admin.Customers.OnlineCustomers")
+    </div>
+    <div class="options">
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<OnlineCustomerModel>()
+                    .Name("onlinecustomers-grid")
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.CustomerInfo)
+                            .Template(x => Html.ActionLink(x.CustomerInfo + " (" + T("Admin.Common.View").Text + ")", "Edit", "Customer", new { id = x.Id }, new { }))
+                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= Id #>\"><#= CustomerInfo #> (" + T("Admin.Common.View").Text + ")</a>");
+                        columns.Bound(x => x.LastIpAddress);
+                        columns.Bound(x => x.Location)
+                            .Width(150);
+                        columns.Bound(x => x.LastActivityDate)
+                            .Width(150);
+                        columns.Bound(x => x.LastVisitedPage);
+                    })
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(10).Position(GridPagerPosition.Both))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "OnlineCustomer"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

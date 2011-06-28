@@ -31,6 +31,17 @@ namespace Nop.Services.Customers
            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
 
         /// <summary>
+        /// Gets online customers
+        /// </summary>
+        /// <param name="lastActivityFromUtc">Customer last activity date (from)</param>
+        /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Customer collection</returns>
+        IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
+            int[] customerRoleIds, int pageIndex, int pageSize);
+
+        /// <summary>
         /// Gets all customers by customer role id
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>

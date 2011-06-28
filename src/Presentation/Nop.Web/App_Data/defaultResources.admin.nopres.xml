@@ -5616,6 +5616,30 @@
                     </LocaleResource>
                   </Children>
                 </LocaleResource>
+                <LocaleResource Name="OnlineCustomers">
+                  <Value>Online customers</Value>
+                    <Children>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="CustomerInfo">
+                            <Value>Customer info</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="IPAddress">
+                            <Value>IP Address</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Location">
+                            <Value>Location</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="LastActivityDate">
+                            <Value>Last activity</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="LastVisitedPage">
+                            <Value>Last visited page</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                </LocaleResource>
                 <LocaleResource Name="Reports">
                   <Value>Customer reports</Value>
                   <Children>
