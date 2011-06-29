@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Shipping.USPS.Models.USPSShippingModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Url):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Url)
+                @Html.ValidationMessageFor(model => model.Url)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Username):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Username)
+                @Html.ValidationMessageFor(model => model.Username)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Password):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdditionalHandlingCharge):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AdditionalHandlingCharge)
+                @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ZipPostalCodeFrom):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ZipPostalCodeFrom)
+                @Html.ValidationMessageFor(model => model.ZipPostalCodeFrom)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                <b>Domestic</b> Carrier Services:
+                <br />
+                -select the services you want to offer to customers.
+            </td>
+            <td class="adminData">
+                <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
+                    @foreach (var csd in Model.AvailableCarrierServicesDomestic)
+                    {
+                        <input type="checkbox" name="CheckedCarrierServicesDomestic" value="@(csd)" @(Model.CarrierServicesOfferedDomestic.Contains(csd) ? " checked=\"checked\"" : null) <text> /></text>
+                        <label>@csd</label>
+                        <br />
+                    }
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                <b>International</b> Carrier Services:
+                <br />
+                -select the services you want to offer to customers.
+            </td>
+            <td class="adminData">
+                <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
+                    @foreach (var csi in Model.AvailableCarrierServicesInternational)
+                    {
+                        <input type="checkbox" name="CheckedCarrierServicesInternational" value="@(csi)" @(Model.CarrierServicesOfferedInternational.Contains(csi) ? " checked=\"checked\"" : null) <text> /></text>
+                        <label>@csi</label>
+                        <br />
+                    }
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+    </table>    
+}

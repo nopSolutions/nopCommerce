@@ -12,6 +12,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.GatewayUrl)
+                @Html.ValidationMessageFor(model => model.GatewayUrl)
             </td>
         </tr>
         <tr>
@@ -20,6 +21,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.AdditionalHandlingCharge)
+                @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
             </td>
         </tr>
         <tr>
@@ -28,6 +30,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.ShippedFromZipPostalCode)
+                @Html.ValidationMessageFor(model => model.ShippedFromZipPostalCode)
             </td>
         </tr>
         <tr>
