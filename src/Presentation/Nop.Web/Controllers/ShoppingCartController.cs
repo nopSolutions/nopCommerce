@@ -776,8 +776,9 @@ namespace Nop.Web.Controllers
                 {
                     CountryId = shippingModel.CountryId,
                     Country = shippingModel.CountryId.HasValue ? _countryService.GetCountryById(shippingModel.CountryId.Value) : null,
-                    StateProvinceId  =shippingModel.StateProvinceId,
+                    StateProvinceId  = shippingModel.StateProvinceId,
                     StateProvince = shippingModel.StateProvinceId.HasValue ? _stateProvinceService.GetStateProvinceById(shippingModel.StateProvinceId.Value) : null,
+                    ZipPostalCode = shippingModel.ZipPostalCode,
                 };
                 GetShippingOptionResponse getShippingOptionResponse = _shippingService.GetShippingOptions(cart, address);
                 if (!getShippingOptionResponse.Success)

@@ -20,7 +20,7 @@ namespace Nop.Plugin.Shipping.Fedex.Domain
                                         "FedEx 3Day Freight",
                                         "FedEx Express Saver",
                                         "FedEx Ground",
-                                        "FexEx First Overnight",
+                                        "FedEx First Overnight",
                                         "FedEx Ground Home Delivery",
                                         "FedEx International Distribution Freight",
                                         "FedEx International Economy",
@@ -73,7 +73,7 @@ namespace Nop.Plugin.Shipping.Fedex.Domain
                 case "FEDEX_GROUND":
                     return "FedEx Ground";
                 case "FIRST_OVERNIGHT":
-                    return "FexEx First Overnight";
+                    return "FedEx First Overnight";
                 case "GROUND_HOME_DELIVERY":
                     return "FedEx Ground Home Delivery";
                 case "INTERNATIONAL_DISTRIBUTION_FREIGHT":
@@ -128,7 +128,7 @@ namespace Nop.Plugin.Shipping.Fedex.Domain
                     return "FEDEX_EXPRESS_SAVER";
                 case "FedEx Ground":
                     return "FEDEX_GROUND";
-                case "FexEx First Overnight":
+                case "FedEx First Overnight":
                     return "FIRST_OVERNIGHT";
                 case "FedEx Ground Home Delivery":
                     return "GROUND_HOME_DELIVERY";

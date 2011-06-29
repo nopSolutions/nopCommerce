@@ -5,6 +5,7 @@ using Nop.Plugin.Shipping.Fedex.Domain;
 using Nop.Plugin.Shipping.Fedex.Models;
 using Nop.Services.Configuration;
 using Nop.Web.Framework.Controllers;
+using Nop.Core;
 
 namespace Nop.Plugin.Shipping.Fedex.Controllers
 {
@@ -78,7 +79,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
             _fedexSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
             _fedexSettings.Street = model.Street;
             _fedexSettings.City = model.City;
-            _fedexSettings.StateOrProvinceCode = model.StateOrProvinceCode;
+            _fedexSettings.StateOrProvinceCode = CommonHelper.EnsureMaximumLength(model.StateOrProvinceCode, 2);
             _fedexSettings.PostalCode = model.PostalCode;
             _fedexSettings.CountryCode = model.CountryCode;
 

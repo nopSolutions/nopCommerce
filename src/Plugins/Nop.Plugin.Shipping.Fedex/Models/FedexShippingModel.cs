@@ -44,7 +44,7 @@ namespace Nop.Plugin.Shipping.Fedex.Models
         [DisplayName("Shipping origin. City")]
         public string City { get; set; }
 
-        [DisplayName("Shipping origin. State code")]
+        [DisplayName("Shipping origin. State code (2 characters)")]
         public string StateOrProvinceCode { get; set; }
 
         [DisplayName("Shipping origin. Zip")]

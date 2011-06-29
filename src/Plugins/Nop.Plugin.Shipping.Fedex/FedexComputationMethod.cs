@@ -148,7 +148,8 @@ namespace Nop.Plugin.Shipping.Fedex
             }
             request.RequestedShipment.Recipient.Address.StreetLines = new string[1] { "Recipient Address Line 1" };
             request.RequestedShipment.Recipient.Address.City = getShippingOptionRequest.ShippingAddress.City;
-            if (getShippingOptionRequest.ShippingAddress.StateProvince != null)
+            if (getShippingOptionRequest.ShippingAddress.StateProvince != null && 
+                IncludeStateProvidenceCode(getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode))
             {
                 request.RequestedShipment.Recipient.Address.StateOrProvinceCode = getShippingOptionRequest.ShippingAddress.StateProvince.Abbreviation;
             }
@@ -165,10 +166,19 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.Shipper = new Party();
             request.RequestedShipment.Shipper.Address = new Address();
             request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { _fedexSettings.Street };
-            request.RequestedShipment.Shipper.Address.City = _fedexSettings.City;
-            request.RequestedShipment.Shipper.Address.StateOrProvinceCode = _fedexSettings.StateOrProvinceCode;
+            request.RequestedShipment.Shipper.Address.City = _fedexSettings.City;            
+            if (IncludeStateProvidenceCode(_fedexSettings.CountryCode))
+            {
+                request.RequestedShipment.Shipper.Address.StateOrProvinceCode = _fedexSettings.StateOrProvinceCode;
+            }
             request.RequestedShipment.Shipper.Address.PostalCode = _fedexSettings.PostalCode;
             request.RequestedShipment.Shipper.Address.CountryCode = _fedexSettings.CountryCode;
+        }
+
+        private bool IncludeStateProvidenceCode(string countryCode)
+        {
+            return (countryCode.Equals("US", StringComparison.InvariantCultureIgnoreCase) || 
+                    countryCode.Equals("CA", StringComparison.InvariantCultureIgnoreCase));
         }
 
         private void SetIndividualPackageLineItems(RateRequest request, GetShippingOptionRequest getShippingOptionRequest, decimal orderSubTotal)
