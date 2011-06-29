@@ -1,0 +1,41 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Shipping.CanadaPost.Models.CanadaPostShippingModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Url):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Url)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Port):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Port)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerId)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+    </table>    
+}
