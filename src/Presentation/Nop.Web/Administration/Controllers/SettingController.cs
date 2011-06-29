@@ -636,6 +636,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            //set page timeout to 5 minutes
+            this.Server.ScriptTimeout = 300;
+
             //store information
             var model = new GeneralCommonSettingsModel();
             model.StoreInformationSettings.StoreName = _storeInformationSettings.StoreName;
@@ -740,6 +743,9 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
+
+            //set page timeout to 5 minutes
+            this.Server.ScriptTimeout = 300;
 
             try
             {
