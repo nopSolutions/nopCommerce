@@ -1,0 +1,150 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Shipping.Fedex.Models.FedexShippingModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Url):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Url)
+                @Html.ValidationMessageFor(model => model.Url)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Key):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Key)
+                @Html.ValidationMessageFor(model => model.Key)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Password):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AccountNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AccountNumber)
+                @Html.ValidationMessageFor(model => model.AccountNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MeterNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MeterNumber)
+                @Html.ValidationMessageFor(model => model.MeterNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UseResidentialRates):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UseResidentialRates)
+                @Html.ValidationMessageFor(model => model.UseResidentialRates)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ApplyDiscounts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ApplyDiscounts)
+                @Html.ValidationMessageFor(model => model.ApplyDiscounts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdditionalHandlingCharge):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AdditionalHandlingCharge)
+                @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                Carrier Services Offered:
+                <br />
+                -select the services you want to offer to customers.
+            </td>
+            <td class="adminData">
+                <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
+                    @foreach (var csd in Model.AvailableCarrierServices)
+                    {
+                        <input type="checkbox" name="CheckedCarrierServices" value="@(csd)" @(Model.CarrierServicesOffered.Contains(csd) ? " checked=\"checked\"" : null) <text> /></text>
+                        <label>@csd</label>
+                        <br />
+                    }
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Street):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Street)
+                @Html.ValidationMessageFor(model => model.Street)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.City):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.City)
+                @Html.ValidationMessageFor(model => model.City)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StateOrProvinceCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StateOrProvinceCode)
+                @Html.ValidationMessageFor(model => model.StateOrProvinceCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PostalCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PostalCode)
+                @Html.ValidationMessageFor(model => model.PostalCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CountryCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CountryCode)
+                @Html.ValidationMessageFor(model => model.CountryCode)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+    </table>    
+}

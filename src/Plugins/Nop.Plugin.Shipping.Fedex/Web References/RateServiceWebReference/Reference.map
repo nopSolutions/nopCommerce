@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="file:///F:/Own/NopCommerce/nopCommerce_1.90_Source/Shipping/Nop.Shipping.FedEx/Web References/RateServiceWebReference/RateServiceDefinitions.wsdl" filename="RateServiceDefinitions.wsdl" />
+  </Results>
+</DiscoveryClientResultsFile>

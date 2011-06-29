@@ -24,7 +24,7 @@ using System.Collections.Generic;
 namespace Nop.Plugin.Shipping.UPS
 {
     /// <summary>
-    /// Australia post computation method
+    /// UPS computation method
     /// </summary>
     public class UPSComputationMethod : BasePlugin, IShippingRateComputationMethod
     {
