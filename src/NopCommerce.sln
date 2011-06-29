@@ -85,6 +85,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.UPS", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.Fedex", "Plugins\Nop.Plugin.Shipping.Fedex\Nop.Plugin.Shipping.Fedex.csproj", "{8D73A283-0611-4673-B78A-62F8673F45D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.ByWeight", "Plugins\Nop.Plugin.Shipping.ByWeight\Nop.Plugin.Shipping.ByWeight.csproj", "{0793FB50-67BB-461E-B961-2F45887464CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -475,6 +477,16 @@ Global
 		{8D73A283-0611-4673-B78A-62F8673F45D9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8D73A283-0611-4673-B78A-62F8673F45D9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8D73A283-0611-4673-B78A-62F8673F45D9}.Release|x86.ActiveCfg = Release|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0793FB50-67BB-461E-B961-2F45887464CF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -518,6 +530,7 @@ Global
 		{E8EB218B-C4FE-4F90-85F2-2D95A48B9F28} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{98CA7487-6ADE-4773-BD0A-29255F443236} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{8D73A283-0611-4673-B78A-62F8673F45D9} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{0793FB50-67BB-461E-B961-2F45887464CF} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(NDepend) = preSolution
 		Project = ".\NopCommerce.ndproj"

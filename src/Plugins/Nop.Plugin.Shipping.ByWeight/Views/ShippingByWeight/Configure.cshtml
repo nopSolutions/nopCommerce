@@ -1,0 +1,148 @@
+﻿@{
+    Layout = "";
+}
+@model ShippingByWeightListModel
+@using Nop.Plugin.Shipping.ByWeight.Models;
+@using Nop.Web.Framework;
+@using Telerik.Web.Mvc.UI;
+@using System.Linq;
+@*TODO always set culture to 'en-US' (Telerik Grid has a bug related to editing decimal values in other cultures). Like currently it's done for admin area in Blobal.asax.cs*@
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid(Model.Records)
+                    .Name("Grid")
+                    .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.CountryName).Width(200).ReadOnly();
+                        columns.Bound(x => x.ShippingMethodName).Width(200).ReadOnly();
+                        columns.Bound(x => x.From).Width(100);
+                        columns.Bound(x => x.To).Width(100);
+                        columns.Bound(x => x.UsePercentage).Width(50);
+                        columns.Bound(x => x.ShippingChargePercentage).Width(100);
+                        columns.Bound(x => x.ShippingChargeAmount).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                            commands.Delete();
+                        }).Width(180);
+
+                    })
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
+                            .Update("RateUpdate", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
+                            .Delete("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } });
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>
+<p>
+</p>
+@using (Html.BeginForm())
+{
+    <table class="adminContent" style="border: 1px solid black; padding: 15px;">
+        <tr>
+            <td class="adminTitle" colspan="2">
+                <b>Adding a new record</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddCountryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddCountryId, Model.AvailableCountries)
+                @Html.ValidationMessageFor(model => model.AddCountryId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddShippingMethodId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddShippingMethodId, Model.AvailableShippingMethods)
+                @Html.ValidationMessageFor(model => model.AddShippingMethodId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddFrom):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddFrom) [@Model.BaseWeightIn]
+                @Html.ValidationMessageFor(model => model.AddFrom)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddTo):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddTo) [@Model.BaseWeightIn]
+                @Html.ValidationMessageFor(model => model.AddTo)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddUsePercentage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddUsePercentage)
+                @Html.ValidationMessageFor(model => model.AddUsePercentage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddShippingChargePercentage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddShippingChargePercentage)
+                @Html.ValidationMessageFor(model => model.AddShippingChargePercentage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddShippingChargeAmount):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddShippingChargeAmount) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.AddShippingChargeAmount)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <button type="submit" name="addshippingbyweightrecord" value="addshippingbyweightrecord"
+                    class="t-button">
+                    Add record</button>
+            </td>
+        </tr>
+    </table>
+<br />
+<hr />
+<br />
+    <table class="adminContent" style="border: 1px solid black; padding: 15px;">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LimitMethodsToCreated):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LimitMethodsToCreated)
+                @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <button type="submit" name="savegeneralsettings" value="savegeneralsettings" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+    </table>
+}

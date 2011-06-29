@@ -24,8 +24,12 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
 
         public ActionResult Configure()
         {
+            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            if (taxCategories.Count == 0)
+                return Content("No tax categories can be loaded");
+
             var tmp = new List<FixedTaxRateModel>();
-            foreach (var taxCategory in _taxCategoryService.GetAllTaxCategories())
+            foreach (var taxCategory in taxCategories)
                 tmp.Add(new FixedTaxRateModel()
                 {
                     TaxCategoryId = taxCategory.Id,

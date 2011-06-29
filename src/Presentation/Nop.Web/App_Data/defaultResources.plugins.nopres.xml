@@ -308,6 +308,82 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Shipping">
+        <Children>
+          <LocaleResource Name="ByWeight">
+            <Children>
+              <LocaleResource Name="Fields">
+                <Children>
+                  <LocaleResource Name="Country">
+                    <Value>Country</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>If an asteriks is selected, then this tax rate will apply to all customers, regardless of the country.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ShippingMethod">
+                    <Value>Shipping method</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The shipping method.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="From">
+                    <Value>Order weight from</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Order weight from.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="To">
+                    <Value>Order weight to</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Order weight to.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="UsePercentage">
+                    <Value>Use percentage</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to use 'charge percentage' value.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ShippingChargePercentage">
+                    <Value>Charge percentage (of subtotal)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Charge percentage (of subtotal).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ShippingChargeAmount">
+                    <Value>Charge amount</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Charge amount.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="LimitMethodsToCreated">
+                    <Value>Limit shipping methods to configured ones</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they'll be able to choose any existing shipping options even they've not configured here (zero shipping fee in this case).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Sms">
         <Children>
           <LocaleResource Name="Clickatell">

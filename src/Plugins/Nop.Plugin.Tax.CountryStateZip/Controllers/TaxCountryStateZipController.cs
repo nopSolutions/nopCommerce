@@ -31,7 +31,13 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 
         public ActionResult Configure()
         {
+            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            if (taxCategories.Count == 0)
+                return Content("No tax categories can be loaded");
+
             var model = new TaxRateListModel();
+            foreach (var tc in taxCategories)
+                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString() });
             var countries = _countryService.GetAllCountries(true);
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
@@ -42,8 +48,6 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
                 foreach (var s in states)
                     model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
             }
-            foreach (var tc in _taxCategoryService.GetAllTaxCategories())
-                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString() });
 
             model.TaxRates = _taxRateService.GetAllTaxRates()
                 .Select(x =>

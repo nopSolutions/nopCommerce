@@ -28,8 +28,8 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             this._shippingService = shippingService;
         }
         #endregion
-
-        #region Methods
+        
+        #region Utilities
 
         private decimal GetRate(int shippingMethodId)
         {
@@ -37,6 +37,9 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             decimal rate = this._settingService.GetSettingByKey<decimal>(key);
             return rate;
         }
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///  Gets available shipping options

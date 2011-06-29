@@ -24,8 +24,12 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
 
         public ActionResult Configure()
         {
+            var shippingMethods = _shippingService.GetAllShippingMethods();
+            if (shippingMethods.Count == 0)
+                return Content("No shipping methods can be loaded");
+
             var tmp = new List<FixedShippingRateModel>();
-            foreach (var shippingMethod in _shippingService.GetAllShippingMethods())
+            foreach (var shippingMethod in shippingMethods)
                 tmp.Add(new FixedShippingRateModel()
                 {
                     ShippingMethodId = shippingMethod.Id,
