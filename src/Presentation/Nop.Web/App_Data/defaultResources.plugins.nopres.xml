@@ -308,6 +308,30 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Payment">
+        <Children>
+          <LocaleResource Name="CashOnDelivery">
+            <Children>
+              <LocaleResource Name="DescriptionText">
+                <Value>Description</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Enter info that will be shown to customers during checkout</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="AdditionalFee">
+                <Value>Additional fee</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>The additional fee.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Shipping">
         <Children>
           <LocaleResource Name="ByWeight">
