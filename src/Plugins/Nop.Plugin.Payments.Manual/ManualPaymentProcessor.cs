@@ -3,6 +3,7 @@ using System.Web.Routing;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.Manual.Controllers;
+using Nop.Services.Configuration;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.Manual
@@ -13,14 +14,19 @@ namespace Nop.Plugin.Payments.Manual
     public class ManualPaymentProcessor : BasePlugin, IPaymentMethod
     {
         #region Fields
+
         private readonly ManualPaymentSettings _manualPaymentSettings;
+        private readonly ISettingService _settingService;
+
         #endregion
 
         #region Ctor
 
-        public ManualPaymentProcessor(ManualPaymentSettings manualPaymentSettings)
+        public ManualPaymentProcessor(ManualPaymentSettings manualPaymentSettings,
+            ISettingService settingService)
         {
             this._manualPaymentSettings = manualPaymentSettings;
+            this._settingService = settingService;
         }
 
         #endregion
@@ -198,6 +204,17 @@ namespace Nop.Plugin.Payments.Manual
         public Type GetControllerType()
         {
             return typeof(PaymentManualController);
+        }
+
+        public override void Install()
+        {
+            var settings = new ManualPaymentSettings()
+            {
+                TransactMode = TransactMode.Pending
+            };
+            _settingService.SaveSetting(settings);
+
+            base.Install();
         }
 
         #endregion

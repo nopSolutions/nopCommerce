@@ -137,7 +137,7 @@ namespace Nop.Services.Localization
                 typeof(T).ToString(), 
                 //Convert.ToInt32(enumValue)
                 enumValue.ToString());
-            string result = localizationService.GetResource(resourceName, languageId, true, "", true);
+            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
             if (String.IsNullOrEmpty(result))
