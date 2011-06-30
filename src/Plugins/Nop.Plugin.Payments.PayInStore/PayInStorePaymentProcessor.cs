@@ -116,8 +116,9 @@ namespace Nop.Plugin.Payments.PayInStore
         /// <returns>Result</returns>
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
-            //always success
-            return new CancelRecurringPaymentResult();
+            var result = new CancelRecurringPaymentResult();
+            result.AddError("Recurring payment not supported");
+            return result;
         }
 
         /// <summary>

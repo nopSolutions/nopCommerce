@@ -2,33 +2,29 @@ using System;
 using System.Web.Routing;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
-using Nop.Plugin.Payments.CheckMoneyOrder.Controllers;
-using Nop.Services.Configuration;
+using Nop.Plugin.Payments.PurchaseOrder.Controllers;
 using Nop.Services.Payments;
 
-namespace Nop.Plugin.Payments.CheckMoneyOrder
+namespace Nop.Plugin.Payments.PurchaseOrder
 {
     /// <summary>
-    /// CheckMoneyOrder payment processor
+    /// PurchaseOrder payment processor
     /// </summary>
-    public class CheckMoneyOrderPaymentProcessor : BasePlugin, IPaymentMethod
+    public class PurchaseOrderPaymentProcessor : BasePlugin, IPaymentMethod
     {
         #region Fields
-        private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
-        private readonly ISettingService _settingService;
+        private readonly PurchaseOrderPaymentSettings _purchaseOrderPaymentSettings;
         #endregion
 
         #region Ctor
 
-        public CheckMoneyOrderPaymentProcessor(CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings,
-            ISettingService settingService)
+        public PurchaseOrderPaymentProcessor(PurchaseOrderPaymentSettings purchaseOrderPaymentSettings)
         {
-            this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
-            this._settingService = settingService;
+            this._purchaseOrderPaymentSettings = purchaseOrderPaymentSettings;
         }
 
         #endregion
-        
+
         #region Methods
         
         /// <summary>
@@ -58,7 +54,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return _checkMoneyOrderPaymentSettings.AdditionalFee;
+            return _purchaseOrderPaymentSettings.AdditionalFee;
         }
 
         /// <summary>
@@ -130,8 +126,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
             actionName = "Configure";
-            controllerName = "PaymentCheckMoneyOrder";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.CheckMoneyOrder.Controllers" }, { "area", null } };
+            controllerName = "PaymentPurchaseOrder";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -143,24 +139,13 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
             actionName = "PaymentInfo";
-            controllerName = "PaymentCheckMoneyOrder";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.CheckMoneyOrder.Controllers" }, { "area", null } };
+            controllerName = "PaymentPurchaseOrder";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
         }
 
         public Type GetControllerType()
         {
-            return typeof(PaymentCheckMoneyOrderController);
-        }
-
-        public override void Install()
-        {
-            var settings = new CheckMoneyOrderPaymentSettings()
-            {
-                DescriptionText = "<p>Mail Personal or Business Check, Cashier's Check or money order to:</p><p><br /><b>NOP SOLUTIONS</b> <br /><b>your address here,</b> <br /><b>New York, NY 10001 </b> <br /><b>USA</b></p><p>Notice that if you pay by Personal or Business Check, your order may be held for up to 10 days after we receive your check to allow enough time for the check to clear.  If you want us to ship faster upon receipt of your payment, then we recommend your send a money order or Cashier's check.</p><p>P.S. You can edit this text from admin panel.</p>"
-            };
-            _settingService.SaveSetting(settings);
-
-            base.Install();
+            return typeof(PaymentPurchaseOrderController);
         }
 
         #endregion

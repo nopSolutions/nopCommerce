@@ -370,6 +370,21 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+          <LocaleResource Name="PurchaseOrder">
+            <Children>
+              <LocaleResource Name="PurchaseOrderNumber">
+                <Value>PO Number</Value>
+              </LocaleResource>
+              <LocaleResource Name="AdditionalFee">
+                <Value>Additional fee</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>The additional fee.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
         </Children>
       </LocaleResource>
       <LocaleResource Name="Shipping">
