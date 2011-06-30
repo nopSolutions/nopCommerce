@@ -21,6 +21,7 @@
             </td>
             <td class="adminData">
                 @Html.DropDownListFor(model => model.CurrencyId, Model.AvailableCurrencies)
+                @Html.ValidationMessageFor(model => model.CurrencyId)
             </td>
         </tr>
         <tr class="adminSeparator">

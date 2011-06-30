@@ -29,6 +29,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.PhoneNumber)
+                @Html.ValidationMessageFor(model => model.PhoneNumber)
             </td>
         </tr>
         <tr>
@@ -37,6 +38,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.ApiId)
+                @Html.ValidationMessageFor(model => model.ApiId)
             </td>
         </tr>
         <tr>
@@ -45,6 +47,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.Username)
+                @Html.ValidationMessageFor(model => model.Username)
             </td>
         </tr>
         <tr>
@@ -53,6 +56,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
             </td>
         </tr>
         <tr>
@@ -79,6 +83,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.TestMessage)
+                @Html.ValidationMessageFor(model => model.TestMessage)
             </td>
         </tr>
         <tr>

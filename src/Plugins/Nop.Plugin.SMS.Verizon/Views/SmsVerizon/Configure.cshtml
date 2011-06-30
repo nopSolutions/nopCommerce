@@ -12,6 +12,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
             </td>
         </tr>
         <tr>
@@ -38,6 +39,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.TestMessage)
+                @Html.ValidationMessageFor(model => model.TestMessage)
             </td>
         </tr>
         <tr>

@@ -5,7 +5,6 @@
 @using Nop.Web.Framework;
 @using (Html.BeginForm())
 {
-    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -13,6 +12,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.Url)
+                @Html.ValidationMessageFor(model => model.Url)
             </td>
         </tr>
         <tr>
@@ -21,6 +21,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.Port)
+                @Html.ValidationMessageFor(model => model.Port)
             </td>
         </tr>
         <tr>
@@ -29,6 +30,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerId)
+                @Html.ValidationMessageFor(model => model.CustomerId)
             </td>
         </tr>
         <tr>
