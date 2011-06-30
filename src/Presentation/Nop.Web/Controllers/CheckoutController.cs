@@ -520,6 +520,9 @@ namespace Nop.Web.Controllers
             var boundPaymentMethods = _paymentService.LoadActivePaymentMethods();
             foreach (var pm in boundPaymentMethods)
             {
+                if (cart.IsRecurring() && _paymentService.GetRecurringPaymentType(pm.PluginDescriptor.SystemName) == RecurringPaymentType.NotSupported)
+                    continue;
+
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel()
                 {
                     Name = pm.PluginDescriptor.FriendlyName,

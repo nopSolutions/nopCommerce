@@ -31,19 +31,6 @@ namespace Nop.Plugin.Payments.Manual
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Gets current transaction mode
-        /// </summary>
-        /// <returns>Current transaction mode</returns>
-        private TransactMode GetCurrentTransactionMode()
-        {
-            return _manualPaymentSettings.TransactMode;
-        }
-
-        #endregion
-        
         #region Methods
         
         /// <summary>
@@ -56,8 +43,7 @@ namespace Nop.Plugin.Payments.Manual
             var result = new ProcessPaymentResult();
 
             result.AllowStoringCreditCardNumber = true;
-            TransactMode transactionMode = GetCurrentTransactionMode();
-            switch (transactionMode)
+            switch (_manualPaymentSettings.TransactMode)
             {
                 case TransactMode.Pending:
                     result.NewPaymentStatus = PaymentStatus.Pending;
@@ -142,8 +128,7 @@ namespace Nop.Plugin.Payments.Manual
             var result = new ProcessPaymentResult();
 
             result.AllowStoringCreditCardNumber = true;
-            TransactMode transactionMode = GetCurrentTransactionMode();
-            switch (transactionMode)
+            switch (_manualPaymentSettings.TransactMode)
             {
                 case TransactMode.Pending:
                     result.NewPaymentStatus = PaymentStatus.Pending;

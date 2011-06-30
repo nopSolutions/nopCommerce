@@ -1211,11 +1211,14 @@ namespace Nop.Services.Orders
                         #endregion
                     }
                 }
+                else
+                {
+                    foreach (var paymentError in processPaymentResult.Errors)
+                        result.AddError(string.Format("Payment error: {0}", paymentError));
+                }
             }
             catch (Exception exc)
             {
-                if (result == null)
-                    result = new PlaceOrderResult();
                 result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
             }
 

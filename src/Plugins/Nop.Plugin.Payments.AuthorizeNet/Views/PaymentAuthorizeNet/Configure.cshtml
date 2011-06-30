@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "";
+}
+@model ConfigurationModel
+@using Nop.Plugin.Payments.AuthorizeNet.Models;
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+    <tr>
+        <td colspan="2">
+            <b>If you're using this gateway ensure that your primary store currency is supported
+                by Authorize.NET.</b>
+        </td>
+    </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UseSandbox):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UseSandbox)
+                @Html.ValidationMessageFor(model => model.UseSandbox)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TransactModeValues):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("TransactModeId", Model.TransactModeValues)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TransactionKey):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TransactionKey)
+                @Html.ValidationMessageFor(model => model.TransactionKey)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LoginId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LoginId)
+                @Html.ValidationMessageFor(model => model.LoginId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdditionalFee):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AdditionalFee)
+                @Html.ValidationMessageFor(model => model.AdditionalFee)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+    </table>
+    
+}
