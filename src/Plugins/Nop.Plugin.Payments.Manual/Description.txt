@@ -1,5 +1,5 @@
 ﻿Group: Payment methods
-FriendlyName: Manual Processing
+FriendlyName: Credit Card
 SystemName: Payments.Manual
 Version: 1.00
 Author: nopCommerce team

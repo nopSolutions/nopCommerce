@@ -4589,7 +4589,14 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<PaymentSettings>>()
                 .SaveSettings(new PaymentSettings()
                 {
-                    ActivePaymentMethodSystemNames = new List<string>() { "Payments.Manual" },
+                    ActivePaymentMethodSystemNames = new List<string>() 
+                    { 
+                        "Payments.CashOnDelivery",
+                        "Payments.CheckMoneyOrder",
+                        "Payments.Manual",
+                        "Payments.PayInStore",
+                        "Payments.PurchaseOrder",
+                    },
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<TaxSettings>>()
