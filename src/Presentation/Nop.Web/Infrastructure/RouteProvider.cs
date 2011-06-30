@@ -147,7 +147,7 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Checkout", action = "Confirm" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("CheckoutCompleted",
-                            "checkout/payment",
+                            "checkout/completed",
                             new { controller = "Checkout", action = "Completed" },
                             new[] { "Nop.Web.Controllers" });
 

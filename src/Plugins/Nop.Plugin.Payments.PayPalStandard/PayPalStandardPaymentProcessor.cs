@@ -1,0 +1,518 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Web;
+using System.Web.Routing;
+using Nop.Core;
+using Nop.Core.Domain;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Shipping;
+using Nop.Core.Plugins;
+using Nop.Plugin.Payments.PayPalStandard.Controllers;
+using Nop.Services.Configuration;
+using Nop.Services.Directory;
+using Nop.Services.Orders;
+using Nop.Services.Payments;
+using Nop.Services.Tax;
+
+namespace Nop.Plugin.Payments.PayPalStandard
+{
+    /// <summary>
+    /// PayPalStandard payment processor
+    /// </summary>
+    public class PayPalStandardPaymentProcessor : BasePlugin, IPaymentMethod
+    {
+        #region Fields
+
+        private readonly PayPalStandardPaymentSettings _paypalStandardPaymentSettings;
+        private readonly ISettingService _settingService;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
+        private readonly IWebHelper _webHelper;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ITaxService _taxService;
+
+        #endregion
+
+        #region Ctor
+
+        public PayPalStandardPaymentProcessor(PayPalStandardPaymentSettings paypalStandardPaymentSettings,
+            ISettingService settingService, ICurrencyService currencyService,
+            CurrencySettings currencySettings, IWebHelper webHelper,
+            ICheckoutAttributeParser checkoutAttributeParser, ITaxService taxService)
+        {
+            this._paypalStandardPaymentSettings = paypalStandardPaymentSettings;
+            this._settingService = settingService;
+            this._currencyService = currencyService;
+            this._currencySettings = currencySettings;
+            this._webHelper = webHelper;
+            this._checkoutAttributeParser = checkoutAttributeParser;
+            this._taxService = taxService;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Gets Paypal URL
+        /// </summary>
+        /// <returns></returns>
+        private string GetPaypalUrl()
+        {
+            return _paypalStandardPaymentSettings.UseSandbox ? "https://www.sandbox.paypal.com/us/cgi-bin/webscr" :
+                "https://www.paypal.com/us/cgi-bin/webscr";
+        }
+        /// <summary>
+        /// Gets PDT details
+        /// </summary>
+        /// <param name="tx">TX</param>
+        /// <param name="values">Values</param>
+        /// <param name="response">Response</param>
+        /// <returns>Result</returns>
+        public bool GetPDTDetails(string tx, out Dictionary<string, string> values, out string response)
+        {
+            var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
+            req.Method = "POST";
+            req.ContentType = "application/x-www-form-urlencoded";
+
+            string formContent = string.Format("cmd=_notify-synch&at={0}&tx={1}", _paypalStandardPaymentSettings.PdtToken, tx);
+            req.ContentLength = formContent.Length;
+
+            using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
+                sw.Write(formContent);
+
+            response = null;
+            using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))
+                response = HttpUtility.UrlDecode(sr.ReadToEnd());
+
+            values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            bool firstLine = true, success = false;
+            foreach (string l in response.Split('\n'))
+            {
+                string line = l.Trim();
+                if (firstLine)
+                {
+                    success = line.Equals("SUCCESS", StringComparison.OrdinalIgnoreCase);
+                    firstLine = false;
+                }
+                else
+                {
+                    int equalPox = line.IndexOf('=');
+                    if (equalPox >= 0)
+                        values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
+                }
+            }
+
+            return success;
+        }
+
+        /// <summary>
+        /// Verifies IPN
+        /// </summary>
+        /// <param name="formString">Form string</param>
+        /// <param name="values">Values</param>
+        /// <returns>Result</returns>
+        public bool VerifyIPN(string formString, out Dictionary<string, string> values)
+        {
+            var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
+            req.Method = "POST";
+            req.ContentType = "application/x-www-form-urlencoded";
+
+            string formContent = string.Format("{0}&cmd=_notify-validate", formString);
+            req.ContentLength = formContent.Length;
+
+            using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
+            {
+                sw.Write(formContent);
+            }
+
+            string response = null;
+            using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))
+            {
+                response = HttpUtility.UrlDecode(sr.ReadToEnd());
+            }
+            bool success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
+
+            values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (string l in formString.Split('&'))
+            {
+                string line = l.Trim();
+                int equalPox = line.IndexOf('=');
+                if (equalPox >= 0)
+                    values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
+            }
+
+            return success;
+        }
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Process a payment
+        /// </summary>
+        /// <param name="processPaymentRequest">Payment info required for an order processing</param>
+        /// <returns>Process payment result</returns>
+        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
+        {
+            var result = new ProcessPaymentResult();
+            result.NewPaymentStatus = PaymentStatus.Pending;
+            return result;
+        }
+
+        /// <summary>
+        /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
+        /// </summary>
+        /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        {
+            var builder = new StringBuilder();
+            builder.Append(GetPaypalUrl());
+            string cmd = string.Empty;
+            if (_paypalStandardPaymentSettings.PassProductNamesAndTotals)
+            {
+                cmd = "_cart";
+            }
+            else
+            {
+                cmd = "_xclick";
+            }
+            builder.AppendFormat("?cmd={0}&business={1}", cmd, HttpUtility.UrlEncode(_paypalStandardPaymentSettings.BusinessEmail));
+            if (_paypalStandardPaymentSettings.PassProductNamesAndTotals)
+            {
+                builder.AppendFormat("&upload=1");
+
+                //get the items in the cart
+                decimal cartTotal = decimal.Zero;
+                var cartItems = postProcessPaymentRequest.Order.OrderProductVariants;
+                int x = 1;
+                foreach (var item in cartItems)
+                {
+                    //round
+                    var unitPriceExclTax = Math.Round(item.UnitPriceExclTax, 2);
+                    //get the product variant so we can get the name
+                    builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(item.ProductVariant.FullProductName));
+                    builder.AppendFormat("&amount_" + x + "={0}", unitPriceExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
+                    x++;
+                    cartTotal += unitPriceExclTax;
+                }
+
+                //the checkout attributes that have a dollar value and send them to Paypal as items to be paid for
+                var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
+                foreach (var val in caValues)
+                {
+                    var attPrice = _taxService.GetCheckoutAttributePrice(val, false, postProcessPaymentRequest.Order.Customer);
+                    //round
+                    attPrice = Math.Round(attPrice, 2);
+                    if (attPrice > decimal.Zero) //if it has a price
+                    {
+                        var ca = val.CheckoutAttribute;
+                        if (ca != null)
+                        {
+                            var attName = ca.Name; //set the name
+                            builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(attName)); //name
+                            builder.AppendFormat("&amount_" + x + "={0}", attPrice.ToString("0.00", CultureInfo.InvariantCulture)); //amount
+                            builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity
+                            x++;
+                            cartTotal += attPrice;
+                        }
+                    }
+                }
+
+                //order totals
+
+                //shipping
+                var orderShippingExclTax = Math.Round(postProcessPaymentRequest.Order.OrderShippingExclTax, 2);
+                if (orderShippingExclTax > decimal.Zero)
+                {
+                    builder.AppendFormat("&item_name_" + x + "={0}", "Shipping fee");
+                    builder.AppendFormat("&amount_" + x + "={0}", orderShippingExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&quantity_" + x + "={0}", 1);
+                    x++;
+                    cartTotal += orderShippingExclTax;
+                }
+
+                //payment method additional fee
+                var paymentMethodAdditionalFeeExclTax = Math.Round(postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax, 2);
+                if (paymentMethodAdditionalFeeExclTax > decimal.Zero)
+                {
+                    builder.AppendFormat("&item_name_" + x + "={0}", "Payment method fee");
+                    builder.AppendFormat("&amount_" + x + "={0}", paymentMethodAdditionalFeeExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&quantity_" + x + "={0}", 1);
+                    x++;
+                    cartTotal += paymentMethodAdditionalFeeExclTax;
+                }
+
+                //tax
+                var orderTax = Math.Round(postProcessPaymentRequest.Order.OrderTax, 2);
+                if (orderTax > decimal.Zero)
+                {
+                    //builder.AppendFormat("&tax_1={0}", orderTax.ToString("0.00", CultureInfo.InvariantCulture));
+
+                    //add tax as item
+                    builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode("Sales Tax")); //name
+                    builder.AppendFormat("&amount_" + x + "={0}", orderTax.ToString("0.00", CultureInfo.InvariantCulture)); //amount
+                    builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity
+
+                    cartTotal += orderTax;
+                    x++;
+                }
+
+                if (cartTotal > postProcessPaymentRequest.Order.OrderTotal)
+                {
+                    /* Take the difference between what the order total is and what it should be and use that as the "discount".
+                     * The difference equals the amount of the gift card and/or reward points used. 
+                     */
+                    decimal discountTotal = cartTotal - postProcessPaymentRequest.Order.OrderTotal;
+                    discountTotal = Math.Round(discountTotal, 2);
+                    //gift card or rewared point amount applied to cart in nopCommerce - shows in Paypal as "discount"
+                    builder.AppendFormat("&discount_amount_cart={0}", discountTotal.ToString("0.00", CultureInfo.InvariantCulture));
+                }
+            }
+            else
+            {
+                //pass order total
+                builder.AppendFormat("&item_name=Order Number {0}", postProcessPaymentRequest.Order.Id);
+                var orderTotal = Math.Round(postProcessPaymentRequest.Order.OrderTotal, 2);
+                builder.AppendFormat("&amount={0}", orderTotal.ToString("0.00", CultureInfo.InvariantCulture));
+            }
+
+            builder.AppendFormat("&custom={0}", postProcessPaymentRequest.Order.OrderGuid);
+            builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode)));
+            builder.AppendFormat("&invoice={0}", postProcessPaymentRequest.Order.Id);
+            builder.AppendFormat("&rm=2", new object[0]);
+            if (postProcessPaymentRequest.Order.ShippingStatus != ShippingStatus.ShippingNotRequired)
+                builder.AppendFormat("&no_shipping=2", new object[0]);
+            else
+                builder.AppendFormat("&no_shipping=1", new object[0]);
+
+            string returnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/PDTHandler";
+            string cancelReturnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/CancelOrder";
+            builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnUrl), HttpUtility.UrlEncode(cancelReturnUrl));
+
+
+            //address
+            //TODO move this param [address_override] to settings (PayPal configuration page)
+            builder.AppendFormat("&address_override=1");
+            builder.AppendFormat("&first_name={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.FirstName));
+            builder.AppendFormat("&last_name={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.LastName));
+            builder.AppendFormat("&address1={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Address1));
+            builder.AppendFormat("&address2={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Address2));
+            builder.AppendFormat("&city={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.City));
+            //if (!String.IsNullOrEmpty(postProcessPaymentRequest.Order.BillingAddress.PhoneNumber))
+            //{
+            //    //strip out all non-digit characters from phone number;
+            //    string billingPhoneNumber = System.Text.RegularExpressions.Regex.Replace(postProcessPaymentRequest.Order.BillingAddress.PhoneNumber, @"\D", string.Empty);
+            //    if (billingPhoneNumber.Length >= 10)
+            //    {
+            //        builder.AppendFormat("&night_phone_a={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(0, 3)));
+            //        builder.AppendFormat("&night_phone_b={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(3, 3)));
+            //        builder.AppendFormat("&night_phone_c={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(6, 4)));
+            //    }
+            //}
+            if (postProcessPaymentRequest.Order.BillingAddress.StateProvince != null)
+                builder.AppendFormat("&state={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.StateProvince.Abbreviation));
+            else
+                builder.AppendFormat("&state={0}", "");
+            if (postProcessPaymentRequest.Order.BillingAddress.Country != null)
+                builder.AppendFormat("&country={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Country.TwoLetterIsoCode));
+            else
+                builder.AppendFormat("&country={0}", "");
+            builder.AppendFormat("&zip={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.ZipPostalCode));
+            builder.AppendFormat("&email={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Email));
+            HttpContext.Current.Response.Redirect(builder.ToString());
+        }
+
+        /// <summary>
+        /// Gets additional handling fee
+        /// </summary>
+        /// <returns>Additional handling fee</returns>
+        public decimal GetAdditionalHandlingFee()
+        {
+            return _paypalStandardPaymentSettings.AdditionalFee;
+        }
+
+        /// <summary>
+        /// Captures payment
+        /// </summary>
+        /// <param name="capturePaymentRequest">Capture payment request</param>
+        /// <returns>Capture payment result</returns>
+        public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
+        {
+            var result = new CapturePaymentResult();
+            result.AddError("Capture method not supported");
+            return result;
+        }
+
+        /// <summary>
+        /// Refunds a payment
+        /// </summary>
+        /// <param name="refundPaymentRequest">Request</param>
+        /// <returns>Result</returns>
+        public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
+        {
+            var result = new RefundPaymentResult();
+            result.AddError("Refund method not supported");
+            return result;
+        }
+
+        /// <summary>
+        /// Voids a payment
+        /// </summary>
+        /// <param name="voidPaymentRequest">Request</param>
+        /// <returns>Result</returns>
+        public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
+        {
+            var result = new VoidPaymentResult();
+            result.AddError("Void method not supported");
+            return result;
+        }
+
+        /// <summary>
+        /// Process recurring payment
+        /// </summary>
+        /// <param name="processPaymentRequest">Payment info required for an order processing</param>
+        /// <returns>Process payment result</returns>
+        public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
+        {
+            var result = new ProcessPaymentResult();
+            result.AddError("Recurring payment not supported");
+            return result;
+        }
+
+        /// <summary>
+        /// Cancels a recurring payment
+        /// </summary>
+        /// <param name="cancelPaymentRequest">Request</param>
+        /// <returns>Result</returns>
+        public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
+        {
+            var result = new CancelRecurringPaymentResult();
+            result.AddError("Recurring payment not supported");
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a route for provider configuration
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            actionName = "Configure";
+            controllerName = "PaymentPayPalStandard";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PayPalStandard.Controllers" }, { "area", null } };
+        }
+
+        /// <summary>
+        /// Gets a route for payment info
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            actionName = "PaymentInfo";
+            controllerName = "PaymentPayPalStandard";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PayPalStandard.Controllers" }, { "area", null } };
+        }
+
+        public Type GetControllerType()
+        {
+            return typeof(PaymentPayPalStandardController);
+        }
+
+        public override void Install()
+        {
+            var settings = new PayPalStandardPaymentSettings()
+            {
+                UseSandbox = true,
+                BusinessEmail = "test@test.com",
+                PdtToken= "Your PDT toekn here...",
+                PdtValidateOrderTotal = true,
+            };
+            _settingService.SaveSetting(settings);
+
+            base.Install();
+        }
+
+        #endregion
+
+        #region Properies
+
+        /// <summary>
+        /// Gets a value indicating whether capture is supported
+        /// </summary>
+        public bool SupportCapture
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether partial refund is supported
+        /// </summary>
+        public bool SupportPartiallyRefund
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether refund is supported
+        /// </summary>
+        public bool SupportRefund
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether void is supported
+        /// </summary>
+        public bool SupportVoid
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a recurring payment type of payment method
+        /// </summary>
+        public RecurringPaymentType RecurringPaymentType
+        {
+            get
+            {
+                return RecurringPaymentType.NotSupported;
+            }
+        }
+
+        /// <summary>
+        /// Gets a payment method type
+        /// </summary>
+        public PaymentMethodType PaymentMethodType
+        {
+            get
+            {
+                return PaymentMethodType.Standard;
+            }
+        }
+
+        #endregion
+    }
+}

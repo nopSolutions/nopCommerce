@@ -57,12 +57,14 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             return View("Nop.Plugin.Payments.CheckMoneyOrder.Views.PaymentCheckMoneyOrder.PaymentInfo", model);
         }
 
+        [NonAction]
         public override IList<string> ValidatePaymentForm(FormCollection form)
         {
             var warnings = new List<string>();
             return warnings;
         }
 
+        [NonAction]
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();

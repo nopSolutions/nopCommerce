@@ -56,12 +56,14 @@ namespace Nop.Plugin.Payments.PayInStore.Controllers
             return View("Nop.Plugin.Payments.PayInStore.Views.PaymentPayInStore.PaymentInfo", model);
         }
 
+        [NonAction]
         public override IList<string> ValidatePaymentForm(FormCollection form)
         {
             var warnings = new List<string>();
             return warnings;
         }
 
+        [NonAction]
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();

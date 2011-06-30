@@ -129,6 +129,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             return View("Nop.Plugin.Payments.AuthorizeNet.Views.PaymentAuthorizeNet.PaymentInfo", model);
         }
 
+        [NonAction]
         public override IList<string> ValidatePaymentForm(FormCollection form)
         {
             var warnings = new List<string>();
@@ -148,6 +149,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             return warnings;
         }
 
+        [NonAction]
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();
