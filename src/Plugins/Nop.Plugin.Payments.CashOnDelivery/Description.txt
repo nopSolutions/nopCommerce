@@ -1,5 +1,5 @@
 ﻿Group: Payment methods
-FriendlyName: Cash On Delivery
+FriendlyName: Cash On Delivery (COD)
 SystemName: Payments.CashOnDelivery
 Version: 1.00
 Author: nopCommerce team

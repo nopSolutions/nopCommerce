@@ -11,14 +11,11 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
     public class PaymentCheckMoneyOrderController : BaseNopPaymentController
     {
         private readonly ISettingService _settingService;
-        private readonly ILocalizationService _localizationService;
         private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
 
-        public PaymentCheckMoneyOrderController(ISettingService settingService, 
-            ILocalizationService localizationService, CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings)
+        public PaymentCheckMoneyOrderController(ISettingService settingService,  CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings)
         {
             this._settingService = settingService;
-            this._localizationService = localizationService;
             this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
         }
         

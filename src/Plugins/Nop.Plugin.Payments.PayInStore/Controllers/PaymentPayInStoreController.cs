@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Nop.Plugin.Payments.CashOnDelivery.Models;
+using Nop.Plugin.Payments.PayInStore.Models;
 using Nop.Services.Configuration;
-using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Web.Framework.Controllers;
 
-namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
+namespace Nop.Plugin.Payments.PayInStore.Controllers
 {
-    public class PaymentCashOnDeliveryController : BaseNopPaymentController
+    public class PaymentPayInStoreController : BaseNopPaymentController
     {
         private readonly ISettingService _settingService;
-        private readonly CashOnDeliveryPaymentSettings _cashOnDeliveryPaymentSettings;
+        private readonly PayInStorePaymentSettings _payInStorePaymentSettings;
 
-        public PaymentCashOnDeliveryController(ISettingService settingService, CashOnDeliveryPaymentSettings cashOnDeliveryPaymentSettings)
+        public PaymentPayInStoreController(ISettingService settingService, PayInStorePaymentSettings payInStorePaymentSettings)
         {
             this._settingService = settingService;
-            this._cashOnDeliveryPaymentSettings = cashOnDeliveryPaymentSettings;
+            this._payInStorePaymentSettings = payInStorePaymentSettings;
         }
         
         [AdminAuthorize]
@@ -24,10 +23,10 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
         public ActionResult Configure()
         {
             var model = new ConfigurationModel();
-            model.DescriptionText = _cashOnDeliveryPaymentSettings.DescriptionText;
-            model.AdditionalFee = _cashOnDeliveryPaymentSettings.AdditionalFee;
+            model.DescriptionText = _payInStorePaymentSettings.DescriptionText;
+            model.AdditionalFee = _payInStorePaymentSettings.AdditionalFee;
             
-            return View("Nop.Plugin.Payments.CashOnDelivery.Views.PaymentCashOnDelivery.Configure", model);
+            return View("Nop.Plugin.Payments.PayInStore.Views.PaymentPayInStore.Configure", model);
         }
 
         [HttpPost]
@@ -39,11 +38,11 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
                 return Configure();
             
             //save settings
-            _cashOnDeliveryPaymentSettings.DescriptionText = model.DescriptionText;
-            _cashOnDeliveryPaymentSettings.AdditionalFee = model.AdditionalFee;
-            _settingService.SaveSetting(_cashOnDeliveryPaymentSettings);
+            _payInStorePaymentSettings.DescriptionText = model.DescriptionText;
+            _payInStorePaymentSettings.AdditionalFee = model.AdditionalFee;
+            _settingService.SaveSetting(_payInStorePaymentSettings);
             
-            return View("Nop.Plugin.Payments.CashOnDelivery.Views.PaymentCashOnDelivery.Configure", model);
+            return View("Nop.Plugin.Payments.PayInStore.Views.PaymentPayInStore.Configure", model);
         }
 
         [ChildActionOnly]
@@ -51,10 +50,10 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
         {
             var model = new PaymentInfoModel()
             {
-                DescriptionText = _cashOnDeliveryPaymentSettings.DescriptionText
+                DescriptionText = _payInStorePaymentSettings.DescriptionText
             };
 
-            return View("Nop.Plugin.Payments.CashOnDelivery.Views.PaymentCashOnDelivery.PaymentInfo", model);
+            return View("Nop.Plugin.Payments.PayInStore.Views.PaymentPayInStore.PaymentInfo", model);
         }
 
         public override IList<string> ValidatePaymentForm(FormCollection form)
