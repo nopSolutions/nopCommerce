@@ -1122,6 +1122,22 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Catalog.ProductSortingEnum">
+        <Children>
+          <LocaleResource Name="Position">
+            <Value>Position</Value>
+          </LocaleResource>
+          <LocaleResource Name="Name">
+            <Value>Name</Value>
+          </LocaleResource>
+          <LocaleResource Name="Price">
+            <Value>Price</Value>
+          </LocaleResource>
+          <LocaleResource Name="CreatedOn">
+            <Value>Created on</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Nop.Core.Domain.Catalog.RecurringProductCyclePeriod">
         <Children>
           <LocaleResource Name="Days">
